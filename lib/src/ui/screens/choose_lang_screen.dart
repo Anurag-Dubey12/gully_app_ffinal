@@ -57,7 +57,7 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
                       },
                     );
                   }),
-              PrimaryButton()
+              const PrimaryButton()
             ],
           ),
         ),

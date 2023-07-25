@@ -13,7 +13,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Colors.white,
         image: DecorationImage(
             image: AssetImage(
@@ -22,7 +22,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             fit: BoxFit.cover),
       ),
       child: DecoratedBox(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
               Color(0xff3F5BBF),
@@ -42,7 +42,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Spacer(),
+                const Spacer(),
                 Column(
                   children: [
                     Image.asset(
@@ -56,12 +56,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ],
                 ),
 
-                Spacer(), Spacer(),
+                const Spacer(), const Spacer(),
                 Text(
                   'Sign Up',
                   style: Get.textTheme.titleLarge,
                 ),
-                Spacer(),
+                const Spacer(),
                 // create a container sign up with google
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -70,10 +70,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       image: 'google_icon.png',
                       title: 'Sign up with Google',
                       bgColor: Colors.white,
-                      color: Color.fromRGBO(0, 0, 0, 0.54),
+                      color: const Color.fromRGBO(0, 0, 0, 0.54),
                       onClick: () {},
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     SocialButton(
                       image: 'apple_icon.png',
                       title: 'Sign up with Apple',
@@ -83,7 +83,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ],
                 ),
-                Spacer(), Spacer(),
+                const Spacer(), const Spacer(),
               ],
             ),
           ),
@@ -112,7 +112,7 @@ class SocialButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Get.to(() => ChooseLanguageScreen()),
+      onTap: () => Get.to(() => const ChooseLanguageScreen()),
       child: Container(
         width: double.infinity,
         height: 50,

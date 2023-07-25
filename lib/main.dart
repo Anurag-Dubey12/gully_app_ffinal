@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:gully_app/src/config/app_constants.dart';
-import 'package:gully_app/src/ui/screens/splash_screen.dart';
+
 import 'package:gully_app/src/ui/screens/welcome_carosuel_screen.dart';
 import 'package:gully_app/src/ui/theme/theme.dart';
 

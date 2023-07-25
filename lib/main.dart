@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:gully_app/src/config/app_constants.dart';
+import 'package:gully_app/src/ui/screens/splash_screen.dart';
+import 'package:gully_app/src/ui/screens/welcome_carosuel_screen.dart';
 import 'package:gully_app/src/ui/theme/theme.dart';
 
 void main() {
@@ -10,10 +13,10 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: AppConstants.appName,
       theme: AppTheme.lightTheme,
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const WelcomeCarouselScreen(),
     );
   }
 }

@@ -9,10 +9,12 @@ environment:
 
 dependencies:
   get: ^5.0.0-release-candidate-4
+  pin_code_fields: ^8.0.1
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
   flutter_svg: ^2.0.7
+  device_preview: ^1.1.0
   
 dev_dependencies:
   flutter_test:
@@ -23,3 +25,16 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/.
+  fonts:
+  - family: Gotham
+    fonts:
+      - asset: assets/fonts/Gotham-Black.otf
+        weight: 700
+      - asset: assets/fonts/Gotham-Bold.otf
+        weight: 600
+      - asset: assets/fonts/GothamMedium.ttf
+        weight: 500
+      - asset: assets/fonts/Gotham-Light.otf
+        weight: 300
+      - asset: assets/fonts/Gotham-Thin.otf
+        weight: 100 

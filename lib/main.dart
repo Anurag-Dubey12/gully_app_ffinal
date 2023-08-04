@@ -1,8 +1,9 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:gully_app/src/config/app_constants.dart';
-
-import 'package:gully_app/src/ui/screens/welcome_carosuel_screen.dart';
+import 'package:gully_app/src/ui/screens/leaderboard_screen.dart';
+import 'package:gully_app/src/ui/screens/splash_screen.dart';
 import 'package:gully_app/src/ui/theme/theme.dart';
 
 void main() {
@@ -13,10 +14,13 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: AppConstants.appName,
-      theme: AppTheme.lightTheme,
-      home: const WelcomeCarouselScreen(),
+    return DevicePreview(
+      enabled: false,
+      builder: (c) => GetMaterialApp(
+        title: AppConstants.appName,
+        theme: AppTheme.lightTheme,
+        home: const SplashScreen(),
+      ),
     );
   }
 }

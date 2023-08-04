@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/src/ui/screens/create_profile_screen.dart';
 import 'package:gully_app/src/ui/theme/theme.dart';
 import 'package:gully_app/src/ui/widgets/primary_button.dart';
 
@@ -30,34 +31,42 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: Get.bottomBarHeight - 40),
+              SizedBox(height: 30),
               Text(
                 'Choose Language',
                 style: Get.textTheme.titleLarge
                     ?.copyWith(color: const Color(0xffFFA62E), fontSize: 32),
               ),
               const SizedBox(height: 20),
-              GridView.builder(
-                  itemCount: languages.length,
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 16 / 9,
-                      crossAxisSpacing: 30,
-                      mainAxisSpacing: 20),
-                  itemBuilder: (context, index) {
-                    return _LanguageCard(
-                      languageDesc: languages[index]['desc'] as String,
-                      languageName: languages[index]['name'] as String,
-                      isSelected: _currentIndex == index,
-                      onClick: () {
-                        setState(() {
-                          _currentIndex = index;
-                        });
-                      },
-                    );
-                  }),
-              const PrimaryButton()
+              Expanded(
+                child: GridView.builder(
+                    itemCount: languages.length,
+                    shrinkWrap: true,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 16 / 8,
+                            crossAxisSpacing: 30,
+                            mainAxisSpacing: 20),
+                    itemBuilder: (context, index) {
+                      return _LanguageCard(
+                        languageDesc: languages[index]['desc'] as String,
+                        languageName: languages[index]['name'] as String,
+                        isSelected: _currentIndex == index,
+                        onClick: () {
+                          setState(() {
+                            _currentIndex = index;
+                          });
+                        },
+                      );
+                    }),
+              ),
+              SizedBox(height: 20),
+              PrimaryButton(
+                onTap: () {
+                  Get.to(() => const CreateProfile());
+                },
+              ),
             ],
           ),
         ),

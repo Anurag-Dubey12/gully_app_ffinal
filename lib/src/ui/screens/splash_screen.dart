@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/src/ui/screens/signup_screen.dart';
+import 'package:gully_app/src/ui/screens/welcome_carosuel_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
         body: Padding(
           padding: const EdgeInsets.all(18.0),
           child: InkWell(
-            onTap: () => Get.to(() => const SignUpScreen()),
+            onTap: () => Get.to(() => const WelcomeCarouselScreen()),
             child: Center(
                 child: Image.asset(
               'assets/images/logo.png',

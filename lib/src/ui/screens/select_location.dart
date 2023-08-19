@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/src/ui/screens/profile_screen.dart';
+import 'package:gully_app/src/ui/screens/player_profile_screen.dart';
 import 'package:gully_app/src/ui/widgets/gradient_builder.dart';
 import '../theme/theme.dart';
 
@@ -67,7 +67,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                         padding: const EdgeInsets.all(18.0),
                         child: InkWell(
                           onTap: () {
-                            Get.to(() => const ProfileScreen());
+                            Get.to(() => const PlayerProfileScreen());
                           },
                           child: Container(
                             width: Get.width,

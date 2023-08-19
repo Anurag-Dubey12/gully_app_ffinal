@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/src/ui/screens/add_player_to_team.dart';
+import 'package:gully_app/src/ui/screens/select_opening_team.dart';
 import 'package:gully_app/src/ui/widgets/custom_text_field.dart';
 import 'package:gully_app/src/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/src/ui/widgets/primary_button.dart';
@@ -73,7 +74,7 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
             const Spacer(),
             PrimaryButton(
               onTap: () {
-                Get.to(() => const AddPlayersToTeam());
+                Get.to(() => const SelectOpeningTeam());
               },
               title: 'Start Match',
             )

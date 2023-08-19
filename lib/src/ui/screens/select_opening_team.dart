@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/src/ui/screens/score_card.dart';
 import 'package:gully_app/src/ui/screens/select_opening_players.dart';
 import 'package:gully_app/src/ui/widgets/custom_text_field.dart';
 import 'package:gully_app/src/ui/widgets/gradient_builder.dart';
@@ -150,7 +151,7 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
           ),
           const SizedBox(height: 20),
           PrimaryButton(onTap: () {
-            Get.to(() => const SelectOpeningPlayer());
+            Get.to(() => const ScoreCardScreen());
           })
         ],
       ),

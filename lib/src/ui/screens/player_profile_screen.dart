@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/src/ui/screens/add_team.dart';
 import 'package:gully_app/src/ui/screens/current_tournament_list.dart';
 import 'package:gully_app/src/ui/screens/edit_tournament_screen.dart';
-import 'package:gully_app/src/ui/screens/notification_screen.dart';
 import 'package:gully_app/src/ui/screens/organize_match.dart';
-import 'package:gully_app/src/ui/screens/score_card.dart';
-import 'package:gully_app/src/ui/screens/select_opening_players.dart';
-import 'package:gully_app/src/ui/screens/select_opening_team.dart';
+import 'package:gully_app/src/ui/screens/select_team_for_scoreboard.dart';
+import 'package:gully_app/src/ui/screens/select_team_to_register.dart';
+import 'package:gully_app/src/ui/screens/select_team_to_view_history.dart';
 import 'package:gully_app/src/ui/screens/txn_history_screen.dart';
 import 'package:gully_app/src/ui/screens/view_matchups_screen.dart';
+import 'package:gully_app/src/ui/screens/view_my_team.dart';
+import 'package:gully_app/src/ui/screens/view_opponent_team.dart';
 import 'package:gully_app/src/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/src/ui/theme/theme.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+class PlayerProfileScreen extends StatefulWidget {
+  const PlayerProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<PlayerProfileScreen> createState() => _PlayerProfileScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -152,64 +154,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
-                            InkWell(
-                              child: ProfileTileCard(
-                                onTap: () {
-                                  Get.bottomSheet(BottomSheet(
-                                    enableDrag: false,
-                                    builder: (context) =>
-                                        const RequestsBottomSheet(),
-                                    onClosing: () {},
-                                  ));
-                                },
-                                text: 'Request',
-                                subTrailingWidget:
-                                    Text('3', style: Get.textTheme.bodyLarge),
-                              ),
-                            ),
                             ProfileTileCard(
-                              text: 'Current Tournament',
+                              text: 'Add team',
                               onTap: () {
-                                Get.to(
-                                    () => const CurrentTournamentListScreen());
-                              },
-                              subTrailingWidget:
-                                  Text('2/13', style: Get.textTheme.bodyLarge),
-                            ),
-                            ProfileTileCard(
-                              text: 'Organize',
-                              onTap: () {
-                                Get.to(() => const SelectOrganizeTeam());
+                                Get.to(() => const AddTeam());
                               },
                             ),
                             ProfileTileCard(
-                              text: 'View Matchups',
+                              text: 'View My Team',
                               onTap: () {
-                                Get.to(() => const ViewMatchupsScreen());
+                                Get.to(() => const ViewTeam());
                               },
                             ),
                             ProfileTileCard(
-                              text: 'Score Board',
+                              text: 'My performance',
                               onTap: () {
-                                Get.to(() => const SelectOpeningPlayer());
+                                Get.to(() => SelectTeamToViewHistory());
                               },
                             ),
                             ProfileTileCard(
-                              text: 'Edit Tournament Form',
+                              text: 'View Opponent',
                               onTap: () {
-                                Get.to(() => EditTournamentScreen());
-                              },
-                            ),
-                            ProfileTileCard(
-                              text: 'Transaction History',
-                              onTap: () {
-                                Get.to(() => const TxnHistoryScreen());
-                              },
-                            ),
-                            ProfileTileCard(
-                              text: 'View your tournament',
-                              onTap: () {
-                                Get.to(() => const ViewTournamentScreen());
+                                Get.to(() => ViewOpponentTeam());
                               },
                             ),
                           ],

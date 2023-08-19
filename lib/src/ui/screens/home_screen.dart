@@ -8,10 +8,11 @@ import 'package:gully_app/src/ui/screens/leaderboard_screen.dart';
 import 'package:gully_app/src/ui/screens/legal_screen.dart';
 import 'package:gully_app/src/ui/screens/looking_for_screen.dart';
 import 'package:gully_app/src/ui/screens/notification_screen.dart';
+import 'package:gully_app/src/ui/screens/organizer_profile.dart';
 import 'package:gully_app/src/ui/screens/others_looking_for.dart';
 import 'package:gully_app/src/ui/screens/player_performance.dart';
 import 'package:gully_app/src/ui/screens/player_ranking_screen.dart';
-import 'package:gully_app/src/ui/screens/profile_screen.dart';
+import 'package:gully_app/src/ui/screens/player_profile_screen.dart';
 import 'package:gully_app/src/ui/screens/rate_us.dart';
 import 'package:gully_app/src/ui/screens/register_team.dart';
 import 'package:gully_app/src/ui/screens/select_team_to_view_history.dart';
@@ -72,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(height: Get.bottomBarHeight / 2),
                       InkWell(
                         onTap: () {
-                          Get.to(() => const ProfileScreen());
+                          Get.to(() => const OrganizerProfileScreen());
                         },
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1077,7 +1078,9 @@ class _TopHeader extends StatelessWidget {
       children: [
         Row(
           children: [
-            const CircleAvatar(),
+            InkWell(
+                onTap: () => Get.to(() => PlayerProfileScreen()),
+                child: const CircleAvatar()),
             const SizedBox(
               width: 10,
             ),

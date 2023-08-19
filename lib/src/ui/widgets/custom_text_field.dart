@@ -13,6 +13,11 @@ class CustomTextField extends StatelessWidget {
   final Function? onTap;
   final bool? enabled;
   final bool? readOnly;
+  final Widget? suffixIcon;
+  final bool? filled;
+  final int? maxLines;
+  final int? minLines;
+
   const CustomTextField(
       {super.key,
       this.hintText,
@@ -26,7 +31,11 @@ class CustomTextField extends StatelessWidget {
       this.textInputType,
       this.onTap,
       this.enabled,
-      this.readOnly});
+      this.readOnly,
+      this.suffixIcon,
+      this.filled,
+      this.maxLines,
+      this.minLines});
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +45,8 @@ class CustomTextField extends StatelessWidget {
       autofocus: autoFocus ?? false,
       controller: controller,
       enabled: enabled,
+      maxLines: minLines,
+      minLines: maxLines,
       readOnly: readOnly ?? false,
       onTap: onTap == null ? () {} : () => onTap!(),
       obscureText: obscureText ?? false,
@@ -45,16 +56,28 @@ class CustomTextField extends StatelessWidget {
             fontWeight: FontWeight.w500, color: Color(0xff676677)),
         hintText: hintText,
         labelText: labelText,
+        suffixIcon: suffixIcon,
+        filled: filled,
         isDense: true,
         hintStyle: const TextStyle(color: Colors.grey, fontSize: 12),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Color(0xff737382)),
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Color(0xff737382)),
-        ),
+        border: filled ?? false
+            ? OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 255, 255, 255), width: 0))
+            : OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Color(0xff737382)),
+              ),
+        enabledBorder: filled ?? false
+            ? OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 255, 255, 255), width: 0))
+            : OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(color: Color(0xff737382)),
+              ),
       ),
     );
   }

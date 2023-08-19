@@ -6,14 +6,14 @@ import 'package:gully_app/src/ui/screens/contact_us_screen.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
-class SearchChallengeTeam extends StatelessWidget {
-  const SearchChallengeTeam({super.key});
+class OthersLookingForScreen extends StatelessWidget {
+  const OthersLookingForScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: Color.fromARGB(255, 245, 247, 255),
         image: DecorationImage(
           image: AssetImage('assets/images/sports_icon.png'),
           fit: BoxFit.cover,
@@ -51,7 +51,7 @@ class SearchChallengeTeam extends StatelessWidget {
               child: Column(
                 children: [
                   const Padding(
-                    padding: EdgeInsets.only(left: 0, top: 30),
+                    padding: EdgeInsets.only(left: 30, top: 30),
                     child: Align(
                         alignment: Alignment.centerLeft,
                         child: BackButton(
@@ -62,7 +62,7 @@ class SearchChallengeTeam extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Challenge team',
+                        'Looking For',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 28,
@@ -114,18 +114,23 @@ class SearchChallengeTeam extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Container(
-                      color: Color.fromARGB(96, 82, 80, 124),
-                      child: Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: ListView.separated(
-                            itemBuilder: (context, index) => _TeamCard(),
-                            separatorBuilder: (context, index) => SizedBox(
-                              height: 20,
-                            ),
-                            itemCount: 3,
-                            shrinkWrap: true,
-                          ))),
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('What others are looking for?',
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        SizedBox(height: 20),
+                        _LookingCard(),
+                        SizedBox(height: 10),
+                        _LookingCard(),
+                        SizedBox(height: 10),
+                        _LookingCard(),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ))
@@ -136,53 +141,47 @@ class SearchChallengeTeam extends StatelessWidget {
   }
 }
 
-class _TeamCard extends StatelessWidget {
-  const _TeamCard({
+class _LookingCard extends StatelessWidget {
+  const _LookingCard({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: Get.width,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.white,
-      ),
+          color: Colors.white, borderRadius: BorderRadius.circular(10)),
       child: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: Row(children: [
-          CircleAvatar(),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'CSK',
-                style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Expanded(
+              flex: 4,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                      'Bhavesh Pant is looking for a team to join as a batsman in Mumbai'),
+                  Text('2 hours ago',
+                      style: TextStyle(fontSize: 12, color: Colors.grey)),
+                ],
               ),
-              const Text(
-                '20th April 2021',
-                style: TextStyle(
-                    fontSize: 13, color: Color.fromARGB(255, 255, 154, 22)),
+            ),
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  CircleAvatar(
+                    backgroundColor: AppTheme.secondaryYellowColor,
+                    child: Icon(Icons.contact_page),
+                  )
+                ],
               ),
-            ],
-          ),
-          const Spacer(),
-          Row(
-            children: [
-              Chip(
-                label: Text('Accept', style: TextStyle(color: Colors.white)),
-                backgroundColor: Colors.green,
-                side: BorderSide.none,
-              ),
-              const SizedBox(width: 10),
-              Chip(
-                  label: Text('Decline', style: TextStyle(color: Colors.white)),
-                  backgroundColor: Colors.red,
-                  side: BorderSide.none),
-            ],
-          )
-        ]),
+            )
+          ],
+        ),
       ),
     );
   }

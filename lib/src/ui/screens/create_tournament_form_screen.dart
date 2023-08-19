@@ -1,11 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:gully_app/src/ui/screens/select_location.dart';
-
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
+import '../widgets/custom_drop_down_field.dart';
+import '../widgets/custom_text_field.dart';
 import '../widgets/primary_button.dart';
 
 class CreateTournamentScreen extends StatefulWidget {
@@ -102,7 +101,8 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                           Text('Create Tournament',
                               style: Get.textTheme.headlineLarge?.copyWith(
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 23)),
                           SizedBox(height: Get.height * 0.04),
                           const _TopCard(),
                         ],
@@ -110,11 +110,12 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                     ),
                     Container(
                       width: Get.width,
-                      height: Get.height * 0.5,
+                      height: Get.height * 0.6,
                       margin: const EdgeInsets.only(top: 20),
                       color: Colors.black26,
                       child: Padding(
-                        padding: const EdgeInsets.all(18.0),
+                        padding: const EdgeInsets.only(
+                            left: 20, right: 20, bottom: 40, top: 20),
                         child: SingleChildScrollView(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -170,7 +171,9 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                               const SizedBox(
                                 height: 8,
                               ),
-                              const CustomTextField(),
+                              const CustomTextField(
+                                filled: true,
+                              ),
                               const SizedBox(
                                 height: 18,
                               ),
@@ -181,7 +184,9 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                               const SizedBox(
                                 height: 8,
                               ),
-                              const CustomTextField(),
+                              const CustomTextField(
+                                filled: true,
+                              ),
                               const SizedBox(
                                 height: 18,
                               ),
@@ -192,7 +197,9 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                               const SizedBox(
                                 height: 8,
                               ),
-                              const CustomTextField(),
+                              const CustomTextField(
+                                filled: true,
+                              ),
                               const SizedBox(
                                 height: 18,
                               ),
@@ -203,7 +210,14 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                               const SizedBox(
                                 height: 8,
                               ),
-                              const CustomTextField(),
+                              CustomTextField(
+                                onTap: () {
+                                  Get.to(() => SelectLocationScreen());
+                                },
+                                filled: true,
+                                enabled: true,
+                                readOnly: true,
+                              ),
                               const SizedBox(
                                 height: 18,
                               ),
@@ -214,7 +228,9 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                               const SizedBox(
                                 height: 8,
                               ),
-                              const CustomTextField(),
+                              const CustomTextField(
+                                filled: true,
+                              ),
                               const SizedBox(
                                 height: 18,
                               ),
@@ -225,7 +241,9 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                               const SizedBox(
                                 height: 8,
                               ),
-                              const CustomTextField(),
+                              const CustomTextField(
+                                filled: true,
+                              ),
                               const SizedBox(
                                 height: 18,
                               ),
@@ -236,7 +254,9 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                               const SizedBox(
                                 height: 8,
                               ),
-                              const CustomTextField(),
+                              const CustomTextField(
+                                filled: true,
+                              ),
                               const SizedBox(
                                 height: 18,
                               ),
@@ -247,7 +267,9 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                               const SizedBox(
                                 height: 8,
                               ),
-                              const CustomTextField(),
+                              const CustomTextField(
+                                filled: true,
+                              ),
                               const SizedBox(
                                 height: 18,
                               ),
@@ -258,7 +280,9 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                               const SizedBox(
                                 height: 8,
                               ),
-                              const CustomTextField(),
+                              const CustomTextField(
+                                filled: true,
+                              ),
                               const SizedBox(
                                 height: 18,
                               ),
@@ -269,7 +293,18 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                               const SizedBox(
                                 height: 8,
                               ),
-                              const CustomTextField(),
+                              const CustomTextField(
+                                filled: true,
+                                maxLines: 5,
+                              ),
+                              Row(
+                                children: [
+                                  Checkbox(value: true, onChanged: (e) {}),
+                                  Text(
+                                      'I\'ve hereby read and agree to your terms and conditions',
+                                      style: Get.textTheme.labelMedium),
+                                ],
+                              )
                             ],
                           ),
                         ),
@@ -281,132 +316,6 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
             )
           ]),
         ));
-  }
-}
-
-class CustomTextField extends StatelessWidget {
-  const CustomTextField({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 48,
-      child: TextField(
-        decoration: InputDecoration(
-          isDense: true,
-
-          labelText: '',
-          labelStyle: TextStyle(
-            color: Colors.grey.shade500,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-          ),
-          filled: true,
-          fillColor: Colors.white,
-          // isCollapsed: true,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              width: 0,
-              style: BorderStyle.none,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class DropDownWidget extends StatelessWidget {
-  final Function onSelect;
-  final String? selectedValue;
-  final List<String> items;
-  final String title;
-  const DropDownWidget({
-    super.key,
-    required this.onSelect,
-    this.selectedValue,
-    required this.items,
-    required this.title,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Material(
-        borderRadius: BorderRadius.circular(9),
-        borderOnForeground: true,
-        child: InkWell(
-          borderRadius: BorderRadius.circular(9),
-          onTap: () {
-            Get.bottomSheet(BottomSheet(
-                onClosing: () {},
-                builder: (context) => Container(
-                      height: Get.height * 0.3,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(9)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(title,
-                                style: Get.textTheme.headlineMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black)),
-                            ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: items.length,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    contentPadding: EdgeInsets.zero,
-                                    leading: Radio(
-                                      value: true,
-                                      groupValue: selectedValue == items[index],
-                                      onChanged: (e) => onSelect(items[index]),
-                                    ),
-                                    onTap: () {
-                                      onSelect();
-                                      Get.back();
-                                    },
-                                    title: Text(items[index]),
-                                  );
-                                }),
-                          ],
-                        ),
-                      ),
-                    )));
-          },
-          child: Ink(
-            width: Get.width,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(9),
-              color: Colors.white,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Row(
-                children: [
-                  Text(selectedValue ?? '', style: Get.textTheme.labelLarge),
-                  const Spacer(),
-                  const Align(
-                      alignment: Alignment.centerRight,
-                      child: Icon(
-                        Icons.arrow_drop_down,
-                        size: 28,
-                      )),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }
 
@@ -442,8 +351,9 @@ class _TopCard extends StatelessWidget {
                       horizontal: Get.width / 4.5, vertical: 13),
                   child: Text(
                     'Bhushan Cricket',
-                    style: Get.textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: Get.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),

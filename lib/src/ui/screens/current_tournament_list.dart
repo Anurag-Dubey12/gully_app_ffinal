@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/src/ui/screens/select_team.dart';
+import 'package:gully_app/src/ui/screens/organize_match.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 

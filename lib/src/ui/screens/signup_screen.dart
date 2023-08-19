@@ -139,8 +139,7 @@ class SocialButton extends StatelessWidget {
             ),
             Text(
               title,
-              style: Get.textTheme.headlineMedium
-                  ?.copyWith(fontStyle: FontStyle.italic, color: color),
+              style: Get.textTheme.headlineMedium?.copyWith(color: color),
             ),
           ],
         ),

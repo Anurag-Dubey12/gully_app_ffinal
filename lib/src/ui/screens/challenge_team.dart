@@ -16,14 +16,14 @@ class ChallengeTeam extends StatelessWidget {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text('Challenge Team',
-            style: Theme.of(context).textTheme.headline6?.copyWith(
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
                 fontSize: 24)),
       ),
       backgroundColor: Colors.transparent,
       body: Column(children: [
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         Center(
           child: Container(
             decoration: BoxDecoration(
@@ -36,12 +36,12 @@ class ChallengeTeam extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(height: 40),
+        const SizedBox(height: 40),
         SizedBox(
             width: 200,
             child: PrimaryButton(
                 onTap: () {
-                  Get.to(() => SearchChallengeTeam());
+                  Get.to(() => const SearchChallengeTeam());
                 },
                 title: 'Pay Now'))
       ]),

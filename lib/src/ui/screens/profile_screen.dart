@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/src/ui/screens/current_tournament_list.dart';
+import 'package:gully_app/src/ui/screens/edit_tournament_screen.dart';
+import 'package:gully_app/src/ui/screens/notification_screen.dart';
+import 'package:gully_app/src/ui/screens/organize_match.dart';
+import 'package:gully_app/src/ui/screens/score_card.dart';
+import 'package:gully_app/src/ui/screens/select_opening_players.dart';
+import 'package:gully_app/src/ui/screens/select_opening_team.dart';
+import 'package:gully_app/src/ui/screens/txn_history_screen.dart';
+import 'package:gully_app/src/ui/screens/view_matchups_screen.dart';
+import 'package:gully_app/src/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/src/ui/theme/theme.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -144,15 +153,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Column(
                           children: [
                             InkWell(
-                              onTap: () {
-                                Get.bottomSheet(BottomSheet(
-                                  enableDrag: false,
-                                  builder: (context) =>
-                                      const RequestsBottomSheet(),
-                                  onClosing: () {},
-                                ));
-                              },
                               child: ProfileTileCard(
+                                onTap: () {
+                                  Get.bottomSheet(BottomSheet(
+                                    enableDrag: false,
+                                    builder: (context) =>
+                                        const RequestsBottomSheet(),
+                                    onClosing: () {},
+                                  ));
+                                },
                                 text: 'Request',
                                 subTrailingWidget:
                                     Text('3', style: Get.textTheme.bodyLarge),
@@ -160,31 +169,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                             ProfileTileCard(
                               text: 'Current Tournament',
+                              onTap: () {
+                                Get.to(
+                                    () => const CurrentTournamentListScreen());
+                              },
                               subTrailingWidget:
                                   Text('2/13', style: Get.textTheme.bodyLarge),
                             ),
-                            const ProfileTileCard(
+                            ProfileTileCard(
                               text: 'Organize',
-                            ),
-                            const ProfileTileCard(
-                              text: 'View Matchups',
-                            ),
-                            const ProfileTileCard(
-                              text: 'Scorer Board',
-                            ),
-                            const ProfileTileCard(
-                              text: 'Edit Tournament Form',
+                              onTap: () {
+                                Get.to(() => const SelectOrganizeTeam());
+                              },
                             ),
                             ProfileTileCard(
-                              text: 'Notifications',
-                              subTrailingWidget:
-                                  Text('3', style: Get.textTheme.bodyLarge),
+                              text: 'View Matchups',
+                              onTap: () {
+                                Get.to(() => const ViewMatchupsScreen());
+                              },
                             ),
-                            const ProfileTileCard(
+                            ProfileTileCard(
+                              text: 'Score Board',
+                              onTap: () {
+                                Get.to(() => const SelectOpeningPlayer());
+                              },
+                            ),
+                            ProfileTileCard(
+                              text: 'Edit Tournament Form',
+                              onTap: () {
+                                Get.to(() => EditTournamentScreen());
+                              },
+                            ),
+                            ProfileTileCard(
                               text: 'Transaction History',
+                              onTap: () {
+                                Get.to(() => const TxnHistoryScreen());
+                              },
                             ),
-                            const ProfileTileCard(
+                            ProfileTileCard(
                               text: 'View your tournament',
+                              onTap: () {
+                                Get.to(() => const ViewTournamentScreen());
+                              },
                             ),
                           ],
                         ),
@@ -200,34 +226,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
 class ProfileTileCard extends StatelessWidget {
   final String text;
   final Widget? subTrailingWidget;
+  final Function? onTap;
   const ProfileTileCard({
     super.key,
     required this.text,
     this.subTrailingWidget,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppTheme.secondaryYellowColor),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            Text(text, style: Get.textTheme.bodyLarge),
-            const Spacer(),
-            subTrailingWidget ?? const SizedBox(),
-            const Icon(
-              Icons.arrow_forward_ios,
-              size: 19,
-              color: AppTheme.secondaryYellowColor,
-            )
-          ],
+    return InkWell(
+      onTap: onTap == null ? () {} : () => onTap!(),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppTheme.secondaryYellowColor),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Row(
+            children: [
+              Text(text, style: Get.textTheme.bodyLarge),
+              const Spacer(),
+              subTrailingWidget ?? const SizedBox(),
+              const Icon(
+                Icons.arrow_forward_ios,
+                size: 19,
+                color: AppTheme.secondaryYellowColor,
+              )
+            ],
+          ),
         ),
       ),
     );

@@ -38,37 +38,6 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
               body: Stack(
                 children: [
                   Positioned(
-                    bottom: 10,
-                    child: Container(
-                      height: 100,
-                      width: Get.width,
-                      decoration: const BoxDecoration(
-                          // color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              bottomLeft: Radius.circular(20))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ...List.generate(
-                              3,
-                              (index) => Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      width: 60,
-                                      height: 10,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Colors.black.withOpacity(
-                                              index == 1 ? 1 : 0.3)),
-                                    ),
-                                  ))
-                        ],
-                      ),
-                    ),
-                  ),
-                  Positioned(
                     top: 30,
                     left: 40,
                     child: Padding(

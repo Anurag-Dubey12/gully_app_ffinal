@@ -4,7 +4,7 @@ class AppTheme {
   AppTheme._();
   static const String fontName = 'WorkSans';
   static const Color primaryColor = Color(0xff3653B9);
-  static const Color secondaryYellowColor = Color(0xffFFA62E);
+  static const Color secondaryYellowColor = Color(0xffffa62e);
   static const Color darkYellowColor = Color(0xffDD6F4E);
   static const Color darkBlueColor = Color(0xff29278C);
 

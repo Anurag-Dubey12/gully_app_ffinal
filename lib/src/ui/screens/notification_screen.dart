@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/src/ui/screens/full_notification_screen.dart';
 import 'package:gully_app/src/ui/screens/txn_history_screen.dart';
 
 import '../theme/theme.dart';
@@ -88,7 +89,8 @@ class NotificationScreen extends StatelessWidget {
                                 children: [
                                   GestureDetector(
                                       onTap: () {
-                                        Get.to(() => const TxnHistoryScreen());
+                                        Get.to(() =>
+                                            const FullNotificationScreen());
                                       },
                                       child: const NotificationCard()),
                                   const NotificationCard(),

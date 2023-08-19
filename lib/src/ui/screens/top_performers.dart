@@ -5,8 +5,8 @@ import 'package:gully_app/src/ui/screens/challenge_team.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
-class PlayerRankingScreen extends StatelessWidget {
-  const PlayerRankingScreen({super.key});
+class TopPerformersScreen extends StatelessWidget {
+  const TopPerformersScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class PlayerRankingScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Padding(
-                          padding: EdgeInsets.only(left: 30, top: 30),
+                          padding: EdgeInsets.only(left: 0, top: 30),
                           child: Align(
                               alignment: Alignment.centerLeft,
                               child: BackButton(
@@ -63,7 +63,7 @@ class PlayerRankingScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              'Player Ranking',
+                              'Top Performers',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 28,
@@ -112,9 +112,9 @@ class PlayerRankingScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(40),
                                     boxShadow: [
                                       BoxShadow(
-                                          color: const Color.fromARGB(
-                                                  121, 187, 186, 186)
-                                              .withOpacity(0.9),
+                                          color:
+                                              Color.fromARGB(121, 225, 215, 215)
+                                                  .withOpacity(0.9),
                                           blurRadius: 20,
                                           spreadRadius: 2,
                                           offset: const Offset(0, 7))
@@ -135,110 +135,18 @@ class PlayerRankingScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 3, horizontal: 18),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(40),
-                                    color: AppTheme.secondaryYellowColor,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: AppTheme.secondaryYellowColor
-                                              .withOpacity(0.4),
-                                          blurRadius: 10,
-                                          spreadRadius: 1,
-                                          offset: const Offset(0, 2))
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(18.0),
-                                      child: Text('Batting',
-                                          style: Get.textTheme.bodyLarge
-                                              ?.copyWith(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 13)),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(40),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color:
-                                              Color.fromARGB(60, 227, 225, 225)
-                                                  .withOpacity(0.9),
-                                          blurRadius: 10,
-                                          spreadRadius: 2,
-                                          offset: const Offset(0, 7))
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(18.0),
-                                      child: Text('Leather ball',
-                                          style: Get.textTheme.bodyLarge
-                                              ?.copyWith(
-                                                  color: AppTheme.darkBlueColor,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 13)),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(40),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: const Color.fromARGB(
-                                                  121, 187, 186, 186)
-                                              .withOpacity(0.9),
-                                          blurRadius: 10,
-                                          spreadRadius: 2,
-                                          offset: const Offset(0, 7))
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(18.0),
-                                      child: Text('Tennis Ball',
-                                          style: Get.textTheme.bodyLarge
-                                              ?.copyWith(
-                                                  color: AppTheme.primaryColor,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 13)),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('Daily top performer',
+                                style: Get.textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.black)),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text('Players',
-                              style: Get.textTheme.headlineMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black)),
                         ),
                         Container(
                           color: Colors.black26,
-                          height: Get.height * 0.6,
+                          height: Get.height * 0.7,
                           child: ListView.separated(
                               padding: const EdgeInsets.all(20),
                               itemCount: 10,
@@ -259,14 +167,14 @@ class PlayerRankingScreen extends StatelessWidget {
                                         child: Row(
                                           children: [
                                             const CircleAvatar(
-                                              radius: 29,
+                                              radius: 26,
                                             ),
                                             const SizedBox(width: 12),
                                             Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text('Player Name',
+                                                Text('Team Name',
                                                     style: Get.textTheme
                                                         .headlineMedium
                                                         ?.copyWith(
@@ -274,14 +182,14 @@ class PlayerRankingScreen extends StatelessWidget {
                                                                 FontWeight.bold,
                                                             color:
                                                                 Colors.black)),
-                                                Text(
-                                                  'Inn 329 Runs 2335 Avg 40.25',
-                                                  style: Get
-                                                      .textTheme.bodyMedium
-                                                      ?.copyWith(
-                                                          color:
-                                                              Colors.black54),
-                                                ),
+                                                // Text(
+                                                //   'Since 24.11.2017',
+                                                //   style: Get
+                                                //       .textTheme.bodyMedium
+                                                //       ?.copyWith(
+                                                //           color:
+                                                //               Colors.black54),
+                                                // ),
                                               ],
                                             )
                                           ],

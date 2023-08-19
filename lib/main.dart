@@ -2,7 +2,7 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:gully_app/src/config/app_constants.dart';
-import 'package:gully_app/src/ui/screens/leaderboard_screen.dart';
+import 'package:gully_app/src/ui/screens/player_performance.dart';
 import 'package:gully_app/src/ui/screens/splash_screen.dart';
 import 'package:gully_app/src/ui/theme/theme.dart';
 

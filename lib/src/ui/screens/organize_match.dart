@@ -183,7 +183,24 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: Get.height * 0.08),
+                            SizedBox(height: Get.height * 0.03),
+                            InkWell(
+                              onTap: () {
+                                showTimePicker(
+                                    context: context,
+                                    initialTime: TimeOfDay.now());
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: Text('12:00'),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: Get.height * 0.03),
                             PrimaryButton(
                               onTap: () {
                                 Get.to(() => const ViewMatchupsScreen());

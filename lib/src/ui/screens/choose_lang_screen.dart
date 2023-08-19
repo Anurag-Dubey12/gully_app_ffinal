@@ -31,7 +31,7 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Text(
                 'Choose Language',
                 style: Get.textTheme.titleLarge
@@ -61,7 +61,7 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
                       );
                     }),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               PrimaryButton(
                 onTap: () {
                   Get.to(() => const CreateProfile());

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "835772612829",
+    "project_id": "gully-app-2",
+    "storage_bucket": "gully-app-2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:835772612829:android:ec98ba0b365d7081399b34",
+        "android_client_info": {
+          "package_name": "com.example.gully_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "835772612829-60c5ajnce6m6h4695o7lsa5daa078f77.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCycn7C4UlwcMW94TS7BFRoVXfVY1Zowgc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "835772612829-60c5ajnce6m6h4695o7lsa5daa078f77.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

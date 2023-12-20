@@ -1,11 +1,11 @@
 name: gully_app
 description: A new Flutter project.
-publish_to: 'none'
+publish_to: "none"
 
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.3 <4.0.0'
+  sdk: ">=3.0.3 <4.0.0"
 
 dependencies:
   get: ^5.0.0-release-candidate-4
@@ -15,8 +15,17 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_svg: ^2.0.7
   device_preview: ^1.1.0
-  
+  logger: ^2.0.1
+  shared_preferences: ^2.2.0
+  firebase_auth: ^4.8.0
+  google_sign_in: ^6.1.4
+  firebase_core: ^2.15.1
+  json_annotation: ^4.8.1
+  intl: ^0.18.1
+
 dev_dependencies:
+  build_runner: ^2.4.6
+  json_serializable: ^6.7.1
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
@@ -26,15 +35,15 @@ flutter:
   assets:
     - assets/images/.
   fonts:
-  - family: Gotham
-    fonts:
-      - asset: assets/fonts/Gotham-Black.otf
-        weight: 700
-      - asset: assets/fonts/Gotham-Bold.otf
-        weight: 600
-      - asset: assets/fonts/GothamMedium.ttf
-        weight: 500
-      - asset: assets/fonts/Gotham-Light.otf
-        weight: 300
-      - asset: assets/fonts/Gotham-Thin.otf
-        weight: 100 
+    - family: Gotham
+      fonts:
+        - asset: assets/fonts/Gotham-Black.otf
+          weight: 700
+        - asset: assets/fonts/Gotham-Bold.otf
+          weight: 600
+        - asset: assets/fonts/GothamMedium.ttf
+          weight: 500
+        - asset: assets/fonts/Gotham-Light.otf
+          weight: 300
+        - asset: assets/fonts/Gotham-Thin.otf
+          weight: 100

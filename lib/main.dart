@@ -1,12 +1,22 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
-import 'package:gully_app/src/config/app_constants.dart';
-import 'package:gully_app/src/ui/screens/player_performance.dart';
-import 'package:gully_app/src/ui/screens/splash_screen.dart';
-import 'package:gully_app/src/ui/theme/theme.dart';
+import 'package:get/get.dart';
 
-void main() {
+import '/config/api_client.dart';
+import '/config/app_constants.dart';
+import '/config/preferences.dart';
+import '/data/api/auth_api.dart';
+import '/data/api/tournament_api.dart';
+import '/data/controller/auth_controller.dart';
+import '/data/controller/tournament_controller.dart';
+import '/ui/screens/splash_screen.dart';
+import '/ui/theme/theme.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
 }
 
@@ -17,6 +27,16 @@ class MyApp extends StatelessWidget {
     return DevicePreview(
       enabled: false,
       builder: (c) => GetMaterialApp(
+        binds: [
+          Bind.put<Preferences>(Preferences()),
+          Bind.lazyPut<GetConnectClient>(() => GetConnectClient()),
+          Bind.put<Preferences>(Preferences()),
+          Bind.lazyPut<AuthApi>(() => AuthApi(Get.find())),
+          Bind.lazyPut<TournamentApi>(() => TournamentApi(repo: Get.find())),
+          Bind.lazyPut<AuthController>(() => AuthController(repo: Get.find())),
+          Bind.lazyPut<TournamentController>(
+              () => TournamentController(Get.find())),
+        ],
         title: AppConstants.appName,
         theme: AppTheme.lightTheme,
         home: const SplashScreen(),

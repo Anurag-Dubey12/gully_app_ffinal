@@ -31,21 +31,20 @@ class SelectFromToCard extends StatelessWidget {
                 padding: EdgeInsets.only(left: 4.0),
                 child: Text('From'),
               ),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () async {
-                      final date = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.now(),
-                          lastDate:
-                              DateTime.now().add(const Duration(days: 365)));
-                      if (date != null) {
-                        onFromChanged(date);
-                      }
-                    },
-                    child: Container(
+              GestureDetector(
+                onTap: () async {
+                  final date = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now().add(const Duration(days: 4)),
+                      firstDate: DateTime.now().add(const Duration(days: 4)),
+                      lastDate: DateTime.now().add(const Duration(days: 365)));
+                  if (date != null) {
+                    onFromChanged(date);
+                  }
+                },
+                child: Row(
+                  children: [
+                    Container(
                       width: 80,
                       height: 33,
                       decoration: BoxDecoration(
@@ -59,14 +58,14 @@ class SelectFromToCard extends StatelessWidget {
                         style: Get.textTheme.labelMedium,
                       )),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Icon(
-                    Icons.calendar_month,
-                    size: 18,
-                    color: AppTheme.secondaryYellowColor,
-                  )
-                ],
+                    const SizedBox(width: 4),
+                    const Icon(
+                      Icons.calendar_month,
+                      size: 18,
+                      color: AppTheme.secondaryYellowColor,
+                    )
+                  ],
+                ),
               )
             ],
           ),
@@ -76,8 +75,8 @@ class SelectFromToCard extends StatelessWidget {
             onTap: () async {
               final date0 = await showDatePicker(
                   context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
+                  initialDate: DateTime.now().add(const Duration(days: 4)),
+                  firstDate: DateTime.now().add(const Duration(days: 4)),
                   lastDate: DateTime.now().add(const Duration(days: 365)));
 
               if (date0 != null) {

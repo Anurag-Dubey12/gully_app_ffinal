@@ -2,28 +2,24 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'tournament_model.g.dart';
 
-@JsonSerializable()
-class TournamenModel {
+@JsonSerializable(createToJson: false)
+class TournamentModel {
   final String tournamentName;
   final DateTime tournamentStartDateTime;
   final DateTime tournamentEndDateTime;
   final double fees;
-  @JsonKey(
-    unknownEnumValue: TournamentListType.upcoming,
-    fromJson: tournamentListTypeFromJson,
-  )
-  final TournamentListType tournamentListType;
-
-  TournamenModel(
+  final int tournamentLimit;
+  final int registeredTeamsCount;
+  TournamentModel(
       {required this.tournamentName,
+      required this.tournamentLimit,
+      required this.registeredTeamsCount,
       required this.tournamentStartDateTime,
       required this.tournamentEndDateTime,
-      required this.tournamentListType,
+      // required this.tournamentListType,
       required this.fees});
-  factory TournamenModel.fromJson(Map<String, dynamic> json) =>
-      _$TournamenModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$TournamenModelToJson(this);
+  factory TournamentModel.fromJson(Map<String, dynamic> json) =>
+      _$TournamentModelFromJson(json);
 
   static TournamentListType tournamentListTypeFromJson(String value) {
     switch (value) {

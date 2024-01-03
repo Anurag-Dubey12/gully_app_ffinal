@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/config/preferences.dart';
+import 'package:gully_app/data/controller/auth_controller.dart';
+import 'package:gully_app/ui/screens/splash_screen.dart';
 
 import '../screens/challenge_team.dart';
 import '../screens/contact_us_screen.dart';
@@ -14,7 +18,7 @@ import '../screens/team_ranking_screen.dart';
 import '../screens/top_performers.dart';
 import 'home_screen/drawer_card.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends GetView<AuthController> {
   const AppDrawer({super.key});
 
   @override
@@ -46,41 +50,44 @@ class AppDrawer extends StatelessWidget {
                   onTap: () {
                     Get.to(() => const OrganizerProfileScreen());
                   },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      DecoratedBox(
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.transparent,
-                            border: Border.all(
-                                color: const Color.fromARGB(255, 142, 133, 133),
-                                width: 2)),
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: CircleAvatar(
-                            radius: 50,
-                            backgroundImage: NetworkImage(
-                                'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80'),
+                  child: Obx(
+                    () => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        DecoratedBox(
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.transparent,
+                              border: Border.all(
+                                  color:
+                                      const Color.fromARGB(255, 142, 133, 133),
+                                  width: 2)),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: CircleAvatar(
+                              radius: 50,
+                              backgroundImage: NetworkImage(
+                                  'https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80'),
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        'Bhavesh Pant',
-                        style: Get.textTheme.headlineMedium?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400,
-                            fontSize: 22),
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        'bhavesh.pant@nileegames.com',
-                        style: Get.textTheme.labelMedium?.copyWith(
-                            color: const Color.fromARGB(255, 200, 189, 189),
-                            fontWeight: FontWeight.w400),
-                      ),
-                    ],
+                        const SizedBox(height: 20),
+                        Text(
+                          controller.user.value.fullName,
+                          style: Get.textTheme.headlineMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w400,
+                              fontSize: 22),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          controller.user.value.email,
+                          style: Get.textTheme.labelMedium?.copyWith(
+                              color: const Color.fromARGB(255, 200, 189, 189),
+                              fontWeight: FontWeight.w400),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 DrawerCard(
@@ -251,9 +258,23 @@ class AppDrawer extends StatelessWidget {
                 DrawerCard(
                   title: 'Disclaimer',
                   onTap: () {
-                    Get.to(() => const LegalViewScreen());
+                    final controller = Get.find<Preferences>();
+                    controller.clear();
+                    FirebaseAuth.instance.signOut();
+                    Get.offAll(() => const SplashScreen());
+                    // Get.to(() => const LegalViewScreen());
                   },
                   icon: Icons.disc_full,
+                ),
+                DrawerCard(
+                  title: 'Log out',
+                  onTap: () {
+                    final controller = Get.find<Preferences>();
+                    controller.clear();
+                    Get.offAll(() => const SplashScreen());
+                    // Get.to(() => const LegalViewScreen());
+                  },
+                  icon: Icons.logout,
                 ),
               ],
             ),

@@ -27,7 +27,7 @@ class DropDownWidget extends StatelessWidget {
             Get.bottomSheet(BottomSheet(
                 onClosing: () {},
                 builder: (context) => Container(
-                      height: Get.height * 0.3,
+                      // height: Get.height * 0.31,
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(9)),
@@ -48,8 +48,8 @@ class DropDownWidget extends StatelessWidget {
                                   return ListTile(
                                     contentPadding: EdgeInsets.zero,
                                     leading: Radio(
-                                      value: true,
-                                      groupValue: selectedValue == items[index],
+                                      value: items[index].toUpperCase(),
+                                      groupValue: selectedValue,
                                       onChanged: (e) => onSelect(items[index]),
                                     ),
                                     onTap: () {

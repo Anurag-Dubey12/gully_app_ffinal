@@ -47,9 +47,37 @@ class _DateTimesCardState extends State<DateTimesCard> {
           shrinkWrap: true,
           controller: scrollController,
           itemBuilder: (context, index) {
+            if (index == dateTimes.length) {
+              return SizedBox(
+                child: GestureDetector(
+                  onTap: () async {
+                    final res = await showDatePicker(
+                        context: context,
+                        helpText: 'Select Tournament Date',
+                        initialEntryMode: DatePickerEntryMode.calendarOnly,
+                        initialDate: DateTime.now(),
+                        firstDate:
+                            DateTime.now().subtract(const Duration(days: 90)),
+                        lastDate: DateTime.now().add(const Duration(days: 90)));
+                    if (res != null) {
+                      controller.setSelectedDate(res);
+                      controller.getTournamentList();
+                    }
+                  },
+                  child: CircleAvatar(
+                    backgroundColor: Colors.grey.shade100,
+                    child: Icon(
+                      Icons.calendar_month,
+                      color: Colors.amber.shade500,
+                    ),
+                  ),
+                ),
+              );
+            }
             return GestureDetector(
                 onTap: () {
                   controller.setSelectedDate(dateTimes[index]);
+                  controller.getTournamentList();
                 },
                 child: Obx(
                   () => TimeCard(
@@ -60,7 +88,7 @@ class _DateTimesCardState extends State<DateTimesCard> {
                 ));
           },
           padding: const EdgeInsets.only(left: 20),
-          itemCount: dateTimes.length),
+          itemCount: dateTimes.length + 1),
     );
   }
 }

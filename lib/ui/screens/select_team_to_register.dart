@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/team_controller.dart';
+import 'package:gully_app/data/model/team_model.dart';
+import 'package:gully_app/ui/screens/add_player_to_team.dart';
 import 'package:gully_app/ui/screens/team_entry_form.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
@@ -14,6 +17,7 @@ class SelectTeamToRegister extends StatefulWidget {
 class _SelectTeamToRegisterState extends State<SelectTeamToRegister> {
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<TeamController>();
     return DecoratedBox(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -26,32 +30,52 @@ class _SelectTeamToRegisterState extends State<SelectTeamToRegister> {
           child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              title: const Text(
-                'Select your Team',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                title: const Text(
+                  'Select your Team',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              leading: const Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
-              ),
-            ),
+                leading: const BackButton(
+                  color: Colors.white,
+                )),
             body: Container(
               width: Get.width,
               // height: Get.height * 0.54,
               margin: const EdgeInsets.only(top: 10),
               color: Colors.black26,
-              child: const Padding(
-                padding: EdgeInsets.all(18.0),
-                child: Column(
-                  children: [_TeamCard(), SizedBox(height: 20), _TeamCard()],
-                ),
-              ),
+              child: Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: FutureBuilder<List<TeamModel>>(
+                      future: controller.getTeams(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
+                        if (snapshot.hasError) {
+                          return Center(
+                            child: Text('Error ${snapshot.error}}'),
+                          );
+                        }
+                        return ListView.separated(
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                            itemCount: snapshot.data?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              return _TeamCard(
+                                team: snapshot.data![index],
+                              );
+                            });
+                      })),
             ),
           ),
         ));
@@ -59,7 +83,8 @@ class _SelectTeamToRegisterState extends State<SelectTeamToRegister> {
 }
 
 class _TeamCard extends StatelessWidget {
-  const _TeamCard();
+  final TeamModel team;
+  const _TeamCard({required this.team});
 
   @override
   Widget build(BuildContext context) {
@@ -72,30 +97,60 @@ class _TeamCard extends StatelessWidget {
         padding: const EdgeInsets.all(18.0),
         child: Row(
           children: [
-            const Text(
-              'CSK',
-              style: TextStyle(fontSize: 19),
+            Text(
+              team.name,
+              style: const TextStyle(fontSize: 19),
             ),
             const Spacer(),
-            Material(
-              child: InkWell(
-                borderRadius: BorderRadius.circular(09),
-                onTap: () {
-                  Get.to(() => const TeamEntryForm());
-                },
-                child: Ink(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
+            if (team.playersCount < 15)
+              Row(
+                children: [
+                  Text('(${team.playersCount}/15)',
+                      style: const TextStyle(fontSize: 13)),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Material(
+                    child: InkWell(
                       borderRadius: BorderRadius.circular(09),
-                      color: AppTheme.secondaryYellowColor,
+                      onTap: () {
+                        Get.to(() => AddPlayersToTeam(teamId: team.id));
+                      },
+                      child: Ink(
+                          width: 30,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(09),
+                            color: AppTheme.secondaryYellowColor,
+                          ),
+                          child: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                          )),
                     ),
-                    child: const Icon(
-                      Icons.add,
-                      color: Colors.white,
-                    )),
+                  )
+                ],
               ),
-            )
+            if (team.playersCount == 15)
+              Material(
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(09),
+                  onTap: () async {
+                    await Get.to(() => const TeamEntryForm());
+                  },
+                  child: Ink(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(09),
+                        // color: AppTheme.secondaryYellowColor,
+                      ),
+                      child: const Icon(
+                        Icons.arrow_forward_ios,
+                        // color: Colors.white,
+                      )),
+                ),
+              )
           ],
         ),
       ),

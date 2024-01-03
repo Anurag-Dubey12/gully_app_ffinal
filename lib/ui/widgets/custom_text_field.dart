@@ -18,6 +18,7 @@ class CustomTextField extends StatelessWidget {
   final int? maxLines;
   final int? minLines;
 
+  final int? maxLen;
   const CustomTextField(
       {super.key,
       this.hintText,
@@ -35,7 +36,8 @@ class CustomTextField extends StatelessWidget {
       this.suffixIcon,
       this.filled,
       this.maxLines,
-      this.minLines});
+      this.minLines,
+      this.maxLen});
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +48,7 @@ class CustomTextField extends StatelessWidget {
       controller: controller,
       enabled: enabled,
       maxLines: minLines,
+      maxLength: maxLen,
       minLines: maxLines,
       readOnly: readOnly ?? false,
       onTap: onTap == null ? () {} : () => onTap!(),

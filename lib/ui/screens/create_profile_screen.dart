@@ -1,10 +1,17 @@
+import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/home_screen.dart';
 import 'package:gully_app/ui/widgets/custom_text_field.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/utils/app_logger.dart';
+import 'package:gully_app/utils/image_picker_helper.dart';
+import 'package:gully_app/utils/utils.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class CreateProfile extends StatefulWidget {
@@ -24,9 +31,19 @@ class _CreateProfileState extends State<CreateProfile>
     super.initState();
   }
 
+  XFile? _image;
+
+  pickImage() async {
+    _image = await imagePickerHelper();
+    setState(() {});
+  }
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _contactController = TextEditingController();
   bool isSelected = false;
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<AuthController>();
     return DecoratedBox(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -69,23 +86,55 @@ class _CreateProfileState extends State<CreateProfile>
                           fontWeight: FontWeight.w900),
                     ),
                     const Spacer(),
-                    const CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 40,
+                    GestureDetector(
+                      onTap: () {
+                        pickImage();
+                      },
+                      child: Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 40,
+                            backgroundColor: Colors.white,
+                            backgroundImage: _image != null
+                                ? FileImage(File(_image!.path))
+                                : null,
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.amber.shade600,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: const Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.edit,
+                                  size: 14,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                     const Spacer(),
                     // create a container sign up with google
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const CustomTextField(
+                        CustomTextField(
                           labelText: 'Name',
+                          controller: _nameController,
                         ),
                         SizedBox(
                           height: Get.height * 0.03,
                         ),
-                        const CustomTextField(
+                        CustomTextField(
                           labelText: 'Contact No',
+                          controller: _contactController,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -116,24 +165,66 @@ class _CreateProfileState extends State<CreateProfile>
                           ],
                         ),
                         const SizedBox(height: 30),
-                        PrimaryButton(onTap: () {
-                          Get.bottomSheet(
-                              BottomSheet(
-                                  onClosing: () {
-                                    log('Wants to close');
-                                  },
-                                  animationController: animationController,
-                                  enableDrag: true,
-                                  builder: (context) =>
-                                      const _OtpBottomSheet()),
-                              enableDrag: true,
-                              isScrollControlled: false,
-                              isDismissible: true,
-                              enterBottomSheetDuration:
-                                  const Duration(milliseconds: 300),
-                              exitBottomSheetDuration:
-                                  const Duration(milliseconds: 300));
-                        }),
+                        Obx(
+                          () => PrimaryButton(
+                              isLoading: controller.status.isLoading,
+                              onTap: () async {
+                                if (_image == null) {
+                                  errorSnackBar('Please select an image');
+                                  return;
+                                }
+                                if (_nameController.text.isEmpty) {
+                                  errorSnackBar('Please enter your name');
+                                  return;
+                                }
+                                if (_contactController.text.isEmpty) {
+                                  errorSnackBar(
+                                      'Please enter your contact number');
+                                  return;
+                                }
+                                if (_contactController.text.length != 10) {
+                                  errorSnackBar(
+                                      'Please enter a valid contact number');
+                                  return;
+                                }
+                                if (!_contactController.text.isPhoneNumber) {
+                                  errorSnackBar(
+                                      'Please enter a valid contact number');
+                                  return;
+                                }
+                                if (!isSelected) {
+                                  errorSnackBar(
+                                      'Please accept our terms and conditions');
+                                  return;
+                                }
+                                final base64Image =
+                                    await convertImageToBase64(_image!);
+                                logger.d(base64Image.substring(0, 100));
+                                final res = await controller.createProfile(
+                                    nickName: _nameController.text,
+                                    phoneNumber: _contactController.text,
+                                    base64: base64Image);
+                                if (res) {
+                                  Get.bottomSheet(
+                                      BottomSheet(
+                                          onClosing: () {
+                                            log('Wants to close');
+                                          },
+                                          animationController:
+                                              animationController,
+                                          enableDrag: true,
+                                          builder: (context) =>
+                                              const _OtpBottomSheet()),
+                                      enableDrag: true,
+                                      isScrollControlled: false,
+                                      isDismissible: true,
+                                      enterBottomSheetDuration:
+                                          const Duration(milliseconds: 300),
+                                      exitBottomSheetDuration:
+                                          const Duration(milliseconds: 300));
+                                }
+                              }),
+                        )
                       ],
                     ),
                     const Spacer(),
@@ -154,9 +245,42 @@ class _OtpBottomSheet extends StatefulWidget {
 
 class _OtpBottomSheetState extends State<_OtpBottomSheet> {
   var textEditingController = TextEditingController();
+  Timer? timer;
+  int countDown = 20;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+  void startTimer() {
+    countDown = 20;
+    const oneSec = Duration(seconds: 1);
+    timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (countDown == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            countDown--;
+          });
+        }
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<AuthController>();
     return SizedBox(
       width: double.infinity,
       height: Get.height / .7,
@@ -224,18 +348,20 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                           return true;
                         },
                       ),
-                      ElevatedButton(
-                        onPressed: () {},
-                        child: const Text(
-                          'Resend',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        'Resend code in 00:21',
-                        style: Get.textTheme.labelSmall,
-                      )
+                      countDown == 0
+                          ? ElevatedButton(
+                              onPressed: () {
+                                startTimer();
+                              },
+                              child: const Text(
+                                'Resend',
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            )
+                          : Text(
+                              'Resend code in 00:$countDown',
+                              style: Get.textTheme.labelSmall,
+                            )
                     ],
                   ),
                 ),
@@ -243,13 +369,20 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
             ),
             const SizedBox(height: 20),
             SizedBox(
-              width: Get.width / 2,
-              child: PrimaryButton(
-                onTap: () {
-                  Get.to(() => const HomeScreen());
-                },
-              ),
-            )
+                width: Get.width / 2,
+                child: Obx(
+                  () => PrimaryButton(
+                    title: 'Verify',
+                    isLoading: controller.status.isLoading,
+                    onTap: () async {
+                      final res = await controller.verifyOtp(
+                          otp: textEditingController.text);
+                      if (res) {
+                        Get.offAll(() => const HomeScreen());
+                      }
+                    },
+                  ),
+                ))
           ],
         ),
       ),

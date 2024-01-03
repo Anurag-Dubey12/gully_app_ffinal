@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/config/preferences.dart';
 import 'package:gully_app/ui/screens/home_screen.dart';
-import 'package:gully_app/ui/screens/signup_screen.dart';
 import 'package:gully_app/ui/screens/welcome_carosuel_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,12 +19,12 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   route() {
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () async {
       final pref = Get.find<Preferences>();
       if (pref.getToken() != null) {
         Get.offAll(() => const HomeScreen());
       } else {
-        Get.off(() => const SignUpScreen());
+        Get.off(() => const WelcomeCarouselScreen());
       }
     });
   }

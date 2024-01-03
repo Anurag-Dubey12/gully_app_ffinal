@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/current_tournament_list.dart';
 import 'package:gully_app/ui/screens/edit_tournament_screen.dart';
 import 'package:gully_app/ui/screens/organize_match.dart';
@@ -9,14 +10,9 @@ import 'package:gully_app/ui/screens/view_matchups_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 
-class OrganizerProfileScreen extends StatefulWidget {
+class OrganizerProfileScreen extends GetView<AuthController> {
   const OrganizerProfileScreen({super.key});
 
-  @override
-  State<OrganizerProfileScreen> createState() => _OrganizerProfileScreenState();
-}
-
-class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -72,74 +68,76 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Column(
-                  children: [
-                    Text(
-                      'John Doe',
-                      style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.grey[900]),
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.mail,
-                          color: Colors.grey[900],
-                          size: 15,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          'kohli239@gmail.com',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey[800]),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.location_on,
-                          color: Colors.grey[900],
-                          size: 15,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          '304/c, S.V. Road, Kandivali East',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey[800]),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.phone,
-                          color: Colors.grey[900],
-                          size: 15,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          '9855453210',
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w300,
-                              color: Colors.grey[800]),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                  ],
+                Obx(
+                  () => Column(
+                    children: [
+                      Text(
+                        controller.user.value.fullName,
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.grey[900]),
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.mail,
+                            color: Colors.grey[900],
+                            size: 15,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            controller.user.value.email,
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.grey[800]),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.location_on,
+                            color: Colors.grey[900],
+                            size: 15,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            '304/c, S.V. Road, Kandivali East',
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.grey[800]),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.phone,
+                            color: Colors.grey[900],
+                            size: 15,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            controller.user.value.phoneNumber ?? "",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w300,
+                                color: Colors.grey[800]),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                    ],
+                  ),
                 ),
                 Expanded(
                   child: Container(

@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/ui/screens/player_profile_screen.dart';
+import 'package:gully_app/ui/screens/search_places_screen.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 
 import '../theme/theme.dart';
@@ -13,127 +17,155 @@ class SelectLocationScreen extends StatefulWidget {
 }
 
 class _SelectLocationScreenState extends State<SelectLocationScreen> {
+  final Completer<GoogleMapController> _controller =
+      Completer<GoogleMapController>();
+
+  static const CameraPosition _kGooglePlex = CameraPosition(
+    target: LatLng(37.42796133580664, -122.085749655962),
+    zoom: 14.4746,
+  );
+
+  static const CameraPosition _kLake = CameraPosition(
+      bearing: 192.8334901395799,
+      target: LatLng(37.43296265331129, -122.08832357078792),
+      tilt: 59.440717697143555,
+      zoom: 19.151926040649414);
+
   @override
   Widget build(BuildContext context) {
-    return GradientBuilder(
-        child: DecoratedBox(
-      decoration: const BoxDecoration(
-        gradient: RadialGradient(colors: [
-          Color(0xff5FBCFF),
-          Color.fromARGB(34, 95, 188, 255),
-        ], stops: [
-          0.2,
-          0.9,
-        ], center: Alignment.topLeft),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(children: [
-          Positioned(
-              top: 0,
-              child: SizedBox(
-                width: Get.width,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(left: 10, top: 30),
-                        child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: BackButton(
-                              color: Colors.white,
-                            )),
-                      ),
-                      Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: Get.width * 0.07,
+    return PopScope(
+      canPop: false,
+      child: GradientBuilder(
+          child: DecoratedBox(
+        decoration: const BoxDecoration(
+          gradient: RadialGradient(colors: [
+            Color(0xff5FBCFF),
+            Color.fromARGB(34, 95, 188, 255),
+          ], stops: [
+            0.2,
+            0.9,
+          ], center: Alignment.topLeft),
+        ),
+        child: PopScope(
+          canPop: false,
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Stack(children: [
+              Positioned(
+                  top: 0,
+                  child: SizedBox(
+                    width: Get.width,
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(left: 10, top: 30),
+                            child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: BackButton(
+                                  color: Colors.white,
+                                )),
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Center(
-                                child: Text('Select a location',
-                                    style: Get.textTheme.headlineSmall
-                                        ?.copyWith(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold)),
+                          Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: Get.width * 0.07,
                               ),
-                              SizedBox(height: Get.height * 0.04),
-                            ],
-                          )),
-                      // Add location search bar white container with text field and search icon
-                      const _SearchBar(),
-                      Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: InkWell(
-                          onTap: () {
-                            Get.to(() => const PlayerProfileScreen());
-                          },
-                          child: Container(
-                            width: Get.width,
-                            height: Get.height * 0.2,
-                            color: Colors.grey[200],
-                            child: const Center(
-                                child: Text('TAP HERE',
-                                    style: TextStyle(fontSize: 30),
-                                    textAlign: TextAlign.center)),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Center(
+                                    child: Text('Select a location',
+                                        style: Get.textTheme.headlineSmall
+                                            ?.copyWith(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold)),
+                                  ),
+                                  SizedBox(height: Get.height * 0.04),
+                                ],
+                              )),
+                          // Add location search bar white container with text field and search icon
+                          const _SearchBar(),
+                          Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: InkWell(
+                              onTap: () {
+                                Get.to(() => const PlayerProfileScreen());
+                              },
+                              child: SizedBox(
+                                width: Get.width,
+                                height: Get.height * 0.2,
+                                // color: Colors.grey[200],
+                                child: GoogleMap(
+                                  mapType: MapType.hybrid,
+                                  initialCameraPosition: _kGooglePlex,
+                                  onMapCreated:
+                                      (GoogleMapController controller) {
+                                    _controller.complete(controller);
+                                  },
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 28, vertical: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Saved Locations',
-                                style: Get.textTheme.headlineMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black)),
-                            ListView.separated(
-                                itemCount: 4,
-                                shrinkWrap: true,
-                                padding:
-                                    const EdgeInsets.only(bottom: 30, top: 30),
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(height: 20),
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(18.0),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text('Thakur Stadium',
-                                              style: Get.textTheme.bodyMedium
-                                                  ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: Colors.black)),
-                                          const SizedBox(height: 10),
-                                          Text('409/c, D.S Road',
-                                              style: Get.textTheme.labelMedium
-                                                  ?.copyWith(
-                                                      color: Colors.grey)),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                })
-                          ],
-                        ),
-                      )
-                    ]),
-              ))
-        ]),
-      ),
-    ));
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 28, vertical: 10),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Saved Locations',
+                                    style: Get.textTheme.headlineMedium
+                                        ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black)),
+                                ListView.separated(
+                                    itemCount: 4,
+                                    shrinkWrap: true,
+                                    padding: const EdgeInsets.only(
+                                        bottom: 30, top: 30),
+                                    separatorBuilder: (context, index) =>
+                                        const SizedBox(height: 20),
+                                    itemBuilder: (context, index) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(18.0),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text('Thakur Stadium',
+                                                  style: Get
+                                                      .textTheme.bodyMedium
+                                                      ?.copyWith(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black)),
+                                              const SizedBox(height: 10),
+                                              Text('409/c, D.S Road',
+                                                  style: Get
+                                                      .textTheme.labelMedium
+                                                      ?.copyWith(
+                                                          color: Colors.grey)),
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    })
+                              ],
+                            ),
+                          )
+                        ]),
+                  )),
+            ]),
+          ),
+        ),
+      )),
+    );
   }
 }
 
@@ -165,6 +197,9 @@ class _SearchBar extends StatelessWidget {
             ),
             Expanded(
               child: TextField(
+                onTap: () {
+                  Get.to(() => const SearchPlacesScreen());
+                },
                 decoration: InputDecoration(
                   hintText: 'Search for a location',
                   hintStyle: Get.textTheme.bodyLarge?.copyWith(

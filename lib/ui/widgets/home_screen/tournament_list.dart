@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 
 import 'current_tournament_card.dart';
@@ -27,9 +28,11 @@ class _TournamentListState extends State<TournamentList> {
       child: SingleChildScrollView(
         child: Obx(() {
           if (isDateTimeToday(controller.selectedDate.value)) {
-            return const PastTournamentMatchCard();
-          } else if (isDateTimeInPast(controller.selectedDate.value)) {
+            logger.i('isDateTimeToday ${controller.selectedDate.value}');
             return const CurrentTournamentCard();
+          } else if (isDateTimeInPast(controller.selectedDate.value)) {
+            logger.i('isDateTimeInPast ${controller.selectedDate.value}');
+            return const PastTournamentMatchCard();
           } else {
             return const FutureTournamentCard();
           }

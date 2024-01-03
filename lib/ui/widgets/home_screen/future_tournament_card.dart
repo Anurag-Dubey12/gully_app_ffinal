@@ -1,13 +1,78 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/model/tournament_model.dart';
 
+import '../../../data/controller/tournament_controller.dart';
+import '../../../utils/date_time_helpers.dart';
 import '../../screens/register_team.dart';
 import '../../theme/theme.dart';
+import 'no_tournament_card.dart';
 
-class FutureTournamentCard extends GetView {
+class FutureTournamentCard extends GetView<TournamentController> {
   const FutureTournamentCard({
     super.key,
   });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: Get.height * 0.54,
+      child: Obx(() {
+        if (controller.tournamentList.isEmpty) {
+          return const NoTournamentCard();
+        } else {
+          return ListView.builder(
+              itemCount: controller.tournamentList.length,
+              shrinkWrap: true,
+              itemBuilder: (context, snapshot) {
+                return _Card(
+                  tournament: controller.tournamentList[snapshot],
+                );
+              });
+        }
+      }),
+    );
+  }
+}
+
+class _Card extends StatefulWidget {
+  final TournamentModel tournament;
+  const _Card({
+    required this.tournament,
+  });
+
+  @override
+  State<_Card> createState() => _CardState();
+}
+
+class _CardState extends State<_Card> {
+  late StreamController<String> _timeStreamController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Replace this with the actual date you get from the server
+
+    _timeStreamController = StreamController<String>();
+    _updateTime();
+    // Update the time every second
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      _updateTime();
+    });
+  }
+
+  void _updateTime() {
+    Duration remainingTime =
+        widget.tournament.tournamentEndDateTime.difference(DateTime.now());
+
+    String formattedTime =
+        '${remainingTime.inDays}d:${remainingTime.inHours.remainder(24)}h:${remainingTime.inMinutes.remainder(60)}m:${remainingTime.inSeconds.remainder(60)}s';
+
+    _timeStreamController.add(formattedTime);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +101,7 @@ class FutureTournamentCard extends GetView {
           children: [
             const SizedBox(height: 7),
             Text(
-              'Premier League | Cricket Tournament',
+              widget.tournament.tournamentName,
               style: Get.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -49,17 +114,21 @@ class FutureTournamentCard extends GetView {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Date: 04 July 2023',
+                    'Date: ${formatDateTime('dd MMM yyy', widget.tournament.tournamentStartDateTime)}',
                     style: Get.textTheme.labelMedium?.copyWith(
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-                  Text(
-                    'Time Left: 5d:13h:5m:23s',
-                    style: Get.textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
+                  StreamBuilder<Object>(
+                      stream: _timeStreamController.stream,
+                      builder: (context, snapshot) {
+                        return Text(
+                          'Time Left: ${snapshot.data}',
+                          style: Get.textTheme.labelMedium?.copyWith(
+                            fontWeight: FontWeight.w400,
+                          ),
+                        );
+                      }),
                 ],
               ),
             ),
@@ -93,22 +162,22 @@ class FutureTournamentCard extends GetView {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Row(
+                  Row(
                     children: [
                       Text(
-                        'Team: 7/10',
-                        style: TextStyle(
+                        'Team: ${widget.tournament.registeredTeamsCount}/${widget.tournament.tournamentLimit}',
+                        style: const TextStyle(
                             color: Colors.black,
                             fontSize: 18,
                             fontWeight: FontWeight.w500),
                       ),
-                      SizedBox(width: 4),
-                      Icon(Icons.info_outline_rounded,
+                      const SizedBox(width: 4),
+                      const Icon(Icons.info_outline_rounded,
                           color: Colors.grey, size: 18)
                     ],
                   ),
                   Text(
-                    'Entry Fees: ₹900/-',
+                    'Entry Fees: ₹${widget.tournament.fees}/-',
                     style: Get.textTheme.labelMedium,
                   )
                 ],

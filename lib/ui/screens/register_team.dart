@@ -27,21 +27,19 @@ class _RegisterTeamState extends State<RegisterTeam> {
           child: Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              title: const Text(
-                'Register Team',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                title: const Text(
+                  'Register Team',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              leading: const Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
-              ),
-            ),
+                leading: const BackButton(
+                  color: Colors.white,
+                )),
             body: Padding(
               padding: const EdgeInsets.all(18.0),
               child: Column(

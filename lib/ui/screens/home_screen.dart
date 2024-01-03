@@ -4,11 +4,12 @@ import 'package:gully_app/ui/screens/create_tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/app_drawer.dart';
 import 'package:gully_app/ui/widgets/home_screen/date_times_card.dart';
+import 'package:gully_app/ui/widgets/home_screen/sports_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/utils/geo_locator_helper.dart';
 
 import '../widgets/arc_clipper.dart';
-import '../widgets/home_screen/sports_card.dart';
 import '../widgets/home_screen/top_header.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,6 +21,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int selectedDate = 0;
+  @override
+  void initState() {
+    super.initState();
+    determinePosition();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         height: 20,
                       ),
                       SizedBox(
-                        height: Get.height * 0.10,
+                        height: 104,
                         child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,

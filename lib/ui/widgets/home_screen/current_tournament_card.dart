@@ -1,17 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/ui/widgets/home_screen/no_tournament_card.dart';
 
+import '../../../data/model/tournament_model.dart';
+import '../../../utils/date_time_helpers.dart';
 import '../../theme/theme.dart';
 import '../dialogs/current_score_dialog.dart';
 
-class CurrentTournamentCard extends StatelessWidget {
+class CurrentTournamentCard extends GetView<TournamentController> {
   const CurrentTournamentCard({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    return SizedBox(
+      height: Get.height * 0.54,
+      child: Obx(() {
+        if (controller.tournamentList.isEmpty) {
+          return const NoTournamentCard();
+        } else {
+          return ListView.builder(
+              itemCount: controller.tournamentList.length,
+              shrinkWrap: true,
+              itemBuilder: (context, snapshot) {
+                return _Card(
+                  tournament: controller.tournamentList[snapshot],
+                );
+              });
+        }
+      }),
+    );
+  }
+}
+
+class _Card extends StatelessWidget {
+  final TournamentModel tournament;
+  const _Card({
+    required this.tournament,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Padding(
+      key: super.key,
       padding: const EdgeInsets.all(8.0),
       child: Container(
         width: Get.width,
@@ -36,7 +69,7 @@ class CurrentTournamentCard extends StatelessWidget {
           children: [
             const SizedBox(height: 7),
             Text(
-              'Premier League | Cricket Tournament',
+              tournament.tournamentName,
               style: Get.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -49,7 +82,7 @@ class CurrentTournamentCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Date: 04 July 2023',
+                    'Date: ${formatDateTime('dd MMM yyy', tournament.tournamentStartDateTime)}',
                     style: Get.textTheme.labelMedium?.copyWith(
                       fontWeight: FontWeight.w400,
                     ),

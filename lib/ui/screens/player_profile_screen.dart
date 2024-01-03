@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/add_team.dart';
 import 'package:gully_app/ui/screens/current_tournament_list.dart';
-
 import 'package:gully_app/ui/screens/select_team_to_view_history.dart';
 import 'package:gully_app/ui/screens/view_my_team.dart';
 import 'package:gully_app/ui/screens/view_opponent_team.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 
-class PlayerProfileScreen extends StatefulWidget {
+class PlayerProfileScreen extends GetView<AuthController> {
   const PlayerProfileScreen({super.key});
 
-  @override
-  State<PlayerProfileScreen> createState() => _PlayerProfileScreenState();
-}
-
-class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -74,7 +69,7 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                 Column(
                   children: [
                     Text(
-                      'John Doe',
+                      controller.user.value.fullName,
                       style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w800,
@@ -91,7 +86,7 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                         ),
                         const SizedBox(width: 5),
                         Text(
-                          'kohli239@gmail.com',
+                          controller.user.value.email,
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w300,
@@ -129,7 +124,7 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                         ),
                         const SizedBox(width: 5),
                         Text(
-                          '9855453210',
+                          controller.user.value.phoneNumber ?? "",
                           style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w300,

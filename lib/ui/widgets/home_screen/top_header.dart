@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/auth_controller.dart';
 
 import '../../screens/notification_screen.dart';
 import '../../screens/player_profile_screen.dart';
 
-class TopHeader extends StatelessWidget {
+class TopHeader extends GetView<AuthController> {
   const TopHeader({super.key});
 
   @override
@@ -23,12 +24,20 @@ class TopHeader extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Bhavesh Pant',
-                  style: Get.textTheme.titleLarge?.copyWith(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontStyle: FontStyle.italic),
+                GestureDetector(
+                  onTap: () {
+                    controller.getUser();
+                  },
+                  child: Obx(() => SizedBox(
+                        width: Get.width * 0.5,
+                        child: Text(
+                          controller.user.value.fullName,
+                          style: Get.textTheme.titleLarge?.copyWith(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontStyle: FontStyle.italic),
+                        ),
+                      )),
                 ),
                 Text('Select Location',
                     style: Get.textTheme.labelSmall?.copyWith(

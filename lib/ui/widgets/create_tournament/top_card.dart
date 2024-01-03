@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/utils/app_logger.dart';
-import 'package:intl/intl.dart';
 
 import 'select_from_to_card.dart';
 
 class TopCard extends StatefulWidget {
   final Function onFromChanged;
   final Function onToChanged;
+  final DateTime? from;
+  final DateTime? to;
   final TextEditingController controller;
-  final TextEditingController fromController;
-  final TextEditingController toController;
+
   const TopCard(
       {super.key,
       required this.controller,
-      required this.fromController,
-      required this.toController,
       required this.onFromChanged,
-      required this.onToChanged});
+      required this.onToChanged,
+      this.from,
+      this.to});
 
   @override
   State<TopCard> createState() => _TopCardState();
@@ -78,21 +78,19 @@ class _TopCardState extends State<TopCard> {
 
                     setState(() {
                       from = e;
-                      widget.fromController.text =
-                          DateFormat('dd-MM-yy').format(e);
+
                       widget.onFromChanged(e);
                     });
                     logger.i("86");
                   },
                 );
               },
-              from: from,
-              to: to,
+              from: widget.from,
+              to: widget.to,
               onToChanged: (e) {
                 setState(() {
                   to = e;
                   widget.onToChanged(e);
-                  widget.toController.text = DateFormat('dd-MM-yy').format(e);
                 });
               },
             )

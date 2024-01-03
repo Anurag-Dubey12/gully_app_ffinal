@@ -1,9 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
-import 'package:gully_app/utils/app_logger.dart';
+import 'package:gully_app/ui/screens/home_screen.dart';
 
 class SignUpScreen extends GetView<AuthController> {
   const SignUpScreen({super.key});
@@ -64,48 +62,23 @@ class SignUpScreen extends GetView<AuthController> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SocialButton(
-                      image: 'google_icon.png',
-                      title: 'Sign up with Google',
-                      bgColor: Colors.white,
-                      color: const Color.fromRGBO(0, 0, 0, 0.54),
-                      onClick: () async {
-                        try {
-                          logger.i("97");
-                          final GoogleSignInAccount? googleUser =
-                              await GoogleSignIn().signIn();
-
-                          logger.i("81");
-                          // Obtain the auth details from the request
-                          logger.i("message");
-                          final GoogleSignInAuthentication? googleAuth =
-                              await googleUser?.authentication;
-                          logger.i("message");
-                          // Create a new credential
-                          final credential = GoogleAuthProvider.credential(
-                            accessToken: googleAuth?.accessToken,
-                            idToken: googleAuth?.idToken,
+                    Obx(
+                      () {
+                        if (controller.status.isLoading) {
+                          return const CircularProgressIndicator();
+                        } else {
+                          return SocialButton(
+                            image: 'google_icon.png',
+                            title: 'Sign up with Google',
+                            bgColor: Colors.white,
+                            color: const Color.fromRGBO(0, 0, 0, 0.54),
+                            onClick: () async {
+                              final res = await controller.loginViaGoogle();
+                              if (res) {
+                                Get.offAll(() => const HomeScreen());
+                              }
+                            },
                           );
-
-                          try {
-                            logger.i("Signing in");
-                            // Once signed in, return the UserCredential
-                            final r = await FirebaseAuth.instance
-                                .signInWithCredential(credential);
-                            logger.f("${r.user}");
-                            logger.f("${r.credential?.accessToken}");
-
-                            controller.loginViaGoogle(r.user!.displayName!,
-                                r.user!.email!, r.credential!.accessToken!);
-                          } on FirebaseAuthException catch (e) {
-                            logger.e(e.message);
-                            rethrow;
-                          } catch (e) {
-                            logger.e(e.toString());
-                            rethrow;
-                          }
-                        } catch (e) {
-                          logger.e(e);
                         }
                       },
                     ),

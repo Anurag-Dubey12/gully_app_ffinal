@@ -11,6 +11,13 @@ class WelcomeCarouselScreen extends StatefulWidget {
 
 class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
   @override
+  void initState() {
+    super.initState();
+    Future.delayed(const Duration(seconds: 2),
+        () => {Get.off(() => const SignUpScreen())});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => Get.to(() => const SignUpScreen()),

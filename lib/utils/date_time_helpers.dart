@@ -6,10 +6,9 @@ bool isDateTimeInPast(DateTime dateTime) {
 }
 
 bool isDateTimeToday(DateTime dateTime) {
-  final now = DateTime.now();
-  final today = DateTime(now.year, now.month, now.day);
-  final tomorrow = today.add(const Duration(days: 1));
-  return dateTime.isAfter(today) && dateTime.isBefore(tomorrow);
+  final now = DateFormat('yyyy-MM-dd').parse(DateTime.now().toString());
+  final parsedDate = DateFormat('yyyy-MM-dd').parse(dateTime.toString());
+  return now == parsedDate;
 }
 
 bool isDateTimeInFuture(DateTime dateTime) {
@@ -20,11 +19,13 @@ bool isDateTimeInFuture(DateTime dateTime) {
 List<DateTime> getDateList() {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
+
   final last7Days =
       List.generate(7, (index) => today.subtract(Duration(days: index + 1)));
   final next4Days =
       List.generate(4, (index) => today.add(Duration(days: index + 1)));
 
+  last7Days.sort((a, b) => a.compareTo(b));
   return [...last7Days, today, ...next4Days];
 }
 
@@ -38,6 +39,10 @@ String getDayName(DateTime dateTime) {
     final formatter = DateFormat('d MMM');
     return formatter.format(dateTime);
   }
+}
+
+String formatDateTime(String format, DateTime dateTime) {
+  return DateFormat(format).format(dateTime);
 }
 
 bool areDatesEqual(DateTime dateTime1, DateTime dateTime2) {

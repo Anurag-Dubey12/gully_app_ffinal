@@ -41,4 +41,17 @@ class TournamentController extends GetxController {
       return false;
     }
   }
+
+  Future<List<TournamentModel>> getOrganizerTournamentList() async {
+    try {
+      final response = await tournamentApi.getOrganizerTournamentList();
+
+      return response.data!['tournamentList']
+          .map<TournamentModel>((e) => TournamentModel.fromJson(e))
+          .toList();
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
 }

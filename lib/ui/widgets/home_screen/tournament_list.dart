@@ -8,18 +8,12 @@ import 'current_tournament_card.dart';
 import 'future_tournament_card.dart';
 import 'past_tournament_card.dart';
 
-class TournamentList extends StatefulWidget {
+class TournamentList extends GetView<TournamentController> {
   final int selectedDate;
   const TournamentList({super.key, required this.selectedDate});
 
   @override
-  State<TournamentList> createState() => _TournamentListState();
-}
-
-class _TournamentListState extends State<TournamentList> {
-  @override
   Widget build(BuildContext context) {
-    final controller = Get.find<TournamentController>();
     return Container(
       width: Get.width,
       height: Get.height * 0.54,

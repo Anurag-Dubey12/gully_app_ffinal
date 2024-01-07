@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/add_team.dart';
 import 'package:gully_app/ui/screens/current_tournament_list.dart';
+import 'package:gully_app/ui/screens/organizer_profile.dart';
 import 'package:gully_app/ui/screens/select_team_to_view_history.dart';
 import 'package:gully_app/ui/screens/view_my_team.dart';
 import 'package:gully_app/ui/screens/view_opponent_team.dart';
@@ -279,7 +280,9 @@ class _RequestsBottomSheetState extends State<RequestsBottomSheet> {
                   itemBuilder: (context, snapshot) {
                     return InkWell(
                       onTap: () {
-                        Get.to(() => const CurrentTournamentListScreen());
+                        Get.to(() => const CurrentTournamentListScreen(
+                              redirectScreen: OrganizerProfileScreen(),
+                            ));
                       },
                       child: Container(
                         decoration: BoxDecoration(

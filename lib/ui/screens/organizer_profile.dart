@@ -165,8 +165,9 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             ProfileTileCard(
                               text: 'Current Tournament',
                               onTap: () {
-                                Get.to(
-                                    () => const CurrentTournamentListScreen());
+                                Get.to(() => const CurrentTournamentListScreen(
+                                      redirectScreen: OrganizerProfileScreen(),
+                                    ));
                               },
                               subTrailingWidget:
                                   Text('2/13', style: Get.textTheme.bodyLarge),
@@ -319,7 +320,9 @@ class _RequestsBottomSheetState extends State<RequestsBottomSheet> {
                   itemBuilder: (context, snapshot) {
                     return InkWell(
                       onTap: () {
-                        Get.to(() => const CurrentTournamentListScreen());
+                        Get.to(() => const CurrentTournamentListScreen(
+                              redirectScreen: OrganizerProfileScreen(),
+                            ));
                       },
                       child: Container(
                         decoration: BoxDecoration(

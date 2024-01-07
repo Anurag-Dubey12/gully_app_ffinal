@@ -36,7 +36,6 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
 class _Card extends StatelessWidget {
   final TournamentModel tournament;
   const _Card({
-    super.key,
     required this.tournament,
   });
 

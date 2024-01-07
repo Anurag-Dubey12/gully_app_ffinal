@@ -9,10 +9,10 @@ class SearchPlacesScreen extends StatefulWidget {
   final String? title;
 
   @override
-  _SearchPlacesScreenState createState() => _SearchPlacesScreenState();
+  SearchPlacesScreenState createState() => SearchPlacesScreenState();
 }
 
-class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
+class SearchPlacesScreenState extends State<SearchPlacesScreen> {
   TextEditingController controller = TextEditingController();
 
   @override
@@ -49,9 +49,7 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
         debounceTime: 400,
         countries: const ["in", "fr"],
         isLatLngRequired: false,
-        getPlaceDetailWithLatLng: (Prediction prediction) {
-          print("placeDetails${prediction.lat}");
-        },
+        getPlaceDetailWithLatLng: (Prediction prediction) {},
 
         itemClick: (Prediction prediction) {
           controller.text = prediction.description ?? "";

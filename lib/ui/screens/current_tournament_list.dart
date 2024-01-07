@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/organize_match.dart';
+import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/data/model/tournament_model.dart';
 
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
-class CurrentTournamentListScreen extends StatefulWidget {
-  const CurrentTournamentListScreen({super.key});
+class CurrentTournamentListScreen extends GetView<TournamentController> {
+  final Widget redirectScreen;
+  const CurrentTournamentListScreen({super.key, required this.redirectScreen});
 
-  @override
-  State<CurrentTournamentListScreen> createState() =>
-      _CurrentTournamentListScreenState();
-}
-
-class _CurrentTournamentListScreenState
-    extends State<CurrentTournamentListScreen> {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -28,83 +23,93 @@ class _CurrentTournamentListScreenState
         ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: Stack(children: [
-            ClipPath(
-              clipper: ArcClipper(),
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: const RadialGradient(
-                    colors: [
-                      Color(0xff368EBF),
-                      AppTheme.primaryColor,
+          body: SafeArea(
+            child: Stack(children: [
+              ClipPath(
+                clipper: ArcClipper(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: const RadialGradient(
+                      colors: [
+                        Color(0xff368EBF),
+                        AppTheme.primaryColor,
+                      ],
+                      center: Alignment(-0.4, -0.8),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                          color: AppTheme.secondaryYellowColor.withOpacity(0.3),
+                          blurRadius: 20,
+                          spreadRadius: 2,
+                          offset: const Offset(0, 70))
                     ],
-                    center: Alignment(-0.4, -0.8),
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                        color: AppTheme.secondaryYellowColor.withOpacity(0.3),
-                        blurRadius: 20,
-                        spreadRadius: 2,
-                        offset: const Offset(0, 70))
-                  ],
-                ),
-                width: double.infinity,
-              ),
-            ),
-            Positioned(
-              top: 0,
-              child: SizedBox(
-                width: Get.width,
-                child: Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 30, top: 30),
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: BackButton(
-                            color: Colors.white,
-                          )),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Get.width * 0.07,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Current Tournament',
-                              style: Get.textTheme.headlineLarge?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                          SizedBox(height: Get.height * 0.02),
-                          ListView.separated(
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(height: 18),
-                              shrinkWrap: true,
-                              itemCount: 4,
-                              itemBuilder: (context, index) {
-                                return const _TeamCard();
-                              }),
-                        ],
-                      ),
-                    ),
-                  ],
+                  width: double.infinity,
                 ),
               ),
-            )
-          ]),
+              Positioned(
+                top: 0,
+                child: SizedBox(
+                  width: Get.width,
+                  child: Column(
+                    children: [
+                      AppBar(
+                        backgroundColor: Colors.transparent,
+                        elevation: 0,
+                        title: Text('Current Tournament',
+                            style: Get.textTheme.headlineMedium?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
+                        leading: const BackButton(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Get.width * 0.07,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(height: Get.height * 0.02),
+                            FutureBuilder<List<TournamentModel>>(
+                                future: controller.getOrganizerTournamentList(),
+                                builder: (context, snapshot) {
+                                  return ListView.separated(
+                                      separatorBuilder: (context, index) =>
+                                          const SizedBox(height: 18),
+                                      shrinkWrap: true,
+                                      itemCount: snapshot.data?.length ?? 0,
+                                      itemBuilder: (context, index) {
+                                        return _Card(
+                                          tournament: snapshot.data![index],
+                                          redirectScreen: redirectScreen,
+                                        );
+                                      });
+                                }),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ]),
+          ),
         ));
   }
 }
 
-class _TeamCard extends StatelessWidget {
-  const _TeamCard();
+class _Card extends StatelessWidget {
+  final TournamentModel tournament;
+  final Widget redirectScreen;
+  const _Card({required this.tournament, required this.redirectScreen});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => const SelectOrganizeTeam());
+        Get.to(() => redirectScreen);
       },
       child: Container(
         width: Get.width,
@@ -131,9 +136,9 @@ class _TeamCard extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                'Black Panther',
+                tournament.tournamentName,
                 style: Get.textTheme.titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w300, fontSize: 19),
+                    ?.copyWith(fontWeight: FontWeight.w600, fontSize: 19),
               ),
               const Spacer(),
             ],

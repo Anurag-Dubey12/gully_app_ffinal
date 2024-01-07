@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/api/team_api.dart';
+import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 
 import '/config/api_client.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
         Bind.lazyPut<TeamApi>(() => TeamApi(repo: Get.find())),
         Bind.lazyPut<TeamController>(() => TeamController(repo: Get.find())),
         Bind.lazyPut<AuthController>(() => AuthController(repo: Get.find())),
+        Bind.put<ScoreBoardController>(ScoreBoardController()),
         Bind.lazyPut<TournamentController>(
             () => TournamentController(Get.find())),
       ],

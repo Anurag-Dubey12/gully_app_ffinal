@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/ui/screens/choose_lang_screen.dart';
 import 'package:gully_app/ui/screens/signup_screen.dart';
 
 class WelcomeCarouselScreen extends StatefulWidget {
@@ -14,7 +15,7 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
   void initState() {
     super.initState();
     Future.delayed(const Duration(seconds: 2),
-        () => {Get.off(() => const SignUpScreen())});
+        () => {Get.off(() => const ChooseLanguageScreen())});
   }
 
   @override

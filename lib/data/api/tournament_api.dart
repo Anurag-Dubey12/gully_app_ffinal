@@ -34,4 +34,13 @@ class TournamentApi {
 
     return ApiResponse.fromJson(response.body);
   }
+
+  Future<ApiResponse> getOrganizerTournamentList() async {
+    var response = await repo.get('/organizer/profile/currentTournament/');
+    if (!response.isOk) {
+      throw response.body['error'] ?? 'Unable to Process Request';
+    }
+
+    return ApiResponse.fromJson(response.body);
+  }
 }

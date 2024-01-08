@@ -15,7 +15,7 @@ OverModel _$OverModelFromJson(Map<String, dynamic> json) => OverModel(
       wicketType: json['wicketType'] as String?,
       ball: json['ball'] as int,
       run: json['run'] as int,
-      wicket: json['wicket'] as int,
+      wickets: json['wickets'] as int,
       extra: json['extra'] as int,
       total: json['total'] as int,
       events: (json['events'] as List<dynamic>)
@@ -27,7 +27,7 @@ Map<String, dynamic> _$OverModelToJson(OverModel instance) => <String, dynamic>{
       'over': instance.over,
       'ball': instance.ball,
       'run': instance.run,
-      'wicket': instance.wicket,
+      'wickets': instance.wickets,
       'extra': instance.extra,
       'total': instance.total,
       'events': instance.events.map((e) => _$EventTypeEnumMap[e]!).toList(),

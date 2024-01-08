@@ -1,4 +1,6 @@
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
+import 'package:gully_app/data/model/bowling_model.dart';
+import 'package:gully_app/data/model/extras_model.dart';
 import 'package:gully_app/data/model/overs_model.dart';
 import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
@@ -7,15 +9,20 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'scoreboard_model.g.dart';
 
-@JsonSerializable(explicitToJson: true)
+@JsonSerializable(explicitToJson: true, createPerFieldToJson: true)
 class ScoreboardModel {
   final TeamModel team1;
   final TeamModel team2;
   final String matchId;
+
+  List<String> lastOvers;
   @JsonKey(
     includeToJson: true,
+    name: 'extras',
   )
-  List<String> lastOvers;
+  final ExtraModel _extras =
+      ExtraModel(wides: 0, noBalls: 0, byes: 0, legByes: 0, penalty: 0);
+  int ballsToBowl = 6;
   int currentOver = 0;
   int currentBall = 0;
   int currentInnings = 0;
@@ -25,8 +32,8 @@ class ScoreboardModel {
   late String _bowlerId;
   late String _strikerId;
   late String _nonStrikerId;
-
   Map<String, OverModel> overHistory = {};
+
   ScoreboardModel(
       {required this.team1,
       required this.team2,
@@ -75,12 +82,32 @@ class ScoreboardModel {
     }
   }
 
-  PlayerModel get bowler {
+  BowlingModel get bowler {
     if (currentInnings == 1) {
-      return team2.players!.firstWhere((element) => element.id == _bowlerId);
+      return team2.players!
+          .firstWhere((element) => element.id == _bowlerId)
+          .bowling;
     } else {
-      return team1.players!.firstWhere((element) => element.id == _bowlerId);
+      return team1.players!
+          .firstWhere((element) => element.id == _bowlerId)
+          .bowling;
     }
+  }
+
+  String get bowlerName {
+    if (currentInnings == 1) {
+      return team2.players!
+          .firstWhere((element) => element.id == _bowlerId)
+          .name;
+    } else {
+      return team1.players!
+          .firstWhere((element) => element.id == _bowlerId)
+          .name;
+    }
+  }
+
+  ExtraModel get currentExtras {
+    return _extras;
   }
 
   double get currentRunRate {
@@ -97,7 +124,7 @@ class ScoreboardModel {
         over: 1,
         ball: 1,
         run: 0,
-        wicket: 0,
+        wickets: 0,
         extra: 0,
         total: 0,
         events: [],
@@ -107,40 +134,25 @@ class ScoreboardModel {
   }
 
   void _incrementBall() {
-    // Check if the decimal part is exactly 0.5
-    if ((bowler.bowling.overs % 1) == 0.6) {
-      // Increment the overs by 0.5 to make it the next whole number
-      bowler.bowling.overs += 0.6;
-    } else {
-      // Increment the overs by 0.1
-      bowler.bowling.overs += 0.1;
-    }
-    bowler.bowling.overs = (bowler.bowling.overs * 10).round() / 10;
-
     currentBall++;
-  }
-
-  void _decrementBall() {
-    currentBall--;
-    // handle case when currentBall goes to -1 and currentOver is not 0
-    if (currentBall == -1 && currentOver > 0) {
-      currentBall = 5;
-      currentOver -= 1;
-    }
-
-// handle case when currentBall goes to -1 and currentOver is 0
-    if (currentBall == -1 && currentOver == 0) {
-      currentBall = 0;
-    }
   }
 
   void addRuns(int runs, {List<EventType>? events}) {
     events ??= [];
     int extraRuns = 0;
-    String key = '${lastBall.over - 1}.${lastBall.ball}';
-    int ball = currentBall;
-    int over = currentOver + 1;
+    String key = '$currentOver.${ballsToBowl - 6}';
 
+    int ball = currentBall;
+
+    int over = currentOver + 1;
+    striker.batting.runs = striker.batting.runs + runs;
+    striker.batting.balls = striker.batting.balls + 1;
+    if (!events.contains(EventType.wide) &&
+        !events.contains(EventType.noBall)) {
+      _incrementBall();
+
+      over = currentOver;
+    }
     if (events.contains(EventType.four)) {
       striker.batting.fours = striker.batting.fours + 1;
     }
@@ -149,48 +161,46 @@ class ScoreboardModel {
     }
     if (events.contains(EventType.noBall) || events.contains(EventType.wide)) {
       extraRuns += 1;
-      ball = ball - 1;
+      if (events.contains(EventType.noBall)) {
+        _extras.noBalls += 1;
+      } else {
+        _extras.wides += 1;
+      }
       currentInningsScore += runs + extraRuns;
+      ballsToBowl += 1;
       overHistory.addAll({
         key: OverModel(
-          over: over + 1,
+          over: over,
           ball: ball,
           run: runs,
-          wicket: 0,
+          wickets: 0,
           extra: extraRuns,
           total: currentInningsScore,
           events: events,
         ),
       });
     } else {
-      striker.batting.runs = striker.batting.runs + runs;
-      striker.batting.balls = striker.batting.balls + 1;
+      ballsToBowl += 1;
       currentInningsScore += runs;
       overHistory.addAll({
         key: OverModel(
           over: over,
           ball: ball,
           run: runs,
-          wicket: 0,
+          wickets: 0,
           extra: extraRuns,
           total: currentInningsScore,
           events: events,
         ),
       });
+      bowler.addRuns(runs);
     }
-    if (!events.contains(EventType.wide) ||
-        !events.contains(EventType.noBall)) {
-      _incrementBall();
-      ball = currentBall;
-      over = currentOver;
-    }
+
     if (events.contains(EventType.wicket) &&
         (!events.contains(EventType.noBall) ||
             !events.contains(EventType.wide))) {
-      bowler.bowling.wickets = bowler.bowling.wickets + 1;
+      bowler.wickets = bowler.wickets + 1;
     }
-
-    bowler.bowling.runs = bowler.bowling.runs + runs;
 
     if (currentBall == 0 && currentOver != 0) {
       if (runs % 2 == 0) {
@@ -211,6 +221,7 @@ class ScoreboardModel {
     if (currentBall == 6) {
       currentBall = 0;
       currentOver += 1;
+      ballsToBowl = 6;
     }
     _updateSR();
   }
@@ -239,6 +250,20 @@ class ScoreboardModel {
       _bowlerId = team2.players!.firstWhere((element) => element.id == id).id;
     } else {
       _bowlerId = team1.players!.firstWhere((element) => element.id == id).id;
+    }
+  }
+
+  void _decrementBall() {
+    currentBall--;
+    // handle case when currentBall goes to -1 and currentOver is not 0
+    if (currentBall == -1 && currentOver > 0) {
+      currentBall = 5;
+      currentOver -= 1;
+    }
+
+// handle case when currentBall goes to -1 and currentOver is 0
+    if (currentBall == -1 && currentOver == 0) {
+      currentBall = 0;
     }
   }
 

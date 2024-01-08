@@ -64,39 +64,35 @@ class _BowlerPlayerStat extends GetView<ScoreBoardController> {
     return Obx(() => Row(
           children: [
             Expanded(
-                flex: 3, child: Text(controller.scoreboard.value!.bowler.name)),
+                flex: 3, child: Text(controller.scoreboard.value!.bowlerName)),
             const Spacer(
               flex: 3,
             ),
             Expanded(
                 child: Center(
                     child: Text(
-                        (controller.scoreboard.value!.bowler.bowling.overs)
-                            .toStringAsFixed(1),
+                        ('${controller.scoreboard.value!.bowler.currentOver}.${controller.scoreboard.value!.bowler.currentBall}'),
                         style: Get.textTheme.labelMedium))),
             Expanded(
               child: Center(
                   child: Text(
-                      (controller.scoreboard.value!.bowler.bowling.maidens)
-                          .toString(),
+                      (controller.scoreboard.value!.bowler.maidens).toString(),
                       style: Get.textTheme.labelMedium)),
             ),
             Expanded(
                 child: Center(
                     child: Text(
-                        controller.scoreboard.value!.bowler.bowling.runs
-                            .toString(),
+                        controller.scoreboard.value!.bowler.runs.toString(),
                         style: Get.textTheme.labelMedium))),
             Expanded(
                 child: Center(
                     child: Text(
-                        controller.scoreboard.value!.bowler.bowling.wickets
-                            .toString(),
+                        controller.scoreboard.value!.bowler.wickets.toString(),
                         style: Get.textTheme.labelMedium))),
             Expanded(
                 child: Center(
                     child: Text(
-                        controller.scoreboard.value!.bowler.batting.strikeRate
+                        controller.scoreboard.value!.bowler.economy
                             .toStringAsFixed(1),
                         style: Get.textTheme.labelMedium)))
           ],

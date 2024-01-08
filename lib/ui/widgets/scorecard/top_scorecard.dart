@@ -56,7 +56,7 @@ class ScoreCard extends GetView<ScoreBoardController> {
                       Row(
                         children: [
                           Text(
-                              '${controller.scoreboard.value!.lastBall.total}-${controller.scoreboard.value!.lastBall.wicket}',
+                              '${controller.scoreboard.value!.lastBall.total}-${controller.scoreboard.value!.lastBall.wickets}',
                               style: Get.textTheme.headlineMedium?.copyWith(
                                   fontWeight: FontWeight.w900,
                                   color: AppTheme.secondaryYellowColor)),

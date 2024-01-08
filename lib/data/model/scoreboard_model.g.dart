@@ -14,6 +14,7 @@ ScoreboardModel _$ScoreboardModelFromJson(Map<String, dynamic> json) =>
       lastOvers:
           (json['lastOvers'] as List<dynamic>).map((e) => e as String).toList(),
     )
+      ..ballsToBowl = json['ballsToBowl'] as int
       ..currentOver = json['currentOver'] as int
       ..currentBall = json['currentBall'] as int
       ..currentInnings = json['currentInnings'] as int
@@ -25,12 +26,46 @@ ScoreboardModel _$ScoreboardModelFromJson(Map<String, dynamic> json) =>
         (k, e) => MapEntry(k, OverModel.fromJson(e as Map<String, dynamic>)),
       );
 
+// ignore: unused_element
+abstract class _$ScoreboardModelPerFieldToJson {
+  // ignore: unused_element
+  static Object? team1(TeamModel instance) => instance.toJson();
+  // ignore: unused_element
+  static Object? team2(TeamModel instance) => instance.toJson();
+  // ignore: unused_element
+  static Object? matchId(String instance) => instance;
+  // ignore: unused_element
+  static Object? lastOvers(List<String> instance) => instance;
+  // ignore: unused_element
+  static Object? _extras(ExtraModel instance) => instance.toJson();
+  // ignore: unused_element
+  static Object? ballsToBowl(int instance) => instance;
+  // ignore: unused_element
+  static Object? currentOver(int instance) => instance;
+  // ignore: unused_element
+  static Object? currentBall(int instance) => instance;
+  // ignore: unused_element
+  static Object? currentInnings(int instance) => instance;
+  // ignore: unused_element
+  static Object? currentInningsScore(int instance) => instance;
+  // ignore: unused_element
+  static Object? currentInningsWickets(int instance) => instance;
+  // ignore: unused_element
+  static Object? lastEventType(EventType? instance) =>
+      _$EventTypeEnumMap[instance];
+  // ignore: unused_element
+  static Object? overHistory(Map<String, OverModel> instance) =>
+      instance.map((k, e) => MapEntry(k, e.toJson()));
+}
+
 Map<String, dynamic> _$ScoreboardModelToJson(ScoreboardModel instance) =>
     <String, dynamic>{
       'team1': instance.team1.toJson(),
       'team2': instance.team2.toJson(),
       'matchId': instance.matchId,
       'lastOvers': instance.lastOvers,
+      'extras': instance._extras.toJson(),
+      'ballsToBowl': instance.ballsToBowl,
       'currentOver': instance.currentOver,
       'currentBall': instance.currentBall,
       'currentInnings': instance.currentInnings,

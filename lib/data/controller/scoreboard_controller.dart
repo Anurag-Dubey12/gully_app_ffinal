@@ -163,7 +163,6 @@ class ScoreBoardController extends GetxController {
           outType: '',
         ),
         bowling: BowlingModel(
-          overs: 0,
           runs: 0,
           wickets: 0,
           economy: 0,

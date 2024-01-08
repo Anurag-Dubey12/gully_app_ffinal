@@ -4,12 +4,12 @@ import '../controller/scoreboard_controller.dart';
 
 part 'overs_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(explicitToJson: true)
 class OverModel {
   final int over;
   final int ball;
   final int run;
-  final int wicket;
+  final int wickets;
   final int extra;
   final int total;
   final List<EventType> events;
@@ -28,7 +28,7 @@ class OverModel {
       this.wicketType,
       required this.ball,
       required this.run,
-      required this.wicket,
+      required this.wickets,
       required this.extra,
       required this.total,
       required this.events});

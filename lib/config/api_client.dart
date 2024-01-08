@@ -11,7 +11,7 @@ class GetConnectClient extends GetConnect {
   void onInit() {
     super.onInit();
     // httpClient.baseUrl = 'http://65.0.80.235:3000';
-    httpClient.baseUrl = 'http://192.168.1.5:3000';
+    httpClient.baseUrl = 'http://192.168.1.7:3000';
 
     httpClient.timeout = const Duration(seconds: 13);
     httpClient.addRequestModifier<dynamic>((request) {

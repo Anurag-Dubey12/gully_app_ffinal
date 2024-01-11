@@ -10,6 +10,8 @@ import 'package:gully_app/utils/app_logger.dart';
 
 class ScoreBoardController extends GetxController {
   final Rx<ScoreboardModel?> scoreboard = Rx<ScoreboardModel?>(null);
+  late ScoreboardModel _lastScoreboardInstance;
+
   RxList<EventType> events = RxList<EventType>([]);
   @override
   void onInit() {
@@ -40,10 +42,14 @@ class ScoreBoardController extends GetxController {
       team2: team2,
       matchId: '12345',
     );
-    logger.i(scoreboard.value!.toJson());
+    _lastScoreboardInstance = scoreboard.value!;
+    // logger.i(scoreboard.value!.toJson());
   }
 
   void addEvent(EventType type, {String? bowlerId, String? strikerId}) {
+    _lastScoreboardInstance =
+        ScoreboardModel.fromJson(scoreboard.value!.toJson());
+
     switch (type) {
       case EventType.four:
         scoreboard.value!.addRuns(4, events: [...events, EventType.four]);
@@ -100,11 +106,13 @@ class ScoreBoardController extends GetxController {
     }
     events.value = [];
     events.refresh();
+
     scoreboard.refresh();
   }
 
   void undoLastEvent() {
-    scoreboard.value!.undoLastEvent();
+    logger.i('undoLastEvent ${_lastScoreboardInstance.lastBall.toJson()}');
+    scoreboard.value = _lastScoreboardInstance;
     scoreboard.refresh();
   }
 

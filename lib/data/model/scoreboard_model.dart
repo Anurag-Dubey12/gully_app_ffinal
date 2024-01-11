@@ -14,6 +14,7 @@ part 'scoreboard_model.g.dart';
 class ScoreboardModel {
   final TeamModel team1;
   final TeamModel team2;
+
   @JsonKey(
     includeToJson: true,
   )
@@ -69,12 +70,12 @@ class ScoreboardModel {
     final List<OverModel?> temp = [];
     for (var i = 0; i < 6; i++) {
       final String key = '$currentOver.$i';
-      logger.i('Key: $key');
+      // logger.i('Key: $key');
       if (overHistory.containsKey(key)) {
-        logger.i('Key: $key exists');
+        // logger.i('Key: $key exists');
         temp.add(overHistory[key]!);
       } else {
-        logger.i('Key: $key does not exist');
+        // logger.i('Key: $key does not exist');
         temp.add(null);
       }
     }
@@ -234,6 +235,7 @@ class ScoreboardModel {
     } else {
       logger.i('Even runs, no strike change');
     }
+    logger.d(currentBall);
     if (currentBall == 0 && currentOver != 0) {
       if (runs % 2 == 0) {
         logger.i('Last ball of the over and even runs, change strike');
@@ -278,110 +280,5 @@ class ScoreboardModel {
     } else {
       _bowlerId = team1.players!.firstWhere((element) => element.id == id).id;
     }
-  }
-
-  void _decrementBall() {
-    currentBall--;
-    // handle case when currentBall goes to -1 and currentOver is not 0
-    if (currentBall == -1 && currentOver > 0) {
-      currentBall = 5;
-      currentOver -= 1;
-    }
-
-// handle case when currentBall goes to -1 and currentOver is 0
-    if (currentBall == -1 && currentOver == 0) {
-      currentBall = 0;
-    }
-  }
-
-  void decrementRuns(int runs) {
-    if (runs % 2 == 0 && currentBall == 0) {
-      logger.i('Undo: Last ball of the over and even runs, change strike');
-      changeStrike();
-    }
-    if (runs % 2 != 0) {
-      logger.i('Undo: Last ball of the over and odd runs, no strike change');
-      changeStrike();
-    }
-    if (striker.batting!.runs < runs) {
-      return;
-    }
-
-    striker.batting!.runs = striker.batting!.runs - runs;
-    currentInningsScore -= runs;
-  }
-
-  void undoLastEvent() {
-    if (lastEventType == null) {
-      return;
-    }
-    final EventType event = lastEventType!;
-    switch (event) {
-      case EventType.four:
-        if (striker.batting!.fours < 0) {
-          striker.batting!.fours = 0;
-        }
-        striker.batting!.fours = striker.batting!.fours - 1;
-        decrementRuns(4);
-        if (currentBall == 0) {
-          changeStrike();
-        }
-        break;
-      case EventType.six:
-        if (currentBall == 0) {
-          changeStrike();
-        }
-        striker.batting!.sixes = striker.batting!.sixes - 1;
-        if (striker.batting!.sixes < 0) {
-          striker.batting!.sixes = 0;
-        }
-        decrementRuns(6);
-        break;
-      case EventType.one:
-        decrementRuns(1);
-        break;
-      case EventType.two:
-        decrementRuns(2);
-        break;
-      case EventType.three:
-        decrementRuns(3);
-        break;
-      case EventType.wide:
-        currentInningsScore -= 1;
-        if (currentInningsScore < 0) {
-          currentInningsScore = 0;
-        }
-
-        break;
-      case EventType.noBall:
-        currentInningsScore -= 1;
-        if (currentInningsScore < 0) {
-          currentInningsScore = 0;
-        }
-        break;
-      case EventType.wicket:
-        currentInningsWickets -= 1;
-        if (currentInningsWickets < 0) {
-          currentInningsWickets = 0;
-        }
-
-        break;
-      case EventType.dotBall:
-        _decrementBall();
-
-        break;
-      case EventType.changeBowler:
-        break;
-      case EventType.changeStriker:
-        final PlayerModel temp = striker;
-        _strikerId = _nonStrikerId;
-        _nonStrikerId = temp.id;
-        break;
-      default:
-        break;
-    }
-    lastOvers.removeLast();
-    lastEventType = null;
-    _decrementBall();
   }
 }

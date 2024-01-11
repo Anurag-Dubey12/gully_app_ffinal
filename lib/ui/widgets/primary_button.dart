@@ -6,12 +6,14 @@ class PrimaryButton extends StatefulWidget {
   final String? title;
   final bool? isLoading;
   final bool? isDisabled;
+  final double? fontSize;
   const PrimaryButton(
       {super.key,
       required this.onTap,
       this.title,
       this.isLoading,
-      this.isDisabled});
+      this.isDisabled,
+      this.fontSize});
 
   @override
   State<PrimaryButton> createState() => _PrimaryButtonState();
@@ -48,10 +50,10 @@ class _PrimaryButtonState extends State<PrimaryButton> {
           child: Center(
             child: Text(
               widget.title ?? 'Continue',
-              style: Theme.of(context)
-                  .textTheme
-                  .labelLarge
-                  ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: widget.fontSize),
             ),
           ),
         ),

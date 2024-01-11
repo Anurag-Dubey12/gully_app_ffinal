@@ -76,6 +76,7 @@ class _CardState extends State<_Card> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<TournamentController>();
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -142,6 +143,7 @@ class _CardState extends State<_Card> {
                   width: 100,
                   child: ElevatedButton(
                       onPressed: () {
+                        controller.setSelectedTournament(widget.tournament);
                         Get.to(() => const RegisterTeam());
                       },
                       style: ButtonStyle(

@@ -17,7 +17,11 @@ class TopHeader extends GetView<AuthController> {
           children: [
             InkWell(
                 onTap: () => Get.to(() => const PlayerProfileScreen()),
-                child: const CircleAvatar()),
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundImage:
+                      NetworkImage(controller.user.value.toImageUrl()),
+                )),
             const SizedBox(
               width: 10,
             ),

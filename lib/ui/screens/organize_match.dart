@@ -6,7 +6,8 @@ import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 
 class SelectOrganizeTeam extends StatefulWidget {
-  const SelectOrganizeTeam({super.key});
+  final String? title;
+  const SelectOrganizeTeam({super.key, this.title});
 
   @override
   State<SelectOrganizeTeam> createState() => _SelectOrganizeTeamState();

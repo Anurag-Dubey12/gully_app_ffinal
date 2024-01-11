@@ -2,25 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/team_model.dart';
-import 'package:gully_app/ui/screens/add_player_to_team.dart';
-import 'package:gully_app/ui/screens/team_entry_form.dart';
+import 'package:gully_app/ui/screens/view_my_team.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 
-class SelectTeamToRegister extends StatefulWidget {
-  const SelectTeamToRegister({
+class MyTeams extends StatefulWidget {
+  const MyTeams({
     super.key,
   });
 
   @override
-  State<SelectTeamToRegister> createState() => _SelectTeamToRegisterState();
+  State<MyTeams> createState() => _MyTeamsState();
 }
 
-class _SelectTeamToRegisterState extends State<SelectTeamToRegister> {
+class _MyTeamsState extends State<MyTeams> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TeamController>();
-    controller.getTeams();
     return DecoratedBox(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -36,7 +34,7 @@ class _SelectTeamToRegisterState extends State<SelectTeamToRegister> {
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 title: const Text(
-                  'Select your Team',
+                  'Your Teams',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -102,12 +100,16 @@ class _TeamCard extends StatelessWidget {
         padding: const EdgeInsets.all(18.0),
         child: Row(
           children: [
+            CircleAvatar(
+              backgroundImage: NetworkImage(team.toImageUrl()),
+            ),
+            const SizedBox(width: 10),
             Text(
               team.name,
               style: const TextStyle(fontSize: 19),
             ),
             const Spacer(),
-            if (team.playersCount < 14)
+            if (team.playersCount < 15)
               Row(
                 children: [
                   Text('(${team.playersCount}/15)',
@@ -119,8 +121,8 @@ class _TeamCard extends StatelessWidget {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(09),
                       onTap: () {
-                        Get.to(() => AddPlayersToTeam(
-                              teamId: team.id,
+                        Get.to(() => ViewTeam(
+                              teamModel: team,
                             ));
                       },
                       child: Ink(
@@ -138,14 +140,14 @@ class _TeamCard extends StatelessWidget {
                   )
                 ],
               ),
-            if (team.playersCount == 14)
+            if (team.playersCount == 15)
               Material(
                 child: InkWell(
                   borderRadius: BorderRadius.circular(09),
                   onTap: () async {
-                    await Get.to(() => TeamEntryForm(
-                          team: team,
-                        ));
+                    // await Get.to(() => const TeamEntryForm(
+
+                    // ));
                   },
                   child: Ink(
                       width: 30,

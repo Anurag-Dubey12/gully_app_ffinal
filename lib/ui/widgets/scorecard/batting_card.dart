@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 
 import '../../../data/model/player_model.dart';
+import 'bowling_card.dart';
 
 class BattingStats extends GetView<ScoreBoardController> {
   const BattingStats({
@@ -11,57 +12,66 @@ class BattingStats extends GetView<ScoreBoardController> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: Colors.white,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Obx(() => Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(4),
+              color: Colors.white,
+            ),
             child: Column(children: [
-              Row(
-                children: [
-                  Expanded(
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                        flex: 3,
+                        child: GestureDetector(
+                            child: Text('Batsman',
+                                style: Get.textTheme.labelMedium))),
+                    const Spacer(
                       flex: 3,
-                      child: GestureDetector(
-                          child: Text('Batsman',
-                              style: Get.textTheme.labelMedium))),
-                  const Spacer(
-                    flex: 3,
-                  ),
-                  Expanded(
+                    ),
+                    Expanded(
+                        child: Center(
+                            child:
+                                Text('R', style: Get.textTheme.labelMedium))),
+                    Expanded(
                       child: Center(
-                          child: Text('R', style: Get.textTheme.labelMedium))),
-                  Expanded(
-                    child: Center(
-                        child: Text('B', style: Get.textTheme.labelMedium)),
-                  ),
-                  Expanded(
-                      child: Center(
-                          child: Text('4s', style: Get.textTheme.labelMedium))),
-                  Expanded(
-                      child: Center(
-                          child: Text('6s', style: Get.textTheme.labelMedium))),
-                  Expanded(
-                      child: Center(
-                          child: Text('SR', style: Get.textTheme.labelMedium)))
-                ],
+                          child: Text('B', style: Get.textTheme.labelMedium)),
+                    ),
+                    Expanded(
+                        child: Center(
+                            child:
+                                Text('4s', style: Get.textTheme.labelMedium))),
+                    Expanded(
+                        child: Center(
+                            child:
+                                Text('6s', style: Get.textTheme.labelMedium))),
+                    Expanded(
+                        child: Center(
+                            child:
+                                Text('SR', style: Get.textTheme.labelMedium)))
+                  ],
+                ),
               ),
               const Divider(
                 height: 10,
                 color: Colors.grey,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 4),
               _PlayerStat(
                 controller.scoreboard.value!.striker,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 3),
               _PlayerStat(
                 controller.scoreboard.value!.nonstriker,
-              )
+              ),
+              const SizedBox(height: 10),
+              const BowlingStats(),
             ]),
-          ),
-        ));
+          )),
+    );
   }
 }
 
@@ -71,34 +81,44 @@ class _PlayerStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(flex: 3, child: Text(player.name)),
-        const Spacer(
-          flex: 3,
-        ),
-        Expanded(
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 3,
+            child: Text(
+              player.name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          const Spacer(
+            flex: 3,
+          ),
+          Expanded(
+              child: Center(
+                  child: Text(player.batting!.runs.toString(),
+                      style: Get.textTheme.labelMedium))),
+          Expanded(
             child: Center(
-                child: Text(player.batting.runs.toString(),
-                    style: Get.textTheme.labelMedium))),
-        Expanded(
-          child: Center(
-              child: Text(player.batting.balls.toString(),
-                  style: Get.textTheme.labelMedium)),
-        ),
-        Expanded(
-            child: Center(
-                child: Text(player.batting.fours.toString(),
-                    style: Get.textTheme.labelMedium))),
-        Expanded(
-            child: Center(
-                child: Text(player.batting.sixes.toString(),
-                    style: Get.textTheme.labelMedium))),
-        Expanded(
-            child: Center(
-                child: Text(player.batting.strikeRate.toStringAsFixed(1),
-                    style: Get.textTheme.labelMedium)))
-      ],
+                child: Text(player.batting!.balls.toString(),
+                    style: Get.textTheme.labelMedium)),
+          ),
+          Expanded(
+              child: Center(
+                  child: Text(player.batting!.fours.toString(),
+                      style: Get.textTheme.labelMedium))),
+          Expanded(
+              child: Center(
+                  child: Text(player.batting!.sixes.toString(),
+                      style: Get.textTheme.labelMedium))),
+          Expanded(
+              child: Center(
+                  child: Text(player.batting!.strikeRate.toStringAsFixed(1),
+                      style: Get.textTheme.labelMedium)))
+        ],
+      ),
     );
   }
 }

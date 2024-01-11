@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/ui/screens/add_player_to_team.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
+import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,8 +21,7 @@ class AddTeam extends StatefulWidget {
 }
 
 class _AddTeamState extends State<AddTeam> {
-  final TextEditingController _teamNameController =
-      TextEditingController(text: 'Albany Eagles');
+  final TextEditingController _teamNameController = TextEditingController();
   XFile? _image;
 
   pickImage() async {
@@ -43,13 +43,11 @@ class _AddTeamState extends State<AddTeam> {
         child: GradientBuilder(
           child: Scaffold(
             appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              leading: const Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
-              ),
-            ),
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                leading: const BackButton(
+                  color: Colors.white,
+                )),
             backgroundColor: Colors.transparent,
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -133,6 +131,7 @@ class _AddTeamState extends State<AddTeam> {
                                 }
                                 final base64Image =
                                     await convertImageToBase64(_image!);
+                                logger.i(base64Image);
                                 final res = await controller.createTeam(
                                     teamName: _teamNameController.text,
                                     teamLogo: base64Image);

@@ -3,8 +3,6 @@ import 'dart:math';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/model/batting_model.dart';
-import 'package:gully_app/data/model/bowling_model.dart';
 import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
@@ -41,7 +39,6 @@ class ScoreBoardController extends GetxController {
       team1: team1,
       team2: team2,
       matchId: '12345',
-      lastOvers: ['W', '1', 'W', '2', '13'],
     );
     logger.i(scoreboard.value!.toJson());
   }
@@ -81,7 +78,7 @@ class ScoreBoardController extends GetxController {
         // addWicket();
         break;
       case EventType.dotBall:
-        scoreboard.value!.addRuns(0);
+        scoreboard.value!.addRuns(0, events: [...events, EventType.dotBall]);
         checkLastBall();
 
         break;
@@ -112,7 +109,8 @@ class ScoreBoardController extends GetxController {
   }
 
   void checkLastBall() {
-    if (scoreboard.value!.currentBall == 0) {
+    if (scoreboard.value!.currentBall == 0 &&
+        scoreboard.value!.currentOver != 0) {
       // Show your dialog here
       showModalBottomSheet(
           context: Get.context!,
@@ -152,26 +150,26 @@ class ScoreBoardController extends GetxController {
         id: index.toString(),
         phoneNumber: generatePhoneNumber(),
         role: 'Batsman',
-        batting: BattingModel(
-          runs: 0,
-          balls: 0,
-          fours: 0,
-          sixes: 0,
-          strikeRate:
-              faker.randomGenerator.decimal(min: 39, scale: 1).toDouble(),
-          bowledBy: '',
-          outType: '',
-        ),
-        bowling: BowlingModel(
-          runs: 0,
-          wickets: 0,
-          economy: 0,
-          maidens: 0,
-          fours: 0,
-          sixes: 0,
-          wides: 0,
-          noBalls: 0,
-        ),
+        // batting: BattingModel(
+        //   runs: 0,
+        //   balls: 0,
+        //   fours: 0,
+        //   sixes: 0,
+        //   strikeRate:
+        //       faker.randomGenerator.decimal(min: 39, scale: 1).toDouble(),
+        //   bowledBy: '',
+        //   outType: '',
+        // ),
+        // bowling: BowlingModel(
+        //   runs: 0,
+        //   wickets: 0,
+        //   economy: 0,
+        //   maidens: 0,
+        //   fours: 0,
+        //   sixes: 0,
+        //   wides: 0,
+        //   noBalls: 0,
+        // ),
       );
     });
   }

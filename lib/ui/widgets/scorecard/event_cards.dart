@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/model/extras_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/custom_text_field.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
@@ -16,7 +17,7 @@ class PartnershipDialog extends StatelessWidget {
         decoration: const BoxDecoration(
             color: Color.fromARGB(255, 233, 229, 229),
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(30), topRight: Radius.circular(30))),
+                topLeft: Radius.circular(10), topRight: Radius.circular(10))),
         width: Get.width,
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -103,11 +104,12 @@ class PartnershipDialog extends StatelessWidget {
   }
 }
 
-class ExtrasDialog extends StatelessWidget {
+class ExtrasDialog extends GetView<ScoreBoardController> {
   const ExtrasDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ExtraModel extraModel = controller.scoreboard.value!.currentExtras;
     return Container(
         decoration: const BoxDecoration(
             color: Color.fromARGB(255, 233, 229, 229),
@@ -142,7 +144,8 @@ class ExtrasDialog extends StatelessWidget {
                           fontSize: 20,
                           fontWeight: FontWeight.w900)),
                   const SizedBox(height: 10),
-                  const Text('0B, 0L, 0W, 0N, 0P, 0WD, '),
+                  Text(
+                      '${extraModel.byes}B, ${extraModel.legByes}L, ${extraModel.noBalls}N, ${extraModel.penalty}P, ${extraModel.wides}WD, '),
                   const SizedBox(height: 30),
                   PrimaryButton(
                     onTap: () {},
@@ -168,7 +171,7 @@ class NumberCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(4.0),
       child: Material(
         child: InkWell(
           borderRadius: BorderRadius.circular(30),
@@ -183,8 +186,10 @@ class NumberCard extends StatelessWidget {
                 shape: BoxShape.circle,
                 border:
                     Border.all(color: AppTheme.secondaryYellowColor, width: 2)),
-            child:
-                Center(child: Text(text, style: Get.textTheme.headlineMedium)),
+            child: Center(
+                child: Text(text,
+                    style: Get.textTheme.headlineMedium
+                        ?.copyWith(fontSize: 15 * Get.textScaleFactor))),
           ),
         ),
       ),
@@ -200,35 +205,38 @@ class UpdateEvent extends GetView<ScoreBoardController> {
     return Column(
       children: [
         Container(
+          width: Get.width,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
+            borderRadius: BorderRadius.circular(10),
             color: Colors.white,
           ),
           child: Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
             child: Column(children: [
-              Wrap(
-                spacing: 9,
-                runSpacing: 10,
-                runAlignment: WrapAlignment.end,
-                alignment: WrapAlignment.spaceBetween,
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  const _EventWidget(
+                  _EventWidget(
                     title: 'Wide',
                     eventType: EventType.wide,
                   ),
-                  const _EventWidget(
+                  _EventWidget(
                     title: 'No ball',
                     eventType: EventType.noBall,
                   ),
-                  const _EventWidget(
+                  _EventWidget(
                     title: 'Byes',
                     eventType: EventType.dotBall,
                   ),
-                  const _EventWidget(
+                  _EventWidget(
                     title: 'Leg bes',
                     eventType: EventType.legByes,
                   ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
                   const _EventWidget(
                     title: 'Wicket',
                     eventType: EventType.wicket,
@@ -241,6 +249,7 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                             Get.bottomSheet(const RetirePlayerDialog());
                           },
                           title: 'Retire')),
+                  const SizedBox(width: 10),
                   SizedBox(
                       width: 120,
                       height: 40,
@@ -290,8 +299,10 @@ class _EventWidget extends GetView<ScoreBoardController> {
           ),
           const SizedBox(width: 4),
           Text(title,
-              style: Get.textTheme.bodyMedium
-                  ?.copyWith(fontWeight: FontWeight.w400, color: Colors.black)),
+              style: Get.textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
+                  fontSize: 12 * Get.textScaleFactor)),
         ],
       ),
     );

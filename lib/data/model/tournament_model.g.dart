@@ -9,8 +9,10 @@ part of 'tournament_model.dart';
 TournamentModel _$TournamentModelFromJson(Map<String, dynamic> json) =>
     TournamentModel(
       tournamentName: json['tournamentName'] as String,
-      tournamentLimit: json['tournamentLimit'] as int,
-      registeredTeamsCount: json['registeredTeamsCount'] as int,
+      id: json['_id'] as String,
+      phoneNumber: json['phoneNumber'] as String?,
+      tournamentLimit: json['tournamentLimit'] as int? ?? 0,
+      registeredTeamsCount: json['registeredTeamsCount'] as int? ?? 0,
       tournamentStartDateTime:
           DateTime.parse(json['tournamentStartDateTime'] as String),
       tournamentEndDateTime:

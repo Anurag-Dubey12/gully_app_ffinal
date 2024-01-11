@@ -2,6 +2,7 @@ import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/model/bowling_model.dart';
 import 'package:gully_app/data/model/extras_model.dart';
 import 'package:gully_app/data/model/overs_model.dart';
+import 'package:gully_app/data/model/partnership_model.dart';
 import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/utils/app_logger.dart';
@@ -13,9 +14,12 @@ part 'scoreboard_model.g.dart';
 class ScoreboardModel {
   final TeamModel team1;
   final TeamModel team2;
+  @JsonKey(
+    includeToJson: true,
+  )
+  final Map<String, PartnershipModel> partnerships = {};
   final String matchId;
-
-  List<String> lastOvers;
+  List<String> lastOvers = [];
   @JsonKey(
     includeToJson: true,
     name: 'extras',
@@ -34,14 +38,27 @@ class ScoreboardModel {
   late String _nonStrikerId;
   Map<String, OverModel> overHistory = {};
 
-  ScoreboardModel(
-      {required this.team1,
-      required this.team2,
-      required this.matchId,
-      required this.lastOvers}) {
+  ScoreboardModel({
+    required this.team1,
+    required this.team2,
+    required this.matchId,
+  }) {
+    logger.i('ScoreboardModel: ');
     _strikerId = team1.players!.first.id;
     _nonStrikerId = team1.players!.last.id;
     _bowlerId = team2.players!.first.id;
+    final key = [striker.id, nonstriker.id];
+    key.sort();
+    partnerships.addAll({
+      partnershipKey: PartnershipModel(
+          player1: team1.players!.first, player2: team1.players!.last)
+    });
+    logger.i('ScoreboardModel: ${toJson()}');
+  }
+  String get partnershipKey {
+    final List<String> key = [_strikerId, _nonStrikerId];
+    key.sort();
+    return key.join();
   }
 
   factory ScoreboardModel.fromJson(Map<String, dynamic> json) =>
@@ -86,11 +103,11 @@ class ScoreboardModel {
     if (currentInnings == 1) {
       return team2.players!
           .firstWhere((element) => element.id == _bowlerId)
-          .bowling;
+          .bowling!;
     } else {
       return team1.players!
           .firstWhere((element) => element.id == _bowlerId)
-          .bowling;
+          .bowling!;
     }
   }
 
@@ -137,37 +154,51 @@ class ScoreboardModel {
     currentBall++;
   }
 
+  void _updatePartnership() {
+    partnerships[partnershipKey] =
+        PartnershipModel(player1: striker, player2: nonstriker);
+  }
+
   void addRuns(int runs, {List<EventType>? events}) {
     events ??= [];
     int extraRuns = 0;
     String key = '$currentOver.${ballsToBowl - 6}';
-
     int ball = currentBall;
-
     int over = currentOver + 1;
-    striker.batting.runs = striker.batting.runs + runs;
-    striker.batting.balls = striker.batting.balls + 1;
+    if (!events.contains(EventType.legByes) &&
+        !events.contains(EventType.bye)) {
+      striker.batting!.runs = striker.batting!.runs + runs;
+    }
+
     if (!events.contains(EventType.wide) &&
         !events.contains(EventType.noBall)) {
       _incrementBall();
-
+      ball = currentBall;
       over = currentOver;
     }
+
+    if (!events.contains(EventType.bye) &&
+        !events.contains(EventType.noBall) &&
+        !events.contains(EventType.wide) &&
+        !events.contains(EventType.legByes)) {
+      striker.batting!.balls = striker.batting!.balls + 1;
+    }
     if (events.contains(EventType.four)) {
-      striker.batting.fours = striker.batting.fours + 1;
+      striker.batting!.fours = striker.batting!.fours + 1;
     }
     if (events.contains(EventType.six)) {
-      striker.batting.sixes = striker.batting.sixes + 1;
+      striker.batting!.sixes = striker.batting!.sixes + 1;
     }
     if (events.contains(EventType.noBall) || events.contains(EventType.wide)) {
-      extraRuns += 1;
       if (events.contains(EventType.noBall)) {
         _extras.noBalls += 1;
       } else {
         _extras.wides += 1;
       }
+      extraRuns += 1;
       currentInningsScore += runs + extraRuns;
       ballsToBowl += 1;
+      logger.d(key);
       overHistory.addAll({
         key: OverModel(
           over: over,
@@ -179,9 +210,11 @@ class ScoreboardModel {
           events: events,
         ),
       });
+      bowler.addRuns(runs, events: events);
     } else {
-      ballsToBowl += 1;
       currentInningsScore += runs;
+      logger.d(key);
+      ballsToBowl += 1;
       overHistory.addAll({
         key: OverModel(
           over: over,
@@ -193,15 +226,14 @@ class ScoreboardModel {
           events: events,
         ),
       });
-      bowler.addRuns(runs);
+      bowler.addRuns(runs, events: events);
     }
-
-    if (events.contains(EventType.wicket) &&
-        (!events.contains(EventType.noBall) ||
-            !events.contains(EventType.wide))) {
-      bowler.wickets = bowler.wickets + 1;
+    if (runs % 2 != 0) {
+      logger.i('Odd runs, change strike');
+      changeStrike();
+    } else {
+      logger.i('Even runs, no strike change');
     }
-
     if (currentBall == 0 && currentOver != 0) {
       if (runs % 2 == 0) {
         logger.i('Last ball of the over and even runs, change strike');
@@ -211,31 +243,26 @@ class ScoreboardModel {
       }
       return;
     }
-    // logger.d("Runs: $runs");
-    if (runs % 2 != 0) {
-      logger.i('Odd runs, change strike');
-      changeStrike();
-    } else {
-      logger.i('Even runs, no strike change');
-    }
+
     if (currentBall == 6) {
       currentBall = 0;
       currentOver += 1;
       ballsToBowl = 6;
     }
     _updateSR();
+    _updatePartnership();
   }
 
   void _updateSR() {
-    striker.batting.strikeRate =
-        (striker.batting.runs / striker.batting.balls) * 100;
-    if (striker.batting.strikeRate.isNaN) {
-      striker.batting.strikeRate = 0;
+    striker.batting!.strikeRate =
+        (striker.batting!.runs / striker.batting!.balls) * 100;
+    if (striker.batting!.strikeRate.isNaN) {
+      striker.batting!.strikeRate = 0;
     }
-    nonstriker.batting.strikeRate =
-        (nonstriker.batting.runs / nonstriker.batting.balls) * 100;
-    if (nonstriker.batting.strikeRate.isNaN) {
-      nonstriker.batting.strikeRate = 0;
+    nonstriker.batting!.strikeRate =
+        (nonstriker.batting!.runs / nonstriker.batting!.balls) * 100;
+    if (nonstriker.batting!.strikeRate.isNaN) {
+      nonstriker.batting!.strikeRate = 0;
     }
   }
 
@@ -276,11 +303,11 @@ class ScoreboardModel {
       logger.i('Undo: Last ball of the over and odd runs, no strike change');
       changeStrike();
     }
-    if (striker.batting.runs < runs) {
+    if (striker.batting!.runs < runs) {
       return;
     }
 
-    striker.batting.runs = striker.batting.runs - runs;
+    striker.batting!.runs = striker.batting!.runs - runs;
     currentInningsScore -= runs;
   }
 
@@ -291,10 +318,10 @@ class ScoreboardModel {
     final EventType event = lastEventType!;
     switch (event) {
       case EventType.four:
-        if (striker.batting.fours < 0) {
-          striker.batting.fours = 0;
+        if (striker.batting!.fours < 0) {
+          striker.batting!.fours = 0;
         }
-        striker.batting.fours = striker.batting.fours - 1;
+        striker.batting!.fours = striker.batting!.fours - 1;
         decrementRuns(4);
         if (currentBall == 0) {
           changeStrike();
@@ -304,9 +331,9 @@ class ScoreboardModel {
         if (currentBall == 0) {
           changeStrike();
         }
-        striker.batting.sixes = striker.batting.sixes - 1;
-        if (striker.batting.sixes < 0) {
-          striker.batting.sixes = 0;
+        striker.batting!.sixes = striker.batting!.sixes - 1;
+        if (striker.batting!.sixes < 0) {
+          striker.batting!.sixes = 0;
         }
         decrementRuns(6);
         break;

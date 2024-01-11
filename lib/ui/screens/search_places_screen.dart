@@ -4,7 +4,9 @@ import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 
 class SearchPlacesScreen extends StatefulWidget {
-  const SearchPlacesScreen({Key? key, this.title}) : super(key: key);
+  final Function(Prediction)? onSelected;
+  const SearchPlacesScreen({Key? key, this.title, this.onSelected})
+      : super(key: key);
 
   final String? title;
 
@@ -39,7 +41,7 @@ class SearchPlacesScreenState extends State<SearchPlacesScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: GooglePlaceAutoCompleteTextField(
         textEditingController: controller,
-        googleAPIKey: "AIzaSyB2Sh_f48rPyB0G-3ASUJd-EyFddaRqi5g",
+        googleAPIKey: "AIzaSyCUv3LmufUU86Lp_Wk34-3AZ3bnCQ3XmJg",
         inputDecoration: const InputDecoration(
           hintText: "Search your location",
           border: InputBorder.none,
@@ -60,16 +62,25 @@ class SearchPlacesScreenState extends State<SearchPlacesScreen> {
         seperatedBuilder: const Divider(),
         // OPTIONAL// If you want to customize list view item builder
         itemBuilder: (context, index, Prediction prediction) {
-          return Container(
-            padding: const EdgeInsets.all(10),
-            child: Row(
-              children: [
-                const Icon(Icons.location_on),
-                const SizedBox(
-                  width: 7,
-                ),
-                Expanded(child: Text(prediction.description ?? ""))
-              ],
+          return InkWell(
+            onTap: () {
+              controller.text = prediction.description ?? "";
+              Get.back();
+              controller.selection = TextSelection.fromPosition(
+                  TextPosition(offset: prediction.description?.length ?? 0));
+              widget.onSelected?.call(prediction);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  const Icon(Icons.location_on),
+                  const SizedBox(
+                    width: 7,
+                  ),
+                  Expanded(child: Text(prediction.description ?? ""))
+                ],
+              ),
             ),
           );
         },

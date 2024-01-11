@@ -73,6 +73,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
           email: "email",
           phoneNumber: "phoneNumber",
           id: "id",
+          profilePhoto: "profilePic",
           isNewUser: false)
       .obs;
 

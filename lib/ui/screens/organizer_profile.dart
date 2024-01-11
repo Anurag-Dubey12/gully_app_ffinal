@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/current_tournament_list.dart';
-import 'package:gully_app/ui/screens/edit_tournament_screen.dart';
-import 'package:gully_app/ui/screens/organize_match.dart';
-import 'package:gully_app/ui/screens/select_team_for_scoreboard.dart';
+import 'package:gully_app/ui/screens/tournament_requests_screen.dart';
 import 'package:gully_app/ui/screens/txn_history_screen.dart';
-import 'package:gully_app/ui/screens/view_matchups_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 
@@ -56,13 +53,13 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                     child: Container(
                         width: 80,
                         height: 80,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.white,
                             image: DecorationImage(
                                 image: NetworkImage(
-                                    'https://staticg.sportskeeda.com/editor/2018/08/16a4f-1534264896-800.jpg'),
-                                fit: BoxFit.contain))),
+                                    controller.user.value.toImageUrl()),
+                                fit: BoxFit.cover))),
 
                     // backgroundColor: Colors.white,
                   ),
@@ -150,12 +147,7 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             InkWell(
                               child: ProfileTileCard(
                                 onTap: () {
-                                  Get.bottomSheet(BottomSheet(
-                                    enableDrag: false,
-                                    builder: (context) =>
-                                        const RequestsBottomSheet(),
-                                    onClosing: () {},
-                                  ));
+                                  Get.to(() => const TournamentRequestScreen());
                                 },
                                 text: 'Request',
                                 subTrailingWidget:
@@ -166,7 +158,8 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                               text: 'Current Tournament',
                               onTap: () {
                                 Get.to(() => const CurrentTournamentListScreen(
-                                      redirectScreen: OrganizerProfileScreen(),
+                                      redirectType:
+                                          RedirectType.currentTournament,
                                     ));
                               },
                               subTrailingWidget:
@@ -175,25 +168,35 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             ProfileTileCard(
                               text: 'Organize',
                               onTap: () {
-                                Get.to(() => const SelectOrganizeTeam());
+                                Get.to(() => const CurrentTournamentListScreen(
+                                      redirectType: RedirectType.organizeMatch,
+                                    ));
                               },
                             ),
                             ProfileTileCard(
                               text: 'View Matchups',
                               onTap: () {
-                                Get.to(() => const ViewMatchupsScreen());
+                                Get.to(() => const CurrentTournamentListScreen(
+                                      redirectType: RedirectType.matchup,
+                                    ));
                               },
                             ),
                             ProfileTileCard(
                               text: 'Score Board',
                               onTap: () {
-                                Get.to(() => const SelectTeamForScoreBoard());
+                                Get.to(() => const CurrentTournamentListScreen(
+                                      redirectType: RedirectType.scoreboard,
+                                    ));
                               },
                             ),
                             ProfileTileCard(
                               text: 'Edit Tournament Form',
                               onTap: () {
-                                Get.to(() => const EditTournamentScreen());
+                                // Get.to(() => const EditTournamentScreen());
+
+                                Get.to(() => const CurrentTournamentListScreen(
+                                      redirectType: RedirectType.editForm,
+                                    ));
                               },
                             ),
                             ProfileTileCard(
@@ -255,107 +258,6 @@ class ProfileTileCard extends StatelessWidget {
               )
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class RequestsBottomSheet extends StatefulWidget {
-  const RequestsBottomSheet({
-    super.key,
-  });
-
-  @override
-  State<RequestsBottomSheet> createState() => _RequestsBottomSheetState();
-}
-
-class _RequestsBottomSheetState extends State<RequestsBottomSheet> {
-  var textEditingController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: Get.height / .7,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                height: 7,
-                width: 120,
-                decoration: BoxDecoration(
-                    color: Colors.grey[400],
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(28.0),
-              child: Row(
-                children: [
-                  Text('Requests',
-                      style: Get.textTheme.titleLarge?.copyWith(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800)),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Icon(Icons.person_add_alt_sharp),
-                  )
-                ],
-              ),
-            ),
-
-            // Create a container with 4 items in row -->  circle avatar with name and two icons in trailing
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListView.separated(
-                  shrinkWrap: true,
-                  itemCount: 4,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 20),
-                  itemBuilder: (context, snapshot) {
-                    return InkWell(
-                      onTap: () {
-                        Get.to(() => const CurrentTournamentListScreen(
-                              redirectScreen: OrganizerProfileScreen(),
-                            ));
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                            color: const Color(0xffE9E7EF),
-                            borderRadius: BorderRadius.circular(19)),
-                        child: const Padding(
-                          padding: EdgeInsets.all(12.0),
-                          child: Row(children: [
-                            CircleAvatar(),
-                            SizedBox(width: 10),
-                            Text(
-                              'Bob Odenkirk',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                            Spacer(),
-                            CircleAvatar(
-                              radius: 13,
-                              backgroundColor: Color.fromARGB(255, 71, 224, 79),
-                              child: Icon(Icons.add),
-                            ),
-                            SizedBox(width: 10),
-                            CircleAvatar(
-                              radius: 13,
-                              backgroundColor: Color.fromARGB(255, 235, 17, 24),
-                              child: Icon(Icons.person_off),
-                            )
-                          ]),
-                        ),
-                      ),
-                    );
-                  }),
-            )
-          ],
         ),
       ),
     );

@@ -13,30 +13,30 @@ class ScoreCard extends GetView<ScoreBoardController> {
   Widget build(BuildContext context) {
     return Obx(() => Column(
           children: [
-            Container(
-              // height: 20,
-              width: 140,
-              decoration: const BoxDecoration(
-                color: Color(0xff0FC335),
-                borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20)),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(4.0),
-                child: Text('Inning 1',
-                    textAlign: TextAlign.center,
-                    style: Get.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w900, color: Colors.white)),
-              ),
-            ),
+            // Container(
+            //   // height: 20,
+            //   width: 140,
+            //   decoration: const BoxDecoration(
+            //     color: Color(0xff0FC335),
+            //     borderRadius: BorderRadius.only(
+            //         topLeft: Radius.circular(10),
+            //         topRight: Radius.circular(10)),
+            //   ),
+            //   child: Padding(
+            //     padding: const EdgeInsets.all(4.0),
+            //     child: Text('Inning 1',
+            //         textAlign: TextAlign.center,
+            //         style: Get.textTheme.bodyMedium?.copyWith(
+            //             fontWeight: FontWeight.w900, color: Colors.white)),
+            //   ),
+            // ),
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(30),
+                borderRadius: BorderRadius.circular(10),
                 color: Colors.white,
               ),
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(8),
                 child: Column(children: [
                   Row(
                     children: [
@@ -45,12 +45,20 @@ class ScoreCard extends GetView<ScoreBoardController> {
                           child: Text(controller.scoreboard.value!.team1.name,
                               style: Get.textTheme.headlineMedium?.copyWith(
                                   fontWeight: FontWeight.w500,
+                                  fontSize: 18 * Get.textScaleFactor,
                                   color: Colors.black))),
                       const Spacer(),
-                      const Expanded(flex: 2, child: Text('Current Run Rate'))
+                      Expanded(
+                          flex: 2,
+                          child: Text(
+                            'Current Run Rate',
+                            style: TextStyle(
+                              fontSize: 12 * Get.textScaleFactor,
+                            ),
+                          ))
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
                   Row(
                     children: [
                       Row(

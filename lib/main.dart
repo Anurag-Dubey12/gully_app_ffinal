@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -26,24 +27,31 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      binds: [
-        Bind.put<Preferences>(Preferences()),
-        Bind.lazyPut<GetConnectClient>(() => GetConnectClient()),
-        Bind.put<Preferences>(Preferences()),
-        Bind.lazyPut<AuthApi>(() => AuthApi()),
-        Bind.lazyPut<TournamentApi>(() => TournamentApi(repo: Get.find())),
-        Bind.lazyPut<TeamApi>(() => TeamApi(repo: Get.find())),
-        Bind.lazyPut<TeamController>(() => TeamController(repo: Get.find())),
-        Bind.lazyPut<AuthController>(() => AuthController(repo: Get.find())),
-        Bind.put<ScoreBoardController>(ScoreBoardController()),
-        Bind.lazyPut<TournamentController>(
-            () => TournamentController(Get.find())),
-      ],
-      title: AppConstants.appName,
-      theme: AppTheme.lightTheme,
-      home: const SplashScreen(),
-    );
+    return DevicePreview(
+        enabled: false,
+        builder: (context) {
+          return GetMaterialApp(
+            binds: [
+              Bind.put<Preferences>(Preferences()),
+              Bind.lazyPut<GetConnectClient>(() => GetConnectClient()),
+              Bind.put<Preferences>(Preferences()),
+              Bind.lazyPut<AuthApi>(() => AuthApi()),
+              Bind.lazyPut<TournamentApi>(
+                  () => TournamentApi(repo: Get.find())),
+              Bind.lazyPut<TeamApi>(() => TeamApi(repo: Get.find())),
+              Bind.lazyPut<TeamController>(
+                  () => TeamController(repo: Get.find())),
+              Bind.lazyPut<AuthController>(
+                  () => AuthController(repo: Get.find())),
+              Bind.put<ScoreBoardController>(ScoreBoardController()),
+              Bind.lazyPut<TournamentController>(
+                  () => TournamentController(Get.find())),
+            ],
+            title: AppConstants.appName,
+            theme: AppTheme.lightTheme,
+            home: const SplashScreen(),
+          );
+        });
   }
 }
 

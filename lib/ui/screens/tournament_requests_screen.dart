@@ -2,27 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
-import 'package:gully_app/ui/screens/edit_tournament_screen.dart';
-import 'package:gully_app/ui/screens/organize_match.dart';
-import 'package:gully_app/ui/screens/select_team_for_scoreboard.dart';
-import 'package:gully_app/ui/screens/view_matchups_screen.dart';
 
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
+import '../widgets/requests_bottom_sheet.dart';
 
-enum RedirectType {
-  organizeMatch,
-  scoreboard,
-  matchup,
-  editForm,
-  currentTournament,
-}
-
-class CurrentTournamentListScreen extends GetView<TournamentController> {
-  final RedirectType redirectType;
-  const CurrentTournamentListScreen({
+class TournamentRequestScreen extends GetView<TournamentController> {
+  const TournamentRequestScreen({
     super.key,
-    required this.redirectType,
   });
 
   @override
@@ -71,7 +58,7 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                       AppBar(
                         backgroundColor: Colors.transparent,
                         elevation: 0,
-                        title: Text('Current Tournament',
+                        title: Text('Select Tournament',
                             style: Get.textTheme.headlineMedium?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold)),
@@ -98,7 +85,6 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                                       itemBuilder: (context, index) {
                                         return _Card(
                                           tournament: snapshot.data![index],
-                                          redirectType: redirectType,
                                         );
                                       });
                                 }),
@@ -117,31 +103,22 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
 
 class _Card extends StatelessWidget {
   final TournamentModel tournament;
-  final RedirectType redirectType;
 
-  const _Card({required this.tournament, required this.redirectType});
+  const _Card({
+    required this.tournament,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        switch (redirectType) {
-          case RedirectType.organizeMatch:
-            Get.to(() => const SelectOrganizeTeam());
-            break;
-          case RedirectType.scoreboard:
-            Get.to(() => const SelectTeamForScoreBoard());
-            break;
-          case RedirectType.matchup:
-            Get.to(() => const ViewMatchupsScreen());
-            break;
-          case RedirectType.editForm:
-            Get.to(() => const EditTournamentScreen());
-            break;
-          case RedirectType.currentTournament:
-            // Get.to(() => redirectScreen);
-            break;
-        }
+        Get.bottomSheet(BottomSheet(
+          enableDrag: false,
+          builder: (context) => RequestsBottomSheet(
+            tournamentId: tournament.id,
+          ),
+          onClosing: () {},
+        ));
       },
       child: Container(
         width: Get.width,
@@ -162,10 +139,6 @@ class _Card extends StatelessWidget {
           ),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: Colors.grey[200],
-              ),
               const Spacer(),
               Text(
                 tournament.tournamentName,
@@ -173,6 +146,11 @@ class _Card extends StatelessWidget {
                     ?.copyWith(fontWeight: FontWeight.w600, fontSize: 19),
               ),
               const Spacer(),
+              Text(
+                '${tournament.registeredTeamsCount}/${tournament.tournamentLimit}',
+                style: Get.textTheme.titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w400, fontSize: 16),
+              ),
             ],
           ),
         ),

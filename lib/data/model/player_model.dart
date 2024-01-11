@@ -11,13 +11,30 @@ class PlayerModel {
   final String name;
   final String phoneNumber;
   final String role;
-  final BattingModel batting;
-  final BowlingModel bowling;
+  @JsonKey(disallowNullValue: false)
+  BattingModel? batting = BattingModel(
+    runs: 0,
+    balls: 0,
+    fours: 0,
+    sixes: 0,
+    strikeRate: 0,
+    bowledBy: '',
+    outType: '',
+  );
+  @JsonKey(disallowNullValue: false)
+  BowlingModel? bowling = BowlingModel(
+    runs: 0,
+    wickets: 0,
+    economy: 0,
+    maidens: 0,
+    fours: 0,
+    sixes: 0,
+    wides: 0,
+    noBalls: 0,
+  );
   PlayerModel(
       {required this.name,
       required this.id,
-      required this.batting,
-      required this.bowling,
       required this.phoneNumber,
       required this.role});
 

@@ -35,8 +35,36 @@ class BowlingModel {
       _$BowlingModelFromJson(json);
   Map<String, dynamic> toJson() => _$BowlingModelToJson(this);
 
-  void addRuns(int run, {List<EventType>? type}) {
-    currentBall = currentBall + 1;
+  void addRuns(int run, {List<EventType>? events}) {
+    events ??= [];
+    if (!events.contains(EventType.wide) &&
+        !events.contains(EventType.noBall)) {
+      currentBall = currentBall + 1;
+    }
+    runs = runs + run;
+    for (var element in events) {
+      switch (element) {
+        case EventType.four:
+          fours = fours + 1;
+          break;
+        case EventType.six:
+          sixes = sixes + 1;
+          break;
+        case EventType.wide:
+          wides = wides + 1;
+          runs = runs + 1;
+          break;
+        case EventType.noBall:
+          noBalls = noBalls + 1;
+          break;
+        case EventType.wicket:
+          wickets = wickets + 1;
+
+          break;
+        default:
+          break;
+      }
+    }
     overs["$currentOver.$currentBall"] = OverModel(
         over: currentOver,
         ball: currentBall,

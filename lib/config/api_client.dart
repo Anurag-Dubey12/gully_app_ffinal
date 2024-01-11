@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/config/app_constants.dart';
 import 'package:gully_app/utils/app_logger.dart';
 
 import 'preferences.dart';
@@ -10,8 +11,8 @@ class GetConnectClient extends GetConnect {
   @override
   void onInit() {
     super.onInit();
-    // httpClient.baseUrl = 'http://65.0.80.235:3000';
-    httpClient.baseUrl = 'http://192.168.1.7:3000';
+
+    httpClient.baseUrl = AppConstants.baseUrl;
 
     httpClient.timeout = const Duration(seconds: 13);
     httpClient.addRequestModifier<dynamic>((request) {

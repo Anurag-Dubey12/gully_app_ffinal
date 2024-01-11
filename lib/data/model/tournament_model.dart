@@ -4,14 +4,22 @@ part 'tournament_model.g.dart';
 
 @JsonSerializable(createToJson: false)
 class TournamentModel {
+  @JsonKey(name: '_id')
+  final String id;
   final String tournamentName;
   final DateTime tournamentStartDateTime;
   final DateTime tournamentEndDateTime;
   final double fees;
+  @JsonKey(defaultValue: 0, disallowNullValue: false)
   final int tournamentLimit;
+  @JsonKey(defaultValue: 0)
   final int registeredTeamsCount;
+  @JsonKey(disallowNullValue: false)
+  final String? phoneNumber;
   TournamentModel(
       {required this.tournamentName,
+      required this.id,
+      required this.phoneNumber,
       required this.tournamentLimit,
       required this.registeredTeamsCount,
       required this.tournamentStartDateTime,

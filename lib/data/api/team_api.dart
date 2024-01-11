@@ -71,6 +71,7 @@ class TeamApi {
       errorSnackBar('Bad Request');
       return ApiResponse.fromJson(response.body);
     }
+
     return ApiResponse.fromJson(response.body);
   }
 

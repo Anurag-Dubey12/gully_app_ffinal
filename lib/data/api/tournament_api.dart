@@ -43,4 +43,48 @@ class TournamentApi {
 
     return ApiResponse.fromJson(response.body);
   }
+
+  Future<ApiResponse> updateTeamRequest(
+      String tournamentId, String teamId, String action) async {
+    var response = await repo.post('/organizer/profile/updateTeamRequest',
+        {'tournamentId': tournamentId, 'teamId': teamId, 'action': action});
+    if (!response.isOk) {
+      throw response.body['error'] ?? 'Unable to Process Request';
+    }
+
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getTeamRequests(String tournamentId) async {
+    var response = await repo.get('/organizer/profile/requests/$tournamentId');
+    if (!response.isOk) {
+      throw response.body['error'] ?? 'Unable to Process Request';
+    }
+
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> registerTeam({
+    required String teamId,
+    required String viceCaptainContact,
+    required String address,
+    required String tournamentId,
+  }) async {
+    final obj = {
+      'teamId': teamId,
+      'viceCaptainContact': viceCaptainContact,
+      'address': address,
+    };
+    logger.i(obj);
+    final response =
+        await repo.post('/users/entry-form/$teamId/$tournamentId', obj);
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
 }

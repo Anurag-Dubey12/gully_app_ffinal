@@ -34,8 +34,10 @@ class FormInput extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label ?? '',
-              style: Get.textTheme.headlineMedium
-                  ?.copyWith(fontWeight: FontWeight.bold, color: Colors.black)),
+              style: Get.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  fontSize: 16)),
           const SizedBox(
             height: 8,
           ),

@@ -8,7 +8,6 @@ import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/utils/app_logger.dart';
 
 import '../widgets/scorecard/batting_card.dart';
-import '../widgets/scorecard/bowling_card.dart';
 import '../widgets/scorecard/current_over_card.dart';
 import '../widgets/scorecard/event_handler.dart';
 import '../widgets/scorecard/top_scorecard.dart';
@@ -36,7 +35,7 @@ class ScoreCardScreen extends GetView<ScoreBoardController> {
             heroTag: 'copy',
             onPressed: () async {
               try {
-                logger.d("COPYING ${controller.scoreboard.value!.toJson()}}");
+                logger.d("COPYING");
                 await Clipboard.setData(ClipboardData(
                     text: jsonEncode(controller.scoreboard.value!.toJson())));
                 logger.d("COPIED");
@@ -63,18 +62,24 @@ class ScoreCardScreen extends GetView<ScoreBoardController> {
         ],
       ),
       body: const Padding(
-        padding: EdgeInsets.all(18.0),
-        child: Column(children: [
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+        child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+          // Expanded(flex: 4, child: ScoreCard()),
+
+          // // SizedBox(height: 10),
+          // Expanded(flex: 10, child: BattingStats()),
+
+          // Expanded(flex: 3, child: CurrentOverStats()),
+
+          // Expanded(flex: 12, child: ScoreUpdater()),
           ScoreCard(),
-          SizedBox(height: 10),
+
+          // SizedBox(height: 10),
           BattingStats(),
-          SizedBox(height: 10),
-          BowlingStats(),
-          SizedBox(height: 10),
+
           CurrentOverStats(),
-          SizedBox(height: 10),
-          ScoreUpdater(),
-          Spacer(),
+
+          Expanded(flex: 3, child: ScoreUpdater()),
         ]),
       ),
     ));

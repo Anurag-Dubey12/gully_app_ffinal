@@ -1,9 +1,12 @@
 import 'package:get/get.dart';
 import 'package:gully_app/data/api/tournament_api.dart';
+import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
+import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 
-class TournamentController extends GetxController {
+class TournamentController extends GetxController
+    with StateMixin<TournamentModel> {
   final TournamentApi tournamentApi;
   TournamentController(this.tournamentApi) {
     getTournamentList();
@@ -26,9 +29,10 @@ class TournamentController extends GetxController {
   RxList<TournamentModel> tournamentList = <TournamentModel>[].obs;
   Future getTournamentList() async {
     try {
+      final position = await determinePosition();
       final response = await tournamentApi.getTournamentList(
-        latitude: 19.142677500362463,
-        longitude: 72.82628403643015,
+        latitude: position.latitude,
+        longitude: position.longitude,
         startDate: selectedDate.value,
         endDate: selectedDate.value,
       );
@@ -38,7 +42,7 @@ class TournamentController extends GetxController {
           .toList();
     } catch (e) {
       errorSnackBar(e.toString());
-      return false;
+      rethrow;
     }
   }
 
@@ -52,6 +56,54 @@ class TournamentController extends GetxController {
     } catch (e) {
       errorSnackBar(e.toString());
       rethrow;
+    }
+  }
+
+  Future<bool> updateTeamRequest(
+    String tournamentId,
+    String teamId,
+    String action,
+  ) {
+    try {
+      tournamentApi.updateTeamRequest(tournamentId, teamId, action);
+      return Future.value(true);
+    } catch (e) {
+      errorSnackBar(e.toString());
+      return Future.value(false);
+    }
+  }
+
+  Future<List<TeamModel>> getTeamRequests(String tournamentId) async {
+    try {
+      final response = await tournamentApi.getTeamRequests(tournamentId);
+      return response.data!['teamRequests']
+          .map<TeamModel>((e) => TeamModel.fromJson(e))
+          .toList();
+    } catch (e) {
+      errorSnackBar(e.toString());
+      return [];
+    }
+  }
+
+  void setSelectedTournament(TournamentModel tournament) {
+    change(GetStatus.success(tournament));
+  }
+
+  Future<bool> registerTeam(
+      {required String teamId,
+      required String viceCaptainContact,
+      required String address,
+      required String tournamentId}) async {
+    try {
+      final response = await tournamentApi.registerTeam(
+          teamId: teamId,
+          viceCaptainContact: viceCaptainContact,
+          address: address,
+          tournamentId: tournamentId);
+      return response.status!;
+    } catch (e) {
+      errorSnackBar(e.toString());
+      return false;
     }
   }
 }

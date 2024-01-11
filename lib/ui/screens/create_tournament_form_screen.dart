@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/ui/screens/select_location.dart';
 import 'package:gully_app/ui/widgets/create_tournament/form_input.dart';
+import 'package:gully_app/utils/app_logger.dart';
+import 'package:gully_app/utils/geo_locator_helper.dart';
 
 import '../../data/controller/auth_controller.dart';
 import '../theme/theme.dart';
@@ -36,6 +38,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
       TextEditingController();
   final TextEditingController _teamLimitController = TextEditingController();
 
+  final TextEditingController _addressController = TextEditingController();
   final TextEditingController _disclaimerController = TextEditingController();
 
   final _key = GlobalKey<FormState>();
@@ -87,29 +90,31 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                               setState(() {
                                 isLoading = true;
                               });
+                              final position = await determinePosition();
                               Map<String, dynamic> tournament = {
                                 "tournamentStartDateTime":
                                     from?.toIso8601String(),
                                 "tournamentEndDateTime": to?.toIso8601String(),
                                 "tournamentName": _nameController.text,
-                                "tournamentCategory": "turf",
+                                "tournamentCategory": tournamentType,
                                 "ballType": ballType.toLowerCase(),
-                                "pitchType": "cement",
+                                "pitchType": pitchType,
                                 "matchType": "Tennis ball cricket match",
                                 "price": "1st price",
-                                "location": "Mumbai",
+                                "location": _addressController.text,
                                 "tournamentPrize": '1st prize',
                                 "fees": _entryFeeController.text,
                                 "ballCharges": _ballChargesController.text,
                                 "breakfastCharges":
                                     _breakfastChargesController.text,
-                                "stadiumAddress": "ABC",
-                                "tournamentLimit": 12,
+                                "stadiumAddress": _addressController.text,
+                                "tournamentLimit": _teamLimitController.text,
                                 "gameType": "KABADDI",
-                                "selectLocation": "borivali", // remove
-                                "latitude": 19.217907,
-                                "longitude": 72.847084
+                                "selectLocation": _addressController.text,
+                                "latitude": position.latitude,
+                                "longitude": position.longitude,
                               };
+                              logger.d(tournament.toString());
                               bool isOk = await tournamentController
                                   .createTournament(tournament);
                               if (isOk) {
@@ -307,11 +312,17 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                               maxLines: 5,
                             ),
                             FormInput(
-                              controller: TextEditingController(),
+                              controller: _addressController,
                               label: 'Select Stadium Address',
                               readOnly: true,
                               onTap: () {
-                                Get.to(() => const SelectLocationScreen());
+                                Get.to(() => SelectLocationScreen(
+                                      onSelected: (e) {
+                                        setState(() {
+                                          _addressController.text = e;
+                                        });
+                                      },
+                                    ));
                               },
                             ),
                             FormInput(
@@ -349,7 +360,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                                       });
                                     }),
                                 Text(
-                                    'I\'ve hereby read and agree to your terms and conditions',
+                                    'I\'ve hereby read and agree to your\nterms and conditions',
                                     style: Get.textTheme.labelMedium),
                               ],
                             )

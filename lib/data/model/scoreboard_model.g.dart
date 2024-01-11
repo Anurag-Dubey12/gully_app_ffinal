@@ -11,9 +11,9 @@ ScoreboardModel _$ScoreboardModelFromJson(Map<String, dynamic> json) =>
       team1: TeamModel.fromJson(json['team1'] as Map<String, dynamic>),
       team2: TeamModel.fromJson(json['team2'] as Map<String, dynamic>),
       matchId: json['matchId'] as String,
-      lastOvers:
-          (json['lastOvers'] as List<dynamic>).map((e) => e as String).toList(),
     )
+      ..lastOvers =
+          (json['lastOvers'] as List<dynamic>).map((e) => e as String).toList()
       ..ballsToBowl = json['ballsToBowl'] as int
       ..currentOver = json['currentOver'] as int
       ..currentBall = json['currentBall'] as int
@@ -32,6 +32,9 @@ abstract class _$ScoreboardModelPerFieldToJson {
   static Object? team1(TeamModel instance) => instance.toJson();
   // ignore: unused_element
   static Object? team2(TeamModel instance) => instance.toJson();
+  // ignore: unused_element
+  static Object? partnerships(Map<String, PartnershipModel> instance) =>
+      instance.map((k, e) => MapEntry(k, e.toJson()));
   // ignore: unused_element
   static Object? matchId(String instance) => instance;
   // ignore: unused_element
@@ -62,6 +65,8 @@ Map<String, dynamic> _$ScoreboardModelToJson(ScoreboardModel instance) =>
     <String, dynamic>{
       'team1': instance.team1.toJson(),
       'team2': instance.team2.toJson(),
+      'partnerships':
+          instance.partnerships.map((k, e) => MapEntry(k, e.toJson())),
       'matchId': instance.matchId,
       'lastOvers': instance.lastOvers,
       'extras': instance._extras.toJson(),

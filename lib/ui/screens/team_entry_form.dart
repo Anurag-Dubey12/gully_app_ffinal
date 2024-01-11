@@ -1,25 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/select_location.dart';
+import 'package:gully_app/data/controller/auth_controller.dart';
+import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/data/model/team_model.dart';
+import 'package:gully_app/ui/screens/home_screen.dart';
+import 'package:gully_app/ui/widgets/create_tournament/form_input.dart';
+import 'package:gully_app/utils/app_logger.dart';
 
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
-import '../widgets/custom_drop_down_field.dart';
-import '../widgets/custom_text_field.dart';
 import '../widgets/primary_button.dart';
 
 class TeamEntryForm extends StatefulWidget {
-  const TeamEntryForm({super.key});
+  final TeamModel team;
+  const TeamEntryForm({super.key, required this.team});
 
   @override
   State<TeamEntryForm> createState() => _TeamEntryFormState();
 }
 
 class _TeamEntryFormState extends State<TeamEntryForm> {
-  String selectedValue = 'Tournament 1';
   String selectedValue2 = 'Tennis';
+  final TextEditingController _viceCaptainController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  bool rulesAccepted = false;
+  bool termsAccepted = false;
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final TournamentController controller = Get.find<TournamentController>();
+    final AuthController authController = Get.find<AuthController>();
     return DecoratedBox(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -45,8 +55,23 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 35.0, vertical: 19),
                   child: PrimaryButton(
+                    isDisabled: !rulesAccepted || !termsAccepted,
                     onTap: () {
-                      Get.to(() => const SelectLocationScreen());
+                      if (_formKey.currentState!.validate()) {
+                        controller
+                            .registerTeam(
+                          teamId: widget.team.id,
+                          viceCaptainContact: _viceCaptainController.text,
+                          address: _addressController.text,
+                          tournamentId: controller.status.data!.id,
+                        )
+                            .then((value) {
+                          if (value) {
+                            logger.i('Team Registered');
+                            Get.offAll(() => const HomeScreen());
+                          }
+                        });
+                      }
                     },
                     title: 'Submit',
                   ),
@@ -119,180 +144,130 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                           padding: const EdgeInsets.only(
                               left: 18.0, right: 18.0, top: 18.0, bottom: 0.0),
                           child: SingleChildScrollView(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Team name',
-                                    style: Get.textTheme.headlineMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15,
-                                            color: Colors.black)),
-                                DropDownWidget(
-                                  title: 'Select Team Name',
-                                  onSelect: (e) {
-                                    setState(() {
-                                      selectedValue = e;
-                                    });
-                                    Get.back();
-                                  },
-                                  selectedValue: selectedValue,
-                                  items: const ['CSK', 'RCB', 'KKR'],
-                                ),
-                                const SizedBox(
-                                  height: 18,
-                                ),
-                                Text('Address',
-                                    style: Get.textTheme.headlineMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15,
-                                            color: Colors.black)),
-                                DropDownWidget(
-                                  title: 'Select Ball Type',
-                                  onSelect: (e) {
-                                    setState(() {
-                                      selectedValue2 = e;
-                                    });
-                                    Get.back();
-                                  },
-                                  selectedValue: selectedValue2,
-                                  items: const [
-                                    'Address',
-                                    'Address',
-                                    'Address',
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 18,
-                                ),
-                                Text('Email Id',
-                                    style: Get.textTheme.headlineMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15,
-                                            color: Colors.black)),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                const CustomTextField(
-                                  filled: true,
-                                ),
-                                const SizedBox(
-                                  height: 18,
-                                ),
-                                Text('Captian Contact Number',
-                                    style: Get.textTheme.headlineMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15,
-                                            color: Colors.black)),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                const CustomTextField(
-                                  filled: true,
-                                ),
-                                const SizedBox(
-                                  height: 18,
-                                ),
-                                Text('Vice Captian Contact Number',
-                                    style: Get.textTheme.headlineMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15,
-                                            color: Colors.black)),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                const CustomTextField(
-                                  filled: true,
-                                ),
-                                const SizedBox(
-                                  height: 18,
-                                ),
-                                Text('Entry Fee',
-                                    style: Get.textTheme.headlineMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15,
-                                            color: Colors.black)),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                CustomTextField(
-                                  onTap: () {},
-                                  enabled: true,
-                                  filled: true,
-                                  readOnly: true,
-                                ),
-                                const SizedBox(
-                                  height: 18,
-                                ),
-                                Text('Organizer Number',
-                                    style: Get.textTheme.headlineMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15,
-                                            color: Colors.black)),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                const CustomTextField(
-                                  filled: true,
-                                ),
-                                const SizedBox(
-                                  height: 18,
-                                ),
-                                Text('Rules',
-                                    style: Get.textTheme.headlineMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15,
-                                            color: Colors.black)),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                const CustomTextField(
-                                  maxLines: 3,
-                                  filled: true,
-                                ),
-                                Row(
-                                  children: [
-                                    Checkbox(value: true, onChanged: (e) {}),
-                                    Text(
-                                        'I\'ve hereby read and agree to your terms and conditions',
-                                        style: Get.textTheme.labelMedium),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 18,
-                                ),
-                                Text('Disclaimer',
-                                    style: Get.textTheme.headlineMedium
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15,
-                                            color: Colors.black)),
-                                const SizedBox(
-                                  height: 8,
-                                ),
-                                const CustomTextField(
-                                  maxLines: 5,
-                                  filled: true,
-                                ),
-                                Row(
-                                  children: [
-                                    Checkbox(value: true, onChanged: (e) {}),
-                                    Text(
-                                        'I\'ve hereby read and agree to your terms and conditions',
-                                        style: Get.textTheme.labelMedium),
-                                  ],
-                                ),
-                                const SizedBox(
-                                  height: 108,
-                                ),
-                              ],
+                            child: Form(
+                              key: _formKey,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FormInput(
+                                    controller: TextEditingController(
+                                      text: widget.team.name,
+                                    ),
+                                    readOnly: true,
+                                    enabled: false,
+                                    label: 'Team name',
+                                  ),
+                                  FormInput(
+                                    controller: _addressController,
+                                    label: 'Address',
+                                  ),
+                                  FormInput(
+                                    controller: TextEditingController(
+                                        text: authController.user.value.email),
+                                    label: 'Email',
+                                    enabled: false,
+                                  ),
+                                  FormInput(
+                                    controller: TextEditingController(
+                                      text:
+                                          authController.user.value.phoneNumber,
+                                    ),
+                                    readOnly: true,
+                                    enabled: false,
+                                    label: 'Captian Contact ',
+                                  ),
+                                  FormInput(
+                                    controller: _viceCaptainController,
+                                    label: 'Vice Captian Contact ',
+                                    textInputType: TextInputType.number,
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'Please enter a valid phone number';
+                                      }
+                                      if (value.length != 10) {
+                                        return 'Please enter a valid phone number';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                  FormInput(
+                                    controller: TextEditingController(
+                                        text: controller.status.data?.fees
+                                            .toString()),
+                                    label: "Entry Fees",
+                                    enabled: false,
+                                  ),
+                                  FormInput(
+                                    controller: TextEditingController(
+                                        text: controller
+                                            .status.data?.phoneNumber
+                                            .toString()),
+                                    enabled: false,
+                                    label: "Organizer Phone",
+                                  ),
+                                  FormInput(
+                                    controller: TextEditingController(
+                                        text:
+                                            'By clicking on submit you agree to the terms and conditions of the tournament'),
+                                    enabled: false,
+                                    maxLines: 4,
+                                    label: "Rules",
+                                  ),
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      SizedBox(
+                                          width: 20,
+                                          child: Checkbox(
+                                              value: rulesAccepted,
+                                              onChanged: (e) {
+                                                setState(() {
+                                                  rulesAccepted = e!;
+                                                });
+                                              })),
+                                      const SizedBox(
+                                        width: 8,
+                                      ),
+                                      Text(
+                                          'I\'ve hereby read and agree to your terms and\nconditions',
+                                          style: Get.textTheme.titleSmall),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 18,
+                                  ),
+                                  FormInput(
+                                    controller: TextEditingController(
+                                        text:
+                                            'By clicking on submit you agree to the terms and conditions of the tournament'),
+                                    enabled: false,
+                                    maxLines: 4,
+                                    label: "Rules",
+                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                          width: 20,
+                                          child: Checkbox(
+                                              value: termsAccepted,
+                                              onChanged: (e) {
+                                                setState(() {
+                                                  termsAccepted = e!;
+                                                });
+                                              })),
+                                      const SizedBox(
+                                        width: 8,
+                                      ),
+                                      Text(
+                                          'I\'ve hereby read and agree to your terms and\nconditions',
+                                          style: Get.textTheme.titleSmall),
+                                    ],
+                                  ),
+                                  const SizedBox(
+                                    height: 108,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -301,151 +276,22 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                   ],
                 ),
               ),
-            )
+            ),
+            FocusScope.of(context).hasFocus
+                ? Positioned(
+                    bottom: 0,
+                    child: Container(
+                        decoration: const BoxDecoration(color: Colors.white),
+                        padding: const EdgeInsets.all(9),
+                        width: Get.width,
+                        child: const Text('Done',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18))))
+                : const SizedBox(),
           ]),
         ));
-  }
-}
-
-class _TopCard extends StatelessWidget {
-  const _TopCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: Get.width,
-      decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 5,
-                spreadRadius: 2,
-                offset: const Offset(0, 1))
-          ],
-          borderRadius: BorderRadius.circular(16)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 28),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(5)),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: Get.width / 4.5, vertical: 13),
-                  child: Text(
-                    'Bhushan Cricket',
-                    style: Get.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const _SelectFromToCard()
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _SelectFromToCard extends StatelessWidget {
-  const _SelectFromToCard();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          const Spacer(),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(left: 4.0),
-                child: Text('From'),
-              ),
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.now(),
-                          lastDate:
-                              DateTime.now().add(const Duration(days: 365)));
-                    },
-                    child: Container(
-                      width: 50,
-                      height: 23,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          color: Colors.grey[200]),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Icon(
-                    Icons.calendar_month,
-                    size: 18,
-                    color: AppTheme.secondaryYellowColor,
-                  )
-                ],
-              )
-            ],
-          ),
-          const Spacer(),
-          const Spacer(),
-          GestureDetector(
-            onTap: () {
-              showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime.now(),
-                  lastDate: DateTime.now().add(const Duration(days: 365)));
-            },
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 4.0),
-                  child: Text(
-                    'To',
-                    style: Get.textTheme.labelLarge,
-                  ),
-                ),
-                Row(
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 23,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4),
-                          color: Colors.grey[200]),
-                    ),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    const Icon(
-                      Icons.calendar_month,
-                      size: 18,
-                      color: AppTheme.secondaryYellowColor,
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-          const Spacer(),
-        ],
-      ),
-    );
   }
 }

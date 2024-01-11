@@ -62,6 +62,7 @@ class CustomTextField extends StatelessWidget {
         suffixIcon: suffixIcon,
         filled: filled,
         isDense: true,
+        fillColor: Colors.white,
         hintStyle: const TextStyle(color: Colors.grey, fontSize: 12),
         border: filled ?? false
             ? OutlineInputBorder(

@@ -23,7 +23,7 @@ List<DateTime> getDateList() {
   final last7Days =
       List.generate(7, (index) => today.subtract(Duration(days: index + 1)));
   final next4Days =
-      List.generate(4, (index) => today.add(Duration(days: index + 1)));
+      List.generate(7, (index) => today.add(Duration(days: index + 1)));
 
   last7Days.sort((a, b) => a.compareTo(b));
   return [...last7Days, today, ...next4Days];

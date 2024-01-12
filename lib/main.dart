@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/api/ranking_api.dart';
 import 'package:gully_app/data/api/team_api.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
@@ -19,7 +22,7 @@ import '/ui/theme/theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }
 
@@ -36,6 +39,7 @@ class MyApp extends StatelessWidget {
               Bind.lazyPut<GetConnectClient>(() => GetConnectClient()),
               Bind.put<Preferences>(Preferences()),
               Bind.lazyPut<AuthApi>(() => AuthApi()),
+              Bind.lazyPut<RankingApi>(() => RankingApi()),
               Bind.lazyPut<TournamentApi>(
                   () => TournamentApi(repo: Get.find())),
               Bind.lazyPut<TeamApi>(() => TeamApi(repo: Get.find())),
@@ -99,5 +103,14 @@ class _MyHomePageState extends State<MyHomePage> {
           tooltip: 'Increment',
           child: const Icon(Icons.add),
         ));
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

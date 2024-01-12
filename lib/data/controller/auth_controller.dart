@@ -12,7 +12,7 @@ import 'package:gully_app/utils/utils.dart';
 import '../../ui/widgets/custom_snackbar.dart';
 import '../api/auth_api.dart';
 
-class AuthController extends GetxController with StateMixin<UserModel> {
+class AuthController extends GetxController with StateMixin<UserModel?> {
   final AuthApi repo;
   AuthController({required this.repo}) {
     change(GetStatus.empty());
@@ -61,7 +61,7 @@ class AuthController extends GetxController with StateMixin<UserModel> {
       return false;
     } catch (e) {
       log("message ${e.toString()}");
-      errorSnackBar("Unable to login");
+      errorSnackBar("Unable to login $e ${e.toString()}");
       change(GetStatus.error(e.toString()));
       return false;
     }

@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/challenge_team.dart';
+import 'package:gully_app/data/model/team_ranking_model.dart';
+import 'package:gully_app/utils/date_time_helpers.dart';
 
+import '../../data/controller/ranking_controller.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
-class TopPerformersScreen extends StatelessWidget {
+class TopPerformersScreen extends StatefulWidget {
   const TopPerformersScreen({super.key});
 
   @override
+  State<TopPerformersScreen> createState() => _TopPerformersScreenState();
+}
+
+class _TopPerformersScreenState extends State<TopPerformersScreen> {
+  int _selectedTab = 0;
+  @override
   Widget build(BuildContext context) {
+    final controller = Get.putOrFind(() => RankingController(Get.find()));
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -47,30 +56,20 @@ class TopPerformersScreen extends StatelessWidget {
               Positioned(
                   top: 0,
                   child: SizedBox(
+                    height: Get.height,
                     width: Get.width,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 0, top: 30),
-                          child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: BackButton(
-                                color: Colors.white,
-                              )),
-                        ),
-                        const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Top Performers',
+                        AppBar(
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                          iconTheme: const IconThemeData(color: Colors.white),
+                          title: const Text('Top Performers',
                               style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 27)),
                         ),
                         const SizedBox(height: 30),
                         Padding(
@@ -78,131 +77,160 @@ class TopPerformersScreen extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(40),
-                                    color: AppTheme.secondaryYellowColor,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: AppTheme.secondaryYellowColor
-                                              .withOpacity(0.3),
-                                          blurRadius: 20,
-                                          spreadRadius: 2,
-                                          offset: const Offset(0, 7))
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(18.0),
-                                      child: Text('Leather ball',
-                                          style: Get.textTheme.bodyLarge
-                                              ?.copyWith(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold)),
-                                    ),
-                                  ),
-                                ),
+                              _SelectBallTypeCard(
+                                tab: 0,
+                                selectedTab: _selectedTab,
+                                text: 'Leather ball',
+                                onTap: (st) {
+                                  setState(() {
+                                    // ignore: unnecessary_statements
+                                    _selectedTab = 0;
+                                  });
+                                },
                               ),
                               const SizedBox(width: 10),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(40),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: const Color.fromARGB(
-                                                  121, 225, 215, 215)
-                                              .withOpacity(0.9),
-                                          blurRadius: 20,
-                                          spreadRadius: 2,
-                                          offset: const Offset(0, 7))
-                                    ],
-                                  ),
-                                  child: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(18.0),
-                                      child: Text('Tennis Ball',
-                                          style: Get.textTheme.bodyLarge
-                                              ?.copyWith(
-                                                  color: AppTheme.primaryColor,
-                                                  fontWeight: FontWeight.bold)),
-                                    ),
-                                  ),
-                                ),
+                              _SelectBallTypeCard(
+                                tab: 1,
+                                selectedTab: _selectedTab,
+                                text: 'Tennis ball',
+                                onTap: (st) {
+                                  setState(() {
+                                    // ignore: unnecessary_statements
+                                    _selectedTab = st;
+                                  });
+                                },
                               )
                             ],
                           ),
                         ),
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text('Daily top performer',
-                                style: Get.textTheme.bodyMedium?.copyWith(
-                                    fontWeight: FontWeight.w400,
-                                    color: Colors.black)),
+                        // Center(
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.all(8.0),
+                        //     child: Text('Most matches played in Mumbai',
+                        //         style: Get.textTheme.bodyMedium?.copyWith(
+                        //             fontWeight: FontWeight.w400,
+                        //             color: Colors.black)),
+                        //   ),
+                        // ),
+                        Expanded(
+                          child: Container(
+                            color: Colors.black26,
+                            // height: Get.height * 0.6,
+                            child: FutureBuilder<List<TeamRankingModel>>(
+                                future: controller.getTeamRankingList(
+                                    _selectedTab == 0 ? 'leather' : 'tennis'),
+                                builder: (context, snapshot) {
+                                  return ListView.separated(
+                                      padding: const EdgeInsets.all(20),
+                                      itemCount: snapshot.data?.length ?? 0,
+                                      shrinkWrap: true,
+                                      separatorBuilder: (c, i) =>
+                                          const SizedBox(height: 10),
+                                      itemBuilder: (c, i) =>
+                                          _TeamCard(team: snapshot.data![i]));
+                                }),
                           ),
-                        ),
-                        Container(
-                          color: Colors.black26,
-                          height: Get.height * 0.7,
-                          child: ListView.separated(
-                              padding: const EdgeInsets.all(20),
-                              itemCount: 10,
-                              shrinkWrap: true,
-                              separatorBuilder: (c, i) =>
-                                  const SizedBox(height: 10),
-                              itemBuilder: (c, i) => GestureDetector(
-                                    onTap: () {
-                                      Get.to(() => const ChallengeTeam());
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(13.0),
-                                        child: Row(
-                                          children: [
-                                            const CircleAvatar(
-                                              radius: 26,
-                                            ),
-                                            const SizedBox(width: 12),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text('Team Name',
-                                                    style: Get.textTheme
-                                                        .headlineMedium
-                                                        ?.copyWith(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color:
-                                                                Colors.black)),
-                                                // Text(
-                                                //   'Since 24.11.2017',
-                                                //   style: Get
-                                                //       .textTheme.bodyMedium
-                                                //       ?.copyWith(
-                                                //           color:
-                                                //               Colors.black54),
-                                                // ),
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  )),
                         )
                       ],
                     ),
                   ))
             ],
           )),
+    );
+  }
+}
+
+class _TeamCard extends StatelessWidget {
+  final TeamRankingModel team;
+  const _TeamCard({
+    super.key,
+    required this.team,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(13.0),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 29,
+              backgroundImage: NetworkImage(team.teamLogo),
+            ),
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(team.teamName,
+                    style: Get.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.bold, color: Colors.black)),
+                Text(
+                  'Since ${formatDateTime('dd.MM.yyyy', team.registeredAt)}',
+                  style:
+                      Get.textTheme.bodyMedium?.copyWith(color: Colors.black54),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SelectBallTypeCard extends StatelessWidget {
+  final int tab;
+  final int selectedTab;
+  final String text;
+  final Function(int tab) onTap;
+
+  const _SelectBallTypeCard({
+    super.key,
+    required this.onTap,
+    required this.tab,
+    required this.selectedTab,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Material(
+        borderRadius: BorderRadius.circular(40),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(40),
+          onTap: () => onTap(tab),
+          child: Ink(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(40),
+              color: tab == selectedTab
+                  ? AppTheme.secondaryYellowColor
+                  : Colors.white,
+              boxShadow: [
+                BoxShadow(
+                    color: AppTheme.secondaryYellowColor.withOpacity(0.3),
+                    blurRadius: 20,
+                    spreadRadius: 2,
+                    offset: const Offset(0, 7))
+              ],
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Text(text,
+                    style: Get.textTheme.bodyLarge?.copyWith(
+                        color: selectedTab == tab ? Colors.white : Colors.black,
+                        fontWeight: FontWeight.bold)),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

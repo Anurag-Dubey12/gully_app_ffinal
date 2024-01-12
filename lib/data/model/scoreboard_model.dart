@@ -20,13 +20,15 @@ class ScoreboardModel {
   )
   final Map<String, PartnershipModel> partnerships = {};
   final String matchId;
-  List<String> lastOvers = [];
+
   @JsonKey(
     includeToJson: true,
     name: 'extras',
   )
   final ExtraModel _extras =
       ExtraModel(wides: 0, noBalls: 0, byes: 0, legByes: 0, penalty: 0);
+  get firstInningsScore => 0;
+  int secondInningsScore = 0;
   int ballsToBowl = 6;
   int currentOver = 0;
   int currentBall = 0;
@@ -37,7 +39,16 @@ class ScoreboardModel {
   late String _bowlerId;
   late String _strikerId;
   late String _nonStrikerId;
-  Map<String, OverModel> overHistory = {};
+  Map<String, OverModel> firstInningHistory = {};
+  Map<String, OverModel> secondInningHistory = {};
+
+  Map<String, OverModel> get currentInningsHistory {
+    if (currentInnings == 1) {
+      return firstInningHistory;
+    } else {
+      return secondInningHistory;
+    }
+  }
 
   ScoreboardModel({
     required this.team1,
@@ -71,9 +82,9 @@ class ScoreboardModel {
     for (var i = 0; i < 6; i++) {
       final String key = '$currentOver.$i';
       // logger.i('Key: $key');
-      if (overHistory.containsKey(key)) {
+      if (currentInningsHistory.containsKey(key)) {
         // logger.i('Key: $key exists');
-        temp.add(overHistory[key]!);
+        temp.add(currentInningsHistory[key]!);
       } else {
         // logger.i('Key: $key does not exist');
         temp.add(null);
@@ -136,7 +147,7 @@ class ScoreboardModel {
   }
 
   OverModel get lastBall {
-    if (overHistory.values.isEmpty) {
+    if (currentInningsHistory.values.isEmpty) {
       logger.i('Over history is empty');
       return OverModel(
         over: 1,
@@ -148,7 +159,7 @@ class ScoreboardModel {
         events: [],
       );
     }
-    return overHistory.values.last;
+    return currentInningsHistory.values.last;
   }
 
   void _incrementBall() {
@@ -200,7 +211,7 @@ class ScoreboardModel {
       currentInningsScore += runs + extraRuns;
       ballsToBowl += 1;
       logger.d(key);
-      overHistory.addAll({
+      secondInningHistory.addAll({
         key: OverModel(
           over: over,
           ball: ball,
@@ -216,7 +227,7 @@ class ScoreboardModel {
       currentInningsScore += runs;
       logger.d(key);
       ballsToBowl += 1;
-      overHistory.addAll({
+      secondInningHistory.addAll({
         key: OverModel(
           over: over,
           ball: ball,
@@ -229,27 +240,30 @@ class ScoreboardModel {
       });
       bowler.addRuns(runs, events: events);
     }
-    if (runs % 2 != 0) {
-      logger.i('Odd runs, change strike');
-      changeStrike();
-    } else {
-      logger.i('Even runs, no strike change');
-    }
+
     logger.d(currentBall);
-    if (currentBall == 0 && currentOver != 0) {
+    // if (currentBall == 0 && currentOver != 0) {
+
+    //   return;
+    // }
+
+    if (currentBall == 6) {
       if (runs % 2 == 0) {
         logger.i('Last ball of the over and even runs, change strike');
         changeStrike();
       } else if (runs % 2 != 0) {
         logger.i('Last ball of the over and odd runs, no strike change');
       }
-      return;
-    }
-
-    if (currentBall == 6) {
       currentBall = 0;
       currentOver += 1;
       ballsToBowl = 6;
+    } else {
+      if (runs % 2 != 0) {
+        logger.i('Odd runs, change strike');
+        changeStrike();
+      } else {
+        logger.i('Even runs, no strike change');
+      }
     }
     _updateSR();
     _updatePartnership();

@@ -12,6 +12,7 @@ class GetConnectClient extends GetConnect {
   void onInit() {
     super.onInit();
 
+    // httpClient.baseUrl = 'http://65.0.80.235:3000';
     httpClient.baseUrl = AppConstants.baseUrl;
 
     httpClient.timeout = const Duration(seconds: 13);

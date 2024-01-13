@@ -1,12 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/select_opening_players.dart';
+import 'package:gully_app/data/controller/tournament_controller.dart';
 
+import '../../data/model/matchup_model.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
+import 'select_opening_players.dart';
 
-class SelectTeamForScoreBoard extends StatelessWidget {
+class SelectTeamForScoreBoard extends GetView<TournamentController> {
   const SelectTeamForScoreBoard({super.key});
 
   @override
@@ -50,83 +51,31 @@ class SelectTeamForScoreBoard extends StatelessWidget {
               width: Get.width,
               child: Column(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 0, top: 30),
-                    child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: BackButton(
-                          color: Colors.white,
-                        )),
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
+                  AppBar(
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      title: const Text(
                         'Select Team',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 28,
+                          fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
-                  ),
-                  SizedBox(height: Get.height * 0.04),
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: const Color.fromARGB(132, 61, 60, 58)
-                                .withOpacity(0.3),
-                            blurRadius: 20,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 7))
-                      ],
-                    ),
-                    height: 54,
-                    width: Get.width / 1.2,
-                    child: TextField(
-                      onTap: () {},
-                      decoration: InputDecoration(
-                        isDense: true,
-
-                        suffixIcon: const Icon(
-                          CupertinoIcons.search,
-                          color: AppTheme.secondaryYellowColor,
-                          size: 28,
-                        ),
-                        labelText: 'Search..',
-                        labelStyle: TextStyle(
-                          color: Colors.grey.shade500,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        // isCollapsed: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(60),
-                          borderSide: const BorderSide(
-                            width: 0,
-                            style: BorderStyle.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                      color: const Color.fromARGB(96, 82, 80, 124),
-                      child: Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: ListView.separated(
-                            itemBuilder: (context, index) => const _TeamCard(),
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(
-                              height: 20,
-                            ),
-                            itemCount: 3,
-                            shrinkWrap: true,
-                          ))),
+                      leading: const BackButton(
+                        color: Colors.white,
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: FutureBuilder(
+                          future: controller.getMatchup(controller.state.id),
+                          builder: (context, snapshot) => ListView.builder(
+                                itemCount: snapshot.data?.length ?? 0,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) => _MatchupCard(
+                                  matchup: snapshot.data![index],
+                                ),
+                              ))),
                 ],
               ),
             ))
@@ -137,61 +86,150 @@ class SelectTeamForScoreBoard extends StatelessWidget {
   }
 }
 
-class _TeamCard extends StatelessWidget {
-  const _TeamCard();
+class _MatchupCard extends StatelessWidget {
+  final MatchupModel matchup;
+  const _MatchupCard({
+    super.key,
+    required this.matchup,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => Get.to(() => const SelectOpeningPlayer()),
+    return GestureDetector(
+      onTap: () {
+        Get.to(() => const SelectOpeningPlayer());
+      },
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
           color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [
+            BoxShadow(
+                color: Colors.black12,
+                blurRadius: 20,
+                spreadRadius: 2,
+                offset: Offset(0, 10))
+          ],
         ),
         child: Padding(
-          padding: const EdgeInsets.all(18.0),
-          child: Row(children: [
-            Row(
-              children: [
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 39,
-                      backgroundColor: Colors.grey.shade300,
-                    ),
-                    const Text(
-                      'CSK',
-                      style:
-                          TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const Spacer(),
-            Row(
-              children: [
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 39,
-                      backgroundColor: Colors.grey.shade300,
-                    ),
-                    const Text(
-                      'RCB',
-                      style:
-                          TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ]),
+          padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 18),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(matchup.matchDate.toString(),
+                  style: Get.textTheme.labelMedium?.copyWith()),
+              SizedBox(height: Get.height * 0.01),
+              Row(
+                children: [
+                  Column(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage:
+                            NetworkImage(matchup.team1.toImageUrl()),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        matchup.team1.name,
+                        style: Get.textTheme.headlineSmall?.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: Get.textScaleFactor * 17,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Column(
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Chip(
+                          label: Text('VS',
+                              style: Get.textTheme.labelLarge?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold)),
+                          backgroundColor: AppTheme.secondaryYellowColor,
+                          side: BorderSide.none),
+                    ],
+                  ),
+                  const Spacer(),
+                  Column(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage:
+                            NetworkImage(matchup.team2.toImageUrl()),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        matchup.team2.name,
+                        style: Get.textTheme.headlineSmall?.copyWith(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: Get.textScaleFactor * 17,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              SizedBox(height: Get.height * 0.01),
+              // Center(
+              //   child: Text('20/1',
+              //       style: Get.textTheme.headlineLarge?.copyWith(
+              //           color: Colors.green, fontWeight: FontWeight.w800)),
+              // ),
+              // SizedBox(height: Get.height * 0.01),
+              // Row(
+              //   children: [
+              //     Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         RichText(
+              //             text: TextSpan(
+              //                 text: 'Overs: ',
+              //                 style: const TextStyle(
+              //                     fontSize: 13, color: Colors.black),
+              //                 children: [
+              //               TextSpan(
+              //                   text: '13.2',
+              //                   style: Get.textTheme.bodyMedium?.copyWith(
+              //                       color: Colors.black,
+              //                       fontSize: 12,
+              //                       fontWeight: FontWeight.bold))
+              //             ])),
+              //         RichText(
+              //             text: TextSpan(
+              //                 text: 'To Win: ',
+              //                 style: const TextStyle(
+              //                     fontSize: 12, color: Colors.black),
+              //                 children: [
+              //               TextSpan(
+              //                 text: '311 OFF 21 Balls',
+              //                 style: Get.textTheme.bodyMedium?.copyWith(
+              //                     color: Colors.black,
+              //                     fontSize: 12,
+              //                     fontWeight: FontWeight.bold),
+              //               ),
+              //             ]))
+              //       ],
+              //     ),
+              //     const Spacer(),
+              //     Chip(
+              //       label: Text(
+              //         'View Full Screen',
+              //         style: Get.textTheme.bodyMedium?.copyWith(
+              //             color: Colors.white,
+              //             fontWeight: FontWeight.bold,
+              //             fontSize: 10),
+              //       ),
+              //       side: BorderSide.none,
+              //       backgroundColor: AppTheme.secondaryYellowColor,
+              //     )
+              //   ],
+              // )
+            ],
+          ),
         ),
       ),
     );

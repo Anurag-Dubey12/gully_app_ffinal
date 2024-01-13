@@ -10,6 +10,7 @@ class AppTheme {
 
   static final ThemeData lightTheme = ThemeData(
       useMaterial3: true,
+
       // fontFamily: 'Gotham',
       scaffoldBackgroundColor: Colors.white,
       appBarTheme: const AppBarTheme(
@@ -17,6 +18,7 @@ class AppTheme {
         iconTheme: IconThemeData(
           color: Colors.black,
         ),
+        centerTitle: true,
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(

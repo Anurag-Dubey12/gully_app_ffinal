@@ -3,26 +3,28 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/screens/select_location.dart';
 import 'package:gully_app/ui/widgets/create_tournament/form_input.dart';
-import 'package:gully_app/utils/app_logger.dart';
+import 'package:gully_app/ui/widgets/custom_drop_down_field.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
+import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/auth_controller.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 import '../widgets/create_tournament/top_card.dart';
-import '../widgets/custom_drop_down_field.dart';
 import '../widgets/primary_button.dart';
 
-class CreateTournamentScreen extends StatefulWidget {
-  const CreateTournamentScreen({super.key});
+class TournamentFormScreen extends StatefulWidget {
+  final TournamentModel? tournament;
+  const TournamentFormScreen({super.key, this.tournament});
 
   @override
-  State<CreateTournamentScreen> createState() => _CreateTournamentScreenState();
+  State<TournamentFormScreen> createState() => _TournamentFormScreenState();
 }
 
-class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
+class _TournamentFormScreenState extends State<TournamentFormScreen> {
   String tournamentType = 'turf';
   String ballType = 'tennis';
   String pitchType = 'cement';
@@ -50,6 +52,22 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       FocusScope.of(context).unfocus();
     });
+    if (widget.tournament != null) {
+      _nameController.text = widget.tournament!.tournamentName;
+      // _rulesController.text = widget.tournament!.rules!;
+      _entryFeeController.text = widget.tournament!.fees.toString();
+      _ballChargesController.text = widget.tournament!.ballCharges.toString();
+      _breakfastChargesController.text =
+          widget.tournament!.breakfastCharges.toString();
+      _teamLimitController.text = widget.tournament!.tournamentLimit.toString();
+      _addressController.text = widget.tournament!.stadiumAddress;
+      // _disclaimerController.text = widget.tournament!.disclaimer!;
+      from = widget.tournament!.tournamentStartDateTime;
+      to = widget.tournament!.tournamentEndDateTime;
+      // tournamentType = widget.tournament!.tournamentCategory!;
+      ballType = widget.tournament!.ballType;
+      pitchType = widget.tournament!.pitchType;
+    }
   }
 
   @override
@@ -114,11 +132,25 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                                 "latitude": position.latitude,
                                 "longitude": position.longitude,
                               };
-                              logger.d(tournament.toString());
-                              bool isOk = await tournamentController
-                                  .createTournament(tournament);
-                              if (isOk) {
-                                Get.back();
+                              if (widget.tournament != null) {
+                                bool isOk = await tournamentController
+                                    .updateTournament({
+                                  ...tournament,
+                                  'id': widget.tournament!.id
+                                });
+                                if (isOk) {
+                                  Get.back();
+                                  successSnackBar(
+                                      'Tournament Updated Successfully');
+                                }
+                              } else {
+                                bool isOk = await tournamentController
+                                    .createTournament(tournament);
+                                if (isOk) {
+                                  Get.back();
+                                  successSnackBar(
+                                      'Tournament Created Successfully');
+                                }
                               }
                             } finally {
                               setState(() {
@@ -163,43 +195,48 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
               height: Get.height,
               child: ListView(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 0, top: 30),
-                    child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: BackButton(
-                          color: Colors.white,
-                        )),
-                  ),
                   Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: Get.width * 0.07,
-                    ),
+                    padding: const EdgeInsets.symmetric(
+                        // horizontal: Get.width * 0.07,
+                        ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text('Create Tournament',
+                        AppBar(
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                          iconTheme: const IconThemeData(color: Colors.white),
+                          title: Text(
+                            widget.tournament != null
+                                ? 'Edit Tournament'
+                                : 'Create Tournament',
                             style: Get.textTheme.headlineLarge?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
-                                fontSize: 23)),
+                                fontSize: 23),
+                          ),
+                          centerTitle: true,
+                        ),
                         SizedBox(height: Get.height * 0.04),
-                        TopCard(
-                          from: from,
-                          to: to,
-                          controller: _nameController,
-                          onFromChanged: (
-                            e,
-                          ) {
-                            setState(() {
-                              from = e;
-                            });
-                          },
-                          onToChanged: (e) {
-                            setState(() {
-                              to = e;
-                            });
-                          },
+                        Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: TopCard(
+                            from: from,
+                            to: to,
+                            controller: _nameController,
+                            onFromChanged: (
+                              e,
+                            ) {
+                              setState(() {
+                                from = e;
+                              });
+                            },
+                            onToChanged: (e) {
+                              setState(() {
+                                to = e;
+                              });
+                            },
+                          ),
                         ),
                       ],
                     ),
@@ -294,15 +331,17 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                             ),
                             FormInput(
                               controller: TextEditingController(
-                                  text: authController.user.value.fullName),
+                                  text: authController.state!.fullName),
                               label: 'Organizer Name',
+                              enabled: false,
                               readOnly: true,
                             ),
                             FormInput(
                               controller: TextEditingController(
-                                text: authController.user.value.phoneNumber,
+                                text: authController.state!.phoneNumber,
                               ),
                               label: 'Organizer Phone',
+                              enabled: false,
                               readOnly: true,
                               textInputType: TextInputType.number,
                             ),
@@ -323,6 +362,7 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
                                         });
                                       },
                                     ));
+                                FocusScope.of(context).unfocus();
                               },
                             ),
                             FormInput(
@@ -375,16 +415,21 @@ class _CreateTournamentScreenState extends State<CreateTournamentScreen> {
             FocusScope.of(context).hasFocus
                 ? Positioned(
                     bottom: 0,
-                    child: Container(
-                        decoration: const BoxDecoration(color: Colors.white),
-                        padding: const EdgeInsets.all(9),
-                        width: Get.width,
-                        child: const Text('Done',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18))))
+                    child: GestureDetector(
+                      onTap: () {
+                        FocusScope.of(context).unfocus();
+                      },
+                      child: Container(
+                          decoration: const BoxDecoration(color: Colors.white),
+                          padding: const EdgeInsets.all(9),
+                          width: Get.width,
+                          child: const Text('Done',
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18))),
+                    ))
                 : const SizedBox(),
           ]),
         ));

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:gully_app/data/api/tournament_api.dart';
+import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
@@ -14,6 +15,16 @@ class TournamentController extends GetxController
   Future<bool> createTournament(Map<String, dynamic> tournament) async {
     try {
       await tournamentApi.createTournament(tournament);
+      return true;
+    } catch (e) {
+      errorSnackBar(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> updateTournament(Map<String, dynamic> tournament) async {
+    try {
+      await tournamentApi.editTournament(tournament);
       return true;
     } catch (e) {
       errorSnackBar(e.toString());
@@ -44,6 +55,10 @@ class TournamentController extends GetxController
       errorSnackBar(e.toString());
       rethrow;
     }
+  }
+
+  void setSelectedTournament(TournamentModel tournament) {
+    change(GetStatus.success(tournament));
   }
 
   Future<List<TournamentModel>> getOrganizerTournamentList() async {
@@ -85,8 +100,16 @@ class TournamentController extends GetxController
     }
   }
 
-  void setSelectedTournament(TournamentModel tournament) {
-    change(GetStatus.success(tournament));
+  Future<List<TeamModel>> getRegisteredTeams(String tournamentId) async {
+    try {
+      final response = await tournamentApi.getRegisteredTeams(tournamentId);
+      return response.data!['registeredTeams']
+          .map<TeamModel>((e) => TeamModel.fromJson(e))
+          .toList();
+    } catch (e) {
+      errorSnackBar(e.toString());
+      return [];
+    }
   }
 
   Future<bool> registerTeam(
@@ -104,6 +127,46 @@ class TournamentController extends GetxController
     } catch (e) {
       errorSnackBar(e.toString());
       return false;
+    }
+  }
+
+  Future<bool> organizeMatch(String tourId, String team1, String team2) async {
+    try {
+      final response = await tournamentApi.organizeMatch(
+          tourId: tourId, team1: team1, team2: team2);
+      return response.status!;
+    } catch (e) {
+      errorSnackBar(e.toString());
+      return false;
+    }
+  }
+
+  Future<bool> createMatchup(String tourId, String team1, String team2,
+      DateTime date, int matchNo, int round) async {
+    try {
+      final response = await tournamentApi.createMatchup(
+          tourId: tourId,
+          team1: team1,
+          team2: team2,
+          round: round,
+          matchNo: matchNo,
+          date: date);
+      return response.status!;
+    } catch (e) {
+      errorSnackBar(e.toString());
+      return false;
+    }
+  }
+
+  Future<List<MatchupModel>> getMatchup(String tourId) async {
+    try {
+      final response = await tournamentApi.getMatchup(tourId);
+      return response.data!['matches']
+          .map<MatchupModel>((e) => MatchupModel.fromJson(e))
+          .toList();
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
     }
   }
 }

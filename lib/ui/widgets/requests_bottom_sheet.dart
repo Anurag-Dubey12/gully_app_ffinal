@@ -5,13 +5,18 @@ import 'package:gully_app/data/model/team_model.dart';
 import '../../data/controller/tournament_controller.dart';
 import '../screens/current_tournament_list.dart';
 
-class RequestsBottomSheet extends StatelessWidget {
+class RequestsBottomSheet extends StatefulWidget {
   final String tournamentId;
   const RequestsBottomSheet({
     super.key,
     required this.tournamentId,
   });
 
+  @override
+  State<RequestsBottomSheet> createState() => _RequestsBottomSheetState();
+}
+
+class _RequestsBottomSheetState extends State<RequestsBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
@@ -53,7 +58,7 @@ class RequestsBottomSheet extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: FutureBuilder<List<TeamModel>>(
-                  future: controller.getTeamRequests(tournamentId),
+                  future: controller.getTeamRequests(widget.tournamentId),
                   builder: (context, snapshot) {
                     return ListView.separated(
                         shrinkWrap: true,
@@ -65,6 +70,7 @@ class RequestsBottomSheet extends StatelessWidget {
                             onTap: () {
                               Get.to(() => const CurrentTournamentListScreen(
                                   redirectType: RedirectType.organizeMatch));
+                              setState(() {});
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -86,7 +92,7 @@ class RequestsBottomSheet extends StatelessWidget {
                                   GestureDetector(
                                     onTap: () async {
                                       await controller.updateTeamRequest(
-                                          tournamentId,
+                                          widget.tournamentId,
                                           snapshot.data![index].id,
                                           'Accepted');
                                     },
@@ -101,7 +107,7 @@ class RequestsBottomSheet extends StatelessWidget {
                                   GestureDetector(
                                     onTap: () async {
                                       await controller.updateTeamRequest(
-                                          tournamentId,
+                                          widget.tournamentId,
                                           snapshot.data![index].id,
                                           'Denied');
                                     },

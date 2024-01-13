@@ -16,7 +16,7 @@ class BattingStats extends GetView<ScoreBoardController> {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Obx(() => Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
               color: Colors.white,
             ),
             child: Column(children: [

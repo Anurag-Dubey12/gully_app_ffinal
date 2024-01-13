@@ -109,7 +109,7 @@ class _TeamCard extends StatelessWidget {
               style: const TextStyle(fontSize: 19),
             ),
             const Spacer(),
-            if (team.playersCount < 15)
+            if (team.playersCount! < 15)
               Row(
                 children: [
                   Text('(${team.playersCount}/15)',

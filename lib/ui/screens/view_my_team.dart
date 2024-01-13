@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/add_player_to_team.dart';
+import 'package:gully_app/data/model/player_model.dart';
 
 import '../../data/controller/team_controller.dart';
 import '../../data/model/team_model.dart';
@@ -127,68 +127,82 @@ class _ViewTeamState extends State<ViewTeam> {
                                       ),
                                     )),
                               ),
-                              TeamPlayersListBuilder(
-                                  teamId: widget.teamModel.id),
+                              // TeamPlayersListBuilder(
+                              //     teamId: widget.teamModel.id),
                               SizedBox(height: Get.height * 0.02),
-                            ], //   Padding(
-                            //     padding: const EdgeInsets.all(8.0),
-                            //     child: FutureBuilder<List<TeamModel>>(
-                            //         future: controller.getTeams(),
-                            //         builder: (context, snapshot) {
-                            //           return ListView.separated(
-                            //               padding:
-                            //                   const EdgeInsets.only(bottom: 10),
-                            //               shrinkWrap: true,
-                            //               itemCount: snapshot.data?.length ?? 0,
-                            //               separatorBuilder: (context, index) =>
-                            //                   const SizedBox(height: 14),
-                            //               itemBuilder: (context, index) {
-                            //                 return InkWell(
-                            //                   onTap: () {
-                            //                     Get.to(
-                            //                         () => const TeamRequest());
-                            //                   },
-                            //                   child: Container(
-                            //                     decoration: BoxDecoration(
-                            //                         color: const Color.fromARGB(
-                            //                             255, 255, 255, 255),
-                            //                         borderRadius:
-                            //                             BorderRadius.circular(
-                            //                                 19),
-                            //                         boxShadow: [
-                            //                           BoxShadow(
-                            //                               color: Colors.grey
-                            //                                   .withOpacity(0.3),
-                            //                               blurRadius: 20,
-                            //                               spreadRadius: 2,
-                            //                               offset: const Offset(
-                            //                                   0, 10))
-                            //                         ]),
-                            //                     child: Padding(
-                            //                       padding: const EdgeInsets.all(
-                            //                           12.0),
-                            //                       child: Row(children: [
-                            //                         const CircleAvatar(),
-                            //                         const Spacer(),
-                            //                         Text(
-                            //                           snapshot
-                            //                               .data![index].name,
-                            //                           style: Get
-                            //                               .textTheme.titleMedium
-                            //                               ?.copyWith(
-                            //                                   fontWeight:
-                            //                                       FontWeight
-                            //                                           .w400),
-                            //                         ),
-                            //                         const Spacer(),
-                            //                       ]),
-                            //                     ),
-                            //                   ),
-                            //                 );
-                            //               });
-                            //         }),
-                            //   )
-                            // ],
+                              SizedBox(
+                                height: Get.height * 0.64,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: FutureBuilder<List<PlayerModel>>(
+                                      future: controller
+                                          .getPlayers(widget.teamModel.id),
+                                      builder: (context, snapshot) {
+                                        return ListView.separated(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 10),
+                                            shrinkWrap: true,
+                                            itemCount:
+                                                snapshot.data?.length ?? 0,
+                                            separatorBuilder:
+                                                (context, index) =>
+                                                    const SizedBox(height: 14),
+                                            itemBuilder: (context, index) {
+                                              return InkWell(
+                                                onTap: () {
+                                                  // Get.to(
+                                                  //     () => const TeamRequest());
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              255,
+                                                              255,
+                                                              255),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              19),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                            color: Colors.grey
+                                                                .withOpacity(
+                                                                    0.3),
+                                                            blurRadius: 20,
+                                                            spreadRadius: 2,
+                                                            offset:
+                                                                const Offset(
+                                                                    0, 10))
+                                                      ]),
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            12.0),
+                                                    child: Row(children: [
+                                                      const CircleAvatar(),
+                                                      const Spacer(),
+                                                      Text(
+                                                        snapshot
+                                                            .data![index].name,
+                                                        style: Get.textTheme
+                                                            .titleMedium
+                                                            ?.copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400),
+                                                      ),
+                                                      const Spacer(),
+                                                    ]),
+                                                  ),
+                                                ),
+                                              );
+                                            });
+                                      }),
+                                ),
+                              )
+                              //
+                            ],
                           ),
                         ),
                       ],

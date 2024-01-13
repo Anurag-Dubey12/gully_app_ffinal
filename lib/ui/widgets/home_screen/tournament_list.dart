@@ -9,8 +9,9 @@ import 'future_tournament_card.dart';
 import 'past_tournament_card.dart';
 
 class TournamentList extends GetView<TournamentController> {
-  final int selectedDate;
-  const TournamentList({super.key, required this.selectedDate});
+  const TournamentList({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

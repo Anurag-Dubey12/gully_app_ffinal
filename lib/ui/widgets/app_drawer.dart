@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -65,15 +66,14 @@ class AppDrawer extends GetView<AuthController> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: CircleAvatar(
-                              radius: 50,
-                              backgroundImage: NetworkImage(
-                                  controller.user.value.toImageUrl()),
-                            ),
+                                radius: 50,
+                                backgroundImage: CachedNetworkImageProvider(
+                                    controller.state?.toImageUrl())),
                           ),
                         ),
                         const SizedBox(height: 20),
                         Text(
-                          controller.user.value.fullName,
+                          controller.state!.fullName,
                           style: Get.textTheme.headlineMedium?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w400,
@@ -81,7 +81,7 @@ class AppDrawer extends GetView<AuthController> {
                         ),
                         const SizedBox(height: 5),
                         Text(
-                          controller.user.value.email,
+                          controller.state!.email,
                           style: Get.textTheme.labelMedium?.copyWith(
                               color: const Color.fromARGB(255, 200, 189, 189),
                               fontWeight: FontWeight.w400),

@@ -216,7 +216,6 @@ class _SelectBallTypeCard extends StatelessWidget {
   final Function(int tab) onTap;
 
   const _SelectBallTypeCard({
-    super.key,
     required this.onTap,
     required this.tab,
     required this.selectedTab,

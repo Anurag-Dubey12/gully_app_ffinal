@@ -15,6 +15,15 @@ class TournamentApi {
     return ApiResponse.fromJson(response.body);
   }
 
+  Future<ApiResponse> editTournament(Map<String, dynamic> tournament) async {
+    var response = await repo.put(
+        '/organizer/edit-tournament/${tournament['id']}', tournament);
+    if (!response.isOk) {
+      throw response.body['error'] ?? 'Unable to Process Request';
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
   Future<ApiResponse> getTournamentList(
       {required double latitude,
       required double longitude,
@@ -64,6 +73,16 @@ class TournamentApi {
     return ApiResponse.fromJson(response.body);
   }
 
+  Future<ApiResponse> getRegisteredTeams(String tournamentId) async {
+    var response =
+        await repo.get('/tournament-match/$tournamentId/registered-teams');
+    if (!response.isOk) {
+      throw response.body['error'] ?? 'Unable to Process Request';
+    }
+
+    return ApiResponse.fromJson(response.body);
+  }
+
   Future<ApiResponse> registerTeam({
     required String teamId,
     required String viceCaptainContact,
@@ -78,6 +97,66 @@ class TournamentApi {
     logger.i(obj);
     final response =
         await repo.post('/users/entry-form/$teamId/$tournamentId', obj);
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> organizeMatch(
+      {required String tourId,
+      required String team1,
+      required String team2}) async {
+    final obj = {
+      'team1': team1,
+      'team2': team2,
+    };
+    logger.i(obj);
+    final response = await repo.post('/organizer/match/$tourId', obj);
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getMatchup(String tourId) async {
+    final response = await repo.get('/tournament-match/view-matchups/$tourId');
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> createMatchup(
+      {required String tourId,
+      required String team1,
+      required String team2,
+      required DateTime date,
+      required int round,
+      required int matchNo}) async {
+    final obj = {
+      'date': formatDateTime('yyyy-MM-dd', date),
+      'time': formatDateTime('HH:mm a ', date),
+      'Round': round,
+      'matchNo': matchNo,
+      'team1': team1,
+      'team2': team2,
+    };
+    logger.i(obj);
+    final response = await repo.post(
+        '/tournament-match/create-matchup/$tourId/$team1/$team2', obj);
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');
       throw Exception('Server Error');

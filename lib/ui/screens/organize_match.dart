@@ -1,30 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/view_matchups_screen.dart';
+import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/utils/app_logger.dart';
+import 'package:gully_app/utils/utils.dart';
+import 'package:intl/intl.dart';
+
+import '../../data/controller/tournament_controller.dart';
 
 class SelectOrganizeTeam extends StatefulWidget {
+  final String tournamentId;
   final String? title;
-  const SelectOrganizeTeam({super.key, this.title});
+  const SelectOrganizeTeam({super.key, this.title, required this.tournamentId});
 
   @override
   State<SelectOrganizeTeam> createState() => _SelectOrganizeTeamState();
 }
 
 class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
-  String _selectedItem = 'TEAM 1'; // Default selected item
+  TeamModel? selectedTeam1;
+  TeamModel? selectedTeam2;
+  List<TeamModel> leftSideteams = [];
+  List<TeamModel> rightSideteams = [];
+  DateTime? selectedDate;
+  @override
+  void initState() {
+    super.initState();
+    getPlayers();
+  }
 
-  final List<String> _dropdownItems = [
-    'TEAM 1',
-    'TEAM 2',
-    'TEAM 3',
-    'TEAM 4',
-    'TEAM 5',
-  ];
+  Future<void> getPlayers() async {
+    final controller = Get.find<TournamentController>();
+    final teams = await controller.getRegisteredTeams(widget.tournamentId);
+    logger.d('TEAMS: $teams');
+    // divide teams into two sides
+    leftSideteams = teams.sublist(0, teams.length ~/ 2);
+    rightSideteams = teams.sublist(teams.length ~/ 2, teams.length);
+    setState(() {
+      selectedTeam1 = leftSideteams[0];
+      if (rightSideteams.length > 1) {
+        selectedTeam2 = rightSideteams[1];
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<TournamentController>();
     return GradientBuilder(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -64,56 +88,65 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Column(
-                                  children: [
-                                    const CircleAvatar(
-                                      radius: 43,
-                                      backgroundImage: NetworkImage(
-                                          'https://mediacaterer.com/wp-content/uploads/2023/06/KFC-logo-1.jpg'),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    DecoratedBox(
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 12),
-                                        child: DropdownButton<String>(
-                                          value: _selectedItem,
-                                          icon:
-                                              const Icon(Icons.arrow_drop_down),
-                                          padding: EdgeInsets.zero,
-                                          iconSize: 24,
-                                          // menuMaxHeight: 8,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          alignment: Alignment.bottomCenter,
-                                          // elevation: 16,
-                                          iconEnabledColor: Colors.black,
-                                          style: const TextStyle(
-                                              color: Colors.black),
-                                          underline: const SizedBox(),
-                                          onChanged: (String? newValue) {
-                                            setState(() {
-                                              _selectedItem = newValue!;
-                                            });
-                                          },
-                                          items: _dropdownItems
-                                              .map<DropdownMenuItem<String>>(
-                                                  (String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(value),
-                                            );
-                                          }).toList(),
+                                Expanded(
+                                  flex: 4,
+                                  child: Column(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 43,
+                                        backgroundImage: NetworkImage(
+                                          selectedTeam1?.toImageUrl() ?? "",
+                                        ),
+                                        backgroundColor: Colors.grey.shade300,
+                                      ),
+                                      const SizedBox(height: 20),
+                                      DecoratedBox(
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 6),
+                                          child: DropdownButton<TeamModel?>(
+                                            value: selectedTeam1,
+                                            icon: const Icon(
+                                                Icons.arrow_drop_down),
+                                            padding: EdgeInsets.zero,
+                                            iconSize: 24,
+                                            // menuMaxHeight: 8,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            alignment: Alignment.bottomCenter,
+                                            // elevation: 16,
+                                            iconEnabledColor: Colors.black,
+                                            style: const TextStyle(
+                                                color: Colors.black),
+                                            underline: const SizedBox(),
+                                            onChanged: (TeamModel? newValue) {
+                                              setState(() {
+                                                selectedTeam1 = newValue!;
+                                              });
+                                            },
+                                            items: leftSideteams.map<
+                                                    DropdownMenuItem<
+                                                        TeamModel?>>(
+                                                (TeamModel value) {
+                                              return DropdownMenuItem<
+                                                  TeamModel?>(
+                                                value: value,
+                                                child: Text(value.name,
+                                                    style: Get
+                                                        .textTheme.labelSmall),
+                                              );
+                                            }).toList(),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                                const Spacer(),
+                                // const Spacer(),
                                 Column(
                                   children: [
                                     const SizedBox(
@@ -131,80 +164,197 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                         side: BorderSide.none),
                                   ],
                                 ),
-                                const Spacer(),
-                                Column(
-                                  children: [
-                                    const CircleAvatar(
-                                      radius: 43,
-                                      backgroundColor: Colors.white,
-                                      backgroundImage: NetworkImage(
-                                          'https://www.partageshoppingbetim.com.br/wp-content/uploads/sites/3/2023/01/Burger-king-logo-1.png'),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    DecoratedBox(
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 12),
-                                        child: DropdownButton<String>(
-                                          value: _selectedItem,
-                                          icon:
-                                              const Icon(Icons.arrow_drop_down),
-                                          padding: EdgeInsets.zero,
-                                          iconSize: 24,
-                                          // menuMaxHeight: 8,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          alignment: Alignment.bottomCenter,
-                                          // elevation: 16,
-                                          iconEnabledColor: Colors.black,
-                                          style: const TextStyle(
-                                              color: Colors.black),
-                                          underline: const SizedBox(),
-                                          onChanged: (String? newValue) {
-                                            setState(() {
-                                              _selectedItem = newValue!;
-                                            });
-                                          },
-                                          items: _dropdownItems
-                                              .map<DropdownMenuItem<String>>(
-                                                  (String value) {
-                                            return DropdownMenuItem<String>(
-                                              value: value,
-                                              child: Text(value),
-                                            );
-                                          }).toList(),
+
+                                Expanded(
+                                  flex: 4,
+                                  child: Column(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 43,
+                                        backgroundColor: Colors.white,
+                                        backgroundImage: NetworkImage(
+                                            selectedTeam2?.toImageUrl() ?? ""),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      DecoratedBox(
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 12),
+                                          child: DropdownButton<TeamModel?>(
+                                            value: selectedTeam2,
+                                            icon: const Icon(
+                                                Icons.arrow_drop_down),
+                                            padding: EdgeInsets.zero,
+                                            iconSize: 24,
+                                            // menuMaxHeight: 8,
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            alignment: Alignment.bottomCenter,
+                                            // elevation: 16,
+                                            iconEnabledColor: Colors.black,
+                                            style: const TextStyle(
+                                                color: Colors.black),
+                                            underline: const SizedBox(),
+                                            onChanged: (TeamModel? newValue) {
+                                              setState(() {
+                                                selectedTeam2 = newValue!;
+                                              });
+                                            },
+                                            items: rightSideteams.map<
+                                                    DropdownMenuItem<
+                                                        TeamModel?>>(
+                                                (TeamModel? value) {
+                                              return DropdownMenuItem<
+                                                  TeamModel?>(
+                                                value: value,
+                                                child: Text(value!.name,
+                                                    style: Get
+                                                        .textTheme.labelSmall),
+                                              );
+                                            }).toList(),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
                             SizedBox(height: Get.height * 0.03),
-                            InkWell(
-                              onTap: () {
-                                showTimePicker(
-                                    context: context,
-                                    initialTime: TimeOfDay.now());
-                              },
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: Text('12:00'),
+                            Row(
+                              children: [
+                                const Spacer(),
+                                InkWell(
+                                  onTap: () async {
+                                    final date = await showDatePicker(
+                                        context: context,
+                                        initialDate: DateTime.now(),
+                                        firstDate: DateTime.now(),
+                                        lastDate: DateTime.now()
+                                            .add(const Duration(days: 365)));
+                                    setState(() {
+                                      if (selectedDate != null) {
+                                        selectedDate = DateTime(
+                                            date!.year,
+                                            date.month,
+                                            date.day,
+                                            selectedDate!.hour,
+                                            selectedDate!.minute);
+                                      } else {
+                                        selectedDate = date;
+                                      }
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                              selectedDate == null
+                                                  ? 'Select Date'
+                                                  : DateFormat('dd MMM yyyy')
+                                                      .format(selectedDate!),
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500)),
+                                          const SizedBox(width: 10),
+                                          const Icon(
+                                            Icons.calendar_month,
+                                            size: 18,
+                                            color:
+                                                AppTheme.secondaryYellowColor,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                const SizedBox(width: 20),
+                                InkWell(
+                                  onTap: () async {
+                                    final time = await showTimePicker(
+                                        context: context,
+                                        initialEntryMode:
+                                            TimePickerEntryMode.dialOnly,
+                                        initialTime: TimeOfDay.now());
+                                    if (time != null) {
+                                      setState(() {
+                                        selectedDate = DateTime(
+                                            selectedDate!.year,
+                                            selectedDate!.month,
+                                            selectedDate!.day,
+                                            time.hour,
+                                            time.minute);
+                                      });
+                                    }
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            selectedDate == null
+                                                ? 'Select Time'
+                                                : DateFormat('hh:mm a')
+                                                    .format(selectedDate!),
+                                            style: const TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          const Icon(
+                                            Icons.timer_sharp,
+                                            size: 18,
+                                            color:
+                                                AppTheme.secondaryYellowColor,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const Spacer(),
+                              ],
                             ),
                             SizedBox(height: Get.height * 0.03),
                             PrimaryButton(
-                              onTap: () {
-                                Get.to(() => const ViewMatchupsScreen());
+                              onTap: () async {
+                                if (selectedDate == null) {
+                                  errorSnackBar('Please select a date');
+                                  return;
+                                }
+                                if (selectedTeam1 == null ||
+                                    selectedTeam2 == null) {
+                                  errorSnackBar('Please select teams');
+                                  return;
+                                }
+                                final response = await controller.createMatchup(
+                                    widget.tournamentId,
+                                    selectedTeam1!.id,
+                                    selectedTeam2!.id,
+                                    selectedDate!,
+                                    1,
+                                    1);
+                                logger.d(response);
+                                if (response) {
+                                  Get.back();
+                                  successSnackBar('Matchup created');
+                                }
+                                // Get.to(() => const ViewMatchupsScreen());
                               },
                               title: 'Submit',
                             )

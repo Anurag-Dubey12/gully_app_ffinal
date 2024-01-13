@@ -11,6 +11,7 @@ class FormInput extends StatelessWidget {
   final bool? readOnly;
   final bool? enabled;
   final String? Function(String?)? validator;
+  final bool? autofocus;
 //ontap
   final Function()? onTap;
   final int? maxLines;
@@ -18,6 +19,7 @@ class FormInput extends StatelessWidget {
       {super.key,
       required this.controller,
       this.label,
+      this.autofocus,
       this.textInputType,
       this.filled,
       this.readOnly,
@@ -44,6 +46,7 @@ class FormInput extends StatelessWidget {
           CustomTextField(
             filled: true,
             onTap: onTap,
+            autoFocus: autofocus,
             readOnly: readOnly,
             enabled: enabled,
             validator: validator,

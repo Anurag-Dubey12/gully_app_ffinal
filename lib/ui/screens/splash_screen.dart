@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (pref.getToken() != null) {
         Get.offAll(() => const HomeScreen());
       } else {
-        Get.off(() => const WelcomeCarouselScreen());
+        Get.offAll(() => const WelcomeCarouselScreen());
       }
     });
   }
@@ -42,13 +42,10 @@ class _SplashScreenState extends State<SplashScreen> {
         backgroundColor: Colors.transparent,
         body: Padding(
           padding: const EdgeInsets.all(18.0),
-          child: InkWell(
-            onTap: () => Get.to(() => const WelcomeCarouselScreen()),
-            child: Center(
-                child: Image.asset(
-              'assets/images/logo.png',
-            )),
-          ),
+          child: Center(
+              child: Image.asset(
+            'assets/images/logo.png',
+          )),
         ),
       ),
     );

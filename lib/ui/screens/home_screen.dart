@@ -1,31 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/create_tournament_form_screen.dart';
+import 'package:gully_app/data/controller/auth_controller.dart';
+import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/app_drawer.dart';
 import 'package:gully_app/ui/widgets/home_screen/date_times_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/sports_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
-import 'package:gully_app/utils/geo_locator_helper.dart';
 
 import '../widgets/arc_clipper.dart';
 import '../widgets/home_screen/top_header.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends GetView<AuthController> {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  Widget build(BuildContext context) {
+    return controller.obx((state) {
+      if (state == null) {
+        return const Scaffold(
+            backgroundColor: Colors.white,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('data'),
+                Center(child: CircularProgressIndicator()),
+              ],
+            ));
+      }
+      return const HomePage();
+    });
+  }
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  int selectedDate = 0;
-  @override
-  void initState() {
-    super.initState();
-    determinePosition();
-  }
+class HomePage extends StatelessWidget {
+  const HomePage({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.all(19.0),
                   child: PrimaryButton(
                     onTap: () {
-                      Get.to(() => const CreateTournamentScreen());
+                      Get.to(() => const TournamentFormScreen());
                     },
                     title: 'Create Your Tournament',
                   ),
@@ -137,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                       ),
-                      TournamentList(selectedDate: selectedDate)
+                      const TournamentList()
                     ],
                   ),
                 ),

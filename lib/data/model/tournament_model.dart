@@ -16,14 +16,26 @@ class TournamentModel {
   final int registeredTeamsCount;
   @JsonKey(disallowNullValue: false)
   final String? phoneNumber;
+
+  final int ballCharges;
+  final int breakfastCharges;
+  final String ballType;
+  final String pitchType;
+  final String stadiumAddress;
+
   TournamentModel(
       {required this.tournamentName,
       required this.id,
+      required this.ballCharges,
       required this.phoneNumber,
       required this.tournamentLimit,
       required this.registeredTeamsCount,
+      required this.stadiumAddress,
       required this.tournamentStartDateTime,
       required this.tournamentEndDateTime,
+      required this.pitchType,
+      required this.breakfastCharges,
+      required this.ballType,
       // required this.tournamentListType,
       required this.fees});
   factory TournamentModel.fromJson(Map<String, dynamic> json) =>

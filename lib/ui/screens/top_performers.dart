@@ -143,7 +143,6 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
 class _TeamCard extends StatelessWidget {
   final TeamRankingModel team;
   const _TeamCard({
-    super.key,
     required this.team,
   });
 
@@ -190,7 +189,6 @@ class _SelectBallTypeCard extends StatelessWidget {
   final Function(int tab) onTap;
 
   const _SelectBallTypeCard({
-    super.key,
     required this.onTap,
     required this.tab,
     required this.selectedTab,

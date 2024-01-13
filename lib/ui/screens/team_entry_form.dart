@@ -110,28 +110,15 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                 height: Get.height,
                 child: Column(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10, top: 30),
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: BackButton(
-                            color: Colors.white,
-                          )),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: Get.width * 0.07,
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('Entry Form',
-                              style: Get.textTheme.headlineLarge?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 29)),
-                          SizedBox(height: Get.height * 0.08),
-                        ],
+                    AppBar(
+                      backgroundColor: Colors.transparent,
+                      elevation: 0,
+                      title: Text('Entry Form',
+                          style: Get.textTheme.headlineMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold)),
+                      leading: const BackButton(
+                        color: Colors.white,
                       ),
                     ),
                     Expanded(
@@ -160,17 +147,17 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                   FormInput(
                                     controller: _addressController,
                                     label: 'Address',
+                                    autofocus: true,
                                   ),
                                   FormInput(
                                     controller: TextEditingController(
-                                        text: authController.user.value.email),
+                                        text: authController.state!.email),
                                     label: 'Email',
                                     enabled: false,
                                   ),
                                   FormInput(
                                     controller: TextEditingController(
-                                      text:
-                                          authController.user.value.phoneNumber,
+                                      text: authController.state!.phoneNumber,
                                     ),
                                     readOnly: true,
                                     enabled: false,

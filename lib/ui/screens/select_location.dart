@@ -238,7 +238,6 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
 class _AddManualPlace extends StatefulWidget {
   final Function(String address)? onSelected;
   const _AddManualPlace({
-    super.key,
     required this.onSelected,
   });
 

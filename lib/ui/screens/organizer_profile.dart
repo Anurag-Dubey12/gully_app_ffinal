@@ -1,9 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/current_tournament_list.dart';
 import 'package:gully_app/ui/screens/tournament_requests_screen.dart';
-import 'package:gully_app/ui/screens/txn_history_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 
@@ -57,8 +57,8 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             shape: BoxShape.circle,
                             color: Colors.white,
                             image: DecorationImage(
-                                image: NetworkImage(
-                                    controller.user.value.toImageUrl()),
+                                image: CachedNetworkImageProvider(
+                                    controller.state?.toImageUrl()),
                                 fit: BoxFit.cover))),
 
                     // backgroundColor: Colors.white,
@@ -69,7 +69,7 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                   () => Column(
                     children: [
                       Text(
-                        controller.user.value.fullName,
+                        controller.state!.fullName,
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
@@ -86,7 +86,7 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            controller.user.value.email,
+                            controller.state!.email,
                             style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w300,
@@ -124,7 +124,7 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                           ),
                           const SizedBox(width: 5),
                           Text(
-                            controller.user.value.phoneNumber ?? "",
+                            controller.state!.phoneNumber ?? "",
                             style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w300,
@@ -199,12 +199,12 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                                     ));
                               },
                             ),
-                            ProfileTileCard(
-                              text: 'Transaction History',
-                              onTap: () {
-                                Get.to(() => const TxnHistoryScreen());
-                              },
-                            ),
+                            // ProfileTileCard(
+                            //   text: 'Transaction History',
+                            //   onTap: () {
+                            //     Get.to(() => const TxnHistoryScreen());
+                            //   },
+                            // ),
                             ProfileTileCard(
                               text: 'View your tournament',
                               onTap: () {

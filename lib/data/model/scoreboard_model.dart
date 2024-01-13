@@ -55,7 +55,7 @@ class ScoreboardModel {
     required this.team2,
     required this.matchId,
   }) {
-    logger.i('ScoreboardModel: ');
+    // logger.i('ScoreboardModel: ');
     _strikerId = team1.players!.first.id;
     _nonStrikerId = team1.players!.last.id;
     _bowlerId = team2.players!.first.id;
@@ -65,7 +65,7 @@ class ScoreboardModel {
       partnershipKey: PartnershipModel(
           player1: team1.players!.first, player2: team1.players!.last)
     });
-    logger.i('ScoreboardModel: ${toJson()}');
+    // logger.i('ScoreboardModel: ${toJson()}');
   }
   String get partnershipKey {
     final List<String> key = [_strikerId, _nonStrikerId];

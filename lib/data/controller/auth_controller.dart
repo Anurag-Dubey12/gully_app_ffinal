@@ -49,6 +49,7 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       prefs.storeToken(accessToken);
       change(GetStatus.success(user));
       await getUser();
+
       if (user.isNewUser) {
         Get.offAll(() => const CreateProfile());
         return false;
@@ -68,21 +69,22 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
   }
 
   // Rx<UserModel?> user = Rxn<UserModel>();
-  Rx<UserModel> user = UserModel(
-          fullName: "name",
-          email: "email",
-          phoneNumber: "phoneNumber",
-          id: "id",
-          profilePhoto: "profilePic",
-          isNewUser: false)
-      .obs;
+  // Rx<UserModel> user = UserModel(
+  //         fullName: "name",
+  //         email: "email",
+  //         phoneNumber: "phoneNumber",
+  //         id: "id",
+  //         profilePhoto: "profilePic",
+  //         isNewUser: false)
+  //     .obs;
 
   Future<void> getUser() async {
     // change(GetStatus.loading());
     try {
       final response = await repo.getUser();
       UserModel? fetchedUser = UserModel.fromJson(response.data!['user']);
-      user.value = fetchedUser;
+      // user.value = fetchedUser;
+      change(GetStatus.success(fetchedUser));
       if (fetchedUser.isNewUser) {
         Get.offAll(() => const CreateProfile());
       }

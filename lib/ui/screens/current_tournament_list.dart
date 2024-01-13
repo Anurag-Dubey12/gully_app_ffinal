@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
-import 'package:gully_app/ui/screens/edit_tournament_screen.dart';
 import 'package:gully_app/ui/screens/organize_match.dart';
 import 'package:gully_app/ui/screens/select_team_for_scoreboard.dart';
+import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/screens/view_matchups_screen.dart';
+import 'package:gully_app/ui/widgets/custom_text_field.dart';
+import 'package:gully_app/ui/widgets/primary_button.dart';
 
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
@@ -115,7 +117,7 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
   }
 }
 
-class _Card extends StatelessWidget {
+class _Card extends GetView<TournamentController> {
   final TournamentModel tournament;
   final RedirectType redirectType;
 
@@ -127,16 +129,45 @@ class _Card extends StatelessWidget {
       onTap: () {
         switch (redirectType) {
           case RedirectType.organizeMatch:
-            Get.to(() => const SelectOrganizeTeam());
+            Get.dialog(Dialog(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CustomTextField(
+                      labelText: 'Enter Round Number',
+                      textInputType: TextInputType.number,
+                      autoFocus: true,
+                    ),
+                    const SizedBox(height: 20),
+                    PrimaryButton(
+                      onTap: () {
+                        Get.back();
+                        Get.to(() => SelectOrganizeTeam(
+                              tournamentId: tournament.id,
+                            ));
+                      },
+                      title: 'Continue',
+                    )
+                  ],
+                ),
+              ),
+            ));
+
             break;
           case RedirectType.scoreboard:
+            controller.setSelectedTournament(tournament);
             Get.to(() => const SelectTeamForScoreBoard());
             break;
           case RedirectType.matchup:
+            controller.setSelectedTournament(tournament);
             Get.to(() => const ViewMatchupsScreen());
             break;
           case RedirectType.editForm:
-            Get.to(() => const EditTournamentScreen());
+            Get.to(() => TournamentFormScreen(
+                  tournament: tournament,
+                ));
             break;
           case RedirectType.currentTournament:
             // Get.to(() => redirectScreen);
@@ -162,10 +193,6 @@ class _Card extends StatelessWidget {
           ),
           child: Row(
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: Colors.grey[200],
-              ),
               const Spacer(),
               Text(
                 tournament.tournamentName,

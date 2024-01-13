@@ -27,7 +27,7 @@ class TeamController extends GetxController with StateMixin {
   }
 
   RxList<PlayerModel> players = <PlayerModel>[].obs;
-  Future<void> getPlayers(String teamId) async {
+  Future<List<PlayerModel>> getPlayers(String teamId) async {
     final response = await repo.getPlayers(teamId: teamId);
     if (response.status == false) {
       errorSnackBar(response.message!);
@@ -37,6 +37,7 @@ class TeamController extends GetxController with StateMixin {
         .toList();
 
     players.value = playersList;
+    return playersList;
   }
 
   Future<bool> addPlayerToTeam({

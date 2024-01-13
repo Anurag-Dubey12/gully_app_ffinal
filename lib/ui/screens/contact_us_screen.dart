@@ -32,53 +32,72 @@ class ContactUsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Spacer(),
-            Text('Name',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                    fontSize: 17)),
-            const CustomTextField(
-              labelText: 'Name',
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Name',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium
+                          ?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              fontSize: 17)),
+                  const CustomTextField(
+                    labelText: 'Name',
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text('Email Address',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium
+                          ?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              fontSize: 17)),
+                  const CustomTextField(
+                    labelText: 'Email Address',
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text('Mobile No.',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium
+                          ?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              fontSize: 17)),
+                  const CustomTextField(
+                    labelText: 'Mobile No.',
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Text('Leave a message',
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium
+                          ?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: Colors.black,
+                              fontSize: 17)),
+                  const CustomTextField(
+                    labelText: 'Leave a message',
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  PrimaryButton(onTap: () {
+                    Get.to(() => const LegalViewScreen());
+                  }),
+                ],
+              ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text('Email Address',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                    fontSize: 17)),
-            const CustomTextField(
-              labelText: 'Email Address',
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text('Mobile No.',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                    fontSize: 17)),
-            const CustomTextField(
-              labelText: 'Mobile No.',
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text('Leave a message',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black,
-                    fontSize: 17)),
-            const CustomTextField(
-              labelText: 'Leave a message',
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            PrimaryButton(onTap: () {
-              Get.to(() => const LegalViewScreen());
-            }),
             SizedBox(
               height: Get.height * 0.06,
             ),

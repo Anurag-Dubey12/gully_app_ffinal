@@ -3,20 +3,53 @@ import 'dart:math';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/config/app_constants.dart';
 import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/utils/app_logger.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
-class ScoreBoardController extends GetxController {
+class ScoreBoardController extends GetxController with StateMixin {
   final Rx<ScoreboardModel?> scoreboard = Rx<ScoreboardModel?>(null);
   late ScoreboardModel _lastScoreboardInstance;
+  Rx<IO.Socket?> socket = Rx(null);
 
   RxList<EventType> events = RxList<EventType>([]);
   @override
   void onInit() {
     super.onInit();
+
     createScoreBoard();
+  }
+
+  void connectToSocket() {
+    try {
+      logger.d('connectToSocket ${AppConstants.websocketUrl}');
+      socket.value = IO.io('ws://192.168.1.6:3001', <String, dynamic>{
+        'transports': ['websocket'],
+      });
+      logger.d('socket $socket');
+      socket.value?.onConnectError((data) => logger.e(data));
+
+      socket.value?.onConnect((_) {
+        logger.d('connect');
+        socket.value?.emit('joinRoom', {
+          'matchId': '12345',
+        });
+      });
+      socket.value?.onDisconnect((_) => logger.i('disconnect'));
+    } catch (e) {
+      logger.e(e);
+    }
+  }
+
+  void emitEvent() {
+    socket.value?.emit('sendMessage', scoreboard.toJson());
+  }
+
+  void disconnect() {
+    socket.value?.disconnect();
   }
 
   void createScoreBoard() {
@@ -43,7 +76,6 @@ class ScoreBoardController extends GetxController {
       matchId: '12345',
     );
     _lastScoreboardInstance = scoreboard.value!;
-    // logger.i(scoreboard.value!.toJson());
   }
 
   void addEvent(EventType type, {String? bowlerId, String? strikerId}) {
@@ -106,7 +138,7 @@ class ScoreBoardController extends GetxController {
     }
     events.value = [];
     events.refresh();
-
+    emitEvent();
     scoreboard.refresh();
   }
 
@@ -158,26 +190,6 @@ class ScoreBoardController extends GetxController {
         id: index.toString(),
         phoneNumber: generatePhoneNumber(),
         role: 'Batsman',
-        // batting: BattingModel(
-        //   runs: 0,
-        //   balls: 0,
-        //   fours: 0,
-        //   sixes: 0,
-        //   strikeRate:
-        //       faker.randomGenerator.decimal(min: 39, scale: 1).toDouble(),
-        //   bowledBy: '',
-        //   outType: '',
-        // ),
-        // bowling: BowlingModel(
-        //   runs: 0,
-        //   wickets: 0,
-        //   economy: 0,
-        //   maidens: 0,
-        //   fours: 0,
-        //   sixes: 0,
-        //   wides: 0,
-        //   noBalls: 0,
-        // ),
       );
     });
   }

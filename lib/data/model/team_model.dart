@@ -11,7 +11,8 @@ class TeamModel {
   final String logo;
   @JsonKey(name: '_id')
   final String id;
-  final int playersCount;
+  @JsonKey(disallowNullValue: false)
+  final int? playersCount;
   @JsonKey(disallowNullValue: false)
   final List<PlayerModel>? players;
   @JsonKey(disallowNullValue: false)
@@ -29,7 +30,7 @@ class TeamModel {
 
   Map<String, dynamic> toJson() => _$TeamModelToJson(this);
 
-  toImageUrl() {
+  String toImageUrl() {
     return "https://gully-team-bucket.s3.amazonaws.com/$logo";
   }
 }

@@ -107,10 +107,10 @@ class _TeamCard extends StatelessWidget {
               style: const TextStyle(fontSize: 19),
             ),
             const Spacer(),
-            if (team.playersCount < 14)
+            if (team.playersCount! < 14)
               Row(
                 children: [
-                  Text('(${team.playersCount}/15)',
+                  Text('(${team.playersCount! + 1}/15)',
                       style: const TextStyle(fontSize: 13)),
                   const SizedBox(
                     width: 10,
@@ -138,7 +138,7 @@ class _TeamCard extends StatelessWidget {
                   )
                 ],
               ),
-            if (team.playersCount == 14)
+            if (team.playersCount! >= 14)
               Material(
                 child: InkWell(
                   borderRadius: BorderRadius.circular(09),

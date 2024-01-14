@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/select_opening_team.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 
@@ -66,9 +64,7 @@ class RateUsScreen extends StatelessWidget {
                   SizedBox(
                     width: 300,
                     child: PrimaryButton(
-                      onTap: () {
-                        Get.to(() => const SelectOpeningTeam());
-                      },
+                      onTap: () {},
                       title: 'Submit',
                     ),
                   ),

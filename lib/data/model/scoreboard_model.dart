@@ -14,7 +14,6 @@ part 'scoreboard_model.g.dart';
 class ScoreboardModel {
   final TeamModel team1;
   final TeamModel team2;
-
   @JsonKey(
     includeToJson: true,
   )
@@ -41,7 +40,6 @@ class ScoreboardModel {
   late String _nonStrikerId;
   Map<String, OverModel> firstInningHistory = {};
   Map<String, OverModel> secondInningHistory = {};
-
   Map<String, OverModel> get currentInningsHistory {
     if (currentInnings == 1) {
       return firstInningHistory;

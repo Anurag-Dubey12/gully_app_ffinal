@@ -1,18 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/score_card.dart';
+import 'package:gully_app/data/model/matchup_model.dart';
+import 'package:gully_app/data/model/team_model.dart';
+import 'package:gully_app/ui/screens/select_opening_players.dart';
 import 'package:gully_app/ui/widgets/custom_text_field.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/utils/app_logger.dart';
 
 class SelectOpeningTeam extends StatefulWidget {
-  const SelectOpeningTeam({super.key});
+  final MatchupModel match;
+  const SelectOpeningTeam({super.key, required this.match});
 
   @override
   State<SelectOpeningTeam> createState() => _SelectOpeningTeamState();
 }
 
 class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
+  TeamModel? hostTeam;
+  TeamModel? visitorTeam;
+  String? tossWonBy;
+  String? optedTo;
+  int totalOvers = 0;
+  @override
+  void initState() {
+    super.initState();
+    hostTeam = widget.match.team1;
+    visitorTeam = widget.match.team2;
+    tossWonBy = widget.match.team1.id;
+    optedTo = 'Bat';
+  }
+
   @override
   Widget build(BuildContext context) {
     return GradientBuilder(
@@ -33,30 +51,41 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
         children: [
           const Text('Host Team',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          CustomTextField(
-            filled: true,
-            suffixIcon: const Icon(
-              Icons.arrow_drop_down,
-              size: 44,
+          const SizedBox(height: 10),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
             ),
-            readOnly: true,
-            onTap: () {},
-          ),
-          const SizedBox(height: 20),
-          const Text('Visitor Team',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          CustomTextField(
-            filled: true,
-            suffixIcon: const Icon(
-              Icons.arrow_drop_down,
-              size: 44,
-            ),
-            readOnly: true,
-            onTap: () {},
-          ),
-          // container with white bg and border radius of 10 with two items in row having text and radio btn
-          const SizedBox(height: 20),
+            child: DropdownButton<TeamModel?>(
+              value: hostTeam,
 
+              icon: const Icon(Icons.arrow_drop_down),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              iconSize: 24,
+              // menuMaxHeight: 8,
+              borderRadius: BorderRadius.circular(10),
+              alignment: Alignment.bottomCenter,
+              // elevation: 16,
+              iconEnabledColor: Colors.black,
+              isExpanded: true,
+              style: const TextStyle(color: Colors.black),
+              underline: const SizedBox(),
+              onChanged: (TeamModel? newValue) {
+                setState(() {
+                  hostTeam = newValue;
+                });
+              },
+              items: [widget.match.team1, widget.match.team2]
+                  .map<DropdownMenuItem<TeamModel?>>((TeamModel value) {
+                return DropdownMenuItem<TeamModel?>(
+                  value: value,
+                  child: Text(value.name, style: Get.textTheme.labelMedium),
+                );
+              }).toList(),
+            ),
+          ),
+          const SizedBox(height: 20),
           Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -76,21 +105,29 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                       Row(
                         children: [
                           Radio(
-                            value: true,
-                            groupValue: false,
-                            onChanged: (value) {},
+                            value: widget.match.team1.id,
+                            groupValue: tossWonBy,
+                            onChanged: (value) {
+                              setState(() {
+                                tossWonBy = value;
+                              });
+                            },
                           ),
-                          const Text('CSK'),
+                          Text(widget.match.team1.name),
                         ],
                       ),
                       Row(
                         children: [
                           Radio(
-                            value: true,
-                            groupValue: true,
-                            onChanged: (value) {},
+                            value: widget.match.team2.id,
+                            groupValue: tossWonBy,
+                            onChanged: (value) {
+                              setState(() {
+                                tossWonBy = value;
+                              });
+                            },
                           ),
-                          const Text('KKR'),
+                          Text(widget.match.team2.name),
                         ],
                       ),
                     ],
@@ -119,9 +156,13 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                       Row(
                         children: [
                           Radio(
-                            value: true,
-                            groupValue: false,
-                            onChanged: (value) {},
+                            groupValue: optedTo,
+                            value: 'Bat',
+                            onChanged: (value) {
+                              setState(() {
+                                optedTo = value;
+                              });
+                            },
                           ),
                           const Text('Bat'),
                         ],
@@ -129,9 +170,14 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                       Row(
                         children: [
                           Radio(
-                            value: true,
-                            groupValue: true,
-                            onChanged: (value) {},
+                            value: 'Bowl',
+                            groupValue: optedTo,
+                            onChanged: (value) {
+                              setState(() {
+                                logger.d(value);
+                                optedTo = value;
+                              });
+                            },
                           ),
                           const Text('Bowl'),
                         ],
@@ -145,12 +191,37 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
           const SizedBox(height: 20),
           const Text('Total Overs',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
           const CustomTextField(
             filled: true,
+            hintText: 'Enter total overs',
+            textInputType: TextInputType.number,
           ),
           const SizedBox(height: 20),
           PrimaryButton(onTap: () {
-            Get.to(() => const ScoreCardScreen());
+            if (hostTeam == null ||
+                visitorTeam == null ||
+                tossWonBy == null ||
+                optedTo == null) {
+              return;
+            }
+            late TeamModel battingTeam;
+            late TeamModel bowlingTeam;
+
+            if (tossWonBy == hostTeam!.id) {
+              if (optedTo == 'Bat') {
+                battingTeam = hostTeam!;
+                bowlingTeam = visitorTeam!;
+              } else {
+                battingTeam = visitorTeam!;
+                bowlingTeam = hostTeam!;
+              }
+            }
+            Get.to(() => SelectOpeningPlayer(
+                  match: widget.match,
+                  battingTeam: battingTeam,
+                  bowlingTeam: bowlingTeam,
+                ));
           })
         ],
       ),

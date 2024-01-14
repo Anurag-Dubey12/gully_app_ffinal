@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -54,14 +55,14 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
     });
     if (widget.tournament != null) {
       _nameController.text = widget.tournament!.tournamentName;
-      // _rulesController.text = widget.tournament!.rules!;
+      _rulesController.text = widget.tournament!.rules ?? "";
       _entryFeeController.text = widget.tournament!.fees.toString();
       _ballChargesController.text = widget.tournament!.ballCharges.toString();
       _breakfastChargesController.text =
           widget.tournament!.breakfastCharges.toString();
       _teamLimitController.text = widget.tournament!.tournamentLimit.toString();
       _addressController.text = widget.tournament!.stadiumAddress;
-      // _disclaimerController.text = widget.tournament!.disclaimer!;
+      _disclaimerController.text = widget.tournament!.disclaimer ?? "";
       from = widget.tournament!.tournamentStartDateTime;
       to = widget.tournament!.tournamentEndDateTime;
       // tournamentType = widget.tournament!.tournamentCategory!;
@@ -104,52 +105,63 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                       : PrimaryButton(
                           onTap: () async {
                             try {
-                              log(_nameController.text);
-                              setState(() {
-                                isLoading = true;
-                              });
-                              final position = await determinePosition();
-                              Map<String, dynamic> tournament = {
-                                "tournamentStartDateTime":
-                                    from?.toIso8601String(),
-                                "tournamentEndDateTime": to?.toIso8601String(),
-                                "tournamentName": _nameController.text,
-                                "tournamentCategory": tournamentType,
-                                "ballType": ballType.toLowerCase(),
-                                "pitchType": pitchType,
-                                "matchType": "Tennis ball cricket match",
-                                "price": "1st price",
-                                "location": _addressController.text,
-                                "tournamentPrize": '1st prize',
-                                "fees": _entryFeeController.text,
-                                "ballCharges": _ballChargesController.text,
-                                "breakfastCharges":
-                                    _breakfastChargesController.text,
-                                "stadiumAddress": _addressController.text,
-                                "tournamentLimit": _teamLimitController.text,
-                                "gameType": "KABADDI",
-                                "selectLocation": _addressController.text,
-                                "latitude": position.latitude,
-                                "longitude": position.longitude,
-                              };
-                              if (widget.tournament != null) {
-                                bool isOk = await tournamentController
-                                    .updateTournament({
-                                  ...tournament,
-                                  'id': widget.tournament!.id
-                                });
-                                if (isOk) {
-                                  Get.back();
-                                  successSnackBar(
-                                      'Tournament Updated Successfully');
+                              if (_key.currentState!.validate()) {
+                                if (from == null || to == null) {
+                                  errorSnackBar(
+                                      'Please select tournament start and end date');
+                                  return;
                                 }
-                              } else {
-                                bool isOk = await tournamentController
-                                    .createTournament(tournament);
-                                if (isOk) {
-                                  Get.back();
-                                  successSnackBar(
-                                      'Tournament Created Successfully');
+                                log(_nameController.text);
+                                setState(() {
+                                  isLoading = true;
+                                });
+                                final position = await determinePosition();
+
+                                Map<String, dynamic> tournament = {
+                                  "tournamentStartDateTime":
+                                      from?.toIso8601String(),
+                                  "tournamentEndDateTime":
+                                      to?.toIso8601String(),
+                                  "tournamentName": _nameController.text,
+                                  "tournamentCategory": tournamentType,
+                                  "ballType": ballType.toLowerCase(),
+                                  "pitchType": pitchType,
+                                  "matchType": "Tennis ball cricket match",
+                                  "price": "1st price",
+                                  "location": _addressController.text,
+                                  "tournamentPrize": '1st prize',
+                                  "fees": _entryFeeController.text,
+                                  "ballCharges": _ballChargesController.text,
+                                  "breakfastCharges":
+                                      _breakfastChargesController.text,
+                                  "stadiumAddress": _addressController.text,
+                                  "tournamentLimit": _teamLimitController.text,
+                                  "gameType": "KABADDI",
+                                  "selectLocation": _addressController.text,
+                                  "latitude": position.latitude,
+                                  "longitude": position.longitude,
+                                  "rules": _rulesController.text,
+                                  "disclaimer": _disclaimerController.text,
+                                };
+                                if (widget.tournament != null) {
+                                  bool isOk = await tournamentController
+                                      .updateTournament({
+                                    ...tournament,
+                                    'id': widget.tournament!.id
+                                  });
+                                  if (isOk) {
+                                    Get.back();
+                                    successSnackBar(
+                                        'Tournament Updated Successfully');
+                                  }
+                                } else {
+                                  bool isOk = await tournamentController
+                                      .createTournament(tournament);
+                                  if (isOk) {
+                                    Get.back();
+                                    successSnackBar(
+                                        'Tournament Created Successfully');
+                                  }
                                 }
                               }
                             } finally {
@@ -360,19 +372,31 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                         setState(() {
                                           _addressController.text = e;
                                         });
+                                        FocusScope.of(context).unfocus();
                                       },
                                     ));
-                                FocusScope.of(context).unfocus();
                               },
                             ),
                             FormInput(
                               controller: _entryFeeController,
                               label: 'Entry Fee',
+                              validator: (e) {
+                                if (e == null || e.isEmpty) {
+                                  return 'Please enter entry fee';
+                                }
+                                return null;
+                              },
                               textInputType: TextInputType.number,
                             ),
                             FormInput(
                               controller: _ballChargesController,
                               label: 'Ball Charges',
+                              validator: (e) {
+                                if (e == null || e.isEmpty) {
+                                  return 'Please enter ball charges';
+                                }
+                                return null;
+                              },
                               textInputType: TextInputType.number,
                             ),
                             FormInput(
@@ -383,6 +407,14 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             FormInput(
                               controller: _teamLimitController,
                               label: 'Team Limit',
+                              validator: (e) {
+                                if (e == null || e.isEmpty) {
+                                  return 'Please enter team limit';
+                                } else if (int.parse(e) < 2) {
+                                  return 'Team limit should be greater than 2';
+                                }
+                                return null;
+                              },
                               textInputType: TextInputType.number,
                             ),
                             FormInput(
@@ -412,7 +444,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                 ],
               ),
             ),
-            FocusScope.of(context).hasFocus
+            FocusScope.of(context).hasFocus && Platform.isIOS
                 ? Positioned(
                     bottom: 0,
                     child: GestureDetector(

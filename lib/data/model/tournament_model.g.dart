@@ -10,6 +10,8 @@ TournamentModel _$TournamentModelFromJson(Map<String, dynamic> json) =>
     TournamentModel(
       tournamentName: json['tournamentName'] as String,
       id: json['_id'] as String,
+      disclaimer: json['disclaimer'] as String?,
+      rules: json['rules'] as String?,
       ballCharges: json['ballCharges'] as int,
       phoneNumber: json['phoneNumber'] as String?,
       tournamentLimit: json['tournamentLimit'] as int? ?? 0,

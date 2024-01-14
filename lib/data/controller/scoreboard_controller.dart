@@ -8,12 +8,12 @@ import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/utils/app_logger.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class ScoreBoardController extends GetxController with StateMixin {
   final Rx<ScoreboardModel?> scoreboard = Rx<ScoreboardModel?>(null);
   late ScoreboardModel _lastScoreboardInstance;
-  Rx<IO.Socket?> socket = Rx(null);
+  Rx<io.Socket?> socket = Rx(null);
 
   RxList<EventType> events = RxList<EventType>([]);
   @override
@@ -26,7 +26,7 @@ class ScoreBoardController extends GetxController with StateMixin {
   void connectToSocket() {
     try {
       logger.d('connectToSocket ${AppConstants.websocketUrl}');
-      socket.value = IO.io('ws://192.168.1.6:3001', <String, dynamic>{
+      socket.value = io.io('ws://192.168.1.6:3001', <String, dynamic>{
         'transports': ['websocket'],
       });
       logger.d('socket $socket');

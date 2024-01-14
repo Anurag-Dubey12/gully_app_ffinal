@@ -1,18 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/select_opening_team.dart';
-import 'package:gully_app/ui/widgets/custom_text_field.dart';
+import 'package:gully_app/data/model/matchup_model.dart';
+import 'package:gully_app/data/model/player_model.dart';
+import 'package:gully_app/data/model/team_model.dart';
+import 'package:gully_app/ui/screens/score_card_screen.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/utils/utils.dart';
 
 class SelectOpeningPlayer extends StatefulWidget {
-  const SelectOpeningPlayer({super.key});
+  final TeamModel battingTeam;
+  final TeamModel bowlingTeam;
+  final MatchupModel match;
+
+  const SelectOpeningPlayer(
+      {super.key,
+      required this.match,
+      required this.battingTeam,
+      required this.bowlingTeam});
 
   @override
   State<SelectOpeningPlayer> createState() => _SelectOpeningPlayerState();
 }
 
 class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
+  PlayerModel? striker;
+  PlayerModel? nonStriker;
+  PlayerModel? openingBowler;
   @override
   Widget build(BuildContext context) {
     return GradientBuilder(
@@ -33,47 +47,62 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Strikers',
+            const Text('Striker',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            CustomTextField(
-              filled: true,
-              suffixIcon: const Icon(
-                Icons.arrow_drop_down,
-                size: 44,
-              ),
-              readOnly: true,
-              onTap: () {},
+            _DropDownWidget(
+              title: 'Select  Striker',
+              onSelect: (e) {
+                setState(() {
+                  if (e.id == nonStriker?.id) {
+                    errorSnackBar('Striker and Non Striker cannot be same');
+                    return;
+                  }
+                  striker = e;
+                });
+                Get.back();
+              },
+              selectedValue: striker?.name.toUpperCase(),
+              items: widget.battingTeam.players!,
             ),
             const SizedBox(height: 20),
-            const Text('Non-Strikers',
+            const Text('Non-Striker',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            CustomTextField(
-              filled: true,
-              suffixIcon: const Icon(
-                Icons.arrow_drop_down,
-                size: 44,
-              ),
-              readOnly: true,
-              onTap: () {},
+
+            _DropDownWidget(
+              title: 'Select Non Striker',
+              onSelect: (e) {
+                setState(() {
+                  if (e.id == striker?.id) {
+                    errorSnackBar('Striker and Non Striker cannot be same');
+                    return;
+                  }
+                  nonStriker = e;
+                });
+                Get.back();
+              },
+              selectedValue: nonStriker?.name.toUpperCase(),
+              items: widget.battingTeam.players!,
             ),
             const SizedBox(height: 20),
             const Text('Opening Bowler',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            CustomTextField(
-              filled: true,
-              suffixIcon: const Icon(
-                Icons.arrow_drop_down,
-                size: 44,
-              ),
-              readOnly: true,
-              onTap: () {},
+            _DropDownWidget(
+              title: 'Select Opening Bowler',
+              onSelect: (e) {
+                setState(() {
+                  openingBowler = e;
+                });
+                Get.back();
+              },
+              selectedValue: openingBowler?.name.toUpperCase(),
+              items: widget.bowlingTeam.players!,
             ),
             // container with white bg and border radius of 10 with two items in row having text and radio btn
             const SizedBox(height: 20),
             const Spacer(),
             PrimaryButton(
               onTap: () {
-                Get.to(() => const SelectOpeningTeam());
+                Get.to(() => const ScoreCardScreen());
               },
               title: 'Start Match',
             )
@@ -81,5 +110,96 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
         ),
       ),
     ));
+  }
+}
+
+class _DropDownWidget extends StatelessWidget {
+  final Function(PlayerModel player) onSelect;
+  final String? selectedValue;
+  final List<PlayerModel> items;
+  final String title;
+  const _DropDownWidget({
+    super.key,
+    required this.onSelect,
+    this.selectedValue,
+    required this.items,
+    required this.title,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Material(
+        borderRadius: BorderRadius.circular(9),
+        borderOnForeground: true,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(9),
+          onTap: () {
+            Get.bottomSheet(BottomSheet(
+                onClosing: () {},
+                builder: (context) => Container(
+                      // height: Get.height * 0.31,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(9)),
+                      child: Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(title,
+                                style: Get.textTheme.headlineMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black)),
+                            Expanded(
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: items.length,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      leading: Radio(
+                                          value:
+                                              items[index].name.toUpperCase(),
+                                          groupValue: selectedValue,
+                                          onChanged: (e) {
+                                            onSelect(items[index]);
+                                          }),
+                                      title: Text(items[index].name),
+                                    );
+                                  }),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )));
+          },
+          child: Ink(
+            width: Get.width,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(9),
+              color: Colors.white,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Row(
+                children: [
+                  Text(selectedValue ?? '', style: Get.textTheme.labelLarge),
+                  const Spacer(),
+                  const Align(
+                      alignment: Alignment.centerRight,
+                      child: Icon(
+                        Icons.arrow_drop_down,
+                        size: 28,
+                      )),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

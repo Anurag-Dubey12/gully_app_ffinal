@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/ui/screens/select_opening_team.dart';
 
 import '../../data/model/matchup_model.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
-import 'select_opening_players.dart';
 
 class SelectTeamForScoreBoard extends GetView<TournamentController> {
   const SelectTeamForScoreBoard({super.key});
@@ -97,7 +97,9 @@ class _MatchupCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => const SelectOpeningPlayer());
+        Get.to(() => SelectOpeningTeam(
+              match: matchup,
+            ));
       },
       child: Container(
         decoration: BoxDecoration(

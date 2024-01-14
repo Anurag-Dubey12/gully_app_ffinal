@@ -22,10 +22,16 @@ class TournamentModel {
   final String ballType;
   final String pitchType;
   final String stadiumAddress;
+  @JsonKey(disallowNullValue: false)
+  final String? disclaimer;
+  @JsonKey(disallowNullValue: false)
+  final String? rules;
 
   TournamentModel(
       {required this.tournamentName,
       required this.id,
+      required this.disclaimer,
+      required this.rules,
       required this.ballCharges,
       required this.phoneNumber,
       required this.tournamentLimit,

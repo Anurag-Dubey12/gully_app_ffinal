@@ -21,7 +21,19 @@ class BattingModel {
       required this.bowledBy,
       required this.outType});
 //
-  factory BattingModel.fromJson(Map<String, dynamic> json) =>
-      _$BattingModelFromJson(json);
+  factory BattingModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return BattingModel(
+          runs: 0,
+          balls: 0,
+          fours: 0,
+          sixes: 0,
+          strikeRate: 0,
+          bowledBy: '',
+          outType: '');
+    } else {
+      return _$BattingModelFromJson(json);
+    }
+  }
   Map<String, dynamic> toJson() => _$BattingModelToJson(this);
 }

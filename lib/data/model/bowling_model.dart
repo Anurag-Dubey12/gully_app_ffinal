@@ -31,8 +31,20 @@ class BowlingModel {
       required this.wides,
       required this.noBalls});
 
-  factory BowlingModel.fromJson(Map<String, dynamic> json) =>
-      _$BowlingModelFromJson(json);
+  factory BowlingModel.fromJson(Map<String, dynamic>? json) {
+    if (json == null) {
+      return BowlingModel(
+          runs: 0,
+          wickets: 0,
+          economy: 0,
+          maidens: 0,
+          fours: 0,
+          sixes: 0,
+          wides: 0,
+          noBalls: 0);
+    }
+    return _$BowlingModelFromJson(json);
+  }
   Map<String, dynamic> toJson() => _$BowlingModelToJson(this);
 
   void addRuns(int run, {List<EventType>? events}) {

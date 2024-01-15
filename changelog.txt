@@ -1,1 +1,8 @@
-Fixed all linear Issues
+Implement Legal Screens API
+Implement Scoreboard API
+Implement Organize API
+Fix requests List API
+Implement View Matchups API
+Update dependencies,
+Fix bugs
+Refactor code

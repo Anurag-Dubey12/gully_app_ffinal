@@ -106,7 +106,13 @@ class _Card extends StatelessWidget {
                   width: 100,
                   child: ElevatedButton(
                       onPressed: () {
-                        Get.bottomSheet(const ScoreBottomDialog());
+                        Get.bottomSheet(
+                          BottomSheet(
+                            enableDrag: false,
+                            builder: (context) => const ScoreBottomDialog(),
+                            onClosing: () {},
+                          ),
+                        );
                       },
                       style: ButtonStyle(
                         padding:

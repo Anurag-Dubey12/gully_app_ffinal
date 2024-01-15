@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/model/team_model.dart';
 
 import '../../data/controller/tournament_controller.dart';
-import '../screens/current_tournament_list.dart';
 
 class RequestsBottomSheet extends StatefulWidget {
   final String tournamentId;
@@ -60,66 +59,66 @@ class _RequestsBottomSheetState extends State<RequestsBottomSheet> {
               child: FutureBuilder<List<TeamModel>>(
                   future: controller.getTeamRequests(widget.tournamentId),
                   builder: (context, snapshot) {
+                    if (snapshot.data?.isEmpty ?? true) {
+                      return const Center(
+                        child: Text('No Requests'),
+                      );
+                    }
                     return ListView.separated(
                         shrinkWrap: true,
                         itemCount: snapshot.data?.length ?? 0,
                         separatorBuilder: (context, index) =>
                             const SizedBox(height: 20),
                         itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              Get.to(() => const CurrentTournamentListScreen(
-                                  redirectType: RedirectType.organizeMatch));
-                              setState(() {});
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: const Color(0xffE9E7EF),
-                                  borderRadius: BorderRadius.circular(19)),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: Row(children: [
-                                  CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        snapshot.data![index].toImageUrl()),
+                          return Container(
+                            decoration: BoxDecoration(
+                                color: const Color(0xffE9E7EF),
+                                borderRadius: BorderRadius.circular(19)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12.0),
+                              child: Row(children: [
+                                CircleAvatar(
+                                  backgroundImage: NetworkImage(
+                                      snapshot.data![index].toImageUrl()),
+                                ),
+                                const SizedBox(width: 10),
+                                Text(
+                                  snapshot.data![index].name,
+                                  style: const TextStyle(fontSize: 18),
+                                ),
+                                const Spacer(),
+                                GestureDetector(
+                                  onTap: () async {
+                                    await controller.updateTeamRequest(
+                                        widget.tournamentId,
+                                        snapshot.data![index].id,
+                                        'Accepted');
+                                    setState(() {});
+                                  },
+                                  child: const CircleAvatar(
+                                    radius: 13,
+                                    backgroundColor:
+                                        Color.fromARGB(255, 71, 224, 79),
+                                    child: Icon(Icons.add),
                                   ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    snapshot.data![index].name,
-                                    style: const TextStyle(fontSize: 18),
+                                ),
+                                const SizedBox(width: 10),
+                                GestureDetector(
+                                  onTap: () async {
+                                    await controller.updateTeamRequest(
+                                        widget.tournamentId,
+                                        snapshot.data![index].id,
+                                        'Denied');
+                                    setState(() {});
+                                  },
+                                  child: const CircleAvatar(
+                                    radius: 13,
+                                    backgroundColor:
+                                        Color.fromARGB(255, 235, 17, 24),
+                                    child: Icon(Icons.person_off),
                                   ),
-                                  const Spacer(),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      await controller.updateTeamRequest(
-                                          widget.tournamentId,
-                                          snapshot.data![index].id,
-                                          'Accepted');
-                                    },
-                                    child: const CircleAvatar(
-                                      radius: 13,
-                                      backgroundColor:
-                                          Color.fromARGB(255, 71, 224, 79),
-                                      child: Icon(Icons.add),
-                                    ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      await controller.updateTeamRequest(
-                                          widget.tournamentId,
-                                          snapshot.data![index].id,
-                                          'Denied');
-                                    },
-                                    child: const CircleAvatar(
-                                      radius: 13,
-                                      backgroundColor:
-                                          Color.fromARGB(255, 235, 17, 24),
-                                      child: Icon(Icons.person_off),
-                                    ),
-                                  )
-                                ]),
-                              ),
+                                )
+                              ]),
                             ),
                           );
                         });

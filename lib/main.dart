@@ -4,8 +4,11 @@ import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/api/misc_api.dart';
 import 'package:gully_app/data/api/ranking_api.dart';
+import 'package:gully_app/data/api/score_board_api.dart';
 import 'package:gully_app/data/api/team_api.dart';
+import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 
@@ -40,17 +43,24 @@ class MyApp extends StatelessWidget {
               Bind.put<Preferences>(Preferences()),
               Bind.lazyPut<AuthApi>(() => AuthApi()),
               Bind.lazyPut<RankingApi>(() => RankingApi()),
+              Bind.lazyPut<MiscApi>(() => MiscApi(repo: Get.find())),
               Bind.lazyPut<TournamentApi>(
                   () => TournamentApi(repo: Get.find())),
+              Bind.lazyPut<ScoreboardApi>(
+                  () => ScoreboardApi(repo: Get.find())),
               Bind.lazyPut<TeamApi>(() => TeamApi(repo: Get.find())),
               Bind.lazyPut<TeamController>(
                   () => TeamController(repo: Get.find())),
               Bind.lazyPut<AuthController>(
                   () => AuthController(repo: Get.find())),
-              Bind.put<ScoreBoardController>(ScoreBoardController()),
+              Bind.put<ScoreBoardController>(
+                  ScoreBoardController(scoreboardApi: Get.find())),
               Bind.lazyPut<TournamentController>(
                   () => TournamentController(Get.find())),
+              Bind.lazyPut<MiscController>(
+                  () => MiscController(repo: Get.find())),
             ],
+            defaultTransition: Transition.cupertino,
             title: AppConstants.appName,
             theme: AppTheme.lightTheme,
             home: const SplashScreen(),

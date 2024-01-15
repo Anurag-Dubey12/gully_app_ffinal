@@ -1,12 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/config/preferences.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/splash_screen.dart';
 
-import '../screens/challenge_team.dart';
 import '../screens/contact_us_screen.dart';
 import '../screens/legal_screen.dart';
 import '../screens/looking_for_screen.dart';
@@ -202,17 +200,20 @@ class AppDrawer extends GetView<AuthController> {
                     ],
                   ),
                 ),
-                DrawerCard(
-                  title: 'Challenge Team',
-                  onTap: () {
-                    Get.to(() => const ChallengeTeam());
-                  },
-                  icon: Icons.compare,
-                ),
+                // DrawerCard(
+                //   title: 'Challenge Team',
+                //   onTap: () {
+                //     Get.to(() => const ChallengeTeam());
+                //   },
+                //   icon: Icons.compare,
+                // ),
                 DrawerCard(
                   title: 'About us',
                   onTap: () {
-                    Get.to(() => const ContactUsScreen());
+                    Get.to(() => const LegalViewScreen(
+                          title: 'About us',
+                          slug: 'about-us',
+                        ));
                   },
                   icon: Icons.info,
                 ),
@@ -237,14 +238,20 @@ class AppDrawer extends GetView<AuthController> {
                 DrawerCard(
                   title: 'Privacy Policy',
                   onTap: () {
-                    Get.to(() => const LegalViewScreen());
+                    Get.to(() => const LegalViewScreen(
+                          title: 'Privacy Policy',
+                          slug: 'privacy-policy',
+                        ));
                   },
                   icon: Icons.privacy_tip,
                 ),
                 DrawerCard(
                   title: 'FAQs',
                   onTap: () {
-                    Get.to(() => const LegalViewScreen());
+                    Get.to(() => const LegalViewScreen(
+                          title: 'FAQs',
+                          slug: 'faqs',
+                        ));
                   },
                   icon: Icons.question_answer,
                 ),
@@ -258,11 +265,10 @@ class AppDrawer extends GetView<AuthController> {
                 DrawerCard(
                   title: 'Disclaimer',
                   onTap: () {
-                    final controller = Get.find<Preferences>();
-                    controller.clear();
-                    FirebaseAuth.instance.signOut();
-                    Get.offAll(() => const SplashScreen());
-                    // Get.to(() => const LegalViewScreen());
+                    Get.to(() => const LegalViewScreen(
+                          title: 'Disclaimer',
+                          slug: 'disclaimer',
+                        ));
                   },
                   icon: Icons.disc_full,
                 ),

@@ -12,12 +12,10 @@ PlayerModel _$PlayerModelFromJson(Map<String, dynamic> json) => PlayerModel(
       phoneNumber: json['phoneNumber'] as String,
       role: json['role'] as String,
     )
-      ..batting = json['batting'] == null
-          ? null
-          : BattingModel.fromJson(json['batting'] as Map<String, dynamic>)
-      ..bowling = json['bowling'] == null
-          ? null
-          : BowlingModel.fromJson(json['bowling'] as Map<String, dynamic>);
+      ..batting =
+          BattingModel.fromJson(json['batting'] as Map<String, dynamic>?)
+      ..bowling =
+          BowlingModel.fromJson(json['bowling'] as Map<String, dynamic>?);
 
 Map<String, dynamic> _$PlayerModelToJson(PlayerModel instance) =>
     <String, dynamic>{

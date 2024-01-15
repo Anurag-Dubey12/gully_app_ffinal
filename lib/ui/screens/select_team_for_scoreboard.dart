@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/data/model/scoreboard_model.dart';
+import 'package:gully_app/ui/screens/score_card_screen.dart';
 import 'package:gully_app/ui/screens/select_opening_team.dart';
 
 import '../../data/model/matchup_model.dart';
@@ -86,10 +89,9 @@ class SelectTeamForScoreBoard extends GetView<TournamentController> {
   }
 }
 
-class _MatchupCard extends StatelessWidget {
+class _MatchupCard extends GetView<ScoreBoardController> {
   final MatchupModel matchup;
   const _MatchupCard({
-    super.key,
     required this.matchup,
   });
 
@@ -97,9 +99,15 @@ class _MatchupCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => SelectOpeningTeam(
-              match: matchup,
-            ));
+        if (matchup.scoreBoard != null) {
+          controller
+              .setScoreBoard(ScoreboardModel.fromJson(matchup.scoreBoard!));
+          Get.off(() => const ScoreCardScreen());
+        } else {
+          Get.off(() => SelectOpeningTeam(
+                match: matchup,
+              ));
+        }
       },
       child: Container(
         decoration: BoxDecoration(

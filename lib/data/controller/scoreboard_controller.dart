@@ -1,26 +1,25 @@
-import 'dart:math';
-
-import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/config/app_constants.dart';
-import 'package:gully_app/data/model/player_model.dart';
+import 'package:gully_app/data/api/score_board_api.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class ScoreBoardController extends GetxController with StateMixin {
+  final ScoreboardApi _scoreboardApi;
   final Rx<ScoreboardModel?> scoreboard = Rx<ScoreboardModel?>(null);
   late ScoreboardModel _lastScoreboardInstance;
   Rx<io.Socket?> socket = Rx(null);
 
   RxList<EventType> events = RxList<EventType>([]);
+
+  ScoreBoardController({required ScoreboardApi scoreboardApi})
+      : _scoreboardApi = scoreboardApi;
   @override
   void onInit() {
     super.onInit();
-
-    createScoreBoard();
   }
 
   void connectToSocket() {
@@ -52,29 +51,38 @@ class ScoreBoardController extends GetxController with StateMixin {
     socket.value?.disconnect();
   }
 
-  void createScoreBoard() {
-    final TeamModel team1 = TeamModel(
-      11,
-      name: 'Team A',
-      logo: 'team_a_logo.png',
-      id: 'team_a',
-      players: generatePlayers(),
-    );
-
-    final TeamModel team2 = TeamModel(
-      11,
-      name: 'Team B',
-      logo: 'team_b_logo.png',
-      id: 'team_b',
-      players: generatePlayers(),
-    );
-
+  void createScoreBoard(
+      {required TeamModel team1,
+      required TeamModel team2,
+      required String strikerId,
+      required String nonStrikerId,
+      required String openingBowler,
+      required String matchId,
+      required String tossWonBy,
+      required String electedTo,
+      required int overs}) {
     // Create sample ScoreboardModel
     scoreboard.value = ScoreboardModel(
       team1: team1,
       team2: team2,
-      matchId: '12345',
+      matchId: matchId,
+      tossWonBy: tossWonBy,
+      electedTo: electedTo,
+      totalOvers: overs,
+      strikerId: strikerId,
+      nonStrikerId: nonStrikerId,
+      bowlerId: openingBowler,
+      firstInningHistory: {},
+      secondInningHistory: {},
     );
+    // logger.i(scoreboard.value!.toJson());
+    _lastScoreboardInstance = scoreboard.value!;
+
+    _scoreboardApi.updateScoreBoard(scoreboard.value!.toJson());
+  }
+
+  void setScoreBoard(ScoreboardModel scoreBoard) {
+    scoreboard.value = scoreBoard;
     _lastScoreboardInstance = scoreboard.value!;
   }
 
@@ -151,7 +159,7 @@ class ScoreBoardController extends GetxController with StateMixin {
   void checkLastBall() {
     if (scoreboard.value!.currentBall == 0 &&
         scoreboard.value!.currentOver != 0) {
-      // Show your dialog here
+      _scoreboardApi.updateScoreBoard(scoreboard.value!.toJson());
       showModalBottomSheet(
           context: Get.context!,
           builder: (c) => const ChangeBowlerWidget(),
@@ -168,30 +176,6 @@ class ScoreBoardController extends GetxController with StateMixin {
   void removeEventType(EventType type) {
     events.value.remove(type);
     events.refresh();
-  }
-  // Function to generate a random phone number
-
-// Generate a random phone number
-  String generatePhoneNumber() {
-    final Random random = Random();
-    return '9${random.nextInt(1000000000)}';
-  }
-
-// Function to generate random player names
-  String generateRandomName() {
-    return faker.person.name();
-  }
-
-  // Function to generate a list of 11 players with random names
-  List<PlayerModel> generatePlayers() {
-    return List.generate(11, (index) {
-      return PlayerModel(
-        name: generateRandomName(),
-        id: index.toString(),
-        phoneNumber: generatePhoneNumber(),
-        role: 'Batsman',
-      );
-    });
   }
 }
 

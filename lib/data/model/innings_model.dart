@@ -28,4 +28,9 @@ class InningsModel {
       required this.openingNonStriker,
       required this.openingBowler,
       required this.extras});
+
+  factory InningsModel.fromJson(Map<String, dynamic> json) =>
+      _$InningsModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$InningsModelToJson(this);
 }

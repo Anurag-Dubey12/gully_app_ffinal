@@ -17,7 +17,7 @@ class _DateTimesCardState extends State<DateTimesCard> {
   final dateTimes = getDateList();
   void scrollToCenter() {
     // Assuming each item and separator in the list has a fixed width
-    double itemWidth = 135;
+    double itemWidth = 109;
     double screenWidth = MediaQuery.of(context).size.width;
     double centerPosition = (dateTimes.length * itemWidth - screenWidth) / 2;
     scrollController.animateTo(
@@ -34,6 +34,9 @@ class _DateTimesCardState extends State<DateTimesCard> {
     // Schedule a callback to scroll the list after the build is complete
     WidgetsBinding.instance.addPostFrameCallback((_) {
       scrollToCenter();
+      final controller = Get.find<TournamentController>();
+      controller.setSelectedDate(DateTime.now());
+      controller.getTournamentList();
     });
   }
 

@@ -51,6 +51,7 @@ class TournamentController extends GetxController
       tournamentList.value = response.data!['tournamentList']
           .map<TournamentModel>((e) => TournamentModel.fromJson(e))
           .toList();
+      tournamentList.refresh();
     } catch (e) {
       errorSnackBar(e.toString());
       rethrow;
@@ -78,9 +79,9 @@ class TournamentController extends GetxController
     String tournamentId,
     String teamId,
     String action,
-  ) {
+  ) async {
     try {
-      tournamentApi.updateTeamRequest(tournamentId, teamId, action);
+      await tournamentApi.updateTeamRequest(tournamentId, teamId, action);
       return Future.value(true);
     } catch (e) {
       errorSnackBar(e.toString());

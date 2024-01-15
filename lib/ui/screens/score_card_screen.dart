@@ -17,7 +17,7 @@ class ScoreCardScreen extends GetView<ScoreBoardController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (controller.socket.value == null) {
+      if (controller.socket.value != null) {
         // controller.connectToSocket();
         return Scaffold(
             floatingActionButton: FloatingActionButton(
@@ -63,7 +63,7 @@ class ScoreCardScreen extends GetView<ScoreBoardController> {
               heroTag: 'restart',
               onPressed: () async {
                 // controller.disconnect();
-                controller.createScoreBoard();
+
                 controller.connectToSocket();
               },
               backgroundColor: Colors.red,

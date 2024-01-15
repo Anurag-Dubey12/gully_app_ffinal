@@ -1,6 +1,7 @@
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/model/bowling_model.dart';
 import 'package:gully_app/data/model/extras_model.dart';
+import 'package:gully_app/data/model/innings_model.dart';
 import 'package:gully_app/data/model/overs_model.dart';
 import 'package:gully_app/data/model/partnership_model.dart';
 import 'package:gully_app/data/model/player_model.dart';
@@ -13,34 +14,43 @@ part 'scoreboard_model.g.dart';
 @JsonSerializable(explicitToJson: true, createPerFieldToJson: true)
 class ScoreboardModel {
   final TeamModel team1;
-  final TeamModel team2;
-  @JsonKey(
-    includeToJson: true,
-  )
-  final Map<String, PartnershipModel> partnerships = {};
-  final String matchId;
 
-  @JsonKey(
-    includeToJson: true,
-    name: 'extras',
-  )
+  final TeamModel team2;
+  @JsonKey(disallowNullValue: false, defaultValue: null)
+  InningsModel? firstInnings;
+  @JsonKey(disallowNullValue: false, defaultValue: null)
+  InningsModel? secondInnings;
+  final Map<String, PartnershipModel> partnerships = {};
+  @JsonKey(includeToJson: true)
+  // final Map<String, PartnershipModel> partnerships = {};
+  final String matchId;
+  final String tossWonBy;
+  final String? electedTo;
+  final int totalOvers;
+
+  @JsonKey(includeToJson: true, name: 'extras')
   final ExtraModel _extras =
       ExtraModel(wides: 0, noBalls: 0, byes: 0, legByes: 0, penalty: 0);
   get firstInningsScore => 0;
-  int secondInningsScore = 0;
+
   int ballsToBowl = 6;
   int currentOver = 0;
   int currentBall = 0;
-  int currentInnings = 0;
+  int currentInnings = 1;
   int currentInningsScore = 0;
   int currentInningsWickets = 0;
   EventType? lastEventType;
-  late String _bowlerId;
-  late String _strikerId;
-  late String _nonStrikerId;
-  Map<String, OverModel> firstInningHistory = {};
-  Map<String, OverModel> secondInningHistory = {};
-  Map<String, OverModel> get currentInningsHistory {
+  late String bowlerId;
+  @JsonKey(includeToJson: true, includeFromJson: true)
+  late String strikerId;
+  @JsonKey(includeToJson: true, includeFromJson: true)
+  late String nonStrikerId;
+  @JsonKey(includeToJson: true, defaultValue: {}, includeFromJson: true)
+  final Map<String, OverModel> firstInningHistory;
+  @JsonKey(includeToJson: true, defaultValue: {}, includeFromJson: true)
+  final Map<String, OverModel> secondInningHistory;
+
+  Map<String, OverModel> get getCurrentInnings {
     if (currentInnings == 1) {
       return firstInningHistory;
     } else {
@@ -52,21 +62,23 @@ class ScoreboardModel {
     required this.team1,
     required this.team2,
     required this.matchId,
+    required this.tossWonBy,
+    required this.electedTo,
+    required this.totalOvers,
+    required this.firstInningHistory,
+    required this.secondInningHistory,
+    required this.strikerId,
+    required this.nonStrikerId,
+    required this.bowlerId,
   }) {
-    // logger.i('ScoreboardModel: ');
-    _strikerId = team1.players!.first.id;
-    _nonStrikerId = team1.players!.last.id;
-    _bowlerId = team2.players!.first.id;
-    final key = [striker.id, nonstriker.id];
-    key.sort();
     partnerships.addAll({
-      partnershipKey: PartnershipModel(
-          player1: team1.players!.first, player2: team1.players!.last)
+      partnershipKey: PartnershipModel(player1: striker, player2: nonstriker)
     });
-    // logger.i('ScoreboardModel: ${toJson()}');
+
+    logger.i('ScoreboardModel: ${toJson()}');
   }
   String get partnershipKey {
-    final List<String> key = [_strikerId, _nonStrikerId];
+    final List<String> key = [strikerId, nonStrikerId];
     key.sort();
     return key.join();
   }
@@ -80,9 +92,9 @@ class ScoreboardModel {
     for (var i = 0; i < 6; i++) {
       final String key = '$currentOver.$i';
       // logger.i('Key: $key');
-      if (currentInningsHistory.containsKey(key)) {
+      if (getCurrentInnings.containsKey(key)) {
         // logger.i('Key: $key exists');
-        temp.add(currentInningsHistory[key]!);
+        temp.add(getCurrentInnings[key]!);
       } else {
         // logger.i('Key: $key does not exist');
         temp.add(null);
@@ -93,30 +105,28 @@ class ScoreboardModel {
 
   PlayerModel get striker {
     if (currentInnings == 1) {
-      return team1.players!.firstWhere((element) => element.id == _strikerId);
+      return team1.players!.firstWhere((element) => element.id == strikerId);
     } else {
-      return team2.players!.firstWhere((element) => element.id == _strikerId);
+      return team2.players!.firstWhere((element) => element.id == strikerId);
     }
   }
 
   PlayerModel get nonstriker {
     if (currentInnings == 1) {
-      return team1.players!
-          .firstWhere((element) => element.id == _nonStrikerId);
+      return team1.players!.firstWhere((element) => element.id == nonStrikerId);
     } else {
-      return team2.players!
-          .firstWhere((element) => element.id == _nonStrikerId);
+      return team2.players!.firstWhere((element) => element.id == nonStrikerId);
     }
   }
 
   BowlingModel get bowler {
     if (currentInnings == 1) {
       return team2.players!
-          .firstWhere((element) => element.id == _bowlerId)
+          .firstWhere((element) => element.id == bowlerId)
           .bowling!;
     } else {
       return team1.players!
-          .firstWhere((element) => element.id == _bowlerId)
+          .firstWhere((element) => element.id == bowlerId)
           .bowling!;
     }
   }
@@ -124,11 +134,11 @@ class ScoreboardModel {
   String get bowlerName {
     if (currentInnings == 1) {
       return team2.players!
-          .firstWhere((element) => element.id == _bowlerId)
+          .firstWhere((element) => element.id == bowlerId)
           .name;
     } else {
       return team1.players!
-          .firstWhere((element) => element.id == _bowlerId)
+          .firstWhere((element) => element.id == bowlerId)
           .name;
     }
   }
@@ -145,7 +155,7 @@ class ScoreboardModel {
   }
 
   OverModel get lastBall {
-    if (currentInningsHistory.values.isEmpty) {
+    if (getCurrentInnings.values.isEmpty) {
       logger.i('Over history is empty');
       return OverModel(
         over: 1,
@@ -157,7 +167,7 @@ class ScoreboardModel {
         events: [],
       );
     }
-    return currentInningsHistory.values.last;
+    return getCurrentInnings.values.last;
   }
 
   void _incrementBall() {
@@ -209,7 +219,7 @@ class ScoreboardModel {
       currentInningsScore += runs + extraRuns;
       ballsToBowl += 1;
       logger.d(key);
-      secondInningHistory.addAll({
+      getCurrentInnings.addAll({
         key: OverModel(
           over: over,
           ball: ball,
@@ -225,7 +235,7 @@ class ScoreboardModel {
       currentInningsScore += runs;
       logger.d(key);
       ballsToBowl += 1;
-      secondInningHistory.addAll({
+      getCurrentInnings.addAll({
         key: OverModel(
           over: over,
           ball: ball,
@@ -282,15 +292,15 @@ class ScoreboardModel {
 
   void changeStrike() {
     final PlayerModel temp = striker;
-    _strikerId = _nonStrikerId;
-    _nonStrikerId = temp.id;
+    strikerId = nonStrikerId;
+    nonStrikerId = temp.id;
   }
 
   void changeBowler(String id) {
     if (currentInnings == 1) {
-      _bowlerId = team2.players!.firstWhere((element) => element.id == id).id;
+      bowlerId = team2.players!.firstWhere((element) => element.id == id).id;
     } else {
-      _bowlerId = team1.players!.firstWhere((element) => element.id == id).id;
+      bowlerId = team1.players!.firstWhere((element) => element.id == id).id;
     }
   }
 }

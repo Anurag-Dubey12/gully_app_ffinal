@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/legal_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/custom_text_field.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
@@ -93,7 +92,7 @@ class ContactUsScreen extends StatelessWidget {
                     height: 20,
                   ),
                   PrimaryButton(onTap: () {
-                    Get.to(() => const LegalViewScreen());
+                    
                   }),
                 ],
               ),

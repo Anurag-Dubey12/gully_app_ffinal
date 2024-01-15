@@ -11,27 +11,27 @@ class PlayerModel {
   final String name;
   final String phoneNumber;
   final String role;
-  @JsonKey(disallowNullValue: false)
+  @JsonKey(
+    fromJson: BattingModel.fromJson,
+  )
   BattingModel? batting = BattingModel(
-    runs: 0,
-    balls: 0,
-    fours: 0,
-    sixes: 0,
-    strikeRate: 0,
-    bowledBy: '',
-    outType: '',
-  );
-  @JsonKey(disallowNullValue: false)
+      runs: 0,
+      balls: 0,
+      fours: 0,
+      sixes: 0,
+      strikeRate: 0,
+      bowledBy: '',
+      outType: '');
+  @JsonKey(fromJson: BowlingModel.fromJson)
   BowlingModel? bowling = BowlingModel(
-    runs: 0,
-    wickets: 0,
-    economy: 0,
-    maidens: 0,
-    fours: 0,
-    sixes: 0,
-    wides: 0,
-    noBalls: 0,
-  );
+      runs: 0,
+      noBalls: 0,
+      wickets: 0,
+      maidens: 0,
+      economy: 0,
+      fours: 0,
+      sixes: 3,
+      wides: 2);
   PlayerModel(
       {required this.name,
       required this.id,

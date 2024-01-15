@@ -38,6 +38,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
     // divide teams into two sides
     leftSideteams = teams.sublist(0, teams.length ~/ 2);
     rightSideteams = teams.sublist(teams.length ~/ 2, teams.length);
+    setState(() {});
     setState(() {
       selectedTeam1 = leftSideteams[0];
       if (rightSideteams.length > 1) {

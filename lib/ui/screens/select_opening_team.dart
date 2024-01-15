@@ -221,6 +221,9 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                   match: widget.match,
                   battingTeam: battingTeam,
                   bowlingTeam: bowlingTeam,
+                  tossWonBy: tossWonBy!,
+                  electedTo: optedTo!,
+                  overs: totalOvers,
                 ));
           })
         ],

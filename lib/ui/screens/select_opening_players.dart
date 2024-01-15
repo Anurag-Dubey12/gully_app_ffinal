@@ -8,16 +8,24 @@ import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../data/controller/scoreboard_controller.dart';
+
 class SelectOpeningPlayer extends StatefulWidget {
   final TeamModel battingTeam;
   final TeamModel bowlingTeam;
   final MatchupModel match;
+  final String tossWonBy;
+  final String electedTo;
+  final int overs;
 
   const SelectOpeningPlayer(
       {super.key,
       required this.match,
       required this.battingTeam,
-      required this.bowlingTeam});
+      required this.bowlingTeam,
+      required this.tossWonBy,
+      required this.electedTo,
+      required this.overs});
 
   @override
   State<SelectOpeningPlayer> createState() => _SelectOpeningPlayerState();
@@ -29,6 +37,7 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
   PlayerModel? openingBowler;
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ScoreBoardController>();
     return GradientBuilder(
         child: Scaffold(
       backgroundColor: Colors.transparent,
@@ -102,6 +111,25 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
             const Spacer(),
             PrimaryButton(
               onTap: () {
+                if (striker == null || nonStriker == null) {
+                  errorSnackBar('Please select both the opening batsmen');
+                  return;
+                }
+                if (openingBowler == null) {
+                  errorSnackBar('Please select opening bowler');
+                  return;
+                }
+                controller.createScoreBoard(
+                  team1: TeamModel.fromJson(widget.battingTeam.toJson()),
+                  team2: TeamModel.fromJson(widget.bowlingTeam.toJson()),
+                  matchId: widget.match.id,
+                  tossWonBy: widget.tossWonBy,
+                  electedTo: widget.electedTo,
+                  overs: widget.overs,
+                  strikerId: striker!.id,
+                  nonStrikerId: nonStriker!.id,
+                  openingBowler: openingBowler!.id,
+                );
                 Get.to(() => const ScoreCardScreen());
               },
               title: 'Start Match',

@@ -12,6 +12,7 @@ class FormInput extends StatelessWidget {
   final bool? enabled;
   final String? Function(String?)? validator;
   final bool? autofocus;
+  final int? maxLength;
 //ontap
   final Function()? onTap;
   final int? maxLines;
@@ -26,7 +27,8 @@ class FormInput extends StatelessWidget {
       this.enabled,
       this.validator,
       this.onTap,
-      this.maxLines});
+      this.maxLines,
+      this.maxLength});
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +50,7 @@ class FormInput extends StatelessWidget {
             onTap: onTap,
             autoFocus: autofocus,
             readOnly: readOnly,
+            maxLen: maxLength,
             enabled: enabled,
             validator: validator,
             maxLines: maxLines,

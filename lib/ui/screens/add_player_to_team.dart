@@ -1,3 +1,4 @@
+import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart'; //
 import 'package:gully_app/data/controller/team_controller.dart';
@@ -451,8 +452,10 @@ class _AddPlayerDetails extends StatefulWidget {
 }
 
 class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
+  final TextEditingController nameController =
+      TextEditingController(text: Faker().person.firstName());
+  final TextEditingController phoneController =
+      TextEditingController(text: Faker().phoneNumber.de());
   String errorText = '';
   String role = 'Batter';
   @override

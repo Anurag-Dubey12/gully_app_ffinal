@@ -6,6 +6,7 @@ import 'package:gully_app/ui/screens/current_tournament_list.dart';
 import 'package:gully_app/ui/screens/tournament_requests_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
+import 'package:gully_app/utils/utils.dart';
 
 class OrganizerProfileScreen extends GetView<AuthController> {
   const OrganizerProfileScreen({super.key});
@@ -57,8 +58,8 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             shape: BoxShape.circle,
                             color: Colors.white,
                             image: DecorationImage(
-                                image: CachedNetworkImageProvider(
-                                    controller.state?.toImageUrl()),
+                                image: CachedNetworkImageProvider(toImageUrl(
+                                    controller.state!.profilePhoto!)),
                                 fit: BoxFit.cover))),
 
                     // backgroundColor: Colors.white,
@@ -104,13 +105,13 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             size: 15,
                           ),
                           const SizedBox(width: 5),
-                          Text(
-                            '304/c, S.V. Road, Kandivali East',
-                            style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w300,
-                                color: Colors.grey[800]),
-                          ),
+                          Obx(() => Text(
+                                controller.location.value,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.grey[800]),
+                              )),
                         ],
                       ),
                       const SizedBox(height: 5),
@@ -150,8 +151,6 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                                   Get.to(() => const TournamentRequestScreen());
                                 },
                                 text: 'Request',
-                                subTrailingWidget:
-                                    Text('3', style: Get.textTheme.bodyLarge),
                               ),
                             ),
                             ProfileTileCard(
@@ -162,8 +161,6 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                                           RedirectType.currentTournament,
                                     ));
                               },
-                              subTrailingWidget:
-                                  Text('2/13', style: Get.textTheme.bodyLarge),
                             ),
                             ProfileTileCard(
                               text: 'Organize',

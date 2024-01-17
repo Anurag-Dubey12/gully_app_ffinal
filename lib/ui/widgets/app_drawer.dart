@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/config/preferences.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/splash_screen.dart';
+import 'package:gully_app/utils/utils.dart';
 
 import '../screens/contact_us_screen.dart';
 import '../screens/legal_screen.dart';
@@ -12,7 +13,6 @@ import '../screens/organizer_profile.dart';
 import '../screens/others_looking_for.dart';
 import '../screens/player_ranking_screen.dart';
 import '../screens/rate_us.dart';
-import '../screens/select_team_to_view_history.dart';
 import '../screens/team_ranking_screen.dart';
 import '../screens/top_performers.dart';
 import 'home_screen/drawer_card.dart';
@@ -63,10 +63,11 @@ class AppDrawer extends GetView<AuthController> {
                                   width: 2)),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: CircleAvatar(
+                            child: Obx(() => CircleAvatar(
                                 radius: 50,
                                 backgroundImage: CachedNetworkImageProvider(
-                                    controller.state?.toImageUrl())),
+                                    toImageUrl(controller.state?.profilePhoto ??
+                                        "")))),
                           ),
                         ),
                         const SizedBox(height: 20),
@@ -224,13 +225,13 @@ class AppDrawer extends GetView<AuthController> {
                     Get.to(() => const ContactUsScreen());
                   },
                 ),
-                DrawerCard(
-                  title: 'History',
-                  onTap: () {
-                    Get.to(() => const SelectTeamToViewHistory());
-                  },
-                  icon: Icons.history,
-                ),
+                // DrawerCard(
+                //   title: 'History',
+                //   onTap: () {
+                //     Get.to(() => const SelectTeamToViewHistory());
+                //   },
+                //   icon: Icons.history,
+                // ),
                 const DrawerCard(
                   title: 'Share App',
                   icon: Icons.share,

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
@@ -161,12 +163,13 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                     ),
                                     readOnly: true,
                                     enabled: false,
-                                    label: 'Captian Contact ',
+                                    label: 'Captain Contact ',
                                   ),
                                   FormInput(
                                     controller: _viceCaptainController,
-                                    label: 'Vice Captian Contact ',
+                                    label: 'Vice Captain Contact ',
                                     textInputType: TextInputType.number,
+                                    maxLength: 10,
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Please enter a valid phone number';
@@ -194,8 +197,7 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                   ),
                                   FormInput(
                                     controller: TextEditingController(
-                                        text:
-                                            'By clicking on submit you agree to the terms and conditions of the tournament'),
+                                        text: controller.status.data!.rules),
                                     enabled: false,
                                     maxLines: 4,
                                     label: "Rules",
@@ -216,7 +218,7 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                         width: 8,
                                       ),
                                       Text(
-                                          'I\'ve hereby read and agree to your terms and\nconditions',
+                                          'I\'ve hereby read and agree to Organizer Rules\nand Regulations',
                                           style: Get.textTheme.titleSmall),
                                     ],
                                   ),
@@ -226,10 +228,10 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                   FormInput(
                                     controller: TextEditingController(
                                         text:
-                                            'By clicking on submit you agree to the terms and conditions of the tournament'),
+                                            controller.status.data!.disclaimer),
                                     enabled: false,
                                     maxLines: 4,
-                                    label: "Rules",
+                                    label: "Terms and Conditions",
                                   ),
                                   Row(
                                     children: [
@@ -264,7 +266,7 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                 ),
               ),
             ),
-            FocusScope.of(context).hasFocus
+            FocusScope.of(context).hasFocus && Platform.isIOS
                 ? Positioned(
                     bottom: 0,
                     child: Container(

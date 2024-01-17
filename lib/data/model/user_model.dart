@@ -24,8 +24,4 @@ class UserModel {
       _$UserModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
-
-  toImageUrl() {
-    return "https://gully-team-bucket.s3.amazonaws.com/${profilePhoto ?? ""}";
-  }
 }

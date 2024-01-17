@@ -119,7 +119,7 @@ class _TeamCard extends StatelessWidget {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(09),
                       onTap: () {
-                        Get.to(() => AddPlayersToTeam(
+                        Get.off(() => AddPlayersToTeam(
                               teamId: team.id,
                             ));
                       },
@@ -138,12 +138,15 @@ class _TeamCard extends StatelessWidget {
                   )
                 ],
               ),
-            if (team.playersCount! >= 14)
+            const SizedBox(
+              width: 10,
+            ),
+            if (team.playersCount! >= 10)
               Material(
                 child: InkWell(
                   borderRadius: BorderRadius.circular(09),
                   onTap: () async {
-                    await Get.to(() => TeamEntryForm(
+                    await Get.off(() => TeamEntryForm(
                           team: team,
                         ));
                   },

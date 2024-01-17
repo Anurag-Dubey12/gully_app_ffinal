@@ -46,4 +46,16 @@ class AuthApi extends GetConnectClient {
     }
     return ApiResponse.fromJson(response.body);
   }
+
+  Future<ApiResponse> updateProfile(
+      {required String nickName, required String base64}) async {
+    var response = await put('/profile/editProfile', {
+      // 'nickName': nickName,
+      'profilePhoto': base64,
+    });
+    if (response.statusCode != 200) {
+      throw Exception(response.body['message'] ?? 'Unable to Process Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
 }

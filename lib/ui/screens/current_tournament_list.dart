@@ -6,6 +6,7 @@ import 'package:gully_app/ui/screens/organize_match.dart';
 import 'package:gully_app/ui/screens/select_team_for_scoreboard.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/screens/view_matchups_screen.dart';
+import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/widgets/custom_text_field.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 
@@ -81,6 +82,7 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                           color: Colors.white,
                         ),
                       ),
+                      SizedBox(height: Get.height * 0.08),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: Get.width * 0.07,
@@ -92,6 +94,14 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                             FutureBuilder<List<TournamentModel>>(
                                 future: controller.getOrganizerTournamentList(),
                                 builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                  if (snapshot.data?.isEmpty ?? true) {
+                                    return const EmptyTournamentWidget();
+                                  }
                                   return ListView.separated(
                                       separatorBuilder: (context, index) =>
                                           const SizedBox(height: 18),
@@ -145,7 +155,7 @@ class _Card extends GetView<TournamentController> {
                       onTap: () {
                         Get.back();
                         Get.to(() => SelectOrganizeTeam(
-                              tournamentId: tournament.id,
+                              tournament: tournament,
                             ));
                       },
                       title: 'Continue',

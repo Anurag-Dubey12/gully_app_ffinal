@@ -147,7 +147,6 @@ class _DropDownWidget extends StatelessWidget {
   final List<PlayerModel> items;
   final String title;
   const _DropDownWidget({
-    super.key,
     required this.onSelect,
     this.selectedValue,
     required this.items,

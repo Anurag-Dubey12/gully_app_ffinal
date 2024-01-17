@@ -25,7 +25,7 @@ class ScoreBoardController extends GetxController with StateMixin {
   void connectToSocket() {
     try {
       logger.d('connectToSocket ${AppConstants.websocketUrl}');
-      socket.value = io.io('ws://192.168.1.6:3001', <String, dynamic>{
+      socket.value = io.io(AppConstants.websocketUrl, <String, dynamic>{
         'transports': ['websocket'],
       });
       logger.d('socket $socket');
@@ -33,7 +33,7 @@ class ScoreBoardController extends GetxController with StateMixin {
 
       socket.value?.onConnect((_) {
         logger.d('connect');
-        socket.value?.emit('joinRoom', {
+        socket.value?.emit('joinMatch', {
           'matchId': '12345',
         });
       });
@@ -44,7 +44,9 @@ class ScoreBoardController extends GetxController with StateMixin {
   }
 
   void emitEvent() {
-    socket.value?.emit('sendMessage', scoreboard.toJson());
+    logger.i('Emiting Message');
+    socket.value?.emit(
+        'sendMessage', {'message': scoreboard.toJson(), 'matchId': '12345'});
   }
 
   void disconnect() {

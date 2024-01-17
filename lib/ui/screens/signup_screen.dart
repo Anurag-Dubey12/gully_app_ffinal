@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
@@ -54,7 +56,7 @@ class SignUpScreen extends GetView<AuthController> {
 
                 const Spacer(), const Spacer(),
                 Text(
-                  'Sign Up',
+                  'Sign Up/Login',
                   style: Get.textTheme.titleLarge,
                 ),
                 const Spacer(),
@@ -83,13 +85,15 @@ class SignUpScreen extends GetView<AuthController> {
                       },
                     ),
                     const SizedBox(height: 30),
-                    SocialButton(
-                      image: 'apple_icon.png',
-                      title: 'Sign up with Apple',
-                      bgColor: Colors.black,
-                      color: Colors.white,
-                      onClick: () {},
-                    ),
+                    Platform.isIOS
+                        ? SocialButton(
+                            image: 'apple_icon.png',
+                            title: 'Sign up with Apple',
+                            bgColor: Colors.black,
+                            color: Colors.white,
+                            onClick: () {},
+                          )
+                        : const SizedBox(),
                   ],
                 ),
                 const Spacer(), const Spacer(),

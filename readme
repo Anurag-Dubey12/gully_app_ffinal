@@ -1,1 +1,1 @@
-flutter build apk && firebase appdistribution:distribute ./build/app/outputs/apk/release/app-release.apk --app 1:835772612829:android:ec98ba0b365d7081399b34 --release-notes-file changelog.txt --groups "internal"
+flutter build apk && firebase appdistribution:distribute ./build/app/outputs/apk/release/app-release.apk --app 1:1035765979959:android:1c7408a48eedfb2f2a98b2 --release-notes-file changelog.txt --groups "internal"

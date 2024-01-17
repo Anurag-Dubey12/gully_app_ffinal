@@ -2,13 +2,15 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
-import 'package:gully_app/ui/screens/home_screen.dart';
+import 'package:gully_app/ui/screens/choose_lang_screen.dart';
+import 'package:gully_app/ui/screens/legal_screen.dart';
 import 'package:gully_app/ui/widgets/custom_text_field.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
-import 'package:gully_app/utils/app_logger.dart';
+import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,6 +31,10 @@ class _CreateProfileState extends State<CreateProfile>
     animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
     super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      determinePosition();
+    });
   }
 
   XFile? _image;
@@ -40,6 +46,7 @@ class _CreateProfileState extends State<CreateProfile>
 
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool isSelected = false;
   @override
   Widget build(BuildContext context) {
@@ -70,166 +77,208 @@ class _CreateProfileState extends State<CreateProfile>
           child: Scaffold(
             backgroundColor: Colors.transparent,
             body: Padding(
-              padding: const EdgeInsets.all(28.0),
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    const Spacer(),
-                    Text(
-                      'Create\nProfile'.toUpperCase(),
-                      style: Get.textTheme.titleLarge?.copyWith(
-                          fontStyle: FontStyle.italic,
-                          color: Colors.white,
-                          fontFamily: 'Gothams',
-                          fontSize: 45,
-                          height: 0.8,
-                          fontWeight: FontWeight.w900),
-                    ),
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        pickImage();
-                      },
-                      child: Stack(
-                        children: [
-                          CircleAvatar(
-                            radius: 40,
-                            backgroundColor: Colors.white,
-                            backgroundImage: _image != null
-                                ? FileImage(File(_image!.path))
-                                : null,
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.amber.shade600,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(8.0),
-                                child: Icon(
-                                  Icons.edit,
-                                  size: 14,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                    // create a container sign up with google
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+              child: SizedBox(
+                // height: Get.height / 2,
+                child: SingleChildScrollView(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        CustomTextField(
-                          labelText: 'Name',
-                          controller: _nameController,
+                        SizedBox(
+                          height: Get.height * 0.13,
+                        ),
+                        Text(
+                          'Create\nProfile'.toUpperCase(),
+                          style: Get.textTheme.titleLarge?.copyWith(
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white,
+                              fontFamily: 'Gothams',
+                              fontSize: Get.textScaleFactor * 45,
+                              height: 0.8,
+                              fontWeight: FontWeight.w900),
                         ),
                         SizedBox(
-                          height: Get.height * 0.03,
+                          height: Get.height * 0.01,
                         ),
-                        CustomTextField(
-                          labelText: 'Contact No',
-                          controller: _contactController,
+
+                        GestureDetector(
+                          onTap: () {
+                            pickImage();
+                          },
+                          child: Stack(
+                            children: [
+                              CircleAvatar(
+                                radius: 60,
+                                backgroundColor: Colors.white,
+                                foregroundImage: _image == null
+                                    ? const AssetImage(
+                                        'assets/images/profile.jpeg',
+                                      )
+                                    : null,
+                                backgroundImage: _image != null
+                                    ? FileImage(File(_image!.path))
+                                    : null,
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber.shade600,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.edit,
+                                      size: 18,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 24,
-                              child: Checkbox(
-                                splashRadius: 0,
-                                value: isSelected,
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
-                                side: const BorderSide(
-                                    color: Color(0xff676677),
-                                    width: 1,
-                                    style: BorderStyle.solid),
-                                onChanged: (e) {
-                                  setState(() {
-                                    isSelected = e as bool;
-                                  });
+
+                        // create a container sign up with google
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: Get.height * 0.03,
+                              ),
+                              CustomTextField(
+                                labelText: 'Name',
+                                controller: _nameController,
+                                validator: (e) {
+                                  // check if name contains special characters
+                                  if (e!.contains(
+                                      RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+                                    return 'Name cannot contain special characters';
+                                  }
+                                  return null;
                                 },
                               ),
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              "I've read your Terms and Conditions.",
-                              style: Get.textTheme.labelSmall,
-                            )
-                          ],
+                              SizedBox(
+                                height: Get.height * 0.03,
+                              ),
+                              CustomTextField(
+                                labelText: 'Contact No',
+                                controller: _contactController,
+                                textInputType: TextInputType.phone,
+                                maxLen: 10,
+                                validator: (e) {
+                                  if (e!.length != 10) {
+                                    return 'Please enter a valid phone number';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  SizedBox(
+                                    width: 24,
+                                    child: Checkbox(
+                                      splashRadius: 0,
+                                      value: isSelected,
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.shrinkWrap,
+                                      side: const BorderSide(
+                                          color: Color(0xff676677),
+                                          width: 1,
+                                          style: BorderStyle.solid),
+                                      onChanged: (e) {
+                                        setState(() {
+                                          isSelected = e as bool;
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  RichText(
+                                    text: TextSpan(
+                                        text: "I've read your",
+                                        children: [
+                                          TextSpan(
+                                              text: " Terms & Conditions",
+                                              recognizer: TapGestureRecognizer()
+                                                ..onTap = () {
+                                                  Get.bottomSheet(BottomSheet(
+                                                      onClosing: () {},
+                                                      builder: (builder) =>
+                                                          const LegalViewScreen(
+                                                              title:
+                                                                  'Terms & Conditions',
+                                                              slug: 'terms')));
+                                                },
+                                              style: const TextStyle(
+                                                  color: Colors.blue,
+                                                  decoration:
+                                                      TextDecoration.underline))
+                                        ],
+                                        style: const TextStyle(
+                                            color: Colors.black, fontSize: 12)),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(height: 30),
+                              Obx(
+                                () => PrimaryButton(
+                                    isLoading: controller.status.isLoading,
+                                    onTap: () async {
+                                      if (_image == null) {
+                                        errorSnackBar('Please select an image');
+                                        return;
+                                      }
+                                      if (_formKey.currentState!.validate()) {
+                                        if (!isSelected) {
+                                          errorSnackBar(
+                                              'Please accept our terms and conditions');
+                                          return;
+                                        }
+                                        final base64Image =
+                                            await convertImageToBase64(_image!);
+
+                                        final res =
+                                            await controller.createProfile(
+                                                nickName: _nameController.text,
+                                                phoneNumber:
+                                                    _contactController.text,
+                                                base64: base64Image);
+                                        if (res) {
+                                          Get.bottomSheet(
+                                              BottomSheet(
+                                                  onClosing: () {
+                                                    log('Wants to close');
+                                                  },
+                                                  animationController:
+                                                      animationController,
+                                                  enableDrag: true,
+                                                  builder: (context) =>
+                                                      const _OtpBottomSheet()),
+                                              enableDrag: true,
+                                              isScrollControlled: false,
+                                              isDismissible: true,
+                                              enterBottomSheetDuration:
+                                                  const Duration(
+                                                      milliseconds: 300),
+                                              exitBottomSheetDuration:
+                                                  const Duration(
+                                                      milliseconds: 300));
+                                        }
+                                      }
+                                    }),
+                              )
+                            ],
+                          ),
                         ),
-                        const SizedBox(height: 30),
-                        Obx(
-                          () => PrimaryButton(
-                              isLoading: controller.status.isLoading,
-                              onTap: () async {
-                                if (_image == null) {
-                                  errorSnackBar('Please select an image');
-                                  return;
-                                }
-                                if (_nameController.text.isEmpty) {
-                                  errorSnackBar('Please enter your name');
-                                  return;
-                                }
-                                if (_contactController.text.isEmpty) {
-                                  errorSnackBar(
-                                      'Please enter your contact number');
-                                  return;
-                                }
-                                if (_contactController.text.length != 10) {
-                                  errorSnackBar(
-                                      'Please enter a valid contact number');
-                                  return;
-                                }
-                                if (!_contactController.text.isPhoneNumber) {
-                                  errorSnackBar(
-                                      'Please enter a valid contact number');
-                                  return;
-                                }
-                                if (!isSelected) {
-                                  errorSnackBar(
-                                      'Please accept our terms and conditions');
-                                  return;
-                                }
-                                final base64Image =
-                                    await convertImageToBase64(_image!);
-                                logger.d(base64Image.substring(0, 100));
-                                final res = await controller.createProfile(
-                                    nickName: _nameController.text,
-                                    phoneNumber: _contactController.text,
-                                    base64: base64Image);
-                                if (res) {
-                                  Get.bottomSheet(
-                                      BottomSheet(
-                                          onClosing: () {
-                                            log('Wants to close');
-                                          },
-                                          animationController:
-                                              animationController,
-                                          enableDrag: true,
-                                          builder: (context) =>
-                                              const _OtpBottomSheet()),
-                                      enableDrag: true,
-                                      isScrollControlled: false,
-                                      isDismissible: true,
-                                      enterBottomSheetDuration:
-                                          const Duration(milliseconds: 300),
-                                      exitBottomSheetDuration:
-                                          const Duration(milliseconds: 300));
-                                }
-                              }),
-                        )
-                      ],
-                    ),
-                    const Spacer(),
-                    const Spacer(),
-                  ]),
+                      ]),
+                ),
+              ),
             ),
           ),
         ));
@@ -316,7 +365,9 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                         length: 5,
                         appContext: context,
                         obscureText: false,
+                        textInputAction: TextInputAction.go,
                         animationType: AnimationType.fade,
+                        autoFocus: true,
                         pinTheme: PinTheme(
                           shape: PinCodeFieldShape.box,
                           activeColor: Colors.white,
@@ -332,11 +383,13 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                           activeFillColor: Colors.white,
                         ),
                         animationDuration: const Duration(milliseconds: 300),
-
+                        keyboardType: TextInputType.number,
                         enableActiveFill: true,
                         // errorAnimationController: errorController,
                         controller: textEditingController,
-                        onCompleted: (v) {},
+                        onCompleted: (v) {
+                          login(controller);
+                        },
                         onChanged: (value) {
                           // setState(() {
                           //   currentText = value;
@@ -375,11 +428,7 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                     title: 'Verify',
                     isLoading: controller.status.isLoading,
                     onTap: () async {
-                      final res = await controller.verifyOtp(
-                          otp: textEditingController.text);
-                      if (res) {
-                        Get.offAll(() => const HomeScreen());
-                      }
+                      await login(controller);
                     },
                   ),
                 ))
@@ -387,5 +436,12 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
         ),
       ),
     );
+  }
+
+  Future<void> login(AuthController controller) async {
+    final res = await controller.verifyOtp(otp: textEditingController.text);
+    if (res) {
+      Get.offAll(() => const ChooseLanguageScreen());
+    }
   }
 }

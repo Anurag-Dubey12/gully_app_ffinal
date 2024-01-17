@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/signup_screen.dart';
+import 'package:gully_app/ui/screens/home_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 
@@ -64,7 +64,7 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
               const SizedBox(height: 20),
               PrimaryButton(
                 onTap: () {
-                  Get.to(() => const SignUpScreen());
+                  Get.to(() => const HomeScreen());
                 },
               ),
             ],

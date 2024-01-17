@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
+import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
@@ -77,6 +78,14 @@ class TournamentRequestScreen extends GetView<TournamentController> {
                             FutureBuilder<List<TournamentModel>>(
                                 future: controller.getOrganizerTournamentList(),
                                 builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                  if (snapshot.data?.isEmpty ?? true) {
+                                    return const EmptyTournamentWidget();
+                                  }
                                   return ListView.separated(
                                       separatorBuilder: (context, index) =>
                                           const SizedBox(height: 18),
@@ -146,11 +155,33 @@ class _Card extends StatelessWidget {
                     ?.copyWith(fontWeight: FontWeight.w600, fontSize: 19),
               ),
               const Spacer(),
-              Text(
-                '${tournament.registeredTeamsCount}/${tournament.tournamentLimit}',
-                style: Get.textTheme.titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w400, fontSize: 16),
-              ),
+              tournament.registeredTeamsCount == tournament.tournamentLimit
+                  ? Chip(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: const BorderSide(color: Colors.white)),
+                      label: Text(
+                        'FULL',
+                        style: Get.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.white),
+                      ),
+                    )
+                  : Chip(
+                      backgroundColor: AppTheme.secondaryYellowColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          side: const BorderSide(color: Colors.white)),
+                      label: Text(
+                        '${tournament.registeredTeamsCount}/${tournament.tournamentLimit}',
+                        style: Get.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.white),
+                      ),
+                    ),
             ],
           ),
         ),

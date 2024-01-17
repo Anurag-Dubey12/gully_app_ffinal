@@ -1,12 +1,15 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gully_app/config/preferences.dart';
 import 'package:gully_app/data/model/user_model.dart';
 import 'package:gully_app/ui/screens/create_profile_screen.dart';
+import 'package:gully_app/ui/screens/signup_screen.dart';
 import 'package:gully_app/utils/app_logger.dart';
+import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../ui/widgets/custom_snackbar.dart';
@@ -17,7 +20,19 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
   AuthController({required this.repo}) {
     change(GetStatus.empty());
     getUser();
+    getCurrentLocation();
+    Geolocator.getServiceStatusStream().listen((event) {
+      getCurrentLocation();
+    });
     // getUser();
+  }
+  RxString location = ''.obs;
+
+  Future<void> getCurrentLocation() async {
+    final coordinates = await determinePosition();
+
+    location.value = await getAddressFromLatLng(coordinates);
+    logger.d('Location ${location.value}');
   }
 
   Future<bool> loginViaGoogle() async {
@@ -68,16 +83,6 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
     }
   }
 
-  // Rx<UserModel?> user = Rxn<UserModel>();
-  // Rx<UserModel> user = UserModel(
-  //         fullName: "name",
-  //         email: "email",
-  //         phoneNumber: "phoneNumber",
-  //         id: "id",
-  //         profilePhoto: "profilePic",
-  //         isNewUser: false)
-  //     .obs;
-
   Future<void> getUser() async {
     // change(GetStatus.loading());
     try {
@@ -88,8 +93,10 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       if (fetchedUser.isNewUser) {
         Get.offAll(() => const CreateProfile());
       }
+      getCurrentLocation();
     } catch (e) {
       logger.e(e.toString());
+      Get.offAll(() => const SignUpScreen());
       throw Exception(e.toString());
     }
   }
@@ -103,6 +110,26 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       change(GetStatus.loading());
       final response = await repo.createProfile(
           nickName: nickName, phoneNumber: phoneNumber, base64: base64);
+
+      final user = UserModel.fromJson(response.data!['user']);
+      change(GetStatus.success(user));
+      return true;
+    } catch (e) {
+      showSnackBar(title: e.toString(), message: e.toString(), isError: true);
+      change(GetStatus.error(e.toString()));
+      rethrow;
+      // return false;
+    }
+  }
+
+  Future<bool> updateProfile({
+    required String nickName,
+    required String base64,
+  }) async {
+    try {
+      change(GetStatus.loading());
+      final response =
+          await repo.updateProfile(nickName: nickName, base64: base64);
 
       final user = UserModel.fromJson(response.data!['user']);
       change(GetStatus.success(user));

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/full_notification_screen.dart';
+import 'package:gully_app/data/model/notification_model.dart';
+import 'package:gully_app/utils/date_time_helpers.dart';
 
+import '../../data/controller/notification_controller.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
-class NotificationScreen extends StatelessWidget {
+class NotificationScreen extends GetView<NotificationController> {
   const NotificationScreen({super.key});
 
   @override
@@ -49,14 +51,6 @@ class NotificationScreen extends StatelessWidget {
               child: SizedBox(
                   width: Get.width,
                   child: Column(children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 10, top: 30),
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: BackButton(
-                            color: Colors.white,
-                          )),
-                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(
                         horizontal: Get.width * 0.03,
@@ -64,10 +58,28 @@ class NotificationScreen extends StatelessWidget {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Notifications',
+                          AppBar(
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                            iconTheme: const IconThemeData(color: Colors.white),
+                            title: Text(
+                              'Notifications',
                               style: Get.textTheme.headlineLarge?.copyWith(
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          // GestureDetector(
+                          //   onTap: () async {
+                          //     final f =
+                          //         await FirebaseMessaging.instance.getToken();
+                          //     logger.d(f);
+                          //   },
+                          //   child: Text('Notifications',
+                          //       style: Get.textTheme.headlineLarge?.copyWith(
+                          //           color: Colors.white,
+                          //           fontWeight: FontWeight.bold)),
+                          // ),
                           SizedBox(height: Get.height * 0.04),
                           Container(
                             width: Get.width,
@@ -86,14 +98,28 @@ class NotificationScreen extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
                                 children: [
-                                  GestureDetector(
-                                      onTap: () {
-                                        Get.to(() =>
-                                            const FullNotificationScreen());
-                                      },
-                                      child: const NotificationCard()),
-                                  const NotificationCard(),
-                                  const NotificationCard(),
+                                  // GestureDetector(
+                                  //     onTap: () {
+                                  //       Get.to(() =>
+                                  //           const FullNotificationScreen());
+                                  //     },
+                                  //     child: const NotificationCard()),
+
+                                  SizedBox(
+                                    height: Get.height,
+                                    child: Obx(
+                                      () => ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: controller
+                                              .notifications.value.length,
+                                          itemBuilder: (context, index) {
+                                            return NotificationCard(
+                                                notification: controller
+                                                    .notifications
+                                                    .value[index]);
+                                          }),
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
@@ -109,17 +135,45 @@ class NotificationScreen extends StatelessWidget {
 }
 
 class NotificationCard extends StatelessWidget {
+  final NotificationModel notification;
   const NotificationCard({
     super.key,
+    required this.notification,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const ListTile(
-          leading: CircleAvatar(),
-          title: Text('Congrats on the win!'),
+        Dismissible(
+          direction: DismissDirection.endToStart,
+          key: Key(notification.notificationId ?? ''),
+          onDismissed: (e) {
+            Get.find<NotificationController>().removeNotification(notification);
+          },
+          background: Container(
+            color: Colors.red,
+            child: const Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: EdgeInsets.only(right: 20.0),
+                child: Icon(
+                  Icons.delete,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          child: ListTile(
+            tileColor: Colors.red,
+            // leading: const CircleAvatar(),
+            title: Text(notification.title,
+                style: Get.textTheme.headlineMedium?.copyWith(
+                    color: Colors.black, fontWeight: FontWeight.bold)),
+            subtitle: Text(notification.body),
+            trailing: Text(
+                formatDateTime('dd/MMM/yyy hh:mm a', notification.createdAt)),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),

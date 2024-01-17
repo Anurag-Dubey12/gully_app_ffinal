@@ -170,4 +170,14 @@ class TournamentController extends GetxController
       rethrow;
     }
   }
+
+  Future<bool> cancelTournament(String tourId) async {
+    try {
+      final response = await tournamentApi.cancelTournament(tourId);
+      return response.status!;
+    } catch (e) {
+      errorSnackBar(e.toString());
+      return false;
+    }
+  }
 }

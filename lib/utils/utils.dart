@@ -59,3 +59,7 @@ Future<String> getAddressFromLatLng(Position position) async {
   });
   return address;
 }
+
+String toImageUrl(String endpoint) {
+  return "https://gully-team-bucket.s3.amazonaws.com/$endpoint";
+}

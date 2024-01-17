@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/team_model.dart';
+import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
@@ -11,9 +12,9 @@ import 'package:intl/intl.dart';
 import '../../data/controller/tournament_controller.dart';
 
 class SelectOrganizeTeam extends StatefulWidget {
-  final String tournamentId;
+  final TournamentModel tournament;
   final String? title;
-  const SelectOrganizeTeam({super.key, this.title, required this.tournamentId});
+  const SelectOrganizeTeam({super.key, this.title, required this.tournament});
 
   @override
   State<SelectOrganizeTeam> createState() => _SelectOrganizeTeamState();
@@ -33,7 +34,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
 
   Future<void> getPlayers() async {
     final controller = Get.find<TournamentController>();
-    final teams = await controller.getRegisteredTeams(widget.tournamentId);
+    final teams = await controller.getRegisteredTeams(widget.tournament.id);
     logger.d('TEAMS: $teams');
     // divide teams into two sides
     leftSideteams = teams.sublist(0, teams.length ~/ 2);
@@ -138,7 +139,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                                 value: value,
                                                 child: Text(value.name,
                                                     style: Get
-                                                        .textTheme.labelSmall),
+                                                        .textTheme.labelMedium),
                                               );
                                             }).toList(),
                                           ),
@@ -214,7 +215,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                                 value: value,
                                                 child: Text(value!.name,
                                                     style: Get
-                                                        .textTheme.labelSmall),
+                                                        .textTheme.labelMedium),
                                               );
                                             }).toList(),
                                           ),
@@ -231,24 +232,32 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                 const Spacer(),
                                 InkWell(
                                   onTap: () async {
-                                    final date = await showDatePicker(
-                                        context: context,
-                                        initialDate: DateTime.now(),
-                                        firstDate: DateTime.now(),
-                                        lastDate: DateTime.now()
-                                            .add(const Duration(days: 365)));
-                                    setState(() {
-                                      if (selectedDate != null) {
-                                        selectedDate = DateTime(
-                                            date!.year,
-                                            date.month,
-                                            date.day,
-                                            selectedDate!.hour,
-                                            selectedDate!.minute);
-                                      } else {
-                                        selectedDate = date;
-                                      }
-                                    });
+                                    try {
+                                      logger.d(widget
+                                          .tournament.tournamentStartDateTime);
+                                      final date = await showDatePicker(
+                                          context: context,
+                                          initialDate: widget.tournament
+                                              .tournamentStartDateTime,
+                                          firstDate: widget.tournament
+                                              .tournamentStartDateTime,
+                                          lastDate: widget.tournament
+                                              .tournamentEndDateTime);
+                                      setState(() {
+                                        if (selectedDate != null) {
+                                          selectedDate = DateTime(
+                                              date!.year,
+                                              date.month,
+                                              date.day,
+                                              selectedDate!.hour,
+                                              selectedDate!.minute);
+                                        } else {
+                                          selectedDate = date;
+                                        }
+                                      });
+                                    } catch (e) {
+                                      logger.d(e);
+                                    }
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -344,7 +353,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                   return;
                                 }
                                 final response = await controller.createMatchup(
-                                    widget.tournamentId,
+                                    widget.tournament.id,
                                     selectedTeam1!.id,
                                     selectedTeam2!.id,
                                     selectedDate!,

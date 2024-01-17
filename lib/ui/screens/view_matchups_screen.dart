@@ -73,7 +73,6 @@ class ViewMatchupsScreen extends GetView<TournamentController> {
 class _MatchupCard extends StatelessWidget {
   final MatchupModel matchup;
   const _MatchupCard({
-    super.key,
     required this.matchup,
   });
 

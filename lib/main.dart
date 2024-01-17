@@ -9,6 +9,7 @@ import 'package:gully_app/data/api/ranking_api.dart';
 import 'package:gully_app/data/api/score_board_api.dart';
 import 'package:gully_app/data/api/team_api.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
+import 'package:gully_app/data/controller/notification_controller.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 
@@ -26,6 +27,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   HttpOverrides.global = MyHttpOverrides();
+
   runApp(const MyApp());
 }
 
@@ -39,8 +41,10 @@ class MyApp extends StatelessWidget {
           return GetMaterialApp(
             binds: [
               Bind.put<Preferences>(Preferences()),
-              Bind.lazyPut<GetConnectClient>(() => GetConnectClient()),
-              Bind.put<Preferences>(Preferences()),
+              Bind.put<NotificationController>(NotificationController(
+                preferences: Get.find<Preferences>(),
+              )),
+              Bind.put<GetConnectClient>(GetConnectClient()),
               Bind.lazyPut<AuthApi>(() => AuthApi()),
               Bind.lazyPut<RankingApi>(() => RankingApi()),
               Bind.lazyPut<MiscApi>(() => MiscApi(repo: Get.find())),

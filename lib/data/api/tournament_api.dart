@@ -166,4 +166,13 @@ class TournamentApi {
     }
     return ApiResponse.fromJson(response.body);
   }
+
+  Future<ApiResponse> cancelTournament(String tourId) async {
+    try {
+      final response = await repo.delete('/organizer/tournament/$tourId');
+      return ApiResponse.fromJson(response.body);
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

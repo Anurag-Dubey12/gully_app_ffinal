@@ -53,7 +53,7 @@ class HomePage extends StatelessWidget {
       child: PopScope(
         canPop: false,
         child: Scaffold(
-          drawer: const AppDrawer(),
+          endDrawer: const AppDrawer(),
           bottomNavigationBar: Container(
             height: 90,
             decoration: BoxDecoration(color: Colors.white, boxShadow: [

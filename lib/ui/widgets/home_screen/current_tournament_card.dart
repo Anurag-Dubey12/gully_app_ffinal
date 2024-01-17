@@ -16,21 +16,24 @@ class CurrentTournamentCard extends GetView<TournamentController> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: Get.height * 0.54,
-      child: Obx(() {
-        if (controller.tournamentList.isEmpty) {
-          return const NoTournamentCard();
-        } else {
-          return ListView.builder(
-              itemCount: controller.tournamentList.length,
-              shrinkWrap: true,
-              itemBuilder: (context, snapshot) {
-                return _Card(
-                  tournament: controller.tournamentList[snapshot],
-                );
-              });
-        }
-      }),
+      height: Get.height * 0.5,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 10),
+        child: Obx(() {
+          if (controller.tournamentList.isEmpty) {
+            return const NoTournamentCard();
+          } else {
+            return ListView.builder(
+                itemCount: controller.tournamentList.length,
+                shrinkWrap: true,
+                itemBuilder: (context, snapshot) {
+                  return _Card(
+                    tournament: controller.tournamentList[snapshot],
+                  );
+                });
+          }
+        }),
+      ),
     );
   }
 }

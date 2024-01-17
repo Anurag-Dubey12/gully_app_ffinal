@@ -1,4 +1,4 @@
-package com.example.gully_app
+package com.nileegames.gullyteam
 
 import io.flutter.embedding.android.FlutterActivity
 

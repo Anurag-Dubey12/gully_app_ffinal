@@ -21,8 +21,10 @@ TournamentModel _$TournamentModelFromJson(Map<String, dynamic> json) =>
           DateTime.parse(json['tournamentStartDateTime'] as String),
       tournamentEndDateTime:
           DateTime.parse(json['tournamentEndDateTime'] as String),
-      pitchType: json['pitchType'] as String,
+      pitchType: TournamentModel.pitchTypeFromJson(
+          json['pitchType'] as Map<String, dynamic>),
       breakfastCharges: json['breakfastCharges'] as int,
-      ballType: json['ballType'] as String,
+      ballType: TournamentModel.ballTypeFromJson(
+          json['ballType'] as Map<String, dynamic>),
       fees: (json['fees'] as num).toDouble(),
     );

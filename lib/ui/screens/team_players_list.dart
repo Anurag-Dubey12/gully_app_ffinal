@@ -7,15 +7,15 @@ import '../../data/model/team_model.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
-class ViewTeam extends StatefulWidget {
+class ViewTeamPlayers extends StatefulWidget {
   final TeamModel teamModel;
-  const ViewTeam({super.key, required this.teamModel});
+  const ViewTeamPlayers({super.key, required this.teamModel});
 
   @override
-  State<ViewTeam> createState() => _ViewTeamState();
+  State<ViewTeamPlayers> createState() => _ViewTeamPlayersState();
 }
 
-class _ViewTeamState extends State<ViewTeam> {
+class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TeamController>();
@@ -82,12 +82,6 @@ class _ViewTeamState extends State<ViewTeam> {
                                             ?.copyWith(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold)),
-                                    Text('Hi, meet your teammates!',
-                                        style: Get.textTheme.headlineLarge
-                                            ?.copyWith(
-                                                color: Colors.white,
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w300)),
                                   ],
                                 ),
                               ),
@@ -109,20 +103,6 @@ class _ViewTeamState extends State<ViewTeam> {
                                             backgroundImage: NetworkImage(
                                                 widget.teamModel.toImageUrl()),
                                           ),
-                                          const Positioned(
-                                            bottom: 0,
-                                            right: 0,
-                                            child: CircleAvatar(
-                                              radius: 10,
-                                              backgroundColor:
-                                                  AppTheme.secondaryYellowColor,
-                                              child: Icon(
-                                                Icons.edit,
-                                                color: Colors.white,
-                                                size: 15,
-                                              ),
-                                            ),
-                                          )
                                         ],
                                       ),
                                     )),
@@ -166,70 +146,42 @@ class _ViewTeamState extends State<ViewTeam> {
                                                     ]),
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(
-                                                      12.0),
-                                                  child: Row(children: [
-                                                    const Spacer(),
-                                                    SizedBox(
-                                                      width: Get.width / 2,
-                                                      child: Text(
-                                                        snapshot
-                                                            .data![index].name,
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        style: Get.textTheme
-                                                            .titleMedium
-                                                            ?.copyWith(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .w500,
-                                                                fontSize: 25),
-                                                      ),
-                                                    ),
-                                                    const Spacer(),
-                                                    GestureDetector(
-                                                      onTap: () async {
-                                                        await Get.dialog(
-                                                            AlertDialog
-                                                                .adaptive(
-                                                          title: const Text(
-                                                              'Delete Player'),
-                                                          content: const Text(
-                                                              'Are you sure you want to delete this Player'),
-                                                          actions: [
-                                                            TextButton(
-                                                                onPressed: () {
-                                                                  Get.back();
-                                                                },
-                                                                child:
-                                                                    const Text(
-                                                                        'No')),
-                                                            TextButton(
-                                                                onPressed:
-                                                                    () async {
-                                                                  await controller.removePlayerFromTeam(
-                                                                      teamId: widget
-                                                                          .teamModel
-                                                                          .id,
-                                                                      playerId: snapshot
-                                                                          .data![
-                                                                              index]
-                                                                          .id);
-                                                                  setState(
-                                                                      () {});
-                                                                  Get.back();
-                                                                },
-                                                                child:
-                                                                    const Text(
-                                                                        'Yes')),
-                                                          ],
-                                                        ));
-                                                        setState(() {});
-                                                      },
-                                                      child: const Icon(
-                                                          Icons.delete,
-                                                          color: Colors.red),
-                                                    ),
-                                                  ]),
+                                                      16.0),
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          snapshot.data![index]
+                                                              .name,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: Get.textTheme
+                                                              .titleMedium
+                                                              ?.copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  fontSize: 25),
+                                                        ),
+                                                        Text(
+                                                          snapshot.data![index]
+                                                              .role,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: Get.textTheme
+                                                              .titleMedium
+                                                              ?.copyWith(
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      600],
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  fontSize: 14),
+                                                        ),
+                                                      ]),
                                                 ),
                                               );
                                             });

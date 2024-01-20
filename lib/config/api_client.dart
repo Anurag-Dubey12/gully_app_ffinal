@@ -6,11 +6,10 @@ import 'package:gully_app/utils/app_logger.dart';
 import 'preferences.dart';
 
 class GetConnectClient extends GetConnect {
-  Preferences preferences = Get.find<Preferences>();
-
   @override
   void onInit() {
     super.onInit();
+    Preferences preferences = Get.find<Preferences>();
 
     // httpClient.baseUrl = 'http://65.0.80.235:3000';
     httpClient.baseUrl = AppConstants.baseUrl;

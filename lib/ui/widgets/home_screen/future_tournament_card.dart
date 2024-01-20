@@ -25,6 +25,7 @@ class FutureTournamentCard extends GetView<TournamentController> {
         } else {
           return ListView.builder(
               itemCount: controller.tournamentList.length,
+              padding: const EdgeInsets.only(bottom: 20, top: 10),
               shrinkWrap: true,
               itemBuilder: (context, snapshot) {
                 return _Card(

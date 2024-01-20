@@ -27,6 +27,12 @@ class ScoreboardModel {
   final String tossWonBy;
   final String? electedTo;
   final int totalOvers;
+  @JsonKey(
+      includeToJson: true,
+      defaultValue: true,
+      includeFromJson: true,
+      disallowNullValue: false)
+  bool? overCompleted = true;
 
   @JsonKey(includeToJson: true, name: 'extras')
   final ExtraModel _extras =

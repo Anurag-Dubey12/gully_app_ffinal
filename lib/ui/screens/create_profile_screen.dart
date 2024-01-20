@@ -9,6 +9,7 @@ import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/choose_lang_screen.dart';
 import 'package:gully_app/ui/screens/legal_screen.dart';
 import 'package:gully_app/ui/widgets/custom_text_field.dart';
+import 'package:gully_app/ui/widgets/location_permission_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
@@ -51,237 +52,246 @@ class _CreateProfileState extends State<CreateProfile>
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<AuthController>();
-    return DecoratedBox(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          image: DecorationImage(
-              image: AssetImage(
-                'assets/images/sports_icon.png',
-              ),
-              fit: BoxFit.cover),
-        ),
-        child: DecoratedBox(
+    return LocationStreamHandler(
+      child: DecoratedBox(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xff3F5BBF),
-                // Color(0xffEEEFF5),
-                Colors.white12,
-                Colors.white54,
-              ],
-              stops: [0.1, 0.9, 1],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
+            color: Colors.white,
+            image: DecorationImage(
+                image: AssetImage(
+                  'assets/images/sports_icon.png',
+                ),
+                fit: BoxFit.cover),
           ),
-          child: Scaffold(
-            backgroundColor: Colors.transparent,
-            body: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-              child: SizedBox(
-                // height: Get.height / 2,
-                child: SingleChildScrollView(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        SizedBox(
-                          height: Get.height * 0.13,
-                        ),
-                        Text(
-                          'Create\nProfile'.toUpperCase(),
-                          style: Get.textTheme.titleLarge?.copyWith(
-                              fontStyle: FontStyle.italic,
-                              color: Colors.white,
-                              fontFamily: 'Gothams',
-                              fontSize: Get.textScaleFactor * 45,
-                              height: 0.8,
-                              fontWeight: FontWeight.w900),
-                        ),
-                        SizedBox(
-                          height: Get.height * 0.01,
-                        ),
-
-                        GestureDetector(
-                          onTap: () {
-                            pickImage();
-                          },
-                          child: Stack(
-                            children: [
-                              CircleAvatar(
-                                radius: 60,
-                                backgroundColor: Colors.white,
-                                foregroundImage: _image == null
-                                    ? const AssetImage(
-                                        'assets/images/profile.jpeg',
-                                      )
-                                    : null,
-                                backgroundImage: _image != null
-                                    ? FileImage(File(_image!.path))
-                                    : null,
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.amber.shade600,
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      Icons.edit,
-                                      size: 18,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
+          child: DecoratedBox(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xff3F5BBF),
+                  // Color(0xffEEEFF5),
+                  Colors.white12,
+                  Colors.white54,
+                ],
+                stops: [0.1, 0.9, 1],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
+            child: Scaffold(
+              backgroundColor: Colors.transparent,
+              body: Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+                child: SizedBox(
+                  // height: Get.height / 2,
+                  child: SingleChildScrollView(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(
+                            height: Get.height * 0.13,
                           ),
-                        ),
+                          Text(
+                            'Create\nProfile'.toUpperCase(),
+                            style: Get.textTheme.titleLarge?.copyWith(
+                                fontStyle: FontStyle.italic,
+                                color: Colors.white,
+                                fontFamily: 'Gothams',
+                                fontSize: Get.textScaleFactor * 45,
+                                height: 0.8,
+                                fontWeight: FontWeight.w900),
+                          ),
+                          SizedBox(
+                            height: Get.height * 0.01,
+                          ),
 
-                        // create a container sign up with google
-                        Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: Get.height * 0.03,
-                              ),
-                              CustomTextField(
-                                labelText: 'Name',
-                                controller: _nameController,
-                                validator: (e) {
-                                  // check if name contains special characters
-                                  if (e!.contains(
-                                      RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-                                    return 'Name cannot contain special characters';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              SizedBox(
-                                height: Get.height * 0.03,
-                              ),
-                              CustomTextField(
-                                labelText: 'Contact No',
-                                controller: _contactController,
-                                textInputType: TextInputType.phone,
-                                maxLen: 10,
-                                validator: (e) {
-                                  if (e!.length != 10) {
-                                    return 'Please enter a valid phone number';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width: 24,
-                                    child: Checkbox(
-                                      splashRadius: 0,
-                                      value: isSelected,
-                                      materialTapTargetSize:
-                                          MaterialTapTargetSize.shrinkWrap,
-                                      side: const BorderSide(
-                                          color: Color(0xff676677),
-                                          width: 1,
-                                          style: BorderStyle.solid),
-                                      onChanged: (e) {
-                                        setState(() {
-                                          isSelected = e as bool;
-                                        });
-                                      },
+                          GestureDetector(
+                            onTap: () {
+                              pickImage();
+                            },
+                            child: Stack(
+                              children: [
+                                CircleAvatar(
+                                  radius: 60,
+                                  backgroundColor: Colors.white,
+                                  foregroundImage: _image == null
+                                      ? const AssetImage(
+                                          'assets/images/profile.jpeg',
+                                        )
+                                      : null,
+                                  backgroundImage: _image != null
+                                      ? FileImage(File(_image!.path))
+                                      : null,
+                                ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.amber.shade600,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.edit,
+                                        size: 18,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
-                                  const SizedBox(width: 5),
-                                  RichText(
-                                    text: TextSpan(
-                                        text: "I've read your",
-                                        children: [
-                                          TextSpan(
-                                              text: " Terms & Conditions",
-                                              recognizer: TapGestureRecognizer()
-                                                ..onTap = () {
-                                                  Get.bottomSheet(BottomSheet(
-                                                      onClosing: () {},
-                                                      builder: (builder) =>
-                                                          const LegalViewScreen(
-                                                              title:
-                                                                  'Terms & Conditions',
-                                                              slug: 'terms')));
-                                                },
-                                              style: const TextStyle(
-                                                  color: Colors.blue,
-                                                  decoration:
-                                                      TextDecoration.underline))
-                                        ],
-                                        style: const TextStyle(
-                                            color: Colors.black, fontSize: 12)),
-                                  )
-                                ],
-                              ),
-                              const SizedBox(height: 30),
-                              Obx(
-                                () => PrimaryButton(
-                                    isLoading: controller.status.isLoading,
-                                    onTap: () async {
-                                      if (_image == null) {
-                                        errorSnackBar('Please select an image');
-                                        return;
-                                      }
-                                      if (_formKey.currentState!.validate()) {
-                                        if (!isSelected) {
+                                )
+                              ],
+                            ),
+                          ),
+
+                          // create a container sign up with google
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: Get.height * 0.03,
+                                ),
+                                CustomTextField(
+                                  labelText: 'Name',
+                                  controller: _nameController,
+                                  validator: (e) {
+                                    // check if name contains special characters
+                                    if (e!.contains(
+                                        RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+                                      return 'Name cannot contain special characters';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                SizedBox(
+                                  height: Get.height * 0.03,
+                                ),
+                                CustomTextField(
+                                  labelText: 'Contact No',
+                                  controller: _contactController,
+                                  textInputType: TextInputType.phone,
+                                  maxLen: 10,
+                                  validator: (e) {
+                                    if (e!.length != 10) {
+                                      return 'Please enter a valid phone number';
+                                    }
+                                    return null;
+                                  },
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      width: 24,
+                                      child: Checkbox(
+                                        splashRadius: 0,
+                                        value: isSelected,
+                                        materialTapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
+                                        side: const BorderSide(
+                                            color: Color(0xff676677),
+                                            width: 1,
+                                            style: BorderStyle.solid),
+                                        onChanged: (e) {
+                                          setState(() {
+                                            isSelected = e as bool;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 5),
+                                    RichText(
+                                      text: TextSpan(
+                                          text: "I've read your",
+                                          children: [
+                                            TextSpan(
+                                                text: " Terms & Conditions",
+                                                recognizer:
+                                                    TapGestureRecognizer()
+                                                      ..onTap = () {
+                                                        Get.bottomSheet(BottomSheet(
+                                                            onClosing: () {},
+                                                            builder: (builder) =>
+                                                                const LegalViewScreen(
+                                                                    title:
+                                                                        'Terms & Conditions',
+                                                                    slug:
+                                                                        'terms')));
+                                                      },
+                                                style: const TextStyle(
+                                                    color: Colors.blue,
+                                                    decoration: TextDecoration
+                                                        .underline))
+                                          ],
+                                          style: const TextStyle(
+                                              color: Colors.black,
+                                              fontSize: 12)),
+                                    )
+                                  ],
+                                ),
+                                const SizedBox(height: 30),
+                                Obx(
+                                  () => PrimaryButton(
+                                      isLoading: controller.status.isLoading,
+                                      onTap: () async {
+                                        if (_image == null) {
                                           errorSnackBar(
-                                              'Please accept our terms and conditions');
+                                              'Please select an image');
                                           return;
                                         }
-                                        final base64Image =
-                                            await convertImageToBase64(_image!);
+                                        if (_formKey.currentState!.validate()) {
+                                          if (!isSelected) {
+                                            errorSnackBar(
+                                                'Please accept our terms and conditions');
+                                            return;
+                                          }
+                                          final base64Image =
+                                              await convertImageToBase64(
+                                                  _image!);
 
-                                        final res =
-                                            await controller.createProfile(
-                                                nickName: _nameController.text,
-                                                phoneNumber:
-                                                    _contactController.text,
-                                                base64: base64Image);
-                                        if (res) {
-                                          Get.bottomSheet(
-                                              BottomSheet(
-                                                  onClosing: () {
-                                                    log('Wants to close');
-                                                  },
-                                                  animationController:
-                                                      animationController,
-                                                  enableDrag: true,
-                                                  builder: (context) =>
-                                                      const _OtpBottomSheet()),
-                                              enableDrag: true,
-                                              isScrollControlled: false,
-                                              isDismissible: true,
-                                              enterBottomSheetDuration:
-                                                  const Duration(
-                                                      milliseconds: 300),
-                                              exitBottomSheetDuration:
-                                                  const Duration(
-                                                      milliseconds: 300));
+                                          final res =
+                                              await controller.createProfile(
+                                                  nickName:
+                                                      _nameController.text,
+                                                  phoneNumber:
+                                                      _contactController.text,
+                                                  base64: base64Image);
+                                          if (res) {
+                                            Get.bottomSheet(
+                                                BottomSheet(
+                                                    onClosing: () {
+                                                      log('Wants to close');
+                                                    },
+                                                    animationController:
+                                                        animationController,
+                                                    enableDrag: true,
+                                                    builder: (context) =>
+                                                        const _OtpBottomSheet()),
+                                                enableDrag: true,
+                                                isScrollControlled: false,
+                                                isDismissible: true,
+                                                enterBottomSheetDuration:
+                                                    const Duration(
+                                                        milliseconds: 300),
+                                                exitBottomSheetDuration:
+                                                    const Duration(
+                                                        milliseconds: 300));
+                                          }
                                         }
-                                      }
-                                    }),
-                              )
-                            ],
+                                      }),
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                      ]),
+                        ]),
+                  ),
                 ),
               ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 }
 

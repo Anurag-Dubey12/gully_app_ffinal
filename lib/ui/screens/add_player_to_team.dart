@@ -1,8 +1,10 @@
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart'; //
+import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/player_model.dart';
+import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/utils/app_logger.dart';
 
 import '../theme/theme.dart';
@@ -11,8 +13,8 @@ import '../widgets/custom_text_field.dart';
 import '../widgets/primary_button.dart';
 
 class AddPlayersToTeam extends StatefulWidget {
-  final String teamId;
-  const AddPlayersToTeam({super.key, required this.teamId});
+  final TeamModel team;
+  const AddPlayersToTeam({super.key, required this.team});
 
   @override
   State<AddPlayersToTeam> createState() => _AddPlayersToTeamState();
@@ -23,7 +25,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
   void initState() {
     super.initState();
     final controller = Get.find<TeamController>();
-    controller.getPlayers(widget.teamId);
+    controller.getPlayers(widget.team.id);
   }
 
   @override
@@ -59,14 +61,14 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                           backgroundColor: const Color(0xffEBEBEB),
                           enableDrag: false,
                           builder: (context) => _AddPlayerDialog(
-                            teamId: widget.teamId,
+                            teamId: widget.team.id,
                           ),
                           onClosing: () {
                             setState(() {});
                           },
                         ),
                       );
-                      logger.f("Calling NOWOWOWOWOWOWOWOWOOWWO $d");
+
                       setState(() {});
                     },
                     title: 'Add Player',
@@ -108,26 +110,64 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 0, top: 30),
-                          child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: BackButton(
-                                color: Colors.white,
+                        AppBar(
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                          title: Text('Players',
+                              style: Get.textTheme.headlineMedium?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24)),
+                          leading: const BackButton(
+                            color: Colors.white,
+                          ),
+                        ),
+                        Center(
+                          child: Container(
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                      color: AppTheme.primaryColor, width: 1)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(3.0),
+                                child: Stack(
+                                  children: [
+                                    CircleAvatar(
+                                      radius: 49,
+                                      backgroundColor: Colors.white,
+                                      backgroundImage: NetworkImage(
+                                          widget.team.toImageUrl()),
+                                    ),
+                                    const Positioned(
+                                      bottom: 0,
+                                      right: 0,
+                                      child: CircleAvatar(
+                                        radius: 10,
+                                        backgroundColor:
+                                            AppTheme.secondaryYellowColor,
+                                        child: Icon(
+                                          Icons.edit,
+                                          color: Colors.white,
+                                          size: 15,
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
                               )),
+                        ),
+                        Center(
+                          child: Text(widget.team.name,
+                              style: Get.textTheme.headlineMedium?.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 24)),
                         ),
                         Center(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Center(
-                                child: Text('Add Players',
-                                    style: Get.textTheme.headlineLarge
-                                        ?.copyWith(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold)),
-                              ),
                               SizedBox(height: Get.height * 0.04),
                               // Padding(
                               //   padding: EdgeInsets.symmetric(
@@ -207,7 +247,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                                             color: Colors.black,
                                             fontWeight: FontWeight.bold)),
                               ),
-                              TeamPlayersListBuilder(teamId: widget.teamId)
+                              TeamPlayersListBuilder(teamId: widget.team.id)
                             ],
                           ),
                         ),
@@ -229,6 +269,10 @@ class TeamPlayersListBuilder extends GetView<TeamController> {
 
   @override
   Widget build(BuildContext context) {
+    AuthController authController = Get.find<AuthController>();
+    logger.d(
+      controller.players.length,
+    );
     return SizedBox(
       height: Get.height * 0.65,
       child: Container(
@@ -248,6 +292,8 @@ class TeamPlayersListBuilder extends GetView<TeamController> {
                   return PlayerCard(
                     teamId,
                     player: controller.players[index],
+                    isEditable: authController.state?.id !=
+                        controller.players[index].id,
                   );
                 });
           }),
@@ -260,10 +306,12 @@ class TeamPlayersListBuilder extends GetView<TeamController> {
 class PlayerCard extends StatefulWidget {
   final PlayerModel player;
   final String team;
+  final bool? isEditable;
   const PlayerCard(
     this.team, {
     super.key,
     required this.player,
+    this.isEditable,
   });
 
   @override
@@ -306,31 +354,53 @@ class _PlayerCardState extends State<PlayerCard> {
             ],
           ),
           const Spacer(),
-          const CircleAvatar(
-            // radius: 13,
-            backgroundColor: Color.fromARGB(255, 71, 224, 79),
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.share),
-            ),
-          ),
+          widget.isEditable ?? true
+              ? const CircleAvatar(
+                  // radius: 13,
+                  backgroundColor: Color.fromARGB(255, 71, 224, 79),
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(Icons.share),
+                  ),
+                )
+              : const SizedBox(),
           const SizedBox(width: 10),
-          CircleAvatar(
-            // radius: 13,
-            backgroundColor: const Color.fromARGB(255, 235, 17, 24),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: GestureDetector(
-                  onTap: () {
-                    controller.removePlayerFromTeam(
-                        teamId: widget.team, playerId: widget.player.id);
-                    setState(() {});
-                  },
-                  child: const Icon(
-                    Icons.cancel,
-                  )),
-            ),
-          )
+          widget.isEditable ?? true
+              ? CircleAvatar(
+                  // radius: 13,
+                  backgroundColor: const Color.fromARGB(255, 235, 17, 24),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                        onTap: () {
+                          Get.dialog(AlertDialog.adaptive(
+                            title: const Text('Delete Player'),
+                            content: const Text(
+                                'Are you sure you want to delete this Player'),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  child: const Text('No')),
+                              TextButton(
+                                  onPressed: () async {
+                                    controller.removePlayerFromTeam(
+                                        teamId: widget.team,
+                                        playerId: widget.player.id);
+                                    setState(() {});
+                                    Get.back();
+                                  },
+                                  child: const Text('Yes')),
+                            ],
+                          ));
+                        },
+                        child: const Icon(
+                          Icons.cancel,
+                        )),
+                  ),
+                )
+              : const SizedBox()
         ]),
       ),
     );
@@ -454,8 +524,8 @@ class _AddPlayerDetails extends StatefulWidget {
 class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
   final TextEditingController nameController =
       TextEditingController(text: Faker().person.firstName());
-  final TextEditingController phoneController =
-      TextEditingController(text: Faker().phoneNumber.de());
+  final TextEditingController phoneController = TextEditingController(
+      text: Faker().randomGenerator.numberOfLength(10).toString());
   String errorText = '';
   String role = 'Batter';
   @override

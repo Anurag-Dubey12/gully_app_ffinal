@@ -41,12 +41,12 @@ class MyApp extends StatelessWidget {
           return GetMaterialApp(
             binds: [
               Bind.put<Preferences>(Preferences()),
+              Bind.put<GetConnectClient>(GetConnectClient()),
               Bind.put<NotificationController>(NotificationController(
                 preferences: Get.find<Preferences>(),
               )),
-              Bind.put<GetConnectClient>(GetConnectClient()),
-              Bind.lazyPut<AuthApi>(() => AuthApi()),
               Bind.lazyPut<RankingApi>(() => RankingApi()),
+              Bind.lazyPut<AuthApi>(() => AuthApi(client: Get.find())),
               Bind.lazyPut<MiscApi>(() => MiscApi(repo: Get.find())),
               Bind.lazyPut<TournamentApi>(
                   () => TournamentApi(repo: Get.find())),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/ui/screens/signup_screen.dart';
+import 'package:gully_app/ui/widgets/location_permission_builder.dart';
 
 class WelcomeCarouselScreen extends StatefulWidget {
   const WelcomeCarouselScreen({super.key});
@@ -13,8 +14,11 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(seconds: 2),
-        () => {Get.off(() => const SignUpScreen())});
+    Future.delayed(
+        const Duration(seconds: 2),
+        () => {
+              Get.off(() => const LocationStreamHandler(child: SignUpScreen()))
+            });
   }
 
   @override

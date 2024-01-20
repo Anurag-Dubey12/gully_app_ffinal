@@ -29,6 +29,7 @@ class TournamentList extends GetView<TournamentController> {
             logger.i('isDateTimeInPast ${controller.selectedDate.value}');
             return const PastTournamentMatchCard();
           } else {
+            logger.i('isDateTimeInFuture ${controller.selectedDate.value}');
             return const FutureTournamentCard();
           }
         }),

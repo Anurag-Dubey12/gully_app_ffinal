@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
+import 'package:gully_app/ui/widgets/scorecard/change_bowler.dart';
 import 'package:gully_app/utils/app_logger.dart';
 
 import '../widgets/scorecard/batting_card.dart';
@@ -12,10 +13,34 @@ import '../widgets/scorecard/current_over_card.dart';
 import '../widgets/scorecard/event_handler.dart';
 import '../widgets/scorecard/top_scorecard.dart';
 
-class ScoreCardScreen extends GetView<ScoreBoardController> {
+class ScoreCardScreen extends StatefulWidget {
   const ScoreCardScreen({super.key});
+
+  @override
+  State<ScoreCardScreen> createState() => _ScoreCardScreenState();
+}
+
+class _ScoreCardScreenState extends State<ScoreCardScreen> {
+  @override
+  void initState() {
+    final controller = Get.find<ScoreBoardController>();
+    controller.connectToSocket();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ScoreBoardController>();
+    if (controller.scoreboard.value!.overCompleted == true) {
+      if (!(Get.isBottomSheetOpen ?? true)) {
+        Future.delayed(const Duration(milliseconds: 500), () {
+          Get.bottomSheet(const ChangeBowlerWidget(),
+              backgroundColor: Colors.white,
+              enableDrag: true,
+              isDismissible: false);
+        });
+      }
+    }
     return Obx(() {
       if (controller.socket.value == null) {
         // controller.connectToSocket();
@@ -60,7 +85,7 @@ class ScoreCardScreen extends GetView<ScoreBoardController> {
             ),
             const SizedBox(width: 10),
             FloatingActionButton(
-              heroTag: 'restart',
+              heroTag: 'connect',
               onPressed: () async {
                 // controller.disconnect();
 

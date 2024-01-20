@@ -216,6 +216,14 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                 battingTeam = visitorTeam!;
                 bowlingTeam = hostTeam!;
               }
+            } else {
+              if (optedTo == 'Bat') {
+                battingTeam = visitorTeam!;
+                bowlingTeam = hostTeam!;
+              } else {
+                battingTeam = hostTeam!;
+                bowlingTeam = visitorTeam!;
+              }
             }
             Get.to(() => SelectOpeningPlayer(
                   match: widget.match,

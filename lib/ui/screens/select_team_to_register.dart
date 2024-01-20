@@ -6,6 +6,7 @@ import 'package:gully_app/ui/screens/add_player_to_team.dart';
 import 'package:gully_app/ui/screens/team_entry_form.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
+import 'package:gully_app/utils/utils.dart';
 
 class SelectTeamToRegister extends StatefulWidget {
   const SelectTeamToRegister({
@@ -102,9 +103,20 @@ class _TeamCard extends StatelessWidget {
         padding: const EdgeInsets.all(18.0),
         child: Row(
           children: [
-            Text(
-              team.name,
-              style: const TextStyle(fontSize: 19),
+            CircleAvatar(
+              radius: 18,
+              backgroundColor: Colors.white,
+              backgroundImage: NetworkImage(toImageUrl(team.logo)),
+            ),
+            const SizedBox(width: 10),
+            SizedBox(
+              width: Get.width / 2.4,
+              child: Text(
+                team.name,
+                overflow: TextOverflow.ellipsis,
+                style:
+                    const TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
+              ),
             ),
             const Spacer(),
             if (team.playersCount! < 14)
@@ -120,7 +132,7 @@ class _TeamCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(09),
                       onTap: () {
                         Get.off(() => AddPlayersToTeam(
-                              teamId: team.id,
+                              team: team,
                             ));
                       },
                       child: Ink(

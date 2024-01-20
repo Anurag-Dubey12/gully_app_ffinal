@@ -1,32 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
-import 'package:gully_app/ui/screens/organize_match.dart';
-import 'package:gully_app/ui/screens/select_team_for_scoreboard.dart';
-import 'package:gully_app/ui/screens/tournament_form_screen.dart';
-import 'package:gully_app/ui/screens/tournament_teams.dart';
-import 'package:gully_app/ui/screens/view_matchups_screen.dart';
+import 'package:gully_app/ui/screens/team_players_list.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
-import 'package:gully_app/ui/widgets/custom_text_field.dart';
-import 'package:gully_app/ui/widgets/primary_button.dart';
 
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
-enum RedirectType {
-  organizeMatch,
-  scoreboard,
-  matchup,
-  editForm,
-  currentTournament,
-}
-
-class CurrentTournamentListScreen extends GetView<TournamentController> {
-  final RedirectType redirectType;
-  const CurrentTournamentListScreen({
+class TournamentTeams extends GetView<TournamentController> {
+  final TournamentModel tournament;
+  const TournamentTeams({
     super.key,
-    required this.redirectType,
+    required this.tournament,
   });
 
   @override
@@ -75,7 +62,7 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                       AppBar(
                         backgroundColor: Colors.transparent,
                         elevation: 0,
-                        title: Text('Current Tournament',
+                        title: Text('Registered Teams',
                             style: Get.textTheme.headlineMedium?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -93,8 +80,9 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(height: Get.height * 0.02),
-                            FutureBuilder<List<TournamentModel>>(
-                                future: controller.getOrganizerTournamentList(),
+                            FutureBuilder<List<TeamModel>>(
+                                future: controller
+                                    .getRegisteredTeams(tournament.id),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
@@ -102,7 +90,10 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                                         child: CircularProgressIndicator());
                                   }
                                   if (snapshot.data?.isEmpty ?? true) {
-                                    return const EmptyTournamentWidget();
+                                    return const EmptyTournamentWidget(
+                                      message:
+                                          'No teams have registered for this tournament yet',
+                                    );
                                   }
                                   return ListView.separated(
                                       separatorBuilder: (context, index) =>
@@ -111,8 +102,7 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                                       itemCount: snapshot.data?.length ?? 0,
                                       itemBuilder: (context, index) {
                                         return _Card(
-                                          tournament: snapshot.data![index],
-                                          redirectType: redirectType,
+                                          team: snapshot.data![index],
                                         );
                                       });
                                 }),
@@ -130,63 +120,20 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
 }
 
 class _Card extends GetView<TournamentController> {
-  final TournamentModel tournament;
-  final RedirectType redirectType;
+  final TeamModel team;
 
-  const _Card({required this.tournament, required this.redirectType});
+  const _Card({
+    required this.team,
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        switch (redirectType) {
-          case RedirectType.organizeMatch:
-            Get.dialog(Dialog(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const CustomTextField(
-                      labelText: 'Enter Round Number',
-                      textInputType: TextInputType.number,
-                      autoFocus: true,
-                    ),
-                    const SizedBox(height: 20),
-                    PrimaryButton(
-                      onTap: () {
-                        Get.back();
-                        Get.to(() => SelectOrganizeTeam(
-                              tournament: tournament,
-                            ));
-                      },
-                      title: 'Continue',
-                    )
-                  ],
-                ),
-              ),
+        Get.to(() => ViewTeamPlayers(
+              teamModel: team,
+              // tournament: tournament,
             ));
-
-            break;
-          case RedirectType.scoreboard:
-            controller.setSelectedTournament(tournament);
-            Get.to(() => const SelectTeamForScoreBoard());
-            break;
-          case RedirectType.matchup:
-            controller.setSelectedTournament(tournament);
-            Get.to(() => const ViewMatchupsScreen());
-            break;
-          case RedirectType.editForm:
-            Get.to(() => TournamentFormScreen(
-                  tournament: tournament,
-                ));
-            break;
-          case RedirectType.currentTournament:
-            Get.to(() => TournamentTeams(
-                  tournament: tournament,
-                ));
-            break;
-        }
       },
       child: Container(
         width: Get.width,
@@ -207,9 +154,13 @@ class _Card extends GetView<TournamentController> {
           ),
           child: Row(
             children: [
+              CircleAvatar(
+                radius: 24,
+                backgroundImage: NetworkImage(team.toImageUrl()),
+              ),
               const Spacer(),
               Text(
-                tournament.tournamentName,
+                team.name,
                 style: Get.textTheme.titleMedium
                     ?.copyWith(fontWeight: FontWeight.w600, fontSize: 19),
               ),

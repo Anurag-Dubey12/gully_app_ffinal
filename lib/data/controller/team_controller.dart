@@ -70,8 +70,9 @@ class TeamController extends GetxController with StateMixin {
         playerId: playerId,
       );
       logger.i("70");
-      await Future.delayed(const Duration(seconds: 1));
-      getPlayers(teamId);
+      players.value.removeWhere((element) => element.id == playerId);
+      players.refresh();
+
       if (response.status == false) {
         errorSnackBar(response.message!);
         return false;

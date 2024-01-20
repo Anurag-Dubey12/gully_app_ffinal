@@ -20,13 +20,12 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   route() {
-    Future.delayed(const Duration(seconds: 1), () async {
+    Future.delayed(const Duration(seconds: 2), () async {
       final pref = Get.find<Preferences>();
       if (pref.getToken() != null) {
         Get.offAll(() => const LocationStreamHandler(child: HomeScreen()));
       } else {
-        Get.offAll(
-            () => const LocationStreamHandler(child: WelcomeCarouselScreen()));
+        Get.offAll(() => const WelcomeCarouselScreen());
       }
     });
   }

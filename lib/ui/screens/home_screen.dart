@@ -12,11 +12,17 @@ import 'package:gully_app/ui/widgets/primary_button.dart';
 import '../widgets/arc_clipper.dart';
 import '../widgets/home_screen/top_header.dart';
 
-class HomeScreen extends GetView<AuthController> {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
   Widget build(BuildContext context) {
+    final controller = Get.find<AuthController>();
     return controller.obx((state) {
       if (state == null) {
         return const Scaffold(

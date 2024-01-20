@@ -30,7 +30,7 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
       final controller = Get.find<AuthController>();
       final base64Image = await convertImageToBase64(_image!);
       controller.updateProfile(
-          nickName: controller.state!.fullName, base64: base64Image);
+          nickName: controller.state!.captializedName, base64: base64Image);
       successSnackBar('Profile updated successfully');
     }
   }
@@ -145,6 +145,7 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                     const SizedBox(height: 5),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Icon(
                           Icons.location_on,
@@ -152,13 +153,18 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                           size: 15,
                         ),
                         const SizedBox(width: 5),
-                        Obx(() => Text(
-                              controller.location.value,
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w300,
-                                  color: Colors.grey[800]),
-                            )),
+                        SizedBox(
+                          width: Get.width * 0.5,
+                          child: Obx(() => Text(
+                                controller.location.value,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w300,
+                                    color: Colors.grey[800]),
+                              )),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 5),
@@ -200,7 +206,7 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                             ProfileTileCard(
                               text: 'View My Team',
                               onTap: () {
-                                Get.off(() => const MyTeams());
+                                Get.to(() => const MyTeams());
                               },
                             ),
                             ProfileTileCard(

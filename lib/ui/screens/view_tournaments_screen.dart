@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
+import 'package:gully_app/ui/screens/tournament_teams.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
@@ -69,8 +70,10 @@ class _ViewTournamentScreenState extends State<ViewTournamentScreen> {
 }
 
 class EmptyTournamentWidget extends StatelessWidget {
+  final String? message;
   const EmptyTournamentWidget({
     super.key,
+    this.message,
   });
 
   @override
@@ -83,8 +86,9 @@ class EmptyTournamentWidget extends StatelessWidget {
           height: 230,
         ),
         SizedBox(height: Get.height * 0.02),
-        const Text('You have no tournaments yet',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        Text(message ?? 'You have no tournaments yet',
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
       ],
     ));
   }
@@ -99,6 +103,9 @@ class _TourCard extends GetView<TournamentController> {
   Widget build(BuildContext context) {
     return ListTile(
       style: ListTileStyle.drawer,
+      onTap: () {
+        Get.to(() => TournamentTeams(tournament: tournament));
+      },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       tileColor: Colors.white,
       contentPadding: const EdgeInsets.all(12),

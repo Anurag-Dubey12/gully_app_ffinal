@@ -182,7 +182,7 @@ class _TeamAddedDialog extends GetView<TeamController> {
               onTap: () {
                 Get.back();
                 Get.back();
-                Get.to(() => AddPlayersToTeam(teamId: controller.state));
+                Get.to(() => AddPlayersToTeam(team: controller.state));
               },
             ),
             const SizedBox(

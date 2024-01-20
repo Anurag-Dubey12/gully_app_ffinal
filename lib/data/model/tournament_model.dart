@@ -19,7 +19,9 @@ class TournamentModel {
 
   final int ballCharges;
   final int breakfastCharges;
+  @JsonKey(fromJson: ballTypeFromJson)
   final String ballType;
+  @JsonKey(fromJson: pitchTypeFromJson)
   final String pitchType;
   final String stadiumAddress;
   @JsonKey(disallowNullValue: false)
@@ -58,6 +60,18 @@ class TournamentModel {
       default:
         return TournamentListType.upcoming;
     }
+  }
+
+  static String pitchTypeFromJson(Map<String, dynamic> value) {
+    return value['name'];
+  }
+
+  static String matchTypeFromJson(Map<String, dynamic> value) {
+    return value['name'];
+  }
+
+  static String ballTypeFromJson(Map<String, dynamic> value) {
+    return value['name'];
   }
 }
 

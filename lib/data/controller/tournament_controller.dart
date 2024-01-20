@@ -105,7 +105,7 @@ class TournamentController extends GetxController
     try {
       final response = await tournamentApi.getRegisteredTeams(tournamentId);
       return response.data!['registeredTeams']
-          .map<TeamModel>((e) => TeamModel.fromJson(e))
+          .map<TeamModel>((e) => TeamModel.fromJson(e['team']))
           .toList();
     } catch (e) {
       errorSnackBar(e.toString());

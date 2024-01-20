@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/config/preferences.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
+import 'package:gully_app/ui/screens/player_profile_screen.dart';
 import 'package:gully_app/ui/screens/splash_screen.dart';
 import 'package:gully_app/utils/utils.dart';
 
@@ -47,7 +48,11 @@ class AppDrawer extends GetView<AuthController> {
                 SizedBox(height: Get.bottomBarHeight / 2),
                 InkWell(
                   onTap: () {
-                    Get.to(() => const OrganizerProfileScreen());
+                    if (controller.state!.isOrganizer) {
+                      Get.to(() => const OrganizerProfileScreen());
+                    } else {
+                      Get.to(() => const PlayerProfileScreen());
+                    }
                   },
                   child: Obx(
                     () => Column(

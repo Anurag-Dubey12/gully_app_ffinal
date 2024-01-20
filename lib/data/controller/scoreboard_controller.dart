@@ -4,6 +4,7 @@ import 'package:gully_app/config/app_constants.dart';
 import 'package:gully_app/data/api/score_board_api.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
+import 'package:gully_app/ui/widgets/scorecard/change_bowler.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
@@ -162,6 +163,7 @@ class ScoreBoardController extends GetxController with StateMixin {
     if (scoreboard.value!.currentBall == 0 &&
         scoreboard.value!.currentOver != 0) {
       _scoreboardApi.updateScoreBoard(scoreboard.value!.toJson());
+      scoreboard.value!.overCompleted = true;
       showModalBottomSheet(
           context: Get.context!,
           builder: (c) => const ChangeBowlerWidget(),
@@ -178,84 +180,6 @@ class ScoreBoardController extends GetxController with StateMixin {
   void removeEventType(EventType type) {
     events.value.remove(type);
     events.refresh();
-  }
-}
-
-class ChangeBowlerWidget extends GetView<ScoreBoardController> {
-  const ChangeBowlerWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final players = [];
-    if (controller.scoreboard.value!.currentInnings == 1) {
-      players.addAll(controller.scoreboard.value!.team2.players!);
-    } else {
-      players.addAll(controller.scoreboard.value!.team1.players!);
-    }
-    return SizedBox(
-      width: Get.width,
-      child: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Text(
-                'Change Bowler',
-                style: Get.textTheme.headlineMedium,
-              ),
-              SizedBox(
-                height: Get.height * 0.5,
-                child: ListView.builder(
-                  itemCount: players.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) => ListTile(
-                    title: Text(players[index].name),
-                    onTap: () {
-                      controller.addEvent(EventType.changeBowler,
-                          bowlerId: players[index].id);
-                      Navigator.pop(context);
-                    },
-                    subtitle: const Row(
-                      children: [
-                        BowlerStat(),
-                        BowlerStat(),
-                        BowlerStat(),
-                        BowlerStat(),
-                        BowlerStat(),
-                      ],
-                    ),
-                    trailing: const Icon(Icons.arrow_forward_ios),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class BowlerStat extends StatelessWidget {
-  const BowlerStat({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Text('O:',
-              style:
-                  TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
-          Text('1'),
-        ],
-      ),
-    );
   }
 }
 

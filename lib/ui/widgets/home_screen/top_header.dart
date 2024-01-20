@@ -31,18 +31,16 @@ class TopHeader extends GetView<AuthController> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    controller.getUser();
-                  },
+                InkWell(
+                  onTap: () => Get.to(() => const PlayerProfileScreen()),
                   child: Obx(() => SizedBox(
                         width: Get.width * 0.5,
                         child: Text(
-                          controller.state!.fullName,
+                          controller.state!.captializedName,
                           style: Get.textTheme.titleLarge?.copyWith(
-                              color: Colors.white,
-                              fontSize: Get.textScaleFactor * 24,
-                              fontStyle: FontStyle.italic),
+                            color: Colors.white,
+                            fontSize: Get.textScaleFactor * 24,
+                          ),
                         ),
                       )),
                 ),

@@ -60,13 +60,9 @@ class BattingStats extends GetView<ScoreBoardController> {
                 color: Colors.grey,
               ),
               const SizedBox(height: 4),
-              _PlayerStat(
-                controller.scoreboard.value!.striker,
-              ),
+              _PlayerStat(controller.scoreboard.value!.striker, true),
               const SizedBox(height: 3),
-              _PlayerStat(
-                controller.scoreboard.value!.nonstriker,
-              ),
+              _PlayerStat(controller.scoreboard.value!.nonstriker, false),
               const SizedBox(height: 10),
               const BowlingStats(),
             ]),
@@ -77,7 +73,8 @@ class BattingStats extends GetView<ScoreBoardController> {
 
 class _PlayerStat extends StatelessWidget {
   final PlayerModel player;
-  const _PlayerStat(this.player);
+  final bool? isStriker;
+  const _PlayerStat(this.player, this.isStriker);
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +85,7 @@ class _PlayerStat extends StatelessWidget {
           Expanded(
             flex: 3,
             child: Text(
-              player.name,
+              player.name + (isStriker ?? false ? "*" : ''),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),

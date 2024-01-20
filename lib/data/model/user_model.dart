@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'user_model.g.dart';
@@ -11,10 +12,12 @@ class UserModel {
   @JsonKey(name: '_id')
   final String id;
   final bool isNewUser;
+  final bool isOrganizer;
   final String? profilePhoto;
   UserModel(
       {required this.fullName,
       required this.email,
+      required this.isOrganizer,
       required this.phoneNumber,
       required this.id,
       required this.isNewUser,
@@ -24,4 +27,5 @@ class UserModel {
       _$UserModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
+  String get captializedName => fullName.capitalize!;
 }

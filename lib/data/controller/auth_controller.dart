@@ -38,14 +38,18 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
   Future<bool> loginViaGoogle() async {
     try {
       change(GetStatus.loading());
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        change(GetStatus.empty());
+        return false;
+      }
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       logger.t("googleAuth: $googleAuth");
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
 
       final userCred =
@@ -77,7 +81,7 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       return false;
     } catch (e) {
       log("message ${e.toString()}");
-      errorSnackBar("Unable to login $e ${e.toString()}");
+      errorSnackBar("Unable to login, Please try again later");
       change(GetStatus.error(e.toString()));
       return false;
     }

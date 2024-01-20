@@ -36,6 +36,7 @@ ScoreboardModel _$ScoreboardModelFromJson(Map<String, dynamic> json) =>
       ..secondInnings = json['secondInnings'] == null
           ? null
           : InningsModel.fromJson(json['secondInnings'] as Map<String, dynamic>)
+      ..overCompleted = json['overCompleted'] as bool? ?? true
       ..ballsToBowl = json['ballsToBowl'] as int
       ..currentOver = json['currentOver'] as int
       ..currentBall = json['currentBall'] as int
@@ -63,6 +64,8 @@ abstract class _$ScoreboardModelPerFieldToJson {
   static Object? electedTo(String? instance) => instance;
   // ignore: unused_element
   static Object? totalOvers(int instance) => instance;
+  // ignore: unused_element
+  static Object? overCompleted(bool? instance) => instance;
   // ignore: unused_element
   static Object? _extras(ExtraModel instance) => instance.toJson();
   // ignore: unused_element
@@ -104,6 +107,7 @@ Map<String, dynamic> _$ScoreboardModelToJson(ScoreboardModel instance) =>
       'tossWonBy': instance.tossWonBy,
       'electedTo': instance.electedTo,
       'totalOvers': instance.totalOvers,
+      'overCompleted': instance.overCompleted,
       'extras': instance._extras.toJson(),
       'ballsToBowl': instance.ballsToBowl,
       'currentOver': instance.currentOver,

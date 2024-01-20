@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/team_model.dart';
-import 'package:gully_app/ui/screens/view_my_team.dart';
+import 'package:gully_app/ui/screens/add_player_to_team.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 
@@ -104,9 +104,13 @@ class _TeamCard extends StatelessWidget {
               backgroundImage: NetworkImage(team.toImageUrl()),
             ),
             const SizedBox(width: 10),
-            Text(
-              team.name,
-              style: const TextStyle(fontSize: 19),
+            SizedBox(
+              width: Get.width / 2,
+              child: Text(
+                team.name,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 19),
+              ),
             ),
             const Spacer(),
             if (team.playersCount! < 15)
@@ -121,8 +125,8 @@ class _TeamCard extends StatelessWidget {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(09),
                       onTap: () {
-                        Get.to(() => ViewTeam(
-                              teamModel: team,
+                        Get.off(() => AddPlayersToTeam(
+                              team: team,
                             ));
                       },
                       child: Ink(
@@ -145,9 +149,9 @@ class _TeamCard extends StatelessWidget {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(09),
                   onTap: () async {
-                    // await Get.to(() => const TeamEntryForm(
-
-                    // ));
+                    Get.to(() => AddPlayersToTeam(
+                          team: team,
+                        ));
                   },
                   child: Ink(
                       width: 30,

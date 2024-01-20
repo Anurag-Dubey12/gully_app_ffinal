@@ -70,7 +70,7 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                   () => Column(
                     children: [
                       Text(
-                        controller.state!.fullName,
+                        controller.state!.captializedName,
                         style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
@@ -105,13 +105,18 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             size: 15,
                           ),
                           const SizedBox(width: 5),
-                          Obx(() => Text(
-                                controller.location.value,
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w300,
-                                    color: Colors.grey[800]),
-                              )),
+                          SizedBox(
+                            width: Get.width * 0.5,
+                            child: Obx(() => Text(
+                                  controller.location.value,
+                                  textAlign: TextAlign.center,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.grey[800]),
+                                )),
+                          ),
                         ],
                       ),
                       const SizedBox(height: 5),

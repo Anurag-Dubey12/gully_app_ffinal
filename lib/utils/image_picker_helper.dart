@@ -6,7 +6,9 @@ import 'package:mime/mime.dart';
 Future<XFile?> imagePickerHelper() async {
   final ImagePicker picker = ImagePicker();
 
-  final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+  final XFile? image =
+      await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+
   return image;
 }
 

@@ -68,6 +68,7 @@ class BowlingModel {
           break;
         case EventType.noBall:
           noBalls = noBalls + 1;
+          runs = runs + 1;
           break;
         case EventType.wicket:
           wickets = wickets + 1;

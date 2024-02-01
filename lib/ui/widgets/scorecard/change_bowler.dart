@@ -37,7 +37,7 @@ class ChangeBowlerWidget extends GetView<ScoreBoardController> {
                   shrinkWrap: true,
                   itemBuilder: (context, index) => ListTile(
                     title: Text(players[index].name),
-                    onTap: () {
+                    onTap: () async {
                       controller.addEvent(EventType.changeBowler,
                           bowlerId: players[index].id);
                       Navigator.pop(context);
@@ -46,13 +46,10 @@ class ChangeBowlerWidget extends GetView<ScoreBoardController> {
                       children: [
                         BowlerStat(
                           title: 'O:',
-                          value: players[index]
-                              .bowling!
-                              .overs
-                              .values
-                              .last
-                              .over
-                              .toString(),
+                          value:
+                              (players[index].bowling!.overs.values.last.over +
+                                      1)
+                                  .toString(),
                         ),
                         BowlerStat(
                           title: 'R: ',

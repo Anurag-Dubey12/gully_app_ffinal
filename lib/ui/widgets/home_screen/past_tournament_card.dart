@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
-import 'package:gully_app/data/model/tournament_model.dart';
+import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 
 import '../../theme/theme.dart';
@@ -21,11 +21,12 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
             return const NoTournamentCard();
           } else {
             return ListView.builder(
-                itemCount: controller.tournamentList.length,
+                itemCount: controller.matches.length,
                 shrinkWrap: true,
+                padding: const EdgeInsets.only(bottom: 20, top: 10),
                 itemBuilder: (context, snapshot) {
                   return _Card(
-                    tournament: controller.tournamentList[snapshot],
+                    tournament: controller.matches[snapshot],
                   );
                 });
           }
@@ -34,7 +35,7 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
 }
 
 class _Card extends StatelessWidget {
-  final TournamentModel tournament;
+  final MatchupModel tournament;
   const _Card({
     required this.tournament,
   });
@@ -60,7 +61,7 @@ class _Card extends StatelessWidget {
           children: [
             const SizedBox(height: 7),
             Text(
-              tournament.tournamentName,
+              tournament.tournamentName!,
               style: Get.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -70,7 +71,7 @@ class _Card extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 28),
               child: Text(
-                'Date: ${formatDateTime('dd MMM yyy', tournament.tournamentStartDateTime)}',
+                'Date: ${formatDateTime('dd MMM yyy', tournament.matchDate)}',
                 style: Get.textTheme.labelMedium?.copyWith(
                   fontWeight: FontWeight.w400,
                 ),
@@ -85,9 +86,17 @@ class _Card extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const CircleAvatar(),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.network(
+                              tournament.team2.toImageUrl(),
+                              height: 50,
+                              fit: BoxFit.cover,
+                              width: 50,
+                            ),
+                          ),
                           const SizedBox(width: 15),
-                          Text('RCB',
+                          Text(tournament.team1.name,
                               style: Get.textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
@@ -104,9 +113,17 @@ class _Card extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          const CircleAvatar(),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: Image.network(
+                              tournament.team2.toImageUrl(),
+                              height: 50,
+                              fit: BoxFit.cover,
+                              width: 50,
+                            ),
+                          ),
                           const SizedBox(width: 15),
-                          Text('MI',
+                          Text(tournament.team2.name,
                               style: Get.textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,

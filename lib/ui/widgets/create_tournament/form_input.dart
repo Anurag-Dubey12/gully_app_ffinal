@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../custom_text_field.dart';
 
 class FormInput extends StatelessWidget {
-  final TextEditingController controller;
+  final TextEditingController? controller;
   final String? label;
   final TextInputType? textInputType;
   final bool? filled;
@@ -18,7 +18,7 @@ class FormInput extends StatelessWidget {
   final int? maxLines;
   const FormInput(
       {super.key,
-      required this.controller,
+      this.controller,
       this.label,
       this.autofocus,
       this.textInputType,

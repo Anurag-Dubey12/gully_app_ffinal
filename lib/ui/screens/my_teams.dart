@@ -105,11 +105,12 @@ class _TeamCard extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             SizedBox(
-              width: Get.width / 2,
+              width: Get.width / 2.7,
               child: Text(
                 team.name,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 19),
+                style: TextStyle(fontSize: Get.textScaleFactor * 17),
               ),
             ),
             const Spacer(),

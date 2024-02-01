@@ -1,11 +1,12 @@
-import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
 import 'package:get/get.dart'; //
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/utils/app_logger.dart';
+import 'package:gully_app/utils/utils.dart';
 
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
@@ -56,7 +57,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                       horizontal: 35.0, vertical: 19),
                   child: PrimaryButton(
                     onTap: () async {
-                      final d = await Get.bottomSheet(
+                      await Get.bottomSheet(
                         BottomSheet(
                           backgroundColor: const Color(0xffEBEBEB),
                           enableDrag: false,
@@ -169,75 +170,6 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SizedBox(height: Get.height * 0.04),
-                              // Padding(
-                              //   padding: EdgeInsets.symmetric(
-                              //     horizontal: Get.width * 0.07,
-                              //   ),
-                              //   child: Container(
-                              //     decoration: BoxDecoration(
-                              //         color: Colors.white,
-                              //         borderRadius: BorderRadius.circular(10),
-                              //         boxShadow: [
-                              //           BoxShadow(
-                              //               color:
-                              //                   Colors.black.withOpacity(0.1),
-                              //               blurRadius: 5,
-                              //               spreadRadius: 2,
-                              //               offset: const Offset(0, 1))
-                              //         ]),
-                              //     child: Padding(
-                              //       padding: const EdgeInsets.all(28.0),
-                              //       child: Row(
-                              //         children: [
-                              //           Container(
-                              //               decoration: BoxDecoration(
-                              //                   shape: BoxShape.circle,
-                              //                   border: Border.all(
-                              //                       color:
-                              //                           AppTheme.primaryColor,
-                              //                       width: 1)),
-                              //               child: const Padding(
-                              //                 padding: EdgeInsets.all(3.0),
-                              //                 child: Stack(
-                              //                   children: [
-                              //                     CircleAvatar(
-                              //                       radius: 39,
-                              //                     ),
-                              //                     Positioned(
-                              //                       bottom: 0,
-                              //                       right: 0,
-                              //                       child: CircleAvatar(
-                              //                         radius: 10,
-                              //                         backgroundColor: AppTheme
-                              //                             .secondaryYellowColor,
-                              //                         child: Icon(
-                              //                           Icons.edit,
-                              //                           color: Colors.white,
-                              //                           size: 15,
-                              //                         ),
-                              //                       ),
-                              //                     )
-                              //                   ],
-                              //                 ),
-                              //               )),
-                              //           const SizedBox(width: 10),
-                              //           Text('Black Panther',
-                              //               style: Get.textTheme.headlineMedium
-                              //                   ?.copyWith(
-                              //                       color: Colors.black,
-                              //                       fontWeight:
-                              //                           FontWeight.w500)),
-                              //           const Icon(
-                              //             Icons.edit,
-                              //             color: AppTheme.secondaryYellowColor,
-                              //             size: 18,
-                              //           )
-                              //         ],
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
-
                               SizedBox(height: Get.height * 0.02),
                               Padding(
                                 padding: const EdgeInsets.all(18.0),
@@ -260,7 +192,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
   }
 }
 
-class TeamPlayersListBuilder extends GetView<TeamController> {
+class TeamPlayersListBuilder extends StatefulWidget {
   final String teamId;
   const TeamPlayersListBuilder({
     super.key,
@@ -268,13 +200,19 @@ class TeamPlayersListBuilder extends GetView<TeamController> {
   });
 
   @override
+  State<TeamPlayersListBuilder> createState() => _TeamPlayersListBuilderState();
+}
+
+class _TeamPlayersListBuilderState extends State<TeamPlayersListBuilder> {
+  @override
   Widget build(BuildContext context) {
+    final controller = Get.find<TeamController>();
     AuthController authController = Get.find<AuthController>();
     logger.d(
       controller.players.length,
     );
     return SizedBox(
-      height: Get.height * 0.65,
+      height: Get.height * 0.55,
       child: Container(
         decoration: const BoxDecoration(
           color: Colors.black26,
@@ -290,7 +228,7 @@ class TeamPlayersListBuilder extends GetView<TeamController> {
                     const SizedBox(height: 20),
                 itemBuilder: (context, index) {
                   return PlayerCard(
-                    teamId,
+                    widget.teamId,
                     player: controller.players[index],
                     isEditable: authController.state?.id !=
                         controller.players[index].id,
@@ -340,13 +278,18 @@ class _PlayerCardState extends State<PlayerCard> {
                     child: Text(
                       widget.player.name,
                       overflow: TextOverflow.ellipsis,
-                      style: Get.textTheme.titleMedium,
+                      style: Get.textTheme.titleMedium?.copyWith(
+                        fontSize: 20,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
                   Text(
                     widget.player.role,
-                    style: Get.textTheme.labelSmall,
+                    style: Get.textTheme.labelSmall?.copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 12),
                   ),
                 ],
               ),
@@ -407,7 +350,7 @@ class _PlayerCardState extends State<PlayerCard> {
   }
 }
 
-class _AddPlayerDialog extends StatelessWidget {
+class _AddPlayerDialog extends GetView<TeamController> {
   final String teamId;
   const _AddPlayerDialog({required this.teamId});
 
@@ -446,7 +389,12 @@ class _AddPlayerDialog extends StatelessWidget {
                 GestureDetector(
                   onTap: () async {
                     // Get.back();
-                    await Get.bottomSheet(_AddPlayerDetails(teamId: teamId),
+                    await Get.bottomSheet(
+                        _AddPlayerDetails(
+                          teamId: teamId,
+                          name: null,
+                          phone: null,
+                        ),
                         backgroundColor: Colors.white);
                   },
                   child: Container(
@@ -477,29 +425,67 @@ class _AddPlayerDialog extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 5,
-                          spreadRadius: 2,
-                          offset: const Offset(0, 1))
-                    ],
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: AppTheme.secondaryYellowColor,
-                          child: Icon(Icons.contact_phone),
+                GestureDetector(
+                  onTap: () async {
+                    final FlutterContactPicker contactPicker =
+                        FlutterContactPicker();
+                    Contact? contact = await contactPicker.selectContact();
+
+                    if (contact == null) return;
+                    if (contact.fullName == null) {
+                      errorSnackBar('Please select a contact with a name');
+                      return;
+                    }
+                    if (contact.phoneNumbers == null ||
+                        contact.phoneNumbers!.isEmpty) {
+                      errorSnackBar(
+                          'Please select a contact with a phone number');
+                      return;
+                    }
+                    // format the phone number
+                    var phoneNumber = contact.phoneNumbers![0]
+                        .replaceAll(' ', '')
+                        .replaceAll('-', '')
+                        .replaceAll('(', '')
+                        .replaceAll(')', '')
+                        .replaceAll('+', '');
+
+                    // take the last 10 digits
+                    phoneNumber = phoneNumber.substring(
+                        phoneNumber.length - 10, phoneNumber.length);
+
+                    await Get.bottomSheet(
+                        _AddPlayerDetails(
+                          teamId: teamId,
+                          name: contact.fullName,
+                          phone: phoneNumber,
                         ),
-                        SizedBox(width: 15),
-                        Text('Add from contacts')
+                        backgroundColor: Colors.white);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 5,
+                            spreadRadius: 2,
+                            offset: const Offset(0, 1))
                       ],
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: AppTheme.secondaryYellowColor,
+                            child: Icon(Icons.contact_phone),
+                          ),
+                          SizedBox(width: 15),
+                          Text('Add from contacts')
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -515,24 +501,37 @@ class _AddPlayerDialog extends StatelessWidget {
 
 class _AddPlayerDetails extends StatefulWidget {
   final String teamId;
-  const _AddPlayerDetails({required this.teamId});
+  final String? name;
+  final String? phone;
+  const _AddPlayerDetails(
+      {required this.teamId, required this.name, required this.phone});
 
   @override
   State<_AddPlayerDetails> createState() => _AddPlayerDetailsState();
 }
 
 class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
-  final TextEditingController nameController =
-      TextEditingController(text: Faker().person.firstName());
-  final TextEditingController phoneController = TextEditingController(
-      text: Faker().randomGenerator.numberOfLength(10).toString());
+  @override
+  void initState() {
+    super.initState();
+    if (widget.name != null) {
+      nameController.text = widget.name!;
+    }
+    if (widget.phone != null) {
+      phoneController.text = widget.phone!;
+    }
+  }
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
   String errorText = '';
-  String role = 'Batter';
+  String role = 'Batsman';
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TeamController>();
     return SizedBox(
       width: Get.width,
+      height: Get.height * 0.6,
       child: Padding(
         padding: const EdgeInsets.all(18.0),
         child: SingleChildScrollView(
@@ -584,7 +583,7 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                   // mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     RoleTile(
-                        value: 'Batter',
+                        value: 'Batsman',
                         role: role,
                         onChanged: (e) {
                           setState(() {

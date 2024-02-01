@@ -14,27 +14,34 @@ class TournamentModel {
   final int tournamentLimit;
   @JsonKey(defaultValue: 0)
   final int registeredTeamsCount;
+  int pendingTeamsCount;
   @JsonKey(disallowNullValue: false)
   final String? phoneNumber;
 
   final int ballCharges;
   final int breakfastCharges;
-  @JsonKey(fromJson: ballTypeFromJson)
+  @JsonKey(fromJson: extractName)
   final String ballType;
-  @JsonKey(fromJson: pitchTypeFromJson)
+  @JsonKey(fromJson: extractName)
   final String pitchType;
   final String stadiumAddress;
   @JsonKey(disallowNullValue: false)
   final String? disclaimer;
   @JsonKey(disallowNullValue: false)
   final String? rules;
+  @JsonKey(fromJson: extractName)
+  final String? tournamentPrize;
+  final String? organizerName;
 
   TournamentModel(
       {required this.tournamentName,
       required this.id,
       required this.disclaimer,
       required this.rules,
+      required this.tournamentPrize,
+      required this.organizerName,
       required this.ballCharges,
+      required this.pendingTeamsCount,
       required this.phoneNumber,
       required this.tournamentLimit,
       required this.registeredTeamsCount,
@@ -62,15 +69,7 @@ class TournamentModel {
     }
   }
 
-  static String pitchTypeFromJson(Map<String, dynamic> value) {
-    return value['name'];
-  }
-
-  static String matchTypeFromJson(Map<String, dynamic> value) {
-    return value['name'];
-  }
-
-  static String ballTypeFromJson(Map<String, dynamic> value) {
+  static String extractName(Map<String, dynamic> value) {
     return value['name'];
   }
 }

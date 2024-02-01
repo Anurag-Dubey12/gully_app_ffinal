@@ -12,18 +12,23 @@ class TeamController extends GetxController with StateMixin {
   }
   Future<bool> createTeam(
       {required String teamName, required String teamLogo}) async {
-    change(GetStatus.loading());
-    final response = await repo.createTeam(
-      teamName: teamName,
-      teamLogo: teamLogo,
-    );
-    if (response.status == false) {
-      errorSnackBar(response.message!);
-      return false;
-    }
-    change(GetStatus.success(response.data!['_id']));
+    try {
+      change(GetStatus.loading());
+      final response = await repo.createTeam(
+        teamName: teamName,
+        teamLogo: teamLogo,
+      );
+      if (response.status == false) {
+        errorSnackBar(response.message!);
+        return false;
+      }
+      change(GetStatus.success(TeamModel.fromJson(response.data!)));
 
-    return true;
+      return true;
+    } catch (e) {
+      change(GetStatus.error(e.toString()));
+      rethrow;
+    }
   }
 
   RxList<PlayerModel> players = <PlayerModel>[].obs;
@@ -32,7 +37,7 @@ class TeamController extends GetxController with StateMixin {
     if (response.status == false) {
       errorSnackBar(response.message!);
     }
-    final playersList = (response.data!['players'] as List)
+    final playersList = (response.data!['teamData']['players'] as List)
         .map((e) => PlayerModel.fromJson(e))
         .toList();
 

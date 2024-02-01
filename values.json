@@ -1,0 +1,76 @@
+{
+  "jobRoles": [
+    {
+      "_id": 1,
+      "values": {
+        "en": "Servant",
+        "de": "Diener"
+      },
+      "lastUpdatedAt": "2018-01-01T00:00:00.000Z",
+      "createdAt": "2018-01-01T00:00:00.000Z"
+    },
+    {
+      "_id": 2,
+      "values": {
+        "en": "Maid",
+        "de": "Maid"
+      },
+      "lastUpdatedAt": "2018-01-01T00:00:00.000Z",
+      "createdAt": "2018-01-01T00:00:00.000Z"
+    },
+    {
+      "_id": 3,
+      "values": {
+        "en": "Butler",
+        "de": "Butler"
+      },
+      "lastUpdatedAt": "2018-01-01T00:00:00.000Z",
+      "createdAt": "2018-01-01T00:00:00.000Z"
+    },
+    {
+      "_id": 4,
+      "values": {
+        "en": "Housekeeper",
+        "de": "Hausmeister"
+      },
+      "lastUpdatedAt": "2018-01-01T00:00:00.000Z",
+      "createdAt": "2018-01-01T00:00:00.000Z"
+    },
+    {
+      "_id": 5,
+      "values": {
+        "en": "Gardener",
+        "de": "Gärtner"
+      },
+      "lastUpdatedAt": "2018-01-01T00:00:00.000Z",
+      "createdAt": "2018-01-01T00:00:00.000Z"
+    },
+    {
+      "_id": 6,
+      "values": {
+        "en": "Cook",
+        "de": "Koch"
+      },
+      "lastUpdatedAt": "2018-01-01T00:00:00.000Z",
+      "createdAt": "2018-01-01T00:00:00.000Z"
+    },
+    {
+      "_id": 7,
+      "values": {
+        "en": "Nanny",
+        "de": "Kindermädchen"
+      },
+      "lastUpdatedAt": "2018-01-01T00:00:00.000Z",
+      "createdAt": "2018-01-01T00:00:00.000Z"
+    },
+    {
+      "_id": 8,
+      "values": {
+        "en": "Driver",
+        "de": "Fahrer"
+      },
+      "lastUpdatedAt": "2018-01-01T00:00:00.000Z",
+      "createdAt": "2018-01-01T00:00:00.000Z"
+    }
+  ]
+}

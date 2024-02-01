@@ -8,13 +8,19 @@ import 'current_tournament_card.dart';
 import 'future_tournament_card.dart';
 import 'past_tournament_card.dart';
 
-class TournamentList extends GetView<TournamentController> {
+class TournamentList extends StatefulWidget {
   const TournamentList({
     super.key,
   });
 
   @override
+  State<TournamentList> createState() => _TournamentListState();
+}
+
+class _TournamentListState extends State<TournamentList> {
+  @override
   Widget build(BuildContext context) {
+    final controller = Get.find<TournamentController>();
     return Container(
       width: Get.width,
       height: Get.height * 0.54,
@@ -22,6 +28,12 @@ class TournamentList extends GetView<TournamentController> {
       color: Colors.black26,
       child: SingleChildScrollView(
         child: Obx(() {
+          if (controller.isLoading.value) {
+            return const Center(
+              heightFactor: 13,
+              child: CircularProgressIndicator(),
+            );
+          }
           if (isDateTimeToday(controller.selectedDate.value)) {
             logger.i('isDateTimeToday ${controller.selectedDate.value}');
             return const CurrentTournamentCard();

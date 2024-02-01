@@ -15,23 +15,6 @@ class ScoreCard extends GetView<ScoreBoardController> {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Obx(() => Column(
             children: [
-              // Container(
-              //   // height: 20,
-              //   width: 140,
-              //   decoration: const BoxDecoration(
-              //     color: Color(0xff0FC335),
-              //     borderRadius: BorderRadius.only(
-              //         topLeft: Radius.circular(10),
-              //         topRight: Radius.circular(10)),
-              //   ),
-              //   child: Padding(
-              //     padding: const EdgeInsets.all(4.0),
-              //     child: Text('Inning 1',
-              //         textAlign: TextAlign.center,
-              //         style: Get.textTheme.bodyMedium?.copyWith(
-              //             fontWeight: FontWeight.w900, color: Colors.white)),
-              //   ),
-              // ),
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -75,8 +58,11 @@ class ScoreCard extends GetView<ScoreBoardController> {
                           ],
                         ),
                         const Spacer(),
-                        Text(controller.scoreboard.value!.currentRunRate
-                            .toStringAsFixed(2)),
+                        Text(controller
+                                .scoreboard.value!.currentRunRate.isInfinite
+                            ? '0.0'
+                            : controller.scoreboard.value!.currentRunRate
+                                .toStringAsFixed(2)),
                       ],
                     )
                   ]),

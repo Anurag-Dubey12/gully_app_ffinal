@@ -52,4 +52,6 @@ const _$EventTypeEnumMap = {
   EventType.changeStriker: 'changeStriker',
   EventType.legByes: 'legByes',
   EventType.bye: 'bye',
+  EventType.retire: 'retire',
+  EventType.eoi: 'eoi',
 };

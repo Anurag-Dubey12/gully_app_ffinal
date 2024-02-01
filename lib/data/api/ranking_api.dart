@@ -2,12 +2,13 @@ import 'package:gully_app/utils/utils.dart';
 
 import '../../config/api_client.dart';
 
-class RankingApi extends GetConnectClient {
-  // final GetConnectClient repo;
-  // const RankingApi({required this.repo});
+class RankingApi {
+  final GetConnectClient client;
+
+  RankingApi({required this.client});
 
   Future<ApiResponse> getTeamRankingList(String ballType) async {
-    var response = await get('/playerdata/team_ranking/$ballType');
+    var response = await client.get('/match/teamRanking/$ballType');
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }
@@ -16,7 +17,7 @@ class RankingApi extends GetConnectClient {
 
   Future<ApiResponse> getPlayerRankingList(
       String ballType, String skill) async {
-    var response = await get('/playerdata/player_ranking/$ballType/$skill');
+    var response = await client.get('/match/playerRanking/$ballType/$skill');
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }

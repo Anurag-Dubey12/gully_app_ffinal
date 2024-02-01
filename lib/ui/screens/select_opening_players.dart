@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/model/extras_model.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/screens/score_card_screen.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/scoreboard_controller.dart';
@@ -38,6 +40,8 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ScoreBoardController>();
+    logger.e(widget.battingTeam.id);
+    logger.e(widget.bowlingTeam.id);
     return GradientBuilder(
         child: Scaffold(
       backgroundColor: Colors.transparent,
@@ -58,7 +62,7 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
           children: [
             const Text('Striker',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            _DropDownWidget(
+            PlayerDropDownWidget(
               title: 'Select  Striker',
               onSelect: (e) {
                 setState(() {
@@ -77,7 +81,7 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
             const Text('Non-Striker',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
 
-            _DropDownWidget(
+            PlayerDropDownWidget(
               title: 'Select Non Striker',
               onSelect: (e) {
                 setState(() {
@@ -95,7 +99,7 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
             const SizedBox(height: 20),
             const Text('Opening Bowler',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            _DropDownWidget(
+            PlayerDropDownWidget(
               title: 'Select Opening Bowler',
               onSelect: (e) {
                 setState(() {
@@ -119,10 +123,18 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
                   errorSnackBar('Please select opening bowler');
                   return;
                 }
+                logger.e(widget.match.id);
                 controller.createScoreBoard(
                   team1: TeamModel.fromJson(widget.battingTeam.toJson()),
                   team2: TeamModel.fromJson(widget.bowlingTeam.toJson()),
                   matchId: widget.match.id,
+                  extras: widget.match.scoreBoard?['extras'] ??
+                      ExtraModel(
+                          wides: 0,
+                          noBalls: 0,
+                          byes: 0,
+                          legByes: 0,
+                          penalty: 0),
                   tossWonBy: widget.tossWonBy,
                   electedTo: widget.electedTo,
                   overs: widget.overs,
@@ -130,7 +142,7 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
                   nonStrikerId: nonStriker!.id,
                   openingBowler: openingBowler!.id,
                 );
-                Get.to(() => const ScoreCardScreen());
+                Get.off(() => const ScoreCardScreen());
               },
               title: 'Start Match',
             )
@@ -141,12 +153,13 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
   }
 }
 
-class _DropDownWidget extends StatelessWidget {
+class PlayerDropDownWidget extends StatelessWidget {
   final Function(PlayerModel player) onSelect;
   final String? selectedValue;
   final List<PlayerModel> items;
   final String title;
-  const _DropDownWidget({
+  const PlayerDropDownWidget({
+    super.key,
     required this.onSelect,
     this.selectedValue,
     required this.items,

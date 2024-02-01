@@ -1,42 +1,39 @@
 import 'dart:convert';
 
+import 'package:get_storage/get_storage.dart';
 import 'package:gully_app/data/model/notification_model.dart';
 import 'package:gully_app/utils/app_logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Preferences {
-  late SharedPreferences _prefs;
-  Preferences() {
-    init();
-  }
-  init() async {
-    _prefs = await SharedPreferences.getInstance();
-  }
+  late final GetStorage _prefs = GetStorage();
+  Preferences();
 
-  void storeToken(String token) async {
-    _prefs.setString('token', token);
+  Future<void> storeToken(String token) async {
+    _prefs.write('token', token);
   }
 
   String? getToken() {
-    return _prefs.getString('token');
+    return _prefs.read('token');
   }
 
   void clear() {
-    _prefs.clear();
+    _prefs.erase();
   }
 
   Future<void> setNotifications(List<NotificationModel> notification) async {
     // encode json to string and store
     final json = notification.map((e) => e.toJson()).toList().toString();
     final string = jsonEncode(json);
-    _prefs.setString('notifications', string);
+    await _prefs.write('notifications', string);
     logger.d(string);
   }
 
-  List<NotificationModel> getNotifications() {
+  Future<List<NotificationModel>> getNotifications() async {
     // get string and decode json
-    final string = _prefs.getString('notifications');
-    final notifications = jsonDecode(string!)
+    final string = _prefs.read('notifications') ?? "";
+
+    if (string == "") return [];
+    final notifications = jsonDecode(string ?? "")
         .map<NotificationModel>((e) => NotificationModel.fromJson(e))
         .toList<List<NotificationModel>>();
 

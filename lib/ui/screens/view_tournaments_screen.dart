@@ -38,30 +38,26 @@ class _ViewTournamentScreenState extends State<ViewTournamentScreen> {
         padding: const EdgeInsets.all(28.0),
         child: Column(
           children: [
-            FutureBuilder<List<TournamentModel>>(
-                future: controller.getOrganizerTournamentList(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (snapshot.data?.isEmpty ?? true) {
-                    return const EmptyTournamentWidget();
-                  }
+            Obx(() {
+              if (controller.organizerTournamentList.isEmpty) {
+                return const EmptyTournamentWidget();
+              }
 
-                  return ListView.separated(
-                      separatorBuilder: (context, index) =>
-                          const SizedBox(height: 18),
-                      shrinkWrap: true,
-                      itemCount: snapshot.data?.length ?? 0,
-                      itemBuilder: (context, index) {
-                        return _TourCard(snapshot.data![index], () {
-                          setState(() {});
-                        }
-                            // tournament: snapshot.data![index],
-                            // redirectType: redirectType,
-                            );
-                      });
-                }),
+              return ListView.separated(
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 18),
+                  shrinkWrap: true,
+                  itemCount: controller.organizerTournamentList.length,
+                  itemBuilder: (context, index) {
+                    return _TourCard(controller.organizerTournamentList[index],
+                        () {
+                      setState(() {});
+                    }
+                        // tournament: snapshot.data![index],
+                        // redirectType: redirectType,
+                        );
+                  });
+            }),
           ],
         ),
       ),

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/team_model.dart';
+import 'package:gully_app/data/model/tournament_model.dart';
 
 import '../../data/controller/tournament_controller.dart';
 
 class RequestsBottomSheet extends StatefulWidget {
-  final String tournamentId;
+  final TournamentModel tournament;
   const RequestsBottomSheet({
     super.key,
-    required this.tournamentId,
+    required this.tournament,
   });
 
   @override
@@ -57,7 +58,7 @@ class _RequestsBottomSheetState extends State<RequestsBottomSheet> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: FutureBuilder<List<TeamModel>>(
-                  future: controller.getTeamRequests(widget.tournamentId),
+                  future: controller.getTeamRequests(widget.tournament.id),
                   builder: (context, snapshot) {
                     if (snapshot.data?.isEmpty ?? true) {
                       return const Center(
@@ -90,10 +91,12 @@ class _RequestsBottomSheetState extends State<RequestsBottomSheet> {
                                 GestureDetector(
                                   onTap: () async {
                                     await controller.updateTeamRequest(
-                                        widget.tournamentId,
+                                        widget.tournament.id,
                                         snapshot.data![index].id,
                                         'Accepted');
-                                    setState(() {});
+                                    setState(() {
+                                      widget.tournament.pendingTeamsCount--;
+                                    });
                                   },
                                   child: const CircleAvatar(
                                     radius: 13,
@@ -106,10 +109,12 @@ class _RequestsBottomSheetState extends State<RequestsBottomSheet> {
                                 GestureDetector(
                                   onTap: () async {
                                     await controller.updateTeamRequest(
-                                        widget.tournamentId,
+                                        widget.tournament.id,
                                         snapshot.data![index].id,
                                         'Denied');
-                                    setState(() {});
+                                    setState(() {
+                                      widget.tournament.pendingTeamsCount--;
+                                    });
                                   },
                                   child: const CircleAvatar(
                                     radius: 13,

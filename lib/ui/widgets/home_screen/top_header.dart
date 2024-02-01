@@ -23,7 +23,7 @@ class TopHeader extends GetView<AuthController> {
                   () => CircleAvatar(
                       radius: 20,
                       backgroundImage: CachedNetworkImageProvider(
-                          toImageUrl(controller.state!.profilePhoto!))),
+                          toImageUrl(controller.state!.profilePhoto))),
                 )),
             const SizedBox(
               width: 10,

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
+import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/ui/screens/current_tournament_list.dart';
 import 'package:gully_app/ui/screens/tournament_requests_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
@@ -58,8 +59,8 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             shape: BoxShape.circle,
                             color: Colors.white,
                             image: DecorationImage(
-                                image: CachedNetworkImageProvider(toImageUrl(
-                                    controller.state!.profilePhoto!)),
+                                image: CachedNetworkImageProvider(
+                                    toImageUrl(controller.state!.profilePhoto)),
                                 fit: BoxFit.cover))),
 
                     // backgroundColor: Colors.white,
@@ -153,6 +154,8 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             InkWell(
                               child: ProfileTileCard(
                                 onTap: () {
+                                  Get.find<TournamentController>()
+                                      .getOrganizerTournamentList();
                                   Get.to(() => const TournamentRequestScreen());
                                 },
                                 text: 'Request',
@@ -161,6 +164,8 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             ProfileTileCard(
                               text: 'Current Tournament',
                               onTap: () {
+                                Get.find<TournamentController>()
+                                    .getOrganizerTournamentList();
                                 Get.to(() => const CurrentTournamentListScreen(
                                       redirectType:
                                           RedirectType.currentTournament,
@@ -170,6 +175,8 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             ProfileTileCard(
                               text: 'Organize',
                               onTap: () {
+                                Get.find<TournamentController>()
+                                    .getOrganizerTournamentList();
                                 Get.to(() => const CurrentTournamentListScreen(
                                       redirectType: RedirectType.organizeMatch,
                                     ));
@@ -178,6 +185,8 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             ProfileTileCard(
                               text: 'View Matchups',
                               onTap: () {
+                                Get.find<TournamentController>()
+                                    .getOrganizerTournamentList();
                                 Get.to(() => const CurrentTournamentListScreen(
                                       redirectType: RedirectType.matchup,
                                     ));
@@ -186,6 +195,8 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             ProfileTileCard(
                               text: 'Score Board',
                               onTap: () {
+                                Get.find<TournamentController>()
+                                    .getOrganizerTournamentList();
                                 Get.to(() => const CurrentTournamentListScreen(
                                       redirectType: RedirectType.scoreboard,
                                     ));
@@ -194,7 +205,8 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             ProfileTileCard(
                               text: 'Edit Tournament Form',
                               onTap: () {
-                                // Get.to(() => const EditTournamentScreen());
+                                Get.find<TournamentController>()
+                                    .getOrganizerTournamentList();
 
                                 Get.to(() => const CurrentTournamentListScreen(
                                       redirectType: RedirectType.editForm,
@@ -210,6 +222,8 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             ProfileTileCard(
                               text: 'View your tournament',
                               onTap: () {
+                                Get.find<TournamentController>()
+                                    .getOrganizerTournamentList();
                                 Get.to(() => const ViewTournamentScreen());
                               },
                             ),

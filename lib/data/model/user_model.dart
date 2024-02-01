@@ -13,7 +13,10 @@ class UserModel {
   final String id;
   final bool isNewUser;
   final bool isOrganizer;
-  final String? profilePhoto;
+  @JsonKey(
+    defaultValue: "",
+  )
+  String profilePhoto = "";
   UserModel(
       {required this.fullName,
       required this.email,

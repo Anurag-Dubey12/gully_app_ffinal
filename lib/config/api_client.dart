@@ -6,14 +6,12 @@ import 'package:gully_app/utils/app_logger.dart';
 import 'preferences.dart';
 
 class GetConnectClient extends GetConnect {
+  final Preferences preferences;
+  GetConnectClient({required this.preferences});
   @override
   void onInit() {
     super.onInit();
-    Preferences preferences = Get.find<Preferences>();
-
-    // httpClient.baseUrl = 'http://65.0.80.235:3000';
     httpClient.baseUrl = AppConstants.baseUrl;
-
     httpClient.timeout = const Duration(seconds: 13);
     httpClient.addRequestModifier<dynamic>((request) {
       logger.d("--> ${request.method.toUpperCase()}: ${request.url}");

@@ -29,8 +29,15 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
     if (_image != null) {
       final controller = Get.find<AuthController>();
       final base64Image = await convertImageToBase64(_image!);
+      if (!base64Image.contains(RegExp(r'data:image\/(png|jpeg);base64,'))) {
+        errorSnackBar('Please select a valid image');
+        return;
+      }
       controller.updateProfile(
           nickName: controller.state!.captializedName, base64: base64Image);
+      await CachedNetworkImage.evictFromCache(
+          toImageUrl(controller.state!.profilePhoto));
+
       successSnackBar('Profile updated successfully');
     }
   }
@@ -90,7 +97,7 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                                   image: DecorationImage(
                                       image: CachedNetworkImageProvider(
                                           toImageUrl(
-                                              controller.state!.profilePhoto!)),
+                                              controller.state!.profilePhoto)),
                                       fit: BoxFit.cover)))),
                       Positioned(
                         bottom: 0,

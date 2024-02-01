@@ -72,7 +72,7 @@ class NotificationController extends GetxController {
   }
 
   Future<void> getNotifications() async {
-    notifications.value = preferences.getNotifications();
+    notifications.value = await preferences.getNotifications();
     notifications.refresh();
   }
 }

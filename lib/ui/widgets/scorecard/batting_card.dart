@@ -87,6 +87,10 @@ class _PlayerStat extends StatelessWidget {
             child: Text(
               player.name + (isStriker ?? false ? "*" : ''),
               maxLines: 1,
+              style: TextStyle(
+                color: isStriker ?? false ? Colors.blue[900] : Colors.black,
+                fontWeight: isStriker ?? false ? FontWeight.bold : null,
+              ),
               overflow: TextOverflow.ellipsis,
             ),
           ),

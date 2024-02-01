@@ -4,6 +4,7 @@ import 'package:gully_app/config/preferences.dart';
 import 'package:gully_app/ui/screens/home_screen.dart';
 import 'package:gully_app/ui/screens/welcome_carosuel_screen.dart';
 import 'package:gully_app/ui/widgets/location_permission_builder.dart';
+import 'package:gully_app/utils/app_logger.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -22,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   route() {
     Future.delayed(const Duration(seconds: 2), () async {
       final pref = Get.find<Preferences>();
+      logger.i("Token: ${pref.getToken()}");
       if (pref.getToken() != null) {
         Get.offAll(() => const LocationStreamHandler(child: HomeScreen()));
       } else {

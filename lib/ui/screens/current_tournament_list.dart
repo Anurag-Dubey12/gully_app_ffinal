@@ -93,29 +93,30 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(height: Get.height * 0.02),
-                            FutureBuilder<List<TournamentModel>>(
-                                future: controller.getOrganizerTournamentList(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const Center(
-                                        child: CircularProgressIndicator());
-                                  }
-                                  if (snapshot.data?.isEmpty ?? true) {
-                                    return const EmptyTournamentWidget();
-                                  }
-                                  return ListView.separated(
-                                      separatorBuilder: (context, index) =>
-                                          const SizedBox(height: 18),
-                                      shrinkWrap: true,
-                                      itemCount: snapshot.data?.length ?? 0,
-                                      itemBuilder: (context, index) {
-                                        return _Card(
-                                          tournament: snapshot.data![index],
-                                          redirectType: redirectType,
-                                        );
-                                      });
-                                }),
+                            Obx(() {
+                              if (controller
+                                  .organizerTournamentList.value.isEmpty) {
+                                return const EmptyTournamentWidget();
+                              }
+                              if (controller.status.isError) {
+                                return Center(
+                                    child: Text(
+                                        'Error: ${controller.status.errorMessage}'));
+                              }
+                              return ListView.separated(
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(height: 18),
+                                  shrinkWrap: true,
+                                  itemCount: controller
+                                      .organizerTournamentList.value.length,
+                                  itemBuilder: (context, index) {
+                                    return _Card(
+                                      tournament: controller
+                                          .organizerTournamentList.value[index],
+                                      redirectType: redirectType,
+                                    );
+                                  });
+                            }),
                           ],
                         ),
                       ),

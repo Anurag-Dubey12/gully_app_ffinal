@@ -7,6 +7,7 @@ import 'package:gully_app/ui/widgets/custom_text_field.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/app_logger.dart';
+import 'package:gully_app/utils/utils.dart';
 
 class SelectOpeningTeam extends StatefulWidget {
   final MatchupModel match;
@@ -21,7 +22,7 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
   TeamModel? visitorTeam;
   String? tossWonBy;
   String? optedTo;
-  int totalOvers = 0;
+  TextEditingController totalOvers = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -192,10 +193,11 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
           const Text('Total Overs',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
           const SizedBox(height: 10),
-          const CustomTextField(
+          CustomTextField(
             filled: true,
             hintText: 'Enter total overs',
             textInputType: TextInputType.number,
+            controller: totalOvers,
           ),
           const SizedBox(height: 20),
           PrimaryButton(onTap: () {
@@ -221,18 +223,21 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                 battingTeam = visitorTeam!;
                 bowlingTeam = hostTeam!;
               } else {
-                battingTeam = hostTeam!;
-                bowlingTeam = visitorTeam!;
+                battingTeam = visitorTeam!;
+                bowlingTeam = hostTeam!;
               }
             }
-            Get.to(() => SelectOpeningPlayer(
-                  match: widget.match,
-                  battingTeam: battingTeam,
-                  bowlingTeam: bowlingTeam,
-                  tossWonBy: tossWonBy!,
-                  electedTo: optedTo!,
-                  overs: totalOvers,
-                ));
+            if (!totalOvers.text.isNum) {
+              errorSnackBar('Please enter valid overs');
+              return;
+            }
+            Get.off(() => SelectOpeningPlayer(
+                match: widget.match,
+                battingTeam: battingTeam,
+                bowlingTeam: bowlingTeam,
+                tossWonBy: tossWonBy!,
+                electedTo: optedTo!,
+                overs: 10));
           })
         ],
       ),

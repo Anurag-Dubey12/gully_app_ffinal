@@ -131,17 +131,17 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                               controller.addEvent(EventType.six);
                             },
                           ),
-                          InkWell(
+                          NumberCard(
+                            text: '•••',
                             onTap: () {
                               Get.bottomSheet(
+
                                   // context: context,
                                   // elevation: 30,
-                                  const EndOfIningsDialog());
+                                  const EndOfIningsDialog(),
+                                  isScrollControlled: true,
+                                  ignoreSafeArea: true);
                             },
-                            child: NumberCard(
-                              text: '•••',
-                              onTap: () {},
-                            ),
                           ),
                         ],
                       ),

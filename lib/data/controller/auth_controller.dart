@@ -19,12 +19,11 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
   final AuthApi repo;
   AuthController({required this.repo}) {
     change(GetStatus.empty());
-    getUser();
+
     getCurrentLocation();
     Geolocator.getServiceStatusStream().listen((event) {
       getCurrentLocation();
     });
-    // getUser();
   }
   RxString location = ''.obs;
 
@@ -57,13 +56,20 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       if (userCred.user == null) {
         errorSnackBar("User not found");
       }
+      final Position position = await determinePosition();
+      final placeName = await getAddressFromLatLng(position);
       final response = await repo.loginViaGoogle({
         'fullName': userCred.user!.displayName,
         'email': userCred.user!.email,
-        'token': userCred.credential!.accessToken
+        'coordinates': {
+          'latitude': position.latitude,
+          'longitude': position.longitude,
+          'placeName': placeName,
+        }
       });
       final user = UserModel.fromJson(response.data!['user']);
-      final accessToken = response.data!['accessToken'];
+      final accessToken = response.data!['user']['accessToken'];
+
       final prefs = Get.find<Preferences>();
       prefs.storeToken(accessToken);
       change(GetStatus.success(user));
@@ -81,7 +87,7 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       return false;
     } catch (e) {
       log("message ${e.toString()}");
-      errorSnackBar("Unable to login, Please try again later");
+      errorSnackBar("Unable to login, ${e.toString()}");
       change(GetStatus.error(e.toString()));
       return false;
     }
@@ -91,7 +97,7 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
     // change(GetStatus.loading());
     try {
       final response = await repo.getUser();
-      UserModel? fetchedUser = UserModel.fromJson(response.data!['user']);
+      UserModel? fetchedUser = UserModel.fromJson(response.data!);
       // user.value = fetchedUser;
       change(GetStatus.success(fetchedUser));
       if (fetchedUser.isNewUser) {
@@ -127,8 +133,9 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
   }
 
   Future<bool> updateProfile({
-    required String nickName,
-    required String base64,
+    String? nickName,
+    String? base64,
+    String? fcmToken,
   }) async {
     try {
       change(GetStatus.loading());

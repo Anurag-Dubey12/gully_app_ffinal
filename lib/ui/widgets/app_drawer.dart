@@ -256,7 +256,7 @@ class AppDrawer extends GetView<AuthController> {
                   onTap: () {
                     Get.to(() => const LegalViewScreen(
                           title: 'FAQs',
-                          slug: 'faqs',
+                          slug: 'faq',
                         ));
                   },
                   icon: Icons.question_answer,

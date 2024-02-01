@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/ui/screens/player_profile_screen.dart';
@@ -163,8 +164,16 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                     fortyFiveDegreeImageryEnabled: false,
                                     initialCameraPosition: _kGooglePlex,
                                     onMapCreated:
-                                        (GoogleMapController controller) {
+                                        (GoogleMapController controller) async {
                                       _controller.complete(controller);
+                                      Position position =
+                                          await Geolocator.getCurrentPosition(
+                                              desiredAccuracy:
+                                                  LocationAccuracy.high);
+                                      controller.animateCamera(
+                                          CameraUpdate.newLatLng(LatLng(
+                                              position.latitude,
+                                              position.longitude)));
                                     },
                                   ),
                                 ),

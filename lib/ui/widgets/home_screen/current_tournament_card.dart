@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/data/model/matchup_model.dart';
+import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/home_screen/no_tournament_card.dart';
 
-import '../../../data/model/tournament_model.dart';
 import '../../../utils/date_time_helpers.dart';
-import '../../theme/theme.dart';
 import '../dialogs/current_score_dialog.dart';
 
 class CurrentTournamentCard extends GetView<TournamentController> {
@@ -24,11 +24,12 @@ class CurrentTournamentCard extends GetView<TournamentController> {
             return const NoTournamentCard();
           } else {
             return ListView.builder(
-                itemCount: controller.tournamentList.length,
+                itemCount: controller.matches.length,
                 shrinkWrap: true,
+                padding: const EdgeInsets.only(bottom: 20, top: 10),
                 itemBuilder: (context, snapshot) {
                   return _Card(
-                    tournament: controller.tournamentList[snapshot],
+                    tournament: controller.matches[snapshot],
                   );
                 });
           }
@@ -39,7 +40,7 @@ class CurrentTournamentCard extends GetView<TournamentController> {
 }
 
 class _Card extends StatelessWidget {
-  final TournamentModel tournament;
+  final MatchupModel tournament;
   const _Card({
     required this.tournament,
   });
@@ -52,53 +53,130 @@ class _Card extends StatelessWidget {
       child: Container(
         width: Get.width,
         decoration: BoxDecoration(
-          color: Colors.white,
-          image: const DecorationImage(
+            color: Colors.white,
+            image: const DecorationImage(
               image: AssetImage(
                 'assets/images/cricket_bat.png',
               ),
               alignment: Alignment.bottomLeft,
-              scale: 1),
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 5,
-                spreadRadius: 2,
-                offset: const Offset(0, 1))
-          ],
-          borderRadius: BorderRadius.circular(22),
-        ),
+              opacity: 0.4,
+            ),
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 5,
+                  spreadRadius: 2,
+                  offset: const Offset(0, 1))
+            ],
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: Colors.grey.shade300, width: 2)),
         child: Column(
           children: [
-            const SizedBox(height: 7),
-            Text(
-              tournament.tournamentName,
-              style: Get.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: AppTheme.darkYellowColor),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8))),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(tournament.tournamentName!,
+                        style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: AppTheme.darkYellowColor)),
+
+                    // Text(isDateTimeInFuture(dateTime)?'Ongoing',
+                    //     style: TextStyle(
+                    //         fontSize: 13, fontWeight: FontWeight.w500))
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 7),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 28),
+              padding: const EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Date: ${formatDateTime('dd MMM yyy', tournament.tournamentStartDateTime)}',
-                    style: Get.textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.w400,
-                    ),
+                  Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image.network(
+                          tournament.team1.toImageUrl(),
+                          fit: BoxFit.cover,
+                          height: 50,
+                          width: 50,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        tournament.team1.name,
+                        style: Get.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    'Time Left: 5d:13h:5m:23s',
-                    style: Get.textTheme.labelMedium?.copyWith(
-                      fontWeight: FontWeight.w400,
-                    ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Column(
+                    children: [
+                      Text(
+                        formatDateTime('hh:mm a', tournament.matchDate),
+                        style: Get.textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      Text(
+                        formatDateTime('dd-MMM-yyy', tournament.matchDate),
+                        style: Get.textTheme.labelMedium?.copyWith(
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Column(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(100),
+                        child: Image.network(
+                          tournament.team2.toImageUrl(),
+                          height: 50,
+                          fit: BoxFit.cover,
+                          width: 50,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        child: Text(
+                          tournament.team2.name,
+                          style: Get.textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: Get.textScaleFactor * 18,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
+            const SizedBox(height: 7),
             const SizedBox(height: 17),
             Padding(
               padding: const EdgeInsets.only(right: 28),
@@ -112,7 +190,9 @@ class _Card extends StatelessWidget {
                         Get.bottomSheet(
                           BottomSheet(
                             enableDrag: false,
-                            builder: (context) => const ScoreBottomDialog(),
+                            builder: (context) => ScoreBottomDialog(
+                              match: tournament,
+                            ),
                             onClosing: () {},
                           ),
                         );
@@ -123,7 +203,7 @@ class _Card extends StatelessWidget {
                       ),
                       child: Text('View Score',
                           style: Get.textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w300,
+                              fontWeight: FontWeight.w500,
                               fontSize: 14,
                               color: Colors.white))),
                 ),

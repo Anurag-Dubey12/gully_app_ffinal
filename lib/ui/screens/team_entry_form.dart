@@ -63,14 +63,79 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                         controller
                             .registerTeam(
                           teamId: widget.team.id,
-                          viceCaptainContact: _viceCaptainController.text,
+                          viceCaptainContact: '1234567890',
                           address: _addressController.text,
                           tournamentId: controller.status.data!.id,
                         )
                             .then((value) {
                           if (value) {
                             logger.i('Team Registered');
-                            Get.offAll(() => const HomeScreen());
+                            Get.bottomSheet(
+                                BottomSheet(
+                                    onClosing: () {},
+                                    enableDrag: false,
+                                    showDragHandle: true,
+                                    builder: (context) {
+                                      return SizedBox(
+                                        width: Get.width,
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            const Icon(
+                                              Icons.verified,
+                                              size: 98,
+                                              color:
+                                                  AppTheme.secondaryYellowColor,
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            const Text(
+                                              'Request Sent Successfully',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            const Text(
+                                              'Your request has been sent to the organizer. You will be notified once your request is accepted.',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.grey,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: PrimaryButton(
+                                                onTap: () {
+                                                  Get.off(
+                                                      () => const HomeScreen());
+                                                },
+                                                title: 'OK',
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 80,
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }),
+                                isDismissible: false,
+                                enableDrag: false);
                           }
                         });
                       }
@@ -165,21 +230,21 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                     enabled: false,
                                     label: 'Captain Contact ',
                                   ),
-                                  FormInput(
-                                    controller: _viceCaptainController,
-                                    label: 'Vice Captain Contact ',
-                                    textInputType: TextInputType.number,
-                                    maxLength: 10,
-                                    validator: (value) {
-                                      if (value!.isEmpty) {
-                                        return 'Please enter a valid phone number';
-                                      }
-                                      if (value.length != 10) {
-                                        return 'Please enter a valid phone number';
-                                      }
-                                      return null;
-                                    },
-                                  ),
+                                  // FormInput(
+                                  //   controller: _viceCaptainController,
+                                  //   label: 'Vice Captain Contact ',
+                                  //   textInputType: TextInputType.number,
+                                  //   maxLength: 10,
+                                  //   validator: (value) {
+                                  //     if (value!.isEmpty) {
+                                  //       return 'Please enter a valid phone number';
+                                  //     }
+                                  //     if (value.length != 10) {
+                                  //       return 'Please enter a valid phone number';
+                                  //     }
+                                  //     return null;
+                                  //   },
+                                  // ),
                                   FormInput(
                                     controller: TextEditingController(
                                         text: controller.status.data?.fees

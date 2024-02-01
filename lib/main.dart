@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:gully_app/data/api/misc_api.dart';
 import 'package:gully_app/data/api/ranking_api.dart';
 import 'package:gully_app/data/api/score_board_api.dart';
@@ -12,6 +14,7 @@ import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/notification_controller.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
+import 'package:gully_app/utils/app_logger.dart';
 
 import '/config/api_client.dart';
 import '/config/app_constants.dart';
@@ -25,8 +28,16 @@ import '/ui/theme/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init();
   await Firebase.initializeApp();
   HttpOverrides.global = MyHttpOverrides();
+  FlutterError.onError = (FlutterErrorDetails details) {
+    logger.e(
+      details.exceptionAsString(),
+    );
+    FlutterError.dumpErrorToConsole(details);
+  };
+  await DefaultCacheManager().emptyCache();
 
   runApp(const MyApp());
 }
@@ -41,22 +52,27 @@ class MyApp extends StatelessWidget {
           return GetMaterialApp(
             binds: [
               Bind.put<Preferences>(Preferences()),
-              Bind.put<GetConnectClient>(GetConnectClient()),
+              Bind.put<GetConnectClient>(GetConnectClient(
+                preferences: Get.find<Preferences>(),
+              )),
               Bind.put<NotificationController>(NotificationController(
                 preferences: Get.find<Preferences>(),
               )),
-              Bind.lazyPut<RankingApi>(() => RankingApi()),
-              Bind.lazyPut<AuthApi>(() => AuthApi(client: Get.find())),
+              Bind.lazyPut<RankingApi>(() => RankingApi(
+                    client: Get.find(),
+                  )),
+              // Bind.lazyPut<AuthApi>(() => AuthApi(client: Get.find())),
+              Bind.put<AuthApi>(AuthApi(client: Get.find())),
               Bind.lazyPut<MiscApi>(() => MiscApi(repo: Get.find())),
               Bind.lazyPut<TournamentApi>(
                   () => TournamentApi(repo: Get.find())),
               Bind.lazyPut<ScoreboardApi>(
                   () => ScoreboardApi(repo: Get.find())),
-              Bind.lazyPut<TeamApi>(() => TeamApi(repo: Get.find())),
-              Bind.lazyPut<TeamController>(
-                  () => TeamController(repo: Get.find())),
-              Bind.lazyPut<AuthController>(
-                  () => AuthController(repo: Get.find())),
+              Bind.put<TeamApi>(TeamApi(repo: Get.find())),
+              Bind.put<TeamController>(TeamController(repo: Get.find())),
+              // Bind.lazyPut<AuthController>(
+              //     () => AuthController(repo: Get.find())),
+              Bind.put<AuthController>(AuthController(repo: Get.find())),
               Bind.put<ScoreBoardController>(
                   ScoreBoardController(scoreboardApi: Get.find())),
               Bind.lazyPut<TournamentController>(

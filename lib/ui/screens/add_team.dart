@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/ui/screens/add_player_to_team.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
@@ -131,7 +130,12 @@ class _AddTeamState extends State<AddTeam> {
                                 }
                                 final base64Image =
                                     await convertImageToBase64(_image!);
-                                logger.i(base64Image);
+                                // check if base64Image
+                                if (!base64Image.contains(RegExp(
+                                    r'data:image\/(png|jpeg);base64,'))) {
+                                  errorSnackBar('Please select a valid image');
+                                  return;
+                                }
                                 final res = await controller.createTeam(
                                     teamName: _teamNameController.text,
                                     teamLogo: base64Image);

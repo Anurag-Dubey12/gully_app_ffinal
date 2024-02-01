@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/extras_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
-import 'package:gully_app/ui/widgets/custom_text_field.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/ui/widgets/scorecard/change_bowler.dart';
+import 'package:gully_app/utils/app_logger.dart';
 
 import '../../../data/controller/scoreboard_controller.dart';
 import 'scorecard_dialogs.dart';
 
-class PartnershipDialog extends StatelessWidget {
+class PartnershipDialog extends GetView<ScoreBoardController> {
   const PartnershipDialog({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final partnerships = controller.scoreboard.value?.partnerships;
+    logger.d(partnerships!.values.toList());
     return Container(
         decoration: const BoxDecoration(
             color: Color.fromARGB(255, 233, 229, 229),
@@ -47,50 +50,78 @@ class PartnershipDialog extends StatelessWidget {
                           fontSize: 20,
                           fontWeight: FontWeight.w900)),
                   const SizedBox(height: 10),
-                  SizedBox(
-                    width: Get.width,
-                    // height: 140,
-                    child: const Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Expanded(
-                            flex: 2,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                  ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: partnerships.values.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SizedBox(
+                            width: Get.width,
+                            // height: 140,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                Text('Rohit Sharma'),
-                                SizedBox(height: 10),
-                                CustomTextField()
-                              ],
-                            )),
-                        SizedBox(width: 10),
-                        Expanded(
-                            child: Column(
-                          children: [
-                            Text('124',
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.green)),
-                            Text('(124)',
-                                style: TextStyle(
-                                  fontSize: 13,
+                                Expanded(
+                                    flex: 2,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(partnerships.values
+                                            .elementAt(index)
+                                            .player1
+                                            .name),
+                                        const SizedBox(height: 10),
+                                        Text(partnerships.values
+                                            .elementAt(index)
+                                            .player1
+                                            .batting!
+                                            .runs
+                                            .toString())
+                                      ],
+                                    )),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                    child: Column(
+                                  children: [
+                                    Text(
+                                        '(${partnerships.values.elementAt(index).runs})',
+                                        style: const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w900,
+                                            color: Colors.green)),
+                                    Text(
+                                        '${partnerships.values.elementAt(index).balls} balls',
+                                        style: const TextStyle(
+                                          fontSize: 13,
+                                        )),
+                                  ],
                                 )),
-                          ],
-                        )),
-                        Expanded(
-                            flex: 2,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Rohit Sharma'),
-                                SizedBox(height: 10),
-                                CustomTextField()
+                                Expanded(
+                                    flex: 2,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(partnerships.values
+                                            .elementAt(index)
+                                            .player2
+                                            .name),
+                                        Text(partnerships.values
+                                            .elementAt(index)
+                                            .player2
+                                            .batting!
+                                            .runs
+                                            .toString()),
+                                        const SizedBox(height: 10),
+                                      ],
+                                    )),
                               ],
-                            )),
-                      ],
-                    ),
-                  ),
+                            ),
+                          ),
+                        );
+                      }),
                   const SizedBox(height: 30),
                   PrimaryButton(
                     onTap: () {},
@@ -226,7 +257,7 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                   ),
                   _EventWidget(
                     title: 'Byes',
-                    eventType: EventType.dotBall,
+                    eventType: EventType.bye,
                   ),
                   _EventWidget(
                     title: 'Leg bes',
@@ -242,22 +273,55 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                     eventType: EventType.wicket,
                   ),
                   SizedBox(
-                      width: 100,
+                      // width: 100,
                       height: 40,
-                      child: PrimaryButton(
-                          onTap: () {
+                      child: TextButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                AppTheme.primaryColor),
+                          ),
+                          onPressed: () {
                             Get.bottomSheet(const RetirePlayerDialog());
                           },
-                          title: 'Retire')),
+                          child: const Text('Retire',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500)))),
                   const SizedBox(width: 10),
                   SizedBox(
-                      width: 120,
+                      // width: 100,
                       height: 40,
-                      child: PrimaryButton(
-                          onTap: () {
+                      child: TextButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(
+                                AppTheme.primaryColor),
+                          ),
+                          onPressed: () {
                             controller.addEvent(EventType.changeStriker);
                           },
-                          title: 'Swap Batsman')),
+                          child: const Text('Swap Batsman',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500)))),
+                  SizedBox(
+                      // width: 120,
+                      height: 40,
+                      child: IconButton(
+                          onPressed: () {
+                            // if (!(controller.scoreboard.value?.overCompleted ??
+                            //     false)) {
+                            //   errorSnackBar('Please complete the over first');
+                            //   return;
+                            // }
+                            showModalBottomSheet(
+                                context: Get.context!,
+                                builder: (c) => const ChangeBowlerWidget(),
+                                enableDrag: true,
+                                isDismissible: true);
+                          },
+                          icon: Image.asset('assets/images/change.png'))),
                 ],
               ),
             ]),

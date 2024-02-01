@@ -8,7 +8,7 @@ class AuthApi {
   AuthApi({required this.client});
   Future<ApiResponse> loginViaGoogle(Map<String, dynamic> data) async {
     logger.i(data.toString());
-    var response = await client.post('/auth/google/google-login', data);
+    var response = await client.post('/auth/google_login', data);
     if (response.statusCode != 200) {
       throw Exception(response.body['message'] ??
           response.body['error'] ??
@@ -18,7 +18,7 @@ class AuthApi {
   }
 
   Future<ApiResponse> getUser() async {
-    var response = await client.get('/organizer/profile/getProfile');
+    var response = await client.get('/user/getProfile');
     if (response.statusCode != 200) {
       throw Exception(response.body['message'] ?? 'Unable to Process Request');
     }
@@ -29,10 +29,10 @@ class AuthApi {
       {required String nickName,
       required String phoneNumber,
       required String base64}) async {
-    var response = await client.post('/profile/create', {
+    var response = await client.post('/user/createProfile', {
       'nickName': nickName,
       'phoneNumber': phoneNumber,
-      'profilePhoto': base64,
+      'base64Image': base64,
     });
     if (response.statusCode != 200) {
       throw Exception(response.body['message'] ?? 'Unable to Process Request');
@@ -41,8 +41,8 @@ class AuthApi {
   }
 
   Future<ApiResponse> verifyOtp({required String otp}) async {
-    var response = await client.post('/profile/verifyOTP', {
-      'otp': otp,
+    var response = await client.post('/user/verifyOTP', {
+      'OTP': otp,
     });
     if (response.statusCode != 200) {
       throw Exception(response.body['message'] ?? 'Unable to Process Request');
@@ -51,10 +51,10 @@ class AuthApi {
   }
 
   Future<ApiResponse> updateProfile(
-      {required String nickName, required String base64}) async {
-    var response = await client.put('/profile/editProfile', {
-      // 'nickName': nickName,
-      'profilePhoto': base64,
+      {String? nickName, String? base64, String? fcmToken}) async {
+    var response = await client.post('/user/editProfile', {
+      'fcmToken': fcmToken,
+      'base64Image': base64,
     });
     if (response.statusCode != 200) {
       throw Exception(response.body['message'] ?? 'Unable to Process Request');

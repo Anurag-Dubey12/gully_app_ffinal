@@ -33,7 +33,8 @@ class LocationStreamHandlerState extends State<LocationStreamHandler> {
     logger.i(serviceEnabled);
     if (serviceEnabled == LocationPermission.denied) {
       serviceEnabled = await Geolocator.requestPermission();
-      if (serviceEnabled == LocationPermission.denied) {
+      if (serviceEnabled == LocationPermission.denied ||
+          serviceEnabled == LocationPermission.deniedForever) {
         // Service still not enabled, handle accordingly
         _locationPermissionController.add(false);
         return;
@@ -41,11 +42,10 @@ class LocationStreamHandlerState extends State<LocationStreamHandler> {
     }
 
     LocationPermission permissionStatus = await Geolocator.checkPermission();
-    if (permissionStatus == LocationPermission.deniedForever) {
-      // Location permission denied, handle accordingly
+    if (permissionStatus == LocationPermission.deniedForever ||
+        permissionStatus == LocationPermission.denied) {
       _locationPermissionController.add(false);
     } else {
-      // Location permission granted, handle accordingly
       _locationPermissionController.add(true);
     }
   }

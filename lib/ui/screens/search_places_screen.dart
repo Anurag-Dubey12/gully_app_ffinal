@@ -41,6 +41,7 @@ class SearchPlacesScreenState extends State<SearchPlacesScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: GooglePlaceAutoCompleteTextField(
         textEditingController: controller,
+
         googleAPIKey: "AIzaSyCUv3LmufUU86Lp_Wk34-3AZ3bnCQ3XmJg",
         inputDecoration: const InputDecoration(
           hintText: "Search your location",

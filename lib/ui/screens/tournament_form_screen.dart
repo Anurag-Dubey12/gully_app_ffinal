@@ -1,10 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
+import 'package:gully_app/ui/screens/legal_screen.dart';
 import 'package:gully_app/ui/screens/select_location.dart';
 import 'package:gully_app/ui/widgets/create_tournament/form_input.dart';
 import 'package:gully_app/ui/widgets/custom_drop_down_field.dart';
@@ -35,6 +37,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
   final TextEditingController _nameController = TextEditingController();
 
   final TextEditingController _rulesController = TextEditingController();
+  final TextEditingController _prizesController = TextEditingController();
   final TextEditingController _entryFeeController = TextEditingController();
   final TextEditingController _ballChargesController = TextEditingController();
   final TextEditingController _breakfastChargesController =
@@ -63,6 +66,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
       _teamLimitController.text = widget.tournament!.tournamentLimit.toString();
       _addressController.text = widget.tournament!.stadiumAddress;
       _disclaimerController.text = widget.tournament!.disclaimer ?? "";
+      _prizesController.text = widget.tournament!.tournamentPrize ?? "";
+
       from = widget.tournament!.tournamentStartDateTime;
       to = widget.tournament!.tournamentEndDateTime;
       // tournamentType = widget.tournament!.tournamentCategory!;
@@ -127,28 +132,24 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                   "ballType": ballType.toLowerCase(),
                                   "pitchType": pitchType,
                                   "matchType": "Tennis ball cricket match",
-                                  "price": "1st price",
-                                  "location": _addressController.text,
-                                  "tournamentPrize": '1st prize',
+                                  "tournamentPrize": _prizesController.text,
                                   "fees": _entryFeeController.text,
                                   "ballCharges": _ballChargesController.text,
                                   "breakfastCharges":
                                       _breakfastChargesController.text,
                                   "stadiumAddress": _addressController.text,
                                   "tournamentLimit": _teamLimitController.text,
-                                  "gameType": "KABADDI",
+                                  "gameType": "CRICKET",
                                   "selectLocation": _addressController.text,
                                   "latitude": position.latitude,
                                   "longitude": position.longitude,
                                   "rules": _rulesController.text,
-                                  "disclaimer": _disclaimerController.text,
                                 };
                                 if (widget.tournament != null) {
                                   bool isOk = await tournamentController
                                       .updateTournament({
                                     ...tournament,
-                                    'id': widget.tournament!.id
-                                  });
+                                  }, widget.tournament!.id);
                                   if (isOk) {
                                     Get.back();
                                     successSnackBar(
@@ -157,7 +158,9 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                 } else {
                                   bool isOk = await tournamentController
                                       .createTournament(tournament);
+
                                   if (isOk) {
+                                    authController.getUser();
                                     Get.back();
                                     successSnackBar(
                                         'Tournament Created Successfully');
@@ -240,11 +243,26 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                               e,
                             ) {
                               setState(() {
+                                if (from != null && e.isBefore(from!)) {
+                                  errorSnackBar(
+                                      'Tournament start date should be less than end date');
+                                  return;
+                                }
                                 from = e;
                               });
                             },
                             onToChanged: (e) {
                               setState(() {
+                                if (from == null) {
+                                  errorSnackBar(
+                                      'Please select tournament start date');
+                                  return;
+                                }
+                                if (e.isBefore(from!)) {
+                                  errorSnackBar(
+                                      'Tournament end date should be greater than start date');
+                                  return;
+                                }
                                 to = e;
                               });
                             },
@@ -269,7 +287,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             Text('Tournament Category',
                                 style: Get.textTheme.headlineMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black)),
+                                    color: Colors.black,
+                                    fontSize: 16)),
                             DropDownWidget(
                               title: 'Select Tournament Category',
                               onSelect: (e) {
@@ -292,7 +311,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             Text('Ball Type',
                                 style: Get.textTheme.headlineMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
-                                    color: Colors.black)),
+                                    color: Colors.black,
+                                    fontSize: 16)),
                             DropDownWidget(
                               title: 'Select Ball Type',
                               onSelect: (e) {
@@ -321,7 +341,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                           style: Get.textTheme.headlineMedium
                                               ?.copyWith(
                                                   fontWeight: FontWeight.bold,
-                                                  color: Colors.black)),
+                                                  color: Colors.black,
+                                                  fontSize: 16)),
                                       DropDownWidget(
                                         title: 'Select Pitch Type',
                                         onSelect: (e) {
@@ -363,6 +384,11 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                               maxLines: 5,
                             ),
                             FormInput(
+                              controller: _prizesController,
+                              label: 'Prizes',
+                              maxLines: 3,
+                            ),
+                            FormInput(
                               controller: _addressController,
                               label: 'Select Stadium Address',
                               readOnly: true,
@@ -386,6 +412,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                 }
                                 return null;
                               },
+                              maxLength: 9,
                               textInputType: TextInputType.number,
                             ),
                             FormInput(
@@ -397,12 +424,20 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                 }
                                 return null;
                               },
+                              maxLength: 6,
                               textInputType: TextInputType.number,
                             ),
                             FormInput(
                               controller: _breakfastChargesController,
                               label: 'Breakfast Charges',
                               textInputType: TextInputType.number,
+                              validator: (e) {
+                                if (e == null || e.isEmpty) {
+                                  return 'Please enter breakfast charges';
+                                }
+                                return null;
+                              },
+                              maxLength: 6,
                             ),
                             FormInput(
                               controller: _teamLimitController,
@@ -415,12 +450,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                 }
                                 return null;
                               },
+                              maxLength: 3,
                               textInputType: TextInputType.number,
-                            ),
-                            FormInput(
-                              controller: _disclaimerController,
-                              label: 'Disclaimer',
-                              maxLines: 5,
                             ),
                             Row(
                               children: [
@@ -431,9 +462,60 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                         tncAccepted = e!;
                                       });
                                     }),
-                                Text(
-                                    'I\'ve hereby read and agree to your\nterms and conditions',
-                                    style: Get.textTheme.labelMedium),
+                                RichText(
+                                  text: TextSpan(
+                                      text: "I've read the  ",
+                                      children: [
+                                        TextSpan(
+                                            text: "disclaimer",
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () {
+                                                Get.bottomSheet(BottomSheet(
+                                                    onClosing: () {},
+                                                    builder: (builder) =>
+                                                        const LegalViewScreen(
+                                                            title: 'Disclaimer',
+                                                            slug:
+                                                                'disclaimer')));
+                                              },
+                                            style: const TextStyle(
+                                                color: Colors.blue,
+                                                decoration:
+                                                    TextDecoration.underline)),
+                                        TextSpan(
+                                            text:
+                                                " and thereby agree to your\n",
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () {
+                                                Get.bottomSheet(BottomSheet(
+                                                    onClosing: () {},
+                                                    builder: (builder) =>
+                                                        const LegalViewScreen(
+                                                            title: 'Disclaimer',
+                                                            slug:
+                                                                'disclaimer')));
+                                              },
+                                            style: const TextStyle()),
+                                        TextSpan(
+                                            text: "Terms & Conditions",
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () {
+                                                Get.bottomSheet(BottomSheet(
+                                                    onClosing: () {},
+                                                    builder: (builder) =>
+                                                        const LegalViewScreen(
+                                                            title:
+                                                                'Terms & Conditions',
+                                                            slug: 'terms')));
+                                              },
+                                            style: const TextStyle(
+                                                color: Colors.blue,
+                                                decoration:
+                                                    TextDecoration.underline))
+                                      ],
+                                      style: const TextStyle(
+                                          color: Colors.black, fontSize: 12)),
+                                )
                               ],
                             )
                           ],

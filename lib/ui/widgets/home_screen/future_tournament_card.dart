@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
+import 'package:gully_app/ui/widgets/home_screen/i_button_dialog.dart';
+import 'package:gully_app/utils/app_logger.dart';
 
 import '../../../data/controller/tournament_controller.dart';
 import '../../../utils/date_time_helpers.dart';
@@ -17,6 +19,7 @@ class FutureTournamentCard extends GetView<TournamentController> {
 
   @override
   Widget build(BuildContext context) {
+    logger.d(controller.tournamentList);
     return SizedBox(
       height: Get.height * 0.54,
       child: Obx(() {
@@ -81,7 +84,7 @@ class _CardState extends State<_Card> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        width: Get.width,
+        width: Get.width * 0.9,
         decoration: BoxDecoration(
           color: Colors.white,
           image: const DecorationImage(
@@ -144,13 +147,29 @@ class _CardState extends State<_Card> {
                   width: 100,
                   child: ElevatedButton(
                       onPressed: () {
+                        if (widget.tournament.registeredTeamsCount ==
+                            widget.tournament.tournamentLimit) {
+                          return;
+                        }
                         controller.setSelectedTournament(widget.tournament);
                         Get.to(() => const RegisterTeam());
                       },
                       style: ButtonStyle(
-                        padding:
-                            MaterialStateProperty.all(const EdgeInsets.all(6)),
-                      ),
+                          padding: MaterialStateProperty.all(
+                              const EdgeInsets.all(6)),
+                          backgroundColor:
+                              MaterialStateProperty.resolveWith((states) {
+                            if (widget.tournament.registeredTeamsCount ==
+                                widget.tournament.tournamentLimit) {
+                              return Colors.grey;
+                            }
+                            if (states.contains(MaterialState.pressed)) {
+                              return AppTheme.secondaryYellowColor
+                                  .withOpacity(0.8);
+                            } else {
+                              return AppTheme.secondaryYellowColor;
+                            }
+                          })),
                       child: Text('Join Now',
                           style: Get.textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.w300,
@@ -175,8 +194,18 @@ class _CardState extends State<_Card> {
                             fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(width: 4),
-                      const Icon(Icons.info_outline_rounded,
-                          color: Colors.grey, size: 18)
+                      IconButton(
+                        onPressed: () {
+                          Get.bottomSheet(
+                              IButtonDialog(
+                                organizerName: widget.tournament.organizerName!,
+                                location: widget.tournament.stadiumAddress,
+                              ),
+                              backgroundColor: Colors.white);
+                        },
+                        icon: const Icon(Icons.info_outline_rounded, size: 18),
+                        color: Colors.grey,
+                      )
                     ],
                   ),
                   Text(

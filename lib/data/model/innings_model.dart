@@ -17,7 +17,7 @@ class InningsModel {
   final PlayerModel openingNonStriker;
   final PlayerModel openingBowler;
   final ExtraModel extras;
-  final Map<String, PartnershipModel> partnerships = {};
+  final Map<String, PartnershipModel> partnerships;
 
   InningsModel(
       {required this.totalScore,
@@ -27,7 +27,8 @@ class InningsModel {
       required this.openingStriker,
       required this.openingNonStriker,
       required this.openingBowler,
-      required this.extras});
+      required this.extras,
+      required this.partnerships});
 
   factory InningsModel.fromJson(Map<String, dynamic> json) =>
       _$InningsModelFromJson(json);

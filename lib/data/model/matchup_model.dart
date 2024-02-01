@@ -11,15 +11,21 @@ class MatchupModel {
   final TeamModel team1;
   final TeamModel team2;
   @JsonKey(name: 'dateTime')
-  final String matchDate;
+  final DateTime matchDate;
   @JsonKey(disallowNullValue: false)
   @JsonKey(name: 'scoreBoard', disallowNullValue: false)
   final Map<String, dynamic>? scoreBoard;
+  @JsonKey(name: 'tournamentName', disallowNullValue: false)
+  final String? tournamentName;
+  @JsonKey(name: 'tournamentId', disallowNullValue: false)
+  final String? tournamentId;
 
   MatchupModel({
     required this.matchDate,
     required this.team1,
     required this.team2,
+    required this.tournamentName,
+    required this.tournamentId,
     required this.scoreBoard,
     required this.id,
   });

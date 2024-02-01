@@ -64,7 +64,7 @@ class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
               const SizedBox(height: 20),
               PrimaryButton(
                 onTap: () {
-                  Get.to(() => const HomeScreen());
+                  Get.offAll(() => const HomeScreen());
                 },
               ),
             ],

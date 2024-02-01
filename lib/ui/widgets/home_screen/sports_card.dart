@@ -32,15 +32,17 @@ class SportsCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/images/cricket_icon.png',
-                height: 45,
-                color: index == 0 ? Colors.white : Colors.grey.shade400,
-                width: 45,
-              ),
+              index != 0
+                  ? Icon(Icons.history, color: Colors.grey[200], size: 45)
+                  : Image.asset(
+                      'assets/images/cricket_icon.png',
+                      height: 45,
+                      color: index == 0 ? Colors.white : Colors.grey.shade400,
+                      width: 45,
+                    ),
               const SizedBox(height: 5),
               Text(
-                'Cricket',
+                index != 0 ? 'Upcoming' : 'Cricket',
                 style: TextStyle(
                     color: index == 0 ? Colors.white : Colors.grey,
                     fontSize: 14),

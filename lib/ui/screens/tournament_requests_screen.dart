@@ -75,28 +75,24 @@ class TournamentRequestScreen extends GetView<TournamentController> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             SizedBox(height: Get.height * 0.02),
-                            FutureBuilder<List<TournamentModel>>(
-                                future: controller.getOrganizerTournamentList(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return const Center(
-                                        child: CircularProgressIndicator());
-                                  }
-                                  if (snapshot.data?.isEmpty ?? true) {
-                                    return const EmptyTournamentWidget();
-                                  }
-                                  return ListView.separated(
-                                      separatorBuilder: (context, index) =>
-                                          const SizedBox(height: 18),
-                                      shrinkWrap: true,
-                                      itemCount: snapshot.data?.length ?? 0,
-                                      itemBuilder: (context, index) {
-                                        return _Card(
-                                          tournament: snapshot.data![index],
-                                        );
-                                      });
-                                }),
+                            Obx(() {
+                              if (controller.organizerTournamentList.isEmpty) {
+                                return const EmptyTournamentWidget();
+                              }
+
+                              return ListView.separated(
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(height: 18),
+                                  shrinkWrap: true,
+                                  itemCount:
+                                      controller.organizerTournamentList.length,
+                                  itemBuilder: (context, index) {
+                                    return _Card(
+                                      tournament: controller
+                                          .organizerTournamentList[index],
+                                    );
+                                  });
+                            }),
                           ],
                         ),
                       ),
@@ -124,7 +120,7 @@ class _Card extends StatelessWidget {
         Get.bottomSheet(BottomSheet(
           enableDrag: false,
           builder: (context) => RequestsBottomSheet(
-            tournamentId: tournament.id,
+            tournament: tournament,
           ),
           onClosing: () {},
         ));
@@ -175,7 +171,7 @@ class _Card extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                           side: const BorderSide(color: Colors.white)),
                       label: Text(
-                        '${tournament.registeredTeamsCount}/${tournament.tournamentLimit}',
+                        '${tournament.pendingTeamsCount}/${tournament.tournamentLimit}',
                         style: Get.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,

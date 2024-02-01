@@ -14,6 +14,7 @@ ScoreboardModel _$ScoreboardModelFromJson(Map<String, dynamic> json) =>
       tossWonBy: json['tossWonBy'] as String,
       electedTo: json['electedTo'] as String?,
       totalOvers: json['totalOvers'] as int,
+      extras: ExtraModel.fromJson(json['extras'] as Map<String, dynamic>),
       firstInningHistory:
           (json['firstInningHistory'] as Map<String, dynamic>?)?.map(
                 (k, e) =>
@@ -29,6 +30,12 @@ ScoreboardModel _$ScoreboardModelFromJson(Map<String, dynamic> json) =>
       strikerId: json['strikerId'] as String,
       nonStrikerId: json['nonStrikerId'] as String,
       bowlerId: json['bowlerId'] as String,
+      overCompleted: json['overCompleted'] as bool? ?? true,
+      partnerships: (json['partnerships'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(
+                k, PartnershipModel.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          {},
     )
       ..firstInnings = json['firstInnings'] == null
           ? null
@@ -36,15 +43,11 @@ ScoreboardModel _$ScoreboardModelFromJson(Map<String, dynamic> json) =>
       ..secondInnings = json['secondInnings'] == null
           ? null
           : InningsModel.fromJson(json['secondInnings'] as Map<String, dynamic>)
-      ..overCompleted = json['overCompleted'] as bool? ?? true
       ..ballsToBowl = json['ballsToBowl'] as int
       ..currentOver = json['currentOver'] as int
       ..currentBall = json['currentBall'] as int
       ..currentInnings = json['currentInnings'] as int
-      ..currentInningsScore = json['currentInningsScore'] as int
-      ..currentInningsWickets = json['currentInningsWickets'] as int
-      ..lastEventType =
-          $enumDecodeNullable(_$EventTypeEnumMap, json['lastEventType']);
+      ..currentInningsScore = json['currentInningsScore'] as int;
 
 // ignore: unused_element
 abstract class _$ScoreboardModelPerFieldToJson {
@@ -57,6 +60,9 @@ abstract class _$ScoreboardModelPerFieldToJson {
   // ignore: unused_element
   static Object? secondInnings(InningsModel? instance) => instance?.toJson();
   // ignore: unused_element
+  static Object? partnerships(Map<String, PartnershipModel> instance) =>
+      instance.map((k, e) => MapEntry(k, e.toJson()));
+  // ignore: unused_element
   static Object? matchId(String instance) => instance;
   // ignore: unused_element
   static Object? tossWonBy(String instance) => instance;
@@ -65,9 +71,9 @@ abstract class _$ScoreboardModelPerFieldToJson {
   // ignore: unused_element
   static Object? totalOvers(int instance) => instance;
   // ignore: unused_element
-  static Object? overCompleted(bool? instance) => instance;
+  static Object? overCompleted(bool instance) => instance;
   // ignore: unused_element
-  static Object? _extras(ExtraModel instance) => instance.toJson();
+  static Object? extras(ExtraModel instance) => instance.toJson();
   // ignore: unused_element
   static Object? ballsToBowl(int instance) => instance;
   // ignore: unused_element
@@ -78,11 +84,6 @@ abstract class _$ScoreboardModelPerFieldToJson {
   static Object? currentInnings(int instance) => instance;
   // ignore: unused_element
   static Object? currentInningsScore(int instance) => instance;
-  // ignore: unused_element
-  static Object? currentInningsWickets(int instance) => instance;
-  // ignore: unused_element
-  static Object? lastEventType(EventType? instance) =>
-      _$EventTypeEnumMap[instance];
   // ignore: unused_element
   static Object? bowlerId(String instance) => instance;
   // ignore: unused_element
@@ -103,19 +104,19 @@ Map<String, dynamic> _$ScoreboardModelToJson(ScoreboardModel instance) =>
       'team2': instance.team2.toJson(),
       'firstInnings': instance.firstInnings?.toJson(),
       'secondInnings': instance.secondInnings?.toJson(),
+      'partnerships':
+          instance.partnerships.map((k, e) => MapEntry(k, e.toJson())),
       'matchId': instance.matchId,
       'tossWonBy': instance.tossWonBy,
       'electedTo': instance.electedTo,
       'totalOvers': instance.totalOvers,
       'overCompleted': instance.overCompleted,
-      'extras': instance._extras.toJson(),
+      'extras': instance.extras.toJson(),
       'ballsToBowl': instance.ballsToBowl,
       'currentOver': instance.currentOver,
       'currentBall': instance.currentBall,
       'currentInnings': instance.currentInnings,
       'currentInningsScore': instance.currentInningsScore,
-      'currentInningsWickets': instance.currentInningsWickets,
-      'lastEventType': _$EventTypeEnumMap[instance.lastEventType],
       'bowlerId': instance.bowlerId,
       'strikerId': instance.strikerId,
       'nonStrikerId': instance.nonStrikerId,
@@ -124,19 +125,3 @@ Map<String, dynamic> _$ScoreboardModelToJson(ScoreboardModel instance) =>
       'secondInningHistory':
           instance.secondInningHistory.map((k, e) => MapEntry(k, e.toJson())),
     };
-
-const _$EventTypeEnumMap = {
-  EventType.one: 'one',
-  EventType.two: 'two',
-  EventType.three: 'three',
-  EventType.four: 'four',
-  EventType.six: 'six',
-  EventType.wide: 'wide',
-  EventType.noBall: 'noBall',
-  EventType.wicket: 'wicket',
-  EventType.dotBall: 'dotBall',
-  EventType.changeBowler: 'changeBowler',
-  EventType.changeStriker: 'changeStriker',
-  EventType.legByes: 'legByes',
-  EventType.bye: 'bye',
-};

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/app_logger.dart';
 
 class ApiResponse {
@@ -19,17 +20,35 @@ class ApiResponse {
   }
 }
 
-errorSnackBar(String errorMessage) => Get.isSnackbarOpen
+errorSnackBar(String errorMessage) => Get.isDialogOpen ?? false
     ? null
-    : Get.snackbar('Error', errorMessage,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        messageText: Text(errorMessage,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-            )),
-        duration: const Duration(seconds: 3));
+    : Get.defaultDialog(
+        title: 'Oops!',
+        contentPadding: const EdgeInsets.all(10),
+        titlePadding: const EdgeInsets.all(10),
+        titleStyle: const TextStyle(
+          color: Colors.red,
+          fontWeight: FontWeight.w500,
+        ),
+        confirm: InkWell(
+          onTap: () {
+            Get.back();
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              color: AppTheme.primaryColor,
+            ),
+            child: const Text('OK',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                )),
+          ),
+        ),
+        middleText: errorMessage,
+      );
 
 successSnackBar(String successMessage) => Get.isSnackbarOpen
     ? null
@@ -50,8 +69,8 @@ Future<String> getAddressFromLatLng(Position position) async {
     Placemark place = placemarks[0];
 
     final currentAddress =
-        '${place.street}, ${place.subLocality}, ${place.subAdministrativeArea}, ${place.postalCode}';
-    logger.d('Location $currentAddress');
+        '${place.street} ${place.subLocality}  ${place.subAdministrativeArea} ${place.administrativeArea}';
+    logger.d('Location ::$currentAddress');
     return currentAddress;
   }).catchError((e) {
     logger.e(e);

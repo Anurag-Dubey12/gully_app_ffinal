@@ -250,7 +250,12 @@ class _CreateProfileState extends State<CreateProfile>
                                           final base64Image =
                                               await convertImageToBase64(
                                                   _image!);
-
+                                          if (!base64Image.contains(RegExp(
+                                              r'data:image\/(png|jpeg);base64,'))) {
+                                            errorSnackBar(
+                                                'Please select a valid image');
+                                            return;
+                                          }
                                           final res =
                                               await controller.createProfile(
                                                   nickName:
@@ -310,6 +315,7 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
   @override
   void initState() {
     super.initState();
+    startTimer();
   }
 
   @override
@@ -380,6 +386,7 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                         autoFocus: true,
                         pinTheme: PinTheme(
                           shape: PinCodeFieldShape.box,
+                          activeFillColor: Colors.white,
                           activeColor: Colors.white,
                           selectedColor: Colors.white,
                           selectedFillColor: Colors.white,
@@ -390,12 +397,10 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                           fieldWidth: 50,
                           borderWidth: 0,
                           selectedBorderWidth: 0,
-                          activeFillColor: Colors.white,
                         ),
                         animationDuration: const Duration(milliseconds: 300),
                         keyboardType: TextInputType.number,
                         enableActiveFill: true,
-                        // errorAnimationController: errorController,
                         controller: textEditingController,
                         onCompleted: (v) {
                           login(controller);

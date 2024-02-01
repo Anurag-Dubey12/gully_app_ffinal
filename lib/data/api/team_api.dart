@@ -15,20 +15,20 @@ class TeamApi {
       'teamLogo': teamLogo,
     };
     logger.i(obj);
-    final response = await repo.post('/users/createteam', obj);
+    final response = await repo.post('/team/createTeam', obj);
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');
       throw Exception('Server Error');
     } else if (response.statusCode! >= 400) {
-      errorSnackBar('Bad Request');
-      return ApiResponse.fromJson(response.body);
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
     }
 
     return ApiResponse.fromJson(response.body);
   }
 
   Future<ApiResponse> getPlayers({required String teamId}) async {
-    final response = await repo.get('/organizer/profile/team/$teamId');
+    final response = await repo.get('/team/getTeam/$teamId');
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');
       throw Exception('Server Error');
@@ -51,7 +51,7 @@ class TeamApi {
       'role': role,
     };
     logger.i(obj);
-    final response = await repo.post('/users/addplayer/$teamId', obj);
+    final response = await repo.post('/team/addplayer/$teamId', obj);
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');
       throw Exception('Server Error');
@@ -63,7 +63,7 @@ class TeamApi {
   }
 
   Future<ApiResponse> getTeams() async {
-    final response = await repo.get('/users/teams');
+    final response = await repo.get('/team/getUsersAllTeam');
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');
       throw Exception('Server Error');
@@ -82,10 +82,7 @@ class TeamApi {
     };
     logger.i(obj);
     return repo
-        .delete(
-      '/users/deletePlayer/$teamId/$playerId',
-    )
-        .then((response) {
+        .post('/team/deletePlayer/$teamId/$playerId', {}).then((response) {
       if (response.isOk) {
         return ApiResponse.fromJson(response.body);
       } else {

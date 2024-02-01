@@ -113,6 +113,7 @@ class _TeamCard extends StatelessWidget {
               width: Get.width / 2.4,
               child: Text(
                 team.name,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style:
                     const TextStyle(fontSize: 19, fontWeight: FontWeight.w500),
@@ -122,7 +123,7 @@ class _TeamCard extends StatelessWidget {
             if (team.playersCount! < 14)
               Row(
                 children: [
-                  Text('(${team.playersCount! + 1}/15)',
+                  Text('(${team.playersCount!}/15)',
                       style: const TextStyle(fontSize: 13)),
                   const SizedBox(
                     width: 10,

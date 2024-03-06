@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
 import 'package:get/get.dart'; //
-import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../theme/theme.dart';
@@ -207,10 +205,7 @@ class _TeamPlayersListBuilderState extends State<TeamPlayersListBuilder> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TeamController>();
-    AuthController authController = Get.find<AuthController>();
-    logger.d(
-      controller.players.length,
-    );
+
     return SizedBox(
       height: Get.height * 0.55,
       child: Container(
@@ -221,7 +216,7 @@ class _TeamPlayersListBuilderState extends State<TeamPlayersListBuilder> {
           padding: const EdgeInsets.all(8.0),
           child: Obx(() {
             return ListView.separated(
-                padding: const EdgeInsets.only(bottom: 30),
+                padding: EdgeInsets.only(bottom: Get.statusBarHeight),
                 shrinkWrap: true,
                 itemCount: controller.players.length,
                 separatorBuilder: (context, index) =>
@@ -230,8 +225,9 @@ class _TeamPlayersListBuilderState extends State<TeamPlayersListBuilder> {
                   return PlayerCard(
                     widget.teamId,
                     player: controller.players[index],
-                    isEditable: authController.state?.id !=
-                        controller.players[index].id,
+                    isEditable: controller.players[index].role == 'Captain'
+                        ? false
+                        : true,
                   );
                 });
           }),
@@ -284,12 +280,9 @@ class _PlayerCardState extends State<PlayerCard> {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  Text(
-                    widget.player.role,
-                    style: Get.textTheme.labelSmall?.copyWith(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 12),
+                  Image.asset(
+                    getAssetFromRole(widget.player.role),
+                    width: 20,
                   ),
                 ],
               ),
@@ -531,7 +524,7 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
     final controller = Get.find<TeamController>();
     return SizedBox(
       width: Get.width,
-      height: Get.height * 0.6,
+      height: Get.height * 0.7,
       child: Padding(
         padding: const EdgeInsets.all(18.0),
         child: SingleChildScrollView(
@@ -555,7 +548,6 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
               Text('Add via Phone Number ',
                   style: Get.textTheme.headlineMedium?.copyWith(
                       color: Colors.black, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 20),
               Text(errorText,
                   style: Get.textTheme.bodyLarge?.copyWith(
                       color: Colors.red,
@@ -628,9 +620,10 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                     return;
                   }
                   if (!phoneController.text.isPhoneNumber ||
-                      phoneController.text.length != 10) {
+                      phoneController.text.length != 10 ||
+                      !phoneController.text.isNumericOnly) {
                     setState(() {
-                      errorText = 'Please enter a valid phone number';
+                      errorSnackBar('Please enter a valid phone number');
                     });
                     return;
                   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/app_logger.dart';
@@ -62,14 +61,13 @@ successSnackBar(String successMessage) => Get.isSnackbarOpen
             )),
         duration: const Duration(seconds: 3));
 
-Future<String> getAddressFromLatLng(Position position) async {
-  final address =
-      await placemarkFromCoordinates(position.latitude, position.longitude)
-          .then((List<Placemark> placemarks) {
+Future<String> getAddressFromLatLng(double latitude, double longitude) async {
+  final address = await placemarkFromCoordinates(latitude, longitude)
+      .then((List<Placemark> placemarks) {
     Placemark place = placemarks[0];
 
     final currentAddress =
-        '${place.street} ${place.subLocality}  ${place.subAdministrativeArea} ${place.administrativeArea}';
+        '${place.subLocality}  ${place.subAdministrativeArea} ${place.administrativeArea}';
     logger.d('Location ::$currentAddress');
     return currentAddress;
   }).catchError((e) {
@@ -81,4 +79,21 @@ Future<String> getAddressFromLatLng(Position position) async {
 
 String toImageUrl(String endpoint) {
   return "https://gully-team-bucket.s3.amazonaws.com/$endpoint";
+}
+
+String getAssetFromRole(String role) {
+  switch (role) {
+    case 'Captain':
+      return 'assets/images/bat.png';
+    case 'Batsman':
+      return 'assets/images/bat.png';
+    case 'Bowler':
+      return 'assets/images/ball.png';
+    case 'Wicket Keeper':
+      return 'assets/images/helmet.png';
+    case 'All Rounder':
+      return 'assets/images/allrounder.png';
+    default:
+      return 'assets/images/bat.png';
+  }
 }

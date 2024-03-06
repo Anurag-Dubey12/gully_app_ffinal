@@ -1,5 +1,4 @@
 import 'package:gully_app/data/model/team_model.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'matchup_model.g.dart';
@@ -34,13 +33,4 @@ class MatchupModel {
       _$MatchupModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$MatchupModelToJson(this);
-
-  static hasScoreBoardFromJson(Map<String, String> json) {
-    logger.e(json['scoreBoard'] ?? "NULL");
-    if (json['scoreBoard'] != null) {
-      return true;
-    } else {
-      return false;
-    }
-  }
 }

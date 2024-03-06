@@ -64,7 +64,8 @@ class ScoreCard extends GetView<ScoreBoardController> {
                             : controller.scoreboard.value!.currentRunRate
                                 .toStringAsFixed(2)),
                       ],
-                    )
+                    ),
+                    // Text(controller.scoreboard.value!.secondInningsText ?? "")
                   ]),
                 ),
               ),

@@ -138,6 +138,23 @@ class _ViewTeamState extends State<ViewTeam> {
                                       future: controller
                                           .getPlayers(widget.teamModel.id),
                                       builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const Center(
+                                            child: CircularProgressIndicator(),
+                                          );
+                                        }
+                                        if (snapshot.hasError) {
+                                          return const Center(
+                                            child: Text('Error fetching data'),
+                                          );
+                                        }
+                                        if (snapshot.data?.isEmpty ?? true) {
+                                          return const Center(
+                                            child:
+                                                Text('No Players in this team'),
+                                          );
+                                        }
                                         return ListView.separated(
                                             padding: const EdgeInsets.only(
                                                 bottom: 10),

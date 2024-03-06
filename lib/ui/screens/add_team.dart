@@ -30,6 +30,7 @@ class _AddTeamState extends State<AddTeam> {
 
   @override
   Widget build(BuildContext context) {
+    final key = GlobalKey<FormState>();
     final controller = Get.find<TeamController>();
     return DecoratedBox(
         decoration: const BoxDecoration(
@@ -48,109 +49,132 @@ class _AddTeamState extends State<AddTeam> {
                   color: Colors.white,
                 )),
             backgroundColor: Colors.transparent,
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Center(
-                  child: Text(
-                    'ADD\nTEAM',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 50,
-                      height: 1,
-                      fontWeight: FontWeight.w800,
+            body: Form(
+              key: key,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Center(
+                    child: Text(
+                      'ADD\nTEAM',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 50,
+                        height: 1,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                GestureDetector(
-                  onTap: () {
-                    pickImage();
-                  },
-                  child: Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 40,
-                        backgroundColor: Colors.white,
-                        backgroundImage: _image != null
-                            ? FileImage(File(_image!.path))
-                            : null,
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.amber.shade600,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Icon(
-                              Icons.edit,
-                              size: 14,
-                              color: Colors.white,
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      pickImage();
+                    },
+                    child: Stack(
+                      children: [
+                        CircleAvatar(
+                          radius: 40,
+                          backgroundColor: Colors.white,
+                          backgroundImage: _image != null
+                              ? FileImage(File(_image!.path))
+                              : null,
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.amber.shade600,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(
+                                Icons.edit,
+                                size: 14,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: CustomTextField(
-                    hintText: 'Eg: Mumbai Sixers',
-                    labelText: 'Team Name',
-                    controller: _teamNameController,
+                  const SizedBox(
+                    height: 20,
                   ),
-                ),
-                Obx(
-                  () => Padding(
-                      padding: const EdgeInsets.all(28.0),
-                      child: controller.status.isLoading
-                          ? const CircularProgressIndicator()
-                          : PrimaryButton(
-                              title: 'Save',
-                              onTap: () async {
-                                if (_teamNameController.text.isEmpty) {
-                                  errorSnackBar('Please enter a team name');
-                                  return;
-                                }
-                                if (_image == null) {
-                                  errorSnackBar(
-                                      'Please select an image for your team logo');
-                                  return;
-                                }
-                                final base64Image =
-                                    await convertImageToBase64(_image!);
-                                // check if base64Image
-                                if (!base64Image.contains(RegExp(
-                                    r'data:image\/(png|jpeg);base64,'))) {
-                                  errorSnackBar('Please select a valid image');
-                                  return;
-                                }
-                                final res = await controller.createTeam(
-                                    teamName: _teamNameController.text,
-                                    teamLogo: base64Image);
-                                if (res) {
-                                  Get.bottomSheet(BottomSheet(
-                                      onClosing: () {},
-                                      builder: (context) {
-                                        return const _TeamAddedDialog();
-                                      }));
-                                }
-                                // Get.to(() => const AddPlayersToTeam());
-                              },
-                            )),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: CustomTextField(
+                      hintText: 'Eg: Mumbai Sixers',
+                      labelText: 'Team Name',
+                      controller: _teamNameController,
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Please enter a team name';
+                        }
+                        if (value.length < 3) {
+                          return 'Team name should be atleast 3 characters long';
+                        }
+                        // check if team name has atleast 3 characters
+                        if (RegExp(r'^[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$')
+                                .hasMatch(value) ==
+                            false) {
+                          return 'Team name should contain only alphabets and numbers, and allow spaces between words without consecutive spaces';
+                        }
+
+                        return null;
+                      },
+                    ),
+                  ),
+                  Obx(
+                    () => Padding(
+                        padding: const EdgeInsets.all(28.0),
+                        child: controller.status.isLoading
+                            ? const CircularProgressIndicator()
+                            : PrimaryButton(
+                                title: 'Save',
+                                onTap: () async {
+                                  if (key.currentState!.validate() == false) {
+                                    errorSnackBar('Please enter a team name');
+                                    return;
+                                  }
+                                  // if (_image == null) {
+                                  //   errorSnackBar(
+                                  //       'Please select an image for your team logo');
+                                  //   return;
+                                  // }
+                                  String? base64Image;
+                                  if (_image != null) {
+                                    base64Image =
+                                        await convertImageToBase64(_image!);
+                                    if (!base64Image.contains(RegExp(
+                                        r'data:image\/(png|jpeg);base64,'))) {
+                                      errorSnackBar(
+                                          'Please select a valid image');
+                                      return;
+                                    }
+                                  }
+                                  // check if base64Image
+                                  final res = await controller.createTeam(
+                                      teamName: _teamNameController.text,
+                                      teamLogo: base64Image);
+                                  if (res) {
+                                    Get.bottomSheet(BottomSheet(
+                                        onClosing: () {},
+                                        builder: (context) {
+                                          return const _TeamAddedDialog();
+                                        }));
+                                  }
+                                  // Get.to(() => const AddPlayersToTeam());
+                                },
+                              )),
+                  ),
+                ],
+              ),
             ),
           ),
         ));

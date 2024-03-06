@@ -20,13 +20,14 @@ class CurrentTournamentCard extends GetView<TournamentController> {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: Obx(() {
-          if (controller.tournamentList.isEmpty) {
+          if (controller.matches.isEmpty) {
             return const NoTournamentCard();
           } else {
             return ListView.builder(
                 itemCount: controller.matches.length,
                 shrinkWrap: true,
-                padding: const EdgeInsets.only(bottom: 20, top: 10),
+                padding:
+                    EdgeInsets.only(bottom: Get.statusBarHeight + 70, top: 10),
                 itemBuilder: (context, snapshot) {
                   return _Card(
                     tournament: controller.matches[snapshot],
@@ -195,6 +196,7 @@ class _Card extends StatelessWidget {
                             ),
                             onClosing: () {},
                           ),
+                          isScrollControlled: true,
                         );
                       },
                       style: ButtonStyle(

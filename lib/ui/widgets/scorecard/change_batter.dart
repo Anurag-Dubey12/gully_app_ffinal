@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/ui/screens/select_opening_players.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/app_logger.dart';
+import 'package:gully_app/utils/utils.dart';
 
 import '../../../data/controller/scoreboard_controller.dart';
 import '../../../data/model/player_model.dart';
@@ -17,14 +18,13 @@ class ChangeBatterWidget extends StatefulWidget {
 }
 
 class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
-  String outType = 'caught';
+  String outType = 'CA';
   String? playerToOut;
-  late PlayerModel selectedBatsman;
+  PlayerModel? selectedBatsman;
   @override
   void initState() {
     super.initState();
-    selectedBatsman =
-        Get.find<ScoreBoardController>().scoreboard.value!.team1.players![0];
+
     playerToOut = Get.find<ScoreBoardController>().scoreboard.value!.striker.id;
   }
 
@@ -33,12 +33,16 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
     final controller = Get.find<ScoreBoardController>();
     final List<PlayerModel> players = [];
     if (controller.scoreboard.value!.currentInnings == 1) {
-      players.addAll(controller.scoreboard.value!.team2.players!);
-    } else {
       players.addAll(controller.scoreboard.value!.team1.players!);
+    } else {
+      players.addAll(controller.scoreboard.value!.team2.players!);
     }
     players.removeWhere(
-        (element) => element.id == controller.scoreboard.value!.bowlerId);
+        (element) => element.id == controller.scoreboard.value!.striker.id);
+    players.removeWhere(
+        (element) => element.id == controller.scoreboard.value!.nonstriker.id);
+
+    players.removeWhere((element) => element.batting!.outType.isNotEmpty);
     return SizedBox(
       width: Get.width,
       child: Padding(
@@ -58,6 +62,19 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                       value: 'CA',
                       groupValue: outType,
                       onChanged: (e) {
+                        if (controller.events.contains(EventType.noBall)) {
+                          errorSnackBar(
+                              'No Ball cannot be selected with  Caught');
+                          return;
+                        }
+                        if (controller.events.contains(EventType.six)) {
+                          errorSnackBar('Six cannot be selected with  Caught');
+                          return;
+                        }
+                        if (controller.events.contains(EventType.four)) {
+                          errorSnackBar('Four cannot be selected with  Caught');
+                          return;
+                        }
                         setState(() {
                           outType = e.toString();
                         });
@@ -87,6 +104,11 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                       value: 'bowled',
                       groupValue: outType,
                       onChanged: (e) {
+                        if (controller.events.contains(EventType.noBall)) {
+                          errorSnackBar(
+                              'No Ball cannot be selected with Bowled');
+                          return;
+                        }
                         setState(() {
                           logger.i(e);
                           outType = e!;
@@ -100,6 +122,11 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                       value: 'ST',
                       groupValue: outType,
                       onChanged: (e) {
+                        if (controller.events.contains(EventType.noBall)) {
+                          errorSnackBar(
+                              'No Ball cannot be selected with Stumped');
+                          return;
+                        }
                         setState(() {
                           logger.i(e);
                           outType = e!;
@@ -121,7 +148,13 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                       groupValue: outType,
                       onChanged: (e) {
                         setState(() {
+                          if (controller.events.contains(EventType.noBall)) {
+                            errorSnackBar(
+                                'No Ball cannot be selected with Leg Before Wicket');
+                            return;
+                          }
                           logger.i(e);
+
                           outType = e!;
                         });
                       },
@@ -133,6 +166,11 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                       value: 'HW',
                       groupValue: outType,
                       onChanged: (e) {
+                        if (controller.events.contains(EventType.noBall)) {
+                          errorSnackBar(
+                              'No Ball cannot be selected with Hit Wicket');
+                          return;
+                        }
                         setState(() {
                           logger.i(e);
                           outType = e!;
@@ -143,7 +181,7 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                   ),
                 ],
               ),
-              const Text('Choose Player',
+              const Text('Choose Player ',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -194,13 +232,17 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                   Get.back();
                 },
                 items: players,
-                selectedValue: selectedBatsman.name,
+                selectedValue: selectedBatsman?.name ?? 'Select Batsman',
                 title: 'Select Batsman',
               ),
               PrimaryButton(
                 onTap: () {
+                  if (selectedBatsman == null) {
+                    errorSnackBar('Please select a batsman');
+                    return;
+                  }
                   Navigator.pop(context, {
-                    'batsmanId': selectedBatsman.id,
+                    'batsmanId': selectedBatsman!.id,
                     'outType': outType,
                     'playerToOut': outType == 'RO' ? playerToOut : null,
                   });

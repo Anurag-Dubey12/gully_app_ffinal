@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/signup_screen.dart';
 import 'package:gully_app/ui/widgets/location_permission_builder.dart';
 
@@ -14,6 +15,7 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
   @override
   void initState() {
     super.initState();
+    Get.put<AuthController>(AuthController(repo: Get.find()));
     Future.delayed(
         const Duration(seconds: 2),
         () => {
@@ -66,11 +68,12 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
                       child: Text(
                         'GULLY\nTEAM',
                         style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 82,
-                            height: 0.8,
-                            fontWeight: FontWeight.w900,
-                            fontStyle: FontStyle.italic),
+                          color: Colors.white,
+                          fontSize: 82,
+                          height: 0.8,
+                          fontFamily: '',
+                          fontWeight: FontWeight.w900,
+                        ),
                       ),
                     ),
                   ),

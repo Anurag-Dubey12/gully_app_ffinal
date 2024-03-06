@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:gully_app/config/api_client.dart';
 import 'package:gully_app/utils/utils.dart';
 
@@ -8,13 +6,11 @@ class ScoreboardApi {
 
   ScoreboardApi({required this.repo});
   Future<ApiResponse> updateScoreBoard(Map<String, dynamic> scoreboard) async {
-    log(scoreboard.toString());
-
     var response = await repo.post(
         '/match/updateScoreBoard/${scoreboard['matchId']}',
         {'scoreBoard': scoreboard});
     if (!response.isOk) {
-      throw response.body['error'] ?? 'Unable to Process Request';
+      throw response.body['message'] ?? 'Unable to Process Request';
     }
     return ApiResponse.fromJson(response.body);
   }

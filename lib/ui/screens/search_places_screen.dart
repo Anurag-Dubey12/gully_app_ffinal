@@ -1,11 +1,20 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
+import 'package:gully_app/utils/app_logger.dart';
+import 'package:gully_app/utils/geo_locator_helper.dart';
+import 'package:gully_app/utils/utils.dart';
 
 class SearchPlacesScreen extends StatefulWidget {
   final Function(Prediction)? onSelected;
-  const SearchPlacesScreen({Key? key, this.title, this.onSelected})
+  final bool? showSelectCurrentLocation;
+  const SearchPlacesScreen(
+      {Key? key,
+      this.title,
+      this.onSelected,
+      this.showSelectCurrentLocation = false})
       : super(key: key);
 
   final String? title;
@@ -28,6 +37,23 @@ class SearchPlacesScreenState extends State<SearchPlacesScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
+            (widget.showSelectCurrentLocation ?? false)
+                ? CupertinoListTile(
+                    leading: const Icon(Icons.location_on, color: Colors.blue),
+                    title: const Text('Use current location',
+                        style: TextStyle(color: Colors.blue, fontSize: 16)),
+                    onTap: () async {
+                      final postion = await determinePosition();
+                      final address = await getAddressFromLatLng(
+                          postion.latitude, postion.longitude);
+                      widget.onSelected?.call(Prediction(
+                          description: address,
+                          lat: postion.latitude.toString(),
+                          lng: postion.longitude.toString()));
+                      Get.back();
+                    },
+                  )
+                : const SizedBox(),
             const SizedBox(height: 20),
             placesAutoCompleteTextField(),
           ],
@@ -51,37 +77,39 @@ class SearchPlacesScreenState extends State<SearchPlacesScreen> {
         textStyle: const TextStyle(color: Colors.black, fontSize: 16),
         debounceTime: 400,
         countries: const ["in", "fr"],
-        isLatLngRequired: false,
-        getPlaceDetailWithLatLng: (Prediction prediction) {},
+        isLatLngRequired: true,
+
+        getPlaceDetailWithLatLng: (Prediction prediction) {
+          logger.d("Selected Place: ${prediction.toJson()}");
+          widget.onSelected?.call(prediction);
+        },
 
         itemClick: (Prediction prediction) {
+          logger.d("Selected Place: ${prediction.toJson()}");
           controller.text = prediction.description ?? "";
-          Get.back();
+          widget.onSelected?.call(prediction);
           controller.selection = TextSelection.fromPosition(
               TextPosition(offset: prediction.description?.length ?? 0));
+          if (widget.showSelectCurrentLocation ?? false) Get.back();
         },
         seperatedBuilder: const Divider(),
         // OPTIONAL// If you want to customize list view item builder
         itemBuilder: (context, index, Prediction prediction) {
-          return InkWell(
-            onTap: () {
-              controller.text = prediction.description ?? "";
-              Get.back();
-              controller.selection = TextSelection.fromPosition(
-                  TextPosition(offset: prediction.description?.length ?? 0));
-              widget.onSelected?.call(prediction);
-            },
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  const Icon(Icons.location_on),
-                  const SizedBox(
-                    width: 7,
-                  ),
-                  Expanded(child: Text(prediction.description ?? ""))
-                ],
-              ),
+          //  controller.text = prediction.description ?? "";
+          //   Get.back();
+          //   controller.selection = TextSelection.fromPosition(
+          //       TextPosition(offset: prediction.description?.length ?? 0));
+          //   widget.onSelected?.call(prediction);
+          return Container(
+            padding: const EdgeInsets.all(10),
+            child: Row(
+              children: [
+                const Icon(Icons.location_on),
+                const SizedBox(
+                  width: 7,
+                ),
+                Expanded(child: Text(prediction.description ?? ""))
+              ],
             ),
           );
         },

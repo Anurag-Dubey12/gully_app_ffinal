@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/ui/theme/theme.dart';
 
 import '../../../data/controller/scoreboard_controller.dart';
 
@@ -29,7 +30,7 @@ class CurrentOverStats extends GetView<ScoreBoardController> {
                     Expanded(
                         flex: 3,
                         child: SizedBox(
-                          height: 50,
+                          height: 54,
                           child: ListView.separated(
                               shrinkWrap: true,
                               separatorBuilder: (context, index) =>
@@ -42,22 +43,47 @@ class CurrentOverStats extends GetView<ScoreBoardController> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                        controller.scoreboard.value!
-                                                .currentOverHistory[index]?.run
-                                                .toString() ??
-                                            '',
-                                        style: Get.textTheme.labelMedium
-                                            ?.copyWith(
-                                                color: controller
-                                                            .scoreboard
-                                                            .value!
-                                                            .currentOverHistory[
-                                                                index]
-                                                            ?.run ==
-                                                        0
-                                                    ? Colors.red
-                                                    : Colors.black)),
+                                    Container(
+                                      width: 24,
+                                      height: 24,
+                                      decoration: BoxDecoration(
+                                        border: controller
+                                                    .scoreboard
+                                                    .value!
+                                                    .currentOverHistory[index]
+                                                    ?.run ==
+                                                null
+                                            ? null
+                                            : Border.all(
+                                                color: AppTheme
+                                                    .secondaryYellowColor,
+                                                width: 1),
+                                        borderRadius:
+                                            BorderRadius.circular(1000),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                            controller
+                                                    .scoreboard
+                                                    .value!
+                                                    .currentOverHistory[index]
+                                                    ?.run
+                                                    .toString() ??
+                                                '',
+                                            style: Get.textTheme.labelMedium
+                                                ?.copyWith(
+                                                    color: controller
+                                                                .scoreboard
+                                                                .value!
+                                                                .currentOverHistory[
+                                                                    index]
+                                                                ?.run ==
+                                                            0
+                                                        ? Colors.red
+                                                        : Colors.black)),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,

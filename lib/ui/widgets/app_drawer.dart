@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/config/preferences.dart';
@@ -13,7 +14,6 @@ import '../screens/looking_for_screen.dart';
 import '../screens/organizer_profile.dart';
 import '../screens/others_looking_for.dart';
 import '../screens/player_ranking_screen.dart';
-import '../screens/rate_us.dart';
 import '../screens/team_ranking_screen.dart';
 import '../screens/top_performers.dart';
 import 'home_screen/drawer_card.dart';
@@ -261,13 +261,13 @@ class AppDrawer extends GetView<AuthController> {
                   },
                   icon: Icons.question_answer,
                 ),
-                DrawerCard(
-                  title: 'Rate us',
-                  onTap: () {
-                    Get.to(() => const RateUsScreen());
-                  },
-                  icon: Icons.rate_review,
-                ),
+                // DrawerCard(
+                //   title: 'Rate us',
+                //   onTap: () {
+                //     Get.to(() => const RateUsScreen());
+                //   },
+                //   icon: Icons.rate_review,
+                // ),
                 DrawerCard(
                   title: 'Disclaimer',
                   onTap: () {
@@ -283,8 +283,11 @@ class AppDrawer extends GetView<AuthController> {
                   onTap: () {
                     final controller = Get.find<Preferences>();
                     controller.clear();
-                    Get.offAll(() => const SplashScreen());
-                    // Get.to(() => const LegalViewScreen());
+
+                    FirebaseAuth.instance.signOut();
+                    Future.delayed(const Duration(milliseconds: 300), () {
+                      Get.offAll(() => const SplashScreen());
+                    });
                   },
                   icon: Icons.logout,
                 ),

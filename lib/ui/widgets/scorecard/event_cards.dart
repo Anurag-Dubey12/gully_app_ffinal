@@ -5,6 +5,7 @@ import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/ui/widgets/scorecard/change_bowler.dart';
 import 'package:gully_app/utils/app_logger.dart';
+import 'package:gully_app/utils/utils.dart';
 
 import '../../../data/controller/scoreboard_controller.dart';
 import 'scorecard_dialogs.dart';
@@ -22,6 +23,7 @@ class PartnershipDialog extends GetView<ScoreBoardController> {
             borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(10), topRight: Radius.circular(10))),
         width: Get.width,
+        height: Get.height * 0.6,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,96 +40,103 @@ class PartnershipDialog extends GetView<ScoreBoardController> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 10),
-                  const Text('Partnership',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w900)),
-                  const SizedBox(height: 10),
-                  ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: partnerships.values.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: SizedBox(
-                            width: Get.width,
-                            // height: 140,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Expanded(
-                                    flex: 2,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+            SizedBox(
+              height: Get.height * 0.5,
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 10),
+                    const Text('Partnership',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w900)),
+                    const SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: partnerships.values.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: SizedBox(
+                                width: Get.width,
+                                // height: 140,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                        flex: 2,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(partnerships.values
+                                                .elementAt(index)
+                                                .player1
+                                                .name),
+                                            const SizedBox(height: 10),
+                                            Text(partnerships.values
+                                                .elementAt(index)
+                                                .player1
+                                                .batting!
+                                                .runs
+                                                .toString())
+                                          ],
+                                        )),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                        child: Column(
                                       children: [
-                                        Text(partnerships.values
-                                            .elementAt(index)
-                                            .player1
-                                            .name),
-                                        const SizedBox(height: 10),
-                                        Text(partnerships.values
-                                            .elementAt(index)
-                                            .player1
-                                            .batting!
-                                            .runs
-                                            .toString())
+                                        Text(
+                                            '(${partnerships.values.elementAt(index).runs})',
+                                            style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w900,
+                                                color: Colors.green)),
+                                        Text(
+                                            '${partnerships.values.elementAt(index).balls} balls',
+                                            style: const TextStyle(
+                                              fontSize: 13,
+                                            )),
                                       ],
                                     )),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                    child: Column(
-                                  children: [
-                                    Text(
-                                        '(${partnerships.values.elementAt(index).runs})',
-                                        style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w900,
-                                            color: Colors.green)),
-                                    Text(
-                                        '${partnerships.values.elementAt(index).balls} balls',
-                                        style: const TextStyle(
-                                          fontSize: 13,
+                                    Expanded(
+                                        flex: 2,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            Text(partnerships.values
+                                                .elementAt(index)
+                                                .player2
+                                                .name),
+                                            Text(partnerships.values
+                                                .elementAt(index)
+                                                .player2
+                                                .batting!
+                                                .runs
+                                                .toString()),
+                                            const SizedBox(height: 10),
+                                          ],
                                         )),
                                   ],
-                                )),
-                                Expanded(
-                                    flex: 2,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text(partnerships.values
-                                            .elementAt(index)
-                                            .player2
-                                            .name),
-                                        Text(partnerships.values
-                                            .elementAt(index)
-                                            .player2
-                                            .batting!
-                                            .runs
-                                            .toString()),
-                                        const SizedBox(height: 10),
-                                      ],
-                                    )),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
-                  const SizedBox(height: 30),
-                  PrimaryButton(
-                    onTap: () {},
-                    title: 'Done',
-                  )
-                ],
+                                ),
+                              ),
+                            );
+                          }),
+                    ),
+                    const SizedBox(height: 30),
+                    PrimaryButton(
+                      onTap: () {
+                        Get.back();
+                      },
+                      title: 'Done',
+                    )
+                  ],
+                ),
               ),
             ),
           ],
@@ -179,7 +188,9 @@ class ExtrasDialog extends GetView<ScoreBoardController> {
                       '${extraModel.byes}B, ${extraModel.legByes}L, ${extraModel.noBalls}N, ${extraModel.penalty}P, ${extraModel.wides}WD, '),
                   const SizedBox(height: 30),
                   PrimaryButton(
-                    onTap: () {},
+                    onTap: () {
+                      Get.back();
+                    },
                     title: 'Done',
                   )
                 ],
@@ -260,7 +271,7 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                     eventType: EventType.bye,
                   ),
                   _EventWidget(
-                    title: 'Leg bes',
+                    title: 'Leg byes',
                     eventType: EventType.legByes,
                   ),
                 ],
@@ -272,56 +283,129 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                     title: 'Wicket',
                     eventType: EventType.wicket,
                   ),
+                  // SizedBox(
+                  //     // width: 100,
+                  //     height: 30,
+                  //     child: TextButton(
+                  //         style: ButtonStyle(
+                  //             backgroundColor: MaterialStateProperty.all(
+                  //                 AppTheme.primaryColor),
+                  //             padding: MaterialStateProperty.all(
+                  //                 const EdgeInsets.all(3))),
+                  //         onPressed: () {
+                  //           controller.addEvent(EventType.changeStriker);
+                  //         },
+                  //         child: const Text('Wicket',
+                  //             style: TextStyle(
+                  //                 color: Colors.white,
+                  //                 fontSize: 10,
+                  //                 fontWeight: FontWeight.w500)))),
                   SizedBox(
                       // width: 100,
-                      height: 40,
+                      height: 30,
                       child: TextButton(
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                AppTheme.primaryColor),
-                          ),
+                              backgroundColor: MaterialStateProperty.all(
+                                  AppTheme.primaryColor),
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.all(4))),
                           onPressed: () {
+                            if ((controller
+                                    .scoreboard.value?.isSecondInningsOver ??
+                                false)) {
+                              errorSnackBar('Match Over');
+                              return;
+                            }
+                            if ((controller
+                                    .scoreboard.value?.inningsCompleted ??
+                                false)) {
+                              errorSnackBar('Innings Completed');
+                              return;
+                            }
                             Get.bottomSheet(const RetirePlayerDialog());
                           },
                           child: const Text('Retire',
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 12,
+                                  fontSize: 10,
                                   fontWeight: FontWeight.w500)))),
-                  const SizedBox(width: 10),
+
                   SizedBox(
                       // width: 100,
-                      height: 40,
+                      height: 30,
                       child: TextButton(
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                AppTheme.primaryColor),
-                          ),
+                              backgroundColor: MaterialStateProperty.all(
+                                  AppTheme.primaryColor),
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.all(7))),
                           onPressed: () {
                             controller.addEvent(EventType.changeStriker);
                           },
                           child: const Text('Swap Batsman',
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 12,
+                                  fontSize: 10,
                                   fontWeight: FontWeight.w500)))),
                   SizedBox(
-                      // width: 120,
-                      height: 40,
-                      child: IconButton(
+                      // width: 100,
+                      height: 30,
+                      child: TextButton(
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(
+                                  AppTheme.primaryColor),
+                              padding: MaterialStateProperty.all(
+                                  const EdgeInsets.all(7))),
                           onPressed: () {
-                            // if (!(controller.scoreboard.value?.overCompleted ??
-                            //     false)) {
-                            //   errorSnackBar('Please complete the over first');
-                            //   return;
-                            // }
+                            if ((controller
+                                    .scoreboard.value?.isSecondInningsOver ??
+                                false)) {
+                              errorSnackBar('Match Over');
+                              return;
+                            }
+                            if ((controller
+                                    .scoreboard.value?.inningsCompleted ??
+                                false)) {
+                              errorSnackBar('Innings Completed');
+                              return;
+                            }
+
                             showModalBottomSheet(
                                 context: Get.context!,
                                 builder: (c) => const ChangeBowlerWidget(),
                                 enableDrag: true,
                                 isDismissible: true);
                           },
-                          icon: Image.asset('assets/images/change.png'))),
+                          child: const Text('Change Bowler',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500)))),
+                  // SizedBox(
+                  //     // width: 120,
+                  //     height: 40,
+                  //     child: IconButton(
+                  //         onPressed: () {
+                  // if ((controller
+                  //         .scoreboard.value?.isSecondInningsOver ??
+                  //     false)) {
+                  //   errorSnackBar('Match Over');
+                  //   return;
+                  // }
+                  // if ((controller
+                  //         .scoreboard.value?.inningsCompleted ??
+                  //     false)) {
+                  //   errorSnackBar('Innings Completed');
+                  //   return;
+                  // }
+
+                  // showModalBottomSheet(
+                  //     context: Get.context!,
+                  //     builder: (c) => const ChangeBowlerWidget(),
+                  //     enableDrag: true,
+                  //     isDismissible: true);
+                  //         },
+                  //         icon: Image.asset('assets/images/change.png'))),
                 ],
               ),
             ]),
@@ -366,7 +450,7 @@ class _EventWidget extends GetView<ScoreBoardController> {
               style: Get.textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w400,
                   color: Colors.black,
-                  fontSize: 12 * Get.textScaleFactor)),
+                  fontSize: 10 * Get.textScaleFactor)),
         ],
       ),
     );

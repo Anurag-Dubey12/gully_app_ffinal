@@ -9,6 +9,7 @@ part of 'scoreboard_model.dart';
 ScoreboardModel _$ScoreboardModelFromJson(Map<String, dynamic> json) =>
     ScoreboardModel(
       team1: TeamModel.fromJson(json['team1'] as Map<String, dynamic>),
+      currentInnings: json['currentInnings'] as int,
       team2: TeamModel.fromJson(json['team2'] as Map<String, dynamic>),
       matchId: json['matchId'] as String,
       tossWonBy: json['tossWonBy'] as String,
@@ -46,7 +47,6 @@ ScoreboardModel _$ScoreboardModelFromJson(Map<String, dynamic> json) =>
       ..ballsToBowl = json['ballsToBowl'] as int
       ..currentOver = json['currentOver'] as int
       ..currentBall = json['currentBall'] as int
-      ..currentInnings = json['currentInnings'] as int
       ..currentInningsScore = json['currentInningsScore'] as int;
 
 // ignore: unused_element

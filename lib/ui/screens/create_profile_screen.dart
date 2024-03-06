@@ -162,6 +162,14 @@ class _CreateProfileState extends State<CreateProfile>
                                         RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
                                       return 'Name cannot contain special characters';
                                     }
+                                    if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
+                                      return 'Name cannot contain emojis';
+                                    }
+                                    // prevent special characters
+                                    if (e.contains(RegExp(
+                                        r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]'))) {
+                                      return 'Name cannot contain special characters & numbers';
+                                    }
                                     return null;
                                   },
                                 ),

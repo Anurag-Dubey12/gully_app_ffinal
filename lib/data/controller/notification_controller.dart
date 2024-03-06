@@ -1,4 +1,3 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/config/preferences.dart';
@@ -16,7 +15,7 @@ class NotificationController extends GetxController {
     super.onInit();
     logger.i("NotificationController onInit");
     getNotifications();
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
     messaging.requestPermission(
       alert: true,
       announcement: false,
@@ -50,13 +49,6 @@ class NotificationController extends GetxController {
       notifications.refresh();
       preferences.setNotifications(notifications);
     });
-  }
-
-  Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-    await Firebase.initializeApp();
-
-    logger.i("Handling a background message: ${message.messageId}");
   }
 
   Future<void> removeNotification(NotificationModel notification) async {

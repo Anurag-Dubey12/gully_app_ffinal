@@ -35,7 +35,7 @@ class AuthApi {
       'base64Image': base64,
     });
     if (response.statusCode != 200) {
-      throw Exception(response.body['message'] ?? 'Unable to Process Request');
+      throw response.body['message'] ?? 'Unable to Process Request';
     }
     return ApiResponse.fromJson(response.body);
   }

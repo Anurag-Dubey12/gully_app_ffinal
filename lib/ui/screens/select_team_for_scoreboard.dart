@@ -5,7 +5,6 @@ import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
 import 'package:gully_app/ui/screens/score_card_screen.dart';
 import 'package:gully_app/ui/screens/select_opening_team.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 
 import '../../data/model/matchup_model.dart';
@@ -73,20 +72,32 @@ class SelectTeamForScoreBoard extends GetView<TournamentController> {
                   Expanded(
                     child: FutureBuilder(
                         future: controller.getMatchup(controller.state!.id),
-                        builder: (context, snapshot) => ListView.separated(
-                              itemCount: snapshot.data?.length ?? 0,
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(
-                                height: 10,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text('Error: ${snapshot.error}'),
+                            );
+                          }
+                          return ListView.separated(
+                            itemCount: snapshot.data?.length ?? 0,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(
+                              height: 10,
+                            ),
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) => Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: _MatchupCard(
+                                matchup: snapshot.data![index],
                               ),
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) => Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: _MatchupCard(
-                                  matchup: snapshot.data![index],
-                                ),
-                              ),
-                            )),
+                            ),
+                          );
+                        }),
                   ),
                 ],
               ),
@@ -108,7 +119,6 @@ class _MatchupCard extends GetView<ScoreBoardController> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        logger.e(matchup.id);
         if (matchup.scoreBoard != null) {
           controller
               .setScoreBoard(ScoreboardModel.fromJson(matchup.scoreBoard!));

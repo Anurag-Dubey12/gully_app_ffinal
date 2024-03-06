@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
@@ -26,17 +27,20 @@ import '/data/controller/tournament_controller.dart';
 import '/ui/screens/splash_screen.dart';
 import '/ui/theme/theme.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // await Firebase.initializeApp();
+
+  logger.i("Handling a background message: ${message.messageId}");
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await GetStorage.init();
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+  await GetStorage.init();
   HttpOverrides.global = MyHttpOverrides();
-  FlutterError.onError = (FlutterErrorDetails details) {
-    logger.e(
-      details.exceptionAsString(),
-    );
-    FlutterError.dumpErrorToConsole(details);
-  };
+
   await DefaultCacheManager().emptyCache();
 
   runApp(const MyApp());

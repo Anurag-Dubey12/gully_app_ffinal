@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:gully_app/ui/screens/player_profile_screen.dart';
 import 'package:gully_app/ui/screens/search_places_screen.dart';
 import 'package:gully_app/ui/widgets/custom_text_field.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
@@ -15,7 +14,9 @@ import '../theme/theme.dart';
 
 class SelectLocationScreen extends StatefulWidget {
   final Function(String address) onSelected;
-  const SelectLocationScreen({super.key, required this.onSelected});
+  final LatLng? initialLocation;
+  const SelectLocationScreen(
+      {super.key, required this.onSelected, this.initialLocation});
 
   @override
   State<SelectLocationScreen> createState() => _SelectLocationScreenState();
@@ -25,17 +26,38 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
-  static const CameraPosition _kGooglePlex = CameraPosition(
+  CameraPosition _kGooglePlex = const CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
     zoom: 14.4746,
   );
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    // post frame callback
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      getLocation().then((value) {
+        _kGooglePlex = CameraPosition(
+          target:
+              widget.initialLocation ?? LatLng(value.latitude, value.longitude),
+          zoom: 14.4746,
+        );
+      });
+    });
+  }
+
+  bool isLoading = true;
+  getLocation() async {
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    return position;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () {
-        return Future.value(false);
-      },
+    return PopScope(
+      canPop: false,
       child: PopScope(
         canPop: false,
         child: GradientBuilder(
@@ -82,19 +104,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                   },
                                 );
                               });
-                          // final d = await Get.bottomSheet(
-                          //   BottomSheet(
-                          //     backgroundColor: const Color(0xffEBEBEB),
-                          //     enableDrag: false,
-                          //     builder: (context) => _AddPlayerDialog(
-                          //         // teamId: widget.teamId,
-                          //         ),
-                          //     onClosing: () {
-                          //       setState(() {});
-                          //     },
-                          //   ),
-                          // );
-                          // logger.f("Calling NOWOWOWOWOWOWOWOWOOWWO $d");
+
                           setState(() {});
                         },
                         title: 'Add Manually',
@@ -151,31 +161,29 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                             ),
                             Padding(
                               padding: const EdgeInsets.all(18.0),
-                              child: InkWell(
-                                onTap: () {
-                                  Get.to(() => const PlayerProfileScreen());
-                                },
-                                child: SizedBox(
-                                  width: Get.width,
-                                  height: Get.height * 0.2,
-                                  // color: Colors.grey[200],
-                                  child: GoogleMap(
-                                    mapType: MapType.hybrid,
-                                    fortyFiveDegreeImageryEnabled: false,
-                                    initialCameraPosition: _kGooglePlex,
-                                    onMapCreated:
-                                        (GoogleMapController controller) async {
-                                      _controller.complete(controller);
-                                      Position position =
-                                          await Geolocator.getCurrentPosition(
-                                              desiredAccuracy:
-                                                  LocationAccuracy.high);
-                                      controller.animateCamera(
-                                          CameraUpdate.newLatLng(LatLng(
-                                              position.latitude,
-                                              position.longitude)));
-                                    },
-                                  ),
+                              child: SizedBox(
+                                width: Get.width,
+                                height: Get.height * 0.2,
+                                // color: Colors.grey[200],
+                                child: GoogleMap(
+                                  mapType: MapType.hybrid,
+                                  fortyFiveDegreeImageryEnabled: false,
+                                  initialCameraPosition: _kGooglePlex,
+                                  onMapCreated:
+                                      (GoogleMapController controller) async {
+                                    _controller.complete(controller);
+                                    Position position =
+                                        await Geolocator.getCurrentPosition(
+                                            desiredAccuracy:
+                                                LocationAccuracy.high);
+                                    controller.animateCamera(
+                                        CameraUpdate.newLatLng(LatLng(
+                                            position.latitude,
+                                            position.longitude)));
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                  },
                                 ),
                               ),
                             ),

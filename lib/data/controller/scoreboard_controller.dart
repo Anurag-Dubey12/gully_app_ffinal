@@ -14,6 +14,7 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 class ScoreBoardController extends GetxController with StateMixin {
   final ScoreboardApi _scoreboardApi;
   final Rx<ScoreboardModel?> scoreboard = Rx<ScoreboardModel?>(null);
+
   late ScoreboardModel _lastScoreboardInstance;
   Rx<io.Socket?> socket = Rx(null);
 
@@ -34,9 +35,17 @@ class ScoreBoardController extends GetxController with StateMixin {
       });
       logger.d('socket $socket');
       socket.value?.onConnectError((data) => logger.e(data));
-      socket.value!.on('scoreboard', (data) => {logger.e('NEW DATA $data')});
+      socket.value!.on('scoreboard', (data) {
+        logger.i('Scoreboard updated to channel $data');
+        if (data != null) {
+          logger.f('41');
+          scoreboard.value = ScoreboardModel.fromJson(data['scoreBoard']);
+          logger.f('Innings ${scoreboard.value?.lastBall.run}');
+          scoreboard.refresh();
+        }
+      });
       socket.value?.onConnect((_) {
-        logger.d('connect');
+        logger.d('connect ${scoreboard.value?.matchId}');
         socket.value?.emit('joinRoom', {
           'matchId': scoreboard.value?.matchId,
         });
@@ -64,13 +73,13 @@ class ScoreBoardController extends GetxController with StateMixin {
     socket.refresh();
   }
 
-  Future<ScoreboardModel> getMatchScoreboard(String matchId) async {
+  Future<ScoreboardModel?> getMatchScoreboard(String matchId) async {
     final response = await _scoreboardApi.getSingleMatchup(matchId);
     try {
       return ScoreboardModel.fromJson(response.data!['match']['scoreBoard']);
     } catch (e) {
-      logger.e(e);
-      throw Exception('Unable to fetch Scoreboard');
+      logger.e('ScoreboardController::getMatchScoreboard $e');
+      return null;
     }
   }
 
@@ -84,13 +93,15 @@ class ScoreBoardController extends GetxController with StateMixin {
       required String tossWonBy,
       required String electedTo,
       required int overs,
-      required ExtraModel extras}) {
+      required ExtraModel extras,
+      bool shouldUpdate = true}) {
     // Create sample ScoreboardModel
 
     scoreboard.value = ScoreboardModel(
         team1: team1,
         team2: team2,
-        overCompleted: true,
+        currentInnings: 1,
+        overCompleted: false,
         matchId: matchId,
         tossWonBy: tossWonBy,
         electedTo: electedTo,
@@ -104,8 +115,9 @@ class ScoreBoardController extends GetxController with StateMixin {
         partnerships: {});
     // logger.i(scoreboard.value!.toJson());
     _lastScoreboardInstance = scoreboard.value!;
-
-    _scoreboardApi.updateScoreBoard(scoreboard.value!.toJson());
+    if (shouldUpdate) {
+      _scoreboardApi.updateScoreBoard(scoreboard.value!.toJson());
+    }
   }
 
   void setScoreBoard(ScoreboardModel scoreBoard) {
@@ -113,7 +125,7 @@ class ScoreBoardController extends GetxController with StateMixin {
     _lastScoreboardInstance = scoreboard.value!;
   }
 
-  void addEvent(
+  Future<bool> addEvent(
     EventType type, {
     String? bowlerId,
     String? strikerId,
@@ -123,24 +135,34 @@ class ScoreBoardController extends GetxController with StateMixin {
     PlayerModel? nonStriker,
     PlayerModel? bowler,
   }) async {
+    if (scoreboard.value?.isAllOut ?? false) {
+      errorSnackBar('All out');
+      return false;
+    }
+    if (scoreboard.value?.isSecondInningsOver ?? false) {
+      errorSnackBar('Match Over');
+      return false;
+    }
     if ((scoreboard.value?.overCompleted ?? true) &&
         type != EventType.changeBowler) {
       errorSnackBar('Please select a bowler');
-      return;
+      return false;
     }
-    if (scoreboard.value?.currentOver == scoreboard.value?.totalOvers &&
-        type != EventType.changeBowler) {
-      errorSnackBar('Match Overs Completed');
-      return;
+    if (scoreboard.value?.inningsCompleted ?? false) {
+      errorSnackBar('Innings Completed');
+
+      return false;
     }
-    logger.i('addEvent $type');
+
     _lastScoreboardInstance =
         ScoreboardModel.fromJson(scoreboard.value!.toJson());
 
     switch (type) {
       case EventType.four:
-        await scoreboard.value!
-            .addRuns(4, events: [...events.value, EventType.four]);
+        await scoreboard.value!.addRuns(
+          4,
+          events: [...events.value, EventType.four],
+        );
 
         break;
       case EventType.six:
@@ -169,10 +191,13 @@ class ScoreBoardController extends GetxController with StateMixin {
 
         break;
       case EventType.changeBowler:
-        logger.i(bowlerId!);
-        scoreboard.value!.changeBowler(bowlerId);
+        logger.i('changeBowler $bowlerId');
+        // if (scoreboard.value?.currentOverHistory.last == null) {
+        //   undoLastEvent();
+        // }
+        logger.i('changeBowler $bowlerId');
+        scoreboard.value!.changeBowler(bowlerId!);
 
-        // changeBowler();
         break;
       case EventType.changeStriker:
         scoreboard.value!.changeStrike();
@@ -181,9 +206,9 @@ class ScoreBoardController extends GetxController with StateMixin {
         scoreboard.value!.retirePlayer(selectedBatsmanId!, playerToRetire!);
       case EventType.eoi:
         scoreboard.value!.endOfInnings(
-          striker: striker!,
-          nonstriker: nonStriker!,
-          bowler: bowler!,
+          strikerT: striker!,
+          nonstrikerT: nonStriker!,
+          bowlerT: bowler!,
         );
 
         break;
@@ -194,6 +219,21 @@ class ScoreBoardController extends GetxController with StateMixin {
     _scoreboardApi.updateScoreBoard(scoreboard.value!.toJson());
     events.value = [];
     events.refresh();
+    emitEvent();
+    scoreboard.refresh();
+    return true;
+  }
+
+  void endOfInnings(
+      {required PlayerModel striker,
+      required PlayerModel nonStriker,
+      required PlayerModel bowler}) {
+    scoreboard.value!.endOfInnings(
+      strikerT: striker,
+      nonstrikerT: nonStriker,
+      bowlerT: bowler,
+    );
+    _scoreboardApi.updateScoreBoard(scoreboard.value!.toJson());
     emitEvent();
     scoreboard.refresh();
   }
@@ -217,6 +257,20 @@ class ScoreBoardController extends GetxController with StateMixin {
   }
 
   void addEventType(EventType type) {
+    // if events contains wide ball and new event is no ball then remove wide ball
+    if (type == EventType.noBall && events.value.contains(EventType.wide)) {
+      events.value.remove(EventType.wide);
+    }
+    if (type == EventType.wide && events.value.contains(EventType.noBall)) {
+      events.value.remove(EventType.noBall);
+    }
+    // same for legByes and byes
+    if (type == EventType.legByes && events.value.contains(EventType.bye)) {
+      events.value.remove(EventType.bye);
+    }
+    if (type == EventType.bye && events.value.contains(EventType.legByes)) {
+      events.value.remove(EventType.legByes);
+    }
     events.value.add(type);
     events.refresh();
   }

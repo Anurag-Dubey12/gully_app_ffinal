@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/ui/screens/select_opening_players.dart';
+import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../primary_button.dart';
@@ -128,11 +129,11 @@ class _EndOfIningsDialogState extends State<EndOfIningsDialog> {
                         errorSnackBar('Please select opening bowler');
                         return;
                       }
-                      controller.addEvent(
-                        EventType.eoi,
-                        striker: striker,
-                        nonStriker: nonStriker,
-                        bowler: openingBowler,
+                      logger.i('Striker: ${striker!.name}');
+                      controller.endOfInnings(
+                        striker: striker!,
+                        nonStriker: nonStriker!,
+                        bowler: openingBowler!,
                       );
 
                       Get.back();
@@ -163,6 +164,18 @@ class _RetirePlayerDialogState extends State<RetirePlayerDialog> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ScoreBoardController>();
+    final List<PlayerModel> players = [];
+    if (controller.scoreboard.value!.currentInnings == 1) {
+      players.addAll(controller.scoreboard.value!.team1.players!);
+    } else {
+      players.addAll(controller.scoreboard.value!.team2.players!);
+    }
+    players.removeWhere(
+        (element) => element.id == controller.scoreboard.value!.striker.id);
+    players.removeWhere(
+        (element) => element.id == controller.scoreboard.value!.nonstriker.id);
+
+    players.removeWhere((element) => element.batting!.outType.isNotEmpty);
     return Container(
         decoration: const BoxDecoration(
             color: Color.fromARGB(255, 233, 229, 229),
@@ -264,9 +277,8 @@ class _RetirePlayerDialogState extends State<RetirePlayerDialog> {
                           newPlayer = newValue!;
                         });
                       },
-                      items: controller.scoreboard.value!.team1.players!
-                          .map<DropdownMenuItem<PlayerModel?>>(
-                              (PlayerModel value) {
+                      items: players.map<DropdownMenuItem<PlayerModel?>>(
+                          (PlayerModel value) {
                         return DropdownMenuItem<PlayerModel?>(
                           value: value,
                           child: Text(value.name,
@@ -277,17 +289,19 @@ class _RetirePlayerDialogState extends State<RetirePlayerDialog> {
                   ),
                   const SizedBox(height: 30),
                   PrimaryButton(
-                    onTap: () {
+                    onTap: () async {
                       if (playerToRetire == null || newPlayer == null) {
                         errorSnackBar(
                             'Please select player to retire and new player to replace');
                         return;
                       }
 
-                      controller.addEvent(EventType.retire,
+                      bool res = await controller.addEvent(EventType.retire,
                           playerToRetire: playerToRetire,
                           selectedBatsmanId: newPlayer!.id);
-                      Get.back();
+                      if (res) {
+                        Get.back();
+                      }
                     },
                     title: 'Done',
                   )

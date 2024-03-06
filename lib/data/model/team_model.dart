@@ -7,8 +7,8 @@ part 'team_model.g.dart';
 class TeamModel {
   @JsonKey(name: 'teamName')
   final String name;
-  @JsonKey(name: 'teamLogo')
-  final String logo;
+  @JsonKey(name: 'teamLogo', disallowNullValue: false)
+  final String? logo;
   @JsonKey(name: '_id')
   final String id;
   @JsonKey(disallowNullValue: false)

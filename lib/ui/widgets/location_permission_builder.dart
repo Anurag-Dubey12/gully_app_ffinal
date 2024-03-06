@@ -25,6 +25,10 @@ class LocationStreamHandlerState extends State<LocationStreamHandler> {
     Geolocator.getServiceStatusStream().listen((event) {
       logger.i(event);
       checkLocationPermission();
+    }, onDone: () {
+      logger.i('Done');
+    }, onError: (e) {
+      logger.e('Error $e');
     });
   }
 
@@ -58,7 +62,11 @@ class LocationStreamHandlerState extends State<LocationStreamHandler> {
       builder: (context, snapshot) {
         if (snapshot.data == false) {
           // Location permission denied, navigate to a different page
-          return const PermissionDeniedPage();
+          return PermissionDeniedPage(
+            onGrantPermission: () {
+              checkLocationPermission();
+            },
+          );
         } else {
           // Location permission granted, continue with your main content
           return widget.child;
@@ -74,24 +82,56 @@ class LocationStreamHandlerState extends State<LocationStreamHandler> {
   }
 }
 
-class MainPage extends StatelessWidget {
-  const MainPage({super.key});
+class PermissionDeniedPage extends StatefulWidget {
+  final Function onGrantPermission;
+  const PermissionDeniedPage({super.key, required this.onGrantPermission});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Main Page'),
-      ),
-      body: const Center(
-        child: Text('Your main content goes here'),
-      ),
-    );
-  }
+  State<PermissionDeniedPage> createState() => _PermissionDeniedPageState();
 }
 
-class PermissionDeniedPage extends StatelessWidget {
-  const PermissionDeniedPage({super.key});
+class _PermissionDeniedPageState extends State<PermissionDeniedPage> {
+  Geolocator location = Geolocator();
+  final StreamController<bool> _locationPermissionController =
+      StreamController<bool>();
+
+  @override
+  void initState() {
+    super.initState();
+    checkLocationPermission();
+    Geolocator.getServiceStatusStream().listen((event) {
+      logger.i(event);
+      print('$event');
+      checkLocationPermission();
+    }, onDone: () {
+      print('DONE 107');
+      logger.i('Done');
+    }, onError: (e) {
+      logger.e('Error $e');
+    });
+  }
+
+  void checkLocationPermission() async {
+    LocationPermission serviceEnabled = await Geolocator.checkPermission();
+    logger.i(serviceEnabled);
+    if (serviceEnabled == LocationPermission.denied) {
+      serviceEnabled = await Geolocator.requestPermission();
+      if (serviceEnabled == LocationPermission.denied ||
+          serviceEnabled == LocationPermission.deniedForever) {
+        // Service still not enabled, handle accordingly
+        _locationPermissionController.add(false);
+        return;
+      }
+    }
+
+    LocationPermission permissionStatus = await Geolocator.checkPermission();
+    if (permissionStatus == LocationPermission.deniedForever ||
+        permissionStatus == LocationPermission.denied) {
+      _locationPermissionController.add(false);
+    } else {
+      widget.onGrantPermission();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,15 +163,28 @@ class PermissionDeniedPage extends StatelessWidget {
                       await Geolocator.checkPermission();
                   if (permissionStatus == LocationPermission.deniedForever) {
                     // Location permission denied, handle accordingly
+                    logger.d(' 119 Opening location settings');
                     Geolocator.openLocationSettings();
+
+                    return;
                   } else {
                     final serviceEnabled = await Geolocator.requestPermission();
-                    if (serviceEnabled == LocationPermission.deniedForever) {
-                      Geolocator.openLocationSettings();
+                    if (serviceEnabled == LocationPermission.deniedForever ||
+                        serviceEnabled == LocationPermission.denied) {
+                      logger.d('Opening location settings');
+                      bool res = await Geolocator.openLocationSettings();
+                      logger.d('res $res');
                       // Service still not enabled, handle accordingly
 
                       return;
                     }
+
+                    if (serviceEnabled == LocationPermission.always ||
+                        serviceEnabled == LocationPermission.whileInUse) {
+                      widget.onGrantPermission();
+                      // Service still not enabled, handle accordingly
+                    }
+
                     // Location permission granted, handle accordingly
                   }
                 },

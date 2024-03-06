@@ -12,40 +12,42 @@ class SportsCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(3.0),
+      padding: const EdgeInsets.all(1.0),
       child: Container(
         decoration: BoxDecoration(
-          color: index == 0 ? const Color(0xffDD6F50) : Colors.white,
-          borderRadius: BorderRadius.circular(22),
+          color: index == 0
+              ? const Color.fromARGB(255, 255, 157, 46)
+              : Colors.white,
+          borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
                 color: index == 0
                     ? AppTheme.secondaryYellowColor.withOpacity(0.3)
                     : Colors.black12,
-                blurRadius: 5,
-                spreadRadius: 2,
-                offset: const Offset(0, 1))
+                blurRadius: 2,
+                spreadRadius: 1,
+                offset: const Offset(0, -1))
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               index != 0
-                  ? Icon(Icons.history, color: Colors.grey[200], size: 45)
+                  ? Icon(Icons.history, color: Colors.grey[200], size: 14)
                   : Image.asset(
                       'assets/images/cricket_icon.png',
-                      height: 45,
                       color: index == 0 ? Colors.white : Colors.grey.shade400,
-                      width: 45,
+                      height: 14,
+                      width: 14,
                     ),
               const SizedBox(height: 5),
               Text(
                 index != 0 ? 'Upcoming' : 'Cricket',
                 style: TextStyle(
                     color: index == 0 ? Colors.white : Colors.grey,
-                    fontSize: 14),
+                    fontSize: 10),
               )
             ],
           ),

@@ -130,17 +130,24 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
   }
 }
 
-class _Card extends GetView<TournamentController> {
+class _Card extends StatefulWidget {
   final TournamentModel tournament;
   final RedirectType redirectType;
 
   const _Card({required this.tournament, required this.redirectType});
 
   @override
+  State<_Card> createState() => _CardState();
+}
+
+class _CardState extends State<_Card> {
+  final roundController = TextEditingController();
+  @override
   Widget build(BuildContext context) {
+    final controller = Get.find<TournamentController>();
     return GestureDetector(
       onTap: () {
-        switch (redirectType) {
+        switch (widget.redirectType) {
           case RedirectType.organizeMatch:
             Get.dialog(Dialog(
               child: Padding(
@@ -148,9 +155,10 @@ class _Card extends GetView<TournamentController> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const CustomTextField(
+                    CustomTextField(
                       labelText: 'Enter Round Number',
                       textInputType: TextInputType.number,
+                      controller: roundController,
                       autoFocus: true,
                     ),
                     const SizedBox(height: 20),
@@ -158,7 +166,8 @@ class _Card extends GetView<TournamentController> {
                       onTap: () {
                         Get.back();
                         Get.to(() => SelectOrganizeTeam(
-                              tournament: tournament,
+                              tournament: widget.tournament,
+                              round: int.parse(roundController.text),
                             ));
                       },
                       title: 'Continue',
@@ -170,21 +179,21 @@ class _Card extends GetView<TournamentController> {
 
             break;
           case RedirectType.scoreboard:
-            controller.setSelectedTournament(tournament);
+            controller.setSelectedTournament(widget.tournament);
             Get.to(() => const SelectTeamForScoreBoard());
             break;
           case RedirectType.matchup:
-            controller.setSelectedTournament(tournament);
+            controller.setSelectedTournament(widget.tournament);
             Get.to(() => const ViewMatchupsScreen());
             break;
           case RedirectType.editForm:
             Get.to(() => TournamentFormScreen(
-                  tournament: tournament,
+                  tournament: widget.tournament,
                 ));
             break;
           case RedirectType.currentTournament:
             Get.to(() => TournamentTeams(
-                  tournament: tournament,
+                  tournament: widget.tournament,
                 ));
             break;
         }
@@ -210,7 +219,7 @@ class _Card extends GetView<TournamentController> {
             children: [
               const Spacer(),
               Text(
-                tournament.tournamentName,
+                widget.tournament.tournamentName,
                 style: Get.textTheme.titleMedium
                     ?.copyWith(fontWeight: FontWeight.w600, fontSize: 19),
               ),

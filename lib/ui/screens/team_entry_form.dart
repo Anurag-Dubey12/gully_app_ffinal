@@ -7,8 +7,8 @@ import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/screens/home_screen.dart';
 import 'package:gully_app/ui/widgets/create_tournament/form_input.dart';
-import 'package:gully_app/utils/app_logger.dart';
 
+import '../../utils/app_logger.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 import '../widgets/primary_button.dart';
@@ -22,8 +22,7 @@ class TeamEntryForm extends StatefulWidget {
 }
 
 class _TeamEntryFormState extends State<TeamEntryForm> {
-  String selectedValue2 = 'Tennis';
-  final TextEditingController _viceCaptainController = TextEditingController();
+// final TextEditingController _viceCaptainController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   bool rulesAccepted = false;
   bool termsAccepted = false;
@@ -121,8 +120,11 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                                   const EdgeInsets.all(8.0),
                                               child: PrimaryButton(
                                                 onTap: () {
-                                                  Get.off(
-                                                      () => const HomeScreen());
+                                                  Get.offAll(
+                                                      () => const HomeScreen(),
+                                                      predicate: (route) =>
+                                                          route.name ==
+                                                          '/HomeScreen');
                                                 },
                                                 title: 'OK',
                                               ),
@@ -251,6 +253,14 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                             .toString()),
                                     label: "Entry Fees",
                                     enabled: false,
+                                  ),
+                                  FormInput(
+                                    controller: TextEditingController(
+                                        text: controller
+                                            .status.data?.organizerName
+                                            .toString()),
+                                    enabled: false,
+                                    label: "Organizer Name",
                                   ),
                                   FormInput(
                                     controller: TextEditingController(

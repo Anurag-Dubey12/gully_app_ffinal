@@ -51,7 +51,11 @@ class ScoreboardModel {
   int ballsToBowl = 6;
   int currentOver = 0;
   int currentBall = 0;
-  int currentInnings = 1;
+  @JsonKey(
+    includeToJson: true,
+    includeFromJson: true,
+  )
+  int currentInnings;
   int currentInningsScore = 0;
   @JsonKey(
     includeToJson: true,
@@ -84,6 +88,7 @@ class ScoreboardModel {
 
   ScoreboardModel({
     required this.team1,
+    required this.currentInnings,
     required this.team2,
     required this.matchId,
     required this.tossWonBy,
@@ -129,6 +134,17 @@ class ScoreboardModel {
     }
     return temp;
   }
+
+  bool get inningsCompleted {
+    if (currentInnings == 1) {
+      logger.i('First innings completed');
+      return firstInnings != null || currentOver == totalOvers;
+    } else {
+      return secondInnings != null;
+    }
+  }
+
+  bool get isAllOut => lastBall.wickets == 10;
 
   PlayerModel get striker {
     if (currentInnings == 1) {
@@ -214,6 +230,43 @@ class ScoreboardModel {
         player1: _partnershipStriker, player2: _partnershipNonStriker);
   }
 
+  bool get isSecondInningsOver {
+    if (currentInnings == 2) {
+      if (lastBall.over == totalOvers && lastBall.ball == 6) {
+        return true;
+      }
+      if (currentInningsScore > firstInnings!.totalScore) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  String? get secondInningsText {
+    if (currentInnings == 2) {
+      if (lastBall.over == totalOvers && lastBall.ball == 6) {
+        return 'Innings Over';
+      }
+      if (currentInningsScore > firstInnings!.totalScore) {
+        return '${team2.name} won by ${10 - lastBall.wickets} wickets';
+      }
+      if (lastBall.wickets == 10 &&
+          firstInnings!.totalScore > currentInningsScore) {
+        return '${team2.name} won by ${firstInnings!.totalScore - currentInningsScore} runs';
+      }
+      final int runsRequired =
+          (firstInnings!.totalScore - currentInningsScore) + 1;
+      int oversRemaining = totalOvers - currentOver;
+      int ballRemaining = 6 - currentBall;
+      oversRemaining = ballRemaining == 6 ? oversRemaining : oversRemaining - 1;
+      ballRemaining = ballRemaining == 6 ? 0 : ballRemaining;
+      final String text =
+          '${team2.name} needs $runsRequired runs in $oversRemaining.$ballRemaining overs';
+      return text;
+    }
+    return null;
+  }
+
   Future<void> addRuns(int runs,
       {List<EventType>? events, List<EventType>? extraEvents}) async {
     events ??= [];
@@ -256,19 +309,28 @@ class ScoreboardModel {
           _partnershipStriker.batting!.sixes + 1;
     }
     if (events.contains(EventType.wicket)) {
-      final res = await Get.bottomSheet(BottomSheet(
-          backgroundColor: Colors.white,
-          onClosing: () {},
-          builder: (c) => const ChangeBatterWidget()));
+      final res = await Get.bottomSheet(
+          BottomSheet(
+              backgroundColor: Colors.white,
+              onClosing: () {},
+              builder: (c) => const ChangeBatterWidget()),
+          isDismissible: false,
+          enableDrag: false);
       logger.i(res);
 
       wickets += 1;
+
       if (res['playerToOut'] != null) {
         if (res['playerToOut'] == strikerId) {
+          striker.batting!.outType = res['outType'];
           setStriker = res['batsmanId'];
         } else {
+          nonstriker.batting!.outType = res['outType'];
           setNonStriker = res['batsmanId'];
         }
+      } else {
+        striker.batting!.outType = res['outType'];
+        setStriker = res['batsmanId'];
       }
       logger.i('Striker: $strikerId');
       _partnershipStriker = PlayerModel(
@@ -336,7 +398,7 @@ class ScoreboardModel {
       bowler.addRuns(runs, events: events);
     }
 
-    logger.d(currentBall);
+    // generate text for the second innings eg : Mi needs 100 runs in 10 overs
 
     if (currentBall == 6) {
       overCompleted = true;
@@ -396,28 +458,36 @@ class ScoreboardModel {
   }
 
   void endOfInnings({
-    required PlayerModel striker,
-    required PlayerModel nonstriker,
-    required PlayerModel bowler,
+    required PlayerModel strikerT,
+    required PlayerModel nonstrikerT,
+    required PlayerModel bowlerT,
   }) {
     try {
+      // assign partnerships to a new variable and clear the partnerships
+      final Map<String, PartnershipModel> tempPartnerships =
+          Map.from(partnerships);
+      partnerships.clear();
       if (currentInnings == 1) {
         firstInnings = InningsModel(
           totalScore: currentInningsScore,
           battingTeam: team1,
           bowlingTeam: team2,
           ballRecord: getCurrentInnings,
-          openingStriker: PlayerModel.fromJson(striker.toJson()),
-          openingNonStriker: PlayerModel.fromJson(nonstriker.toJson()),
-          openingBowler: PlayerModel.fromJson(bowler.toJson()),
+          // TODO: Fix this
+
+          openingStriker: team1.players![0],
+          openingNonStriker: team1.players![1],
+          openingBowler: team1.players![0],
           extras: extras,
-          partnerships: partnerships,
+          partnerships: tempPartnerships,
         );
+        // partnerships.clear();
         currentInnings = 2;
-        strikerId = team2.players!.first.id;
-        nonStrikerId = team2.players!.last.id;
-        bowlerId = team1.players!.first.id;
-        overCompleted = true;
+        strikerId = strikerT.id;
+        nonStrikerId = nonstrikerT.id;
+        bowlerId = bowlerT.id;
+
+        overCompleted = false;
         currentBall = 0;
         currentOver = 0;
         currentInningsScore = 0;
@@ -436,8 +506,8 @@ class ScoreboardModel {
           battingTeam: team2,
           bowlingTeam: team1,
           ballRecord: getCurrentInnings,
-          openingStriker: PlayerModel.fromJson(striker.toJson()),
-          openingNonStriker: PlayerModel.fromJson(nonstriker.toJson()),
+          openingStriker: PlayerModel.fromJson(strikerT.toJson()),
+          openingNonStriker: PlayerModel.fromJson(nonstrikerT.toJson()),
           openingBowler: PlayerModel.fromJson(bowler.toJson()),
           extras: extras,
           partnerships: partnerships,
@@ -450,9 +520,10 @@ class ScoreboardModel {
 
   void changeBowler(String id) {
     if (currentInnings == 1) {
-      bowlerId = team2.players!.firstWhere((element) => element.id == id).id;
+      bowlerId = id;
     } else {
-      bowlerId = team1.players!.firstWhere((element) => element.id == id).id;
+      logger.i('Changing bowler to $id');
+      bowlerId = id;
     }
     overCompleted = false;
   }

@@ -50,6 +50,7 @@ class CustomTextField extends StatelessWidget {
       maxLines: minLines,
       maxLength: maxLen,
       minLines: maxLines,
+      // smartDashesType: SmartDashesType.enabled,
       readOnly: readOnly ?? false,
       onTap: onTap == null ? () {} : () => onTap!(),
       obscureText: obscureText ?? false,

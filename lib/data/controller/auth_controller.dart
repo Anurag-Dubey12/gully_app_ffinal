@@ -30,9 +30,12 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
   Future<void> getCurrentLocation() async {
     final coordinates = await determinePosition();
 
-    location.value = await getAddressFromLatLng(coordinates);
+    location.value =
+        await getAddressFromLatLng(coordinates.latitude, coordinates.longitude);
     logger.d('Location ${location.value}');
   }
+
+  set setLocation(String value) => location.value = value;
 
   Future<bool> loginViaGoogle() async {
     try {
@@ -57,7 +60,8 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
         errorSnackBar("User not found");
       }
       final Position position = await determinePosition();
-      final placeName = await getAddressFromLatLng(position);
+      final placeName =
+          await getAddressFromLatLng(position.latitude, position.longitude);
       final response = await repo.loginViaGoogle({
         'fullName': userCred.user!.displayName,
         'email': userCred.user!.email,
@@ -125,7 +129,9 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       change(GetStatus.success(user));
       return true;
     } catch (e) {
-      showSnackBar(title: e.toString(), message: e.toString(), isError: true);
+      errorSnackBar(
+        e.toString(),
+      );
       change(GetStatus.error(e.toString()));
       rethrow;
       // return false;
@@ -139,8 +145,8 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
   }) async {
     try {
       change(GetStatus.loading());
-      final response =
-          await repo.updateProfile(nickName: nickName, base64: base64);
+      final response = await repo.updateProfile(
+          nickName: nickName, base64: base64, fcmToken: fcmToken);
 
       final user = UserModel.fromJson(response.data!['user']);
       change(GetStatus.success(user));

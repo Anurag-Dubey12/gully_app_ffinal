@@ -16,16 +16,17 @@ class NoTournamentCard extends StatelessWidget {
         width: Get.width,
         height: 100,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            const SizedBox(height: 30),
             Image.asset(
               "assets/images/empty.png",
-              scale: 3,
+              scale: 6,
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
             Text(
               'Oops, No matches on this day.',
-              style: TextStyle(color: Colors.grey.shade500, fontSize: 19),
+              style: TextStyle(color: Colors.grey.shade700, fontSize: 16),
             )
           ],
         ),

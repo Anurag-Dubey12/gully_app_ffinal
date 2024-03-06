@@ -30,5 +30,5 @@ class UserModel {
       _$UserModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserModelToJson(this);
-  String get captializedName => fullName.capitalize!;
+  String get captializedName => fullName.capitalize;
 }

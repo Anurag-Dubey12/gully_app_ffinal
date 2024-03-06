@@ -26,17 +26,19 @@ class ChangeBowlerWidget extends GetView<ScoreBoardController> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Text(
-                'Change Bowler',
-                style: Get.textTheme.headlineMedium,
-              ),
+              Text('Change Bowler', style: Get.textTheme.headlineMedium),
               SizedBox(
                 height: Get.height * 0.5,
                 child: ListView.builder(
                   itemCount: players.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) => ListTile(
-                    title: Text(players[index].name),
+                    title: Text(
+                      players[index].name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                     onTap: () async {
                       controller.addEvent(EventType.changeBowler,
                           bowlerId: players[index].id);
@@ -47,9 +49,7 @@ class ChangeBowlerWidget extends GetView<ScoreBoardController> {
                         BowlerStat(
                           title: 'O:',
                           value:
-                              (players[index].bowling!.overs.values.last.over +
-                                      1)
-                                  .toString(),
+                              (players[index].bowling!.currentOver).toString(),
                         ),
                         BowlerStat(
                           title: 'R: ',

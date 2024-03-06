@@ -9,7 +9,8 @@ import 'package:gully_app/utils/date_time_helpers.dart';
 import '../../data/controller/tournament_controller.dart';
 
 class ViewTournamentScreen extends StatefulWidget {
-  const ViewTournamentScreen({super.key});
+  final bool opponentView;
+  const ViewTournamentScreen({super.key, this.opponentView = false});
 
   @override
   State<ViewTournamentScreen> createState() => _ViewTournamentScreenState();
@@ -23,12 +24,12 @@ class _ViewTournamentScreenState extends State<ViewTournamentScreen> {
         child: Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppTheme.primaryColor,
         elevation: 0,
         // toolbarHeight: 100,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          'Your Tournaments',
+          widget.opponentView ? 'Select Tournament' : 'Your Tournaments',
           textAlign: TextAlign.center,
           style: Get.textTheme.headlineLarge?.copyWith(
               color: Colors.white, fontWeight: FontWeight.w700, fontSize: 24),
@@ -43,20 +44,22 @@ class _ViewTournamentScreenState extends State<ViewTournamentScreen> {
                 return const EmptyTournamentWidget();
               }
 
-              return ListView.separated(
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 18),
-                  shrinkWrap: true,
-                  itemCount: controller.organizerTournamentList.length,
-                  itemBuilder: (context, index) {
-                    return _TourCard(controller.organizerTournamentList[index],
-                        () {
-                      setState(() {});
-                    }
-                        // tournament: snapshot.data![index],
-                        // redirectType: redirectType,
-                        );
-                  });
+              return Expanded(
+                child: ListView.separated(
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 18),
+                    shrinkWrap: true,
+                    itemCount: controller.organizerTournamentList.length,
+                    itemBuilder: (context, index) {
+                      return _TourCard(
+                          controller.organizerTournamentList[index], () {
+                        setState(() {});
+                      }
+                          // tournament: snapshot.data![index],
+                          // redirectType: redirectType,
+                          );
+                    }),
+              );
             }),
           ],
         ),

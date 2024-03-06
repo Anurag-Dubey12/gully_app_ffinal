@@ -65,6 +65,18 @@ class _MyTeamsState extends State<MyTeams> {
                             child: Text('Error ${snapshot.error}}'),
                           );
                         }
+                        if ((snapshot.data?.isEmpty ?? true)) {
+                          return SizedBox(
+                            width: Get.width,
+                            child: const Center(
+                              child: Text('No Teams Found',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold)),
+                            ),
+                          );
+                        }
                         return ListView.separated(
                             separatorBuilder: (context, index) =>
                                 const SizedBox(

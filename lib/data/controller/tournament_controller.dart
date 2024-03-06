@@ -1,4 +1,6 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/api/tournament_api.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
@@ -11,7 +13,27 @@ class TournamentController extends GetxController
   final TournamentApi tournamentApi;
   TournamentController(this.tournamentApi) {
     getTournamentList();
+    getCurrentLocation();
+    Geolocator.getServiceStatusStream().listen((event) {
+      getCurrentLocation();
+    });
   }
+  RxString location = ''.obs;
+
+  Future<void> getCurrentLocation() async {
+    final position = await determinePosition();
+
+    coordinates.value = LatLng(position.latitude, position.longitude);
+    coordinates.refresh();
+  }
+
+  set setCoordinates(LatLng value) {
+    coordinates.value = value;
+    coordinates.refresh();
+    getTournamentList();
+  }
+
+  Rx<LatLng> coordinates = const LatLng(0, 0).obs;
   Future<bool> createTournament(Map<String, dynamic> tournament) async {
     try {
       await tournamentApi.createTournament(tournament);
@@ -41,14 +63,17 @@ class TournamentController extends GetxController
   RxList<TournamentModel> tournamentList = <TournamentModel>[].obs;
   RxList<MatchupModel> matches = <MatchupModel>[].obs;
   RxBool isLoading = false.obs;
-  Future getTournamentList() async {
+  Future getTournamentList({String? filter}) async {
     isLoading.value = true;
+    if (coordinates.value.latitude == 0) {
+      await getCurrentLocation();
+    }
     try {
-      final position = await determinePosition();
       final response = await tournamentApi.getTournamentList(
-        latitude: position.latitude,
-        longitude: position.longitude,
+        latitude: coordinates.value.latitude,
+        longitude: coordinates.value.longitude,
         startDate: selectedDate.value,
+        filter: filter,
         endDate: selectedDate.value.add(const Duration(days: 7)),
       );
 

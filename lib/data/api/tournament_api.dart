@@ -25,7 +25,7 @@ class TournamentApi {
       throw Exception('Requested Path Not Found');
     }
     if (!response.isOk) {
-      throw response.body['error'] ?? 'Unable to Process Request';
+      throw response.body['message'] ?? 'Unable to Process Request';
     }
     return ApiResponse.fromJson(response.body);
   }
@@ -34,12 +34,14 @@ class TournamentApi {
       {required double latitude,
       required double longitude,
       required DateTime startDate,
-      required DateTime endDate}) async {
+      required DateTime endDate,
+      String? filter}) async {
     final obj = {
       'latitude': latitude,
       'longitude': longitude,
       'startDate': formatDateTime('yyyy-MM-dd', startDate),
       'endDate': formatDateTime('yyyy-MM-dd', endDate),
+      'filter': filter,
     };
     logger.d(obj);
     var response = await repo.post('/main/getTournament', obj);
@@ -64,7 +66,7 @@ class TournamentApi {
     var response = await repo
         .post('/main/updateTeamRequest/$tournamentId/$teamId/$action', {});
     if (!response.isOk) {
-      throw response.body['error'] ?? 'Unable to Process Request';
+      throw response.body['message'] ?? 'Unable to Process Request';
     }
 
     return ApiResponse.fromJson(response.body);

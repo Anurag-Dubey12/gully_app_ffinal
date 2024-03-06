@@ -7,7 +7,6 @@ import 'package:gully_app/utils/app_logger.dart';
 class Preferences {
   late final GetStorage _prefs = GetStorage();
   Preferences();
-
   Future<void> storeToken(String token) async {
     _prefs.write('token', token);
   }
@@ -21,7 +20,6 @@ class Preferences {
   }
 
   Future<void> setNotifications(List<NotificationModel> notification) async {
-    // encode json to string and store
     final json = notification.map((e) => e.toJson()).toList().toString();
     final string = jsonEncode(json);
     await _prefs.write('notifications', string);
@@ -29,7 +27,6 @@ class Preferences {
   }
 
   Future<List<NotificationModel>> getNotifications() async {
-    // get string and decode json
     final string = _prefs.read('notifications') ?? "";
 
     if (string == "") return [];

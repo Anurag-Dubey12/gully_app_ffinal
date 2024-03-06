@@ -49,6 +49,7 @@ class IButtonDialog extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(width: 10),
                       const Text('Location:',
@@ -56,7 +57,7 @@ class IButtonDialog extends StatelessWidget {
                       const Spacer(),
                       SizedBox(
                           width: 180,
-                          height: 70,
+                          // height: 70,
                           child: Text(location,
                               maxLines: 3,
                               style: const TextStyle(fontSize: 13))),

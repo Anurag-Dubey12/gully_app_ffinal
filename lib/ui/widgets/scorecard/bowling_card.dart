@@ -18,7 +18,7 @@ class BowlingStats extends StatelessWidget {
                 flex: 3,
                 child: Text('Bowler', style: Get.textTheme.labelMedium)),
             const Spacer(
-              flex: 3,
+              flex: 2,
             ),
             Expanded(
                 child: Center(
@@ -63,11 +63,12 @@ class _BowlerPlayerStat extends GetView<ScoreBoardController> {
           child: Row(
             children: [
               Expanded(
-                  flex: 3,
-                  child: Text(controller.scoreboard.value!.bowlerName)),
-              const Spacer(
-                flex: 3,
-              ),
+                  flex: 5,
+                  child: Text(
+                    controller.scoreboard.value!.bowlerName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  )),
               Expanded(
                   child: Center(
                       child: Text(

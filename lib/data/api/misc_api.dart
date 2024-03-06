@@ -10,7 +10,7 @@ class MiscApi {
   Future<ApiResponse> getContent(String slug) async {
     var response = await repo.get('/other/getContent/$slug');
     if (!response.isOk) {
-      throw response.body['error'] ?? 'Unable to Process Request';
+      throw response.body['message'] ?? 'Unable to Process Request';
     }
     return ApiResponse.fromJson(response.body);
   }
@@ -18,8 +18,17 @@ class MiscApi {
   Future<ApiResponse> addhelpDesk(Map<String, dynamic> data) async {
     var response = await repo.post('/other/addhelpDesk', data);
     if (!response.isOk) {
-      throw response.body['error'] ?? 'Unable to Process Request';
+      throw response.body['message'] ?? 'Unable to Process Request';
     }
     return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getBanners() {
+    return repo.get('/other/getBanner').then((response) {
+      if (!response.isOk) {
+        throw response.body['message'] ?? 'Unable to Process Request';
+      }
+      return ApiResponse.fromJson(response.body);
+    });
   }
 }

@@ -40,8 +40,7 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ScoreBoardController>();
-    logger.e(widget.battingTeam.id);
-    logger.e(widget.bowlingTeam.id);
+
     return GradientBuilder(
         child: Scaffold(
       backgroundColor: Colors.transparent,
@@ -74,7 +73,8 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
                 });
                 Get.back();
               },
-              selectedValue: striker?.name.toUpperCase(),
+              selectedValue: striker?.name,
+              selectedPlayerId: striker?.id,
               items: widget.battingTeam.players!,
             ),
             const SizedBox(height: 20),
@@ -93,7 +93,8 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
                 });
                 Get.back();
               },
-              selectedValue: nonStriker?.name.toUpperCase(),
+              selectedValue: nonStriker?.name,
+              selectedPlayerId: nonStriker?.id,
               items: widget.battingTeam.players!,
             ),
             const SizedBox(height: 20),
@@ -107,7 +108,8 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
                 });
                 Get.back();
               },
-              selectedValue: openingBowler?.name.toUpperCase(),
+              selectedValue: openingBowler?.name,
+              selectedPlayerId: openingBowler?.id,
               items: widget.bowlingTeam.players!,
             ),
             // container with white bg and border radius of 10 with two items in row having text and radio btn
@@ -115,8 +117,12 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
             const Spacer(),
             PrimaryButton(
               onTap: () {
-                if (striker == null || nonStriker == null) {
-                  errorSnackBar('Please select both the opening batsmen');
+                if (striker == null) {
+                  errorSnackBar('Please select striker');
+                  return;
+                }
+                if (nonStriker == null) {
+                  errorSnackBar('Please select non striker');
                   return;
                 }
                 if (openingBowler == null) {
@@ -156,12 +162,14 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
 class PlayerDropDownWidget extends StatelessWidget {
   final Function(PlayerModel player) onSelect;
   final String? selectedValue;
+  final String? selectedPlayerId;
   final List<PlayerModel> items;
   final String title;
   const PlayerDropDownWidget({
     super.key,
     required this.onSelect,
     this.selectedValue,
+    this.selectedPlayerId,
     required this.items,
     required this.title,
   });
@@ -201,13 +209,16 @@ class PlayerDropDownWidget extends StatelessWidget {
                                     return ListTile(
                                       contentPadding: EdgeInsets.zero,
                                       leading: Radio(
-                                          value:
-                                              items[index].name.toUpperCase(),
-                                          groupValue: selectedValue,
+                                          value: items[index].id,
+                                          groupValue: selectedPlayerId,
                                           onChanged: (e) {
                                             onSelect(items[index]);
                                           }),
                                       title: Text(items[index].name),
+                                      trailing: Image.asset(
+                                        getAssetFromRole(items[index].role),
+                                        width: 20,
+                                      ),
                                     );
                                   }),
                             ),

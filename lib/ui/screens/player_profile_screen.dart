@@ -6,8 +6,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/add_team.dart';
 import 'package:gully_app/ui/screens/my_teams.dart';
-import 'package:gully_app/ui/screens/select_team_to_view_history.dart';
-import 'package:gully_app/ui/screens/view_opponent_team.dart';
+import 'package:gully_app/ui/screens/opponent_tournament_list.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -216,16 +215,18 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                                 Get.to(() => const MyTeams());
                               },
                             ),
-                            ProfileTileCard(
-                              text: 'My performance',
-                              onTap: () {
-                                Get.to(() => const SelectTeamToViewHistory());
-                              },
-                            ),
+                            // ProfileTileCard(
+                            //   text: 'My performance',
+                            //   onTap: () {
+                            //     Get.to(() => const SelectTeamToViewHistory());
+                            //   },
+                            // ),
                             ProfileTileCard(
                               text: 'View Opponent',
                               onTap: () {
-                                Get.to(() => const ViewOpponentTeam());
+                                Get.to(() => const OpponentTournamentsScreen(
+                                      opponentView: true,
+                                    ));
                               },
                             ),
                           ],

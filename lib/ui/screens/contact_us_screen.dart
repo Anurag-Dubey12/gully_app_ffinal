@@ -84,7 +84,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                             return;
                           }
                           logger.i('adding help desk');
-                          final r = await miscController.addhelpDesk({
+                          await miscController.addhelpDesk({
                             'issue': messageController.text,
                           });
                           logger.i('help desk added');

@@ -3,10 +3,12 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/screens/add_player_to_team.dart';
-import 'package:gully_app/ui/screens/team_entry_form.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
+import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
+
+import 'team_entry_form.dart';
 
 class SelectTeamToRegister extends StatefulWidget {
   const SelectTeamToRegister({
@@ -68,6 +70,15 @@ class _SelectTeamToRegisterState extends State<SelectTeamToRegister> {
                             child: Text('Error ${snapshot.error}}'),
                           );
                         }
+                        if (snapshot.data?.isEmpty ?? true) {
+                          return const Center(
+                            child: Text('No Teams found',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold)),
+                          );
+                        }
                         return ListView.separated(
                             separatorBuilder: (context, index) =>
                                 const SizedBox(
@@ -106,11 +117,11 @@ class _TeamCard extends StatelessWidget {
             CircleAvatar(
               radius: 18,
               backgroundColor: Colors.white,
-              backgroundImage: NetworkImage(toImageUrl(team.logo)),
+              backgroundImage: NetworkImage(toImageUrl(team.logo ?? '')),
             ),
             const SizedBox(width: 10),
             SizedBox(
-              width: Get.width / 2.4,
+              width: Get.width / 3,
               child: Text(
                 team.name,
                 maxLines: 2,
@@ -159,7 +170,8 @@ class _TeamCard extends StatelessWidget {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(09),
                   onTap: () async {
-                    await Get.off(() => TeamEntryForm(
+                    logger.i('Team selected ${team.name}');
+                    Get.to(() => TeamEntryForm(
                           team: team,
                         ));
                   },

@@ -26,8 +26,7 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
   @override
   void initState() {
     super.initState();
-    hostTeam = widget.match.team1;
-    visitorTeam = widget.match.team2;
+
     tossWonBy = widget.match.team1.id;
     optedTo = 'Bat';
   }
@@ -75,6 +74,14 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
               onChanged: (TeamModel? newValue) {
                 setState(() {
                   hostTeam = newValue;
+                  if (visitorTeam == hostTeam) {
+                    visitorTeam = null;
+                  }
+                  if (hostTeam!.id == widget.match.team1.id) {
+                    visitorTeam = widget.match.team2;
+                  } else {
+                    visitorTeam = widget.match.team1;
+                  }
                 });
               },
               items: [widget.match.team1, widget.match.team2]
@@ -196,48 +203,66 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
           CustomTextField(
             filled: true,
             hintText: 'Enter total overs',
+            maxLen: 3,
             textInputType: TextInputType.number,
             controller: totalOvers,
           ),
           const SizedBox(height: 20),
           PrimaryButton(onTap: () {
-            if (hostTeam == null ||
-                visitorTeam == null ||
-                tossWonBy == null ||
-                optedTo == null) {
+            if (hostTeam == null || visitorTeam == null) {
+              errorSnackBar('Please select Host team');
+              return;
+            }
+            if (tossWonBy == null || optedTo == null) {
+              errorSnackBar('Please select toss won by and opted to');
               return;
             }
             late TeamModel battingTeam;
             late TeamModel bowlingTeam;
 
-            if (tossWonBy == hostTeam!.id) {
-              if (optedTo == 'Bat') {
-                battingTeam = hostTeam!;
-                bowlingTeam = visitorTeam!;
-              } else {
-                battingTeam = visitorTeam!;
-                bowlingTeam = hostTeam!;
-              }
+            if (tossWonBy == widget.match.team1.id && optedTo == 'Bat') {
+              battingTeam = widget.match.team1;
+              bowlingTeam = widget.match.team2;
+            } else if (tossWonBy == widget.match.team1.id &&
+                optedTo == 'Bowl') {
+              battingTeam = widget.match.team2;
+              bowlingTeam = widget.match.team1;
+            } else if (tossWonBy == widget.match.team2.id && optedTo == 'Bat') {
+              battingTeam = widget.match.team2;
+              bowlingTeam = widget.match.team1;
             } else {
-              if (optedTo == 'Bat') {
-                battingTeam = visitorTeam!;
-                bowlingTeam = hostTeam!;
-              } else {
-                battingTeam = visitorTeam!;
-                bowlingTeam = hostTeam!;
-              }
+              logger.d('visitor team won the toss');
+              logger.d('visitor team ${visitorTeam?.name}');
+              logger.d('Host team ${hostTeam?.name}');
+              battingTeam = widget.match.team1;
+              bowlingTeam = widget.match.team2;
             }
-            if (!totalOvers.text.isNum) {
+            setState(() {});
+            if (totalOvers.text.isEmpty) {
+              errorSnackBar('Please enter total overs');
+              return;
+            }
+            if (!totalOvers.text.isNumericOnly) {
+              errorSnackBar('Please enter valid overs!');
+              return;
+            }
+
+            if ((int.tryParse(totalOvers.text) ?? 0) <= 0) {
               errorSnackBar('Please enter valid overs');
               return;
             }
+            if (int.parse(totalOvers.text) % 1 != 0) {
+              errorSnackBar('Please enter valid overs');
+              return;
+            }
+
             Get.off(() => SelectOpeningPlayer(
                 match: widget.match,
                 battingTeam: battingTeam,
                 bowlingTeam: bowlingTeam,
                 tossWonBy: tossWonBy!,
                 electedTo: optedTo!,
-                overs: 10));
+                overs: int.parse(totalOvers.text)));
           })
         ],
       ),

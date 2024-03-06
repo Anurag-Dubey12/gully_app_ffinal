@@ -8,7 +8,7 @@ class TeamApi {
   const TeamApi({required this.repo});
   Future<ApiResponse> createTeam({
     required String teamName,
-    required String teamLogo,
+    required String? teamLogo,
   }) async {
     final obj = {
       'teamName': teamName,
@@ -97,5 +97,18 @@ class TeamApi {
         }
       }
     });
+  }
+
+  Future<ApiResponse> getOpponents() async {
+    final response = await repo.get('/match/getOpponentTournamentId');
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! >= 400) {
+      errorSnackBar('Bad Request');
+      return ApiResponse.fromJson(response.body);
+    }
+
+    return ApiResponse.fromJson(response.body);
   }
 }

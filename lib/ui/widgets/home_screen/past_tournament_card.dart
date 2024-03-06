@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
+import 'package:gully_app/data/model/scoreboard_model.dart';
+import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
+import 'package:gully_app/utils/utils.dart';
 
 import '../../theme/theme.dart';
 import 'no_tournament_card.dart';
@@ -23,7 +26,8 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
             return ListView.builder(
                 itemCount: controller.matches.length,
                 shrinkWrap: true,
-                padding: const EdgeInsets.only(bottom: 20, top: 10),
+                padding:
+                    EdgeInsets.only(bottom: Get.statusBarHeight + 70, top: 10),
                 itemBuilder: (context, snapshot) {
                   return _Card(
                     tournament: controller.matches[snapshot],
@@ -42,6 +46,10 @@ class _Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    logger.d('tournament: ${tournament.scoreBoard!['matchId']}');
+    ScoreboardModel? scoreboard = tournament.scoreBoard == null
+        ? null
+        : ScoreboardModel?.fromJson(tournament.scoreBoard!);
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -89,22 +97,25 @@ class _Card extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: Image.network(
-                              tournament.team2.toImageUrl(),
+                              toImageUrl(scoreboard!.team1.logo!),
                               height: 50,
                               fit: BoxFit.cover,
                               width: 50,
                             ),
                           ),
                           const SizedBox(width: 15),
-                          Text(tournament.team1.name,
-                              style: Get.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontSize: 18,
-                              ))
+                          Text(
+                            scoreboard.team1.name,
+                            style: Get.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 18,
+                            ),
+                          )
                         ],
                       ),
-                      const Text('216/8')
+                      Text(
+                          '${scoreboard.firstInningHistory.entries.last.value.total}/${scoreboard.firstInningHistory.entries.last.value.wickets}'),
                     ],
                   ),
                   const SizedBox(height: 10),
@@ -116,14 +127,14 @@ class _Card extends StatelessWidget {
                           ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             child: Image.network(
-                              tournament.team2.toImageUrl(),
+                              toImageUrl(scoreboard.team2.logo!),
                               height: 50,
                               fit: BoxFit.cover,
                               width: 50,
                             ),
                           ),
                           const SizedBox(width: 15),
-                          Text(tournament.team2.name,
+                          Text(scoreboard.team2.name,
                               style: Get.textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
@@ -131,14 +142,15 @@ class _Card extends StatelessWidget {
                               ))
                         ],
                       ),
-                      const Text('216/8')
+                      Text(
+                          '${scoreboard.currentInningsScore ?? 0}/${scoreboard.currentOverHistory.last?.wickets ?? 0}')
                     ],
                   ),
                 ],
               ),
             ),
             Text(
-              'Mi wons by 5 wickets',
+              scoreboard.secondInningsText ?? '',
               style: Get.textTheme.headlineMedium?.copyWith(
                 color: Colors.black,
                 fontSize: 12,

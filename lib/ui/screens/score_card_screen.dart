@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
@@ -31,7 +28,6 @@ class _ScoreCardScreenState extends State<ScoreCardScreen> {
     super.dispose();
     final controller = Get.find<ScoreBoardController>();
     controller.disconnect();
-    controller.dispose();
   }
 
   @override
@@ -46,19 +42,20 @@ class _ScoreCardScreenState extends State<ScoreCardScreen> {
       return GradientBuilder(
           child: Scaffold(
         backgroundColor: Colors.transparent,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // copy to clipboard
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     // copy to clipboard
 
-            Clipboard.setData(ClipboardData(
-                text: jsonEncode(controller.scoreboard.value!.toJson())));
-          },
-          child: const Icon(Icons.copy),
-        ),
+        //     Clipboard.setData(ClipboardData(
+        //         text: jsonEncode(controller.scoreboard.value!.toJson())));
+        //   },
+        //   child: const Icon(Icons.copy),
+        // ),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           iconTheme: const IconThemeData(color: Colors.white),
-          title: Text('Black panther vs CSK',
+          title: Text(
+              '${controller.scoreboard.value?.team1.name} vs ${controller.scoreboard.value?.team2.name}',
               style: Get.textTheme.titleMedium?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w900,
@@ -67,7 +64,6 @@ class _ScoreCardScreenState extends State<ScoreCardScreen> {
         body: const Padding(
           padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-            SizedBox(height: 20),
             ScoreCard(),
             BattingStats(),
             CurrentOverStats(),

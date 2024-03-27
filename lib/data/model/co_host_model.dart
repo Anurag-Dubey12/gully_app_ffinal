@@ -14,6 +14,4 @@ class CoHostModel {
 
   factory CoHostModel.fromJson(Map<String, dynamic> json) =>
       _$CoHostModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CoHostModelToJson(this);
 }

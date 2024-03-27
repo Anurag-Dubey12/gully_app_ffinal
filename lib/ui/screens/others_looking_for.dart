@@ -166,6 +166,8 @@ class _LookingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final startIndex = model.role!.indexOf("for a") + "for a".length;
+    final roleString = model.role!.substring(startIndex).trim();
     return Container(
       width: Get.width,
       decoration: BoxDecoration(
@@ -199,7 +201,7 @@ class _LookingCard extends StatelessWidget {
                               fontFamily: AppTheme.fontName),
                           children: [
                         const TextSpan(
-                          text: ' is looking for a team to join as a ',
+                          text: ' is looking for a  ',
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 14,
@@ -207,7 +209,7 @@ class _LookingCard extends StatelessWidget {
                               fontFamily: AppTheme.fontName),
                         ),
                         TextSpan(
-                          text: model.role,
+                          text: roleString,
                           style: const TextStyle(
                             color: AppTheme.secondaryYellowColor,
                             fontSize: 14,

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/home_screen.dart';
@@ -65,7 +66,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                 const Spacer(), const Spacer(),
                 Text(
-                  'Sign Up/Login',
+                  '${AppLocalizations.of(context)!.signup}/ ${AppLocalizations.of(context)!.login}',
                   style: Get.textTheme.titleLarge,
                 ),
                 const Spacer(),
@@ -78,7 +79,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     } else {
                       return SocialButton(
                         image: 'google_icon.png',
-                        title: 'Sign up with Google',
+                        title: AppLocalizations.of(context)!.signupgoogle,
                         bgColor: Colors.white,
                         color: const Color.fromRGBO(0, 0, 0, 0.54),
                         onClick: () async {
@@ -95,7 +96,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Platform.isIOS
                     ? SocialButton(
                         image: 'apple_icon.png',
-                        title: 'Sign up with Apple',
+                        title: AppLocalizations.of(context)!.signupapple,
                         bgColor: Colors.black,
                         color: Colors.white,
                         onClick: () {},
@@ -107,41 +108,52 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                      text: "By Continuing you agree to the\n ",
+                      text: "${AppLocalizations.of(context)!.by_continuing}\n ",
                       children: [
                         TextSpan(
-                            text: "Terms of Service ",
+                            text:
+                                AppLocalizations.of(context)!.terms_of_service,
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 Get.bottomSheet(BottomSheet(
                                     onClosing: () {},
-                                    builder: (builder) => const LegalViewScreen(
-                                        title: 'Terms of Services',
-                                        slug: 'terms')));
+                                    builder: (builder) => LegalViewScreen(
+                                          title: AppLocalizations.of(context)!
+                                              .terms_of_service,
+                                          slug: 'terms',
+                                          hideDeleteButton: true,
+                                        )));
                               },
                             style: TextStyle(
                                 color: Colors.blue.shade700,
                                 fontWeight: FontWeight.w500)),
                         TextSpan(
-                            text: " and ",
+                            text: AppLocalizations.of(context)!.and,
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 Get.bottomSheet(BottomSheet(
                                     onClosing: () {},
-                                    builder: (builder) => const LegalViewScreen(
-                                        title: 'Privacy Policy',
-                                        slug: 'privacy')));
+                                    builder: (builder) => LegalViewScreen(
+                                          title:
+                                              '${AppLocalizations.of(context)!.privacy_policy} ',
+                                          slug: 'privacy',
+                                          hideDeleteButton: true,
+                                        )));
                               },
                             style: const TextStyle()),
                         TextSpan(
-                            text: "Privacy Policy ",
+                            text:
+                                " ${AppLocalizations.of(context)!.privacy_policy}",
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 Get.bottomSheet(BottomSheet(
                                     onClosing: () {},
-                                    builder: (builder) => const LegalViewScreen(
-                                        title: 'Privacy Policy',
-                                        slug: 'privacy')));
+                                    builder: (builder) => LegalViewScreen(
+                                          title: AppLocalizations.of(context)!
+                                              .privacy_policy,
+                                          slug: 'privacy',
+                                          hideDeleteButton: true,
+                                        )));
                               },
                             style: TextStyle(
                                 color: Colors.blue.shade700,

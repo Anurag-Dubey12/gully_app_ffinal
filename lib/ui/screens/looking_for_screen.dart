@@ -73,7 +73,16 @@ class _LookingForScreenState extends State<LookingForScreen> {
                     Get.back();
                   },
                   selectedValue: selectedValue,
-                  items: const ['Batsman', 'Bowler', 'Wicket Keeper'],
+                  items: const [
+                    "I am looking for a team to join as a Bowler",
+                    "I am looking for a team to join as a Batsman",
+                    "I am looking for a team to join as a Wicket-keeper",
+                    "I am looking for a team to join as an All-rounder",
+                    "I am looking for a Teammate to join as a Bowler",
+                    "I am looking for a Teammate to join as a Batsman",
+                    "I am looking for a Teammate to join as a Wicket-keeper",
+                    "I am looking for a Teammate to join as an All-rounder"
+                  ],
                 ),
                 const SizedBox(height: 10),
                 FormInput(
@@ -306,8 +315,7 @@ class _PostCardState extends State<_PostCard> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                      '${widget.post.fullName} is looking for a ${widget.post.role} in ${widget.post.location}'),
+                  Text('${widget.post.role} in ${widget.post.location}'),
                   Text(
                       DateFormat('dd MMM yyy hh:mm a')
                           .format(widget.post.createdAt.toLocal()),

@@ -151,4 +151,24 @@ class TeamController extends GetxController with StateMixin {
       rethrow;
     }
   }
+
+  // getAllNearByTeam
+  Future<List<TeamModel>> getAllNearByTeam() async {
+    try {
+      final response = await repo.getAllNearByTeam();
+
+      if (response.status == false) {
+        logger.i('error');
+        errorSnackBar(response.message!);
+        return [];
+      }
+      final teams = response.data!['teams'] as List;
+      final teamList = teams.map((e) => TeamModel.fromJson(e)).toList();
+
+      return teamList;
+    } catch (e) {
+      logger.i(e.toString());
+      rethrow;
+    }
+  }
 }

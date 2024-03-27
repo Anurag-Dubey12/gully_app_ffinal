@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
@@ -408,13 +409,15 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                           ),
                           FormInput(
                             controller: _nameController,
-                            label: 'Tournament Name',
+                            label: AppLocalizations.of(context)!.tournamentName,
                             validator: (p0) {
                               if (p0!.isEmpty) {
-                                return 'Please enter tournament name';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterTournamentName;
                               }
                               if (p0.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                return 'Tournament name cannot contain emojis';
+                                return AppLocalizations.of(context)!
+                                    .tournamentNameCannotContainEmojis;
                               }
                               return null;
                             },
@@ -423,13 +426,11 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             from: from,
                             to: to,
                             controller: _nameController,
-                            onFromChanged: (
-                              e,
-                            ) {
+                            onFromChanged: (e) {
                               setState(() {
                                 if (to != null && e.isAfter(to)) {
-                                  errorSnackBar(
-                                      'Tournament start date should be less than end date');
+                                  errorSnackBar(AppLocalizations.of(context)!
+                                      .tournamentStartDateShouldBeLessThanEndDate);
                                   return;
                                 }
                                 from = e;
@@ -438,26 +439,27 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             onToChanged: (e) {
                               setState(() {
                                 if (from == null) {
-                                  errorSnackBar(
-                                      'Please select tournament start date');
+                                  errorSnackBar(AppLocalizations.of(context)!
+                                      .pleaseSelectTournamentStartDate);
                                   return;
                                 }
                                 if (e.isBefore(from!)) {
-                                  errorSnackBar(
-                                      'Tournament end date should be greater than start date');
+                                  errorSnackBar(AppLocalizations.of(context)!
+                                      .tournamentEndDateShouldBeGreaterThanStartDate);
                                   return;
                                 }
                                 to = e;
                               });
                             },
                           ),
-                          Text('Tournament Category',
+                          Text(AppLocalizations.of(context)!.tournamentCategory,
                               style: Get.textTheme.headlineMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                   fontSize: 16)),
                           DropDownWidget(
-                            title: 'Select Tournament Category',
+                            title: AppLocalizations.of(context)!
+                                .selectTournamentCategory,
                             onSelect: (e) {
                               setState(() {
                                 tournamentType = e;
@@ -475,13 +477,13 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                           const SizedBox(
                             height: 18,
                           ),
-                          Text('Ball Type',
+                          Text(AppLocalizations.of(context)!.ballType,
                               style: Get.textTheme.headlineMedium?.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
                                   fontSize: 16)),
                           DropDownWidget(
-                            title: 'Select Ball Type',
+                            title: AppLocalizations.of(context)!.selectBallType,
                             onSelect: (e) {
                               setState(() {
                                 ballType = e;
@@ -503,14 +505,16 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                     const SizedBox(
                                       height: 18,
                                     ),
-                                    Text('Pitch Type',
+                                    Text(
+                                        AppLocalizations.of(context)!.pitchType,
                                         style: Get.textTheme.headlineMedium
                                             ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black,
                                                 fontSize: 16)),
                                     DropDownWidget(
-                                      title: 'Select Pitch Type',
+                                      title: AppLocalizations.of(context)!
+                                          .selectPitchType,
                                       onSelect: (e) {
                                         setState(() {
                                           pitchType = e;

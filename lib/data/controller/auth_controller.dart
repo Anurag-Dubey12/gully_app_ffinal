@@ -12,6 +12,7 @@ import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../ui/screens/splash_screen.dart';
 import '../../ui/widgets/custom_snackbar.dart';
 import '../api/auth_api.dart';
 
@@ -174,6 +175,48 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       change(GetStatus.error(e.toString()));
       rethrow;
       // return false;
+    }
+  }
+
+  Future<bool> deleteAccount() async {
+    try {
+      await Future.delayed(const Duration(seconds: 2));
+      await repo.deleteAccount();
+      logout();
+
+      return true;
+    } catch (e) {
+      showSnackBar(title: e.toString(), message: e.toString(), isError: true);
+      change(GetStatus.error(e.toString()));
+      rethrow;
+      // return false;
+    }
+  }
+
+  Future<void> logout() async {
+    try {
+      change(GetStatus.loading());
+      final controller = Get.find<Preferences>();
+      controller.clear();
+      final googleSignIn = GoogleSignIn();
+      try {
+        await googleSignIn.disconnect();
+        await googleSignIn.signOut();
+      } catch (e) {
+        logger.e(e);
+      }
+      if (FirebaseAuth.instance.currentUser != null) {
+        await FirebaseAuth.instance.signOut();
+      }
+
+      change(GetStatus.empty());
+      Future.delayed(const Duration(milliseconds: 300), () {
+        Get.offAll(() => const SplashScreen());
+      });
+    } catch (e) {
+      showSnackBar(title: e.toString(), message: e.toString(), isError: true);
+      change(GetStatus.error(e.toString()));
+      rethrow;
     }
   }
 }

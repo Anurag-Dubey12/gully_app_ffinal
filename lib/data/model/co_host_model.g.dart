@@ -11,10 +11,3 @@ CoHostModel _$CoHostModelFromJson(Map<String, dynamic> json) => CoHostModel(
       fullName: json['fullName'] as String,
       phoneNumber: json['phoneNumber'] as String,
     );
-
-Map<String, dynamic> _$CoHostModelToJson(CoHostModel instance) =>
-    <String, dynamic>{
-      '_id': instance.id,
-      'fullName': instance.fullName,
-      'phoneNumber': instance.phoneNumber,
-    };

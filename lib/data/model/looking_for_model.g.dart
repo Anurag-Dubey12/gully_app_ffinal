@@ -16,14 +16,3 @@ LookingForPlayerModel _$LookingForPlayerModelFromJson(
       phoneNumber: json['phoneNumber'] as String?,
       role: json['role'] as String?,
     );
-
-Map<String, dynamic> _$LookingForPlayerModelToJson(
-        LookingForPlayerModel instance) =>
-    <String, dynamic>{
-      '_id': instance.id,
-      'fullName': instance.fullName,
-      'role': instance.role,
-      'createdAt': instance.createdAt.toIso8601String(),
-      'phoneNumber': instance.phoneNumber,
-      'location': instance.location,
-    };

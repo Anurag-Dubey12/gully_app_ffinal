@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'looking_for_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createToJson: false)
 class LookingForPlayerModel {
   @JsonKey(name: '_id')
   final String id;

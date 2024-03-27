@@ -7,6 +7,7 @@ import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/screens/home_screen.dart';
 import 'package:gully_app/ui/widgets/create_tournament/form_input.dart';
+import 'package:gully_app/utils/utils.dart';
 
 import '../../utils/app_logger.dart';
 import '../theme/theme.dart';
@@ -190,6 +191,30 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                         color: Colors.white,
                       ),
                     ),
+                    controller.state!.coverPhoto != null
+                        ? Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: SizedBox(
+                              height: 130,
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: SizedBox(
+                                      width: Get.width,
+                                      height: 120,
+                                      child: Image.network(
+                                        toImageUrl(
+                                            controller.state!.coverPhoto!),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
                     Expanded(
                       child: Container(
                         width: Get.width,

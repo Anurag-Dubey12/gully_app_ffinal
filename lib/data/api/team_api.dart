@@ -129,4 +129,32 @@ class TeamApi {
 
     return ApiResponse.fromJson(response.body);
   }
+
+  // getAllNearByTeam
+  Future<ApiResponse> getAllNearByTeam() async {
+    final response = await repo.get('/team/getAllNearByTeam');
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! >= 400) {
+      errorSnackBar('Bad Request');
+      return ApiResponse.fromJson(response.body);
+    }
+
+    return ApiResponse.fromJson(response.body);
+  }
+
+  //match/getChallengeMatch
+  Future<ApiResponse> getChallengeMatch() async {
+    final response = await repo.get('/match/getChallengeMatch');
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! >= 400) {
+      errorSnackBar('Bad Request');
+      return ApiResponse.fromJson(response.body);
+    }
+
+    return ApiResponse.fromJson(response.body);
+  }
 }

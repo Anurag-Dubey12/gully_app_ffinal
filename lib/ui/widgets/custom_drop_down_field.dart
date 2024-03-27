@@ -34,31 +34,34 @@ class DropDownWidget extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(18.0),
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
+                          mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(title,
                                 style: Get.textTheme.headlineMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black)),
-                            ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: items.length,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    contentPadding: EdgeInsets.zero,
-                                    leading: Radio(
-                                      value: items[index].toUpperCase(),
-                                      groupValue: selectedValue,
-                                      onChanged: (e) => onSelect(items[index]),
-                                    ),
-                                    onTap: () {
-                                      onSelect();
-                                      Get.back();
-                                    },
-                                    title: Text(items[index]),
-                                  );
-                                }),
+                            Expanded(
+                              child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: items.length,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                      contentPadding: EdgeInsets.zero,
+                                      leading: Radio(
+                                        value: items[index].toUpperCase(),
+                                        groupValue: selectedValue,
+                                        onChanged: (e) =>
+                                            onSelect(items[index]),
+                                      ),
+                                      onTap: () {
+                                        onSelect();
+                                        Get.back();
+                                      },
+                                      title: Text(items[index]),
+                                    );
+                                  }),
+                            ),
                           ],
                         ),
                       ),
@@ -74,7 +77,14 @@ class DropDownWidget extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: Row(
                 children: [
-                  Text(selectedValue ?? '', style: Get.textTheme.labelLarge),
+                  SizedBox(
+                    width: Get.width * 0.8,
+                    child: Text(
+                      selectedValue ?? '',
+                      style: Get.textTheme.labelLarge,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                   const Spacer(),
                   const Align(
                       alignment: Alignment.centerRight,

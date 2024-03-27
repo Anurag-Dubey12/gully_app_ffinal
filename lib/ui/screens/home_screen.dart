@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
@@ -99,7 +100,9 @@ class HomePage extends StatelessWidget {
                               tournament: null,
                             ));
                       },
-                      title: 'Create Your Tournament',
+                      // title: 'Create Your Tournament',
+                      title:
+                          AppLocalizations.of(context)!.create_your_tournament,
                     ),
                   ),
                 ],
@@ -318,13 +321,14 @@ class _TitleWidgetState extends State<TitleWidget> {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
       child: Row(
         children: [
-          const Text(
-            'Tournaments',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+          Text(
+            AppLocalizations.of(context)!.tournaments,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
           ),
           const Spacer(),
           _TournamentMajorDuration(
-            title: 'Past',
+            // title: 'Past',
+            title: AppLocalizations.of(context)!.past,
             isSelected: selected == 'Past',
             onTap: () => setState(() {
               controller.getTournamentList(filter: 'past');
@@ -332,7 +336,8 @@ class _TitleWidgetState extends State<TitleWidget> {
             }),
           ),
           _TournamentMajorDuration(
-            title: 'Current',
+            // title: 'Current',
+            title: AppLocalizations.of(context)!.current,
             isSelected: selected == 'Current',
             onTap: () => setState(() {
               controller.getTournamentList(filter: 'current');
@@ -340,7 +345,8 @@ class _TitleWidgetState extends State<TitleWidget> {
             }),
           ),
           _TournamentMajorDuration(
-            title: 'Upcoming',
+            // title: 'Upcoming',
+            title: AppLocalizations.of(context)!.upcoming,
             isSelected: selected == 'Upcoming',
             onTap: () => setState(() {
               controller.getTournamentList(filter: 'upcoming');

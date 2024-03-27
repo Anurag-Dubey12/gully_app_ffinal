@@ -11,9 +11,3 @@ AuthorityModel _$AuthorityModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       fullName: json['fullName'] as String,
     );
-
-Map<String, dynamic> _$AuthorityModelToJson(AuthorityModel instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'fullName': instance.fullName,
-    };

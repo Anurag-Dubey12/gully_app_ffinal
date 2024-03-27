@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/choose_lang_screen.dart';
@@ -65,7 +66,6 @@ class _CreateProfileState extends State<CreateProfile>
               gradient: LinearGradient(
                 colors: [
                   Color(0xff3F5BBF),
-                  // Color(0xffEEEFF5),
                   Colors.white12,
                   Colors.white54,
                 ],
@@ -80,7 +80,6 @@ class _CreateProfileState extends State<CreateProfile>
                 padding:
                     const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
                 child: SizedBox(
-                  // height: Get.height / 2,
                   child: SingleChildScrollView(
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -89,7 +88,9 @@ class _CreateProfileState extends State<CreateProfile>
                             height: Get.height * 0.13,
                           ),
                           Text(
-                            'Create\nProfile'.toUpperCase(),
+                            AppLocalizations.of(context)!
+                                .create_profile
+                                .toUpperCase(),
                             style: Get.textTheme.titleLarge?.copyWith(
                                 fontStyle: FontStyle.italic,
                                 color: Colors.white,
@@ -101,7 +102,6 @@ class _CreateProfileState extends State<CreateProfile>
                           SizedBox(
                             height: Get.height * 0.01,
                           ),
-
                           GestureDetector(
                             onTap: () {
                               pickImage();
@@ -141,8 +141,6 @@ class _CreateProfileState extends State<CreateProfile>
                               ],
                             ),
                           ),
-
-                          // create a container sign up with google
                           Form(
                             key: _formKey,
                             child: Column(
@@ -152,21 +150,23 @@ class _CreateProfileState extends State<CreateProfile>
                                   height: Get.height * 0.03,
                                 ),
                                 CustomTextField(
-                                  labelText: 'Name',
+                                  labelText: AppLocalizations.of(context)!.name,
                                   controller: _nameController,
                                   validator: (e) {
-                                    // check if name contains special characters
                                     if (e!.contains(
                                         RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-                                      return 'Name cannot contain special characters';
+                                      return AppLocalizations.of(context)!
+                                          .name_cannot_contain_special_characters;
                                     }
                                     if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                      return 'Name cannot contain emojis';
+                                      return AppLocalizations.of(context)!
+                                          .name_cannot_contain_emojis;
                                     }
-                                    // prevent special characters
+
                                     if (e.contains(RegExp(
                                         r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]'))) {
-                                      return 'Name cannot contain special characters & numbers';
+                                      return AppLocalizations.of(context)!
+                                          .name_cannot_contain_special_characters_numbers;
                                     }
                                     return null;
                                   },
@@ -181,7 +181,8 @@ class _CreateProfileState extends State<CreateProfile>
                                   maxLen: 10,
                                   validator: (e) {
                                     if (e!.length != 10) {
-                                      return 'Please enter a valid phone number';
+                                      return AppLocalizations.of(context)!
+                                          .please_enter_valid_phone_number;
                                     }
                                     return null;
                                   },
@@ -193,22 +194,22 @@ class _CreateProfileState extends State<CreateProfile>
                                       onTap: () async {
                                         if (_image == null) {
                                           errorSnackBar(
-                                              'Please select an image');
+                                              AppLocalizations.of(context)!
+                                                  .please_select_an_image);
                                           return;
                                         }
                                         if (_formKey.currentState!.validate()) {
-                                          // if (!isSelected) {
-                                          //   errorSnackBar(
-                                          //       'Please accept our terms and conditions');
-                                          //   return;
-                                          // }
                                           final base64Image =
                                               await convertImageToBase64(
                                                   _image!);
                                           if (!base64Image.contains(RegExp(
                                               r'data:image\/(png|jpeg);base64,'))) {
-                                            errorSnackBar(
-                                                'Please select a valid image');
+                                            if (mounted) {
+                                              errorSnackBar(AppLocalizations.of(
+                                                      // ignore: use_build_context_synchronously
+                                                      context)!
+                                                  .please_select_a_valid_image);
+                                            }
                                             return;
                                           }
                                           final res =
@@ -329,8 +330,10 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                   padding: const EdgeInsets.all(13.0),
                   child: Column(
                     children: [
-                      const Text(
-                          'Enter 5 digit code sent to your mobile number'),
+                      Text(
+                          AppLocalizations.of(context)!
+                              .please_enter_5_digit_code,
+                          style: Get.textTheme.labelSmall),
                       const SizedBox(height: 20),
                       PinCodeTextField(
                         length: 5,
@@ -360,14 +363,8 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                         onCompleted: (v) {
                           login(controller);
                         },
-                        onChanged: (value) {
-                          // setState(() {
-                          //   currentText = value;
-                          // });
-                        },
+                        onChanged: (value) {},
                         beforeTextPaste: (text) {
-                          //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
-                          //but you can show anything you want here, like your pop up saying wrong paste format or etc
                           return true;
                         },
                       ),
@@ -376,9 +373,9 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                               onPressed: () {
                                 startTimer();
                               },
-                              child: const Text(
-                                'Resend',
-                                style: TextStyle(color: Colors.white),
+                              child: Text(
+                                AppLocalizations.of(context)!.resend,
+                                style: const TextStyle(color: Colors.white),
                               ),
                             )
                           : Text(
@@ -395,7 +392,7 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                 width: Get.width / 2,
                 child: Obx(
                   () => PrimaryButton(
-                    title: 'Verify',
+                    title: AppLocalizations.of(context)!.verify,
                     isLoading: controller.status.isLoading,
                     onTap: () async {
                       await login(controller);

@@ -199,6 +199,7 @@ class _CardState extends State<_Card> {
                               IButtonDialog(
                                 organizerName: widget.tournament.organizerName!,
                                 location: widget.tournament.stadiumAddress,
+                                coverPhoto: widget.tournament.coverPhoto,
                               ),
                               backgroundColor: Colors.white);
                         },

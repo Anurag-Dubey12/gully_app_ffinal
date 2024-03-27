@@ -9,6 +9,7 @@ import 'package:gully_app/utils/utils.dart';
 
 import '../../../data/controller/tournament_controller.dart';
 import '../../screens/notification_screen.dart';
+import '../../screens/organizer_profile.dart';
 import '../../screens/player_profile_screen.dart';
 
 class TopHeader extends GetView<AuthController> {
@@ -22,7 +23,13 @@ class TopHeader extends GetView<AuthController> {
         Row(
           children: [
             InkWell(
-                onTap: () => Get.to(() => const PlayerProfileScreen()),
+                onTap: () {
+                  if (controller.state!.isOrganizer) {
+                    Get.to(() => const OrganizerProfileScreen());
+                  } else {
+                    Get.to(() => const PlayerProfileScreen());
+                  }
+                },
                 child: Obx(
                   () => CircleAvatar(
                       radius: 20,
@@ -36,7 +43,13 @@ class TopHeader extends GetView<AuthController> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 InkWell(
-                  onTap: () => Get.to(() => const PlayerProfileScreen()),
+                  onTap: () {
+                    if (controller.state!.isOrganizer) {
+                      Get.to(() => const OrganizerProfileScreen());
+                    } else {
+                      Get.to(() => const PlayerProfileScreen());
+                    }
+                  },
                   child: Obx(() => SizedBox(
                         width: Get.width * 0.5,
                         child: Text(
@@ -99,6 +112,7 @@ class LocationBuilder extends GetView<AuthController> {
       onTap: () {
         Get.to(() => SearchPlacesScreen(
               showSelectCurrentLocation: true,
+              title: 'Select Location',
               onSelected: (e) async {
                 controller.setLocation = e.description ?? 'Fetching Location';
                 final tournamentController = Get.find<TournamentController>();

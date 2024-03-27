@@ -118,11 +118,34 @@ class TeamController extends GetxController with StateMixin {
         errorSnackBar(response.message!);
         return [];
       }
-      final opponents = response.data!['opponents'] as List;
+
+      final opponents = response.data!['data'] as List;
       final opponentList =
           opponents.map((e) => OpponentModel.fromJson(e)).toList();
 
       return opponentList;
+    } catch (e) {
+      logger.i(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<List<TeamModel>> getOpponentTeamList(
+      String teamId, String tournamentId) async {
+    try {
+      final response = await repo.getOpponentTeams(teamId, tournamentId);
+
+      if (response.status == false) {
+        logger.i('error');
+        errorSnackBar(response.message!);
+        return [];
+      }
+      final teams = response.data!['matches'] as List;
+      logger.f(teams.runtimeType);
+      final teamList =
+          teams.map((e) => TeamModel.fromJson(e['opponent'])).toList();
+      logger.f(teamList);
+      return teamList;
     } catch (e) {
       logger.i(e.toString());
       rethrow;

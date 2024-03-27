@@ -24,6 +24,7 @@ class CurrentTournamentCard extends GetView<TournamentController> {
             return const NoTournamentCard();
           } else {
             return ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: controller.matches.length,
                 shrinkWrap: true,
                 padding:

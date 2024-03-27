@@ -10,10 +10,14 @@ class TeamApi {
     required String teamName,
     required String? teamLogo,
   }) async {
-    final obj = {
-      'teamName': teamName,
-      'teamLogo': teamLogo,
-    };
+    final obj = teamLogo == null
+        ? {
+            'teamName': teamName,
+          }
+        : {
+            'teamName': teamName,
+            'teamLogo': teamLogo,
+          };
     logger.i(obj);
     final response = await repo.post('/team/createTeam', obj);
     if (response.statusCode! >= 500) {
@@ -64,6 +68,20 @@ class TeamApi {
 
   Future<ApiResponse> getTeams() async {
     final response = await repo.get('/team/getUsersAllTeam');
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! >= 400) {
+      errorSnackBar('Bad Request');
+      return ApiResponse.fromJson(response.body);
+    }
+
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getOpponentTeams(
+      String teamId, String tournamentId) async {
+    final response = await repo.get('/match/getOpponent/$teamId/$tournamentId');
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');
       throw Exception('Server Error');

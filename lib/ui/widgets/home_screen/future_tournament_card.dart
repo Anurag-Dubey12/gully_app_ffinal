@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/widgets/home_screen/i_button_dialog.dart';
-import 'package:gully_app/utils/app_logger.dart';
 
 import '../../../data/controller/tournament_controller.dart';
 import '../../../utils/date_time_helpers.dart';
@@ -19,17 +18,16 @@ class FutureTournamentCard extends GetView<TournamentController> {
 
   @override
   Widget build(BuildContext context) {
-    logger.d(controller.tournamentList);
     return SizedBox(
-      height: Get.height * 0.54,
+      // height: Get.height * 0.54,
       child: Obx(() {
         if (controller.tournamentList.isEmpty) {
           return const NoTournamentCard();
         } else {
           return ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
               itemCount: controller.tournamentList.length,
-              padding:
-                  EdgeInsets.only(bottom: Get.statusBarHeight + 70, top: 10),
+              padding: const EdgeInsets.only(bottom: 10, top: 10),
               shrinkWrap: true,
               itemBuilder: (context, snapshot) {
                 return _Card(

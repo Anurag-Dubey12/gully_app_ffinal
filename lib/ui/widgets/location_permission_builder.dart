@@ -101,10 +101,9 @@ class _PermissionDeniedPageState extends State<PermissionDeniedPage> {
     checkLocationPermission();
     Geolocator.getServiceStatusStream().listen((event) {
       logger.i(event);
-      print('$event');
+
       checkLocationPermission();
     }, onDone: () {
-      print('DONE 107');
       logger.i('Done');
     }, onError: (e) {
       logger.e('Error $e');

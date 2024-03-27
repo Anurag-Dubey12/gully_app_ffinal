@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,10 +11,13 @@ import 'package:gully_app/ui/screens/select_location.dart';
 import 'package:gully_app/ui/widgets/create_tournament/form_input.dart';
 import 'package:gully_app/ui/widgets/create_tournament/top_card.dart';
 import 'package:gully_app/ui/widgets/custom_drop_down_field.dart';
+import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../data/controller/auth_controller.dart';
+import '../../utils/image_picker_helper.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 import '../widgets/primary_button.dart';
@@ -44,9 +49,28 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
 
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _disclaimerController = TextEditingController();
+  final TextEditingController _cohost1Name = TextEditingController();
+  final TextEditingController _cohost1Phone = TextEditingController();
+  final TextEditingController _cohost2Name = TextEditingController();
+  final TextEditingController _cohost2Phone = TextEditingController();
 
   final _key = GlobalKey<FormState>();
+
   bool isLoading = false;
+
+  XFile? _image;
+
+  pickImage() async {
+    final img = await imagePickerHelper();
+    if (img != null) {
+      setState(() {
+        _image = img;
+      });
+    }
+
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -69,13 +93,24 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
 
       from = widget.tournament!.tournamentStartDateTime;
       to = widget.tournament!.tournamentEndDateTime;
+      _cohost1Name.text = widget.tournament!.coHost1?.fullName ?? "";
+      _cohost1Phone.text = widget.tournament!.coHost1?.phoneNumber ?? "";
+      _cohost2Name.text = widget.tournament!.coHost2?.fullName ?? "";
+      _cohost2Phone.text = widget.tournament!.coHost2?.phoneNumber ?? "";
       // tournamentType = widget.tournament!.tournamentCategory!;
       ballType = widget.tournament!.ballType;
       pitchType = widget.tournament!.pitchType;
     }
+    fetchLocation();
   }
 
-  final bool _stretch = true;
+  late LatLng location;
+  fetchLocation() async {
+    final postion = await determinePosition();
+    location = LatLng(postion.latitude, postion.longitude);
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final TournamentController tournamentController =
@@ -125,7 +160,11 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                     isLoading = true;
                                   });
                                   final position = await determinePosition();
-
+                                  String? base64;
+                                  if (_image != null) {
+                                    base64 =
+                                        await convertImageToBase64(_image!);
+                                  }
                                   Map<String, dynamic> tournament = {
                                     "tournamentStartDateTime":
                                         from?.toIso8601String(),
@@ -149,6 +188,20 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                     "latitude": position.latitude,
                                     "longitude": position.longitude,
                                     "rules": _rulesController.text,
+                                    'coverPhoto': base64,
+                                    'coHost1Name': _cohost1Name.text.isEmpty
+                                        ? null
+                                        : _cohost1Name.text,
+                                    'coHost1Phone': _cohost1Phone.text.isEmpty
+                                        ? null
+                                        : _cohost1Phone.text,
+                                    'coHost2Name': _cohost2Name.text.isEmpty
+                                        ? null
+                                        : _cohost2Name.text,
+                                    'coHost2Phone': _cohost2Phone.text.isEmpty
+                                        ? null
+                                        : _cohost2Phone.text,
+                                    // 'disclaimer': _disclaimerController.text,
                                   };
                                   if (widget.tournament != null) {
                                     bool isOk = await tournamentController
@@ -244,6 +297,115 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             centerTitle: true,
                           ),
                           SizedBox(height: Get.height * 0.04),
+                          Material(
+                            borderRadius: BorderRadius.circular(20),
+                            child: InkWell(
+                              onTap: () {
+                                pickImage();
+                              },
+                              borderRadius: BorderRadius.circular(20),
+                              child: Ink(
+                                width: Get.width,
+                                height: 120,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 5,
+                                          spreadRadius: 2,
+                                          offset: const Offset(0, 1))
+                                    ]),
+                                child: _image != null
+                                    ? SizedBox(
+                                        height: 130,
+                                        child: Stack(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              child: SizedBox(
+                                                width: Get.width,
+                                                height: 120,
+                                                child: Image.file(
+                                                  File(
+                                                    _image!.path,
+                                                  ),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              right: 0,
+                                              bottom: 0,
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    pickImage();
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.edit,
+                                                    color: Colors.white,
+                                                  )),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    : widget.tournament?.coverPhoto != null
+                                        ? SizedBox(
+                                            height: 130,
+                                            child: Stack(
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  child: SizedBox(
+                                                    width: Get.width,
+                                                    height: 120,
+                                                    child: Image.network(
+                                                      toImageUrl(widget
+                                                          .tournament!
+                                                          .coverPhoto!),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  right: 0,
+                                                  bottom: 0,
+                                                  child: IconButton(
+                                                      onPressed: () {
+                                                        pickImage();
+                                                      },
+                                                      icon: const Icon(
+                                                        Icons.edit,
+                                                        color: Colors.white,
+                                                      )),
+                                                )
+                                              ],
+                                            ),
+                                          )
+                                        : const Center(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Icon(Icons.photo),
+                                                Text('Add Cover Photo',
+                                                    style: TextStyle(
+                                                        color: Colors.grey,
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.w500)),
+                                              ],
+                                            ),
+                                          ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 18,
+                          ),
                           FormInput(
                             controller: _nameController,
                             label: 'Tournament Name',
@@ -377,10 +539,98 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             controller: TextEditingController(
                               text: authController.state!.phoneNumber,
                             ),
-                            label: 'Organizer Phone',
+                            label: 'Organizer Contact No',
                             enabled: false,
                             readOnly: true,
                             textInputType: TextInputType.number,
+                          ),
+                          FormInput(
+                            controller: _cohost1Name,
+                            label: 'Co-host 1 Name',
+                            textInputType: TextInputType.text,
+                            validator: (e) {
+                              if (_cohost1Phone.text.isEmpty && e!.isNotEmpty) {
+                                return 'Please enter co-host 1 contact no';
+                              }
+                              if (e!.contains(RegExp(r'[^\x00-\x7F]+'))) {
+                                return 'Rules cannot contain emojis';
+                              }
+
+                              return null;
+                            },
+                          ),
+                          FormInput(
+                            controller: _cohost1Phone,
+                            label: 'Co-host 1 Contact No',
+                            textInputType: TextInputType.number,
+                            maxLength: 10,
+                            validator: (e) {
+                              if ((_cohost1Name.text.isNotEmpty) &&
+                                  e!.isEmpty) {
+                                return 'Please enter co-host 1 contact no';
+                              }
+                              if (e!.isEmpty) {
+                                return null;
+                              }
+                              if (!RegExp(r'^\d+$').hasMatch(e)) {
+                                return 'Please enter a valid co-host 1 contact no';
+                              }
+                              if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
+                                return 'Rules cannot contain emojis';
+                              }
+                              if (_cohost2Phone.text == e) {
+                                return 'Co-host 1 and Co-host 2 contact no cannot be same';
+                              }
+                              if (e.length != 10) {
+                                return 'Please enter a valid contact no';
+                              }
+
+                              return null;
+                            },
+                          ),
+                          FormInput(
+                            controller: _cohost2Name,
+                            label: 'Co-host 2 Name',
+                            textInputType: TextInputType.text,
+                            validator: (e) {
+                              if (_cohost2Phone.text.isEmpty && e!.isNotEmpty) {
+                                return 'Please enter co-host 1 contact no';
+                              }
+                              if (e!.contains(RegExp(r'[^\x00-\x7F]+'))) {
+                                return 'Rules cannot contain emojis';
+                              }
+
+                              return null;
+                            },
+                          ),
+                          FormInput(
+                            controller: _cohost2Phone,
+                            label: 'Co-host 2 Contact No',
+                            textInputType: TextInputType.number,
+                            maxLength: 10,
+                            validator: (e) {
+                              if ((_cohost2Name.text.isNotEmpty) &&
+                                  e!.isEmpty) {
+                                return 'Please enter co-host 1 contact no';
+                              }
+                              if (e!.isEmpty) {
+                                return null;
+                              }
+                              if (!RegExp(r'^\d+$').hasMatch(e)) {
+                                return 'Please enter a valid co-host 1 contact no';
+                              }
+                              if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
+                                return 'Rules cannot contain emojis';
+                              }
+                              if (_cohost1Phone.text == e) {
+                                return 'Co-host 1 and Co-host 2 contact no cannot be same';
+                              }
+                              if (e.length != 10) {
+                                return 'Please enter a valid contact no';
+                              }
+
+                              return null;
+                            },
                           ),
                           FormInput(
                             controller: _rulesController,
@@ -427,14 +677,20 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                   ],
                                 ),
                               )));
-                              final location = await determinePosition();
+
                               Get.back();
                               Get.to(
                                 () => SelectLocationScreen(
-                                  onSelected: (e) {
+                                  onSelected: (e, l) {
                                     setState(() {
                                       _addressController.text = e;
                                     });
+                                    if (l != null) {
+                                      setState(() {
+                                        location = l;
+                                      });
+                                    }
+                                    logger.d('location: $l');
                                     FocusScope.of(context).unfocus();
                                   },
                                   initialLocation: LatLng(
@@ -454,6 +710,12 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                               if (!RegExp(r'^\d+$').hasMatch(e)) {
                                 return 'Please enter a valid entry fee';
                               }
+                              // check if the entry fee starts with 0
+                              if (e.startsWith('0')) {
+                                return 'Entry fee cannot start with 0';
+                              }
+
+                              // check if the entry fee contains emojis
                               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
                                 return 'Rules cannot contain emojis';
                               }
@@ -525,10 +787,29 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                   }),
                               RichText(
                                 text: TextSpan(
-                                    text: "I've read the  ",
+                                    //i hereby agree to the terms and conditions and disclaimer of the app
+                                    text: "I hereby agree to the  ",
                                     children: [
                                       TextSpan(
-                                          text: "disclaimer",
+                                          text: "Terms and Conditions",
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () {
+                                              Get.bottomSheet(BottomSheet(
+                                                  onClosing: () {},
+                                                  builder: (builder) =>
+                                                      const LegalViewScreen(
+                                                          title:
+                                                              'Terms and Conditions',
+                                                          slug: 'terms')));
+                                            },
+                                          style: const TextStyle(
+                                              color: Colors.blue,
+                                              decoration:
+                                                  TextDecoration.underline)),
+                                      const TextSpan(
+                                          text: " and \n", style: TextStyle()),
+                                      TextSpan(
+                                          text: "Disclaimer",
                                           recognizer: TapGestureRecognizer()
                                             ..onTap = () {
                                               Get.bottomSheet(BottomSheet(
@@ -542,34 +823,9 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                               color: Colors.blue,
                                               decoration:
                                                   TextDecoration.underline)),
-                                      TextSpan(
-                                          text: " and thereby agree to your\n",
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              Get.bottomSheet(BottomSheet(
-                                                  onClosing: () {},
-                                                  builder: (builder) =>
-                                                      const LegalViewScreen(
-                                                          title: 'Disclaimer',
-                                                          slug: 'disclaimer')));
-                                            },
-                                          style: const TextStyle()),
-                                      TextSpan(
-                                          text: "Terms & Conditions",
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              Get.bottomSheet(BottomSheet(
-                                                  onClosing: () {},
-                                                  builder: (builder) =>
-                                                      const LegalViewScreen(
-                                                          title:
-                                                              'Terms & Conditions',
-                                                          slug: 'terms')));
-                                            },
-                                          style: const TextStyle(
-                                              color: Colors.blue,
-                                              decoration:
-                                                  TextDecoration.underline))
+                                      const TextSpan(
+                                          text: " of the app ",
+                                          style: TextStyle()),
                                     ],
                                     style: const TextStyle(
                                         color: Colors.black, fontSize: 12)),

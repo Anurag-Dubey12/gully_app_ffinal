@@ -69,7 +69,7 @@ class _MyTeamsState extends State<MyTeams> {
                           return SizedBox(
                             width: Get.width,
                             child: const Center(
-                              child: Text('No Teams Found',
+                              child: Text('No teams created yet',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 24,

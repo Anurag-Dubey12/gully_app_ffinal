@@ -1,6 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/misc_controller.dart';
+import 'package:gully_app/data/model/looking_for_model.dart';
+import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
@@ -10,9 +14,10 @@ class OthersLookingForScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    MiscController miscController = Get.find<MiscController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
-        color: Color.fromARGB(255, 245, 247, 255),
+        color: Color.fromARGB(255, 253, 253, 253),
         image: DecorationImage(
           image: AssetImage('assets/images/sports_icon.png'),
           fit: BoxFit.cover,
@@ -46,87 +51,102 @@ class OthersLookingForScreen extends StatelessWidget {
             ),
             Positioned(
                 child: SizedBox(
+              // height: 70,
               width: Get.width,
-              child: Column(
+              // height: Get.height / 1.2,
+              child: ListView(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 30, top: 30),
-                    child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: BackButton(
-                          color: Colors.white,
-                        )),
-                  ),
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Looking For',
-                        style: TextStyle(
+                  AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    centerTitle: true,
+                    iconTheme: const IconThemeData(color: Colors.white),
+                    title: const Text(
+                      'Looking for',
+                      style: TextStyle(
                           color: Colors.white,
                           fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: Get.height * 0.04),
-                  Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                            color: const Color.fromARGB(132, 61, 60, 58)
-                                .withOpacity(0.3),
-                            blurRadius: 20,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 7))
-                      ],
+                          fontWeight: FontWeight.bold),
                     ),
-                    height: 54,
-                    width: Get.width / 1.2,
-                    child: TextField(
-                      onTap: () {},
-                      decoration: InputDecoration(
-                        isDense: true,
+                  ),
+                  // SizedBox(height: Get.height * 0.04),
+                  // Container(
+                  //   decoration: BoxDecoration(
+                  //     boxShadow: [
+                  //       BoxShadow(
+                  //           color: const Color.fromARGB(132, 61, 60, 58)
+                  //               .withOpacity(0.3),
+                  //           blurRadius: 20,
+                  //           spreadRadius: 2,
+                  //           offset: const Offset(0, 7))
+                  //     ],
+                  //   ),
+                  //   height: 54,
+                  //   width: Get.width / 1.2,
+                  //   child: TextField(
+                  //     onTap: () {},
+                  //     decoration: InputDecoration(
+                  //       isDense: true,
 
-                        suffixIcon: const Icon(
-                          CupertinoIcons.search,
-                          color: AppTheme.secondaryYellowColor,
-                          size: 28,
-                        ),
-                        labelText: 'Search..',
-                        labelStyle: TextStyle(
-                          color: Colors.grey.shade500,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        // isCollapsed: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(60),
-                          borderSide: const BorderSide(
-                            width: 0,
-                            style: BorderStyle.none,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Padding(
-                    padding: EdgeInsets.all(18.0),
+                  //       suffixIcon: const Icon(
+                  //         CupertinoIcons.search,
+                  //         color: AppTheme.secondaryYellowColor,
+                  //         size: 28,
+                  //       ),
+                  //       labelText: 'Search..',
+                  //       labelStyle: TextStyle(
+                  //         color: Colors.grey.shade500,
+                  //         fontSize: 14,
+                  //         fontWeight: FontWeight.w500,
+                  //       ),
+                  //       filled: true,
+                  //       fillColor: Colors.white,
+                  //       // isCollapsed: true,
+                  //       border: OutlineInputBorder(
+                  //         borderRadius: BorderRadius.circular(60),
+                  //         borderSide: const BorderSide(
+                  //           width: 0,
+                  //           style: BorderStyle.none,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('What others are looking for?',
+                        const Text('What others are looking for?',
                             style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
-                        SizedBox(height: 20),
-                        _LookingCard(),
-                        SizedBox(height: 10),
-                        _LookingCard(),
-                        SizedBox(height: 10),
-                        _LookingCard(),
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white)),
+                        const SizedBox(height: 30),
+                        FutureBuilder(
+                            future: miscController.getLookingFor(),
+                            builder: (c, s) {
+                              if (s.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                              if (s.hasError) {
+                                return Center(child: Text('Error: ${s.error}'));
+                              }
+                              return ListView.separated(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: s.data?.length ?? 0,
+                                separatorBuilder: (c, i) {
+                                  return const SizedBox(height: 10);
+                                },
+                                itemBuilder: (c, i) {
+                                  return _LookingCard(s.data![i]);
+                                },
+                              );
+                            }),
                       ],
                     ),
                   )
@@ -141,16 +161,26 @@ class OthersLookingForScreen extends StatelessWidget {
 }
 
 class _LookingCard extends StatelessWidget {
-  const _LookingCard();
+  final LookingForPlayerModel model;
+  const _LookingCard(this.model);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: Get.width,
       decoration: BoxDecoration(
-          color: Colors.white, borderRadius: BorderRadius.circular(10)),
-      child: const Padding(
-        padding: EdgeInsets.all(8.0),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 5,
+              spreadRadius: 2,
+              offset: const Offset(0, 1))
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
             Expanded(
@@ -158,10 +188,46 @@ class _LookingCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  RichText(
+                      text: TextSpan(
+                          text: model.fullName,
+                          style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              height: 1.5,
+                              fontFamily: AppTheme.fontName),
+                          children: [
+                        const TextSpan(
+                          text: ' is looking for a team to join as a ',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.normal,
+                              fontFamily: AppTheme.fontName),
+                        ),
+                        TextSpan(
+                          text: model.role,
+                          style: const TextStyle(
+                            color: AppTheme.secondaryYellowColor,
+                            fontSize: 14,
+                          ),
+                        ),
+                        TextSpan(
+                          text: ' in ${model.location}',
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ])),
+                  const SizedBox(height: 5),
                   Text(
-                      'Bhavesh Pant is looking for a team to join as a batsman in Mumbai'),
-                  Text('2 hours ago',
-                      style: TextStyle(fontSize: 12, color: Colors.grey)),
+                      DateFormat('dd MMM yyy @hh:mm a')
+                          .format(model.createdAt.toLocal()),
+                      style:
+                          TextStyle(fontSize: 12, color: Colors.grey.shade600)),
                 ],
               ),
             ),
@@ -170,9 +236,15 @@ class _LookingCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  CircleAvatar(
-                    backgroundColor: AppTheme.secondaryYellowColor,
-                    child: Icon(Icons.contact_page),
+                  InkWell(
+                    onTap: () {
+                      HapticFeedback.heavyImpact();
+                      launchUrl(Uri.parse('tel:+91${model.phoneNumber}'));
+                    },
+                    child: const CircleAvatar(
+                      backgroundColor: AppTheme.secondaryYellowColor,
+                      child: Icon(Icons.contact_page),
+                    ),
                   )
                 ],
               ),

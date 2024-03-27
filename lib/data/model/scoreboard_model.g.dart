@@ -96,6 +96,8 @@ abstract class _$ScoreboardModelPerFieldToJson {
   // ignore: unused_element
   static Object? secondInningHistory(Map<String, OverModel> instance) =>
       instance.map((k, e) => MapEntry(k, e.toJson()));
+  // ignore: unused_element
+  static Object? totalWickets(int instance) => instance;
 }
 
 Map<String, dynamic> _$ScoreboardModelToJson(ScoreboardModel instance) =>
@@ -124,4 +126,5 @@ Map<String, dynamic> _$ScoreboardModelToJson(ScoreboardModel instance) =>
           instance.firstInningHistory.map((k, e) => MapEntry(k, e.toJson())),
       'secondInningHistory':
           instance.secondInningHistory.map((k, e) => MapEntry(k, e.toJson())),
+      'totalWickets': instance.totalWickets,
     };

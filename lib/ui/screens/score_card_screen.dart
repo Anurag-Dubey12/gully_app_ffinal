@@ -1,4 +1,8 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
@@ -42,15 +46,17 @@ class _ScoreCardScreenState extends State<ScoreCardScreen> {
       return GradientBuilder(
           child: Scaffold(
         backgroundColor: Colors.transparent,
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     // copy to clipboard
+        floatingActionButton: kDebugMode
+            ? FloatingActionButton(
+                onPressed: () {
+                  // copy to clipboard
 
-        //     Clipboard.setData(ClipboardData(
-        //         text: jsonEncode(controller.scoreboard.value!.toJson())));
-        //   },
-        //   child: const Icon(Icons.copy),
-        // ),
+                  Clipboard.setData(ClipboardData(
+                      text: jsonEncode(controller.scoreboard.value!.toJson())));
+                },
+                child: const Icon(Icons.copy),
+              )
+            : null,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           iconTheme: const IconThemeData(color: Colors.white),

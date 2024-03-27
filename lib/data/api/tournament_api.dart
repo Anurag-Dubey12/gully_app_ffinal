@@ -43,7 +43,7 @@ class TournamentApi {
       'endDate': formatDateTime('yyyy-MM-dd', endDate),
       'filter': filter,
     };
-    logger.d(obj);
+    logger.f(obj);
     var response = await repo.post('/main/getTournament', obj);
     if (!response.isOk) {
       throw response.body['error'] ?? 'Unable to Process Request';
@@ -180,5 +180,20 @@ class TournamentApi {
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<ApiResponse> updateTournamentAuthority(
+      String tourId, String authority) async {
+    final obj = {"tournamentID": tourId, "UserId": authority};
+    logger.i(obj);
+    final response = await repo.post('/main/updateAuthority', obj);
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
   }
 }

@@ -217,6 +217,13 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                     controller: _addressController,
                                     label: 'Address',
                                     autofocus: true,
+                                    validator: (e) {
+                                      if (e!
+                                          .contains(RegExp(r'[^\x00-\x7F]+'))) {
+                                        return 'Name cannot contain emojis';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                   FormInput(
                                     controller: TextEditingController(

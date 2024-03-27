@@ -49,7 +49,15 @@ class ScoreboardModel {
       ExtraModel(wides: 0, noBalls: 0, byes: 0, legByes: 0, penalty: 0);
 
   int ballsToBowl = 6;
+  @JsonKey(
+    includeToJson: true,
+    includeFromJson: true,
+  )
   int currentOver = 0;
+  @JsonKey(
+    includeToJson: true,
+    includeFromJson: true,
+  )
   int currentBall = 0;
   @JsonKey(
     includeToJson: true,
@@ -85,6 +93,9 @@ class ScoreboardModel {
       return secondInningHistory;
     }
   }
+
+  @JsonKey(includeFromJson: false, includeToJson: true)
+  int get totalWickets => lastBall.wickets;
 
   ScoreboardModel({
     required this.team1,
@@ -123,12 +134,9 @@ class ScoreboardModel {
     final List<OverModel?> temp = [];
     for (var i = 0; i < getCurrentInnings.length; i++) {
       final String key = '$currentOver.$i';
-      // logger.i('Key: $key');
       if (getCurrentInnings.containsKey(key)) {
-        // logger.i('Key: $key exists');
         temp.add(getCurrentInnings[key]!);
       } else {
-        // logger.i('Key: $key does not exist');
         temp.add(null);
       }
     }

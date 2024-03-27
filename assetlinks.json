@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.nileegames.gullyteam",
+      "sha256_cert_fingerprints": [
+        "00:1E:F7:C2:1D:63:09:36:21:4C:E8:3B:99:40:35:F9:6A:0F:FE:38:00:A9:78:87:8B:B1:11:D8:B9:DB:E4:AA"
+      ]
+    }
+  }
+]

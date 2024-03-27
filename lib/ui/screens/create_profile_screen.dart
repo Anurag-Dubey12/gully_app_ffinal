@@ -2,12 +2,10 @@ import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/choose_lang_screen.dart';
-import 'package:gully_app/ui/screens/legal_screen.dart';
 import 'package:gully_app/ui/widgets/custom_text_field.dart';
 import 'package:gully_app/ui/widgets/location_permission_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
@@ -188,57 +186,6 @@ class _CreateProfileState extends State<CreateProfile>
                                     return null;
                                   },
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      width: 24,
-                                      child: Checkbox(
-                                        splashRadius: 0,
-                                        value: isSelected,
-                                        materialTapTargetSize:
-                                            MaterialTapTargetSize.shrinkWrap,
-                                        side: const BorderSide(
-                                            color: Color(0xff676677),
-                                            width: 1,
-                                            style: BorderStyle.solid),
-                                        onChanged: (e) {
-                                          setState(() {
-                                            isSelected = e as bool;
-                                          });
-                                        },
-                                      ),
-                                    ),
-                                    const SizedBox(width: 5),
-                                    RichText(
-                                      text: TextSpan(
-                                          text: "I've read your",
-                                          children: [
-                                            TextSpan(
-                                                text: " Terms & Conditions",
-                                                recognizer:
-                                                    TapGestureRecognizer()
-                                                      ..onTap = () {
-                                                        Get.bottomSheet(BottomSheet(
-                                                            onClosing: () {},
-                                                            builder: (builder) =>
-                                                                const LegalViewScreen(
-                                                                    title:
-                                                                        'Terms & Conditions',
-                                                                    slug:
-                                                                        'terms')));
-                                                      },
-                                                style: const TextStyle(
-                                                    color: Colors.blue,
-                                                    decoration: TextDecoration
-                                                        .underline))
-                                          ],
-                                          style: const TextStyle(
-                                              color: Colors.black,
-                                              fontSize: 12)),
-                                    )
-                                  ],
-                                ),
                                 const SizedBox(height: 30),
                                 Obx(
                                   () => PrimaryButton(
@@ -250,11 +197,11 @@ class _CreateProfileState extends State<CreateProfile>
                                           return;
                                         }
                                         if (_formKey.currentState!.validate()) {
-                                          if (!isSelected) {
-                                            errorSnackBar(
-                                                'Please accept our terms and conditions');
-                                            return;
-                                          }
+                                          // if (!isSelected) {
+                                          //   errorSnackBar(
+                                          //       'Please accept our terms and conditions');
+                                          //   return;
+                                          // }
                                           final base64Image =
                                               await convertImageToBase64(
                                                   _image!);

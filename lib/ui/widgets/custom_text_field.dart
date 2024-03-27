@@ -47,17 +47,21 @@ class CustomTextField extends StatelessWidget {
       autofocus: autoFocus ?? false,
       controller: controller,
       enabled: enabled,
+      style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
       maxLines: minLines,
       maxLength: maxLen,
       minLines: maxLines,
-      // smartDashesType: SmartDashesType.enabled,
+      // smartDashesType: SmartDashe
+      // sType.enabled,
+
       readOnly: readOnly ?? false,
       onTap: onTap == null ? () {} : () => onTap!(),
       obscureText: obscureText ?? false,
       keyboardType: textInputType ?? TextInputType.text,
       decoration: InputDecoration(
         labelStyle: const TextStyle(
-            fontWeight: FontWeight.w500, color: Color(0xff676677)),
+            fontWeight: FontWeight.w500,
+            color: Color.fromARGB(255, 106, 106, 106)),
         hintText: hintText,
         labelText: labelText,
         suffixIcon: suffixIcon,
@@ -65,7 +69,8 @@ class CustomTextField extends StatelessWidget {
         isDense: true,
         counter: const SizedBox(),
         fillColor: Colors.white,
-        hintStyle: const TextStyle(color: Colors.grey, fontSize: 12),
+        hintStyle: const TextStyle(
+            color: Color.fromARGB(255, 144, 144, 144), fontSize: 12),
         border: filled ?? false
             ? OutlineInputBorder(
                 borderRadius: BorderRadius.circular(10),

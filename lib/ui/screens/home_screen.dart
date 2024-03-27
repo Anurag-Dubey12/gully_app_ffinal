@@ -138,41 +138,47 @@ class HomePage extends StatelessWidget {
                     // color: Colors.red,
                     width: Get.width,
 
-                    child: Column(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: TopHeader(),
+                    child: SizedBox(
+                      height: Get.height - 150,
+                      child: SingleChildScrollView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        child: Column(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: TopHeader(),
+                            ),
+                            const SizedBox(
+                              height: 10,
+                            ),
+                            SizedBox(
+                              height: 60,
+                              child: ListView.separated(
+                                  scrollDirection: Axis.horizontal,
+                                  shrinkWrap: true,
+                                  itemBuilder: (context, index) {
+                                    return SportsCard(
+                                      index: index,
+                                    );
+                                  },
+                                  padding: const EdgeInsets.only(left: 20),
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(
+                                        width: 15,
+                                      ),
+                                  itemCount: 7),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            const FullBannerSlider(),
+                            const SizedBox(height: 20),
+                            const DateTimesCard(),
+                            const TitleWidget(),
+                            const TournamentList()
+                          ],
                         ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        SizedBox(
-                          height: 50,
-                          child: ListView.separated(
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) {
-                                return SportsCard(
-                                  index: index,
-                                );
-                              },
-                              padding: const EdgeInsets.only(left: 20),
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(
-                                    width: 15,
-                                  ),
-                              itemCount: 7),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        const FullBannerSlider(),
-                        const SizedBox(height: 20),
-                        const DateTimesCard(),
-                        const TitleWidget(),
-                        const TournamentList()
-                      ],
+                      ),
                     ),
                   ),
                 )
@@ -190,14 +196,12 @@ class _TournamentMajorDuration extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
   const _TournamentMajorDuration(
-      {super.key,
-      required this.title,
-      required this.isSelected,
-      required this.onTap});
+      {required this.title, required this.isSelected, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
+      key: key,
       padding: const EdgeInsets.symmetric(horizontal: 4),
       child: GestureDetector(
         onTap: () => onTap(),

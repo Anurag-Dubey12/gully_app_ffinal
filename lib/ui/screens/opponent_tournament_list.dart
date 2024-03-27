@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/opponent_model.dart';
-import 'package:gully_app/data/model/tournament_model.dart';
-import 'package:gully_app/ui/screens/tournament_teams.dart';
+import 'package:gully_app/ui/screens/opponent_team_list.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
-import 'package:gully_app/utils/date_time_helpers.dart';
 
 import '../../data/controller/tournament_controller.dart';
 
@@ -54,8 +52,7 @@ class _OpponentTournamentsScreenState extends State<OpponentTournamentsScreen> {
                               itemCount: snapshot.data?.length ?? 0,
                               itemBuilder: (context, index) {
                                 return _TourCard(
-                                    snapshot.data!.elementAt(index).tournament,
-                                    () {
+                                    snapshot.data!.elementAt(index), () {
                                   setState(() {});
                                 }
                                     // tournament: snapshot.data![index],
@@ -94,16 +91,16 @@ class EmptyTournamentWidget extends StatelessWidget {
 }
 
 class _TourCard extends GetView<TournamentController> {
-  final TournamentModel tournament;
+  final OpponentModel opponentModel;
   final Function onCancel;
-  const _TourCard(this.tournament, this.onCancel);
+  const _TourCard(this.opponentModel, this.onCancel);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       style: ListTileStyle.drawer,
       onTap: () {
-        Get.to(() => TournamentTeams(tournament: tournament));
+        // Get.to(() => TournamentTeams(tournament: opponentModel));
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       tileColor: Colors.white,
@@ -111,57 +108,26 @@ class _TourCard extends GetView<TournamentController> {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(tournament.tournamentName,
+          Text(opponentModel.tournamentName,
               style: Get.textTheme.bodyLarge
                   ?.copyWith(fontWeight: FontWeight.w700)),
-          Text(tournament.stadiumAddress,
-              style: Get.textTheme.bodySmall
-                  ?.copyWith(color: Colors.grey.shade600)),
-          SizedBox(height: Get.height * 0.01),
-          Row(
-            children: [
-              const Icon(Icons.calendar_month,
-                  color: AppTheme.secondaryYellowColor, size: 16),
-              const SizedBox(width: 8),
-              Text(
-                  formatDateTime(
-                      'dd.MMM.yyyy', tournament.tournamentStartDateTime),
-                  style: Get.textTheme.bodySmall
-                      ?.copyWith(color: Colors.grey.shade800)),
-            ],
-          ),
+          // Text(opponentModel.stadiumAddress,
+          //     style: Get.textTheme.bodySmall
+          //         ?.copyWith(color: Colors.grey.shade600)),
         ],
       ),
       trailing: GestureDetector(
         onTap: () async {
-          Get.dialog(AlertDialog.adaptive(
-            title: const Text('Cancel Tournament'),
-            content:
-                const Text('Are you sure you want to cancel this tournament?'),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  child: const Text('No')),
-              TextButton(
-                  onPressed: () async {
-                    await controller.cancelTournament(tournament.id);
-                    onCancel();
-                    Get.back();
-                  },
-                  child: const Text('Yes')),
-            ],
-          ));
-          // await controller.cancelTournament(tournament.id);
-          // onCancel();
+          Get.to(() => ViewOpponentTeamList(
+                opponent: opponentModel,
+              ));
         },
         child: const Chip(
             iconTheme: IconThemeData(color: Colors.white),
             padding: EdgeInsets.zero,
-            label: Text('Cancel',
+            label: Text('View Opponents',
                 style: TextStyle(color: Colors.white, fontSize: 12)),
-            backgroundColor: Colors.red,
+            backgroundColor: AppTheme.darkYellowColor,
             side: BorderSide.none),
       ),
     );

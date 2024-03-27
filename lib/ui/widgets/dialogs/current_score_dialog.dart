@@ -5,8 +5,6 @@ import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
-import '../scorecard/batting_card.dart';
-
 class ScoreBottomDialog extends StatefulWidget {
   final MatchupModel match;
   const ScoreBottomDialog({
@@ -144,7 +142,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                     Container(
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 225, 222, 236),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(18.0),
@@ -216,7 +214,45 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                 // const Text('To win: '),
                               ]),
                             ),
-                            const BattingStats()
+                            const SizedBox(height: 30),
+                            Row(
+                              children: [
+                                Image.asset('assets/images/bat.png',
+                                    height: 14),
+                                const SizedBox(width: 5),
+                                const Text('Striker:  ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500)),
+                                Text(
+                                    '${controller.scoreboard.value?.striker.name}')
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Image.asset('assets/images/bat.png',
+                                    height: 14),
+                                const SizedBox(width: 5),
+                                const Text('Non Striker:  ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500)),
+                                Text(
+                                    '${controller.scoreboard.value?.nonstriker.name}'),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                Image.asset('assets/images/ball.png',
+                                    height: 14),
+                                const SizedBox(width: 5),
+                                const Text('Striker:  ',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w500)),
+                                Text(
+                                    '${controller.scoreboard.value?.bowlerName}'),
+                              ],
+                            )
                           ],
                         ),
                       ),

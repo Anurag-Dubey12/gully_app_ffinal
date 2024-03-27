@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/team_request.dart';
+import 'package:gully_app/data/model/team_model.dart';
+import 'package:gully_app/utils/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
 class ViewOpponentTeam extends StatefulWidget {
-  const ViewOpponentTeam({super.key});
+  final TeamModel team;
+  const ViewOpponentTeam({super.key, required this.team});
 
   @override
   State<ViewOpponentTeam> createState() => _ViewOpponentTeamState();
@@ -73,12 +77,13 @@ class _ViewOpponentTeamState extends State<ViewOpponentTeam> {
                               Center(
                                 child: Column(
                                   children: [
-                                    Text('Black Panther',
+                                    Text(widget.team.name.capitalizeFirst,
                                         style: Get.textTheme.headlineLarge
                                             ?.copyWith(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold)),
-                                    Text('Captain: Rohit Sharma',
+                                    Text(
+                                        'Captain: ${widget.team.players![0].name.capitalizeFirst}',
                                         style:
                                             Get.textTheme.bodyMedium?.copyWith(
                                           color: Colors.white,
@@ -87,16 +92,25 @@ class _ViewOpponentTeamState extends State<ViewOpponentTeam> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text('Contact: +91 9876543210 ',
+                                        const SizedBox(width: 15),
+                                        Text(
+                                            'Contact: +91 ${widget.team.players?[0].phoneNumber} ',
                                             style: Get.textTheme.bodyMedium
                                                 ?.copyWith(
                                               color: Colors.white,
                                             )),
                                         const SizedBox(width: 5),
-                                        const Icon(
-                                          Icons.copy,
+                                        IconButton(
+                                          onPressed: () {
+                                            HapticFeedback.heavyImpact();
+                                            launchUrl(Uri.parse(
+                                                'tel:+91${widget.team.players?[0].phoneNumber}'));
+                                          },
+                                          icon: const Icon(
+                                            Icons.call,
+                                            size: 15,
+                                          ),
                                           color: Colors.white,
-                                          size: 15,
                                         ),
                                       ],
                                     ),
@@ -111,27 +125,16 @@ class _ViewOpponentTeamState extends State<ViewOpponentTeam> {
                                         border: Border.all(
                                             color: AppTheme.primaryColor,
                                             width: 1)),
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(3.0),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(3.0),
                                       child: Stack(
                                         children: [
                                           CircleAvatar(
                                             radius: 49,
+                                            backgroundImage: NetworkImage(
+                                                toImageUrl(
+                                                    widget.team.logo ?? "")),
                                           ),
-                                          Positioned(
-                                            bottom: 0,
-                                            right: 0,
-                                            child: CircleAvatar(
-                                              radius: 10,
-                                              backgroundColor:
-                                                  AppTheme.secondaryYellowColor,
-                                              child: Icon(
-                                                Icons.edit,
-                                                color: Colors.white,
-                                                size: 15,
-                                              ),
-                                            ),
-                                          )
                                         ],
                                       ),
                                     )),
@@ -139,18 +142,17 @@ class _ViewOpponentTeamState extends State<ViewOpponentTeam> {
                               SizedBox(height: Get.height * 0.02),
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: ListView.separated(
-                                    padding: const EdgeInsets.only(bottom: 10),
-                                    shrinkWrap: true,
-                                    itemCount: 4,
-                                    separatorBuilder: (context, index) =>
-                                        const SizedBox(height: 14),
-                                    itemBuilder: (context, snapshot) {
-                                      return InkWell(
-                                        onTap: () {
-                                          Get.to(() => const TeamRequest());
-                                        },
-                                        child: Container(
+                                child: SizedBox(
+                                  height: Get.height * 0.63,
+                                  child: ListView.separated(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 10),
+                                      shrinkWrap: true,
+                                      itemCount: widget.team.players!.length,
+                                      separatorBuilder: (context, index) =>
+                                          const SizedBox(height: 14),
+                                      itemBuilder: (context, snapshot) {
+                                        return Container(
                                           decoration: BoxDecoration(
                                               color: const Color.fromARGB(
                                                   255, 255, 255, 255),
@@ -167,10 +169,11 @@ class _ViewOpponentTeamState extends State<ViewOpponentTeam> {
                                           child: Padding(
                                             padding: const EdgeInsets.all(12.0),
                                             child: Row(children: [
-                                              const CircleAvatar(),
+                                              // const CircleAvatar(),
                                               const Spacer(),
                                               Text(
-                                                'Bob Odenkirk',
+                                                widget.team.players![snapshot]
+                                                    .name.capitalizeFirst,
                                                 style: Get
                                                     .textTheme.headlineSmall
                                                     ?.copyWith(
@@ -180,9 +183,9 @@ class _ViewOpponentTeamState extends State<ViewOpponentTeam> {
                                               const Spacer(),
                                             ]),
                                           ),
-                                        ),
-                                      );
-                                    }),
+                                        );
+                                      }),
+                                ),
                               )
                             ],
                           ),

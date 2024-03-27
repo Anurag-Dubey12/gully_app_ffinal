@@ -2,9 +2,13 @@ import 'dart:io';
 
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:gully_app/data/api/misc_api.dart';
@@ -40,6 +44,14 @@ void main() async {
 
   await GetStorage.init();
   HttpOverrides.global = MyHttpOverrides();
+  FlutterError.onError = (errorDetails) {
+    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+  };
+
+  PlatformDispatcher.instance.onError = (error, stack) {
+    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+    return true;
+  };
 
   await DefaultCacheManager().emptyCache();
 
@@ -54,6 +66,16 @@ class MyApp extends StatelessWidget {
         enabled: false,
         builder: (context) {
           return GetMaterialApp(
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale('en'),
+              Locale('es'),
+            ],
             binds: [
               Bind.put<Preferences>(Preferences()),
               Bind.put<GetConnectClient>(GetConnectClient(
@@ -74,8 +96,6 @@ class MyApp extends StatelessWidget {
                   () => ScoreboardApi(repo: Get.find())),
               Bind.put<TeamApi>(TeamApi(repo: Get.find())),
               Bind.put<TeamController>(TeamController(repo: Get.find())),
-              // Bind.lazyPut<AuthController>(
-              //     () => AuthController(repo: Get.find())),
               Bind.put<AuthController>(AuthController(repo: Get.find())),
               Bind.put<ScoreBoardController>(
                   ScoreBoardController(scoreboardApi: Get.find())),
@@ -95,9 +115,7 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
   final String title;
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }

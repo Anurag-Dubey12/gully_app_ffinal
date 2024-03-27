@@ -2,11 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gully_app/config/preferences.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/player_profile_screen.dart';
 import 'package:gully_app/ui/screens/splash_screen.dart';
 import 'package:gully_app/utils/utils.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../screens/contact_us_screen.dart';
 import '../screens/legal_screen.dart';
@@ -237,9 +239,13 @@ class AppDrawer extends GetView<AuthController> {
                 //   },
                 //   icon: Icons.history,
                 // ),
-                const DrawerCard(
+                DrawerCard(
                   title: 'Share App',
                   icon: Icons.share,
+                  onTap: () {
+                    Share.share(
+                        'Inviting you to experience real-time tournament with the Gully Team app – download now!\n Download: https://play.google.com/store/apps/details?id=com.nileegames.gullyteam');
+                  },
                 ),
                 DrawerCard(
                   title: 'Privacy Policy',
@@ -280,11 +286,20 @@ class AppDrawer extends GetView<AuthController> {
                 ),
                 DrawerCard(
                   title: 'Log out',
-                  onTap: () {
+                  onTap: () async {
                     final controller = Get.find<Preferences>();
                     controller.clear();
+                    final googleSignIn = GoogleSignIn();
+                    try {
+                      await googleSignIn.disconnect();
+                      await googleSignIn.signOut();
+                    } catch (e) {
+                      print('failed to disconnect on signout $e');
+                    }
+                    if (FirebaseAuth.instance.currentUser != null) {
+                      await FirebaseAuth.instance.signOut();
+                    }
 
-                    FirebaseAuth.instance.signOut();
                     Future.delayed(const Duration(milliseconds: 300), () {
                       Get.offAll(() => const SplashScreen());
                     });

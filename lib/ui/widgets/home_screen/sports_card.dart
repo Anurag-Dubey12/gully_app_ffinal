@@ -14,11 +14,12 @@ class SportsCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(1.0),
       child: Container(
+        width: 60,
         decoration: BoxDecoration(
           color: index == 0
               ? const Color.fromARGB(255, 255, 157, 46)
               : Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(21),
           boxShadow: [
             BoxShadow(
                 color: index == 0
@@ -35,12 +36,12 @@ class SportsCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               index != 0
-                  ? Icon(Icons.history, color: Colors.grey[200], size: 14)
+                  ? const SizedBox()
                   : Image.asset(
                       'assets/images/cricket_icon.png',
                       color: index == 0 ? Colors.white : Colors.grey.shade400,
-                      height: 14,
-                      width: 14,
+                      height: 18,
+                      width: 18,
                     ),
               const SizedBox(height: 5),
               Text(

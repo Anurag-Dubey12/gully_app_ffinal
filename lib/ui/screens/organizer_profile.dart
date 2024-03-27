@@ -9,6 +9,10 @@ import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import 'add_team.dart';
+import 'my_teams.dart';
+import 'opponent_tournament_list.dart';
+
 class OrganizerProfileScreen extends GetView<AuthController> {
   const OrganizerProfileScreen({super.key});
 
@@ -151,6 +155,32 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
+                            ProfileTileCard(
+                              text: 'Add team',
+                              onTap: () {
+                                Get.to(() => const AddTeam());
+                              },
+                            ),
+                            ProfileTileCard(
+                              text: 'View My Team',
+                              onTap: () {
+                                Get.to(() => const MyTeams());
+                              },
+                            ),
+                            // ProfileTileCard(
+                            //   text: 'My performance',
+                            //   onTap: () {
+                            //     Get.to(() => const SelectTeamToViewHistory());
+                            //   },
+                            // ),
+                            ProfileTileCard(
+                              text: 'View Opponent',
+                              onTap: () {
+                                Get.to(() => const OpponentTournamentsScreen(
+                                      opponentView: true,
+                                    ));
+                              },
+                            ),
                             InkWell(
                               child: ProfileTileCard(
                                 onTap: () {
@@ -169,6 +199,17 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                                 Get.to(() => const CurrentTournamentListScreen(
                                       redirectType:
                                           RedirectType.currentTournament,
+                                    ));
+                              },
+                            ),
+                            ProfileTileCard(
+                              text: 'Manage Tournament Authority',
+                              onTap: () {
+                                Get.find<TournamentController>()
+                                    .getOrganizerTournamentList();
+                                Get.to(() => const CurrentTournamentListScreen(
+                                      redirectType:
+                                          RedirectType.manageAuthority,
                                     ));
                               },
                             ),

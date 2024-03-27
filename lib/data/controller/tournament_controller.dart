@@ -219,4 +219,16 @@ class TournamentController extends GetxController
       return false;
     }
   }
+
+  Future<bool> updateTournamentAuthority(
+      String tourId, String authority) async {
+    try {
+      final response =
+          await tournamentApi.updateTournamentAuthority(tourId, authority);
+      return response.status!;
+    } catch (e) {
+      errorSnackBar(e.toString());
+      return false;
+    }
+  }
 }

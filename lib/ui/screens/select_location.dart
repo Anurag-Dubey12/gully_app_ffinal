@@ -13,7 +13,7 @@ import 'package:gully_app/utils/app_logger.dart';
 import '../theme/theme.dart';
 
 class SelectLocationScreen extends StatefulWidget {
-  final Function(String address) onSelected;
+  final Function(String address, LatLng? selectedLocation) onSelected;
   final LatLng? initialLocation;
   const SelectLocationScreen(
       {super.key, required this.onSelected, this.initialLocation});
@@ -32,10 +32,9 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
   );
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    logger.i("INIT STATE ${widget.initialLocation}");
 
-    // post frame callback
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       getLocation().then((value) {
         _kGooglePlex = CameraPosition(
@@ -54,6 +53,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
     return position;
   }
 
+  var markers = <MarkerId, Marker>{};
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -99,7 +99,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                               builder: (c) {
                                 return _AddManualPlace(
                                   onSelected: (e) {
-                                    widget.onSelected.call(e);
+                                    widget.onSelected.call(e, null);
                                     Get.back();
                                   },
                                 );
@@ -152,10 +152,10 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                 )),
                             // Add location search bar white container with text field and search icon
                             _SearchBar(
-                              onSelected: (e) {
+                              onSelected: (e, l) {
                                 logger.i(e);
                                 logger.i("SELECTED");
-                                widget.onSelected.call(e);
+                                widget.onSelected.call(e, l);
                                 Get.back();
                               },
                             ),
@@ -163,23 +163,28 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                               padding: const EdgeInsets.all(18.0),
                               child: SizedBox(
                                 width: Get.width,
-                                height: Get.height * 0.2,
+                                height: Get.height * 0.3,
                                 // color: Colors.grey[200],
                                 child: GoogleMap(
+                                  markers: Set<Marker>.of(markers.values),
                                   mapType: MapType.hybrid,
                                   fortyFiveDegreeImageryEnabled: false,
                                   initialCameraPosition: _kGooglePlex,
                                   onMapCreated:
                                       (GoogleMapController controller) async {
                                     _controller.complete(controller);
-                                    Position position =
-                                        await Geolocator.getCurrentPosition(
-                                            desiredAccuracy:
-                                                LocationAccuracy.high);
+                                    markers.clear();
+                                    markers[const MarkerId('1')] = Marker(
+                                      markerId: const MarkerId('1'),
+                                      position: LatLng(
+                                          widget.initialLocation!.latitude,
+                                          widget.initialLocation!.longitude),
+                                    );
                                     controller.animateCamera(
                                         CameraUpdate.newLatLng(LatLng(
-                                            position.latitude,
-                                            position.longitude)));
+                                            widget.initialLocation!.latitude,
+                                            widget
+                                                .initialLocation!.longitude)));
                                     setState(() {
                                       isLoading = false;
                                     });
@@ -300,6 +305,18 @@ class _AddManualPlaceState extends State<_AddManualPlace> {
                     if (e!.isEmpty) {
                       return 'Please enter a place name';
                     }
+                    // check if the name contains emojis
+                    if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
+                      return 'Name cannot contain emojis';
+                    }
+                    // check if the name contains only numbers
+
+                    // check if the name contains only special characters
+                    if (e.contains(
+                        RegExp(r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]'))) {
+                      return 'Name cannot contain special characters';
+                    }
+
                     return null;
                   },
                 ),
@@ -329,7 +346,7 @@ class _AddManualPlaceState extends State<_AddManualPlace> {
 }
 
 class _SearchBar extends StatelessWidget {
-  final Function(String address)? onSelected;
+  final Function(String address, LatLng? latlng)? onSelected;
   const _SearchBar({required this.onSelected});
 
   @override
@@ -360,7 +377,12 @@ class _SearchBar extends StatelessWidget {
                 onTap: () {
                   Get.to(() => SearchPlacesScreen(
                         onSelected: (e) {
-                          onSelected?.call(e.description ?? "No Addres");
+                          onSelected?.call(
+                              e.description ?? "No Address",
+                              e.lat == null
+                                  ? null
+                                  : LatLng(double.parse(e.lat!),
+                                      double.parse(e.lng!)));
                         },
                       ));
                 },

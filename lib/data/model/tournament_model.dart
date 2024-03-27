@@ -1,3 +1,4 @@
+import 'package:gully_app/data/model/co_host_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'tournament_model.g.dart';
@@ -32,27 +33,39 @@ class TournamentModel {
   @JsonKey(fromJson: extractName)
   final String? tournamentPrize;
   final String? organizerName;
+  final String? coverPhoto;
+  @JsonKey(disallowNullValue: false)
+  final CoHostModel? coHost1;
+  @JsonKey(disallowNullValue: false)
+  final CoHostModel? coHost2;
+  @JsonKey(disallowNullValue: false)
+  final String? authority;
 
-  TournamentModel(
-      {required this.tournamentName,
-      required this.id,
-      required this.disclaimer,
-      required this.rules,
-      required this.tournamentPrize,
-      required this.organizerName,
-      required this.ballCharges,
-      required this.pendingTeamsCount,
-      required this.phoneNumber,
-      required this.tournamentLimit,
-      required this.registeredTeamsCount,
-      required this.stadiumAddress,
-      required this.tournamentStartDateTime,
-      required this.tournamentEndDateTime,
-      required this.pitchType,
-      required this.breakfastCharges,
-      required this.ballType,
-      // required this.tournamentListType,
-      required this.fees});
+  TournamentModel({
+    required this.tournamentName,
+    required this.id,
+    required this.disclaimer,
+    required this.rules,
+    required this.tournamentPrize,
+    required this.organizerName,
+    required this.ballCharges,
+    required this.pendingTeamsCount,
+    required this.phoneNumber,
+    required this.tournamentLimit,
+    required this.registeredTeamsCount,
+    required this.stadiumAddress,
+    required this.tournamentStartDateTime,
+    required this.tournamentEndDateTime,
+    required this.pitchType,
+    required this.breakfastCharges,
+    required this.ballType,
+    // required this.tournamentListType,
+    required this.coverPhoto,
+    required this.fees,
+    required this.coHost1,
+    required this.coHost2,
+    required this.authority,
+  });
   factory TournamentModel.fromJson(Map<String, dynamic> json) =>
       _$TournamentModelFromJson(json);
 

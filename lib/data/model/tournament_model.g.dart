@@ -30,5 +30,13 @@ TournamentModel _$TournamentModelFromJson(Map<String, dynamic> json) =>
       breakfastCharges: json['breakfastCharges'] as int,
       ballType:
           TournamentModel.extractName(json['ballType'] as Map<String, dynamic>),
+      coverPhoto: json['coverPhoto'] as String?,
       fees: (json['fees'] as num).toDouble(),
+      coHost1: json['coHost1'] == null
+          ? null
+          : CoHostModel.fromJson(json['coHost1'] as Map<String, dynamic>),
+      coHost2: json['coHost2'] == null
+          ? null
+          : CoHostModel.fromJson(json['coHost2'] as Map<String, dynamic>),
+      authority: json['authority'] as String?,
     );

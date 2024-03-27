@@ -26,6 +26,7 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
             return ListView.builder(
                 itemCount: controller.matches.length,
                 shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 padding:
                     EdgeInsets.only(bottom: Get.statusBarHeight + 70, top: 10),
                 itemBuilder: (context, snapshot) {
@@ -143,7 +144,7 @@ class _Card extends StatelessWidget {
                         ],
                       ),
                       Text(
-                          '${scoreboard.currentInningsScore ?? 0}/${scoreboard.currentOverHistory.last?.wickets ?? 0}')
+                          '${scoreboard.currentInningsScore}/${scoreboard.currentOverHistory.last?.wickets ?? 0}')
                     ],
                   ),
                 ],

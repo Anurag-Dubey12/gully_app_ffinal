@@ -49,17 +49,35 @@ errorSnackBar(String errorMessage) => Get.isDialogOpen ?? false
         middleText: errorMessage,
       );
 
-successSnackBar(String successMessage) => Get.isSnackbarOpen
+Future successSnackBar(String successMessage) async => Get.isSnackbarOpen
     ? null
-    : Get.snackbar('Success', successMessage,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        messageText: Text(successMessage,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w500,
-            )),
-        duration: const Duration(seconds: 3));
+    : await Get.defaultDialog(
+        title: 'Yayy!',
+        contentPadding: const EdgeInsets.all(10),
+        titlePadding: const EdgeInsets.all(10),
+        titleStyle: const TextStyle(
+          color: Colors.green,
+          fontWeight: FontWeight.w500,
+        ),
+        confirm: InkWell(
+          onTap: () {
+            Get.back();
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+              color: AppTheme.primaryColor,
+            ),
+            child: const Text('OK',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                )),
+          ),
+        ),
+        middleText: successMessage,
+      );
 
 Future<String> getAddressFromLatLng(double latitude, double longitude) async {
   final address = await placemarkFromCoordinates(latitude, longitude)
@@ -83,8 +101,8 @@ String toImageUrl(String endpoint) {
 
 String getAssetFromRole(String role) {
   switch (role) {
-    case 'Captain':
-      return 'assets/images/bat.png';
+    case 'captain':
+      return 'assets/images/captian.png';
     case 'Batsman':
       return 'assets/images/bat.png';
     case 'Bowler':
@@ -94,6 +112,6 @@ String getAssetFromRole(String role) {
     case 'All Rounder':
       return 'assets/images/allrounder.png';
     default:
-      return 'assets/images/bat.png';
+      return 'assets/images/captain.png';
   }
 }

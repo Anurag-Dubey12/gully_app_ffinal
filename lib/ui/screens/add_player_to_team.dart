@@ -29,6 +29,8 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<TeamController>();
+
     return Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -39,43 +41,54 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
               fit: BoxFit.cover),
         ),
         child: Scaffold(
-          bottomNavigationBar: Container(
-            height: 90,
-            decoration: BoxDecoration(color: Colors.white, boxShadow: [
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 5,
-                  spreadRadius: 2,
-                  offset: const Offset(0, -1))
-            ]),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 35.0, vertical: 19),
-                  child: PrimaryButton(
-                    onTap: () async {
-                      await Get.bottomSheet(
-                        BottomSheet(
-                          backgroundColor: const Color(0xffEBEBEB),
-                          enableDrag: false,
-                          builder: (context) => _AddPlayerDialog(
-                            teamId: widget.team.id,
-                          ),
-                          onClosing: () {
-                            setState(() {});
-                          },
-                        ),
-                      );
+          bottomNavigationBar: Builder(
+              builder: (context) => Obx(
+                    () {
+                      if (controller.players.value.length == 15) {
+                        return const SizedBox();
+                      } else {
+                        return Container(
+                          height: 90,
+                          decoration:
+                              BoxDecoration(color: Colors.white, boxShadow: [
+                            BoxShadow(
+                                color: Colors.black.withOpacity(0.1),
+                                blurRadius: 5,
+                                spreadRadius: 2,
+                                offset: const Offset(0, -1))
+                          ]),
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 35.0, vertical: 19),
+                                child: PrimaryButton(
+                                  onTap: () async {
+                                    await Get.bottomSheet(
+                                      BottomSheet(
+                                        backgroundColor:
+                                            const Color(0xffEBEBEB),
+                                        enableDrag: false,
+                                        builder: (context) => _AddPlayerDialog(
+                                          teamId: widget.team.id,
+                                        ),
+                                        onClosing: () {
+                                          setState(() {});
+                                        },
+                                      ),
+                                    );
 
-                      setState(() {});
+                                    setState(() {});
+                                  },
+                                  title: 'Add Player',
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
                     },
-                    title: 'Add Player',
-                  ),
-                ),
-              ],
-            ),
-          ),
+                  )),
           backgroundColor: Colors.transparent,
           body: Stack(
             children: [
@@ -167,8 +180,8 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              SizedBox(height: Get.height * 0.04),
-                              SizedBox(height: Get.height * 0.02),
+                              // SizedBox(height: Get.height * 0.04),
+                              // SizedBox(height: Get.height * 0.02),
                               Padding(
                                 padding: const EdgeInsets.all(18.0),
                                 child: Text('Players',
@@ -281,7 +294,9 @@ class _PlayerCardState extends State<PlayerCard> {
                   ),
                   const SizedBox(width: 10),
                   Image.asset(
-                    getAssetFromRole(widget.player.role),
+                    (widget.isEditable ?? true)
+                        ? getAssetFromRole(widget.player.role)
+                        : getAssetFromRole('captian'),
                     width: 20,
                   ),
                 ],
@@ -496,6 +511,7 @@ class _AddPlayerDetails extends StatefulWidget {
   final String teamId;
   final String? name;
   final String? phone;
+
   const _AddPlayerDetails(
       {required this.teamId, required this.name, required this.phone});
 
@@ -545,7 +561,10 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                 ),
               ),
               const SizedBox(height: 20),
-              Text('Add via Phone Number ',
+              Text(
+                  widget.name != null
+                      ? 'Add from Contact'
+                      : 'Add via Phone Number ',
                   style: Get.textTheme.headlineMedium?.copyWith(
                       color: Colors.black, fontWeight: FontWeight.bold)),
               Text(errorText,
@@ -612,6 +631,7 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
               const SizedBox(height: 20),
               PrimaryButton(
                 onTap: () async {
+                  FocusScope.of(context).unfocus();
                   if (nameController.text.isEmpty ||
                       phoneController.text.isEmpty) {
                     setState(() {
@@ -619,6 +639,14 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                     });
                     return;
                   }
+                  // check if the name contains only alphabets and spaces
+                  if (!nameController.text.contains(RegExp(r'^[a-zA-Z ]+$'))) {
+                    setState(() {
+                      errorText = 'Please enter a valid name';
+                    });
+                    return;
+                  }
+
                   if (!phoneController.text.isPhoneNumber ||
                       phoneController.text.length != 10 ||
                       !phoneController.text.isNumericOnly) {

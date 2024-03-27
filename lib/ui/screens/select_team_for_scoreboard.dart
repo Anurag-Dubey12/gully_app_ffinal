@@ -83,6 +83,14 @@ class SelectTeamForScoreBoard extends GetView<TournamentController> {
                               child: Text('Error: ${snapshot.error}'),
                             );
                           }
+                          if (snapshot.data?.isEmpty ?? true) {
+                            return const Center(
+                                child: Text('No Matchup has been organized yet',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)));
+                          }
                           return ListView.separated(
                             itemCount: snapshot.data?.length ?? 0,
                             separatorBuilder: (context, index) =>

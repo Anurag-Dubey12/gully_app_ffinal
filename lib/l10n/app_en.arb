@@ -1,0 +1,10 @@
+{
+  "helloWorld": "¡Hola Mundo!",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  },
+  "tournament": "Tournament",
+  "past": "Past",
+  "upcoming": "Upcoming",
+  "current": "Current"
+}

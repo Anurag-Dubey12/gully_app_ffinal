@@ -1,15 +1,24 @@
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/home_screen.dart';
 
-class SignUpScreen extends GetView<AuthController> {
+import 'legal_screen.dart';
+
+class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
 
   @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  @override
   Widget build(BuildContext context) {
+    final controller = Get.find<AuthController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -36,7 +45,7 @@ class SignUpScreen extends GetView<AuthController> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           body: Padding(
-            padding: const EdgeInsets.all(28.0),
+            padding: const EdgeInsets.all(18.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -61,42 +70,87 @@ class SignUpScreen extends GetView<AuthController> {
                 ),
                 const Spacer(),
                 // create a container sign up with google
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Obx(
-                      () {
-                        if (controller.status.isLoading) {
-                          return const CircularProgressIndicator();
-                        } else {
-                          return SocialButton(
-                            image: 'google_icon.png',
-                            title: 'Sign up with Google',
-                            bgColor: Colors.white,
-                            color: const Color.fromRGBO(0, 0, 0, 0.54),
-                            onClick: () async {
-                              final res = await controller.loginViaGoogle();
-                              if (res) {
-                                Get.offAll(() => const HomeScreen());
-                              }
-                            },
-                          );
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 30),
-                    Platform.isIOS
-                        ? SocialButton(
-                            image: 'apple_icon.png',
-                            title: 'Sign up with Apple',
-                            bgColor: Colors.black,
-                            color: Colors.white,
-                            onClick: () {},
-                          )
-                        : const SizedBox(),
-                  ],
+                const SizedBox(height: 15),
+                Obx(
+                  () {
+                    if (controller.status.isLoading) {
+                      return const CircularProgressIndicator();
+                    } else {
+                      return SocialButton(
+                        image: 'google_icon.png',
+                        title: 'Sign up with Google',
+                        bgColor: Colors.white,
+                        color: const Color.fromRGBO(0, 0, 0, 0.54),
+                        onClick: () async {
+                          final res = await controller.loginViaGoogle();
+                          if (res) {
+                            Get.offAll(() => const HomeScreen());
+                          }
+                        },
+                      );
+                    }
+                  },
                 ),
-                const Spacer(), const Spacer(),
+                const SizedBox(height: 30),
+                Platform.isIOS
+                    ? SocialButton(
+                        image: 'apple_icon.png',
+                        title: 'Sign up with Apple',
+                        bgColor: Colors.black,
+                        color: Colors.white,
+                        onClick: () {},
+                      )
+                    : const SizedBox(),
+                const Spacer(),
+                const Spacer(),
+
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                      text: "By Continuing you agree to the\n ",
+                      children: [
+                        TextSpan(
+                            text: "Terms of Service ",
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Get.bottomSheet(BottomSheet(
+                                    onClosing: () {},
+                                    builder: (builder) => const LegalViewScreen(
+                                        title: 'Terms of Services',
+                                        slug: 'terms')));
+                              },
+                            style: TextStyle(
+                                color: Colors.blue.shade700,
+                                fontWeight: FontWeight.w500)),
+                        TextSpan(
+                            text: " and ",
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Get.bottomSheet(BottomSheet(
+                                    onClosing: () {},
+                                    builder: (builder) => const LegalViewScreen(
+                                        title: 'Privacy Policy',
+                                        slug: 'privacy')));
+                              },
+                            style: const TextStyle()),
+                        TextSpan(
+                            text: "Privacy Policy ",
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                Get.bottomSheet(BottomSheet(
+                                    onClosing: () {},
+                                    builder: (builder) => const LegalViewScreen(
+                                        title: 'Privacy Policy',
+                                        slug: 'privacy')));
+                              },
+                            style: TextStyle(
+                                color: Colors.blue.shade700,
+                                fontWeight: FontWeight.w500))
+                      ],
+                      style:
+                          const TextStyle(color: Colors.black, fontSize: 13)),
+                ),
+                const SizedBox(height: 14),
               ],
             ),
           ),

@@ -9,6 +9,7 @@ import 'package:gully_app/utils/utils.dart';
 
 class SearchPlacesScreen extends StatefulWidget {
   final Function(Prediction)? onSelected;
+
   final bool? showSelectCurrentLocation;
   const SearchPlacesScreen(
       {Key? key,
@@ -70,6 +71,7 @@ class SearchPlacesScreenState extends State<SearchPlacesScreen> {
 
         googleAPIKey: "AIzaSyCUv3LmufUU86Lp_Wk34-3AZ3bnCQ3XmJg",
         inputDecoration: const InputDecoration(
+          contentPadding: EdgeInsets.all(8),
           hintText: "Search your location",
           border: InputBorder.none,
           enabledBorder: InputBorder.none,

@@ -6,6 +6,7 @@ import 'package:gully_app/ui/screens/organize_match.dart';
 import 'package:gully_app/ui/screens/select_team_for_scoreboard.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/screens/tournament_teams.dart';
+import 'package:gully_app/ui/screens/update_authority_screen.dart';
 import 'package:gully_app/ui/screens/view_matchups_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/widgets/custom_text_field.dart';
@@ -20,6 +21,7 @@ enum RedirectType {
   matchup,
   editForm,
   currentTournament,
+  manageAuthority,
 }
 
 class CurrentTournamentListScreen extends GetView<TournamentController> {
@@ -57,10 +59,10 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                          color: AppTheme.secondaryYellowColor.withOpacity(0.3),
+                          color: Colors.black.withOpacity(0.9),
                           blurRadius: 20,
-                          spreadRadius: 2,
-                          offset: const Offset(0, 70))
+                          spreadRadius: 20,
+                          offset: const Offset(0, 90))
                     ],
                   ),
                   width: double.infinity,
@@ -70,6 +72,7 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                 top: 0,
                 child: SizedBox(
                   width: Get.width,
+                  height: Get.height,
                   child: Column(
                     children: [
                       AppBar(
@@ -84,15 +87,15 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(height: Get.height * 0.08),
                       Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: Get.width * 0.07,
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
                           children: [
-                            SizedBox(height: Get.height * 0.02),
+                            // SizedBox(height: Get.height * 0.08),
                             Obx(() {
                               if (controller
                                   .organizerTournamentList.value.isEmpty) {
@@ -103,19 +106,27 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                                     child: Text(
                                         'Error: ${controller.status.errorMessage}'));
                               }
-                              return ListView.separated(
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(height: 18),
-                                  shrinkWrap: true,
-                                  itemCount: controller
-                                      .organizerTournamentList.value.length,
-                                  itemBuilder: (context, index) {
-                                    return _Card(
-                                      tournament: controller
-                                          .organizerTournamentList.value[index],
-                                      redirectType: redirectType,
-                                    );
-                                  });
+                              return SizedBox(
+                                height: Get.height / 1.2,
+                                child: ListView.separated(
+                                    separatorBuilder: (context, index) =>
+                                        const SizedBox(height: 18),
+                                    shrinkWrap: true,
+                                    padding:
+                                        EdgeInsets.only(top: Get.height * 0.08),
+                                    physics:
+                                        const AlwaysScrollableScrollPhysics(),
+                                    itemCount: controller
+                                        .organizerTournamentList.value.length,
+                                    itemBuilder: (context, index) {
+                                      return _Card(
+                                        tournament: controller
+                                            .organizerTournamentList
+                                            .value[index],
+                                        redirectType: redirectType,
+                                      );
+                                    }),
+                              );
                             }),
                           ],
                         ),
@@ -193,6 +204,10 @@ class _CardState extends State<_Card> {
             break;
           case RedirectType.currentTournament:
             Get.to(() => TournamentTeams(
+                  tournament: widget.tournament,
+                ));
+          case RedirectType.manageAuthority:
+            Get.to(() => UpdateAuthorityScreen(
                   tournament: widget.tournament,
                 ));
             break;

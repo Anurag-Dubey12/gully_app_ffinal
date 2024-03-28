@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
@@ -112,7 +113,8 @@ class LocationBuilder extends GetView<AuthController> {
       onTap: () {
         Get.to(() => SearchPlacesScreen(
               showSelectCurrentLocation: true,
-              title: 'Select Location',
+              // title: 'Select Location',
+              title: AppLocalizations.of(context)!.selectLocation,
               onSelected: (e) async {
                 controller.setLocation = e.description ?? 'Fetching Location';
                 final tournamentController = Get.find<TournamentController>();

@@ -6,13 +6,26 @@ import 'package:gully_app/utils/app_logger.dart';
 
 class Preferences {
   late final GetStorage _prefs = GetStorage();
-  Preferences();
+
   Future<void> storeToken(String token) async {
     _prefs.write('token', token);
   }
 
   String? getToken() {
     return _prefs.read('token');
+  }
+
+  bool get languageSelected => _prefs.read('languageSelected') ?? false;
+
+  String setLanguage(String code) {
+    _prefs.write('language', code);
+    _prefs.write('languageSelected', true);
+
+    return code;
+  }
+
+  String getLanguage() {
+    return _prefs.read('language') ?? "en";
   }
 
   void clear() {

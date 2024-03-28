@@ -11,8 +11,8 @@ import '../../data/model/matchup_model.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
-class SelectTeamForScoreBoard extends GetView<TournamentController> {
-  const SelectTeamForScoreBoard({super.key});
+class SelectMatchForScoreBoard extends GetView<TournamentController> {
+  const SelectMatchForScoreBoard({super.key});
 
   @override
   Widget build(BuildContext context) {

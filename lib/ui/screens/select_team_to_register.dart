@@ -8,11 +8,11 @@ import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
-import 'team_entry_form.dart';
-
 class SelectTeamToRegister extends StatefulWidget {
+  final Function onTeamSelected;
   const SelectTeamToRegister({
     super.key,
+    required this.onTeamSelected,
   });
 
   @override
@@ -87,6 +87,7 @@ class _SelectTeamToRegisterState extends State<SelectTeamToRegister> {
                             itemCount: snapshot.data?.length ?? 0,
                             itemBuilder: (context, index) {
                               return _TeamCard(
+                                onTeamSelected: widget.onTeamSelected,
                                 team: snapshot.data![index],
                               );
                             });
@@ -98,9 +99,11 @@ class _SelectTeamToRegisterState extends State<SelectTeamToRegister> {
 }
 
 class _TeamCard extends StatelessWidget {
+  final Function onTeamSelected;
   final TeamModel team;
   const _TeamCard({
     required this.team,
+    required this.onTeamSelected,
   });
 
   @override
@@ -171,9 +174,7 @@ class _TeamCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(09),
                   onTap: () async {
                     logger.i('Team selected ${team.name}');
-                    Get.to(() => TeamEntryForm(
-                          team: team,
-                        ));
+                    onTeamSelected(team);
                   },
                   child: Ink(
                       width: 30,

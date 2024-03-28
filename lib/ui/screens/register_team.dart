@@ -5,6 +5,8 @@ import 'package:gully_app/ui/screens/select_team_to_register.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 
+import 'add_player_to_team.dart';
+
 class RegisterTeam extends StatefulWidget {
   const RegisterTeam({super.key});
 
@@ -47,7 +49,13 @@ class _RegisterTeamState extends State<RegisterTeam> {
                   _Card(
                     title: 'Select Team',
                     onTap: () {
-                      Get.to(() => const SelectTeamToRegister());
+                      Get.to(() => SelectTeamToRegister(
+                            onTeamSelected: (team) {
+                              Get.off(() => AddPlayersToTeam(
+                                    team: team,
+                                  ));
+                            },
+                          ));
                     },
                   ),
                   const SizedBox(

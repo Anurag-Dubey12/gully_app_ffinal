@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
@@ -89,7 +90,8 @@ class _LegalViewScreenState extends State<LegalViewScreen> {
                           child: Column(
                             children: [
                               Text(
-                                'If you want to delete your account, please click the button below. Your account will be deleted permanently and you will not be able to recover it.',
+                                AppLocalizations.of(context)!
+                                    .deleteAccountConfirmation,
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineMedium
@@ -102,9 +104,73 @@ class _LegalViewScreenState extends State<LegalViewScreen> {
                               PrimaryButton(
                                 onTap: () async {
                                   setState(() {
-                                    isLoading = true;
+                                    isLoading = false;
                                   });
-                                  authController.deleteAccount();
+                                  // authController.deleteAccount();
+                                  Get.dialog(
+                                    AlertDialog(
+                                      title: Text(
+                                        AppLocalizations.of(context)!
+                                            .deleteAccountConfirmation,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineMedium
+                                            ?.copyWith(
+                                              color: Colors.black,
+                                              fontSize: 17,
+                                            ),
+                                      ),
+                                      content: Text(
+                                        // AppLocalizations.of(context)!
+                                        //     .deleteAccountConfirmationMessage,
+                                        'Are you sure you want to delete your account?',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineMedium
+                                            ?.copyWith(
+                                              color: Colors.black,
+                                              fontSize: 17,
+                                            ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Get.back();
+                                          },
+                                          child: Text(
+                                            AppLocalizations.of(context)!.no,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineMedium
+                                                ?.copyWith(
+                                                  color: Colors.black,
+                                                  fontSize: 17,
+                                                ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () async {
+                                            setState(() {
+                                              isLoading = true;
+                                            });
+                                            await authController
+                                                .deleteAccount();
+                                            Get.back();
+                                          },
+                                          child: Text(
+                                            AppLocalizations.of(context)!.yes,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headlineMedium
+                                                ?.copyWith(
+                                                  color: Colors.black,
+                                                  fontSize: 17,
+                                                ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
                                 },
                                 title: 'Delete My Account',
                                 isLoading: isLoading,

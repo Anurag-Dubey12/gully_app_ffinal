@@ -128,6 +128,15 @@ class _TourCard extends GetView<TournamentController> {
                       'dd.MMM.yyyy', tournament.tournamentStartDateTime),
                   style: Get.textTheme.bodySmall
                       ?.copyWith(color: Colors.grey.shade800)),
+              const SizedBox(width: 12),
+              const Icon(Icons.calendar_today_outlined,
+                  color: AppTheme.secondaryYellowColor, size: 16),
+              const SizedBox(width: 8),
+              Text(
+                  formatDateTime(
+                      'dd.MMM.yyyy', tournament.tournamentEndDateTime),
+                  style: Get.textTheme.bodySmall
+                      ?.copyWith(color: Colors.grey.shade800)),
             ],
           ),
         ],

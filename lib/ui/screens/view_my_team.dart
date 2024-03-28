@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/player_model.dart';
+import 'package:gully_app/ui/screens/add_team.dart';
 
 import '../../data/controller/team_controller.dart';
 import '../../data/model/team_model.dart';
@@ -109,17 +110,24 @@ class _ViewTeamState extends State<ViewTeam> {
                                             backgroundImage: NetworkImage(
                                                 widget.teamModel.toImageUrl()),
                                           ),
-                                          const Positioned(
+                                          Positioned(
                                             bottom: 0,
                                             right: 0,
-                                            child: CircleAvatar(
-                                              radius: 10,
-                                              backgroundColor:
-                                                  AppTheme.secondaryYellowColor,
-                                              child: Icon(
-                                                Icons.edit,
-                                                color: Colors.white,
-                                                size: 15,
+                                            child: InkWell(
+                                              onTap: () {
+                                                Get.off(() => AddTeam(
+                                                      team: widget.teamModel,
+                                                    ));
+                                              },
+                                              child: const CircleAvatar(
+                                                radius: 20,
+                                                backgroundColor: AppTheme
+                                                    .secondaryYellowColor,
+                                                child: Icon(
+                                                  Icons.edit,
+                                                  color: Colors.white,
+                                                  size: 15,
+                                                ),
                                               ),
                                             ),
                                           )

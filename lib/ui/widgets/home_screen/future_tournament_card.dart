@@ -30,7 +30,7 @@ class FutureTournamentCard extends GetView<TournamentController> {
               padding: const EdgeInsets.only(bottom: 10, top: 10),
               shrinkWrap: true,
               itemBuilder: (context, snapshot) {
-                return _Card(
+                return TournamentCard(
                   tournament: controller.tournamentList[snapshot],
                 );
               });
@@ -40,17 +40,18 @@ class FutureTournamentCard extends GetView<TournamentController> {
   }
 }
 
-class _Card extends StatefulWidget {
+class TournamentCard extends StatefulWidget {
   final TournamentModel tournament;
-  const _Card({
+  const TournamentCard({
+    super.key,
     required this.tournament,
   });
 
   @override
-  State<_Card> createState() => _CardState();
+  State<TournamentCard> createState() => _TournamentCardState();
 }
 
-class _CardState extends State<_Card> {
+class _TournamentCardState extends State<TournamentCard> {
   late StreamController<String> _timeStreamController;
 
   @override

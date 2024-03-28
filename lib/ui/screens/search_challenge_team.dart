@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
+import 'package:gully_app/data/model/challenge_match.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/utils/utils.dart';
 
@@ -65,12 +67,13 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
                           color: Colors.white,
                         )),
                   ),
-                  const Row(
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Challenge team',
-                        style: TextStyle(
+                        // 'Challenge team',
+                        AppLocalizations.of(context)!.challengeTeamTitle,
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
@@ -121,19 +124,47 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
                   //     ),
                   //   ),
                   // ),
-
                   Expanded(
                     child: Container(
                         color: const Color.fromARGB(96, 82, 80, 124),
                         child: Padding(
                             padding: const EdgeInsets.all(18.0),
                             child: FutureBuilder<List<TeamModel>>(
-                                future: teamController.getTeams(),
+                                future: teamController.getAllNearByTeam(),
                                 builder: (context, snapshot) {
+                                  if (snapshot.hasError) {
+                                    return Center(
+                                        child:
+                                            Text('Error: ${snapshot.error}'));
+                                  }
                                   return ListView.separated(
                                     itemBuilder: (context, index) =>
                                         StatefulBuilder(
                                       builder: (c, s) => _TeamCard(
+                                        team: snapshot.data![index],
+                                      ),
+                                    ),
+                                    separatorBuilder: (context, index) =>
+                                        const SizedBox(
+                                      height: 20,
+                                    ),
+                                    itemCount: snapshot.data?.length ?? 0,
+                                    shrinkWrap: true,
+                                  );
+                                }))),
+                  ),
+                  Expanded(
+                    child: Container(
+                        color: const Color.fromARGB(96, 82, 80, 124),
+                        child: Padding(
+                            padding: const EdgeInsets.all(18.0),
+                            child: FutureBuilder<List<ChallengeMatchModel>>(
+                                future: teamController.getChallengeMatch(),
+                                builder: (context, snapshot) {
+                                  return ListView.separated(
+                                    itemBuilder: (context, index) =>
+                                        StatefulBuilder(
+                                      builder: (c, s) => _Challenges(
                                         team: snapshot.data![index],
                                       ),
                                     ),
@@ -198,7 +229,70 @@ class _TeamCard extends StatelessWidget {
                 child: IconButton(
                   padding: const EdgeInsets.all(0),
                   onPressed: () {
-                    successSnackBar('Request sent successfully!');
+                    successSnackBar(AppLocalizations.of(context)!
+                        .request_sent_successfully);
+                  },
+                  icon: const Icon(Icons.add),
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 10),
+              // Chip(
+              //     label: Text('Decline', style: TextStyle(color: Colors.white)),
+              //     backgroundColor: Colors.red,
+              //     side: BorderSide.none),
+            ],
+          )
+        ]),
+      ),
+    );
+  }
+}
+
+class _Challenges extends StatelessWidget {
+  final ChallengeMatchModel team;
+
+  const _Challenges({super.key, required this.team});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.white,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Row(children: [
+          // CircleAvatar(
+          //     backgroundImage: NetworkImage(toImageUrl(team.logo ?? ""))),
+          const SizedBox(width: 10),
+          const Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'team.name.capitalize',
+                style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+              ),
+              // const Text(
+              //   '20th April 2021',
+              //   style: TextStyle(
+              //       fontSize: 13, color: Color.fromARGB(255, 255, 154, 22)),
+              // ),
+            ],
+          ),
+          const Spacer(),
+          Row(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(90),
+                    color: AppTheme.darkYellowColor),
+                child: IconButton(
+                  padding: const EdgeInsets.all(0),
+                  onPressed: () {
+                    successSnackBar(AppLocalizations.of(context)!
+                        .request_sent_successfully);
                   },
                   icon: const Icon(Icons.add),
                   color: Colors.white,

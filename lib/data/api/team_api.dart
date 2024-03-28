@@ -157,4 +157,28 @@ class TeamApi {
 
     return ApiResponse.fromJson(response.body);
   }
+
+  Future<ApiResponse> updateTeam(
+      {required String teamName,
+      String? teamLogo,
+      required String teamId}) async {
+    final obj = teamLogo == null
+        ? {
+            'teamName': teamName,
+          }
+        : {
+            'teamName': teamName,
+            'teamLogo': teamLogo,
+          };
+    logger.i(obj);
+    final response = await repo.post('/team/editTeam/$teamId', obj);
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! >= 400) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
 }

@@ -1,11 +1,12 @@
 import 'dart:io';
 
-import 'package:device_preview/device_preview.dart';
+import "package:app_links/app_links.dart";
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -58,58 +59,142 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _appLinks = AppLinks();
+  Locale _locale = const Locale('en');
+  // @override
+  // initState() {
+  //   super.initState();
+  //   _appLinks.allUriLinkStream.listen((uri) {
+  //     // Do something (navigation, ...)
+  //     logger.f("URI: ${uri.data}");
+  //     logger.f("URI: ${uri.queryParameters}");
+  //     logger.f("URI: ${uri.queryParametersAll}");
+  //     logger.f("URI: ${uri.query}");
+  //     print("URI: $uri");
+  //   });
+  // }
+
+  @override
+  void initState() {
+    super.initState();
+    initDeepLinks();
+  }
+
+  String _deepLink = 'No deep link';
+  Future<void> initDeepLinks() async {
+    try {
+      Uri? initialUri = await _appLinks.getInitialAppLink();
+      handleDeepLink(initialUri);
+    } on PlatformException {
+      // Handle exception
+    }
+
+    // Listen for deep link changes
+    _appLinks.allUriLinkStream.listen((Uri uri) {
+      handleDeepLink(uri);
+    }, onError: (err) {
+      // Handle error
+    });
+    _appLinks.getInitialAppLink().then((uri) {
+      handleDeepLink(uri);
+    });
+  }
+
+  void handleDeepLink(Uri? uri) {
+    if (uri == null) return;
+    setState(() {
+      _deepLink = uri.toString();
+      // Access query parameters
+
+      String? bookId = uri.queryParameters['id'];
+      String? title = uri.queryParameters['title'];
+      print('Book ID: $bookId, Title: $title');
+    });
+  }
+
+  setLocale(Locale value) {
+    setState(() {
+      _locale = value;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DevicePreview(
-        enabled: false,
-        builder: (context) {
-          return GetMaterialApp(
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: const [
-              Locale('en'),
-              Locale('es'),
-            ],
-            binds: [
-              Bind.put<Preferences>(Preferences()),
-              Bind.put<GetConnectClient>(GetConnectClient(
-                preferences: Get.find<Preferences>(),
-              )),
-              Bind.put<NotificationController>(NotificationController(
-                preferences: Get.find<Preferences>(),
-              )),
-              Bind.lazyPut<RankingApi>(() => RankingApi(
-                    client: Get.find(),
-                  )),
-              // Bind.lazyPut<AuthApi>(() => AuthApi(client: Get.find())),
-              Bind.put<AuthApi>(AuthApi(client: Get.find())),
-              Bind.lazyPut<MiscApi>(() => MiscApi(repo: Get.find())),
-              Bind.lazyPut<TournamentApi>(
-                  () => TournamentApi(repo: Get.find())),
-              Bind.lazyPut<ScoreboardApi>(
-                  () => ScoreboardApi(repo: Get.find())),
-              Bind.put<TeamApi>(TeamApi(repo: Get.find())),
-              Bind.put<TeamController>(TeamController(repo: Get.find())),
-              Bind.put<AuthController>(AuthController(repo: Get.find())),
-              Bind.put<ScoreBoardController>(
-                  ScoreBoardController(scoreboardApi: Get.find())),
-              Bind.lazyPut<TournamentController>(
-                  () => TournamentController(Get.find())),
-              Bind.lazyPut<MiscController>(
-                  () => MiscController(repo: Get.find())),
-            ],
-            defaultTransition: Transition.cupertino,
-            title: AppConstants.appName,
-            theme: AppTheme.lightTheme,
-            home: const SplashScreen(),
+    return GetMaterialApp(
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en'),
+        Locale('hi'),
+        Locale('kn'),
+        Locale('mr'),
+        Locale('ml'),
+        Locale('ur'),
+        Locale('pa'),
+        Locale('bn'),
+        Locale('ta'),
+        Locale('te'),
+      ],
+      builder: (context, child) {
+        if (Get.locale != null &&
+            (Get.locale!.languageCode == 'ar' ||
+                Get.locale!.languageCode == 'ur')) {
+          return Directionality(
+            textDirection:
+                TextDirection.rtl, // Right-to-left for Arabic or Urdu
+            child: child!,
           );
-        });
+        } else {
+          return Directionality(
+            textDirection:
+                TextDirection.ltr, // Left-to-right for other languages
+            child: child!,
+          );
+        }
+      },
+      locale: const Locale('en'),
+      binds: [
+        Bind.put<Preferences>(Preferences()),
+        Bind.put<GetConnectClient>(GetConnectClient(
+          preferences: Get.find<Preferences>(),
+        )),
+        Bind.put<NotificationController>(NotificationController(
+          preferences: Get.find<Preferences>(),
+        )),
+        Bind.lazyPut<RankingApi>(() => RankingApi(
+              client: Get.find(),
+            )),
+        // Bind.lazyPut<AuthApi>(() => AuthApi(client: Get.find())),
+        Bind.put<AuthApi>(AuthApi(client: Get.find())),
+        Bind.lazyPut<MiscApi>(() => MiscApi(repo: Get.find())),
+        Bind.lazyPut<TournamentApi>(() => TournamentApi(repo: Get.find())),
+        Bind.lazyPut<ScoreboardApi>(() => ScoreboardApi(repo: Get.find())),
+        Bind.put<TeamApi>(TeamApi(repo: Get.find())),
+        Bind.put<TeamController>(TeamController(repo: Get.find())),
+        Bind.put<AuthController>(AuthController(repo: Get.find())),
+        Bind.put<ScoreBoardController>(
+            ScoreBoardController(scoreboardApi: Get.find())),
+        Bind.lazyPut<TournamentController>(
+            () => TournamentController(Get.find())),
+        Bind.lazyPut<MiscController>(() => MiscController(repo: Get.find())),
+      ],
+      defaultTransition: Transition.cupertino,
+      title: AppConstants.appName,
+      theme: AppTheme.lightTheme,
+      home: const SplashScreen(),
+    );
   }
 }
 

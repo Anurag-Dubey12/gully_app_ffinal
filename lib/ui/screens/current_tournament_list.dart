@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
@@ -26,6 +27,7 @@ enum RedirectType {
 
 class CurrentTournamentListScreen extends GetView<TournamentController> {
   final RedirectType redirectType;
+
   const CurrentTournamentListScreen({
     super.key,
     required this.redirectType,
@@ -34,18 +36,18 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          image: DecorationImage(
-              image: AssetImage(
-                'assets/images/sports_icon.png',
-              ),
-              fit: BoxFit.cover),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        image: DecorationImage(
+          image: AssetImage('assets/images/sports_icon.png'),
+          fit: BoxFit.cover,
         ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: SafeArea(
-            child: Stack(children: [
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: Stack(
+            children: [
               ClipPath(
                 clipper: ArcClipper(),
                 child: Container(
@@ -59,10 +61,11 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                          color: Colors.black.withOpacity(0.9),
-                          blurRadius: 20,
-                          spreadRadius: 20,
-                          offset: const Offset(0, 90))
+                        color: Colors.black.withOpacity(0.9),
+                        blurRadius: 20,
+                        spreadRadius: 20,
+                        offset: const Offset(0, 90),
+                      ),
                     ],
                   ),
                   width: double.infinity,
@@ -78,11 +81,14 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                       AppBar(
                         backgroundColor: Colors.transparent,
                         elevation: 0,
-                        title: Text('Current Tournament',
-                            style: Get.textTheme.headlineMedium?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24)),
+                        title: Text(
+                          AppLocalizations.of(context)!.currentTournamentTitle,
+                          style: Get.textTheme.headlineMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                          ),
+                        ),
                         leading: const BackButton(
                           color: Colors.white,
                         ),
@@ -95,7 +101,6 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           mainAxisSize: MainAxisSize.max,
                           children: [
-                            // SizedBox(height: Get.height * 0.08),
                             Obx(() {
                               if (controller
                                   .organizerTournamentList.value.isEmpty) {
@@ -103,29 +108,31 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                               }
                               if (controller.status.isError) {
                                 return Center(
-                                    child: Text(
-                                        'Error: ${controller.status.errorMessage}'));
+                                  child: Text(
+                                    'Error: ${controller.status.errorMessage}',
+                                  ),
+                                );
                               }
                               return SizedBox(
                                 height: Get.height / 1.2,
                                 child: ListView.separated(
-                                    separatorBuilder: (context, index) =>
-                                        const SizedBox(height: 18),
-                                    shrinkWrap: true,
-                                    padding:
-                                        EdgeInsets.only(top: Get.height * 0.08),
-                                    physics:
-                                        const AlwaysScrollableScrollPhysics(),
-                                    itemCount: controller
-                                        .organizerTournamentList.value.length,
-                                    itemBuilder: (context, index) {
-                                      return _Card(
-                                        tournament: controller
-                                            .organizerTournamentList
-                                            .value[index],
-                                        redirectType: redirectType,
-                                      );
-                                    }),
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(height: 18),
+                                  shrinkWrap: true,
+                                  padding:
+                                      EdgeInsets.only(top: Get.height * 0.08),
+                                  physics:
+                                      const AlwaysScrollableScrollPhysics(),
+                                  itemCount: controller
+                                      .organizerTournamentList.value.length,
+                                  itemBuilder: (context, index) {
+                                    return _Card(
+                                      tournament: controller
+                                          .organizerTournamentList.value[index],
+                                      redirectType: redirectType,
+                                    );
+                                  },
+                                ),
                               );
                             }),
                           ],
@@ -135,9 +142,11 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                   ),
                 ),
               )
-            ]),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -153,45 +162,51 @@ class _Card extends StatefulWidget {
 
 class _CardState extends State<_Card> {
   final roundController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
+
     return GestureDetector(
       onTap: () {
         switch (widget.redirectType) {
           case RedirectType.organizeMatch:
-            Get.dialog(Dialog(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CustomTextField(
-                      labelText: 'Enter Round Number',
-                      textInputType: TextInputType.number,
-                      controller: roundController,
-                      autoFocus: true,
-                    ),
-                    const SizedBox(height: 20),
-                    PrimaryButton(
-                      onTap: () {
-                        Get.back();
-                        Get.to(() => SelectOrganizeTeam(
+            Get.dialog(
+              Dialog(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CustomTextField(
+                        labelText:
+                            AppLocalizations.of(context)!.enterRoundNumberLabel,
+                        textInputType: TextInputType.number,
+                        controller: roundController,
+                        autoFocus: true,
+                      ),
+                      const SizedBox(height: 20),
+                      PrimaryButton(
+                        onTap: () {
+                          Get.back();
+                          Get.to(
+                            () => SelectOrganizeTeam(
                               tournament: widget.tournament,
                               round: int.parse(roundController.text),
-                            ));
-                      },
-                      title: 'Continue',
-                    )
-                  ],
+                            ),
+                          );
+                        },
+                        title: 'Continue',
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ));
-
+            );
             break;
           case RedirectType.scoreboard:
             controller.setSelectedTournament(widget.tournament);
-            Get.to(() => const SelectTeamForScoreBoard());
+            Get.to(() => const SelectMatchForScoreBoard());
             break;
           case RedirectType.matchup:
             controller.setSelectedTournament(widget.tournament);
@@ -206,6 +221,7 @@ class _CardState extends State<_Card> {
             Get.to(() => TournamentTeams(
                   tournament: widget.tournament,
                 ));
+            break;
           case RedirectType.manageAuthority:
             Get.to(() => UpdateAuthorityScreen(
                   tournament: widget.tournament,
@@ -216,15 +232,17 @@ class _CardState extends State<_Card> {
       child: Container(
         width: Get.width,
         decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 5,
-                  spreadRadius: 2,
-                  offset: const Offset(0, 1))
-            ],
-            borderRadius: BorderRadius.circular(16)),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 5,
+              spreadRadius: 2,
+              offset: const Offset(0, 1),
+            ),
+          ],
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: Get.width * 0.05,
@@ -235,8 +253,10 @@ class _CardState extends State<_Card> {
               const Spacer(),
               Text(
                 widget.tournament.tournamentName,
-                style: Get.textTheme.titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w600, fontSize: 19),
+                style: Get.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 19,
+                ),
               ),
               const Spacer(),
             ],

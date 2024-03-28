@@ -1,0 +1,26 @@
+{
+  "kn": [
+    "changeLanguage"
+  ],
+
+  "ml": [
+    "okButton",
+    "emailInfo",
+    "addressInfo",
+    "phoneInfo",
+    "currentTournamentTitle",
+    "enterRoundNumberLabel",
+    "leaderboardTitle",
+    "playerRankingTitle",
+    "teamRankingTitle",
+    "topPerformerTitle",
+    "deleteAccountConfirmation",
+    "request_sent_successfully",
+    "selectLocation",
+    "changeLanguage"
+  ],
+
+  "mr": [
+    "changeLanguage"
+  ]
+}

@@ -174,6 +174,13 @@ class HomePage extends StatelessWidget {
                             const SizedBox(
                               height: 20,
                             ),
+                            TextButton(
+                                onPressed: () {
+                                  Get.updateLocale(const Locale("kn"));
+
+                                  logger.d(Get.locale?.languageCode);
+                                },
+                                child: const Text('Locale')),
                             const FullBannerSlider(),
                             const SizedBox(height: 20),
                             const DateTimesCard(),

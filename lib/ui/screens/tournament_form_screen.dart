@@ -535,117 +535,131 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                           FormInput(
                             controller: TextEditingController(
                                 text: authController.state!.fullName),
-                            label: 'Organizer Name',
+                            label: AppLocalizations.of(context)!.organizerName,
                             enabled: false,
                             readOnly: true,
                           ),
                           FormInput(
                             controller: TextEditingController(
-                              text: authController.state!.phoneNumber,
-                            ),
-                            label: 'Organizer Contact No',
+                                text: authController.state!.phoneNumber),
+                            label: AppLocalizations.of(context)!
+                                .organizerContactNo,
                             enabled: false,
                             readOnly: true,
                             textInputType: TextInputType.number,
                           ),
                           FormInput(
                             controller: _cohost1Name,
-                            label: 'Co-host 1 Name',
+                            label: AppLocalizations.of(context)!.cohost1Name,
                             textInputType: TextInputType.text,
                             validator: (e) {
                               if (_cohost1Phone.text.isEmpty && e!.isNotEmpty) {
-                                return 'Please enter co-host 1 contact no';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterCohost1ContactNo;
                               }
                               if (e!.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                return 'Rules cannot contain emojis';
+                                return AppLocalizations.of(context)!
+                                    .rulesCannotContainEmojis;
                               }
-
                               return null;
                             },
                           ),
                           FormInput(
                             controller: _cohost1Phone,
-                            label: 'Co-host 1 Contact No',
+                            label:
+                                AppLocalizations.of(context)!.cohost1ContactNo,
                             textInputType: TextInputType.number,
                             maxLength: 10,
                             validator: (e) {
                               if ((_cohost1Name.text.isNotEmpty) &&
                                   e!.isEmpty) {
-                                return 'Please enter co-host 1 contact no';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterCohost1ContactNo;
                               }
                               if (e!.isEmpty) {
                                 return null;
                               }
                               if (!RegExp(r'^\d+$').hasMatch(e)) {
-                                return 'Please enter a valid co-host 1 contact no';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterValidCohost1ContactNo;
                               }
                               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                return 'Rules cannot contain emojis';
+                                return AppLocalizations.of(context)!
+                                    .rulesCannotContainEmojis;
                               }
                               if (_cohost2Phone.text == e) {
-                                return 'Co-host 1 and Co-host 2 contact no cannot be same';
+                                return AppLocalizations.of(context)!
+                                    .cohost1AndCohost2ContactNoCannotBeSame;
                               }
                               if (e.length != 10) {
-                                return 'Please enter a valid contact no';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterValidContactNo;
                               }
-
                               return null;
                             },
                           ),
                           FormInput(
                             controller: _cohost2Name,
-                            label: 'Co-host 2 Name',
+                            label: AppLocalizations.of(context)!.cohost2Name,
                             textInputType: TextInputType.text,
                             validator: (e) {
                               if (_cohost2Phone.text.isEmpty && e!.isNotEmpty) {
-                                return 'Please enter co-host 1 contact no';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterCohost1ContactNo;
                               }
                               if (e!.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                return 'Rules cannot contain emojis';
+                                return AppLocalizations.of(context)!
+                                    .rulesCannotContainEmojis;
                               }
-
                               return null;
                             },
                           ),
                           FormInput(
                             controller: _cohost2Phone,
-                            label: 'Co-host 2 Contact No',
+                            label:
+                                AppLocalizations.of(context)!.cohost2ContactNo,
                             textInputType: TextInputType.number,
                             maxLength: 10,
                             validator: (e) {
                               if ((_cohost2Name.text.isNotEmpty) &&
                                   e!.isEmpty) {
-                                return 'Please enter co-host 1 contact no';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterCohost1ContactNo;
                               }
                               if (e!.isEmpty) {
                                 return null;
                               }
                               if (!RegExp(r'^\d+$').hasMatch(e)) {
-                                return 'Please enter a valid co-host 1 contact no';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterValidCohost1ContactNo;
                               }
                               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                return 'Rules cannot contain emojis';
+                                return AppLocalizations.of(context)!
+                                    .rulesCannotContainEmojis;
                               }
                               if (_cohost1Phone.text == e) {
-                                return 'Co-host 1 and Co-host 2 contact no cannot be same';
+                                return AppLocalizations.of(context)!
+                                    .cohost1AndCohost2ContactNoCannotBeSame;
                               }
                               if (e.length != 10) {
-                                return 'Please enter a valid contact no';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterValidContactNo;
                               }
-
                               return null;
                             },
                           ),
                           FormInput(
                             controller: _rulesController,
-                            label: 'Rules',
+                            label: AppLocalizations.of(context)!.rules,
                             textInputType: TextInputType.multiline,
                             validator: (e) {
                               if (e!.isEmpty) {
-                                return 'Please enter rules';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterRules;
                               }
                               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                return 'Rules cannot contain emojis';
+                                return AppLocalizations.of(context)!
+                                    .rulesCannotContainEmojis;
                               }
                               return null;
                             },
@@ -653,34 +667,38 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                           ),
                           FormInput(
                             controller: _prizesController,
-                            label: 'Prizes',
+                            label: AppLocalizations.of(context)!.prizes,
                             maxLines: 3,
                             textInputType: TextInputType.multiline,
                             validator: (e) {
                               if (e!.isEmpty) {
-                                return 'Please enter rules';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterRules;
                               }
                               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                return 'Rules cannot contain emojis';
+                                return AppLocalizations.of(context)!
+                                    .rulesCannotContainEmojis;
                               }
                               return null;
                             },
                           ),
                           FormInput(
                             controller: _addressController,
-                            label: 'Select Stadium Address',
+                            label: AppLocalizations.of(context)!
+                                .selectStadiumAddress,
                             readOnly: true,
                             onTap: () async {
                               Get.dialog(const Dialog(
-                                  child: Padding(
-                                padding: EdgeInsets.all(28.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    CircularProgressIndicator(),
-                                  ],
+                                child: Padding(
+                                  padding: EdgeInsets.all(28.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      CircularProgressIndicator(),
+                                    ],
+                                  ),
                                 ),
-                              )));
+                              ));
 
                               Get.back();
                               Get.to(
@@ -705,23 +723,23 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                           ),
                           FormInput(
                             controller: _entryFeeController,
-                            label: 'Entry Fee',
+                            label: AppLocalizations.of(context)!.entryFee,
                             validator: (e) {
                               if (e == null || e.isEmpty) {
-                                return 'Please enter entry fee';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterEntryFee;
                               }
-                              // check if the entry fee is a decimal number
                               if (!RegExp(r'^\d+$').hasMatch(e)) {
-                                return 'Please enter a valid entry fee';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterValidEntryFee;
                               }
-                              // check if the entry fee starts with 0
                               if (e.startsWith('0')) {
-                                return 'Entry fee cannot start with 0';
+                                return AppLocalizations.of(context)!
+                                    .entryFeeCannotStartWith0;
                               }
-
-                              // check if the entry fee contains emojis
                               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                return 'Rules cannot contain emojis';
+                                return AppLocalizations.of(context)!
+                                    .rulesCannotContainEmojis;
                               }
                               return null;
                             },
@@ -730,16 +748,19 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                           ),
                           FormInput(
                             controller: _ballChargesController,
-                            label: 'Ball Charges',
+                            label: AppLocalizations.of(context)!.ballCharges,
                             validator: (e) {
                               if (e == null || e.isEmpty) {
-                                return 'Please enter ball charges';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterBallCharges;
                               }
                               if (!RegExp(r'^\d+$').hasMatch(e)) {
-                                return 'Please enter a valid ball charges';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterValidBallCharges;
                               }
                               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                return 'Rules cannot contain emojis';
+                                return AppLocalizations.of(context)!
+                                    .rulesCannotContainEmojis;
                               }
                               return null;
                             },
@@ -748,17 +769,21 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                           ),
                           FormInput(
                             controller: _breakfastChargesController,
-                            label: 'Breakfast Charges',
+                            label:
+                                AppLocalizations.of(context)!.breakfastCharges,
                             textInputType: TextInputType.number,
                             validator: (e) {
                               if (e == null || e.isEmpty) {
-                                return 'Please enter breakfast charges';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterBreakfastCharges;
                               }
                               if (!RegExp(r'^\d+(?:\.\d+)?$').hasMatch(e)) {
-                                return 'Please enter a valid entry fee';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterValidEntryFee;
                               }
                               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                return 'Rules cannot contain emojis';
+                                return AppLocalizations.of(context)!
+                                    .rulesCannotContainEmojis;
                               }
                               return null;
                             },
@@ -766,14 +791,17 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                           ),
                           FormInput(
                             controller: _teamLimitController,
-                            label: 'Team Limit',
+                            label: AppLocalizations.of(context)!.teamLimit,
                             validator: (e) {
                               if (e == null || e.isEmpty) {
-                                return 'Please enter team limit';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterTeamLimit;
                               } else if (!RegExp(r'^\d+$').hasMatch(e)) {
-                                return 'Please enter a valid team limit';
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterValidTeamLimit;
                               } else if (int.parse(e) < 2) {
-                                return 'Team limit should be equal or greater than 2';
+                                return AppLocalizations.of(context)!
+                                    .teamLimitShouldBeEqualOrGreaterThan2;
                               }
                               return null;
                             },
@@ -791,51 +819,59 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                   }),
                               RichText(
                                 text: TextSpan(
-                                    //i hereby agree to the terms and conditions and disclaimer of the app
-                                    text: "I hereby agree to the  ",
-                                    children: [
-                                      TextSpan(
-                                          text: "Terms and Conditions",
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              Get.bottomSheet(BottomSheet(
-                                                  onClosing: () {},
-                                                  builder: (builder) =>
-                                                      const LegalViewScreen(
-                                                          title:
-                                                              'Terms and Conditions',
-                                                          slug: 'terms')));
-                                            },
-                                          style: const TextStyle(
-                                              color: Colors.blue,
-                                              decoration:
-                                                  TextDecoration.underline)),
-                                      const TextSpan(
-                                          text: " and \n", style: TextStyle()),
-                                      TextSpan(
-                                          text: "Disclaimer",
-                                          recognizer: TapGestureRecognizer()
-                                            ..onTap = () {
-                                              Get.bottomSheet(BottomSheet(
-                                                  onClosing: () {},
-                                                  builder: (builder) =>
-                                                      const LegalViewScreen(
-                                                          title: 'Disclaimer',
-                                                          slug: 'disclaimer')));
-                                            },
-                                          style: const TextStyle(
-                                              color: Colors.blue,
-                                              decoration:
-                                                  TextDecoration.underline)),
-                                      const TextSpan(
-                                          text: " of the app ",
-                                          style: TextStyle()),
-                                    ],
-                                    style: const TextStyle(
-                                        color: Colors.black, fontSize: 12)),
-                              )
+                                  //i hereby agree to the terms and conditions and disclaimer of the app
+                                  text: AppLocalizations.of(context)!
+                                      .iHerebyAgreeToThe,
+                                  children: [
+                                    TextSpan(
+                                      text: AppLocalizations.of(context)!
+                                          .termsAndConditions,
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          Get.bottomSheet(BottomSheet(
+                                            onClosing: () {},
+                                            builder: (builder) =>
+                                                const LegalViewScreen(
+                                                    title:
+                                                        'Terms and Conditions',
+                                                    slug: 'terms'),
+                                          ));
+                                        },
+                                      style: const TextStyle(
+                                        color: Colors.blue,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                    const TextSpan(
+                                        text: " and \n", style: TextStyle()),
+                                    TextSpan(
+                                      text: AppLocalizations.of(context)!
+                                          .disclaimer,
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () {
+                                          Get.bottomSheet(BottomSheet(
+                                            onClosing: () {},
+                                            builder: (builder) =>
+                                                const LegalViewScreen(
+                                                    title: 'Disclaimer',
+                                                    slug: 'disclaimer'),
+                                          ));
+                                        },
+                                      style: const TextStyle(
+                                        color: Colors.blue,
+                                        decoration: TextDecoration.underline,
+                                      ),
+                                    ),
+                                    const TextSpan(
+                                        text: " of the app ",
+                                        style: TextStyle()),
+                                  ],
+                                  style: const TextStyle(
+                                      color: Colors.black, fontSize: 12),
+                                ),
+                              ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),

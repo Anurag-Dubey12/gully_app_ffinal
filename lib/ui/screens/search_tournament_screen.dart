@@ -1,6 +1,36 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
+import 'package:gully_app/ui/widgets/home_screen/future_tournament_card.dart';
+
+class Debouncer {
+  final Duration delay;
+  Timer? _timer;
+  final StreamController<String> _streamController = StreamController<String>();
+
+  Debouncer({this.delay = const Duration(milliseconds: 500)});
+
+  Stream<String> get onValueChanged => _streamController.stream;
+
+  void debounce(String value) {
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+
+    _timer = Timer(delay, () {
+      _streamController.add(value);
+    });
+  }
+
+  void dispose() {
+    _timer?.cancel();
+    _streamController.close();
+  }
+}
 
 class SearchTournamentScreen extends StatefulWidget {
   const SearchTournamentScreen({super.key});
@@ -10,6 +40,41 @@ class SearchTournamentScreen extends StatefulWidget {
 }
 
 class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
+  final debouncer = Debouncer();
+  int sortValue = 0;
+  List<TournamentModel> tournaments = [];
+
+  @override
+  void initState() {
+    super.initState();
+    final TournamentController tournamentController =
+        Get.find<TournamentController>();
+    searchController.addListener(() {
+      debouncer.debounce(searchController.text);
+    });
+    debouncer.onValueChanged.listen((value) {
+      print("Value debounced: $value");
+      tournamentController.searchTournament(value).then((value) {
+        setState(() {
+          tournaments = value;
+        });
+      });
+      // Call your API here with the debounced value
+    });
+  }
+
+  void sortByName() {
+    tournaments.sort((a, b) => a.tournamentName.compareTo(b.tournamentName));
+  }
+
+  void sortByEntryFee() {
+    tournaments.sort((a, b) => a.fees.compareTo(b.fees));
+  }
+
+  FocusNode searchFocusNode = FocusNode();
+
+  TextEditingController searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -50,10 +115,11 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                     child: Row(
                       children: [
                         const SizedBox(width: 18),
-                        const Expanded(
+                        Expanded(
                             child: TextField(
                           autofocus: true,
-                          decoration: InputDecoration(
+                          controller: searchController,
+                          decoration: const InputDecoration(
                             prefixIcon: Icon(
                               Icons.search,
                               color: AppTheme.secondaryYellowColor,
@@ -79,18 +145,26 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                                                 fontWeight: FontWeight.bold)),
                                       ),
                                       RadioListTile(
-                                        value: 1,
-                                        groupValue: 1,
+                                        value: 0,
+                                        groupValue: sortValue,
                                         title: const Text('Name'),
                                         onChanged: (e) {
+                                          sortByName();
+                                          setState(() {
+                                            sortValue = e as int;
+                                          });
                                           Get.back();
                                         },
                                       ),
                                       RadioListTile(
                                         value: 1,
-                                        groupValue: 1,
-                                        title: const Text('Prize Money'),
+                                        groupValue: sortValue,
+                                        title: const Text('Entry Fee'),
                                         onChanged: (e) {
+                                          sortByEntryFee();
+                                          setState(() {
+                                            sortValue = e as int;
+                                          });
                                           Get.back();
                                         },
                                       ),
@@ -106,7 +180,23 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                 ),
               ),
             ),
-            // const PastTournamentMatchCard()
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: tournaments.length,
+                        itemBuilder: (context, index) {
+                          return TournamentCard(
+                            tournament: tournaments[index],
+                          );
+                        })
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

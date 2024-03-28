@@ -196,4 +196,18 @@ class TournamentApi {
     }
     return ApiResponse.fromJson(response.body);
   }
+
+  ///search/:query
+  Future<ApiResponse> searchTournament(String query) async {
+    final response = await repo.get('/main/search?query=$query');
+    logger.i(response.body);
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
 }

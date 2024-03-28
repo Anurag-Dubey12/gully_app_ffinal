@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:gully_app/data/api/team_api.dart';
+import 'package:gully_app/data/model/challenge_match.dart';
 import 'package:gully_app/data/model/opponent_model.dart';
 import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
@@ -18,6 +19,31 @@ class TeamController extends GetxController with StateMixin {
       final response = await repo.createTeam(
         teamName: teamName,
         teamLogo: teamLogo,
+      );
+      if (response.status == false) {
+        errorSnackBar(response.message!);
+        return false;
+      }
+      change(GetStatus.success(TeamModel.fromJson(response.data!)));
+
+      return true;
+    } catch (e) {
+      change(GetStatus.error(e.toString()));
+      rethrow;
+    }
+  }
+
+  Future<bool> updateTeam({
+    required String teamName,
+    required String? teamLogo,
+    required String teamId,
+  }) async {
+    try {
+      change(GetStatus.loading());
+      final response = await repo.updateTeam(
+        teamName: teamName,
+        teamLogo: teamLogo,
+        teamId: teamId,
       );
       if (response.status == false) {
         errorSnackBar(response.message!);
@@ -164,8 +190,31 @@ class TeamController extends GetxController with StateMixin {
       }
       final teams = response.data!['teams'] as List;
       final teamList = teams.map((e) => TeamModel.fromJson(e)).toList();
+      logger.f(teams.length);
 
       return teamList;
+    } catch (e) {
+      logger.i(e.toString());
+      rethrow;
+    }
+  }
+
+  //getChallengeMatch
+  Future<List<ChallengeMatchModel>> getChallengeMatch() async {
+    try {
+      final response = await repo.getChallengeMatch();
+
+      if (response.status == false) {
+        logger.i('error');
+        errorSnackBar(response.message!);
+        return [];
+      }
+      final matches = response.data!['matches'] as List;
+      final matchList =
+          matches.map((e) => ChallengeMatchModel.fromJson(e)).toList();
+      logger.f(matchList.length);
+
+      return matchList;
     } catch (e) {
       logger.i(e.toString());
       rethrow;

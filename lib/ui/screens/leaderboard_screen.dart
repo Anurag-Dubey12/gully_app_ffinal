@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/ui/screens/player_ranking_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
@@ -15,52 +16,53 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   @override
   Widget build(BuildContext context) {
     return GradientBuilder(
-        child: Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
+      child: Scaffold(
         backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      body: Column(
-        children: [
-          Center(
-            child: Text(
-              'Leaderboard',
-              style: Get.textTheme.titleMedium?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          iconTheme: const IconThemeData(color: Colors.white),
+        ),
+        body: Column(
+          children: [
+            Center(
+              child: Text(
+                AppLocalizations.of(context)!.leaderboardTitle,
+                style: Get.textTheme.titleMedium?.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Column(
-                  children: [
-                    _Card(
-                      title: 'Player Ranking',
-                      onTap: () {
-                        Get.to(() => const PlayerRankingScreen());
-                      },
-                    ),
-                    _Card(
-                      title: 'Team Ranking',
-                      onTap: () {},
-                    ),
-                    _Card(
-                      title: 'Top performer',
-                      onTap: () {},
-                    ),
-                  ],
-                ),
-              )
-            ],
-          )
-        ],
+            Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(18.0),
+                  child: Column(
+                    children: [
+                      _Card(
+                        title: AppLocalizations.of(context)!.playerRankingTitle,
+                        onTap: () {
+                          Get.to(() => const PlayerRankingScreen());
+                        },
+                      ),
+                      _Card(
+                        title: AppLocalizations.of(context)!.teamRankingTitle,
+                        onTap: () {},
+                      ),
+                      _Card(
+                        title: AppLocalizations.of(context)!.topPerformerTitle,
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
-    ));
+    );
   }
 }
 

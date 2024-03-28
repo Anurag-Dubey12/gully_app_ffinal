@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:app_links/app_links.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -63,7 +64,9 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       final Position position = await determinePosition();
       final placeName =
           await getAddressFromLatLng(position.latitude, position.longitude);
-      final response = await repo.loginViaGoogle({
+      final applinks = AppLinks();
+      final uri = await applinks.getLatestAppLink();
+      var body = {
         'fullName': userCred.user!.displayName,
         'email': userCred.user!.email,
         'coordinates': {
@@ -71,7 +74,13 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
           'longitude': position.longitude,
           'placeName': placeName,
         }
-      });
+      };
+      if (uri != null) {
+        logger.i("URIPHONE: ${uri.queryParameters["refer_id"]}");
+        body['phoneNumber'] = uri.queryParameters["refer_id"];
+      }
+      logger.i("Body: $body");
+      final response = await repo.loginViaGoogle(body);
       final user = UserModel.fromJson(response.data!['user']);
       final accessToken = response.data!['user']['accessToken'];
 

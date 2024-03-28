@@ -231,4 +231,17 @@ class TournamentController extends GetxController
       return false;
     }
   }
+
+  //searchTournament
+  Future<List<TournamentModel>> searchTournament(String query) async {
+    try {
+      final response = await tournamentApi.searchTournament(query);
+      return response.data!['tournamentList']
+          .map<TournamentModel>((e) => TournamentModel.fromJson(e))
+          .toList();
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
 }

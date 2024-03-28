@@ -48,9 +48,14 @@ class _CreateProfileState extends State<CreateProfile>
   final TextEditingController _contactController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool isSelected = false;
+  bool allowUpdateContact = true;
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<AuthController>();
+    if (controller.state != null && controller.state?.phoneNumber != null) {
+      _contactController.text = controller.state!.phoneNumber!;
+      allowUpdateContact = false;
+    }
     return LocationStreamHandler(
       child: DecoratedBox(
           decoration: const BoxDecoration(
@@ -177,6 +182,7 @@ class _CreateProfileState extends State<CreateProfile>
                                 CustomTextField(
                                   labelText: 'Contact No',
                                   controller: _contactController,
+                                  enabled: allowUpdateContact,
                                   textInputType: TextInputType.phone,
                                   maxLen: 10,
                                   validator: (e) {

@@ -26,6 +26,7 @@ class _UpdateAuthorityScreenState extends State<UpdateAuthorityScreen> {
     logger.f("Authority: ${widget.tournament.authority}");
     selectedValue = widget.tournament.authority ?? "";
     if (widget.tournament.coHost1 != null) {
+      logger.f("Cost host 1: ${widget.tournament.coHost1?.fullName}");
       items.add(
         DropdownMenuItem(
           value: widget.tournament.coHost1!.id,
@@ -37,6 +38,8 @@ class _UpdateAuthorityScreenState extends State<UpdateAuthorityScreen> {
       );
     }
     if (widget.tournament.coHost2 != null) {
+      logger.f("Cost host 2: ${widget.tournament.coHost2?.fullName}");
+
       items.add(
         DropdownMenuItem(
             value: widget.tournament.coHost2!.id,
@@ -102,8 +105,6 @@ class _UpdateAuthorityScreenState extends State<UpdateAuthorityScreen> {
                   },
                   value: selectedValue,
                   items: items,
-                  selectedItemBuilder: (context) =>
-                      items.map((e) => e.child).toList(),
                   onChanged: (e) {
                     setState(() {
                       selectedValue = e!;

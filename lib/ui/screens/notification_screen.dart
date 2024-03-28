@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/notification_model.dart';
-import 'package:gully_app/utils/date_time_helpers.dart';
 
 import '../../data/controller/notification_controller.dart';
+import '../../utils/date_time_helpers.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
@@ -110,10 +110,20 @@ class NotificationScreen extends GetView<NotificationController> {
                                     child: Obx(
                                       () => ListView.builder(
                                           shrinkWrap: true,
+                                          // itemCount: 2,
                                           itemCount: controller
                                               .notifications.value.length,
                                           itemBuilder: (context, index) {
                                             return NotificationCard(
+                                                //     notification:
+                                                //         NotificationModel.fromJson({
+                                                //   'title':
+                                                //       'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+                                                //   'body':
+                                                //       'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
+                                                //   'createdAt':
+                                                //       DateTime.now().toString(),
+                                                // }));
                                                 notification: controller
                                                     .notifications
                                                     .value[index]);
@@ -164,16 +174,52 @@ class NotificationCard extends StatelessWidget {
               ),
             ),
           ),
-          child: ListTile(
-            tileColor: Colors.red,
-            // leading: const CircleAvatar(),
-            title: Text(notification.title,
-                style: Get.textTheme.headlineMedium?.copyWith(
-                    color: Colors.black, fontWeight: FontWeight.bold)),
-            subtitle: Text(notification.body),
-            trailing: Text(
-                formatDateTime('dd/MMM/yyy hh:mm a', notification.createdAt)),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    width: Get.width / 1.8,
+                    child: Text(notification.title,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 4,
+                        style: Get.textTheme.headlineMedium?.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14)),
+                  ),
+                  const Spacer(),
+                  Text(
+                    formatDateTime(
+                      'dd/MMM/yyy hh:mm a',
+                      notification.createdAt,
+                    ),
+                    style: const TextStyle(color: Colors.grey, fontSize: 12),
+                  )
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(notification.body,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 4,
+                  style: Get.textTheme.headlineMedium?.copyWith(
+                      color: Colors.blueGrey,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14)),
+            ],
           ),
+          // child: ListTile(
+          //   tileColor: Colors.red,
+          //   // leading: const CircleAvatar(),
+          //   title: Text(notification.title,
+          //       style: Get.textTheme.headlineMedium?.copyWith(
+          //           color: Colors.black,
+          //           fontWeight: FontWeight.w500,
+          //           fontSize: 14)),
+          //   subtitle: Text(notification.body),
+          //   trailing: Text(
+          //       formatDateTime('dd/MMM/yyy hh:mm a', notification.createdAt)),
+          // ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),

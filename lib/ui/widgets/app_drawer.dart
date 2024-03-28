@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
+import 'package:gully_app/ui/screens/choose_lang_screen.dart';
 import 'package:gully_app/ui/screens/player_profile_screen.dart';
 import 'package:gully_app/ui/screens/search_challenge_team.dart';
+import 'package:gully_app/ui/screens/select_team_to_register.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -215,7 +217,11 @@ class AppDrawer extends GetView<AuthController> {
                   // title: 'Challenge Team',
                   title: AppLocalizations.of(context)!.challenge_team,
                   onTap: () {
-                    Get.to(() => const SearchChallengeTeam());
+                    Get.to(() => SelectTeamToRegister(
+                          onTeamSelected: (team) {
+                            Get.to(() => const SearchChallengeTeam());
+                          },
+                        ));
                   },
                   icon: Icons.compare,
                 ),
@@ -273,6 +279,7 @@ class AppDrawer extends GetView<AuthController> {
                   onTap: () {
                     Get.to(() => LegalViewScreen(
                           // title: 'FAQs',
+                          hideDeleteButton: true,
                           title: AppLocalizations.of(context)!.faqs,
                           slug: 'faq',
                         ));
@@ -298,6 +305,17 @@ class AppDrawer extends GetView<AuthController> {
                         ));
                   },
                   icon: Icons.disc_full,
+                ),
+                DrawerCard(
+                  // title: 'Disclaimer',
+                  title: AppLocalizations.of(context)!.changeLanguage,
+                  onTap: () {
+                    Get.to(() => const ChooseLanguageScreen(
+                        // title: 'Disclaimer',
+
+                        ));
+                  },
+                  icon: Icons.language,
                 ),
                 DrawerCard(
                   // title: 'Log out',

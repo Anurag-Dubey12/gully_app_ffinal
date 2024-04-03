@@ -5,7 +5,8 @@ part 'team_ranking_model.g.dart';
 @JsonSerializable()
 class TeamRankingModel {
   final String teamName;
-  final String teamLogo;
+  @JsonKey(name: 'teamLogo', disallowNullValue: false)
+  final String? teamLogo;
   final int numberOfWins;
   final DateTime registeredAt;
 

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/search_challenge_team.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 
@@ -47,7 +45,9 @@ class ChallengeTeam extends StatelessWidget {
               width: 200,
               child: PrimaryButton(
                 onTap: () {
-                  Get.to(() => const SearchChallengeTeam());
+                  // Get.to(() =>  SearchChallengeTeam(
+                  //   team: w,
+                  // ));
                 },
                 title: AppLocalizations.of(context)!.payNow,
               ),

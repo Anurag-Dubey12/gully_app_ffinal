@@ -174,13 +174,6 @@ class HomePage extends StatelessWidget {
                             const SizedBox(
                               height: 20,
                             ),
-                            TextButton(
-                                onPressed: () {
-                                  Get.updateLocale(const Locale("kn"));
-
-                                  logger.d(Get.locale?.languageCode);
-                                },
-                                child: const Text('Locale')),
                             const FullBannerSlider(),
                             const SizedBox(height: 20),
                             const DateTimesCard(),
@@ -338,7 +331,7 @@ class _TitleWidgetState extends State<TitleWidget> {
             title: AppLocalizations.of(context)!.past,
             isSelected: selected == 'Past',
             onTap: () => setState(() {
-              controller.getTournamentList(filter: 'past');
+              controller.getTournamentList(filterD: 'past');
               selected = 'Past';
             }),
           ),
@@ -347,7 +340,7 @@ class _TitleWidgetState extends State<TitleWidget> {
             title: AppLocalizations.of(context)!.current,
             isSelected: selected == 'Current',
             onTap: () => setState(() {
-              controller.getTournamentList(filter: 'current');
+              controller.getTournamentList(filterD: 'current');
               selected = 'Current';
             }),
           ),
@@ -356,7 +349,7 @@ class _TitleWidgetState extends State<TitleWidget> {
             title: AppLocalizations.of(context)!.upcoming,
             isSelected: selected == 'Upcoming',
             onTap: () => setState(() {
-              controller.getTournamentList(filter: 'upcoming');
+              controller.getTournamentList(filterD: 'upcoming');
               selected = 'Upcoming';
             }),
           ),

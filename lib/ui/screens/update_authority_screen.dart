@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
@@ -23,7 +22,7 @@ class _UpdateAuthorityScreenState extends State<UpdateAuthorityScreen> {
   @override
   void initState() {
     super.initState();
-    logger.f("Authority: ${widget.tournament.authority}");
+
     selectedValue = widget.tournament.authority ?? "";
     if (widget.tournament.coHost1 != null) {
       logger.f("Cost host 1: ${widget.tournament.coHost1?.fullName}");
@@ -39,6 +38,7 @@ class _UpdateAuthorityScreenState extends State<UpdateAuthorityScreen> {
     }
     if (widget.tournament.coHost2 != null) {
       logger.f("Cost host 2: ${widget.tournament.coHost2?.fullName}");
+      logger.f("Cost host 2: ${widget.tournament.coHost2?.phoneNumber}");
 
       items.add(
         DropdownMenuItem(
@@ -49,12 +49,12 @@ class _UpdateAuthorityScreenState extends State<UpdateAuthorityScreen> {
             )),
       );
     }
-    final AuthController authController = Get.find();
+
     items.add(
       DropdownMenuItem(
-          value: authController.state?.id,
+          value: widget.tournament.user.id,
           child: Text(
-            authController.state?.fullName ?? '',
+            widget.tournament.user.fullName,
             style: const TextStyle(color: Colors.black, fontSize: 16),
           )),
     );

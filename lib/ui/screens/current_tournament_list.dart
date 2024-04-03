@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/screens/organize_match.dart';
-import 'package:gully_app/ui/screens/select_team_for_scoreboard.dart';
+import 'package:gully_app/ui/screens/select_match_for_scoreboard.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/screens/tournament_teams.dart';
 import 'package:gully_app/ui/screens/update_authority_screen.dart';
@@ -12,6 +13,7 @@ import 'package:gully_app/ui/screens/view_matchups_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/widgets/custom_text_field.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/utils/utils.dart';
 
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
@@ -162,10 +164,16 @@ class _Card extends StatefulWidget {
 
 class _CardState extends State<_Card> {
   final roundController = TextEditingController();
+  @override
+  dispose() {
+    roundController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
+    final authController = Get.find<AuthController>();
 
     return GestureDetector(
       onTap: () {
@@ -188,6 +196,19 @@ class _CardState extends State<_Card> {
                       const SizedBox(height: 20),
                       PrimaryButton(
                         onTap: () {
+                          // logger.i('Routo: ${widget.tournament.authority}');
+                          // logger.i('Aut: ${authController.state?.id}');
+                          if (widget.tournament.authority !=
+                              authController.state?.id) {
+                            // logger.i(
+                            //     'Show ERROR: ${widget.tournament.authority}');
+                            errorSnackBar(
+                                    'You are not authorized to organize the match',
+                                    forceDialogOpen: true)
+                                .then((value) => Get.back());
+
+                            return;
+                          }
                           Get.back();
                           Get.to(
                             () => SelectOrganizeTeam(

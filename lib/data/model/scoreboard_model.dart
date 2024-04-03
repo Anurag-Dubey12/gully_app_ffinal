@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
-import 'package:gully_app/data/model/bowling_model.dart';
 import 'package:gully_app/data/model/extras_model.dart';
 import 'package:gully_app/data/model/innings_model.dart';
 import 'package:gully_app/data/model/overs_model.dart';
@@ -148,7 +147,7 @@ class ScoreboardModel {
       logger.i('First innings completed');
       return firstInnings != null || currentOver == totalOvers;
     } else {
-      return secondInnings != null;
+      return isSecondInningsOver;
     }
   }
 
@@ -178,29 +177,25 @@ class ScoreboardModel {
     nonStrikerId = id;
   }
 
-  BowlingModel get bowler {
+  PlayerModel get bowler {
     if (currentInnings == 1) {
-      return team2.players!
-          .firstWhere((element) => element.id == bowlerId)
-          .bowling!;
+      return team2.players!.firstWhere((element) => element.id == bowlerId);
     } else {
-      return team1.players!
-          .firstWhere((element) => element.id == bowlerId)
-          .bowling!;
+      return team1.players!.firstWhere((element) => element.id == bowlerId);
     }
   }
 
-  String get bowlerName {
-    if (currentInnings == 1) {
-      return team2.players!
-          .firstWhere((element) => element.id == bowlerId)
-          .name;
-    } else {
-      return team1.players!
-          .firstWhere((element) => element.id == bowlerId)
-          .name;
-    }
-  }
+  // String get bowlerName {
+  //   if (currentInnings == 1) {
+  //     return team2.players!
+  //         .firstWhere((element) => element.id == bowlerId)
+  //         .name;
+  //   } else {
+  //     return team1.players!
+  //         .firstWhere((element) => element.id == bowlerId)
+  //         .name;
+  //   }
+  // }
 
   ExtraModel get currentExtras {
     return extras;
@@ -238,12 +233,33 @@ class ScoreboardModel {
         player1: _partnershipStriker, player2: _partnershipNonStriker);
   }
 
+  String get getWinningTeam {
+    if ((lastBall.over == totalOvers && lastBall.ball == 6) &&
+        currentInningsScore > firstInnings!.totalScore) {
+      logger.i('Second team won');
+      return team2.id;
+    } else if ((lastBall.over == totalOvers && lastBall.ball == 6) ||
+        currentInningsScore < firstInnings!.totalScore) {
+      logger.i('First team won');
+      return team1.id;
+    }
+    if (currentInningsScore > firstInnings!.totalScore) {
+      logger.i('Second team won');
+      return team2.id;
+    } else {
+      return team1.id;
+    }
+  }
+
   bool get isSecondInningsOver {
+    logger.i('Checking if second innings is over');
     if (currentInnings == 2) {
       if (lastBall.over == totalOvers && lastBall.ball == 6) {
+        logger.i('Second innings over');
         return true;
       }
       if (currentInningsScore > firstInnings!.totalScore) {
+        logger.i('Second innings over');
         return true;
       }
     }
@@ -387,7 +403,7 @@ class ScoreboardModel {
           events: events,
         ),
       });
-      bowler.addRuns(runs, events: events);
+      bowler.bowling!.addRuns(runs, events: events);
     } else {
       currentInningsScore += runs;
       logger.d(key);
@@ -403,7 +419,7 @@ class ScoreboardModel {
           events: events,
         ),
       });
-      bowler.addRuns(runs, events: events);
+      bowler.bowling!.addRuns(runs, events: events);
     }
 
     // generate text for the second innings eg : Mi needs 100 runs in 10 overs
@@ -443,6 +459,27 @@ class ScoreboardModel {
     if (nonstriker.batting!.strikeRate.isNaN) {
       nonstriker.batting!.strikeRate = 0;
     }
+    logger.f('Updating second Innings');
+    final Map<String, PartnershipModel> tempPartnerships =
+        Map.from(partnerships);
+    partnerships.clear();
+    // if (currentInnings == 1) {
+    secondInnings = InningsModel(
+      totalScore: currentInningsScore,
+      battingTeam: team2,
+      bowlingTeam: team1,
+      ballRecord: getCurrentInnings,
+      totalWickets: lastBall.wickets,
+      overs: lastBall.over,
+      balls: lastBall.ball,
+      // TODO: Fix this
+
+      openingStriker: team1.players![0],
+      openingNonStriker: team1.players![1],
+      openingBowler: team1.players![0],
+      extras: extras,
+      partnerships: tempPartnerships,
+    );
   }
 
   void changeStrike() {
@@ -481,6 +518,10 @@ class ScoreboardModel {
           battingTeam: team1,
           bowlingTeam: team2,
           ballRecord: getCurrentInnings,
+          totalWickets: lastBall.wickets,
+          overs: lastBall.over,
+          balls: lastBall.ball,
+
           // TODO: Fix this
 
           openingStriker: team1.players![0],
@@ -513,6 +554,9 @@ class ScoreboardModel {
           totalScore: currentInningsScore,
           battingTeam: team2,
           bowlingTeam: team1,
+          totalWickets: lastBall.wickets,
+          overs: lastBall.over,
+          balls: lastBall.ball,
           ballRecord: getCurrentInnings,
           openingStriker: PlayerModel.fromJson(strikerT.toJson()),
           openingNonStriker: PlayerModel.fromJson(nonstrikerT.toJson()),

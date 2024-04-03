@@ -216,6 +216,9 @@ class ScoreBoardController extends GetxController with StateMixin {
         break;
       default:
     }
+    if (scoreboard.value!.isSecondInningsOver) {
+      updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
+    }
     _scoreboardApi.updateScoreBoard(scoreboard.value!.toJson());
     events.value = [];
     events.refresh();
@@ -278,6 +281,11 @@ class ScoreBoardController extends GetxController with StateMixin {
   void removeEventType(EventType type) {
     events.value.remove(type);
     events.refresh();
+  }
+
+  void updateFinalScoreBoard(String winningTeamId) {
+    _scoreboardApi.updateFinalScoreBoard(
+        scoreboard.value!.matchId, winningTeamId);
   }
 }
 

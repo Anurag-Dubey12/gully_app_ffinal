@@ -15,6 +15,17 @@ class ScoreboardApi {
     return ApiResponse.fromJson(response.body);
   }
 
+  Future<ApiResponse> updateFinalScoreBoard(
+      matchId, String winningTeamId) async {
+    var response = await repo.post('/match/updateTeamMatchsData/$matchId', {
+      'winningTeamId': winningTeamId,
+    });
+    if (!response.isOk) {
+      throw response.body['message'] ?? 'Unable to Process Request';
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
   Future<ApiResponse> getSingleMatchup(String matchId) async {
     final response = await repo.get('/match/getMatch/$matchId');
     if (response.statusCode! >= 500) {

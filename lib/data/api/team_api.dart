@@ -1,3 +1,4 @@
+import 'package:geolocator/geolocator.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
@@ -132,7 +133,12 @@ class TeamApi {
 
   // getAllNearByTeam
   Future<ApiResponse> getAllNearByTeam() async {
-    final response = await repo.get('/team/getAllNearByTeam');
+    final location = await Geolocator.getCurrentPosition();
+
+    final response = await repo.post('/team/getAllNearByTeam', {
+      'latitude': location.latitude,
+      'longitude': location.longitude,
+    });
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');
       throw Exception('Server Error');
@@ -179,6 +185,62 @@ class TeamApi {
       errorSnackBar(response.body['message']);
       throw Exception('Bad Request');
     }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> createChallengeMatch({
+    required String teamId,
+    required String opponentId,
+    // required DateTime matchDate
+  }) async {
+    final obj = {
+      'team1ID': teamId,
+      'team2ID': opponentId,
+      // 'dateTime': matchDate.toIso8601String(),
+    };
+    logger.i(obj);
+    final response = await repo.post('/match/createChallengeMatch', obj);
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! >= 400) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  ///match/updateChallengeMatch
+  Future<ApiResponse> updateChallengeMatch({
+    required String matchId,
+    required String status,
+  }) async {
+    final response =
+        await repo.post('/match/updateChallengeMatch/$matchId/$status', {});
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! >= 400) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getMyPerformance({
+    required String matchType,
+    required String inningsType,
+  }) async {
+    final response =
+        await repo.get('/match/myPerformns/$matchType/$inningsType');
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! >= 400) {
+      errorSnackBar('Bad Request');
+      return ApiResponse.fromJson(response.body);
+    }
+
     return ApiResponse.fromJson(response.body);
   }
 }

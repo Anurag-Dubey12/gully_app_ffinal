@@ -174,6 +174,13 @@ class _PlayerRankingScreenState extends State<PlayerRankingScreen> {
                         //             color: Colors.black)),
                         //   ),
                         // ),
+                        // TextButton(
+                        //     onPressed: () {
+                        //       controller.getPlayerRankingList(
+                        //           _selectedTab == 0 ? 'leather' : 'tennis',
+                        //           selectedChildTab);
+                        //     },
+                        //     child: const Text('Click me')),
                         Expanded(
                           child: Container(
                             color: Colors.black26,
@@ -222,7 +229,8 @@ class _TeamCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 29,
-              backgroundImage: NetworkImage(player.profilePhoto),
+              backgroundColor: Colors.grey.shade300,
+              backgroundImage: NetworkImage(player.profilePhoto ?? ""),
             ),
             const SizedBox(width: 12),
             Column(
@@ -232,7 +240,7 @@ class _TeamCard extends StatelessWidget {
                     style: Get.textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold, color: Colors.black)),
                 Text(
-                  'Inn ${player.balls} | SR:${player.strikeRate} | Runs: ${player.runs} |\nFours: ${player.fours} | Sixes: ${player.sixes}',
+                  'Inn ${player.balls} | SR:${player.strikeRate?.toStringAsFixed(2)} | Runs: ${player.runs} |\nFours: ${player.fours} | Sixes: ${player.sixes}',
                   style: Get.textTheme.bodyMedium
                       ?.copyWith(color: Colors.black54, fontSize: 12),
                 ),
@@ -264,23 +272,24 @@ class _SelectBallTypeCard extends StatelessWidget {
     return Expanded(
       child: Material(
         borderRadius: BorderRadius.circular(40),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(40),
-          onTap: () => onTap(tab),
-          child: Ink(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40),
-              color: tab == selectedTab
-                  ? AppTheme.secondaryYellowColor
-                  : Colors.white,
-              boxShadow: [
-                BoxShadow(
-                    color: AppTheme.secondaryYellowColor.withOpacity(0.3),
-                    blurRadius: 20,
-                    spreadRadius: 2,
-                    offset: const Offset(0, 7))
-              ],
-            ),
+        child: Ink(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+            color: tab == selectedTab
+                ? AppTheme.secondaryYellowColor
+                : Colors.white,
+            boxShadow: [
+              BoxShadow(
+                  color:
+                      const Color.fromARGB(57, 255, 164, 46).withOpacity(0.3),
+                  blurRadius: 20,
+                  spreadRadius: 2,
+                  offset: const Offset(0, 7))
+            ],
+          ),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(40),
+            onTap: () => onTap(tab),
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(18.0),

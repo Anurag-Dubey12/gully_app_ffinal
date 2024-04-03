@@ -146,7 +146,7 @@ class _ViewOpponentTeamState extends State<ViewOpponentTeam> {
                                   height: Get.height * 0.63,
                                   child: ListView.separated(
                                       padding:
-                                          const EdgeInsets.only(bottom: 10),
+                                          const EdgeInsets.only(bottom: 30),
                                       shrinkWrap: true,
                                       itemCount: widget.team.players!.length,
                                       separatorBuilder: (context, index) =>
@@ -179,6 +179,12 @@ class _ViewOpponentTeamState extends State<ViewOpponentTeam> {
                                                     ?.copyWith(
                                                         fontWeight:
                                                             FontWeight.w400),
+                                              ),
+                                              const SizedBox(width: 10),
+                                              Image.asset(
+                                                getAssetFromRole(widget.team
+                                                    .players![snapshot].role),
+                                                width: 20,
                                               ),
                                               const Spacer(),
                                             ]),

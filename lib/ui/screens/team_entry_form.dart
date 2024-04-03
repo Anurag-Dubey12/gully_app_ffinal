@@ -289,6 +289,14 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                   FormInput(
                                     controller: TextEditingController(
                                         text: controller
+                                            .status.data?.tournamentPrize
+                                            .toString()),
+                                    label: "Prize",
+                                    enabled: false,
+                                  ),
+                                  FormInput(
+                                    controller: TextEditingController(
+                                        text: controller
                                             .status.data?.organizerName
                                             .toString()),
                                     enabled: false,
@@ -338,7 +346,7 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                             controller.status.data!.disclaimer),
                                     enabled: false,
                                     maxLines: 4,
-                                    label: "Terms and Conditions",
+                                    label: "Disclaimer",
                                   ),
                                   Row(
                                     children: [
@@ -351,11 +359,9 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                                   termsAccepted = e!;
                                                 });
                                               })),
-                                      const SizedBox(
-                                        width: 8,
-                                      ),
+                                      const SizedBox(width: 8),
                                       Text(
-                                          'I\'ve hereby read and agree to your terms and\nconditions',
+                                          'I\'ve hereby read and agree to your disclaimer',
                                           style: Get.textTheme.titleSmall),
                                     ],
                                   ),

@@ -53,6 +53,7 @@ class MiscApi {
 
   Future<ApiResponse> getLookingFor() async {
     final location = await Geolocator.getCurrentPosition();
+    
     return repo.post('/team/getAllLooking', {
       'latitude': location.latitude,
       'longitude': location.longitude,

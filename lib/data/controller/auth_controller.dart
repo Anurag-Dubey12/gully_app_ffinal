@@ -13,6 +13,7 @@ import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../ui/screens/choose_lang_screen.dart';
 import '../../ui/screens/splash_screen.dart';
 import '../../ui/widgets/custom_snackbar.dart';
 import '../api/auth_api.dart';
@@ -117,6 +118,12 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       if (fetchedUser.isNewUser) {
         Get.offAll(() => const CreateProfile());
       }
+      final pref = Get.put<Preferences>(Preferences(), permanent: true);
+      logger.f("Language: ${pref.getLanguage()}");
+      if (!pref.languageSelected) {
+        Get.offAll(() => const ChooseLanguageScreen());
+        // return false;
+      }
       getCurrentLocation();
     } catch (e) {
       logger.e(e.toString());
@@ -133,7 +140,10 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
     try {
       change(GetStatus.loading());
       final response = await repo.createProfile(
-          nickName: nickName, phoneNumber: phoneNumber, base64: base64);
+          nickName: nickName,
+          phoneNumber: phoneNumber,
+          base64: base64,
+          isNewUser: state!.isNewUser);
 
       final user = UserModel.fromJson(response.data!['user']);
       change(GetStatus.success(user));
@@ -176,6 +186,22 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       change(GetStatus.loading());
       await Future.delayed(const Duration(seconds: 2));
       final response = await repo.verifyOtp(otp: otp);
+      final user = UserModel.fromJson(response.data!['user']);
+      change(GetStatus.success(user));
+      return true;
+    } catch (e) {
+      showSnackBar(title: e.toString(), message: e.toString(), isError: true);
+      change(GetStatus.error(e.toString()));
+      rethrow;
+      // return false;
+    }
+  }
+
+  Future<bool> sendOTP() async {
+    try {
+      change(GetStatus.loading());
+      await Future.delayed(const Duration(seconds: 2));
+      final response = await repo.resendOTP(state!.phoneNumber!);
       final user = UserModel.fromJson(response.data!['user']);
       change(GetStatus.success(user));
       return true;

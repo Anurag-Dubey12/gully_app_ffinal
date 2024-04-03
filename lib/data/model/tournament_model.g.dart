@@ -30,6 +30,7 @@ TournamentModel _$TournamentModelFromJson(Map<String, dynamic> json) =>
       breakfastCharges: json['breakfastCharges'] as int,
       ballType:
           TournamentModel.extractName(json['ballType'] as Map<String, dynamic>),
+      user: CoHostModel.fromJson(json['user'] as Map<String, dynamic>),
       coverPhoto: json['coverPhoto'] as String?,
       fees: (json['fees'] as num).toDouble(),
       coHost1: json['coHost1'] == null

@@ -12,7 +12,7 @@ class GetConnectClient extends GetConnect {
   void onInit() {
     super.onInit();
     httpClient.baseUrl = AppConstants.baseUrl;
-    httpClient.timeout = const Duration(seconds: 13);
+    httpClient.timeout = const Duration(seconds: 25);
     httpClient.addRequestModifier<dynamic>((request) {
       logger.d("--> ${request.method.toUpperCase()}: ${request.url}");
       request.headers.addAll({

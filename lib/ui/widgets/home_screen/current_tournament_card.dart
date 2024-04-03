@@ -16,7 +16,7 @@ class CurrentTournamentCard extends GetView<TournamentController> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: Get.height * 0.5,
+      // height: Get.height * 0.5,
       child: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: Obx(() {
@@ -27,8 +27,7 @@ class CurrentTournamentCard extends GetView<TournamentController> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: controller.matches.length,
                 shrinkWrap: true,
-                padding:
-                    EdgeInsets.only(bottom: Get.statusBarHeight + 70, top: 10),
+                padding: const EdgeInsets.only(bottom: 10, top: 10),
                 itemBuilder: (context, snapshot) {
                   return _Card(
                     tournament: controller.matches[snapshot],

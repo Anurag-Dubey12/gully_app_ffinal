@@ -4,13 +4,16 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/challenge_match.dart';
 import 'package:gully_app/data/model/team_model.dart';
+import 'package:gully_app/ui/screens/view_opponent_team.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../data/controller/auth_controller.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
 class SearchChallengeTeam extends StatefulWidget {
-  const SearchChallengeTeam({super.key});
+  final TeamModel team;
+  const SearchChallengeTeam({super.key, required this.team});
 
   @override
   State<SearchChallengeTeam> createState() => _SearchChallengeTeamState();
@@ -20,6 +23,7 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
   @override
   Widget build(BuildContext context) {
     final TeamController teamController = Get.find<TeamController>();
+    final AuthController authController = Get.find<AuthController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -125,57 +129,101 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
                   //   ),
                   // ),
                   Expanded(
-                    child: Container(
+                    child: SingleChildScrollView(
+                      child: Container(
                         color: const Color.fromARGB(96, 82, 80, 124),
-                        child: Padding(
-                            padding: const EdgeInsets.all(18.0),
-                            child: FutureBuilder<List<TeamModel>>(
-                                future: teamController.getAllNearByTeam(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasError) {
-                                    return Center(
-                                        child:
-                                            Text('Error: ${snapshot.error}'));
-                                  }
-                                  return ListView.separated(
-                                    itemBuilder: (context, index) =>
-                                        StatefulBuilder(
-                                      builder: (c, s) => _TeamCard(
-                                        team: snapshot.data![index],
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(18.0),
+                              child: FutureBuilder<List<ChallengeMatchModel>>(
+                                  future: teamController.getChallengeMatch(),
+                                  builder: (context, snapshot) {
+                                    return ListView.separated(
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemBuilder: (context, index) =>
+                                          StatefulBuilder(
+                                        builder: (c, s) => _Challenges(
+                                          team: snapshot.data![index],
+                                          isChallengedByMe:
+                                              authController.state?.id ==
+                                                  snapshot.data![index]
+                                                      .challengedBy,
+                                          onTap: (status) {
+                                            teamController.updateChallengeMatch(
+                                                matchId:
+                                                    snapshot.data![index].id,
+                                                status: status);
+                                            successSnackBar(
+                                                'Status Updated to $status');
+                                            setState(() {});
+                                          },
+                                        ),
                                       ),
-                                    ),
-                                    separatorBuilder: (context, index) =>
-                                        const SizedBox(
-                                      height: 20,
-                                    ),
-                                    itemCount: snapshot.data?.length ?? 0,
-                                    shrinkWrap: true,
-                                  );
-                                }))),
-                  ),
-                  Expanded(
-                    child: Container(
-                        color: const Color.fromARGB(96, 82, 80, 124),
-                        child: Padding(
-                            padding: const EdgeInsets.all(18.0),
-                            child: FutureBuilder<List<ChallengeMatchModel>>(
-                                future: teamController.getChallengeMatch(),
-                                builder: (context, snapshot) {
-                                  return ListView.separated(
-                                    itemBuilder: (context, index) =>
-                                        StatefulBuilder(
-                                      builder: (c, s) => _Challenges(
-                                        team: snapshot.data![index],
+                                      separatorBuilder: (context, index) =>
+                                          const SizedBox(
+                                        height: 20,
                                       ),
-                                    ),
-                                    separatorBuilder: (context, index) =>
-                                        const SizedBox(
-                                      height: 20,
-                                    ),
-                                    itemCount: snapshot.data?.length ?? 0,
-                                    shrinkWrap: true,
-                                  );
-                                }))),
+                                      itemCount: snapshot.data?.length ?? 0,
+                                      shrinkWrap: true,
+                                    );
+                                  }),
+                            ),
+                            Container(
+
+                                // height: Get.height,
+                                child: Padding(
+                                    padding: const EdgeInsets.all(18.0),
+                                    child: FutureBuilder<List<TeamModel>>(
+                                        future:
+                                            teamController.getAllNearByTeam(),
+                                        builder: (context, snapshot) {
+                                          if (snapshot.hasError) {
+                                            return Center(
+                                                child: TextButton(
+                                                    onPressed: () {
+                                                      teamController
+                                                          .getAllNearByTeam();
+                                                    },
+                                                    child: Text(
+                                                        'Error: ${snapshot.error}')));
+                                          }
+                                          return ListView.separated(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            itemBuilder: (context, index) =>
+                                                StatefulBuilder(
+                                              builder: (c, s) => _TeamCard(
+                                                team: snapshot.data![index],
+                                                onTap: () async {
+                                                  await teamController
+                                                      .createChallengeMatch(
+                                                          teamId:
+                                                              widget.team.id,
+                                                          opponentId: snapshot
+                                                              .data![index].id);
+                                                  successSnackBar(AppLocalizations
+                                                          .of(context)!
+                                                      .request_sent_successfully);
+                                                  setState(() {});
+                                                },
+                                              ),
+                                            ),
+                                            separatorBuilder:
+                                                (context, index) =>
+                                                    const SizedBox(
+                                              height: 20,
+                                            ),
+                                            itemCount:
+                                                snapshot.data?.length ?? 0,
+                                            shrinkWrap: true,
+                                          );
+                                        }))),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -188,8 +236,9 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
 }
 
 class _TeamCard extends StatelessWidget {
+  final Function onTap;
   final TeamModel team;
-  const _TeamCard({super.key, required this.team});
+  const _TeamCard({super.key, required this.team, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -229,8 +278,7 @@ class _TeamCard extends StatelessWidget {
                 child: IconButton(
                   padding: const EdgeInsets.all(0),
                   onPressed: () {
-                    successSnackBar(AppLocalizations.of(context)!
-                        .request_sent_successfully);
+                    onTap();
                   },
                   icon: const Icon(Icons.add),
                   color: Colors.white,
@@ -251,61 +299,108 @@ class _TeamCard extends StatelessWidget {
 
 class _Challenges extends StatelessWidget {
   final ChallengeMatchModel team;
+  final bool isChallengedByMe;
+  final Function onTap;
 
-  const _Challenges({super.key, required this.team});
+  const _Challenges(
+      {required this.team,
+      required this.isChallengedByMe,
+      required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Colors.white,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: Row(children: [
-          // CircleAvatar(
-          //     backgroundImage: NetworkImage(toImageUrl(team.logo ?? ""))),
-          const SizedBox(width: 10),
-          const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'team.name.capitalize',
-                style: TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
-              ),
-              // const Text(
-              //   '20th April 2021',
-              //   style: TextStyle(
-              //       fontSize: 13, color: Color.fromARGB(255, 255, 154, 22)),
-              // ),
-            ],
-          ),
-          const Spacer(),
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(90),
-                    color: AppTheme.darkYellowColor),
-                child: IconButton(
-                  padding: const EdgeInsets.all(0),
-                  onPressed: () {
-                    successSnackBar(AppLocalizations.of(context)!
-                        .request_sent_successfully);
-                  },
-                  icon: const Icon(Icons.add),
-                  color: Colors.white,
+    return GestureDetector(
+      onTap: () {
+        if (team.status == "Accepted") {
+          Get.to(() => ViewOpponentTeam(team: team.team2));
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Row(children: [
+            // CircleAvatar(
+            //     backgroundImage: NetworkImage(toImageUrl(team.logo ?? ""))),
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  isChallengedByMe
+                      ? team.team2.name.capitalize
+                      : team.team1.name.capitalize,
+                  style: const TextStyle(
+                      fontSize: 19, fontWeight: FontWeight.bold),
                 ),
-              ),
-              const SizedBox(width: 10),
-              // Chip(
-              //     label: Text('Decline', style: TextStyle(color: Colors.white)),
-              //     backgroundColor: Colors.red,
-              //     side: BorderSide.none),
-            ],
-          )
-        ]),
+                // const Text(
+                //   '20th April 2021',
+                //   style: TextStyle(
+                //       fontSize: 13, color: Color.fromARGB(255, 255, 154, 22)),
+                // ),
+              ],
+            ),
+            const Spacer(),
+            Row(
+              children: [
+                isChallengedByMe
+                    ? Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(90),
+                            color: team.status == "Pending"
+                                ? AppTheme.darkYellowColor
+                                : team.status == "Accepted"
+                                    ? Colors.green
+                                    : AppTheme.darkYellowColor),
+                        child: Padding(
+                          padding: const EdgeInsets.all(7.0),
+                          child: Text(team.status,
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 12)),
+                        ),
+                      )
+                    : const SizedBox(),
+                const SizedBox(
+                  width: 10,
+                ),
+                team.status == "Accepted"
+                    ? const Icon(Icons.arrow_forward_ios)
+                    : const SizedBox(),
+                const SizedBox(width: 10),
+                !isChallengedByMe && team.status == "Pending"
+                    ? Row(
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              onTap('Accepted');
+                            },
+                            child: const Chip(
+                                label: Text('Accept',
+                                    style: TextStyle(color: Colors.white)),
+                                backgroundColor: Colors.green,
+                                side: BorderSide.none),
+                          ),
+                          const SizedBox(width: 12),
+                          InkWell(
+                            onTap: () {
+                              onTap('Denied');
+                            },
+                            child: const Chip(
+                                label: Text('Decline',
+                                    style: TextStyle(color: Colors.white)),
+                                backgroundColor: Colors.red,
+                                side: BorderSide.none),
+                          ),
+                        ],
+                      )
+                    : const SizedBox()
+              ],
+            )
+          ]),
+        ),
       ),
     );
   }

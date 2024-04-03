@@ -1,12 +1,12 @@
+import 'dart:async';
 import 'dart:io';
 
-import "package:app_links/app_links.dart";
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -20,6 +20,7 @@ import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/notification_controller.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
+import 'package:gully_app/ui/screens/no_internet_screen.dart';
 import 'package:gully_app/utils/app_logger.dart';
 
 import '/config/api_client.dart';
@@ -67,63 +68,33 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final _appLinks = AppLinks();
-  Locale _locale = const Locale('en');
-  // @override
-  // initState() {
-  //   super.initState();
-  //   _appLinks.allUriLinkStream.listen((uri) {
-  //     // Do something (navigation, ...)
-  //     logger.f("URI: ${uri.data}");
-  //     logger.f("URI: ${uri.queryParameters}");
-  //     logger.f("URI: ${uri.queryParametersAll}");
-  //     logger.f("URI: ${uri.query}");
-  //     print("URI: $uri");
-  //   });
-  // }
-
+  StreamSubscription<List<ConnectivityResult>>? subscription;
+  bool _isConnected = true;
   @override
   void initState() {
     super.initState();
-    initDeepLinks();
-  }
 
-  String _deepLink = 'No deep link';
-  Future<void> initDeepLinks() async {
-    try {
-      Uri? initialUri = await _appLinks.getInitialAppLink();
-      handleDeepLink(initialUri);
-    } on PlatformException {
-      // Handle exception
-    }
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((List<ConnectivityResult> result) {
+      if (result.contains(ConnectivityResult.none)) {
+        setState(() {
+          _isConnected = false;
+        });
+      } else {
+        setState(() {
+          _isConnected = true;
+        });
+      }
 
-    // Listen for deep link changes
-    _appLinks.allUriLinkStream.listen((Uri uri) {
-      handleDeepLink(uri);
-    }, onError: (err) {
-      // Handle error
-    });
-    _appLinks.getInitialAppLink().then((uri) {
-      handleDeepLink(uri);
+      // Received changes in available connectivity types!
     });
   }
 
-  void handleDeepLink(Uri? uri) {
-    if (uri == null) return;
-    setState(() {
-      _deepLink = uri.toString();
-      // Access query parameters
-
-      String? bookId = uri.queryParameters['id'];
-      String? title = uri.queryParameters['title'];
-      print('Book ID: $bookId, Title: $title');
-    });
-  }
-
-  setLocale(Locale value) {
-    setState(() {
-      _locale = value;
-    });
+  @override
+  void dispose() {
+    subscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -148,6 +119,9 @@ class _MyAppState extends State<MyApp> {
         Locale('te'),
       ],
       builder: (context, child) {
+        if (!_isConnected) {
+          return const NoInternetScreen();
+        }
         if (Get.locale != null &&
             (Get.locale!.languageCode == 'ar' ||
                 Get.locale!.languageCode == 'ur')) {

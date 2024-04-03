@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 import 'package:gully_app/utils/utils.dart';
 
@@ -18,24 +17,23 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: Get.height * 0.54,
+        // height: Get.height * 0.54,
         child: Obx(() {
-          if (controller.tournamentList.isEmpty) {
-            return const NoTournamentCard();
-          } else {
-            return ListView.builder(
-                itemCount: controller.matches.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding:
-                    EdgeInsets.only(bottom: Get.statusBarHeight + 70, top: 10),
-                itemBuilder: (context, snapshot) {
-                  return _Card(
-                    tournament: controller.matches[snapshot],
-                  );
-                });
-          }
-        }));
+      if (controller.tournamentList.isEmpty) {
+        return const NoTournamentCard();
+      } else {
+        return ListView.builder(
+            itemCount: controller.matches.length,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.only(bottom: 10, top: 10),
+            itemBuilder: (context, snapshot) {
+              return _Card(
+                tournament: controller.matches[snapshot],
+              );
+            });
+      }
+    }));
   }
 }
 
@@ -47,7 +45,6 @@ class _Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    logger.d('tournament: ${tournament.scoreBoard!['matchId']}');
     ScoreboardModel? scoreboard = tournament.scoreBoard == null
         ? null
         : ScoreboardModel?.fromJson(tournament.scoreBoard!);
@@ -86,72 +83,86 @@ class _Card extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 28),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.network(
-                              toImageUrl(scoreboard!.team1.logo!),
-                              height: 50,
-                              fit: BoxFit.cover,
-                              width: 50,
-                            ),
-                          ),
-                          const SizedBox(width: 15),
-                          Text(
-                            scoreboard.team1.name,
-                            style: Get.textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
-                              fontSize: 18,
-                            ),
-                          )
-                        ],
-                      ),
-                      Text(
-                          '${scoreboard.firstInningHistory.entries.last.value.total}/${scoreboard.firstInningHistory.entries.last.value.wickets}'),
-                    ],
+            if (scoreboard == null)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 28),
+                child: Text(
+                  'Scoreboard not available yet.',
+                  style: Get.textTheme.headlineMedium?.copyWith(
+                    color: Colors.black,
+                    fontSize: 18,
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(100),
-                            child: Image.network(
-                              toImageUrl(scoreboard.team2.logo!),
-                              height: 50,
-                              fit: BoxFit.cover,
-                              width: 50,
+                ),
+              ),
+            if (scoreboard != null)
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 28),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image.network(
+                                toImageUrl(scoreboard.team1.logo!),
+                                height: 50,
+                                fit: BoxFit.cover,
+                                width: 50,
+                              ),
                             ),
-                          ),
-                          const SizedBox(width: 15),
-                          Text(scoreboard.team2.name,
+                            const SizedBox(width: 15),
+                            Text(
+                              scoreboard.team1.name,
                               style: Get.textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.black,
                                 fontSize: 18,
-                              ))
-                        ],
-                      ),
-                      Text(
-                          '${scoreboard.currentInningsScore}/${scoreboard.currentOverHistory.last?.wickets ?? 0}')
-                    ],
-                  ),
-                ],
+                              ),
+                            )
+                          ],
+                        ),
+                        Text(
+                            '${scoreboard.firstInningHistory.entries.last.value.total}/${scoreboard.firstInningHistory.entries.last.value.wickets}'),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(100),
+                              child: Image.network(
+                                toImageUrl(scoreboard.team2.logo!),
+                                height: 50,
+                                fit: BoxFit.cover,
+                                width: 50,
+                              ),
+                            ),
+                            const SizedBox(width: 15),
+                            Text(scoreboard.team2.name,
+                                style: Get.textTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                ))
+                          ],
+                        ),
+                        Text(
+                            '${scoreboard.currentInningsScore}/${scoreboard.currentOverHistory.last?.wickets ?? 0}')
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
             Text(
-              scoreboard.secondInningsText ?? '',
+              scoreboard?.secondInningsText ?? '',
               style: Get.textTheme.headlineMedium?.copyWith(
                 color: Colors.black,
                 fontSize: 12,

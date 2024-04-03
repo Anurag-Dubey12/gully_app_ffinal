@@ -71,6 +71,11 @@ class TournamentTeams extends GetView<TournamentController> {
                           color: Colors.white,
                         ),
                       ),
+                      // TextButton(
+                      //     onPressed: () {
+                      //       controller.getRegisteredTeams(tournament.id);
+                      //     },
+                      //     child: const Text('data')),
                       SizedBox(height: Get.height * 0.08),
                       Padding(
                         padding: EdgeInsets.symmetric(

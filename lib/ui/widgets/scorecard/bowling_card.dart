@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 
-class BowlingStats extends StatelessWidget {
+class BowlingStats extends GetView<ScoreBoardController> {
   const BowlingStats({
     super.key,
   });
@@ -65,37 +65,38 @@ class _BowlerPlayerStat extends GetView<ScoreBoardController> {
               Expanded(
                   flex: 5,
                   child: Text(
-                    controller.scoreboard.value!.bowlerName,
+                    controller.scoreboard.value!.bowler.name,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   )),
               Expanded(
                   child: Center(
                       child: Text(
-                          ('${controller.scoreboard.value!.bowler.currentOver}.${controller.scoreboard.value!.bowler.currentBall}'),
+                          ('${controller.scoreboard.value!.bowler.bowling!.currentOver}.${controller.scoreboard.value!.bowler.bowling!.currentBall}'),
                           style: Get.textTheme.labelMedium))),
               Expanded(
                 child: Center(
                     child: Text(
-                        (controller.scoreboard.value!.bowler.maidens)
+                        (controller.scoreboard.value!.bowler.bowling!.maidens)
                             .toString(),
                         style: Get.textTheme.labelMedium)),
               ),
               Expanded(
                   child: Center(
                       child: Text(
-                          controller.scoreboard.value!.bowler.runs.toString(),
-                          style: Get.textTheme.labelMedium))),
-              Expanded(
-                  child: Center(
-                      child: Text(
-                          controller.scoreboard.value!.bowler.wickets
+                          controller.scoreboard.value!.bowler.bowling!.runs
                               .toString(),
                           style: Get.textTheme.labelMedium))),
               Expanded(
                   child: Center(
                       child: Text(
-                          controller.scoreboard.value!.bowler.economy
+                          controller.scoreboard.value!.bowler.bowling!.wickets
+                              .toString(),
+                          style: Get.textTheme.labelMedium))),
+              Expanded(
+                  child: Center(
+                      child: Text(
+                          controller.scoreboard.value!.bowler.bowling!.economy
                               .toStringAsFixed(1),
                           style: Get.textTheme.labelMedium)))
             ],

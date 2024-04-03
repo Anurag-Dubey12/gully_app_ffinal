@@ -9,7 +9,7 @@ part of 'team_ranking_model.dart';
 TeamRankingModel _$TeamRankingModelFromJson(Map<String, dynamic> json) =>
     TeamRankingModel(
       teamName: json['teamName'] as String,
-      teamLogo: json['teamLogo'] as String,
+      teamLogo: json['teamLogo'] as String?,
       numberOfWins: json['numberOfWins'] as int,
       registeredAt: DateTime.parse(json['registeredAt'] as String),
     );

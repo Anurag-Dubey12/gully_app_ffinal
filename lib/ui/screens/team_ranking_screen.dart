@@ -162,7 +162,7 @@ class _TeamCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 29,
-                  backgroundImage: NetworkImage(team.teamLogo),
+                  backgroundImage: NetworkImage(team.teamLogo ?? ""),
                 ),
                 const SizedBox(width: 12),
                 Column(

@@ -287,6 +287,9 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
   }
 
   void startTimer() {
+    // reset controller
+    textEditingController.clear();
+
     countDown = 20;
     const oneSec = Duration(seconds: 1);
     timer = Timer.periodic(
@@ -377,6 +380,7 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                       countDown == 0
                           ? ElevatedButton(
                               onPressed: () {
+                                controller.sendOTP();
                                 startTimer();
                               },
                               child: Text(
@@ -414,7 +418,9 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
   Future<void> login(AuthController controller) async {
     final res = await controller.verifyOtp(otp: textEditingController.text);
     if (res) {
-      Get.offAll(() => const ChooseLanguageScreen());
+      successSnackBar(
+              'Thank you for registering with us! Welcome to the Gully Team app.')
+          .then((value) => Get.offAll(() => const ChooseLanguageScreen()));
     }
   }
 }

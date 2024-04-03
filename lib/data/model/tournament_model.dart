@@ -38,6 +38,7 @@ class TournamentModel {
   final CoHostModel? coHost1;
   @JsonKey(disallowNullValue: false)
   final CoHostModel? coHost2;
+  final CoHostModel user;
   @JsonKey(disallowNullValue: false)
   final String? authority;
 
@@ -59,6 +60,7 @@ class TournamentModel {
     required this.pitchType,
     required this.breakfastCharges,
     required this.ballType,
+    required this.user,
     // required this.tournamentListType,
     required this.coverPhoto,
     required this.fees,

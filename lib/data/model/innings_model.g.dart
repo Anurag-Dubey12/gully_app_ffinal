@@ -26,6 +26,9 @@ InningsModel _$InningsModelFromJson(Map<String, dynamic> json) => InningsModel(
         (k, e) =>
             MapEntry(k, PartnershipModel.fromJson(e as Map<String, dynamic>)),
       ),
+      overs: json['overs'] as int,
+      balls: json['balls'] as int,
+      totalWickets: json['totalWickets'] as int,
     );
 
 Map<String, dynamic> _$InningsModelToJson(InningsModel instance) =>
@@ -40,4 +43,7 @@ Map<String, dynamic> _$InningsModelToJson(InningsModel instance) =>
       'extras': instance.extras.toJson(),
       'partnerships':
           instance.partnerships.map((k, e) => MapEntry(k, e.toJson())),
+      'overs': instance.overs,
+      'balls': instance.balls,
+      'totalWickets': instance.totalWickets,
     };

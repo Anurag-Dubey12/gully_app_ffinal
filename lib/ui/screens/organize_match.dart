@@ -363,8 +363,8 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                     widget.round);
                                 logger.d(response);
                                 if (response) {
-                                  Get.back();
-                                  successSnackBar('Matchup created');
+                                  successSnackBar('Matchup created')
+                                      .then((value) => Get.back());
                                 }
                                 // Get.to(() => const ViewMatchupsScreen());
                               },

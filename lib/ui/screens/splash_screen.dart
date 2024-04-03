@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/config/preferences.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
-import 'package:gully_app/ui/screens/choose_lang_screen.dart';
 import 'package:gully_app/ui/screens/home_screen.dart';
 import 'package:gully_app/ui/screens/welcome_carosuel_screen.dart';
 import 'package:gully_app/utils/app_logger.dart';
@@ -32,10 +31,10 @@ class _SplashScreenState extends State<SplashScreen> {
       final pref = Get.put<Preferences>(Preferences(), permanent: true);
       logger.i("Token: ${pref.getToken()}");
       if (pref.getToken() != null) {
-        if (!pref.languageSelected) {
-          Get.offAll(() => const ChooseLanguageScreen());
-          return;
-        }
+        // if (!pref.languageSelected) {
+        //   Get.offAll(() => const ChooseLanguageScreen());
+        //   return;
+        // }
         Get.updateLocale(Locale(pref.getLanguage()));
         Get.offAll(() => const HomeScreen());
       } else {

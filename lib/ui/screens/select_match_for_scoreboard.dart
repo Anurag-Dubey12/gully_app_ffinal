@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
 import 'package:gully_app/ui/screens/score_card_screen.dart';
 import 'package:gully_app/ui/screens/select_opening_team.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
+import 'package:gully_app/utils/utils.dart';
 
 import '../../data/model/matchup_model.dart';
 import '../theme/theme.dart';
@@ -119,14 +121,21 @@ class SelectMatchForScoreBoard extends GetView<TournamentController> {
 
 class _MatchupCard extends GetView<ScoreBoardController> {
   final MatchupModel matchup;
+
   const _MatchupCard({
     required this.matchup,
   });
 
   @override
   Widget build(BuildContext context) {
+    final TournamentController tournamentController = Get.find();
+    final AuthController authController = Get.find();
     return GestureDetector(
       onTap: () {
+        if (tournamentController.state?.authority != authController.state?.id) {
+          errorSnackBar('You are not authorized to update the score board');
+          return;
+        }
         if (matchup.scoreBoard != null) {
           controller
               .setScoreBoard(ScoreboardModel.fromJson(matchup.scoreBoard!));

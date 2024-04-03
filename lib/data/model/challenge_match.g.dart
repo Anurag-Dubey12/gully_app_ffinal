@@ -8,9 +8,9 @@ part of 'challenge_match.dart';
 
 ChallengeMatchModel _$ChallengeMatchModelFromJson(Map<String, dynamic> json) =>
     ChallengeMatchModel(
-      id: json['id'] as String,
-      team1Id: json['team1Id'] as String,
-      team2Id: json['team2Id'] as String,
-      team1Name: json['team1Name'] as String,
-      team2Name: json['team2Name'] as String,
+      id: json['_id'] as String,
+      status: json['status'] as String,
+      team1: TeamModel.fromJson(json['team1'] as Map<String, dynamic>),
+      team2: TeamModel.fromJson(json['team2'] as Map<String, dynamic>),
+      challengedBy: json['challengedBy'] as String,
     );

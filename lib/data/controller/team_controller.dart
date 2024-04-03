@@ -188,13 +188,21 @@ class TeamController extends GetxController with StateMixin {
         errorSnackBar(response.message!);
         return [];
       }
-      final teams = response.data!['teams'] as List;
-      final teamList = teams.map((e) => TeamModel.fromJson(e)).toList();
-      logger.f(teams.length);
+      List<TeamModel> teamList = [];
+      final organizers = response.data!['teams'] as List;
+      for (var i = 0; i < organizers.length; i++) {
+        final teams = organizers[i]['teams'];
+        for (var i = 0; i < teams.length; i++) {
+          teamList.add(TeamModel.fromJson(teams[i]));
+        }
+      }
+
+      logger.f(organizers.length);
 
       return teamList;
     } catch (e) {
       logger.i(e.toString());
+
       rethrow;
     }
   }
@@ -215,6 +223,65 @@ class TeamController extends GetxController with StateMixin {
       logger.f(matchList.length);
 
       return matchList;
+    } catch (e) {
+      logger.i(e.toString());
+      rethrow;
+    }
+  }
+
+  ///match/createChallengeMatch
+  Future<bool> createChallengeMatch({
+    required String teamId,
+    required String opponentId,
+    // required DateTime matchDate,
+  }) async {
+    try {
+      final response = await repo.createChallengeMatch(
+        teamId: teamId,
+        opponentId: opponentId,
+        // matchDate: matchDate,
+      );
+      if (response.status == false) {
+        errorSnackBar(response.message!);
+        return false;
+      }
+      return true;
+    } catch (e) {
+      logger.i(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<bool> updateChallengeMatch({
+    required String matchId,
+    required String status,
+  }) async {
+    try {
+      final response = await repo.updateChallengeMatch(
+        matchId: matchId,
+        status: status,
+      );
+      if (response.status == false) {
+        errorSnackBar(response.message!);
+        return false;
+      }
+      return true;
+    } catch (e) {
+      logger.i(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>> getMyPerformance(
+      {required String matchType, required String inningsType}) async {
+    try {
+      final response = await repo.getMyPerformance(
+          matchType: matchType, inningsType: inningsType);
+      if (response.status == false) {
+        errorSnackBar(response.message!);
+        return {};
+      }
+      return response.data!;
     } catch (e) {
       logger.i(e.toString());
       rethrow;

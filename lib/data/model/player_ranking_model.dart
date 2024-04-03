@@ -5,24 +5,24 @@ part 'player_ranking_model.g.dart';
 @JsonSerializable()
 class PlayerRankingModel {
   final String playerName;
-  final String profilePhoto;
-  @JsonKey(disallowNullValue: false)
+  final String? profilePhoto;
+  @JsonKey(disallowNullValue: false, defaultValue: 0)
   final int? over;
-  @JsonKey(disallowNullValue: false)
+  @JsonKey(disallowNullValue: false, defaultValue: 0)
   final int? wickets;
-  @JsonKey(disallowNullValue: false)
+  @JsonKey(disallowNullValue: false, defaultValue: 0)
   final int? runs;
-  @JsonKey(disallowNullValue: false)
+  @JsonKey(disallowNullValue: false, defaultValue: 0)
   final int? total;
-  @JsonKey(disallowNullValue: false)
+  @JsonKey(disallowNullValue: false, defaultValue: 0)
   final int? average;
-  @JsonKey(disallowNullValue: false)
+  @JsonKey(disallowNullValue: false, defaultValue: 0)
   final int? balls;
-  @JsonKey(disallowNullValue: false)
+  @JsonKey(disallowNullValue: false, defaultValue: 0)
   final int? fours;
-  @JsonKey(disallowNullValue: false)
+  @JsonKey(disallowNullValue: false, defaultValue: 0)
   final int? sixes;
-  @JsonKey(disallowNullValue: false)
+  @JsonKey(disallowNullValue: false, defaultValue: 0.0)
   final double? strikeRate;
 
   PlayerRankingModel({

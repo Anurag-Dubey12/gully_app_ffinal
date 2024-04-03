@@ -9,16 +9,16 @@ part of 'player_ranking_model.dart';
 PlayerRankingModel _$PlayerRankingModelFromJson(Map<String, dynamic> json) =>
     PlayerRankingModel(
       playerName: json['playerName'] as String,
-      balls: json['balls'] as int?,
-      fours: json['fours'] as int?,
-      sixes: json['sixes'] as int?,
-      strikeRate: (json['strikeRate'] as num?)?.toDouble(),
-      profilePhoto: json['profilePhoto'] as String,
-      over: json['over'] as int?,
-      wickets: json['wickets'] as int?,
-      runs: json['runs'] as int?,
-      total: json['total'] as int?,
-      average: json['average'] as int?,
+      balls: json['balls'] as int? ?? 0,
+      fours: json['fours'] as int? ?? 0,
+      sixes: json['sixes'] as int? ?? 0,
+      strikeRate: (json['strikeRate'] as num?)?.toDouble() ?? 0.0,
+      profilePhoto: json['profilePhoto'] as String?,
+      over: json['over'] as int? ?? 0,
+      wickets: json['wickets'] as int? ?? 0,
+      runs: json['runs'] as int? ?? 0,
+      total: json['total'] as int? ?? 0,
+      average: json['average'] as int? ?? 0,
     );
 
 Map<String, dynamic> _$PlayerRankingModelToJson(PlayerRankingModel instance) =>

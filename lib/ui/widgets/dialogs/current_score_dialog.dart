@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
+import 'package:gully_app/ui/screens/full_scorecard.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
@@ -246,12 +247,21 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                 Image.asset('assets/images/ball.png',
                                     height: 14),
                                 const SizedBox(width: 5),
-                                const Text('Striker:  ',
+                                const Text('Bowler :  ',
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500)),
                                 Text(
-                                    '${controller.scoreboard.value?.bowlerName}'),
+                                    '${controller.scoreboard.value?.bowler.name}'),
                               ],
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            PrimaryButton(
+                              onTap: () {
+                                Get.to(() => const FullScoreboardScreen());
+                              },
+                              title: 'View Scorecard ',
                             )
                           ],
                         ),

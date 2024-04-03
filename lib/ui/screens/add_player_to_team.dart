@@ -9,6 +9,7 @@ import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/screens/add_team.dart';
 import 'package:gully_app/utils/utils.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
@@ -45,55 +46,50 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
       ),
       child: Scaffold(
         bottomNavigationBar: Builder(
-          builder: (context) => Obx(
-            () {
-              if (controller.players.value.length == 15) {
-                return const SizedBox();
-              } else {
-                return Container(
-                  height: 90,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 5,
-                        spreadRadius: 2,
-                        offset: const Offset(0, -1),
-                      ),
-                    ],
+          builder: (context) => Obx(() {
+            return Container(
+              height: 90,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 5,
+                    spreadRadius: 2,
+                    offset: const Offset(0, -1),
                   ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 35.0, vertical: 19),
-                        child: PrimaryButton(
-                          onTap: () async {
-                            await Get.bottomSheet(
-                              BottomSheet(
-                                backgroundColor: const Color(0xffEBEBEB),
-                                enableDrag: false,
-                                builder: (context) => _AddPlayerDialog(
-                                  teamId: widget.team.id,
-                                ),
-                                onClosing: () {
-                                  setState(() {});
-                                },
-                              ),
-                            );
+                ],
+              ),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 35.0, vertical: 19),
+                    child: PrimaryButton(
+                      isDisabled: controller.players.value.length == 15,
+                      onTap: () async {
+                        await Get.bottomSheet(
+                          BottomSheet(
+                            backgroundColor: const Color(0xffEBEBEB),
+                            enableDrag: false,
+                            builder: (context) => _AddPlayerDialog(
+                              teamId: widget.team.id,
+                            ),
+                            onClosing: () {
+                              setState(() {});
+                            },
+                          ),
+                        );
 
-                            setState(() {});
-                          },
-                          title: AppLocalizations.of(context)!.addPlayer,
-                        ),
-                      ),
-                    ],
+                        setState(() {});
+                      },
+                      title: AppLocalizations.of(context)!.addPlayer,
+                    ),
                   ),
-                );
-              }
-            },
-          ),
+                ],
+              ),
+            );
+          }),
         ),
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -255,7 +251,7 @@ class _TeamPlayersListBuilderState extends State<TeamPlayersListBuilder> {
           padding: const EdgeInsets.all(8.0),
           child: Obx(() {
             return ListView.separated(
-              padding: EdgeInsets.only(bottom: Get.statusBarHeight),
+              padding: const EdgeInsets.only(bottom: 20),
               shrinkWrap: true,
               itemCount: controller.players.length,
               separatorBuilder: (context, index) => const SizedBox(height: 20),
@@ -324,7 +320,7 @@ class _PlayerCardState extends State<PlayerCard> {
                     Image.asset(
                       (widget.isEditable ?? true)
                           ? getAssetFromRole(widget.player.role)
-                          : getAssetFromRole('captain'),
+                          : getAssetFromRole('captian'),
                       width: 20,
                     ),
                   ],
@@ -334,11 +330,18 @@ class _PlayerCardState extends State<PlayerCard> {
             ),
             const Spacer(),
             widget.isEditable ?? true
-                ? const CircleAvatar(
-                    backgroundColor: Color.fromARGB(255, 71, 224, 79),
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.share),
+                ? InkWell(
+                    onTap: () {
+                      Share.share(
+                          'Join my team on Gully App. Click on the link to join: '
+                          'https://tummle.robinj.dev/refer/${widget.player.phoneNumber}');
+                    },
+                    child: const CircleAvatar(
+                      backgroundColor: Color.fromARGB(255, 71, 224, 79),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(Icons.share),
+                      ),
                     ),
                   )
                 : const SizedBox(),
@@ -569,6 +572,7 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
+  final _key = GlobalKey<FormState>();
   String errorText = '';
   String role = 'Batsman';
   @override
@@ -580,135 +584,139 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
       child: Padding(
         padding: const EdgeInsets.all(18.0),
         child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: 7,
-                    width: 120,
-                    decoration: BoxDecoration(
-                        color: Colors.grey[400],
-                        borderRadius: BorderRadius.circular(10)),
+          child: Form(
+            key: _key,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      height: 7,
+                      width: 120,
+                      decoration: BoxDecoration(
+                          color: Colors.grey[400],
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              Text(
-                  widget.name != null
-                      ? AppLocalizations.of(context)!.addFromContact
-                      : AppLocalizations.of(context)!.addViaPhoneNumber,
-                  style: Get.textTheme.headlineMedium?.copyWith(
-                      color: Colors.black, fontWeight: FontWeight.bold)),
-              Text(errorText,
-                  style: Get.textTheme.bodyLarge?.copyWith(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14)),
-              const SizedBox(height: 20),
-              Text(AppLocalizations.of(context)!.name),
-              const SizedBox(height: 10),
-              CustomTextField(
-                controller: nameController,
-                maxLen: 23,
-              ),
-              const SizedBox(height: 20),
-              Text(AppLocalizations.of(context)!.contactNumber),
-              const SizedBox(height: 10),
-              CustomTextField(
-                controller: phoneController,
-                maxLen: 10,
-                textInputType: TextInputType.phone,
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: Get.width,
-                child: Wrap(
-                  children: [
-                    RoleTile(
-                        value: 'Batsman',
-                        role: role,
-                        onChanged: (e) {
-                          setState(() {
-                            role = e!;
-                          });
-                        }),
-                    RoleTile(
-                        value: 'Bowler',
-                        role: role,
-                        onChanged: (e) {
-                          setState(() {
-                            role = e!;
-                          });
-                        }),
-                    RoleTile(
-                        value: 'All Rounder',
-                        role: role,
-                        onChanged: (e) {
-                          setState(() {
-                            role = e!;
-                          });
-                        }),
-                    RoleTile(
-                        value: 'Wicket Keeper',
-                        role: role,
-                        onChanged: (e) {
-                          setState(() {
-                            role = e!;
-                          });
-                        }),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-              PrimaryButton(
-                onTap: () async {
-                  FocusScope.of(context).unfocus();
-                  if (nameController.text.isEmpty ||
-                      phoneController.text.isEmpty) {
-                    setState(() {
-                      errorText = AppLocalizations.of(context)!.fillAllFields;
-                    });
-                    return;
-                  }
-                  // check if the name contains only alphabets and spaces
-                  if (!nameController.text.contains(RegExp(r'^[a-zA-Z ]+$'))) {
-                    setState(() {
-                      errorText = AppLocalizations.of(context)!.validName;
-                    });
-                    return;
-                  }
-
-                  if (!phoneController.text.isPhoneNumber ||
-                      phoneController.text.length != 10 ||
-                      !phoneController.text.isNumericOnly) {
-                    setState(() {
-                      errorSnackBar(
-                          AppLocalizations.of(context)!.validPhoneNumber);
-                    });
-                    return;
-                  }
-                  try {
-                    final res = await controller.addPlayerToTeam(
-                        teamId: widget.teamId,
-                        name: nameController.text,
-                        phone: phoneController.text,
-                        role: role);
-
-                    if (res) {
-                      Get.back();
-                      Get.back();
+                const SizedBox(height: 20),
+                Text(
+                    widget.name != null
+                        ? AppLocalizations.of(context)!.addFromContact
+                        : AppLocalizations.of(context)!.addViaPhoneNumber,
+                    style: Get.textTheme.headlineMedium?.copyWith(
+                        color: Colors.black, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 20),
+                Text(AppLocalizations.of(context)!.name),
+                const SizedBox(height: 10),
+                CustomTextField(
+                  controller: nameController,
+                  maxLen: 23,
+                  textInputType: TextInputType.name,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return AppLocalizations.of(context)!.fillAllFields;
                     }
-                  } catch (e) {
-                    rethrow;
-                  }
-                },
-                title: AppLocalizations.of(context)!.addPlayer,
-              )
-            ],
+                    if (!value.contains(RegExp(r'^[a-zA-Z ]+$'))) {
+                      return AppLocalizations.of(context)!.validName;
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                Text(AppLocalizations.of(context)!.contactNumber),
+                const SizedBox(height: 10),
+                CustomTextField(
+                  controller: phoneController,
+                  maxLen: 10,
+                  textInputType: TextInputType.phone,
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: Get.width,
+                  child: Wrap(
+                    children: [
+                      RoleTile(
+                          value: 'Batsman',
+                          role: role,
+                          onChanged: (e) {
+                            setState(() {
+                              role = e!;
+                            });
+                          }),
+                      RoleTile(
+                          value: 'Bowler',
+                          role: role,
+                          onChanged: (e) {
+                            setState(() {
+                              role = e!;
+                            });
+                          }),
+                      RoleTile(
+                          value: 'All Rounder',
+                          role: role,
+                          onChanged: (e) {
+                            setState(() {
+                              role = e!;
+                            });
+                          }),
+                      RoleTile(
+                          value: 'Wicket Keeper',
+                          role: role,
+                          onChanged: (e) {
+                            setState(() {
+                              role = e!;
+                            });
+                          }),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+                const SizedBox(height: 20),
+                PrimaryButton(
+                  onTap: () async {
+                    FocusScope.of(context).unfocus();
+                    if (!_key.currentState!.validate()) return;
+                    // check if the name contains only alphabets and spaces
+                    if (!nameController.text
+                        .contains(RegExp(r'^[a-zA-Z ]+$'))) {
+                      setState(() {
+                        errorText = AppLocalizations.of(context)!.validName;
+                      });
+                      return;
+                    }
+
+                    if (!phoneController.text.isPhoneNumber ||
+                        phoneController.text.length != 10 ||
+                        !phoneController.text.isNumericOnly) {
+                      setState(() {
+                        errorSnackBar(
+                            AppLocalizations.of(context)!.validPhoneNumber);
+                      });
+                      return;
+                    }
+                    try {
+                      final res = await controller.addPlayerToTeam(
+                          teamId: widget.teamId,
+                          name: nameController.text,
+                          phone: phoneController.text,
+                          role: role);
+
+                      if (res) {
+                        Get.back();
+                        Get.back();
+                      }
+                    } catch (e) {
+                      rethrow;
+                    }
+                  },
+                  title: AppLocalizations.of(context)!.addPlayer,
+                )
+              ],
+            ),
           ),
         ),
       ),

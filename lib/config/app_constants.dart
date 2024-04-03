@@ -4,8 +4,8 @@ class AppConstants {
   AppConstants._();
   static const String appName = 'Gully Cricket';
   static const baseUrl = kReleaseMode
-      ? "http://65.0.80.235:5000/api"
-      : "http://192.168.1.5:3000/api";
+      ? "http://3.109.65.55:5000/api"
+      : "http://192.168.1.2:3000/api";
   static const websocketUrl =
       kReleaseMode ? "ws://13.233.149.139:3001" : "ws://13.233.149.139:3001";
   static const String s3BucketUrl =

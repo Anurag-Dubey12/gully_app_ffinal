@@ -48,6 +48,7 @@ class TournamentController extends GetxController
       Map<String, dynamic> tournament, String tournamentId) async {
     try {
       await tournamentApi.editTournament(tournament, tournamentId);
+      await getOrganizerTournamentList();
       return true;
     } catch (e) {
       errorSnackBar(e.toString());
@@ -56,6 +57,7 @@ class TournamentController extends GetxController
   }
 
   final Rx<DateTime> selectedDate = DateTime.now().obs;
+  final RxString filter = ''.obs;
   void setSelectedDate(DateTime dateTime) {
     selectedDate.value = dateTime;
   }
@@ -63,7 +65,8 @@ class TournamentController extends GetxController
   RxList<TournamentModel> tournamentList = <TournamentModel>[].obs;
   RxList<MatchupModel> matches = <MatchupModel>[].obs;
   RxBool isLoading = false.obs;
-  Future getTournamentList({String? filter}) async {
+  Future getTournamentList({String? filterD}) async {
+    filter.value = filterD ?? '';
     isLoading.value = true;
     if (coordinates.value.latitude == 0) {
       await getCurrentLocation();
@@ -73,7 +76,7 @@ class TournamentController extends GetxController
         latitude: coordinates.value.latitude,
         longitude: coordinates.value.longitude,
         startDate: selectedDate.value,
-        filter: filter,
+        filter: filterD,
         endDate: selectedDate.value.add(const Duration(days: 7)),
       );
 
@@ -147,7 +150,7 @@ class TournamentController extends GetxController
           .toList();
     } catch (e) {
       errorSnackBar(e.toString());
-      return [];
+      rethrow;
     }
   }
 

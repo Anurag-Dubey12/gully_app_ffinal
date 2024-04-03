@@ -22,6 +22,7 @@ import '../../utils/image_picker_helper.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 import '../widgets/primary_button.dart';
+import 'home_screen.dart';
 
 class TournamentFormScreen extends StatefulWidget {
   final TournamentModel? tournament;
@@ -211,6 +212,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                     }, widget.tournament!.id);
                                     if (isOk) {
                                       Get.back();
+                                      Get.forceAppUpdate();
                                       successSnackBar(
                                           'Tournament Updated Successfully');
                                     }
@@ -220,9 +222,13 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
 
                                     if (isOk) {
                                       authController.getUser();
-                                      Get.back();
+                                      // Get.back();
                                       successSnackBar(
-                                          'Tournament Created Successfully');
+                                        'Congratulations, Organizer!\nYour tournament has been successfully created.',
+                                      ).then((value) => Get.offAll(
+                                          () => const HomeScreen(),
+                                          predicate: (route) =>
+                                              route.name == '/HomeScreen'));
                                     }
                                   }
                                 }
@@ -298,110 +304,107 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             centerTitle: true,
                           ),
                           SizedBox(height: Get.height * 0.04),
-                          Material(
+                          InkWell(
+                            onTap: () {
+                              pickImage();
+                            },
                             borderRadius: BorderRadius.circular(20),
-                            child: InkWell(
-                              onTap: () {
-                                pickImage();
-                              },
-                              borderRadius: BorderRadius.circular(20),
-                              child: Ink(
-                                width: Get.width,
-                                height: 120,
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          blurRadius: 5,
-                                          spreadRadius: 2,
-                                          offset: const Offset(0, 1))
-                                    ]),
-                                child: _image != null
-                                    ? SizedBox(
-                                        height: 130,
-                                        child: Stack(
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(20),
-                                              child: SizedBox(
-                                                width: Get.width,
-                                                height: 120,
-                                                child: Image.file(
-                                                  File(
-                                                    _image!.path,
-                                                  ),
-                                                  fit: BoxFit.cover,
+                            child: Container(
+                              width: Get.width,
+                              height: 120,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black.withOpacity(0.1),
+                                        blurRadius: 5,
+                                        spreadRadius: 2,
+                                        offset: const Offset(0, 1))
+                                  ]),
+                              child: _image != null
+                                  ? SizedBox(
+                                      height: 130,
+                                      child: Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            child: SizedBox(
+                                              width: Get.width,
+                                              height: 120,
+                                              child: Image.file(
+                                                File(
+                                                  _image!.path,
                                                 ),
+                                                fit: BoxFit.cover,
                                               ),
                                             ),
-                                            Positioned(
-                                              right: 0,
-                                              bottom: 0,
-                                              child: IconButton(
-                                                  onPressed: () {
-                                                    pickImage();
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.edit,
-                                                    color: Colors.white,
-                                                  )),
-                                            )
-                                          ],
-                                        ),
-                                      )
-                                    : widget.tournament?.coverPhoto != null
-                                        ? SizedBox(
-                                            height: 130,
-                                            child: Stack(
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  child: SizedBox(
-                                                    width: Get.width,
-                                                    height: 120,
-                                                    child: Image.network(
-                                                      toImageUrl(widget
-                                                          .tournament!
-                                                          .coverPhoto!),
-                                                      fit: BoxFit.cover,
-                                                    ),
+                                          ),
+                                          Positioned(
+                                            right: 0,
+                                            bottom: 0,
+                                            child: IconButton(
+                                                onPressed: () {
+                                                  pickImage();
+                                                },
+                                                icon: const Icon(
+                                                  Icons.edit,
+                                                  color: Colors.white,
+                                                )),
+                                          )
+                                        ],
+                                      ),
+                                    )
+                                  : widget.tournament?.coverPhoto != null
+                                      ? SizedBox(
+                                          height: 130,
+                                          child: Stack(
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child: SizedBox(
+                                                  width: Get.width,
+                                                  height: 120,
+                                                  child: Image.network(
+                                                    toImageUrl(widget
+                                                        .tournament!
+                                                        .coverPhoto!),
+                                                    fit: BoxFit.cover,
                                                   ),
                                                 ),
-                                                Positioned(
-                                                  right: 0,
-                                                  bottom: 0,
-                                                  child: IconButton(
-                                                      onPressed: () {
-                                                        pickImage();
-                                                      },
-                                                      icon: const Icon(
-                                                        Icons.edit,
-                                                        color: Colors.white,
-                                                      )),
-                                                )
-                                              ],
-                                            ),
-                                          )
-                                        : const Center(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Icon(Icons.photo),
-                                                Text('Add Cover Photo',
-                                                    style: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 12,
-                                                        fontWeight:
-                                                            FontWeight.w500)),
-                                              ],
-                                            ),
+                                              ),
+                                              Positioned(
+                                                right: 0,
+                                                bottom: 0,
+                                                child: IconButton(
+                                                    onPressed: () {
+                                                      pickImage();
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.edit,
+                                                      color: Colors.white,
+                                                    )),
+                                              )
+                                            ],
                                           ),
-                              ),
+                                        )
+                                      : const Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Icon(Icons.photo),
+                                              Text('Add Cover Photo',
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                            ],
+                                          ),
+                                        ),
                             ),
                           ),
                           const SizedBox(
@@ -424,6 +427,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                           ),
                           TopCard(
                             from: from,
+                            key: const Key('date_picker'),
                             to: to,
                             controller: _nameController,
                             onFromChanged: (e) {
@@ -832,9 +836,10 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                             onClosing: () {},
                                             builder: (builder) =>
                                                 const LegalViewScreen(
-                                                    title:
-                                                        'Terms and Conditions',
-                                                    slug: 'terms'),
+                                              title: 'Terms and Conditions',
+                                              slug: 'terms',
+                                              hideDeleteButton: true,
+                                            ),
                                           ));
                                         },
                                       style: const TextStyle(
@@ -854,7 +859,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                             builder: (builder) =>
                                                 const LegalViewScreen(
                                                     title: 'Disclaimer',
-                                                    slug: 'disclaimer'),
+                                                    slug: 'disclaimer',
+                                                    hideDeleteButton: true),
                                           ));
                                         },
                                       style: const TextStyle(

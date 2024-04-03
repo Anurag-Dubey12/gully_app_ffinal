@@ -28,6 +28,11 @@ class Preferences {
     return _prefs.read('language') ?? "en";
   }
 
+  void setLanguageFalse() {
+    logger.d("Language set to false");
+    _prefs.write('languageSelected', false);
+  }
+
   void clear() {
     _prefs.erase();
   }

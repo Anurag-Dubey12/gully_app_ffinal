@@ -28,11 +28,13 @@ class AuthApi {
   Future<ApiResponse> createProfile(
       {required String nickName,
       required String phoneNumber,
-      required String base64}) async {
+      required String base64,
+      required bool isNewUser}) async {
     var response = await client.post('/user/createProfile', {
       'nickName': nickName,
       'phoneNumber': phoneNumber,
       'base64Image': base64,
+      'isNewUser': isNewUser
     });
     if (response.statusCode != 200) {
       throw response.body['message'] ?? 'Unable to Process Request';
@@ -64,6 +66,16 @@ class AuthApi {
 
   Future<ApiResponse> deleteAccount() async {
     var response = await client.get('/user/deleteProfile');
+    if (response.statusCode != 200) {
+      throw Exception(response.body['message'] ?? 'Unable to Process Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> resendOTP(String phoneNumber) async {
+    var response = await client.post('/user/sendOTP', {
+      'phoneNumber': phoneNumber,
+    });
     if (response.statusCode != 200) {
       throw Exception(response.body['message'] ?? 'Unable to Process Request');
     }

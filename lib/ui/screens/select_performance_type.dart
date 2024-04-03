@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/add_team.dart';
-import 'package:gully_app/ui/screens/select_team_to_register.dart';
-import 'package:gully_app/ui/screens/team_entry_form.dart';
+import 'package:gully_app/ui/screens/performance_stat_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
-import 'package:gully_app/utils/app_logger.dart';
 
-class RegisterTeam extends StatefulWidget {
-  const RegisterTeam({super.key});
+class SelectPerformanceCategory extends StatefulWidget {
+  const SelectPerformanceCategory({super.key});
 
   @override
-  State<RegisterTeam> createState() => _RegisterTeamState();
+  State<SelectPerformanceCategory> createState() =>
+      _SelectPerformanceCategoryState();
 }
 
-class _RegisterTeamState extends State<RegisterTeam> {
+class _SelectPerformanceCategoryState extends State<SelectPerformanceCategory> {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -32,7 +30,7 @@ class _RegisterTeamState extends State<RegisterTeam> {
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 title: const Text(
-                  'Register Team',
+                  'My Perfomance',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 30,
@@ -47,15 +45,10 @@ class _RegisterTeamState extends State<RegisterTeam> {
               child: Column(
                 children: [
                   _Card(
-                    title: 'Select Team',
+                    title: 'Tournaments',
                     onTap: () {
-                      Get.to(() => SelectTeamToRegister(
-                            onTeamSelected: (team) {
-                              logger.d('team selected---> $team');
-                              Get.off(() => TeamEntryForm(
-                                    team: team,
-                                  ));
-                            },
+                      Get.to(() => const PerformanceStatScreen(
+                            category: 'tournaments',
                           ));
                     },
                   ),
@@ -63,9 +56,11 @@ class _RegisterTeamState extends State<RegisterTeam> {
                     height: 20,
                   ),
                   _Card(
-                    title: 'Create Team',
+                    title: 'Challenge',
                     onTap: () {
-                      Get.to(() => const AddTeam());
+                      Get.to(() => const PerformanceStatScreen(
+                            category: 'challenge',
+                          ));
                     },
                   ),
                 ],

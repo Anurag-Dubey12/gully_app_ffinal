@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/ui/screens/full_scorecard.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../../data/controller/scoreboard_controller.dart';
@@ -220,7 +221,12 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                                               fontWeight: FontWeight.w500)))),
                             ),
                           )
-                        : const SizedBox())
+                        : PrimaryButton(
+                            onTap: () {
+                              Get.to(() => const FullScoreboardScreen());
+                            },
+                            title: 'View Full Scorecard',
+                          ))
                   ],
                 ),
               )

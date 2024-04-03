@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/choose_lang_screen.dart';
 import 'package:gully_app/ui/screens/player_profile_screen.dart';
-import 'package:gully_app/ui/screens/search_challenge_team.dart';
-import 'package:gully_app/ui/screens/select_team_to_register.dart';
+import 'package:gully_app/ui/screens/select_performance_type.dart';
+import 'package:gully_app/ui/screens/select_team_for_challenge.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -217,13 +217,17 @@ class AppDrawer extends GetView<AuthController> {
                   // title: 'Challenge Team',
                   title: AppLocalizations.of(context)!.challenge_team,
                   onTap: () {
-                    Get.to(() => SelectTeamToRegister(
-                          onTeamSelected: (team) {
-                            Get.to(() => const SearchChallengeTeam());
-                          },
-                        ));
+                    Get.to(() => const SelectTeamForChallenge());
                   },
                   icon: Icons.compare,
+                ),
+                DrawerCard(
+                  // title: 'Challenge Team',
+                  title: AppLocalizations.of(context)!.my_performance,
+                  onTap: () {
+                    Get.to(() => const SelectPerformanceCategory());
+                  },
+                  icon: Icons.auto_graph,
                 ),
                 DrawerCard(
                   // title: 'About us',
@@ -233,6 +237,7 @@ class AppDrawer extends GetView<AuthController> {
                     Get.to(() => LegalViewScreen(
                           title: AppLocalizations.of(context)!.about_us,
                           slug: 'about-us',
+                          hideDeleteButton: true,
                         ));
                   },
                   icon: Icons.info,
@@ -302,6 +307,7 @@ class AppDrawer extends GetView<AuthController> {
 
                           title: AppLocalizations.of(context)!.disclaimer,
                           slug: 'disclaimer',
+                          hideDeleteButton: true,
                         ));
                   },
                   icon: Icons.disc_full,

@@ -19,37 +19,40 @@ class ApiResponse {
   }
 }
 
-errorSnackBar(String errorMessage) => Get.isDialogOpen ?? false
-    ? null
-    : Get.defaultDialog(
-        title: 'Oops!',
-        contentPadding: const EdgeInsets.all(10),
-        titlePadding: const EdgeInsets.all(10),
-        titleStyle: const TextStyle(
-          color: Colors.red,
-          fontWeight: FontWeight.w500,
-        ),
-        confirm: InkWell(
-          onTap: () {
-            Get.back();
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              color: AppTheme.primaryColor,
+Future errorSnackBar(String errorMessage,
+        {bool forceDialogOpen = false}) async =>
+    (Get.isDialogOpen ?? false) && !forceDialogOpen
+        ? null
+        : Get.defaultDialog(
+            title: 'Oops!',
+            contentPadding: const EdgeInsets.all(10),
+            titlePadding: const EdgeInsets.all(10),
+            titleStyle: const TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.w500,
             ),
-            child: const Text('OK',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                )),
-          ),
-        ),
-        middleText: errorMessage,
-      );
+            confirm: InkWell(
+              onTap: () {
+                Get.back();
+              },
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  color: AppTheme.primaryColor,
+                ),
+                child: const Text('OK',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    )),
+              ),
+            ),
+            middleText: errorMessage,
+          );
 
-Future successSnackBar(String successMessage) async => Get.isSnackbarOpen
+Future successSnackBar(String successMessage) async => Get.isDialogOpen ?? false
     ? null
     : await Get.defaultDialog(
         title: 'Yayy!',

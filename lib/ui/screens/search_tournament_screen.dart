@@ -53,7 +53,6 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
       debouncer.debounce(searchController.text);
     });
     debouncer.onValueChanged.listen((value) {
-      print("Value debounced: $value");
       tournamentController.searchTournament(value).then((value) {
         setState(() {
           tournaments = value;

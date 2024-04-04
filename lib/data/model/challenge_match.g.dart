@@ -13,4 +13,8 @@ ChallengeMatchModel _$ChallengeMatchModelFromJson(Map<String, dynamic> json) =>
       team1: TeamModel.fromJson(json['team1'] as Map<String, dynamic>),
       team2: TeamModel.fromJson(json['team2'] as Map<String, dynamic>),
       challengedBy: json['challengedBy'] as String,
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      scoreBoard: json['scoreBoard'] as Map<String, dynamic>?,
     );

@@ -245,7 +245,7 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                     validator: (e) {
                                       if (e!
                                           .contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                        return 'Name cannot contain emojis';
+                                        return 'Address cannot contain emojis';
                                       }
                                       return null;
                                     },

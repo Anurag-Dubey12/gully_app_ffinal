@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/team_ranking_model.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
+import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/ranking_controller.dart';
 import '../theme/theme.dart';
@@ -159,7 +160,7 @@ class _TeamCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 29,
-              backgroundImage: NetworkImage(team.teamLogo ?? ""),
+              backgroundImage: NetworkImage(toImageUrl(team.teamLogo ?? "")),
             ),
             const SizedBox(width: 12),
             Column(

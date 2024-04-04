@@ -11,10 +11,13 @@ import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
+import '../model/matchup_model.dart';
+
 class ScoreBoardController extends GetxController with StateMixin {
   final ScoreboardApi _scoreboardApi;
   final Rx<ScoreboardModel?> scoreboard = Rx<ScoreboardModel?>(null);
-
+  bool isChallenge = false;
+  MatchupModel? match;
   late ScoreboardModel _lastScoreboardInstance;
   Rx<io.Socket?> socket = Rx(null);
 
@@ -36,10 +39,11 @@ class ScoreBoardController extends GetxController with StateMixin {
       logger.d('socket $socket');
       socket.value?.onConnectError((data) => logger.e(data));
       socket.value!.on('scoreboard', (data) {
-        logger.i('Scoreboard updated to channel $data');
+        logger.e('Scoreboard updated to channel $data');
         if (data != null) {
-          logger.f('41');
-          scoreboard.value = ScoreboardModel.fromJson(data['scoreBoard']);
+          if (data['scoreBoard'] != null) {
+            scoreboard.value = ScoreboardModel.fromJson(data['scoreBoard']);
+          }
           logger.f('Innings ${scoreboard.value?.lastBall.run}');
           scoreboard.refresh();
         }
@@ -83,31 +87,34 @@ class ScoreBoardController extends GetxController with StateMixin {
     }
   }
 
-  void createScoreBoard(
-      {required TeamModel team1,
-      required TeamModel team2,
-      required String strikerId,
-      required String nonStrikerId,
-      required String openingBowler,
-      required String matchId,
-      required String tossWonBy,
-      required String electedTo,
-      required int overs,
-      required ExtraModel extras,
-      bool shouldUpdate = true}) {
+  void createScoreBoard({
+    required TeamModel team1,
+    required TeamModel team2,
+    required String strikerId,
+    required String nonStrikerId,
+    required String openingBowler,
+    required String matchId,
+    required String tossWonBy,
+    required String electedTo,
+    required int overs,
+    required ExtraModel extras,
+    bool shouldUpdate = true,
+  }) {
     // Create sample ScoreboardModel
-
+    logger.f("isChallenge $isChallenge");
+    logger.f("matchID ${match?.id}");
     scoreboard.value = ScoreboardModel(
         team1: team1,
         team2: team2,
         currentInnings: 1,
         overCompleted: false,
-        matchId: matchId,
+        matchId: match!.id,
         tossWonBy: tossWonBy,
         electedTo: electedTo,
         totalOvers: overs,
         strikerId: strikerId,
         extras: extras,
+        isChallenge: isChallenge,
         nonStrikerId: nonStrikerId,
         bowlerId: openingBowler,
         firstInningHistory: {},
@@ -115,8 +122,11 @@ class ScoreBoardController extends GetxController with StateMixin {
         partnerships: {});
     // logger.i(scoreboard.value!.toJson());
     _lastScoreboardInstance = scoreboard.value!;
-    if (shouldUpdate) {
+
+    if (shouldUpdate && !isChallenge) {
       _scoreboardApi.updateScoreBoard(scoreboard.value!.toJson());
+    } else {
+      _scoreboardApi.updateChallengeScoreBoard(scoreboard.value!.toJson());
     }
   }
 
@@ -216,10 +226,17 @@ class ScoreBoardController extends GetxController with StateMixin {
         break;
       default:
     }
-    if (scoreboard.value!.isSecondInningsOver) {
+    if (scoreboard.value!.isSecondInningsOver &&
+        !scoreboard.value!.isChallenge!) {
       updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
+    } else {
+      updateFinalChallengeScoreBoard(scoreboard.value!.getWinningTeam);
     }
-    _scoreboardApi.updateScoreBoard(scoreboard.value!.toJson());
+    if (scoreboard.value!.isChallenge!) {
+      _scoreboardApi.updateChallengeScoreBoard(scoreboard.value!.toJson());
+    } else {
+      _scoreboardApi.updateScoreBoard(scoreboard.value!.toJson());
+    }
     events.value = [];
     events.refresh();
     emitEvent();
@@ -285,6 +302,11 @@ class ScoreBoardController extends GetxController with StateMixin {
 
   void updateFinalScoreBoard(String winningTeamId) {
     _scoreboardApi.updateFinalScoreBoard(
+        scoreboard.value!.matchId, winningTeamId);
+  }
+
+  void updateFinalChallengeScoreBoard(String winningTeamId) {
+    _scoreboardApi.updateFinalChallengeScoreBoard(
         scoreboard.value!.matchId, winningTeamId);
   }
 }

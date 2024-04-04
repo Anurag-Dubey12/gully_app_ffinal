@@ -29,6 +29,7 @@ InningsModel _$InningsModelFromJson(Map<String, dynamic> json) => InningsModel(
       overs: json['overs'] as int,
       balls: json['balls'] as int,
       totalWickets: json['totalWickets'] as int,
+      isOver: json['isOver'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$InningsModelToJson(InningsModel instance) =>
@@ -46,4 +47,5 @@ Map<String, dynamic> _$InningsModelToJson(InningsModel instance) =>
       'overs': instance.overs,
       'balls': instance.balls,
       'totalWickets': instance.totalWickets,
+      'isOver': instance.isOver,
     };

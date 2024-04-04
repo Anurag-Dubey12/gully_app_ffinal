@@ -3,7 +3,9 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'matchup_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(
+  explicitToJson: true,
+)
 class MatchupModel {
   @JsonKey(name: '_id')
   final String id;

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/screens/select_opening_players.dart';
 import 'package:gully_app/ui/widgets/custom_text_field.dart';
@@ -9,9 +8,11 @@ import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../data/controller/scoreboard_controller.dart';
+
 class SelectOpeningTeam extends StatefulWidget {
-  final MatchupModel match;
-  const SelectOpeningTeam({super.key, required this.match});
+  final bool isTournament;
+  const SelectOpeningTeam({super.key, required this.isTournament});
 
   @override
   State<SelectOpeningTeam> createState() => _SelectOpeningTeamState();
@@ -26,13 +27,21 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
   @override
   void initState() {
     super.initState();
+    logger.d('isTournament ${widget.isTournament}');
 
-    tossWonBy = widget.match.team1.id;
     optedTo = 'Bat';
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    totalOvers.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final scoreBoardController = Get.find<ScoreBoardController>();
+    final match = scoreBoardController.match!;
     return GradientBuilder(
         child: Scaffold(
       backgroundColor: Colors.transparent,
@@ -77,14 +86,14 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                   if (visitorTeam == hostTeam) {
                     visitorTeam = null;
                   }
-                  if (hostTeam!.id == widget.match.team1.id) {
-                    visitorTeam = widget.match.team2;
+                  if (hostTeam!.id == match.team1.id) {
+                    visitorTeam = match.team2;
                   } else {
-                    visitorTeam = widget.match.team1;
+                    visitorTeam = match.team1;
                   }
                 });
               },
-              items: [widget.match.team1, widget.match.team2]
+              items: [match.team1, match.team2]
                   .map<DropdownMenuItem<TeamModel?>>((TeamModel value) {
                 return DropdownMenuItem<TeamModel?>(
                   value: value,
@@ -113,7 +122,7 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                       Row(
                         children: [
                           Radio(
-                            value: widget.match.team1.id,
+                            value: match.team1.id,
                             groupValue: tossWonBy,
                             onChanged: (value) {
                               setState(() {
@@ -121,13 +130,13 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                               });
                             },
                           ),
-                          Text(widget.match.team1.name),
+                          Text(match.team1.name),
                         ],
                       ),
                       Row(
                         children: [
                           Radio(
-                            value: widget.match.team2.id,
+                            value: match.team2.id,
                             groupValue: tossWonBy,
                             onChanged: (value) {
                               setState(() {
@@ -135,7 +144,7 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                               });
                             },
                           ),
-                          Text(widget.match.team2.name),
+                          Text(match.team2.name),
                         ],
                       ),
                     ],
@@ -220,22 +229,21 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
             late TeamModel battingTeam;
             late TeamModel bowlingTeam;
 
-            if (tossWonBy == widget.match.team1.id && optedTo == 'Bat') {
-              battingTeam = widget.match.team1;
-              bowlingTeam = widget.match.team2;
-            } else if (tossWonBy == widget.match.team1.id &&
-                optedTo == 'Bowl') {
-              battingTeam = widget.match.team2;
-              bowlingTeam = widget.match.team1;
-            } else if (tossWonBy == widget.match.team2.id && optedTo == 'Bat') {
-              battingTeam = widget.match.team2;
-              bowlingTeam = widget.match.team1;
+            if (tossWonBy == match.team1.id && optedTo == 'Bat') {
+              battingTeam = match.team1;
+              bowlingTeam = match.team2;
+            } else if (tossWonBy == match.team1.id && optedTo == 'Bowl') {
+              battingTeam = match.team2;
+              bowlingTeam = match.team1;
+            } else if (tossWonBy == match.team2.id && optedTo == 'Bat') {
+              battingTeam = match.team2;
+              bowlingTeam = match.team1;
             } else {
               logger.d('visitor team won the toss');
               logger.d('visitor team ${visitorTeam?.name}');
               logger.d('Host team ${hostTeam?.name}');
-              battingTeam = widget.match.team1;
-              bowlingTeam = widget.match.team2;
+              battingTeam = match.team1;
+              bowlingTeam = match.team2;
             }
             setState(() {});
             if (totalOvers.text.isEmpty) {
@@ -255,13 +263,15 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
               errorSnackBar('Please enter valid overs');
               return;
             }
+            logger.i('is tournament${widget.isTournament}');
 
             Get.off(() => SelectOpeningPlayer(
-                match: widget.match,
+                match: match,
                 battingTeam: battingTeam,
                 bowlingTeam: bowlingTeam,
                 tossWonBy: tossWonBy!,
                 electedTo: optedTo!,
+                isTournament: widget.isTournament,
                 overs: int.parse(totalOvers.text)));
           })
         ],

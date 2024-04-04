@@ -1,4 +1,5 @@
-import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../config/api_client.dart';
@@ -52,11 +53,10 @@ class MiscApi {
   }
 
   Future<ApiResponse> getLookingFor() async {
-    final location = await Geolocator.getCurrentPosition();
-    
+    final authController = Get.find<TournamentController>();
     return repo.post('/team/getAllLooking', {
-      'latitude': location.latitude,
-      'longitude': location.longitude,
+      'latitude': authController.coordinates.value.latitude,
+      'longitude': authController.coordinates.value.longitude,
     }).then((response) {
       if (!response.isOk) {
         throw response.body['message'] ?? 'Unable to Process Request';

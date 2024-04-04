@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
@@ -13,6 +12,7 @@ import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:intl/intl.dart';
 
+import '../../data/controller/tournament_controller.dart';
 import '../../utils/app_logger.dart';
 import '../theme/theme.dart';
 import '../widgets/custom_drop_down_field.dart';
@@ -160,10 +160,11 @@ class _LookingForScreenState extends State<LookingForScreen> {
                             return;
                           }
                           if (location == null) {
-                            final position =
-                                await Geolocator.getCurrentPosition();
-                            location =
-                                LatLng(position.latitude, position.longitude);
+                            final authController =
+                                Get.find<TournamentController>();
+                            location = LatLng(
+                                authController.coordinates.value.latitude,
+                                authController.coordinates.value.longitude);
                             setState(() {});
                           }
                           miscController.addLookingFor({

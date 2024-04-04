@@ -19,6 +19,7 @@ class SelectOpeningPlayer extends StatefulWidget {
   final String tossWonBy;
   final String electedTo;
   final int overs;
+  final bool isTournament;
 
   const SelectOpeningPlayer(
       {super.key,
@@ -27,7 +28,8 @@ class SelectOpeningPlayer extends StatefulWidget {
       required this.bowlingTeam,
       required this.tossWonBy,
       required this.electedTo,
-      required this.overs});
+      required this.overs,
+      required this.isTournament});
 
   @override
   State<SelectOpeningPlayer> createState() => _SelectOpeningPlayerState();

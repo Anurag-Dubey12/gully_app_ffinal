@@ -182,7 +182,7 @@ class _CreateProfileState extends State<CreateProfile>
                                 CustomTextField(
                                   labelText: 'Contact No',
                                   controller: _contactController,
-                                  enabled: allowUpdateContact,
+                                  // enabled: allowUpdateContact,
                                   textInputType: TextInputType.phone,
                                   maxLen: 10,
                                   validator: (e) {
@@ -290,7 +290,7 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
     // reset controller
     textEditingController.clear();
 
-    countDown = 20;
+    countDown = 60;
     const oneSec = Duration(seconds: 1);
     timer = Timer.periodic(
       oneSec,

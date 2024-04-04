@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/player_ranking_model.dart';
+import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/ranking_controller.dart';
 import '../theme/theme.dart';
@@ -190,6 +191,11 @@ class _PlayerRankingScreenState extends State<PlayerRankingScreen> {
                                     _selectedTab == 0 ? 'leather' : 'tennis',
                                     selectedChildTab),
                                 builder: (context, snapshot) {
+                                  if (snapshot.error != null) {
+                                    return Center(
+                                      child: Text('Error ${snapshot.error}}'),
+                                    );
+                                  }
                                   return ListView.separated(
                                       padding: const EdgeInsets.all(20),
                                       itemCount: snapshot.data?.length ?? 0,
@@ -230,7 +236,8 @@ class _TeamCard extends StatelessWidget {
             CircleAvatar(
               radius: 29,
               backgroundColor: Colors.grey.shade300,
-              backgroundImage: NetworkImage(player.profilePhoto ?? ""),
+              backgroundImage:
+                  NetworkImage(toImageUrl(player.profilePhoto ?? "")),
             ),
             const SizedBox(width: 12),
             Column(

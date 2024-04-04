@@ -13,7 +13,7 @@ PlayerRankingModel _$PlayerRankingModelFromJson(Map<String, dynamic> json) =>
       fours: json['fours'] as int? ?? 0,
       sixes: json['sixes'] as int? ?? 0,
       strikeRate: (json['strikeRate'] as num?)?.toDouble() ?? 0.0,
-      profilePhoto: json['profilePhoto'] as String?,
+      profilePhoto: json['profilePhoto'] as String? ?? '',
       over: json['over'] as int? ?? 0,
       wickets: json['wickets'] as int? ?? 0,
       runs: json['runs'] as int? ?? 0,

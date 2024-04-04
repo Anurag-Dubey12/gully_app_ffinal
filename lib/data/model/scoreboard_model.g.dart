@@ -37,6 +37,7 @@ ScoreboardModel _$ScoreboardModelFromJson(Map<String, dynamic> json) =>
                 k, PartnershipModel.fromJson(e as Map<String, dynamic>)),
           ) ??
           {},
+      isChallenge: json['isChallenge'] as bool? ?? false,
     )
       ..firstInnings = json['firstInnings'] == null
           ? null
@@ -55,6 +56,8 @@ abstract class _$ScoreboardModelPerFieldToJson {
   static Object? team1(TeamModel instance) => instance.toJson();
   // ignore: unused_element
   static Object? team2(TeamModel instance) => instance.toJson();
+  // ignore: unused_element
+  static Object? isChallenge(bool? instance) => instance;
   // ignore: unused_element
   static Object? firstInnings(InningsModel? instance) => instance?.toJson();
   // ignore: unused_element
@@ -104,6 +107,7 @@ Map<String, dynamic> _$ScoreboardModelToJson(ScoreboardModel instance) =>
     <String, dynamic>{
       'team1': instance.team1.toJson(),
       'team2': instance.team2.toJson(),
+      'isChallenge': instance.isChallenge,
       'firstInnings': instance.firstInnings?.toJson(),
       'secondInnings': instance.secondInnings?.toJson(),
       'partnerships':

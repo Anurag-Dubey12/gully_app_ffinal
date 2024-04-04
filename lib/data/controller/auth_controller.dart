@@ -117,6 +117,7 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       change(GetStatus.success(fetchedUser));
       if (fetchedUser.isNewUser) {
         Get.offAll(() => const CreateProfile());
+        return;
       }
       final pref = Get.put<Preferences>(Preferences(), permanent: true);
       logger.f("Language: ${pref.getLanguage()}");
@@ -202,8 +203,9 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       change(GetStatus.loading());
       await Future.delayed(const Duration(seconds: 2));
       final response = await repo.resendOTP(state!.phoneNumber!);
-      final user = UserModel.fromJson(response.data!['user']);
-      change(GetStatus.success(user));
+      // final user = UserModel.fromJson(response.data!['user']);
+      successSnackBar(response.message!);
+      change(GetStatus.success(state));
       return true;
     } catch (e) {
       showSnackBar(title: e.toString(), message: e.toString(), isError: true);

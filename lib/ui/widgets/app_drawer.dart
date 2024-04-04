@@ -15,7 +15,9 @@ import '../screens/legal_screen.dart';
 import '../screens/looking_for_screen.dart';
 import '../screens/organizer_profile.dart';
 import '../screens/others_looking_for.dart';
+import '../screens/performance_stat_screen.dart';
 import '../screens/player_ranking_screen.dart';
+import '../screens/select_challenge_match_for_performance.dart';
 import '../screens/team_ranking_screen.dart';
 import '../screens/top_performers.dart';
 import 'home_screen/drawer_card.dart';
@@ -225,7 +227,19 @@ class AppDrawer extends GetView<AuthController> {
                   // title: 'Challenge Team',
                   title: AppLocalizations.of(context)!.my_performance,
                   onTap: () {
-                    Get.to(() => const SelectPerformanceCategory());
+                    Get.to(() => SelectPerformanceCategory(
+                          onChallengeTap: () {
+                            Get.to(
+                                () => const SelectChallengeMatchForPerformance(
+                                    // category: 'challenge',
+                                    ));
+                          },
+                          onTouranmentTap: () {
+                            Get.to(() => const PerformanceStatScreen(
+                                  category: 'tournaments',
+                                ));
+                          },
+                        ));
                   },
                   icon: Icons.auto_graph,
                 ),

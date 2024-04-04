@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/ui/screens/full_scorecard.dart';
+import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/ui/widgets/scorecard/current_over_card.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 class ScoreBottomDialog extends StatefulWidget {
@@ -204,6 +206,35 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                         fontSize: 18,
                                       ),
                                     ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    controller.scoreboard.value
+                                                ?.currentInnings ==
+                                            1
+                                        ? const SizedBox()
+                                        : Container(
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  AppTheme.secondaryYellowColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Text(
+                                                '${controller.scoreboard.value?.firstInningHistory.entries.last.value.total}/${controller.scoreboard.value?.firstInningHistory.entries.last.value.wickets}',
+                                                style: Get
+                                                    .textTheme.headlineMedium
+                                                    ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  fontSize: 14,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                   ],
                                 ),
                               ],
@@ -215,30 +246,113 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                 // const Text('To win: '),
                               ]),
                             ),
+                            Obx(() => Text(
+                                  controller.scoreboard.value
+                                          ?.secondInningsText ??
+                                      '',
+                                )),
                             const SizedBox(height: 30),
                             Row(
                               children: [
-                                Image.asset('assets/images/bat.png',
-                                    height: 14),
-                                const SizedBox(width: 5),
-                                const Text('Striker:  ',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500)),
-                                Text(
-                                    '${controller.scoreboard.value?.striker.name}')
-                              ],
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Image.asset('assets/images/bat.png',
-                                    height: 14),
-                                const SizedBox(width: 5),
-                                const Text('Non Striker:  ',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w500)),
-                                Text(
-                                    '${controller.scoreboard.value?.nonstriker.name}'),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Image.asset('assets/images/bat.png',
+                                            height: 14),
+                                        const SizedBox(width: 5),
+                                        const Text('Striker:  ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500)),
+                                        Text(
+                                            '${controller.scoreboard.value?.striker.name}')
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // Image.asset('assets/images/bat.png',
+                                        //     height: 14),
+                                        const SizedBox(width: 15),
+                                        const Text('Runs:  ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500)),
+                                        Text(
+                                            '${controller.scoreboard.value?.striker.batting?.runs}')
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // Image.asset('assets/images/bat.png',
+                                        //     height: 14),
+                                        const SizedBox(width: 15),
+                                        const Text('Strike Rate:  ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500)),
+                                        Text(
+                                            '${controller.scoreboard.value?.striker.batting?.strikeRate.toStringAsFixed(2)}')
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                const Spacer(),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Image.asset('assets/images/bat.png',
+                                            height: 14),
+                                        const SizedBox(width: 5),
+                                        const Text('Striker:  ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500)),
+                                        Text(
+                                            '${controller.scoreboard.value?.nonstriker.name}')
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // Image.asset('assets/images/bat.png',
+                                        //     height: 14),
+                                        const SizedBox(width: 15),
+                                        const Text('Runs:  ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500)),
+                                        Text(
+                                            '${controller.scoreboard.value?.nonstriker.batting?.runs}')
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        // Image.asset('assets/images/bat.png',
+                                        //     height: 14),
+                                        const SizedBox(width: 15),
+                                        const Text('Strike Rate:  ',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w500)),
+                                        Text(
+                                            '${controller.scoreboard.value?.nonstriker.batting?.strikeRate.toStringAsFixed(2)}')
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ],
                             ),
                             const SizedBox(height: 10),
@@ -254,6 +368,10 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                     '${controller.scoreboard.value?.bowler.name}'),
                               ],
                             ),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            const CurrentOverStats(),
                             const SizedBox(
                               height: 20,
                             ),

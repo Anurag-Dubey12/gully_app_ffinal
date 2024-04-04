@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/config/preferences.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
@@ -40,7 +39,7 @@ class _TournamentListState extends State<TournamentList> {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(28),
                   onTap: () {
-                    final pref = Get.find<Preferences>();
+                    // final pref = Get.find<Preferences>();
                     // pref.setLanguageFalse();
                     Get.to(() => const SearchTournamentScreen());
                   },

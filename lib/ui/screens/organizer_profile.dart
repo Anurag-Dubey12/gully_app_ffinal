@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/ui/screens/accepted_challenges.dart';
 import 'package:gully_app/ui/screens/current_tournament_list.dart';
+import 'package:gully_app/ui/screens/select_match_type_for_scoreboard.dart';
+import 'package:gully_app/ui/screens/select_performance_type.dart';
 import 'package:gully_app/ui/screens/tournament_requests_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
@@ -192,13 +195,25 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                               ),
                             ),
                             ProfileTileCard(
-                              text: 'Current Tournament',
+                              text: 'Current Matches',
                               onTap: () {
                                 Get.find<TournamentController>()
                                     .getOrganizerTournamentList();
-                                Get.to(() => const CurrentTournamentListScreen(
-                                      redirectType:
-                                          RedirectType.currentTournament,
+                                Get.to(() => SelectPerformanceCategory(
+                                      onTouranmentTap: () {
+                                        Get.to(() =>
+                                            const CurrentTournamentListScreen(
+                                              redirectType: RedirectType
+                                                  .currentTournament,
+                                            ));
+                                      },
+                                      onChallengeTap: () {
+                                        Get.to(
+                                            () => const AcceptedChallenges());
+                                      },
+
+                                      // redirectType:
+                                      //     RedirectType.currentTournament,
                                     ));
                               },
                             ),
@@ -236,11 +251,14 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                             ProfileTileCard(
                               text: 'Score Board',
                               onTap: () {
-                                Get.find<TournamentController>()
-                                    .getOrganizerTournamentList();
-                                Get.to(() => const CurrentTournamentListScreen(
-                                      redirectType: RedirectType.scoreboard,
-                                    ));
+                                final controller =
+                                    Get.find<TournamentController>();
+                                controller.getOrganizerTournamentList();
+
+                                // Get.to(() => const CurrentTournamentListScreen(
+                                //       redirectType: RedirectType.scoreboard,
+                                //     ));
+                                Get.to(() => const SelectMatchCategory());
                               },
                             ),
                             ProfileTileCard(

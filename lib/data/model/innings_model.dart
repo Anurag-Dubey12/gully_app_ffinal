@@ -21,20 +21,23 @@ class InningsModel {
   final int overs;
   final int balls;
   final int totalWickets;
+  final bool isOver;
 
-  InningsModel(
-      {required this.totalScore,
-      required this.battingTeam,
-      required this.bowlingTeam,
-      required this.ballRecord,
-      required this.openingStriker,
-      required this.openingNonStriker,
-      required this.openingBowler,
-      required this.extras,
-      required this.partnerships,
-      required this.overs,
-      required this.balls,
-      required this.totalWickets});
+  InningsModel({
+    required this.totalScore,
+    required this.battingTeam,
+    required this.bowlingTeam,
+    required this.ballRecord,
+    required this.openingStriker,
+    required this.openingNonStriker,
+    required this.openingBowler,
+    required this.extras,
+    required this.partnerships,
+    required this.overs,
+    required this.balls,
+    required this.totalWickets,
+    this.isOver = false,
+  });
 
   factory InningsModel.fromJson(Map<String, dynamic> json) =>
       _$InningsModelFromJson(json);

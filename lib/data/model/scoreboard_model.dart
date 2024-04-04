@@ -17,6 +17,7 @@ part 'scoreboard_model.g.dart';
 class ScoreboardModel {
   final TeamModel team1;
   final TeamModel team2;
+  final bool? isChallenge;
   @JsonKey(disallowNullValue: false, defaultValue: null)
   InningsModel? firstInnings;
   @JsonKey(disallowNullValue: false, defaultValue: null)
@@ -112,6 +113,7 @@ class ScoreboardModel {
     required this.bowlerId,
     required this.overCompleted,
     required this.partnerships,
+    this.isChallenge = false,
   }) {
     partnerships.addAll({
       partnershipKey: PartnershipModel(player1: striker, player2: nonstriker)
@@ -140,15 +142,6 @@ class ScoreboardModel {
       }
     }
     return temp;
-  }
-
-  bool get inningsCompleted {
-    if (currentInnings == 1) {
-      logger.i('First innings completed');
-      return firstInnings != null || currentOver == totalOvers;
-    } else {
-      return isSecondInningsOver;
-    }
   }
 
   bool get isAllOut => lastBall.wickets == 10;
@@ -251,14 +244,23 @@ class ScoreboardModel {
     }
   }
 
+  bool get inningsCompleted {
+    if (currentInnings == 1) {
+      return (firstInnings?.isOver ?? false) || currentOver == totalOvers;
+    } else {
+      return isSecondInningsOver;
+    }
+  }
+
   bool get isSecondInningsOver {
     logger.i('Checking if second innings is over');
     if (currentInnings == 2) {
-      if (lastBall.over == totalOvers && lastBall.ball == 6) {
+      // if (lastBall.over == totalOvers && lastBall.ball == 6) {
+      if (currentOver == totalOvers) {
         logger.i('Second innings over');
         return true;
       }
-      if (currentInningsScore > firstInnings!.totalScore) {
+      if (currentInningsScore >= firstInnings!.totalScore) {
         logger.i('Second innings over');
         return true;
       }
@@ -276,7 +278,11 @@ class ScoreboardModel {
       }
       if (lastBall.wickets == 10 &&
           firstInnings!.totalScore > currentInningsScore) {
-        return '${team2.name} won by ${firstInnings!.totalScore - currentInningsScore} runs';
+        return '${team1.name} won by ${firstInnings!.totalScore - currentInningsScore} runs';
+      }
+      if (isSecondInningsOver &&
+          firstInnings!.totalScore > currentInningsScore) {
+        return '${team1.name} won by ${firstInnings!.totalScore - currentInningsScore} runs';
       }
       final int runsRequired =
           (firstInnings!.totalScore - currentInningsScore) + 1;
@@ -463,23 +469,41 @@ class ScoreboardModel {
     final Map<String, PartnershipModel> tempPartnerships =
         Map.from(partnerships);
     partnerships.clear();
-    // if (currentInnings == 1) {
-    secondInnings = InningsModel(
-      totalScore: currentInningsScore,
-      battingTeam: team2,
-      bowlingTeam: team1,
-      ballRecord: getCurrentInnings,
-      totalWickets: lastBall.wickets,
-      overs: lastBall.over,
-      balls: lastBall.ball,
-      // TODO: Fix this
+    if (currentInnings == 1) {
+      firstInnings = InningsModel(
+        totalScore: currentInningsScore,
+        battingTeam: team2,
+        bowlingTeam: team1,
+        ballRecord: getCurrentInnings,
+        totalWickets: lastBall.wickets,
+        overs: lastBall.over,
+        balls: lastBall.ball,
+        // TODO: Fix this
 
-      openingStriker: team1.players![0],
-      openingNonStriker: team1.players![1],
-      openingBowler: team1.players![0],
-      extras: extras,
-      partnerships: tempPartnerships,
-    );
+        openingStriker: team1.players![0],
+        openingNonStriker: team1.players![1],
+        openingBowler: team1.players![0],
+        extras: extras,
+        partnerships: tempPartnerships,
+      );
+    } else {
+      secondInnings = InningsModel(
+        totalScore: currentInningsScore,
+        battingTeam: team2,
+        bowlingTeam: team1,
+        ballRecord: getCurrentInnings,
+        totalWickets: lastBall.wickets,
+        overs: lastBall.over,
+        balls: lastBall.ball,
+        // TODO: Fix this
+
+        openingStriker: team1.players![0],
+        openingNonStriker: team1.players![1],
+        openingBowler: team1.players![0],
+        extras: extras,
+        partnerships: tempPartnerships,
+      );
+    }
   }
 
   void changeStrike() {
@@ -521,9 +545,7 @@ class ScoreboardModel {
           totalWickets: lastBall.wickets,
           overs: lastBall.over,
           balls: lastBall.ball,
-
-          // TODO: Fix this
-
+          isOver: true,
           openingStriker: team1.players![0],
           openingNonStriker: team1.players![1],
           openingBowler: team1.players![0],

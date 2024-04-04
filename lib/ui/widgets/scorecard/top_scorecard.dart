@@ -64,6 +64,9 @@ class ScoreCard extends GetView<ScoreBoardController> {
                                   ),
                                 ),
                                 const SizedBox(height: 10),
+                                // Text(controller
+                                //         .scoreboard.value?.secondInningsText ??
+                                //     "NUll"),
                                 SizedBox(
                                   width: Get.width / 2,
                                   height: 30,

@@ -1,8 +1,9 @@
-import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../config/api_client.dart';
+import '../controller/tournament_controller.dart';
 
 class TeamApi {
   final GetConnectClient repo;
@@ -133,11 +134,11 @@ class TeamApi {
 
   // getAllNearByTeam
   Future<ApiResponse> getAllNearByTeam() async {
-    final location = await Geolocator.getCurrentPosition();
+    final authController = Get.find<TournamentController>();
 
     final response = await repo.post('/team/getAllNearByTeam', {
-      'latitude': location.latitude,
-      'longitude': location.longitude,
+      'latitude': authController.coordinates.value.latitude,
+      'longitude': authController.coordinates.value.longitude,
     });
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');
@@ -233,6 +234,22 @@ class TeamApi {
   }) async {
     final response =
         await repo.get('/match/myPerformns/$matchType/$inningsType');
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! >= 400) {
+      errorSnackBar('Bad Request');
+      return ApiResponse.fromJson(response.body);
+    }
+
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getChallengePerformance({
+    required String matchId,
+  }) async {
+    final response =
+        await repo.get('/match/getChallengeMatchPerformance/$matchId');
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');
       throw Exception('Server Error');

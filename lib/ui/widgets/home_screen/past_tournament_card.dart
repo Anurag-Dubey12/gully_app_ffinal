@@ -154,8 +154,9 @@ class _Card extends StatelessWidget {
                                 ))
                           ],
                         ),
-                        Text(
-                            '${scoreboard.currentInningsScore}/${scoreboard.currentOverHistory.last?.wickets ?? 0}')
+                        Text(scoreboard.currentInnings == 1
+                            ? "Not Played yet"
+                            : '${scoreboard.currentInningsScore}/${scoreboard.currentOverHistory.last?.wickets ?? 0}')
                       ],
                     ),
                   ],

@@ -130,15 +130,20 @@ class _UpdateAuthorityScreenState extends State<UpdateAuthorityScreen> {
                 setState(() {
                   isLoading = true;
                 });
-                await tournamentController.updateTournamentAuthority(
-                    widget.tournament.id, selectedValue);
+
+                final res =
+                    await tournamentController.updateTournamentAuthority(
+                        widget.tournament.id, selectedValue);
                 setState(() {
                   isLoading = false;
                 });
-                successSnackBar('Authority Updated Successfully').then((value) {
-                  Get.back();
-                  Get.back();
-                });
+                if (res) {
+                  successSnackBar('Authority Updated Successfully')
+                      .then((value) {
+                    Get.back();
+                    Get.back();
+                  });
+                }
               },
               isLoading: isLoading,
               title: 'Update',

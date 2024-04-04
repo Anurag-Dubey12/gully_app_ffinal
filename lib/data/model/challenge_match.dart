@@ -12,6 +12,8 @@ class ChallengeMatchModel {
   final TeamModel team2;
   final String status;
   final String challengedBy;
+  final DateTime? createdAt;
+  final Map<String, dynamic>? scoreBoard;
 
   ChallengeMatchModel({
     required this.id,
@@ -19,6 +21,8 @@ class ChallengeMatchModel {
     required this.team1,
     required this.team2,
     required this.challengedBy,
+    required this.createdAt,
+    required this.scoreBoard,
   });
 
   factory ChallengeMatchModel.fromJson(Map<String, dynamic> json) =>

@@ -5,6 +5,11 @@ part 'player_ranking_model.g.dart';
 @JsonSerializable()
 class PlayerRankingModel {
   final String playerName;
+
+  @JsonKey(
+    disallowNullValue: false,
+    defaultValue: '',
+  )
   final String? profilePhoto;
   @JsonKey(disallowNullValue: false, defaultValue: 0)
   final int? over;

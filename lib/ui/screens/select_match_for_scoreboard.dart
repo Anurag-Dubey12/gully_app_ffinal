@@ -10,6 +10,7 @@ import 'package:gully_app/utils/date_time_helpers.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../data/model/matchup_model.dart';
+import '../../utils/app_logger.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
@@ -141,8 +142,10 @@ class _MatchupCard extends GetView<ScoreBoardController> {
               .setScoreBoard(ScoreboardModel.fromJson(matchup.scoreBoard!));
           Get.off(() => const ScoreCardScreen());
         } else {
-          Get.off(() => SelectOpeningTeam(
-                match: matchup,
+          logger.i("Tournament Match: true");
+          controller.match = MatchupModel.fromJson(matchup.toJson());
+          Get.off(() => const SelectOpeningTeam(
+                isTournament: true,
               ));
         }
       },

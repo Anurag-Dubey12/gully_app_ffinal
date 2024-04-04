@@ -14,11 +14,9 @@ class ChooseLanguageScreen extends StatefulWidget {
 }
 
 class _ChooseLanguageScreenState extends State<ChooseLanguageScreen> {
-  final int _currentIndex = 0;
   String selectedLanguage = 'en';
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     final pref = Get.put<Preferences>(Preferences(), permanent: true);
     setState(() {

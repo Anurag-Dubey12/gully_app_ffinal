@@ -228,7 +228,12 @@ class TournamentController extends GetxController
     try {
       final response =
           await tournamentApi.updateTournamentAuthority(tourId, authority);
-      return response.status!;
+      if (response.status!) {
+        return response.status!;
+      } else {
+        errorSnackBar(response.message!);
+        return false;
+      }
     } catch (e) {
       errorSnackBar(e.toString());
       return false;

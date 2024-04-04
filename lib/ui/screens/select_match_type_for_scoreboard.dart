@@ -3,20 +3,23 @@ import 'package:get/get.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 
-class SelectPerformanceCategory extends StatefulWidget {
-  final Function onTouranmentTap;
-  final Function onChallengeTap;
-  const SelectPerformanceCategory(
-      {super.key, required this.onTouranmentTap, required this.onChallengeTap});
+import '../../data/controller/scoreboard_controller.dart';
+import 'current_tournament_list.dart';
+import 'select_challenge_for_scoreboard.dart';
+
+class SelectMatchCategory extends StatefulWidget {
+  const SelectMatchCategory({
+    super.key,
+  });
 
   @override
-  State<SelectPerformanceCategory> createState() =>
-      _SelectPerformanceCategoryState();
+  State<SelectMatchCategory> createState() => _SelectMatchCategoryState();
 }
 
-class _SelectPerformanceCategoryState extends State<SelectPerformanceCategory> {
+class _SelectMatchCategoryState extends State<SelectMatchCategory> {
   @override
   Widget build(BuildContext context) {
+    final scorerboardController = Get.find<ScoreBoardController>();
     return DecoratedBox(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -49,7 +52,10 @@ class _SelectPerformanceCategoryState extends State<SelectPerformanceCategory> {
                   _Card(
                     title: 'Tournaments',
                     onTap: () {
-                      widget.onTouranmentTap();
+                      Get.to(() => const CurrentTournamentListScreen(
+                            redirectType: RedirectType.scoreboard,
+                          ));
+                      scorerboardController.isChallenge = false;
                     },
                   ),
                   const SizedBox(
@@ -58,7 +64,8 @@ class _SelectPerformanceCategoryState extends State<SelectPerformanceCategory> {
                   _Card(
                     title: 'Challenge',
                     onTap: () {
-                      widget.onChallengeTap();
+                      Get.to(() => const SelectChallengeForScoreboard());
+                      scorerboardController.isChallenge = true;
                     },
                   ),
                 ],

@@ -287,4 +287,22 @@ class TeamController extends GetxController with StateMixin {
       rethrow;
     }
   }
+
+  Future<Map<String, dynamic>> getChallengePerformance({
+    required String matchId,
+  }) async {
+    try {
+      final response = await repo.getChallengePerformance(
+        matchId: matchId,
+      );
+      if (response.status == false) {
+        errorSnackBar(response.message!);
+        return {};
+      }
+      return response.data!;
+    } catch (e) {
+      logger.i(e.toString());
+      rethrow;
+    }
+  }
 }

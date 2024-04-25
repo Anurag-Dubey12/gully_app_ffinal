@@ -158,7 +158,7 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                                                 style: Get
                                                     .textTheme.labelMedium))),
                                     const Spacer(
-                                      flex: 2,
+                                      flex: 1,
                                     ),
                                     Expanded(
                                         child: Center(

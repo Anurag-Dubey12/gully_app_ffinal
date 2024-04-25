@@ -18,7 +18,7 @@ class ChangeBatterWidget extends StatefulWidget {
 }
 
 class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
-  String outType = 'CA';
+  String outType = 'RO';
   String? playerToOut;
   PlayerModel? selectedBatsman;
   @override
@@ -59,6 +59,19 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                 children: [
                   Expanded(
                     child: RadioListTile.adaptive(
+                      value: 'RO',
+                      groupValue: outType,
+                      onChanged: (e) {
+                        setState(() {
+                          logger.i(e);
+                          outType = e!;
+                        });
+                      },
+                      title: const Text('Run Out'),
+                    ),
+                  ),
+                  Expanded(
+                    child: RadioListTile.adaptive(
                       value: 'CA',
                       groupValue: outType,
                       onChanged: (e) {
@@ -82,19 +95,6 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                       title: const Text('Caught'),
                     ),
                   ),
-                  Expanded(
-                    child: RadioListTile.adaptive(
-                      value: 'RO',
-                      groupValue: outType,
-                      onChanged: (e) {
-                        setState(() {
-                          logger.i(e);
-                          outType = e!;
-                        });
-                      },
-                      title: const Text('Run Out'),
-                    ),
-                  )
                 ],
               ),
               Row(

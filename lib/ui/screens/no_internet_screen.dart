@@ -26,16 +26,10 @@ class _NoInternetScreenState extends State<NoInternetScreen> {
             const SizedBox(height: 10),
             const Text('Please check your internet connection and try again'),
             const SizedBox(height: 20),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     // Navigator.of(context).pushReplacement(
-            //     //   MaterialPageRoute(
-            //     //     builder: (context) => const MyHomePage(title: 'Flutter Demo Home Page'),
-            //     // ),
-            //     // );
-            //   },
-            //   child: const Text('Retry', style: TextStyle(color: Colors.white)),
-            // )
+            ElevatedButton(
+              onPressed: () {},
+              child: const Text('Retry', style: TextStyle(color: Colors.white)),
+            )
           ],
         ),
       ),

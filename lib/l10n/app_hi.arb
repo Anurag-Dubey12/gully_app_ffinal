@@ -78,6 +78,7 @@
   "pleaseEnterValidBallCharges": "कृपया एक वैध गेंद शुल्क दर्ज करें",
   "breakfastCharges": "नाश्ता शुल्क",
   "pleaseEnterBreakfastCharges": "कृपया नाश्ता शुल्क दर्ज करें",
+  "pleaseEnterValidBreakfastCharges": "कृपया एक वैध नाश्ता शुल्क दर्ज करें",
   "teamLimit": "टीम सीमा",
   "pleaseEnterTeamLimit": "कृपया टीम सीमा दर्ज करें",
   "pleaseEnterValidTeamLimit": "कृपया एक वैध टीम सीमा दर्ज करें",

@@ -98,7 +98,7 @@ class _SelectTeamToRegisterState extends State<SelectTeamToRegister> {
   }
 }
 
-class _TeamCard extends StatelessWidget {
+class _TeamCard extends GetView<TeamController> {
   final Function onTeamSelected;
   final TeamModel team;
   const _TeamCard({
@@ -146,9 +146,8 @@ class _TeamCard extends StatelessWidget {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(09),
                       onTap: () {
-                        Get.off(() => AddPlayersToTeam(
-                              team: team,
-                            ));
+                        controller.setTeam(team);
+                        Get.off(() => const AddPlayersToTeam());
                       },
                       child: Ink(
                           width: 30,

@@ -143,8 +143,7 @@ class _ViewTeamState extends State<ViewTeam> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: FutureBuilder<List<PlayerModel>>(
-                                      future: controller
-                                          .getPlayers(widget.teamModel.id),
+                                      future: controller.getPlayers(),
                                       builder: (context, snapshot) {
                                         if (snapshot.connectionState ==
                                             ConnectionState.waiting) {

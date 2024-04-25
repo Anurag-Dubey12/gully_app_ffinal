@@ -31,10 +31,6 @@ class _SplashScreenState extends State<SplashScreen> {
       final pref = Get.put<Preferences>(Preferences(), permanent: true);
       logger.i("Token: ${pref.getToken()}");
       if (pref.getToken() != null) {
-        // if (!pref.languageSelected) {
-        //   Get.offAll(() => const ChooseLanguageScreen());
-        //   return;
-        // }
         Get.updateLocale(Locale(pref.getLanguage()));
         Get.offAll(() => const HomeScreen());
       } else {

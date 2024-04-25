@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/choose_lang_screen.dart';
 import 'package:gully_app/ui/widgets/custom_text_field.dart';
-import 'package:gully_app/ui/widgets/location_permission_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
@@ -56,209 +55,205 @@ class _CreateProfileState extends State<CreateProfile>
       _contactController.text = controller.state!.phoneNumber!;
       allowUpdateContact = false;
     }
-    return LocationStreamHandler(
-      child: DecoratedBox(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            image: DecorationImage(
-                image: AssetImage(
-                  'assets/images/sports_icon.png',
-                ),
-                fit: BoxFit.cover),
-          ),
-          child: DecoratedBox(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xff3F5BBF),
-                  Colors.white12,
-                  Colors.white54,
-                ],
-                stops: [0.1, 0.9, 1],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+    return DecoratedBox(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          image: DecorationImage(
+              image: AssetImage(
+                'assets/images/sports_icon.png',
               ),
+              fit: BoxFit.cover),
+        ),
+        child: DecoratedBox(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xff3F5BBF),
+                Colors.white12,
+                Colors.white54,
+              ],
+              stops: [0.1, 0.9, 1],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
-            child: Scaffold(
-              backgroundColor: Colors.transparent,
-              body: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
-                child: SizedBox(
-                  child: SingleChildScrollView(
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          SizedBox(
-                            height: Get.height * 0.13,
-                          ),
-                          Text(
-                            AppLocalizations.of(context)!
-                                .create_profile
-                                .toUpperCase(),
-                            style: Get.textTheme.titleLarge?.copyWith(
-                                fontStyle: FontStyle.italic,
-                                color: Colors.white,
-                                fontFamily: 'Gothams',
-                                fontSize: Get.textScaleFactor * 45,
-                                height: 0.8,
-                                fontWeight: FontWeight.w900),
-                          ),
-                          SizedBox(
-                            height: Get.height * 0.01,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              pickImage();
-                            },
-                            child: Stack(
-                              children: [
-                                CircleAvatar(
-                                  radius: 60,
-                                  backgroundColor: Colors.white,
-                                  foregroundImage: _image == null
-                                      ? const AssetImage(
-                                          'assets/images/profile.jpeg',
-                                        )
-                                      : null,
-                                  backgroundImage: _image != null
-                                      ? FileImage(File(_image!.path))
-                                      : null,
-                                ),
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.amber.shade600,
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: Icon(
-                                        Icons.edit,
-                                        size: 18,
-                                        color: Colors.white,
-                                      ),
+          ),
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 8),
+              child: SizedBox(
+                child: SingleChildScrollView(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        SizedBox(
+                          height: Get.height * 0.13,
+                        ),
+                        Text(
+                          AppLocalizations.of(context)!
+                              .create_profile
+                              .toUpperCase(),
+                          style: Get.textTheme.titleLarge?.copyWith(
+                              fontStyle: FontStyle.italic,
+                              color: Colors.white,
+                              fontFamily: 'Gothams',
+                              fontSize: Get.textScaleFactor * 45,
+                              height: 0.8,
+                              fontWeight: FontWeight.w900),
+                        ),
+                        SizedBox(
+                          height: Get.height * 0.01,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            pickImage();
+                          },
+                          child: Stack(
+                            children: [
+                              CircleAvatar(
+                                radius: 60,
+                                backgroundColor: Colors.white,
+                                foregroundImage: _image == null
+                                    ? const AssetImage(
+                                        'assets/images/profile.jpeg',
+                                      )
+                                    : null,
+                                backgroundImage: _image != null
+                                    ? FileImage(File(_image!.path))
+                                    : null,
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.amber.shade600,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.edit,
+                                      size: 18,
+                                      color: Colors.white,
                                     ),
                                   ),
-                                )
-                              ],
-                            ),
+                                ),
+                              )
+                            ],
                           ),
-                          Form(
-                            key: _formKey,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                SizedBox(
-                                  height: Get.height * 0.03,
-                                ),
-                                CustomTextField(
-                                  labelText: AppLocalizations.of(context)!.name,
-                                  controller: _nameController,
-                                  validator: (e) {
-                                    if (e!.contains(
-                                        RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-                                      return AppLocalizations.of(context)!
-                                          .name_cannot_contain_special_characters;
-                                    }
-                                    if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                      return AppLocalizations.of(context)!
-                                          .name_cannot_contain_emojis;
-                                    }
+                        ),
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: Get.height * 0.03,
+                              ),
+                              CustomTextField(
+                                labelText: AppLocalizations.of(context)!.name,
+                                controller: _nameController,
+                                validator: (e) {
+                                  if (e!.contains(
+                                      RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+                                    return AppLocalizations.of(context)!
+                                        .name_cannot_contain_special_characters;
+                                  }
+                                  if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
+                                    return AppLocalizations.of(context)!
+                                        .name_cannot_contain_emojis;
+                                  }
 
-                                    if (e.contains(RegExp(
-                                        r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]'))) {
-                                      return AppLocalizations.of(context)!
-                                          .name_cannot_contain_special_characters_numbers;
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                SizedBox(
-                                  height: Get.height * 0.03,
-                                ),
-                                CustomTextField(
-                                  labelText: 'Contact No',
-                                  controller: _contactController,
-                                  // enabled: allowUpdateContact,
-                                  textInputType: TextInputType.phone,
-                                  maxLen: 10,
-                                  validator: (e) {
-                                    if (e!.length != 10) {
-                                      return AppLocalizations.of(context)!
-                                          .please_enter_valid_phone_number;
-                                    }
-                                    return null;
-                                  },
-                                ),
-                                const SizedBox(height: 30),
-                                Obx(
-                                  () => PrimaryButton(
-                                      isLoading: controller.status.isLoading,
-                                      onTap: () async {
-                                        if (_image == null) {
-                                          errorSnackBar(
-                                              AppLocalizations.of(context)!
-                                                  .please_select_an_image);
+                                  if (e.contains(RegExp(
+                                      r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]'))) {
+                                    return AppLocalizations.of(context)!
+                                        .name_cannot_contain_special_characters_numbers;
+                                  }
+                                  return null;
+                                },
+                              ),
+                              SizedBox(
+                                height: Get.height * 0.03,
+                              ),
+                              CustomTextField(
+                                labelText: 'Contact No',
+                                controller: _contactController,
+                                // enabled: allowUpdateContact,
+                                textInputType: TextInputType.phone,
+                                maxLen: 10,
+                                validator: (e) {
+                                  if (e!.length != 10) {
+                                    return AppLocalizations.of(context)!
+                                        .please_enter_valid_phone_number;
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(height: 30),
+                              Obx(
+                                () => PrimaryButton(
+                                    isLoading: controller.status.isLoading,
+                                    onTap: () async {
+                                      if (_image == null) {
+                                        errorSnackBar(
+                                            AppLocalizations.of(context)!
+                                                .please_select_an_image);
+                                        return;
+                                      }
+                                      if (_formKey.currentState!.validate()) {
+                                        final base64Image =
+                                            await convertImageToBase64(_image!);
+                                        if (!base64Image.contains(RegExp(
+                                            r'data:image\/(png|jpeg);base64,'))) {
+                                          if (mounted) {
+                                            errorSnackBar(AppLocalizations.of(
+                                                    // ignore: use_build_context_synchronously
+                                                    context)!
+                                                .please_select_a_valid_image);
+                                          }
                                           return;
                                         }
-                                        if (_formKey.currentState!.validate()) {
-                                          final base64Image =
-                                              await convertImageToBase64(
-                                                  _image!);
-                                          if (!base64Image.contains(RegExp(
-                                              r'data:image\/(png|jpeg);base64,'))) {
-                                            if (mounted) {
-                                              errorSnackBar(AppLocalizations.of(
-                                                      // ignore: use_build_context_synchronously
-                                                      context)!
-                                                  .please_select_a_valid_image);
-                                            }
-                                            return;
-                                          }
-                                          final res =
-                                              await controller.createProfile(
-                                                  nickName:
-                                                      _nameController.text,
-                                                  phoneNumber:
-                                                      _contactController.text,
-                                                  base64: base64Image);
-                                          if (res) {
-                                            Get.bottomSheet(
-                                                BottomSheet(
-                                                    onClosing: () {
-                                                      log('Wants to close');
-                                                    },
-                                                    animationController:
-                                                        animationController,
-                                                    enableDrag: true,
-                                                    builder: (context) =>
-                                                        const _OtpBottomSheet()),
-                                                enableDrag: true,
-                                                isScrollControlled: false,
-                                                isDismissible: true,
-                                                enterBottomSheetDuration:
-                                                    const Duration(
-                                                        milliseconds: 300),
-                                                exitBottomSheetDuration:
-                                                    const Duration(
-                                                        milliseconds: 300));
-                                          }
+                                        final res =
+                                            await controller.createProfile(
+                                                nickName: _nameController.text,
+                                                phoneNumber:
+                                                    _contactController.text,
+                                                base64: base64Image);
+                                        if (res) {
+                                          Get.bottomSheet(
+                                              BottomSheet(
+                                                onClosing: () {
+                                                  log('Wants to close');
+                                                },
+                                                animationController:
+                                                    animationController,
+                                                enableDrag: false,
+                                                builder: (context) =>
+                                                    const _OtpBottomSheet(),
+                                              ),
+                                              enableDrag: false,
+                                              isScrollControlled: false,
+                                              isDismissible: false,
+                                              enterBottomSheetDuration:
+                                                  const Duration(
+                                                      milliseconds: 300),
+                                              exitBottomSheetDuration:
+                                                  const Duration(
+                                                      milliseconds: 300));
                                         }
-                                      }),
-                                )
-                              ],
-                            ),
+                                      }
+                                    }),
+                              )
+                            ],
                           ),
-                        ]),
-                  ),
+                        ),
+                      ]),
                 ),
               ),
             ),
-          )),
-    );
+          ),
+        ));
   }
 }
 
@@ -346,6 +341,7 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                       const SizedBox(height: 20),
                       PinCodeTextField(
                         length: 5,
+
                         appContext: context,
                         obscureText: false,
                         textInputAction: TextInputAction.go,
@@ -369,6 +365,8 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                         keyboardType: TextInputType.number,
                         enableActiveFill: true,
                         controller: textEditingController,
+                        // allow user to edit the specific field
+
                         onCompleted: (v) {
                           login(controller);
                         },
@@ -391,7 +389,19 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                           : Text(
                               'Resend code in 00:$countDown',
                               style: Get.textTheme.labelSmall,
-                            )
+                            ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: Text('Change Number',
+                            style: Get.textTheme.labelSmall?.copyWith(
+                              color: Colors.blue,
+                            )),
+                      ),
                     ],
                   ),
                 ),

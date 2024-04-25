@@ -10,8 +10,8 @@ class AuthApi {
     logger.i(data.toString());
     var response = await client.post('/auth/google_login', data);
     if (response.statusCode != 200) {
-      throw Exception(response.body['message'] ??
-          response.body['error'] ??
+      throw Exception(response.body?['message'] ??
+          response.body?['error'] ??
           'Unable to Process Request');
     }
     return ApiResponse.fromJson(response.body);
@@ -37,7 +37,7 @@ class AuthApi {
       'isNewUser': isNewUser
     });
     if (response.statusCode != 200) {
-      throw response.body['message'] ?? 'Unable to Process Request';
+      throw response.body?['message'] ?? 'Unable to Process Request';
     }
     return ApiResponse.fromJson(response.body);
   }
@@ -47,7 +47,7 @@ class AuthApi {
       'OTP': otp,
     });
     if (response.statusCode != 200) {
-      throw Exception(response.body['message'] ?? 'Unable to Process Request');
+      throw Exception(response.body?['message'] ?? 'Unable to Process Request');
     }
     return ApiResponse.fromJson(response.body);
   }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,16 +13,45 @@ import 'package:gully_app/ui/screens/tournament_requests_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/utils.dart';
+import 'package:image_picker/image_picker.dart';
 
+import '../../utils/image_picker_helper.dart';
 import 'add_team.dart';
 import 'my_teams.dart';
 import 'opponent_tournament_list.dart';
 
-class OrganizerProfileScreen extends GetView<AuthController> {
+class OrganizerProfileScreen extends StatefulWidget {
   const OrganizerProfileScreen({super.key});
 
   @override
+  State<OrganizerProfileScreen> createState() => _OrganizerProfileScreenState();
+}
+
+class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
+  XFile? _image;
+
+  pickImage() async {
+    _image = await imagePickerHelper();
+    setState(() {});
+    if (_image != null) {
+      final controller = Get.find<AuthController>();
+      final base64Image = await convertImageToBase64(_image!);
+      if (!base64Image.contains(RegExp(r'data:image\/(png|jpeg);base64,'))) {
+        errorSnackBar('Please select a valid image');
+        return;
+      }
+      controller.updateProfile(
+          nickName: controller.state!.captializedName, base64: base64Image);
+      await CachedNetworkImage.evictFromCache(
+          toImageUrl(controller.state!.profilePhoto));
+
+      successSnackBar('Profile updated successfully');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final controller = Get.find<AuthController>();
     return DecoratedBox(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -53,24 +84,47 @@ class OrganizerProfileScreen extends GetView<AuthController> {
                         fontWeight: FontWeight.w800),
                   ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 1)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                            image: DecorationImage(
-                                image: CachedNetworkImageProvider(
-                                    toImageUrl(controller.state!.profilePhoto)),
-                                fit: BoxFit.cover))),
-
-                    // backgroundColor: Colors.white,
+                GestureDetector(
+                  onTap: () {
+                    pickImage();
+                  },
+                  child: Stack(
+                    children: [
+                      Obx(() => _image != null
+                          ? CircleAvatar(
+                              radius: 40,
+                              backgroundColor: Colors.white,
+                              backgroundImage: FileImage(File(_image!.path)))
+                          : Container(
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  image: DecorationImage(
+                                      image: CachedNetworkImageProvider(
+                                          toImageUrl(
+                                              controller.state!.profilePhoto)),
+                                      fit: BoxFit.cover)))),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.amber.shade600,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(
+                              Icons.edit,
+                              size: 14,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ),
                 const SizedBox(height: 20),

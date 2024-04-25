@@ -62,54 +62,60 @@ class CurrentOverStats extends GetView<ScoreBoardController> {
                                             BorderRadius.circular(1000),
                                       ),
                                       child: Center(
-                                        child: Text(
-                                            controller
-                                                    .scoreboard
-                                                    .value!
-                                                    .currentOverHistory[index]
-                                                    ?.run
-                                                    .toString() ??
-                                                '',
-                                            style: Get.textTheme.labelMedium
-                                                ?.copyWith(
-                                                    color: controller
-                                                                .scoreboard
-                                                                .value!
-                                                                .currentOverHistory[
-                                                                    index]
-                                                                ?.run ==
-                                                            0
-                                                        ? Colors.red
-                                                        : Colors.black)),
+                                        child: Obx(
+                                          () => Text(
+                                              controller
+                                                      .scoreboard
+                                                      .value!
+                                                      .currentOverHistory[index]
+                                                      ?.run
+                                                      .toString() ??
+                                                  '',
+                                              style: Get.textTheme.labelMedium
+                                                  ?.copyWith(
+                                                      color: controller
+                                                                  .scoreboard
+                                                                  .value!
+                                                                  .currentOverHistory[
+                                                                      index]
+                                                                  ?.run ==
+                                                              0
+                                                          ? Colors.red
+                                                          : Colors.black)),
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(height: 4),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        // ...controller.scoreboard.value?
-                                        //     .currentOverHistory[index]!.events
-                                        ...(controller
-                                                    .scoreboard
-                                                    .value!
-                                                    .currentOverHistory[index]
-                                                    ?.events ??
-                                                [])
-                                            .map((e) => Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(2.0),
-                                                  child: CircleAvatar(
-                                                    radius: 9,
-                                                    child: Text(
-                                                      convertEventTypeToText(e),
-                                                      style: const TextStyle(
-                                                          fontSize: 8),
-                                                    ),
-                                                  ),
-                                                )),
-                                      ],
-                                    )
+                                    Obx(() => Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            // ...controller.scoreboard.value?
+                                            //     .currentOverHistory[index]!.events
+                                            ...(controller
+                                                        .scoreboard
+                                                        .value!
+                                                        .currentOverHistory[
+                                                            index]
+                                                        ?.events ??
+                                                    [])
+                                                .map((e) => Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              2.0),
+                                                      child: CircleAvatar(
+                                                        radius: 9,
+                                                        child: Text(
+                                                          convertEventTypeToText(
+                                                              e),
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 8),
+                                                        ),
+                                                      ),
+                                                    )),
+                                          ],
+                                        )),
                                   ],
                                 );
                               }),

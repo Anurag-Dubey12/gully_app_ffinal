@@ -98,6 +98,8 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                           children: [
                             NumberCard(
                               text: '0',
+                              disabled: controller
+                                  .scoreboard.value!.isSecondInningsOver,
                               onTap: () {
                                 if (controller.events.contains(EventType.bye) ||
                                     controller.events
@@ -112,24 +114,32 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                             ),
                             NumberCard(
                               text: '1',
+                              disabled: controller
+                                  .scoreboard.value!.isSecondInningsOver,
                               onTap: () {
                                 controller.addEvent(EventType.one);
                               },
                             ),
                             NumberCard(
                               text: '2',
+                              disabled: controller
+                                  .scoreboard.value!.isSecondInningsOver,
                               onTap: () {
                                 controller.addEvent(EventType.two);
                               },
                             ),
                             NumberCard(
                               text: '3',
+                              disabled: controller
+                                  .scoreboard.value!.isSecondInningsOver,
                               onTap: () {
                                 controller.addEvent(EventType.three);
                               },
                             ),
                             NumberCard(
                               text: '4',
+                              disabled: controller
+                                  .scoreboard.value!.isSecondInningsOver,
                               onTap: () {
                                 if (controller.events.contains(EventType.bye) ||
                                     controller.events
@@ -138,12 +148,12 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                                       'You can not add a four and a bye or leg bye');
                                   return;
                                 }
-                                if (controller.events
-                                    .contains(EventType.wide)) {
-                                  errorSnackBar(
-                                      'You can not add a four and a wide ball');
-                                  return;
-                                }
+                                // if (controller.events
+                                //     .contains(EventType.wide)) {
+                                //   errorSnackBar(
+                                //       'You can not add a four and a wide ball');
+                                //   return;
+                                // }
                                 if (controller.events
                                     .contains(EventType.wicket)) {
                                   errorSnackBar(
@@ -155,10 +165,14 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                             ),
                             NumberCard(
                               text: '5',
+                              disabled: controller
+                                  .scoreboard.value!.isSecondInningsOver,
                               onTap: () {},
                             ),
                             NumberCard(
                               text: '6',
+                              disabled: controller
+                                  .scoreboard.value!.isSecondInningsOver,
                               onTap: () {
                                 if (controller.events.contains(EventType.bye) ||
                                     controller.events

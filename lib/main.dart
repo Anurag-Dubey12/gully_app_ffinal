@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:connectivity_widget/connectivity_widget.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -20,7 +20,9 @@ import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/notification_controller.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
+import 'package:gully_app/firebase_options.dart';
 import 'package:gully_app/ui/screens/no_internet_screen.dart';
+import 'package:gully_app/ui/widgets/location_permission_builder.dart';
 import 'package:gully_app/utils/app_logger.dart';
 
 import '/config/api_client.dart';
@@ -41,7 +43,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await GetStorage.init();
@@ -54,7 +56,6 @@ void main() async {
     FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
     return true;
   };
-
   await DefaultCacheManager().emptyCache();
 
   runApp(const MyApp());
@@ -68,32 +69,30 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  StreamSubscription<List<ConnectivityResult>>? subscription;
-  bool _isConnected = true;
-  @override
-  void initState() {
-    super.initState();
+  // StreamSubscription<List<ConnectivityResult>>? subscription;
+  // bool _isConnected = true;
+  // @override
+  // void initState() {
+  //   super.initState();
 
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((List<ConnectivityResult> result) {
-      if (result.contains(ConnectivityResult.none)) {
-        setState(() {
-          _isConnected = false;
-        });
-      } else {
-        setState(() {
-          _isConnected = true;
-        });
-      }
-
-      // Received changes in available connectivity types!
-    });
-  }
+  //   subscription = Connectivity()
+  //       .onConnectivityChanged
+  //       .listen((List<ConnectivityResult> result) {
+  //     if (result.contains(ConnectivityResult.none)) {
+  //       setState(() {
+  //         _isConnected = false;
+  //       });
+  //     } else {
+  //       setState(() {
+  //         _isConnected = true;
+  //       });
+  //     }
+  //   });
+  // }
 
   @override
   void dispose() {
-    subscription?.cancel();
+    // subscription?.cancel();
     super.dispose();
   }
 
@@ -119,23 +118,30 @@ class _MyAppState extends State<MyApp> {
         Locale('te'),
       ],
       builder: (context, child) {
-        if (!_isConnected) {
-          return const NoInternetScreen();
-        }
+        // if (!_isConnected) {
+        //   return const NoInternetScreen();
+        // }
         if (Get.locale != null &&
             (Get.locale!.languageCode == 'ar' ||
                 Get.locale!.languageCode == 'ur')) {
-          return Directionality(
-            textDirection:
-                TextDirection.rtl, // Right-to-left for Arabic or Urdu
-            child: child!,
+          return LocationStreamHandler(
+            child: Directionality(
+              textDirection:
+                  TextDirection.rtl, // Right-to-left for Arabic or Urdu
+              child: child!,
+            ),
           );
         } else {
-          return Directionality(
-            textDirection:
-                TextDirection.ltr, // Left-to-right for other languages
-            child: child!,
-          );
+          return ConnectivityWidget(
+              offlineBanner: const SizedBox(),
+              builder: (BuildContext context, bool isOnline) {
+                if (!isOnline) {
+                  return const NoInternetScreen();
+                }
+                return LocationStreamHandler(
+                  child: child!,
+                );
+              });
         }
       },
       locale: const Locale('en'),

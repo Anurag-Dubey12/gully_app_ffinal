@@ -25,7 +25,7 @@ class TournamentApi {
       throw Exception('Requested Path Not Found');
     }
     if (!response.isOk) {
-      throw response.body['message'] ?? 'Unable to Process Request';
+      throw response.body?['message'] ?? 'Unable to Process Request';
     }
     return ApiResponse.fromJson(response.body);
   }
@@ -128,7 +128,7 @@ class TournamentApi {
       errorSnackBar('Server Error');
       throw Exception('Server Error');
     } else if (response.statusCode! != 200) {
-      errorSnackBar(response.body['message']);
+      errorSnackBar(response.body?['message'] ?? 'Bad Request');
       throw Exception('Bad Request');
     }
     return ApiResponse.fromJson(response.body);
@@ -140,7 +140,7 @@ class TournamentApi {
       errorSnackBar('Server Error');
       throw Exception('Server Error');
     } else if (response.statusCode! != 200) {
-      errorSnackBar(response.body['message']);
+      errorSnackBar(response.body?['message'] ?? 'Bad Request');
       throw Exception('Bad Request');
     }
     return ApiResponse.fromJson(response.body);

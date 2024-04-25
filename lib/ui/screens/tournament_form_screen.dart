@@ -158,10 +158,12 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                         'Please select tournament start and end date');
                                     return;
                                   }
+                                  // tournmanent name should not contain emojis or special characters except for alphabets and numbers
+
                                   setState(() {
                                     isLoading = true;
                                   });
-                                  final position = await determinePosition();
+
                                   String? base64;
                                   if (_image != null) {
                                     base64 =
@@ -187,16 +189,20 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                         _teamLimitController.text,
                                     "gameType": "CRICKET",
                                     "selectLocation": _addressController.text,
-                                    "latitude": position.latitude,
-                                    "longitude": position.longitude,
+                                    "latitude": tournamentController
+                                        .coordinates.value.latitude,
+                                    "longitude": tournamentController
+                                        .coordinates.value.longitude,
                                     "rules": _rulesController.text,
                                     'coverPhoto': base64,
-                                    'coHost1Name': _cohost1Name.text.isEmpty
-                                        ? null
-                                        : _cohost1Name.text,
-                                    'coHost1Phone': _cohost1Phone.text.isEmpty
-                                        ? null
-                                        : _cohost1Phone.text,
+                                    'coHost1Name':
+                                        _cohost1Name.text.trim().isEmpty
+                                            ? null
+                                            : _cohost1Name.text,
+                                    'coHost1Phone':
+                                        _cohost1Phone.text.trim().isEmpty
+                                            ? null
+                                            : _cohost1Phone.text,
                                     'coHost2Name': _cohost2Name.text.isEmpty
                                         ? null
                                         : _cohost2Name.text,
@@ -414,10 +420,24 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             controller: _nameController,
                             label: AppLocalizations.of(context)!.tournamentName,
                             validator: (p0) {
-                              if (p0!.isEmpty) {
+                              if (p0![0] == " ") {
+                                return "First character should not be a space";
+                              }
+                              if (p0.trim().isEmpty) {
                                 return AppLocalizations.of(context)!
                                     .pleaseEnterTournamentName;
                               }
+                              if (p0.length < 3) {
+                                return "Tournament name should be atleast 3 characters long";
+                              }
+                              if (p0.isNotEmpty &&
+                                  !RegExp(r'^[a-zA-Z]+$').hasMatch(p0[0])) {
+                                return "First character should be an alphabet";
+                              }
+                              if (!p0.contains(RegExp(r'^[a-zA-Z0-9- ]*$'))) {
+                                return "Special characters are not allowed (except -)";
+                              }
+
                               if (p0.contains(RegExp(r'[^\x00-\x7F]+'))) {
                                 return AppLocalizations.of(context)!
                                     .tournamentNameCannotContainEmojis;
@@ -557,14 +577,31 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             label: AppLocalizations.of(context)!.cohost1Name,
                             textInputType: TextInputType.text,
                             validator: (e) {
-                              if (_cohost1Phone.text.isEmpty && e!.isNotEmpty) {
+                              if (e![0] == " ") {
+                                return "First character should not be a space";
+                              }
+                              if (e.trim().isEmpty &&
+                                  _cohost1Phone.text.isNotEmpty) {
+                                return "Please enter co-host 1 name";
+                              }
+                              if (_cohost1Phone.text.isEmpty && e.isNotEmpty) {
                                 return AppLocalizations.of(context)!
                                     .pleaseEnterCohost1ContactNo;
                               }
-                              if (e!.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                return AppLocalizations.of(context)!
-                                    .rulesCannotContainEmojis;
+                              // first character should be a alphabet
+                              if (e.isNotEmpty &&
+                                  !RegExp(r'^[a-zA-Z]+$').hasMatch(e[0])) {
+                                return "First character should be an alphabet";
                               }
+                              if (!e.contains(RegExp(r'^[a-zA-Z0-9- ]*$'))) {
+                                return "Please enter valid name";
+                              }
+
+                              // if (e.contains(RegExp(
+                              //     r'[^\x00-\x7F\uD800-\uDBFF\uDC00-\uDFFF]+'))) {
+                              //   return AppLocalizations.of(context)!
+                              //       .rulesCannotContainEmojis;
+                              // }
                               return null;
                             },
                           ),
@@ -575,12 +612,14 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             textInputType: TextInputType.number,
                             maxLength: 10,
                             validator: (e) {
-                              if ((_cohost1Name.text.isNotEmpty) &&
-                                  e!.isEmpty) {
+                              if (e![0] == " ") {
+                                return "First character should not be a space";
+                              }
+                              if ((_cohost1Name.text.isNotEmpty) && e.isEmpty) {
                                 return AppLocalizations.of(context)!
                                     .pleaseEnterCohost1ContactNo;
                               }
-                              if (e!.isEmpty) {
+                              if (e.isEmpty) {
                                 return null;
                               }
                               if (!RegExp(r'^\d+$').hasMatch(e)) {
@@ -607,14 +646,27 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             label: AppLocalizations.of(context)!.cohost2Name,
                             textInputType: TextInputType.text,
                             validator: (e) {
-                              if (_cohost2Phone.text.isEmpty && e!.isNotEmpty) {
+                              if (e!.trim().isEmpty &&
+                                  _cohost2Phone.text.isNotEmpty) {
+                                return "Please enter co-host 2 name";
+                              }
+                              if (_cohost2Phone.text.trim().isEmpty &&
+                                  e.isNotEmpty) {
                                 return AppLocalizations.of(context)!
                                     .pleaseEnterCohost1ContactNo;
                               }
-                              if (e!.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                return AppLocalizations.of(context)!
-                                    .rulesCannotContainEmojis;
+                              if (e.isNotEmpty &&
+                                  !RegExp(r'^[a-zA-Z]+$').hasMatch(e[0])) {
+                                return "First character should be an alphabet";
                               }
+                              if (!e.contains(RegExp(r'^[a-zA-Z0-9- ]*$'))) {
+                                return "Please enter valid name";
+                              }
+
+                              // if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
+                              //   return AppLocalizations.of(context)!
+                              //       .rulesCannotContainEmojis;
+                              // }
                               return null;
                             },
                           ),
@@ -626,11 +678,11 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             maxLength: 10,
                             validator: (e) {
                               if ((_cohost2Name.text.isNotEmpty) &&
-                                  e!.isEmpty) {
+                                  e!.trim().isEmpty) {
                                 return AppLocalizations.of(context)!
                                     .pleaseEnterCohost1ContactNo;
                               }
-                              if (e!.isEmpty) {
+                              if (e!.trim().isEmpty) {
                                 return null;
                               }
                               if (!RegExp(r'^\d+$').hasMatch(e)) {
@@ -657,13 +709,12 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             label: AppLocalizations.of(context)!.rules,
                             textInputType: TextInputType.multiline,
                             validator: (e) {
-                              if (e!.isEmpty) {
+                              if (e!.trim().isEmpty) {
                                 return AppLocalizations.of(context)!
                                     .pleaseEnterRules;
                               }
-                              if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                return AppLocalizations.of(context)!
-                                    .rulesCannotContainEmojis;
+                              if (!e.contains(RegExp(r'^[a-zA-Z0-9\/. ]*$'))) {
+                                return "Rules should not contain special characters except (/) and (.)";
                               }
                               return null;
                             },
@@ -675,7 +726,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             maxLines: 3,
                             textInputType: TextInputType.multiline,
                             validator: (e) {
-                              if (e!.isEmpty) {
+                              if (e!.trim().isEmpty) {
                                 return AppLocalizations.of(context)!
                                     .pleaseEnterRules;
                               }
@@ -729,7 +780,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             controller: _entryFeeController,
                             label: AppLocalizations.of(context)!.entryFee,
                             validator: (e) {
-                              if (e == null || e.isEmpty) {
+                              if (e == null || e.trim().isEmpty) {
                                 return AppLocalizations.of(context)!
                                     .pleaseEnterEntryFee;
                               }
@@ -754,7 +805,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             controller: _ballChargesController,
                             label: AppLocalizations.of(context)!.ballCharges,
                             validator: (e) {
-                              if (e == null || e.isEmpty) {
+                              if (e == null || e.trim().isEmpty) {
                                 return AppLocalizations.of(context)!
                                     .pleaseEnterBallCharges;
                               }
@@ -777,17 +828,17 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                 AppLocalizations.of(context)!.breakfastCharges,
                             textInputType: TextInputType.number,
                             validator: (e) {
-                              if (e == null || e.isEmpty) {
+                              if (e == null || e.trim().isEmpty) {
                                 return AppLocalizations.of(context)!
                                     .pleaseEnterBreakfastCharges;
                               }
                               if (!RegExp(r'^\d+(?:\.\d+)?$').hasMatch(e)) {
                                 return AppLocalizations.of(context)!
-                                    .pleaseEnterValidEntryFee;
+                                    .pleaseEnterValidBreakfastCharges;
                               }
                               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
                                 return AppLocalizations.of(context)!
-                                    .rulesCannotContainEmojis;
+                                    .pleaseEnterValidBreakfastCharges;
                               }
                               return null;
                             },
@@ -797,7 +848,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             controller: _teamLimitController,
                             label: AppLocalizations.of(context)!.teamLimit,
                             validator: (e) {
-                              if (e == null || e.isEmpty) {
+                              if (e == null || e.trim().isEmpty) {
                                 return AppLocalizations.of(context)!
                                     .pleaseEnterTeamLimit;
                               } else if (!RegExp(r'^\d+$').hasMatch(e)) {

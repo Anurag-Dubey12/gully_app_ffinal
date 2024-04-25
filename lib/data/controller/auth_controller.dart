@@ -62,7 +62,8 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       if (userCred.user == null) {
         errorSnackBar("User not found");
       }
-      final Position position = await determinePosition();
+      final Position position =
+          await determinePosition(accuracy: LocationAccuracy.low);
       final placeName =
           await getAddressFromLatLng(position.latitude, position.longitude);
       final applinks = AppLinks();
@@ -77,10 +78,9 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
         }
       };
       if (uri != null) {
-        logger.i("URIPHONE: ${uri.queryParameters["refer_id"]}");
         body['phoneNumber'] = uri.queryParameters["refer_id"];
       }
-      logger.i("Body: $body");
+
       final response = await repo.loginViaGoogle(body);
       final user = UserModel.fromJson(response.data!['user']);
       final accessToken = response.data!['user']['accessToken'];
@@ -125,6 +125,7 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
         Get.offAll(() => const ChooseLanguageScreen());
         // return false;
       }
+      refresh();
       getCurrentLocation();
     } catch (e) {
       logger.e(e.toString());
@@ -141,10 +142,11 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
     try {
       change(GetStatus.loading());
       final response = await repo.createProfile(
-          nickName: nickName,
-          phoneNumber: phoneNumber,
-          base64: base64,
-          isNewUser: state!.isNewUser);
+        nickName: nickName,
+        phoneNumber: phoneNumber,
+        base64: base64,
+        isNewUser: state!.isNewUser,
+      );
 
       final user = UserModel.fromJson(response.data!['user']);
       change(GetStatus.success(user));
@@ -171,12 +173,13 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
 
       final user = UserModel.fromJson(response.data!['user']);
       change(GetStatus.success(user));
+      getUser();
+      refresh();
       return true;
     } catch (e) {
       showSnackBar(title: e.toString(), message: e.toString(), isError: true);
       change(GetStatus.error(e.toString()));
       rethrow;
-      // return false;
     }
   }
 

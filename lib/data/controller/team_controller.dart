@@ -7,11 +7,16 @@ import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
-class TeamController extends GetxController with StateMixin {
+class TeamController extends GetxController with StateMixin<TeamModel> {
   final TeamApi repo;
   TeamController({required this.repo}) {
     change(GetStatus.empty());
   }
+  void setTeam(TeamModel team) {
+    logger.i(team.toJson());
+    change(GetStatus.success(team));
+  }
+
   Future<bool> createTeam(
       {required String teamName, required String? teamLogo}) async {
     try {
@@ -25,6 +30,7 @@ class TeamController extends GetxController with StateMixin {
         return false;
       }
       change(GetStatus.success(TeamModel.fromJson(response.data!)));
+      refresh();
 
       return true;
     } catch (e) {
@@ -59,8 +65,10 @@ class TeamController extends GetxController with StateMixin {
   }
 
   RxList<PlayerModel> players = <PlayerModel>[].obs;
-  Future<List<PlayerModel>> getPlayers(String teamId) async {
-    final response = await repo.getPlayers(teamId: teamId);
+  Future<List<PlayerModel>> getPlayers() async {
+    players.value = [];
+    players.refresh();
+    final response = await repo.getPlayers(teamId: state.id);
     if (response.status == false) {
       errorSnackBar(response.message!);
     }
@@ -88,7 +96,7 @@ class TeamController extends GetxController with StateMixin {
       errorSnackBar(response.message!);
       return false;
     }
-    getPlayers(teamId);
+    getPlayers();
     return true;
   }
 
@@ -167,10 +175,10 @@ class TeamController extends GetxController with StateMixin {
         return [];
       }
       final teams = response.data!['matches'] as List;
-      logger.f(teams.runtimeType);
+
       final teamList =
           teams.map((e) => TeamModel.fromJson(e['opponent'])).toList();
-      logger.f(teamList);
+
       return teamList;
     } catch (e) {
       logger.i(e.toString());

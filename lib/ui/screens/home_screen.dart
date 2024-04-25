@@ -13,7 +13,6 @@ import 'package:gully_app/ui/widgets/app_drawer.dart';
 import 'package:gully_app/ui/widgets/home_screen/date_times_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/sports_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
-import 'package:gully_app/ui/widgets/location_permission_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -67,126 +66,122 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return LocationStreamHandler(
-      child: DecoratedBox(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          image: DecorationImage(
-              image: AssetImage(
-                'assets/images/sports_icon.png',
-              ),
-              fit: BoxFit.cover),
-        ),
-        child: PopScope(
-          canPop: false,
-          child: Scaffold(
-            endDrawer: const AppDrawer(),
-            bottomNavigationBar: Container(
-              height: 90,
-              decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 5,
-                    spreadRadius: 2,
-                    offset: const Offset(0, -1))
-              ]),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(19.0),
-                    child: PrimaryButton(
-                      onTap: () {
-                        Get.to(() => const TournamentFormScreen(
-                              tournament: null,
-                            ));
-                      },
-                      // title: 'Create Your Tournament',
-                      title:
-                          AppLocalizations.of(context)!.create_your_tournament,
-                    ),
-                  ),
-                ],
-              ),
+    return DecoratedBox(
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        image: DecorationImage(
+            image: AssetImage(
+              'assets/images/sports_icon.png',
             ),
-            backgroundColor: Colors.transparent,
-            body: Stack(
+            fit: BoxFit.cover),
+      ),
+      child: PopScope(
+        canPop: false,
+        child: Scaffold(
+          endDrawer: const AppDrawer(),
+          bottomNavigationBar: Container(
+            height: 90,
+            decoration: BoxDecoration(color: Colors.white, boxShadow: [
+              BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 5,
+                  spreadRadius: 2,
+                  offset: const Offset(0, -1))
+            ]),
+            child: Column(
               children: [
-                ClipPath(
-                  clipper: ArcClipper(),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: const RadialGradient(
-                        colors: [
-                          Color(0xff368EBF),
-                          AppTheme.primaryColor,
-                        ],
-                        center: Alignment(-0.4, -0.8),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                            color:
-                                AppTheme.secondaryYellowColor.withOpacity(0.3),
-                            blurRadius: 20,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 70))
-                      ],
-                    ),
-                    width: double.infinity,
+                Padding(
+                  padding: const EdgeInsets.all(19.0),
+                  child: PrimaryButton(
+                    onTap: () {
+                      Get.to(() => const TournamentFormScreen(
+                            tournament: null,
+                          ));
+                    },
+                    // title: 'Create Your Tournament',
+                    title: AppLocalizations.of(context)!.create_your_tournament,
                   ),
                 ),
-                Positioned(
-                  top: Get.statusBarHeight / 2.3,
-                  // left: 20,
-                  child: SizedBox(
-                    // color: Colors.red,
-                    width: Get.width,
+              ],
+            ),
+          ),
+          backgroundColor: Colors.transparent,
+          body: Stack(
+            children: [
+              ClipPath(
+                clipper: ArcClipper(),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: const RadialGradient(
+                      colors: [
+                        Color(0xff368EBF),
+                        AppTheme.primaryColor,
+                      ],
+                      center: Alignment(-0.4, -0.8),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                          color: AppTheme.secondaryYellowColor.withOpacity(0.3),
+                          blurRadius: 20,
+                          spreadRadius: 2,
+                          offset: const Offset(0, 70))
+                    ],
+                  ),
+                  width: double.infinity,
+                ),
+              ),
+              Positioned(
+                top: Get.statusBarHeight / 2.3,
+                // left: 20,
+                child: SizedBox(
+                  // color: Colors.red,
+                  width: Get.width,
 
-                    child: SizedBox(
-                      height: Get.height - 150,
-                      child: SingleChildScrollView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        child: Column(
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: TopHeader(),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            SizedBox(
-                              height: 60,
-                              child: ListView.separated(
-                                  scrollDirection: Axis.horizontal,
-                                  shrinkWrap: true,
-                                  itemBuilder: (context, index) {
-                                    return SportsCard(
-                                      index: index,
-                                    );
-                                  },
-                                  padding: const EdgeInsets.only(left: 20),
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(
-                                        width: 15,
-                                      ),
-                                  itemCount: 7),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            const FullBannerSlider(),
-                            const SizedBox(height: 20),
-                            const DateTimesCard(),
-                            const TitleWidget(),
-                            const TournamentList()
-                          ],
-                        ),
+                  child: SizedBox(
+                    height: Get.height - 150,
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      child: Column(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: TopHeader(),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          SizedBox(
+                            height: 60,
+                            child: ListView.separated(
+                                scrollDirection: Axis.horizontal,
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) {
+                                  return SportsCard(
+                                    index: index,
+                                  );
+                                },
+                                padding: const EdgeInsets.only(left: 20),
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(
+                                      width: 15,
+                                    ),
+                                itemCount: 7),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          const FullBannerSlider(),
+                          const SizedBox(height: 20),
+                          const DateTimesCard(),
+                          const TitleWidget(),
+                          const TournamentList()
+                        ],
                       ),
                     ),
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
         ),
       ),

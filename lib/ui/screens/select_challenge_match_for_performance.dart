@@ -7,7 +7,6 @@ import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:intl/intl.dart';
 
-import '../../data/controller/auth_controller.dart';
 import '../../data/controller/team_controller.dart';
 
 class SelectChallengeMatchForPerformance extends StatefulWidget {
@@ -23,7 +22,7 @@ class _SelectChallengeMatchForPerformanceState
   @override
   Widget build(BuildContext context) {
     final TeamController teamController = Get.find<TeamController>();
-    final authController = Get.find<AuthController>();
+
     return GradientBuilder(
       child: Scaffold(
           backgroundColor: Colors.transparent,
@@ -46,7 +45,20 @@ class _SelectChallengeMatchForPerformanceState
                   final acceptedChallenges = snapshot.data
                       ?.where((e) => e.status == 'played')
                       .toList();
-                  logger.f('Accepted Challenges: $acceptedChallenges');
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (snapshot.hasError) {
+                    logger.e(snapshot.error);
+                    return const Center(
+                      child: Text('Error fetching data'),
+                    );
+                  }
+                  if (acceptedChallenges!.isEmpty) {
+                    return const Center(
+                      child: Text('No matches played yet'),
+                    );
+                  }
                   return ListView.separated(
                       itemBuilder: ((context, index) {
                         return ListTile(
@@ -54,7 +66,7 @@ class _SelectChallengeMatchForPerformanceState
                                 borderRadius: BorderRadius.circular(20)),
                             tileColor: Colors.white,
                             title: Text(
-                                '${acceptedChallenges![index].team1.name.capitalize} vs ${acceptedChallenges[index].team2.name.capitalize}',
+                                '${acceptedChallenges[index].team1.name.capitalize} vs ${acceptedChallenges[index].team2.name.capitalize}',
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 18,
@@ -84,7 +96,7 @@ class _SelectChallengeMatchForPerformanceState
                       separatorBuilder: (context, index) => const SizedBox(
                             height: 20,
                           ),
-                      itemCount: acceptedChallenges?.length ?? 0);
+                      itemCount: acceptedChallenges.length);
                 }),
           )),
     );

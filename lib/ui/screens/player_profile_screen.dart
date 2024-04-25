@@ -32,10 +32,10 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
         errorSnackBar('Please select a valid image');
         return;
       }
-      controller.updateProfile(
-          nickName: controller.state!.captializedName, base64: base64Image);
       await CachedNetworkImage.evictFromCache(
           toImageUrl(controller.state!.profilePhoto));
+      controller.updateProfile(
+          nickName: controller.state!.captializedName, base64: base64Image);
 
       successSnackBar('Profile updated successfully');
     }

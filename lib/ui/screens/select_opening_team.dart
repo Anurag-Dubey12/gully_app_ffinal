@@ -264,15 +264,18 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
               return;
             }
             logger.i('is tournament${widget.isTournament}');
+            logger.i('Total overs ${totalOvers.text}');
 
-            Get.off(() => SelectOpeningPlayer(
-                match: match,
-                battingTeam: battingTeam,
-                bowlingTeam: bowlingTeam,
-                tossWonBy: tossWonBy!,
-                electedTo: optedTo!,
-                isTournament: widget.isTournament,
-                overs: int.parse(totalOvers.text)));
+            Get.off(
+                () => SelectOpeningPlayer(
+                    match: match,
+                    battingTeam: battingTeam,
+                    bowlingTeam: bowlingTeam,
+                    tossWonBy: tossWonBy!,
+                    electedTo: optedTo!,
+                    isTournament: widget.isTournament,
+                    overs: int.parse(totalOvers.text)),
+                preventDuplicates: false);
           })
         ],
       ),

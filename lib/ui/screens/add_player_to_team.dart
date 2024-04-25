@@ -6,7 +6,6 @@ import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart
 import 'package:get/get.dart'; //
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/player_model.dart';
-import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/screens/add_team.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:share_plus/share_plus.dart';
@@ -17,8 +16,9 @@ import '../widgets/custom_text_field.dart';
 import '../widgets/primary_button.dart';
 
 class AddPlayersToTeam extends StatefulWidget {
-  final TeamModel team;
-  const AddPlayersToTeam({Key? key, required this.team}) : super(key: key);
+  const AddPlayersToTeam({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<AddPlayersToTeam> createState() => _AddPlayersToTeamState();
@@ -29,7 +29,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
   void initState() {
     super.initState();
     final controller = Get.find<TeamController>();
-    controller.getPlayers(widget.team.id);
+    controller.getPlayers();
   }
 
   @override
@@ -67,13 +67,14 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                         horizontal: 35.0, vertical: 19),
                     child: PrimaryButton(
                       isDisabled: controller.players.value.length == 15,
+                      disabledText: 'Maximum 15 players added',
                       onTap: () async {
                         await Get.bottomSheet(
                           BottomSheet(
                             backgroundColor: const Color(0xffEBEBEB),
                             enableDrag: false,
                             builder: (context) => _AddPlayerDialog(
-                              teamId: widget.team.id,
+                              teamId: controller.state.id,
                             ),
                             onClosing: () {
                               setState(() {});
@@ -157,7 +158,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                                 radius: 49,
                                 backgroundColor: Colors.white,
                                 backgroundImage:
-                                    NetworkImage(widget.team.toImageUrl()),
+                                    NetworkImage(controller.state.toImageUrl()),
                               ),
                               Positioned(
                                 bottom: 0,
@@ -165,7 +166,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                                 child: InkWell(
                                   onTap: () {
                                     Get.off(() => AddTeam(
-                                          team: widget.team,
+                                          team: controller.state,
                                         ));
                                   },
                                   child: const CircleAvatar(
@@ -187,7 +188,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                     ),
                     Center(
                       child: Text(
-                        widget.team.name,
+                        controller.state.name,
                         style: Get.textTheme.headlineMedium?.copyWith(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -210,7 +211,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                               ),
                             ),
                           ),
-                          TeamPlayersListBuilder(teamId: widget.team.id),
+                          TeamPlayersListBuilder(teamId: controller.state.id),
                         ],
                       ),
                     ),
@@ -618,6 +619,10 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                   textInputType: TextInputType.name,
                   validator: (value) {
                     if (value!.isEmpty) {
+                      return AppLocalizations.of(context)!.fillAllFields;
+                    }
+                    // prevent only spaces
+                    if (value.trim().isEmpty) {
                       return AppLocalizations.of(context)!.fillAllFields;
                     }
                     if (!value.contains(RegExp(r'^[a-zA-Z ]+$'))) {

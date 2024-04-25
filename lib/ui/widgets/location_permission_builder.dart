@@ -23,7 +23,6 @@ class LocationStreamHandlerState extends State<LocationStreamHandler> {
     super.initState();
     checkLocationPermission();
     Geolocator.getServiceStatusStream().listen((event) {
-      logger.i(event);
       checkLocationPermission();
     }, onDone: () {
       logger.i('Done');
@@ -33,25 +32,23 @@ class LocationStreamHandlerState extends State<LocationStreamHandler> {
   }
 
   void checkLocationPermission() async {
-    LocationPermission serviceEnabled = await Geolocator.checkPermission();
-    logger.i(serviceEnabled);
-    if (serviceEnabled == LocationPermission.denied) {
-      serviceEnabled = await Geolocator.requestPermission();
-      if (serviceEnabled == LocationPermission.denied ||
-          serviceEnabled == LocationPermission.deniedForever) {
-        // Service still not enabled, handle accordingly
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      _locationPermissionController.add(false);
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever ||
+          permission == LocationPermission.unableToDetermine) {
         _locationPermissionController.add(false);
         return;
       }
     }
 
     LocationPermission permissionStatus = await Geolocator.checkPermission();
-    if (permissionStatus == LocationPermission.deniedForever ||
-        permissionStatus == LocationPermission.denied) {
-      _locationPermissionController.add(false);
-    } else {
-      _locationPermissionController.add(true);
-    }
+    bool granted = permissionStatus != LocationPermission.deniedForever &&
+        permissionStatus != LocationPermission.denied;
+    _locationPermissionController.add(granted);
   }
 
   @override
@@ -92,51 +89,29 @@ class PermissionDeniedPage extends StatefulWidget {
 
 class _PermissionDeniedPageState extends State<PermissionDeniedPage> {
   Geolocator location = Geolocator();
-  final StreamController<bool> _locationPermissionController =
-      StreamController<bool>();
-
+  Timer? timer;
   @override
   void initState() {
     super.initState();
-    checkLocationPermission();
-    Geolocator.getServiceStatusStream().listen((event) {
-      logger.i(event);
-
-      checkLocationPermission();
-    }, onDone: () {
-      logger.i('Done');
-    }, onError: (e) {
-      logger.e('Error $e');
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      widget.onGrantPermission();
     });
   }
 
-  void checkLocationPermission() async {
-    LocationPermission serviceEnabled = await Geolocator.checkPermission();
-    logger.i(serviceEnabled);
-    if (serviceEnabled == LocationPermission.denied) {
-      serviceEnabled = await Geolocator.requestPermission();
-      if (serviceEnabled == LocationPermission.denied ||
-          serviceEnabled == LocationPermission.deniedForever) {
-        // Service still not enabled, handle accordingly
-        _locationPermissionController.add(false);
-        return;
-      }
-    }
-
-    LocationPermission permissionStatus = await Geolocator.checkPermission();
-    if (permissionStatus == LocationPermission.deniedForever ||
-        permissionStatus == LocationPermission.denied) {
-      _locationPermissionController.add(false);
-    } else {
-      widget.onGrantPermission();
-    }
+  @override
+  void dispose() {
+    super.dispose();
+    timer?.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Permission Denied'),
+        title: const Text(
+          'Permission Denied',
+          style: TextStyle(color: Colors.black, fontSize: 18),
+        ),
       ),
       body: Center(
         child: Column(
@@ -153,7 +128,10 @@ class _PermissionDeniedPageState extends State<PermissionDeniedPage> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
-            const Text('Please grant location permission to continue.'),
+            const Text(
+              'Please grant location permission to continue.',
+              textAlign: TextAlign.center,
+            ),
             Padding(
               padding: const EdgeInsets.all(28.0),
               child: PrimaryButton(
@@ -164,7 +142,6 @@ class _PermissionDeniedPageState extends State<PermissionDeniedPage> {
                     // Location permission denied, handle accordingly
                     logger.d(' 119 Opening location settings');
                     Geolocator.openLocationSettings();
-
                     return;
                   } else {
                     final serviceEnabled = await Geolocator.requestPermission();
@@ -173,7 +150,6 @@ class _PermissionDeniedPageState extends State<PermissionDeniedPage> {
                       logger.d('Opening location settings');
                       bool res = await Geolocator.openLocationSettings();
                       logger.d('res $res');
-                      // Service still not enabled, handle accordingly
 
                       return;
                     }
@@ -181,8 +157,8 @@ class _PermissionDeniedPageState extends State<PermissionDeniedPage> {
                     if (serviceEnabled == LocationPermission.always ||
                         serviceEnabled == LocationPermission.whileInUse) {
                       widget.onGrantPermission();
-                      // Service still not enabled, handle accordingly
                     }
+                    widget.onGrantPermission();
 
                     // Location permission granted, handle accordingly
                   }

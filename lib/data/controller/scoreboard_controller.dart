@@ -39,7 +39,7 @@ class ScoreBoardController extends GetxController with StateMixin {
       logger.d('socket $socket');
       socket.value?.onConnectError((data) => logger.e(data));
       socket.value!.on('scoreboard', (data) {
-        logger.e('Scoreboard updated to channel $data');
+        logger.i('Scoreboard updated to channel ');
         if (data != null) {
           if (data['scoreBoard'] != null) {
             scoreboard.value = ScoreboardModel.fromJson(data['scoreBoard']);
@@ -55,7 +55,11 @@ class ScoreBoardController extends GetxController with StateMixin {
         });
       });
       socket.value!.connect();
-      socket.value?.onDisconnect((_) => logger.i('disconnect'));
+      socket.value?.onDisconnect((_) {
+        logger.d('disconnect');
+        scoreboard.value = null;
+        scoreboard.refresh();
+      });
     } catch (e) {
       logger.e(e);
     }
@@ -229,7 +233,8 @@ class ScoreBoardController extends GetxController with StateMixin {
     if (scoreboard.value!.isSecondInningsOver &&
         !scoreboard.value!.isChallenge!) {
       updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
-    } else {
+    } else if (scoreboard.value!.isSecondInningsOver &&
+        scoreboard.value!.isChallenge!) {
       updateFinalChallengeScoreBoard(scoreboard.value!.getWinningTeam);
     }
     if (scoreboard.value!.isChallenge!) {
@@ -239,8 +244,8 @@ class ScoreBoardController extends GetxController with StateMixin {
     }
     events.value = [];
     events.refresh();
-    emitEvent();
     scoreboard.refresh();
+    emitEvent();
     return true;
   }
 
@@ -277,16 +282,21 @@ class ScoreBoardController extends GetxController with StateMixin {
   }
 
   void addEventType(EventType type) {
-    // if events contains wide ball and new event is no ball then remove wide ball
     if (type == EventType.noBall && events.value.contains(EventType.wide)) {
       events.value.remove(EventType.wide);
     }
     if (type == EventType.wide && events.value.contains(EventType.noBall)) {
       events.value.remove(EventType.noBall);
     }
+    if (type == EventType.wide && events.value.contains(EventType.legByes)) {
+      events.value.remove(EventType.legByes);
+    }
     // same for legByes and byes
     if (type == EventType.legByes && events.value.contains(EventType.bye)) {
       events.value.remove(EventType.bye);
+    }
+    if (type == EventType.legByes && events.value.contains(EventType.wide)) {
+      events.value.remove(EventType.wide);
     }
     if (type == EventType.bye && events.value.contains(EventType.legByes)) {
       events.value.remove(EventType.legByes);

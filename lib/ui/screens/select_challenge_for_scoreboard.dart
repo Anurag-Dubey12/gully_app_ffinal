@@ -100,10 +100,10 @@ class _SelectChallengeForScoreboardState
                                     '_id': acceptedChallenges[index].id,
                                   });
                                   Get.off(
-                                    () => const SelectOpeningTeam(
-                                      isTournament: false,
-                                    ),
-                                  );
+                                      () => const SelectOpeningTeam(
+                                            isTournament: false,
+                                          ),
+                                      preventDuplicates: false);
                                 }
                               },
                               icon: const Icon(

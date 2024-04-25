@@ -176,24 +176,41 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
                                           future: teamController
                                               .getChallengeMatch(),
                                           builder: (context, snapshot) {
+                                            if (snapshot.hasError) {
+                                              return Center(
+                                                  child: TextButton(
+                                                      onPressed: () {
+                                                        teamController
+                                                            .getChallengeMatch();
+                                                      },
+                                                      child: Text(
+                                                          'Error: ${snapshot.error}')));
+                                            }
+                                            final filteredMatches =
+                                                (snapshot.data ?? [])
+                                                    .where((e) =>
+                                                        e.status != "played")
+                                                    .toList();
+
                                             return ListView.separated(
                                               physics:
                                                   const NeverScrollableScrollPhysics(),
                                               itemBuilder: (context, index) =>
                                                   StatefulBuilder(
                                                 builder: (c, s) => _Challenges(
-                                                  team: snapshot.data![index],
+                                                  team: filteredMatches[index],
                                                   isChallengedByMe:
                                                       authController
                                                               .state?.id ==
-                                                          snapshot.data![index]
+                                                          filteredMatches[index]
                                                               .challengedBy,
-                                                  onTap: (status) {
-                                                    teamController
+                                                  onTap: (status) async {
+                                                    await teamController
                                                         .updateChallengeMatch(
-                                                            matchId: snapshot
-                                                                .data![index]
-                                                                .id,
+                                                            matchId:
+                                                                filteredMatches[
+                                                                        index]
+                                                                    .id,
                                                             status: status);
                                                     successSnackBar(
                                                         'Status Updated to $status');
@@ -206,8 +223,7 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
                                                       const SizedBox(
                                                 height: 20,
                                               ),
-                                              itemCount:
-                                                  snapshot.data?.length ?? 0,
+                                              itemCount: filteredMatches.length,
                                               shrinkWrap: true,
                                             );
                                           }),
@@ -283,8 +299,7 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
                                                       const SizedBox(
                                                 height: 20,
                                               ),
-                                              itemCount:
-                                                  filteredTeams.length ?? 0,
+                                              itemCount: filteredTeams.length,
                                               shrinkWrap: true,
                                             );
                                           }))),
@@ -404,7 +419,7 @@ class _Challenges extends StatelessWidget {
                       ? team.team2.name.capitalize
                       : team.team1.name.capitalize,
                   style: const TextStyle(
-                      fontSize: 19, fontWeight: FontWeight.bold),
+                      fontSize: 17, fontWeight: FontWeight.bold),
                 ),
                 // const Text(
                 //   '20th April 2021',
@@ -448,8 +463,10 @@ class _Challenges extends StatelessWidget {
                               onTap('Accepted');
                             },
                             child: const Chip(
+                                padding: EdgeInsets.zero,
                                 label: Text('Accept',
-                                    style: TextStyle(color: Colors.white)),
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 11)),
                                 backgroundColor: Colors.green,
                                 side: BorderSide.none),
                           ),
@@ -459,8 +476,10 @@ class _Challenges extends StatelessWidget {
                               onTap('Denied');
                             },
                             child: const Chip(
+                                padding: EdgeInsets.zero,
                                 label: Text('Decline',
-                                    style: TextStyle(color: Colors.white)),
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 11)),
                                 backgroundColor: Colors.red,
                                 side: BorderSide.none),
                           ),

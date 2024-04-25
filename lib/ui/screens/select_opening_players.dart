@@ -7,7 +7,6 @@ import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/screens/score_card_screen.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/scoreboard_controller.dart';
@@ -42,7 +41,6 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ScoreBoardController>();
-
     return GradientBuilder(
         child: Scaffold(
       backgroundColor: Colors.transparent,
@@ -131,7 +129,10 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
                   errorSnackBar('Please select opening bowler');
                   return;
                 }
-                logger.e(widget.match.id);
+                // if (widget.overs == 2) {
+                //   errorSnackBar('Please select overs');
+                //   return;
+                // }
                 controller.createScoreBoard(
                   team1: TeamModel.fromJson(widget.battingTeam.toJson()),
                   team2: TeamModel.fromJson(widget.bowlingTeam.toJson()),

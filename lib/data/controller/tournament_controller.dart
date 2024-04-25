@@ -108,6 +108,7 @@ class TournamentController extends GetxController
       organizerTournamentList.value = response.data!['tournamentList']
           .map<TournamentModel>((e) => TournamentModel.fromJson(e))
           .toList();
+      organizerTournamentList.refresh();
       // change(GetStatus.success(null));
     } catch (e) {
       errorSnackBar(e.toString());

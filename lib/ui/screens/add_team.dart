@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/screens/add_player_to_team.dart';
 import 'package:gully_app/ui/screens/organizer_profile.dart';
+import 'package:gully_app/ui/screens/player_profile_screen.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -158,8 +160,6 @@ class _AddTeamState extends State<AddTeam> {
                             title: AppLocalizations.of(context)!.saveButton,
                             onTap: () async {
                               if (key.currentState!.validate() == false) {
-                                errorSnackBar(AppLocalizations.of(context)!
-                                    .pleaseEnterTeamName);
                                 return;
                               }
 
@@ -169,6 +169,7 @@ class _AddTeamState extends State<AddTeam> {
                                     await convertImageToBase64(_image!);
                                 if (!base64Image.contains(RegExp(
                                     r'data:image\/(png|jpeg);base64,'))) {
+                                  // ignore: use_build_context_synchronously
                                   errorSnackBar(AppLocalizations.of(context)!
                                       .please_select_a_valid_image);
                                   return;
@@ -226,17 +227,21 @@ class _TeamAddedDialog extends GetView<TeamController> {
       child: Padding(
         padding: const EdgeInsets.all(18.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(
               height: 20,
             ),
             const Icon(Icons.verified, color: Colors.green, size: 50),
-            Text(
-              isEdited
-                  ? "Team Updated Successfully"
-                  : AppLocalizations.of(context)!.teamCreatedSuccessfully,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Center(
+              child: Text(
+                isEdited
+                    ? "Team Updated Successfully"
+                    : AppLocalizations.of(context)!.teamCreatedSuccessfully,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
             ),
             const SizedBox(
               height: 20,
@@ -245,10 +250,11 @@ class _TeamAddedDialog extends GetView<TeamController> {
                 ? const SizedBox()
                 : PrimaryButton(
                     title: AppLocalizations.of(context)!.addPlayersButton,
-                    onTap: () {
+                    onTap: () async {
                       Get.back();
                       Get.back();
-                      Get.to(() => AddPlayersToTeam(team: controller.state));
+
+                      Get.to(() => const AddPlayersToTeam());
                     },
                   ),
             const SizedBox(
@@ -258,9 +264,16 @@ class _TeamAddedDialog extends GetView<TeamController> {
               title: AppLocalizations.of(context)!.doneButton,
               onTap: () {
                 if (isEdited) {
-                  Get.offAll(() => const OrganizerProfileScreen(),
-                      predicate: (route) =>
-                          route.name == '/OrganizerProfileScreen');
+                  final authController = Get.find<AuthController>();
+                  if (authController.state!.isOrganizer) {
+                    Get.offAll(() => const OrganizerProfileScreen(),
+                        predicate: (route) =>
+                            route.name == '/OrganizerProfileScreen');
+                  } else {
+                    Get.offAll(() => const PlayerProfileScreen(),
+                        predicate: (route) =>
+                            route.name == '/PlayerProfileScreen');
+                  }
                 } else {
                   Get.back();
                   Get.back();

@@ -37,16 +37,19 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
   Future<void> getPlayers() async {
     final controller = Get.find<TournamentController>();
     final teams = await controller.getRegisteredTeams(widget.tournament.id);
+    if (teams.isEmpty) {
+      errorSnackBar('Please register a team first').then((value) => Get.back());
+    }
     logger.d('TEAMS: $teams');
     // divide teams into two sides
     leftSideteams = teams.sublist(0, teams.length ~/ 2);
     rightSideteams = teams.sublist(teams.length ~/ 2, teams.length);
-    setState(() {});
+
     setState(() {
-      selectedTeam1 = leftSideteams[0];
-      if (rightSideteams.length > 1) {
-        selectedTeam2 = rightSideteams[1];
-      }
+      // selectedTeam1 = leftSideteams[0];
+      // if (rightSideteams.length > 1) {
+      //   selectedTeam2 = rightSideteams[1];
+      // }
     });
   }
 

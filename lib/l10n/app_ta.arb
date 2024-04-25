@@ -77,6 +77,7 @@
   "pleaseEnterValidBallCharges": "செல்லுபடியாக பந்து கட்டணத்தை உள்ளிடவும்",
   "breakfastCharges": "காலைகள் கட்டணம்",
   "pleaseEnterBreakfastCharges": "காலைகள் கட்டணத்தை உள்ளிடவும்",
+  "pleaseEnterValidBreakfastCharges": "செல்லுபடியாக காலைகள் கட்டணத்தை உள்ளிடவும்",
   "teamLimit": "அணி வரம்பு",
   "pleaseEnterTeamLimit": "அணி வரம்பை உள்ளிடவும்",
   "pleaseEnterValidTeamLimit": "செல்லுபடியாக அணி வரம்பை உள்ளிடவும்",

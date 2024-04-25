@@ -153,9 +153,32 @@ class _LegalViewScreenState extends State<LegalViewScreen> {
                                             setState(() {
                                               isLoading = true;
                                             });
+                                            Get.dialog(
+                                              const Dialog(
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(18.0),
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Center(
+                                                          child: Row(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          CircularProgressIndicator(),
+                                                        ],
+                                                      )),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                              barrierDismissible: false,
+                                            );
                                             await authController
                                                 .deleteAccount();
-                                            Get.back();
+                                            // Get.back();
                                           },
                                           child: Text(
                                             AppLocalizations.of(context)!.yes,

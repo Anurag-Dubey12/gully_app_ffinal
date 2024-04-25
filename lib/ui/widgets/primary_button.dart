@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gully_app/ui/theme/theme.dart';
+import 'package:gully_app/utils/utils.dart';
 
 class PrimaryButton extends StatefulWidget {
   final Function onTap;
@@ -7,13 +8,15 @@ class PrimaryButton extends StatefulWidget {
   final bool? isLoading;
   final bool? isDisabled;
   final double? fontSize;
+  final String? disabledText;
   const PrimaryButton(
       {super.key,
       required this.onTap,
       this.title,
       this.isLoading,
       this.isDisabled,
-      this.fontSize});
+      this.fontSize,
+      this.disabledText});
 
   @override
   State<PrimaryButton> createState() => _PrimaryButtonState();
@@ -30,7 +33,13 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       );
     } else {
       return InkWell(
-        onTap: (widget.isDisabled ?? false) ? () {} : () => widget.onTap(),
+        onTap: (widget.isDisabled ?? false)
+            ? () {
+                if (widget.disabledText != null) {
+                  errorSnackBar(widget.disabledText!);
+                }
+              }
+            : () => widget.onTap(),
         child: Container(
           width: double.infinity,
           height: 50,

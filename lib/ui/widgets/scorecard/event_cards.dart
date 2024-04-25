@@ -204,10 +204,12 @@ class ExtrasDialog extends GetView<ScoreBoardController> {
 class NumberCard extends StatelessWidget {
   final String text;
   final void Function()? onTap;
+  final bool disabled;
   const NumberCard({
     super.key,
     required this.text,
     required this.onTap,
+    required this.disabled,
   });
 
   @override
@@ -217,17 +219,20 @@ class NumberCard extends StatelessWidget {
       child: Material(
         child: InkWell(
           borderRadius: BorderRadius.circular(30),
-          focusColor: Colors.amber,
-          hoverColor: Colors.amber,
+          focusColor: const Color.fromARGB(255, 253, 247, 228),
+          hoverColor: const Color.fromARGB(255, 255, 244, 209),
           splashColor: Colors.amber,
-          onTap: onTap,
+          onTap: disabled ? null : onTap,
           child: Ink(
             width: 40,
             height: 40,
             decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border:
-                    Border.all(color: AppTheme.secondaryYellowColor, width: 2)),
+                border: Border.all(
+                    color: disabled
+                        ? Colors.grey.shade300
+                        : AppTheme.secondaryYellowColor,
+                    width: 2)),
             child: Center(
                 child: Text(text,
                     style: Get.textTheme.headlineMedium

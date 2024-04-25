@@ -161,7 +161,7 @@ class _TeamCard extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  radius: 29,
+                  radius: 18,
                   backgroundImage: NetworkImage(team.teamLogo ?? ""),
                 ),
                 const SizedBox(width: 12),
@@ -169,16 +169,18 @@ class _TeamCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      width: 230,
-                      child: Text(team.teamName,
+                      width: Get.width / 2.5,
+                      child: Text(team.teamName.capitalize,
+                          overflow: TextOverflow.clip,
                           style: Get.textTheme.headlineMedium?.copyWith(
                               fontWeight: FontWeight.bold,
+                              fontSize: 18,
                               color: Colors.black)),
                     ),
                     Text(
                       'Since ${formatDateTime('dd.MM.yyyy', team.registeredAt)}',
                       style: Get.textTheme.bodyMedium
-                          ?.copyWith(color: Colors.black54),
+                          ?.copyWith(color: Colors.black54, fontSize: 12),
                     ),
                   ],
                 )
@@ -187,7 +189,7 @@ class _TeamCard extends StatelessWidget {
             Column(
               children: [
                 CircleAvatar(
-                  radius: 19,
+                  radius: 18,
                   backgroundColor: AppTheme.secondaryYellowColor,
                   child: Text(
                     team.numberOfWins.toString(),

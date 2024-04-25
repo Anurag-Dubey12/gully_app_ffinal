@@ -30,7 +30,7 @@ class BattingStats extends GetView<ScoreBoardController> {
                             child: Text('Batsman',
                                 style: Get.textTheme.labelMedium))),
                     const Spacer(
-                      flex: 2,
+                      flex: 1,
                     ),
                     Expanded(
                         child: Center(
@@ -95,7 +95,7 @@ class BatterPlayerStat extends StatelessWidget {
             ),
           ),
           const Spacer(
-            flex: 2,
+            flex: 1,
           ),
           Expanded(
               child: Center(
@@ -116,7 +116,8 @@ class BatterPlayerStat extends StatelessWidget {
                       style: Get.textTheme.labelMedium))),
           Expanded(
               child: Center(
-                  child: Text(player.batting!.strikeRate.toStringAsFixed(1),
+                  child: Text(
+                      '${player.batting!.strikeRate.toStringAsFixed(1)}%',
                       style:
                           Get.textTheme.labelMedium?.copyWith(fontSize: 11))))
         ],

@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
+import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/screens/home_screen.dart';
@@ -28,6 +30,7 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
   bool rulesAccepted = false;
   bool termsAccepted = false;
   final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     final TournamentController controller = Get.find<TournamentController>();
@@ -340,14 +343,53 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                   const SizedBox(
                                     height: 18,
                                   ),
-                                  FormInput(
-                                    controller: TextEditingController(
-                                        text:
-                                            controller.status.data!.disclaimer),
-                                    enabled: false,
-                                    maxLines: 4,
-                                    label: "Disclaimer",
+                                  Text('Disclaimer',
+                                      style: Get.textTheme.headlineMedium
+                                          ?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                              fontSize: 16)),
+                                  const SizedBox(
+                                    height: 8,
                                   ),
+                                  FutureBuilder<String>(
+                                      future: Get.find<MiscController>()
+                                          .getContent('teamDisclaimer'),
+                                      builder: (context, snapshot) {
+                                        return Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                  color: Colors.black12
+                                                      .withOpacity(0.7)),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(0.1),
+                                                    blurRadius: 5,
+                                                    spreadRadius: 2,
+                                                    offset: const Offset(0, 2))
+                                              ]),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: HtmlWidget(
+                                              snapshot.data ?? '',
+                                              textStyle: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 14),
+                                            ),
+                                          ),
+                                        );
+                                        // return FormInput(
+                                        //   controller: TextEditingController(
+                                        //       text: snapshot.data ?? ''),
+                                        //   enabled: false,
+                                        //   maxLines: 4,
+                                        //   label: "Disclaimer",
+                                        // );
+                                      }),
                                   Row(
                                     children: [
                                       SizedBox(

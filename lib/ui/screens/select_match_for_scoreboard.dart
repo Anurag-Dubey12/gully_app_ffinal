@@ -138,15 +138,15 @@ class _MatchupCard extends GetView<ScoreBoardController> {
           return;
         }
         if (matchup.scoreBoard != null) {
+          Get.off(() => const ScoreCardScreen());
           controller
               .setScoreBoard(ScoreboardModel.fromJson(matchup.scoreBoard!));
-          Get.off(() => const ScoreCardScreen());
         } else {
           logger.i("Tournament Match: true");
-          controller.match = MatchupModel.fromJson(matchup.toJson());
           Get.off(() => const SelectOpeningTeam(
                 isTournament: true,
               ));
+          controller.match = MatchupModel.fromJson(matchup.toJson());
         }
       },
       child: Container(

@@ -307,7 +307,8 @@ class ScoreboardModel {
     int over = currentOver + 1;
 
     if (!events.contains(EventType.legByes) &&
-        !events.contains(EventType.bye)) {
+        !events.contains(EventType.bye) &&
+        !events.contains(EventType.wide)) {
       striker.batting!.runs = striker.batting!.runs + runs;
       _partnershipStriker.batting!.runs =
           _partnershipStriker.batting!.runs + runs;
@@ -457,7 +458,8 @@ class ScoreboardModel {
     striker.batting!.strikeRate =
         (striker.batting!.runs / striker.batting!.balls) * 100;
 
-    if (striker.batting!.strikeRate.isNaN) {
+    if (striker.batting!.strikeRate.isNaN ||
+        striker.batting!.strikeRate.isInfinite) {
       striker.batting!.strikeRate = 0;
     }
     nonstriker.batting!.strikeRate =
@@ -472,8 +474,8 @@ class ScoreboardModel {
     if (currentInnings == 1) {
       firstInnings = InningsModel(
         totalScore: currentInningsScore,
-        battingTeam: team2,
-        bowlingTeam: team1,
+        battingTeam: team1,
+        bowlingTeam: team2,
         ballRecord: getCurrentInnings,
         totalWickets: lastBall.wickets,
         overs: lastBall.over,
@@ -593,12 +595,9 @@ class ScoreboardModel {
   }
 
   void changeBowler(String id) {
-    if (currentInnings == 1) {
-      bowlerId = id;
-    } else {
-      logger.i('Changing bowler to $id');
-      bowlerId = id;
-    }
+    // bowlerId = id;
+    bowler.bowling!.currentBall = 0;
+    bowlerId = id;
     overCompleted = false;
   }
 

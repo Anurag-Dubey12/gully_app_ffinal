@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
@@ -13,6 +15,7 @@ import 'package:gully_app/ui/screens/view_matchups_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/widgets/custom_text_field.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../theme/theme.dart';
@@ -163,10 +166,15 @@ class _Card extends StatefulWidget {
 }
 
 class _CardState extends State<_Card> {
-  final roundController = TextEditingController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    logger.d('init state');
+  }
+
   @override
   dispose() {
-    roundController.dispose();
     super.dispose();
   }
 
@@ -174,54 +182,15 @@ class _CardState extends State<_Card> {
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
     final authController = Get.find<AuthController>();
-
+    logger.d('build');
     return GestureDetector(
       onTap: () {
         switch (widget.redirectType) {
           case RedirectType.organizeMatch:
             Get.dialog(
-              Dialog(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CustomTextField(
-                        labelText:
-                            AppLocalizations.of(context)!.enterRoundNumberLabel,
-                        textInputType: TextInputType.number,
-                        controller: roundController,
-                        autoFocus: true,
-                      ),
-                      const SizedBox(height: 20),
-                      PrimaryButton(
-                        onTap: () {
-                          // logger.i('Routo: ${widget.tournament.authority}');
-                          // logger.i('Aut: ${authController.state?.id}');
-                          if (widget.tournament.authority !=
-                              authController.state?.id) {
-                            // logger.i(
-                            //     'Show ERROR: ${widget.tournament.authority}');
-                            errorSnackBar(
-                                    'You are not authorized to organize the match',
-                                    forceDialogOpen: true)
-                                .then((value) => Get.back());
-
-                            return;
-                          }
-                          Get.back();
-                          Get.to(
-                            () => SelectOrganizeTeam(
-                              tournament: widget.tournament,
-                              round: int.parse(roundController.text),
-                            ),
-                          );
-                        },
-                        title: 'Continue',
-                      )
-                    ],
-                  ),
-                ),
+              id: Random().nextInt(1000).toString(),
+              _InputRoundNumber(
+                tournament: widget.tournament,
               ),
             );
             break;
@@ -282,6 +251,69 @@ class _CardState extends State<_Card> {
               const Spacer(),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _InputRoundNumber extends StatefulWidget {
+  const _InputRoundNumber({
+    super.key,
+    required this.tournament,
+  });
+
+  final TournamentModel tournament;
+
+  @override
+  State<_InputRoundNumber> createState() => _InputRoundNumberState();
+}
+
+class _InputRoundNumberState extends State<_InputRoundNumber> {
+  var roundController = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    final authController = Get.find<AuthController>();
+    return Dialog(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomTextField(
+              labelText: AppLocalizations.of(context)!.enterRoundNumberLabel,
+              textInputType: TextInputType.number,
+              controller: roundController,
+              autoFocus: true,
+            ),
+            const SizedBox(height: 20),
+            PrimaryButton(
+              onTap: () {
+                // allow only digits upto 4 in length. no alphanumeric
+                if (!RegExp(r'^[0-9]{1,4}$').hasMatch(roundController.text)) {
+                  errorSnackBar('Please enter a valid round number',
+                      forceDialogOpen: true);
+                  return;
+                }
+
+                if (widget.tournament.authority != authController.state?.id) {
+                  errorSnackBar('You are not authorized to organize the match',
+                          forceDialogOpen: true)
+                      .then((value) => Get.back());
+
+                  return;
+                }
+                Get.back();
+                Get.to(
+                  () => SelectOrganizeTeam(
+                    tournament: widget.tournament,
+                    round: int.parse(roundController.text),
+                  ),
+                );
+              },
+              title: 'Continue',
+            )
+          ],
         ),
       ),
     );

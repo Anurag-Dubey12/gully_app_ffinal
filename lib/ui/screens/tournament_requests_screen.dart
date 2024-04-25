@@ -84,12 +84,12 @@ class TournamentRequestScreen extends GetView<TournamentController> {
                                   separatorBuilder: (context, index) =>
                                       const SizedBox(height: 18),
                                   shrinkWrap: true,
-                                  itemCount:
-                                      controller.organizerTournamentList.length,
+                                  itemCount: controller
+                                      .organizerTournamentList.value.length,
                                   itemBuilder: (context, index) {
                                     return _Card(
                                       tournament: controller
-                                          .organizerTournamentList[index],
+                                          .organizerTournamentList.value[index],
                                     );
                                   });
                             }),

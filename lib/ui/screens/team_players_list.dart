@@ -19,6 +19,7 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TeamController>();
+    controller.setTeam(widget.teamModel);
     return Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -115,8 +116,7 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: FutureBuilder<List<PlayerModel>>(
-                                      future: controller
-                                          .getPlayers(widget.teamModel.id),
+                                      future: controller.getPlayers(),
                                       builder: (context, snapshot) {
                                         return ListView.separated(
                                             padding: const EdgeInsets.only(

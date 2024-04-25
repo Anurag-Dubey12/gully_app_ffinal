@@ -43,10 +43,16 @@ class MiscApi {
         if (response.statusCode == 403) {
           throw 'Forbidden';
         }
-        if (response.statusCode == 404) {
+        if (response.status.isNotFound) {
           throw 'Not Found';
         }
-        throw response.body['message'] ?? 'Unable to Process Request';
+        if (response.status.connectionError) {
+          throw 'Connection Error';
+        }
+        if (response.status.isServerError) {
+          response.body?['message'] ?? 'Server Error';
+        }
+        throw response.body?['message'] ?? 'Unable to Process Request';
       }
       return ApiResponse.fromJson(response.body);
     });

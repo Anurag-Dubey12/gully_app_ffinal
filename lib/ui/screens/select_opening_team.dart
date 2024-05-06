@@ -222,8 +222,12 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
               errorSnackBar('Please select Host team');
               return;
             }
-            if (tossWonBy == null || optedTo == null) {
-              errorSnackBar('Please select toss won by and opted to');
+            if (tossWonBy == null) {
+              errorSnackBar('Please select toss won by');
+              return;
+            }
+            if (optedTo == null) {
+              errorSnackBar('Please select opted to');
               return;
             }
             late TeamModel battingTeam;

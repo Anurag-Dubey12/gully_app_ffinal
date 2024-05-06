@@ -32,7 +32,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
     final controller = Get.find<ScoreBoardController>();
     if (sb != null) {
       controller.setScoreBoard(sb);
-      controller.connectToSocket();
+      controller.connectToSocket(hideDialog: true);
     }
   }
 

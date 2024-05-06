@@ -136,25 +136,25 @@ class _ChallengePerformanceStatScreenState
                             child: Text('Tennis', textAlign: TextAlign.center),
                           ),
                         ),
-                        SizedBox(
-                          height: 40,
-                          child: VerticalDivider(
-                            color: Colors.grey.shade300,
-                            thickness: 1,
-                            indent: 1,
-                            endIndent: 2,
-                          ),
-                        ),
-                        const Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.all(0.0),
-                            child: Text(
-                              'Leather',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontSize: 12),
-                            ),
-                          ),
-                        ),
+                        // SizedBox(
+                        //   height: 40,
+                        //   child: VerticalDivider(
+                        //     color: Colors.grey.shade300,
+                        //     thickness: 1,
+                        //     indent: 1,
+                        //     endIndent: 2,
+                        //   ),
+                        // ),
+                        // const Expanded(
+                        //   child: Padding(
+                        //     padding: EdgeInsets.all(0.0),
+                        //     child: Text(
+                        //       'Leather',
+                        //       textAlign: TextAlign.center,
+                        //       style: TextStyle(fontSize: 12),
+                        //     ),
+                        //   ),
+                        // ),
                         // SizedBox(
                         //   height: 40,
                         //   child: VerticalDivider(
@@ -183,6 +183,23 @@ class _ChallengePerformanceStatScreenState
                         future: controller.getChallengePerformance(
                             matchId: widget.match.id),
                         builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          if (snapshot.hasError) {
+                            return const Padding(
+                              padding: EdgeInsets.all(18.0),
+                              child: Center(child: Text('Error fetching data')),
+                            );
+                          }
+                          if (snapshot.data!.isEmpty) {
+                            return const Padding(
+                              padding: EdgeInsets.all(18.0),
+                              child: Center(child: Text('No data available')),
+                            );
+                          }
                           return ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
@@ -227,28 +244,28 @@ class _ChallengePerformanceStatScreenState
                                         ),
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: 40,
-                                      child: VerticalDivider(
-                                        color: Colors.grey.shade300,
-                                        thickness: 1,
-                                        indent: 1,
-                                        endIndent: 2,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          snapshot.data!.entries
-                                              .elementAt(index)
-                                              .value['leather']
-                                              .toString(),
-                                          textAlign: TextAlign.center,
-                                          style: _valueStyle(),
-                                        ),
-                                      ),
-                                    ),
+                                    // SizedBox(
+                                    //   height: 40,
+                                    //   child: VerticalDivider(
+                                    //     color: Colors.grey.shade300,
+                                    //     thickness: 1,
+                                    //     indent: 1,
+                                    //     endIndent: 2,
+                                    //   ),
+                                    // ),
+                                    // Expanded(
+                                    //   child: Padding(
+                                    //     padding: const EdgeInsets.all(8.0),
+                                    //     child: Text(
+                                    //       snapshot.data!.entries
+                                    //           .elementAt(index)
+                                    //           .value['leather']
+                                    //           .toString(),
+                                    //       textAlign: TextAlign.center,
+                                    //       style: _valueStyle(),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                     // SizedBox(
                                     //   height: 40,
                                     //   child: VerticalDivider(

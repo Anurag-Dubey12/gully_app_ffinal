@@ -156,6 +156,11 @@ class _Card extends StatelessWidget {
                         child: Image.network(
                           tournament.team2.toImageUrl(),
                           height: 50,
+                          errorBuilder: (error, stackTrace, s) => Image.asset(
+                            'assets/images/placeholder.png',
+                            fit: BoxFit.cover,
+                            width: 50,
+                          ),
                           fit: BoxFit.cover,
                           width: 50,
                         ),

@@ -34,4 +34,18 @@ class RankingController extends GetxController {
       rethrow;
     }
   }
+
+  //topperformers
+  Future<List<PlayerRankingModel>> getTopPerformers(String ballType) async {
+    try {
+      final response = await api.getTopPerformers(ballType);
+
+      return response.data!['topPerformers']
+          .map<PlayerRankingModel>((e) => PlayerRankingModel.fromJson(e))
+          .toList();
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
 }

@@ -45,6 +45,20 @@ class _OpponentTournamentsScreenState extends State<OpponentTournamentsScreen> {
                     child: FutureBuilder<List<OpponentModel>>(
                         future: controller.getOpponents(),
                         builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          }
+                          if (snapshot.hasError) {
+                            return Center(
+                                child: Text(snapshot.error.toString(),
+                                    style: Get.textTheme.bodyLarge
+                                        ?.copyWith(color: Colors.red)));
+                          }
+                          if (snapshot.data == null || snapshot.data!.isEmpty) {
+                            return const EmptyTournamentWidget();
+                          }
                           return ListView.separated(
                               separatorBuilder: (context, index) =>
                                   const SizedBox(height: 18),

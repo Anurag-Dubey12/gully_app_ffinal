@@ -29,6 +29,10 @@ class PlayerRankingModel {
   final int? sixes;
   @JsonKey(disallowNullValue: false, defaultValue: 0.0)
   final double? strikeRate;
+  @JsonKey(disallowNullValue: false, defaultValue: 0.0)
+  final double? economy;
+  @JsonKey(disallowNullValue: false, defaultValue: 0)
+  final int? innings;
 
   PlayerRankingModel({
     required this.playerName,
@@ -42,6 +46,8 @@ class PlayerRankingModel {
     required this.runs,
     required this.total,
     required this.average,
+    required this.economy,
+    required this.innings,
   });
 
   factory PlayerRankingModel.fromJson(Map<String, dynamic> json) =>

@@ -151,7 +151,7 @@ class TournamentApi {
       required String team1,
       required String team2,
       required DateTime date,
-      required int round,
+      required String round,
       required int matchNo}) async {
     final obj = {
       'dateTime': date.toIso8601String(),
@@ -201,6 +201,84 @@ class TournamentApi {
   Future<ApiResponse> searchTournament(String query) async {
     final response = await repo.get('/main/search?query=$query');
     logger.i(response.body);
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+// payment/tournamentFees
+  Future<ApiResponse> getTournamentFees({required String tournamentId}) async {
+    final response = await repo.post('/payment/tournamentFees', {
+      'tournamentId': tournamentId,
+    });
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> createOrder(
+      {required double discountAmount,
+      required String tournamentId,
+      required double totalAmount,
+      required String? coupon}) async {
+    final response = await repo.post('/payment/createOrder', {
+      'amountWithoutCoupon': discountAmount,
+      'tournamentId': tournamentId,
+      'amount': totalAmount,
+      'coupon': coupon,
+    });
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getCoupons() async {
+    final response = await repo.get('/payment/getCoupon');
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> applyCoupon(
+      String tournamentId, String couponId, double amount) async {
+    final response = await repo.post('/payment/applyCoupon', {
+      'tournamentId': tournamentId,
+      'couponId': couponId,
+      'amount': amount,
+    });
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  // getTransactions
+  Future<ApiResponse> getTransactions() async {
+    final response = await repo.get('/payment/transactionHistory');
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');
       throw Exception('Server Error');

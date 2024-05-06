@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/data/model/txn_model.dart';
+import 'package:gully_app/ui/screens/txn_details.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
+import 'package:intl/intl.dart';
 
-class TxnHistoryScreen extends StatelessWidget {
+class TxnHistoryScreen extends GetView<TournamentController> {
   const TxnHistoryScreen({super.key});
 
   @override
@@ -34,13 +38,23 @@ class TxnHistoryScreen extends StatelessWidget {
                   offset: const Offset(0, 10))
             ],
           ),
-          child: const Column(
-            children: [
-              SizedBox(height: 20),
-              _TxnHistoryCard(),
-              _TxnHistoryCard(),
-              _TxnHistoryCard()
-            ],
+          child: FutureBuilder<List<Transaction>>(
+            future: controller.getTransactions(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return SizedBox(
+                    width: Get.width,
+                    child: const Center(child: CircularProgressIndicator()));
+              }
+              return ListView.builder(
+                  itemCount: snapshot.data?.length ?? 0,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return _TxnHistoryCard(
+                      snapshot.data![index],
+                    );
+                  });
+            },
           ),
         ),
       ),
@@ -49,17 +63,16 @@ class TxnHistoryScreen extends StatelessWidget {
 }
 
 class _TxnHistoryCard extends StatelessWidget {
-  const _TxnHistoryCard();
+  final Transaction transaction;
+  const _TxnHistoryCard(this.transaction);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.bottomSheet(BottomSheet(
-          onClosing: () {},
-          builder: (context) => const TxnInfoSheet(),
-          enableDrag: false,
-        ));
+        Get.to(() => TxnDetailsView(
+              transaction: transaction,
+            ));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
@@ -77,18 +90,31 @@ class _TxnHistoryCard extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        const CircleAvatar(),
+                        CircleAvatar(
+                          backgroundColor: transaction.status == "captured"
+                              ? Colors.green
+                              : transaction.status == "created"
+                                  ? Colors.orange
+                                  : Colors.red,
+                          // child:  Icon(Icons.warning),
+                          child: transaction.status == "captured"
+                              ? const Icon(Icons.check)
+                              : transaction.status == "created"
+                                  ? const Icon(Icons.warning)
+                                  : const Icon(Icons.error),
+                        ),
                         const SizedBox(width: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Paid to Gully Team',
+                            Text(transaction.tournamentName,
                                 style: Get.textTheme.bodyMedium?.copyWith(
                                     color: Colors.black,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 17)),
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 19)),
                             Text(
-                              '16/07/2023 | 12:00 PM',
+                              DateFormat('dd/MM/yyyy @hh:mm a').format(
+                                  DateTime.parse(transaction.createdAt)),
                               style: Get.textTheme.bodySmall
                                   ?.copyWith(color: Colors.grey),
                             )
@@ -97,27 +123,23 @@ class _TxnHistoryCard extends StatelessWidget {
                       ],
                     ),
                     const Spacer(),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.money_outlined,
-                          color: Colors.green,
-                        ),
-                        const SizedBox(width: 5),
-                        Text('₹1000',
-                            style: Get.textTheme.bodyMedium?.copyWith(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 21)),
-                      ],
+                    Chip(
+                      label: Text(transaction.status.capitalize,
+                          style: Get.textTheme.bodyMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600)),
+                      backgroundColor: transaction.status == "captured"
+                          ? Colors.green
+                          : transaction.status == "created"
+                              ? Colors.orange
+                              : Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: const BorderSide(color: Colors.white),
+                      ),
                     )
                   ],
                 ),
-                Icon(
-                  Icons.info,
-                  size: 18,
-                  color: Colors.grey[600],
-                )
               ],
             ),
           ),

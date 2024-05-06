@@ -40,8 +40,13 @@ class ScoreCard extends GetView<ScoreBoardController> {
                                       Expanded(
                                           flex: 2,
                                           child: Text(
-                                              controller
-                                                  .scoreboard.value!.team1.name,
+                                              controller.scoreboard.value!
+                                                          .currentInnings ==
+                                                      1
+                                                  ? controller.scoreboard.value!
+                                                      .team1.name.capitalize
+                                                  : controller.scoreboard.value!
+                                                      .team2.name.capitalize,
                                               style: Get
                                                   .textTheme.headlineMedium
                                                   ?.copyWith(
@@ -120,7 +125,9 @@ class ScoreCard extends GetView<ScoreBoardController> {
                                           mainAxisAlignment:
                                               MainAxisAlignment.start,
                                           children: [
-                                            const Text('Innings 1'),
+                                            const FittedBox(
+                                              child: Text('Innings 1'),
+                                            ),
                                             const SizedBox(height: 15),
                                             Text(
                                               "${controller.scoreboard.value!.firstInnings?.totalScore.toString() ?? ""}/${controller.scoreboard.value!.firstInnings?.ballRecord.entries.last.value.wickets.toString() ?? ""}",

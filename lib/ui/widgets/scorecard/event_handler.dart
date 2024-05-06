@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/ui/screens/full_scorecard.dart';
+import 'package:gully_app/ui/widgets/custom_score_select_sheet.dart';
+import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../../data/controller/scoreboard_controller.dart';
@@ -117,6 +119,45 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                               disabled: controller
                                   .scoreboard.value!.isSecondInningsOver,
                               onTap: () {
+                                if (controller.events.contains(EventType.bye) &&
+                                    controller.events
+                                        .contains(EventType.wide) &&
+                                    controller.events
+                                        .contains(EventType.wicket)) {
+                                  errorSnackBar(
+                                      'You can not add a one and a bye or wide or wicket');
+                                  return;
+                                }
+
+                                if (controller.events
+                                        .contains(EventType.legByes) &&
+                                    controller.events
+                                        .contains(EventType.wide) &&
+                                    controller.events
+                                        .contains(EventType.wicket)) {
+                                  errorSnackBar(
+                                      'You can not add a one and a leg bye or wide or wicket');
+                                  return;
+                                }
+                                if (controller.events
+                                        .contains(EventType.noBall) &&
+                                    controller.events.contains(EventType.bye) &&
+                                    controller.events
+                                        .contains(EventType.wicket)) {
+                                  errorSnackBar(
+                                      'You can not add a one and a no ball or bye or wicket');
+                                  return;
+                                }
+                                if (controller.events
+                                        .contains(EventType.noBall) &&
+                                    controller.events
+                                        .contains(EventType.legByes) &&
+                                    controller.events
+                                        .contains(EventType.wicket)) {
+                                  errorSnackBar(
+                                      'You can not add a one and a no ball or leg bye or wicket');
+                                  return;
+                                }
                                 controller.addEvent(EventType.one);
                               },
                             ),
@@ -154,6 +195,7 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                                 //       'You can not add a four and a wide ball');
                                 //   return;
                                 // }
+
                                 if (controller.events
                                     .contains(EventType.wicket)) {
                                   errorSnackBar(
@@ -167,7 +209,24 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                               text: '5',
                               disabled: controller
                                   .scoreboard.value!.isSecondInningsOver,
-                              onTap: () {},
+                              onTap: () {
+                                if (controller.events
+                                        .contains(EventType.wide) &&
+                                    controller.events
+                                        .contains(EventType.wicket)) {
+                                  errorSnackBar(
+                                      'You can not add a five and a wide ball');
+                                  return;
+                                }
+                                if (controller.events.contains(EventType.bye) ||
+                                    controller.events
+                                        .contains(EventType.legByes)) {
+                                  errorSnackBar(
+                                      'You can not add 5 runs and a bye or leg bye');
+                                  return;
+                                }
+                                controller.addEvent(EventType.five);
+                              },
                             ),
                             NumberCard(
                               text: '6',
@@ -195,6 +254,42 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                                 }
 
                                 controller.addEvent(EventType.six);
+                              },
+                            ),
+                            NumberCard(
+                              text: '+',
+                              disabled: controller
+                                  .scoreboard.value!.isSecondInningsOver,
+                              onTap: () async {
+                                int? runs = await Get.bottomSheet(
+                                  const CustomScoreSheet(),
+                                );
+                                logger.d(runs);
+
+                                if (runs != null) {
+                                  // if (controller.events.contains(EventType.bye) ||
+                                  //     controller.events
+                                  //         .contains(EventType.legByes)) {
+                                  //   errorSnackBar(
+                                  //       'You can not add 7 runs and a bye or leg bye');
+                                  //   return;
+                                  // }
+                                  // if (controller.events
+                                  //     .contains(EventType.wide)) {
+                                  //   errorSnackBar(
+                                  //       'You can not add 7 runs and a wide ball');
+                                  //   return;
+                                  // }
+                                  // if (controller.events
+                                  //     .contains(EventType.wicket)) {
+                                  //   errorSnackBar(
+                                  //       'You can not add 7 runs and a wicket');
+                                  //   return;
+                                  // }
+                                  // controller.addEventType(Eve)
+                                  controller.addEvent(EventType.custom,
+                                      runs: runs);
+                                }
                               },
                             ),
                           ],

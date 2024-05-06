@@ -30,7 +30,7 @@ class ScoreBoardController extends GetxController with StateMixin {
     super.onInit();
   }
 
-  void connectToSocket() {
+  void connectToSocket({bool hideDialog = false}) {
     try {
       logger.d('connectToSocket ${AppConstants.websocketUrl}');
       socket.value = io.io(AppConstants.websocketUrl, <String, dynamic>{
@@ -40,6 +40,10 @@ class ScoreBoardController extends GetxController with StateMixin {
       socket.value?.onConnectError((data) => logger.e(data));
       socket.value!.on('scoreboard', (data) {
         logger.i('Scoreboard updated to channel ');
+        // showDrawPopup();
+        if (hideDialog) {
+          showWinnerPopup();
+        }
         if (data != null) {
           if (data['scoreBoard'] != null) {
             scoreboard.value = ScoreboardModel.fromJson(data['scoreBoard']);
@@ -50,6 +54,11 @@ class ScoreBoardController extends GetxController with StateMixin {
       });
       socket.value?.onConnect((_) {
         logger.d('connect ${scoreboard.value?.matchId}');
+        // check if match is drawn
+        // showDrawPopup();
+        if (hideDialog) {
+          showWinnerPopup();
+        }
         socket.value?.emit('joinRoom', {
           'matchId': scoreboard.value?.matchId,
         });
@@ -62,6 +71,22 @@ class ScoreBoardController extends GetxController with StateMixin {
       });
     } catch (e) {
       logger.e(e);
+    }
+  }
+
+  showWinnerPopup() {
+    if (scoreboard.value?.isSecondInningsOver ?? false) {
+      final firstInning = scoreboard.value?.firstInnings!.totalScore;
+      final secondInning = scoreboard.value?.secondInnings!.totalScore;
+      if (firstInning! > secondInning!) {
+        successSnackBar('Team ${scoreboard.value?.team1.name} Won the Match');
+      }
+      if (firstInning < secondInning) {
+        successSnackBar('Team ${scoreboard.value?.team2.name} Won the Match');
+      }
+      if (firstInning == secondInning) {
+        errorSnackBar('The Match is Drawn');
+      }
     }
   }
 
@@ -139,18 +164,23 @@ class ScoreBoardController extends GetxController with StateMixin {
     _lastScoreboardInstance = scoreboard.value!;
   }
 
-  Future<bool> addEvent(
-    EventType type, {
-    String? bowlerId,
-    String? strikerId,
-    String? selectedBatsmanId,
-    String? playerToRetire,
-    PlayerModel? striker,
-    PlayerModel? nonStriker,
-    PlayerModel? bowler,
-  }) async {
+  Future<bool> addEvent(EventType type,
+      {String? bowlerId,
+      String? strikerId,
+      String? selectedBatsmanId,
+      String? playerToRetire,
+      PlayerModel? striker,
+      PlayerModel? nonStriker,
+      PlayerModel? bowler,
+      int? runs}) async {
     if (scoreboard.value?.isAllOut ?? false) {
-      errorSnackBar('All out');
+      if (scoreboard.value?.currentInnings == 1) {
+        // opps all out start 2nd inning
+        errorSnackBar('Oops! All out. Start 2nd Innings');
+        return false;
+      }
+
+      errorSnackBar('Oops! All out. Match Over');
       return false;
     }
     if (scoreboard.value?.isSecondInningsOver ?? false) {
@@ -163,7 +193,8 @@ class ScoreBoardController extends GetxController with StateMixin {
       return false;
     }
     if (scoreboard.value?.inningsCompleted ?? false) {
-      errorSnackBar('Innings Completed');
+      errorSnackBar(
+          'First Innings has been completed you can start 2nd Innings');
 
       return false;
     }
@@ -194,6 +225,14 @@ class ScoreBoardController extends GetxController with StateMixin {
         break;
       case EventType.three:
         await scoreboard.value!.addRuns(3, events: events.value);
+
+        break;
+      case EventType.five:
+        await scoreboard.value!.addRuns(5, events: events.value);
+
+        break;
+      case EventType.custom:
+        await scoreboard.value!.addRuns(runs!, events: events.value);
 
         break;
 
@@ -326,7 +365,9 @@ enum EventType {
   two,
   three,
   four,
+  five,
   six,
+  custom,
   wide,
   noBall,
   wicket,

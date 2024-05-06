@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/screens/legal_screen.dart';
+import 'package:gully_app/ui/screens/payment_page.dart';
 import 'package:gully_app/ui/screens/select_location.dart';
 import 'package:gully_app/ui/widgets/create_tournament/form_input.dart';
 import 'package:gully_app/ui/widgets/create_tournament/top_card.dart';
@@ -22,7 +23,6 @@ import '../../utils/image_picker_helper.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 import '../widgets/primary_button.dart';
-import 'home_screen.dart';
 
 class TournamentFormScreen extends StatefulWidget {
   final TournamentModel? tournament;
@@ -223,19 +223,21 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                           'Tournament Updated Successfully');
                                     }
                                   } else {
-                                    bool isOk = await tournamentController
-                                        .createTournament(tournament);
+                                    final tournamentModel =
+                                        await tournamentController
+                                            .createTournament(tournament);
 
-                                    if (isOk) {
-                                      authController.getUser();
-                                      // Get.back();
-                                      successSnackBar(
-                                        'Congratulations, Organizer!\nYour tournament has been successfully created.',
-                                      ).then((value) => Get.offAll(
-                                          () => const HomeScreen(),
-                                          predicate: (route) =>
-                                              route.name == '/HomeScreen'));
-                                    }
+                                    authController.getUser();
+                                    Get.to(() => PaymentPage(
+                                          tournament: tournamentModel,
+                                        ));
+                                    // Get.back();
+                                    // successSnackBar(
+                                    //   'Congratulations, Organizer!\nYour tournament has been successfully created.',
+                                    // ).then((value) => Get.offAll(
+                                    //     () => const HomeScreen(),
+                                    //     predicate: (route) =>
+                                    //         route.name == '/HomeScreen'));
                                   }
                                 }
                               } finally {

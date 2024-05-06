@@ -34,7 +34,9 @@ class Preferences {
   }
 
   void clear() {
+    String language = getLanguage();
     _prefs.erase();
+    setLanguage(language);
   }
 
   Future<void> setNotifications(List<NotificationModel> notification) async {

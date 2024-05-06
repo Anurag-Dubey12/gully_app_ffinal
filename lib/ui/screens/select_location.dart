@@ -33,7 +33,6 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
   @override
   void initState() {
     super.initState();
-    logger.i("INIT STATE ${widget.initialLocation}");
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       getLocation().then((value) {

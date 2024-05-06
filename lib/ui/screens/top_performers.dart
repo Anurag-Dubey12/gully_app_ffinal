@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/model/team_ranking_model.dart';
-import 'package:gully_app/utils/date_time_helpers.dart';
+import 'package:gully_app/data/model/player_ranking_model.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/ranking_controller.dart';
@@ -117,8 +116,8 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                           child: Container(
                             color: Colors.black26,
                             // height: Get.height * 0.6,
-                            child: FutureBuilder<List<TeamRankingModel>>(
-                                future: controller.getTeamRankingList(
+                            child: FutureBuilder<List<PlayerRankingModel>>(
+                                future: controller.getTopPerformers(
                                     _selectedTab == 0 ? 'leather' : 'tennis'),
                                 builder: (context, snapshot) {
                                   return ListView.separated(
@@ -127,8 +126,8 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                                       shrinkWrap: true,
                                       separatorBuilder: (c, i) =>
                                           const SizedBox(height: 10),
-                                      itemBuilder: (c, i) =>
-                                          _TeamCard(team: snapshot.data![i]));
+                                      itemBuilder: (c, i) => _PlayerCard(
+                                          player: snapshot.data![i]));
                                 }),
                           ),
                         )
@@ -141,10 +140,10 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
   }
 }
 
-class _TeamCard extends StatelessWidget {
-  final TeamRankingModel team;
-  const _TeamCard({
-    required this.team,
+class _PlayerCard extends StatelessWidget {
+  final PlayerRankingModel player;
+  const _PlayerCard({
+    required this.player,
   });
 
   @override
@@ -160,20 +159,21 @@ class _TeamCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 29,
-              backgroundImage: NetworkImage(toImageUrl(team.teamLogo ?? "")),
+              backgroundImage:
+                  NetworkImage(toImageUrl(player.profilePhoto ?? "")),
             ),
             const SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(team.teamName,
+                Text(player.playerName,
                     style: Get.textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold, color: Colors.black)),
-                Text(
-                  'Since ${formatDateTime('dd.MM.yyyy', team.registeredAt)}',
-                  style:
-                      Get.textTheme.bodyMedium?.copyWith(color: Colors.black54),
-                ),
+                // Text(
+                //   'Since ${formatDateTime('dd.MM.yyyy', player.registeredAt)}',
+                //   style:
+                //       Get.textTheme.bodyMedium?.copyWith(color: Colors.black54),
+                // ),
               ],
             )
           ],

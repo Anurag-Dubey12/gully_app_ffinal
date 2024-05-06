@@ -202,8 +202,10 @@ class _PlayerRankingScreenState extends State<PlayerRankingScreen> {
                                       shrinkWrap: true,
                                       separatorBuilder: (c, i) =>
                                           const SizedBox(height: 10),
-                                      itemBuilder: (c, i) =>
-                                          _TeamCard(player: snapshot.data![i]));
+                                      itemBuilder: (c, i) => _TeamCard(
+                                            player: snapshot.data![i],
+                                            selectedChildTab: selectedChildTab,
+                                          ));
                                 }),
                           ),
                         )
@@ -217,9 +219,11 @@ class _PlayerRankingScreenState extends State<PlayerRankingScreen> {
 }
 
 class _TeamCard extends StatelessWidget {
+  final String selectedChildTab;
   final PlayerRankingModel player;
   const _TeamCard({
     required this.player,
+    required this.selectedChildTab,
   });
 
   @override
@@ -246,11 +250,24 @@ class _TeamCard extends StatelessWidget {
                 Text(player.playerName,
                     style: Get.textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.bold, color: Colors.black)),
-                Text(
-                  'Inn ${player.balls} | SR:${player.strikeRate?.toStringAsFixed(2)} | Runs: ${player.runs} |\nFours: ${player.fours} | Sixes: ${player.sixes}',
-                  style: Get.textTheme.bodyMedium
-                      ?.copyWith(color: Colors.black54, fontSize: 12),
-                ),
+                if (selectedChildTab == 'batting')
+                  Text(
+                    'Inn ${player.innings} | SR:${player.strikeRate?.toStringAsFixed(2)} | Runs: ${player.runs} |\nFours: ${player.fours} | Sixes: ${player.sixes}',
+                    style: Get.textTheme.bodyMedium
+                        ?.copyWith(color: Colors.black54, fontSize: 12),
+                  ),
+                if (selectedChildTab == 'bowling')
+                  Text(
+                    'Wickets ${player.wickets} | Economy:${player.economy?.toStringAsFixed(2)} | Runs: ${player.runs} |\nFours: ${player.fours} | Sixes: ${player.sixes}',
+                    style: Get.textTheme.bodyMedium
+                        ?.copyWith(color: Colors.black54, fontSize: 12),
+                  ),
+                if (selectedChildTab == 'all-rounder')
+                  Text(
+                    'Inn ${player.innings} | SR:${player.strikeRate?.toStringAsFixed(2)} | Runs: ${player.runs} |Fours: ${player.fours} | Sixes: ${player.sixes} \n| Wickets ${player.wickets} | Economy:${player.economy?.toStringAsFixed(2)}',
+                    style: Get.textTheme.bodyMedium
+                        ?.copyWith(color: Colors.black54, fontSize: 12),
+                  ),
               ],
             )
           ],

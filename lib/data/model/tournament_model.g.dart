@@ -16,7 +16,7 @@ TournamentModel _$TournamentModelFromJson(Map<String, dynamic> json) =>
           json['tournamentPrize'] as Map<String, dynamic>),
       organizerName: json['organizerName'] as String?,
       ballCharges: json['ballCharges'] as int,
-      pendingTeamsCount: json['pendingTeamsCount'] as int,
+      pendingTeamsCount: json['pendingTeamsCount'] as int? ?? 0,
       phoneNumber: json['phoneNumber'] as String?,
       tournamentLimit: json['tournamentLimit'] as int? ?? 0,
       registeredTeamsCount: json['registeredTeamsCount'] as int? ?? 0,

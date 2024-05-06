@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:app_links/app_links.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
@@ -97,12 +95,10 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
 
       return true;
     } on FirebaseAuthException catch (e) {
-      logger.e(e.toString());
       errorSnackBar(e.message ?? "Something went wrong at Firebase Auth");
       return false;
     } catch (e) {
-      log("message ${e.toString()}");
-      errorSnackBar("Unable to login, ${e.toString()}");
+      errorSnackBar(e.toString());
       change(GetStatus.error(e.toString()));
       return false;
     }

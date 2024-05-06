@@ -112,6 +112,7 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
                       height: 54,
                       width: Get.width / 1.2,
                       child: TextField(
+                        maxLength: 50,
                         onTap: () {
                           setState(() {
                             searchOpen = true;
@@ -132,6 +133,12 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
                             setState(() {
                               searchOpen = true;
                             });
+                          }
+                          if (e.isNotEmpty) {
+                            if (!RegExp(r'^[a-zA-Z0-9]*$').hasMatch(e)) {
+                              searchValue.text = searchValue.text
+                                  .substring(0, searchValue.text.length - 1);
+                            }
                           }
                         },
                         decoration: InputDecoration(

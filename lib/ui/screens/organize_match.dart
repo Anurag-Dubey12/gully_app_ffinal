@@ -13,7 +13,7 @@ import '../../data/controller/tournament_controller.dart';
 
 class SelectOrganizeTeam extends StatefulWidget {
   final TournamentModel tournament;
-  final int round;
+  final String round;
   final String? title;
   const SelectOrganizeTeam(
       {super.key, this.title, required this.tournament, required this.round});

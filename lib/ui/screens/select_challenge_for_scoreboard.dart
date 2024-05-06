@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 
 import '../../data/controller/team_controller.dart';
 import '../../data/model/scoreboard_model.dart';
+import '../../utils/utils.dart';
 import 'score_card_screen.dart';
 import 'select_opening_team.dart';
 
@@ -99,6 +100,26 @@ class _SelectChallengeForScoreboardState
                                     'scoreBoard': null,
                                     '_id': acceptedChallenges[index].id,
                                   });
+                                  if (acceptedChallenges[index]
+                                          .team1
+                                          .players!
+                                          .length <
+                                      11) {
+                                    errorSnackBar(
+                                        'Team ${acceptedChallenges[index].team1.name} does not have enough players');
+
+                                    return;
+                                  }
+
+                                  if (acceptedChallenges[index]
+                                          .team2
+                                          .players!
+                                          .length <
+                                      11) {
+                                    errorSnackBar(
+                                        'Team ${acceptedChallenges[index].team2.name} does not have enough players');
+                                    return;
+                                  }
                                   Get.off(
                                       () => const SelectOpeningTeam(
                                             isTournament: false,

@@ -253,14 +253,14 @@ class ScoreboardModel {
   }
 
   bool get isSecondInningsOver {
-    logger.i('Checking if second innings is over');
+    logger.i('Checking if second innings is over $matchId');
     if (currentInnings == 2) {
       // if (lastBall.over == totalOvers && lastBall.ball == 6) {
-      if (currentOver == totalOvers) {
+      if (currentOver == totalOvers || lastBall.wickets == 10) {
         logger.i('Second innings over');
         return true;
       }
-      if (currentInningsScore >= firstInnings!.totalScore) {
+      if (currentInningsScore > firstInnings!.totalScore) {
         logger.i('Second innings over');
         return true;
       }
@@ -270,19 +270,23 @@ class ScoreboardModel {
 
   String? get secondInningsText {
     if (currentInnings == 2) {
-      if (lastBall.over == totalOvers && lastBall.ball == 6) {
-        return 'Innings Over';
-      }
+      // if (lastBall.over == totalOvers && lastBall.ball == 6) {
+      //   return 'Innings Over';
+      // }
       if (currentInningsScore > firstInnings!.totalScore) {
         return '${team2.name} won by ${10 - lastBall.wickets} wickets';
       }
       if (lastBall.wickets == 10 &&
           firstInnings!.totalScore > currentInningsScore) {
-        return '${team1.name} won by ${firstInnings!.totalScore - currentInningsScore} runs';
+        return '${team1.name.capitalize} won by ${firstInnings!.totalScore - currentInningsScore} runs';
       }
       if (isSecondInningsOver &&
           firstInnings!.totalScore > currentInningsScore) {
-        return '${team1.name} won by ${firstInnings!.totalScore - currentInningsScore} runs';
+        return '${team1.name.capitalize} won by ${firstInnings!.totalScore - currentInningsScore} runs';
+      }
+      if (isSecondInningsOver &&
+          currentInningsScore == firstInnings!.totalScore) {
+        return 'Match Tied';
       }
       final int runsRequired =
           (firstInnings!.totalScore - currentInningsScore) + 1;

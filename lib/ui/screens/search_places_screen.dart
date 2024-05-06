@@ -78,9 +78,10 @@ class SearchPlacesScreenState extends State<SearchPlacesScreen> {
         ),
         textStyle: const TextStyle(color: Colors.black, fontSize: 16),
         debounceTime: 400,
-        countries: const ["in", "fr"],
+        countries: const [
+          "in",
+        ],
         isLatLngRequired: true,
-
         getPlaceDetailWithLatLng: (Prediction prediction) {
           logger.d("Selected Place: ${prediction.toJson()}");
           widget.onSelected?.call(prediction);

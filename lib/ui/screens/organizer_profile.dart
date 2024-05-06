@@ -12,6 +12,7 @@ import 'package:gully_app/ui/screens/select_performance_type.dart';
 import 'package:gully_app/ui/screens/tournament_requests_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
+import 'package:gully_app/ui/widgets/home_screen/top_header.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -19,6 +20,7 @@ import '../../utils/image_picker_helper.dart';
 import 'add_team.dart';
 import 'my_teams.dart';
 import 'opponent_tournament_list.dart';
+import 'txn_history_screen.dart';
 
 class OrganizerProfileScreen extends StatefulWidget {
   const OrganizerProfileScreen({super.key});
@@ -167,18 +169,21 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                             size: 15,
                           ),
                           const SizedBox(width: 5),
-                          SizedBox(
-                            width: Get.width * 0.5,
-                            child: Obx(() => Text(
-                                  controller.location.value,
-                                  textAlign: TextAlign.center,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w300,
-                                      color: Colors.grey[800]),
-                                )),
+                          const LocationBuilder(
+                            textColor: Colors.black,
                           ),
+                          // SizedBox(
+                          //   width: Get.width * 0.5,
+                          //   child: Obx(() => Text(
+                          //         controller.location.value,
+                          //         textAlign: TextAlign.center,
+                          //         overflow: TextOverflow.ellipsis,
+                          //         style: TextStyle(
+                          //             fontSize: 15,
+                          //             fontWeight: FontWeight.w300,
+                          //             color: Colors.grey[800]),
+                          //       )),
+                          // ),
                         ],
                       ),
                       const SizedBox(height: 5),
@@ -326,12 +331,12 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                                     ));
                               },
                             ),
-                            // ProfileTileCard(
-                            //   text: 'Transaction History',
-                            //   onTap: () {
-                            //     Get.to(() => const TxnHistoryScreen());
-                            //   },
-                            // ),
+                            ProfileTileCard(
+                              text: 'Transaction History',
+                              onTap: () {
+                                Get.to(() => const TxnHistoryScreen());
+                              },
+                            ),
                             ProfileTileCard(
                               text: 'View your tournament',
                               onTap: () {

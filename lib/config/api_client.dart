@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/config/app_constants.dart';
+import 'package:gully_app/ui/screens/welcome_carosuel_screen.dart';
 import 'package:gully_app/utils/app_logger.dart';
 
 import 'preferences.dart';
@@ -31,6 +32,10 @@ class GetConnectClient extends GetConnect {
             "--> START RESPONSE ${request.method.toUpperCase()}: ${request.url} -->");
         logger.i("${response.body}");
         logger.i("<-- END RESPONSE ");
+      }
+      if (response.statusCode == 401) {
+        preferences.clear();
+        Get.offAll(() => const WelcomeCarouselScreen());
       }
       return response;
     });

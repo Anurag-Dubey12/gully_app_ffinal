@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
+import 'package:gully_app/data/model/bowling_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/scorecard/batting_card.dart';
@@ -25,7 +26,7 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
     battingTeamPlayers =
         controller.scoreboard.value?.firstInnings?.battingTeam.players ?? [];
     bowlingTeam =
-        controller.scoreboard.value?.secondInnings?.bowlingTeam.players ?? [];
+        controller.scoreboard.value?.firstInnings?.bowlingTeam.players ?? [];
   }
 
   void changeInning(int selected) {
@@ -307,8 +308,7 @@ class ScoreboardBowlerPlayerStat extends GetView<ScoreBoardController> {
               )),
           Expanded(
               child: Center(
-                  child: Text(
-                      ('${bowler.bowling?.currentOver}.${bowler.bowling?.currentBall}'),
+                  child: Text((getCurrentBowl(bowler.bowling!)),
                       style: Get.textTheme.labelMedium))),
           Expanded(
             child: Center(
@@ -332,4 +332,15 @@ class ScoreboardBowlerPlayerStat extends GetView<ScoreBoardController> {
       ),
     );
   }
+}
+
+String getCurrentBowl(BowlingModel bowling) {
+  if (bowling.overs.length == 1) {
+    return '0.0';
+  }
+
+  if (bowling.currentBall == 0 && bowling.overs.entries.last.value.ball != 6) {
+    return '${bowling.currentOver}.${bowling.overs.entries.last.value.ball}';
+  }
+  return '${bowling.currentOver}.${bowling.currentBall}';
 }

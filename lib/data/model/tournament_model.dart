@@ -15,6 +15,7 @@ class TournamentModel {
   final int tournamentLimit;
   @JsonKey(defaultValue: 0)
   final int registeredTeamsCount;
+  @JsonKey(defaultValue: 0)
   int pendingTeamsCount;
   @JsonKey(disallowNullValue: false)
   final String? phoneNumber;

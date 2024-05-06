@@ -2,9 +2,11 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/api/tournament_api.dart';
+import 'package:gully_app/data/model/coupon_model.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
+import 'package:gully_app/data/model/txn_model.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 
@@ -34,13 +36,14 @@ class TournamentController extends GetxController
   }
 
   Rx<LatLng> coordinates = const LatLng(0, 0).obs;
-  Future<bool> createTournament(Map<String, dynamic> tournament) async {
+  Future<TournamentModel> createTournament(
+      Map<String, dynamic> tournament) async {
     try {
-      await tournamentApi.createTournament(tournament);
-      return true;
+      final body = await tournamentApi.createTournament(tournament);
+      return TournamentModel.fromJson(body.data!);
     } catch (e) {
       errorSnackBar(e.toString());
-      return false;
+      rethrow;
     }
   }
 
@@ -185,7 +188,7 @@ class TournamentController extends GetxController
   }
 
   Future<bool> createMatchup(String tourId, String team1, String team2,
-      DateTime date, int matchNo, int round) async {
+      DateTime date, int matchNo, String round) async {
     try {
       final response = await tournamentApi.createMatchup(
           tourId: tourId,
@@ -247,6 +250,67 @@ class TournamentController extends GetxController
       final response = await tournamentApi.searchTournament(query);
       return response.data!['tournamentList']
           .map<TournamentModel>((e) => TournamentModel.fromJson(e))
+          .toList();
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<double> getTournamentFee(String tournamentId) async {
+    final res =
+        await tournamentApi.getTournamentFees(tournamentId: tournamentId);
+    return double.parse(res.data!['fee'].toString());
+  }
+
+  Future<String> createOrder(
+      {required double discountAmount,
+      required String tournamentId,
+      required double totalAmount,
+      required String? coupon}) async {
+    try {
+      final response = await tournamentApi.createOrder(
+          discountAmount: discountAmount,
+          tournamentId: tournamentId,
+          totalAmount: totalAmount,
+          coupon: coupon);
+      return response.data!['id'];
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<List<Coupon>>? getCoupons() async {
+    try {
+      final response = await tournamentApi.getCoupons();
+      return response.data!['coupons']
+          .map<Coupon>((e) => Coupon.fromJson(e))
+          .toList();
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
+
+  Future applyCoupon(
+      String tournamentId, String couponId, double amount) async {
+    try {
+      final response =
+          await tournamentApi.applyCoupon(tournamentId, couponId, amount);
+      return response.data;
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<List<Transaction>> getTransactions() async {
+    try {
+      final response = await tournamentApi.getTransactions();
+
+      return response.data!['transactions']
+          .map<Transaction>((e) => Transaction.fromJson(e))
           .toList();
     } catch (e) {
       errorSnackBar(e.toString());

@@ -88,6 +88,17 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                           errorSnackBar('Four cannot be selected with  Caught');
                           return;
                         }
+                        if (controller.events.contains(EventType.bye) &&
+                            controller.events.contains(EventType.wicket)) {
+                          errorSnackBar('Player can be only run out with byes');
+                          return;
+                        }
+                        if (controller.events.contains(EventType.legByes) &&
+                            controller.events.contains(EventType.wicket)) {
+                          errorSnackBar(
+                              'Player can be only run out with Leg Byes');
+                          return;
+                        }
                         setState(() {
                           outType = e.toString();
                         });
@@ -109,6 +120,19 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                               'No Ball cannot be selected with Bowled');
                           return;
                         }
+                        // wicket + byes + 1 can only be run through run out
+                        if (controller.events.contains(EventType.bye) &&
+                            controller.events.contains(EventType.wicket)) {
+                          errorSnackBar('Player can be only run out with byes');
+                          return;
+                        }
+                        if (controller.events.contains(EventType.legByes) &&
+                            controller.events.contains(EventType.wicket)) {
+                          errorSnackBar(
+                              'Player can be only run out with Leg Byes');
+                          return;
+                        }
+
                         setState(() {
                           logger.i(e);
                           outType = e!;
@@ -125,6 +149,17 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                         if (controller.events.contains(EventType.noBall)) {
                           errorSnackBar(
                               'No Ball cannot be selected with Stumped');
+                          return;
+                        }
+                        if (controller.events.contains(EventType.bye) &&
+                            controller.events.contains(EventType.wicket)) {
+                          errorSnackBar('Player can be only run out with byes');
+                          return;
+                        }
+                        if (controller.events.contains(EventType.legByes) &&
+                            controller.events.contains(EventType.wicket)) {
+                          errorSnackBar(
+                              'Player can be only run out with Leg Byes');
                           return;
                         }
                         setState(() {
@@ -153,6 +188,18 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                                 'No Ball cannot be selected with Leg Before Wicket');
                             return;
                           }
+                          if (controller.events.contains(EventType.bye) &&
+                              controller.events.contains(EventType.wicket)) {
+                            errorSnackBar(
+                                'Player can be only run out with byes');
+                            return;
+                          }
+                          if (controller.events.contains(EventType.legByes) &&
+                              controller.events.contains(EventType.wicket)) {
+                            errorSnackBar(
+                                'Player can be only run out with Leg Byes');
+                            return;
+                          }
                           logger.i(e);
 
                           outType = e!;
@@ -169,6 +216,17 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                         if (controller.events.contains(EventType.noBall)) {
                           errorSnackBar(
                               'No Ball cannot be selected with Hit Wicket');
+                          return;
+                        }
+                        if (controller.events.contains(EventType.bye) &&
+                            controller.events.contains(EventType.wicket)) {
+                          errorSnackBar('Player can be only run out with byes');
+                          return;
+                        }
+                        if (controller.events.contains(EventType.legByes) &&
+                            controller.events.contains(EventType.wicket)) {
+                          errorSnackBar(
+                              'Player can be only run out with Leg Byes');
                           return;
                         }
                         setState(() {

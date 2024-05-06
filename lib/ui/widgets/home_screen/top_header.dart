@@ -4,6 +4,7 @@ import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
+import 'package:gully_app/data/controller/notification_controller.dart';
 import 'package:gully_app/ui/screens/search_places_screen.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -69,20 +70,7 @@ class TopHeader extends GetView<AuthController> {
         ),
         Row(
           children: [
-            SizedBox(
-              width: 30,
-              child: IconButton(
-                padding: EdgeInsets.zero,
-                icon: const Icon(
-                  Icons.notifications,
-                  size: 23,
-                ),
-                onPressed: () {
-                  Get.to(() => const NotificationScreen());
-                },
-                color: Colors.white,
-              ),
-            ),
+            const _NotificationIcon(),
             SizedBox(
               width: 30,
               child: IconButton(
@@ -104,8 +92,52 @@ class TopHeader extends GetView<AuthController> {
   }
 }
 
+class _NotificationIcon extends GetView<NotificationController> {
+  const _NotificationIcon({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 30,
+      child: IconButton(
+        padding: EdgeInsets.zero,
+        icon: Stack(
+          children: [
+            const Icon(
+              Icons.notifications,
+              size: 23,
+            ),
+            controller.notifications.value.isNotEmpty
+                ? Positioned(
+                    right: 0,
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(99)),
+                    ),
+                  )
+                : const SizedBox(),
+          ],
+        ),
+        onPressed: () {
+          Get.to(() => const NotificationScreen());
+        },
+        color: Colors.white,
+      ),
+    );
+  }
+}
+
 class LocationBuilder extends GetView<AuthController> {
-  const LocationBuilder({super.key});
+  final Color? textColor;
+  const LocationBuilder({
+    super.key,
+    this.textColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +150,7 @@ class LocationBuilder extends GetView<AuthController> {
               onSelected: (e) async {
                 controller.setLocation = e.description ?? 'Fetching Location';
                 final tournamentController = Get.find<TournamentController>();
-                logger.d("${e.lat}, ${e.lng}");
+
                 tournamentController.setCoordinates =
                     LatLng(double.parse(e.lat!), double.parse(e.lng!));
                 logger.f('Location: ${tournamentController.coordinates.value}');
@@ -129,11 +161,12 @@ class LocationBuilder extends GetView<AuthController> {
         width: Get.width / 2.2,
         child: Obx(() => Text(controller.location.value,
             maxLines: 1,
+            // textAlign: TextAlign.start,
             style: Get.textTheme.labelSmall?.copyWith(
                 overflow: TextOverflow.ellipsis,
-                color: Colors.white,
+                color: textColor ?? Colors.white,
                 decoration: TextDecoration.underline,
-                decorationColor: Colors.white))),
+                decorationColor: textColor ?? Colors.white))),
       ),
     );
   }

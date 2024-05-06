@@ -1,5 +1,4 @@
 import 'package:gully_app/config/api_client.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
 class AuthApi {
@@ -7,12 +6,11 @@ class AuthApi {
 
   AuthApi({required this.client});
   Future<ApiResponse> loginViaGoogle(Map<String, dynamic> data) async {
-    logger.i(data.toString());
     var response = await client.post('/auth/google_login', data);
     if (response.statusCode != 200) {
-      throw Exception(response.body?['message'] ??
+      throw response.body?['message'] ??
           response.body?['error'] ??
-          'Unable to Process Request');
+          'Unable to Process Request';
     }
     return ApiResponse.fromJson(response.body);
   }

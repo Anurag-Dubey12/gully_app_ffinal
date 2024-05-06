@@ -131,6 +131,10 @@ class _MatchupCard extends GetView<ScoreBoardController> {
   Widget build(BuildContext context) {
     final TournamentController tournamentController = Get.find();
     final AuthController authController = Get.find();
+    final ScoreboardModel? scoreboard = matchup.scoreBoard == null
+        ? null
+        : ScoreboardModel.fromJson(matchup.scoreBoard!);
+
     return GestureDetector(
       onTap: () {
         if (tournamentController.state?.authority != authController.state?.id) {
@@ -143,6 +147,16 @@ class _MatchupCard extends GetView<ScoreBoardController> {
               .setScoreBoard(ScoreboardModel.fromJson(matchup.scoreBoard!));
         } else {
           logger.i("Tournament Match: true");
+          if (matchup.team1.players!.length < 11) {
+            errorSnackBar(
+                'Team ${matchup.team1.name} does not have enough players');
+            return;
+          }
+          if (matchup.team2.players!.length < 11) {
+            errorSnackBar(
+                'Team ${matchup.team2.name} does not have enough players');
+            return;
+          }
           Get.off(() => const SelectOpeningTeam(
                 isTournament: true,
               ));
@@ -225,6 +239,10 @@ class _MatchupCard extends GetView<ScoreBoardController> {
                 ],
               ),
               SizedBox(height: Get.height * 0.01),
+              Center(
+                child: Text(scoreboard?.secondInningsText ?? "",
+                    style: Get.textTheme.labelMedium?.copyWith()),
+              ),
             ],
           ),
         ),

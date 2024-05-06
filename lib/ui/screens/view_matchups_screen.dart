@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
+import 'package:gully_app/data/model/scoreboard_model.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
@@ -71,6 +72,10 @@ class _MatchupCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ScoreboardModel? scoreboard = matchup.scoreBoard == null
+        ? null
+        : ScoreboardModel.fromJson(matchup.scoreBoard!);
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -94,7 +99,7 @@ class _MatchupCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        matchup.team1.name,
+                        matchup.team1.name.capitalize,
                         style: Get.textTheme.headlineSmall?.copyWith(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -127,7 +132,7 @@ class _MatchupCard extends StatelessWidget {
                       ),
                       const SizedBox(height: 6),
                       Text(
-                        matchup.team2.name,
+                        matchup.team2.name.capitalize,
                         style: Get.textTheme.headlineSmall?.copyWith(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
@@ -139,6 +144,10 @@ class _MatchupCard extends StatelessWidget {
                 ],
               ),
               SizedBox(height: Get.height * 0.01),
+              Center(
+                child: Text(scoreboard?.secondInningsText ?? "",
+                    style: Get.textTheme.labelMedium?.copyWith()),
+              ),
               // Center(
               //   child: Text('20/1',
               //       style: Get.textTheme.headlineLarge?.copyWith(

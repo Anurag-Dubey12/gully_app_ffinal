@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
+import 'package:gully_app/utils/app_logger.dart';
 
 import '../widgets/scorecard/batting_card.dart';
 import '../widgets/scorecard/current_over_card.dart';
@@ -40,9 +41,9 @@ class _ScoreCardScreenState extends State<ScoreCardScreen> {
 
     return Obx(() {
       if (controller.socket.value == null) {
-        // controller.connectToSocket();
         return const Scaffold(body: Center(child: CircularProgressIndicator()));
       }
+      logger.d(controller.scoreboard.value?.matchId);
       return GradientBuilder(
           child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -62,9 +63,12 @@ class _ScoreCardScreenState extends State<ScoreCardScreen> {
           iconTheme: const IconThemeData(color: Colors.white),
           title: Text(
               '${controller.scoreboard.value?.team1.name} vs ${controller.scoreboard.value?.team2.name}',
+              maxLines: 2,
+              textAlign: TextAlign.center,
               style: Get.textTheme.titleMedium?.copyWith(
                 color: Colors.white,
                 fontWeight: FontWeight.w900,
+                fontSize: 17,
               )),
         ),
         body: const Padding(

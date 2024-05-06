@@ -13,7 +13,6 @@ import 'package:gully_app/ui/screens/tournament_teams.dart';
 import 'package:gully_app/ui/screens/update_authority_screen.dart';
 import 'package:gully_app/ui/screens/view_matchups_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
-import 'package:gully_app/ui/widgets/custom_text_field.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -168,9 +167,7 @@ class _Card extends StatefulWidget {
 class _CardState extends State<_Card> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    logger.d('init state');
   }
 
   @override
@@ -181,7 +178,7 @@ class _CardState extends State<_Card> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
-    final authController = Get.find<AuthController>();
+
     logger.d('build');
     return GestureDetector(
       onTap: () {
@@ -259,7 +256,6 @@ class _CardState extends State<_Card> {
 
 class _InputRoundNumber extends StatefulWidget {
   const _InputRoundNumber({
-    super.key,
     required this.tournament,
   });
 
@@ -271,6 +267,11 @@ class _InputRoundNumber extends StatefulWidget {
 
 class _InputRoundNumberState extends State<_InputRoundNumber> {
   var roundController = TextEditingController();
+  List<String> items = [
+    'qualifier',
+    'semi final',
+    'final match',
+  ];
   @override
   Widget build(BuildContext context) {
     final authController = Get.find<AuthController>();
@@ -279,22 +280,57 @@ class _InputRoundNumberState extends State<_InputRoundNumber> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomTextField(
-              labelText: AppLocalizations.of(context)!.enterRoundNumberLabel,
-              textInputType: TextInputType.number,
-              controller: roundController,
-              autoFocus: true,
+            // CustomTextField(
+            //   labelText: AppLocalizations.of(context)!.enterRoundNumberLabel,
+            //   textInputType: TextInputType.number,
+            //   controller: roundController,
+            //   autoFocus: true,
+            // ),
+            Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Text("Select Round",
+                  style: Get.textTheme.headlineMedium?.copyWith(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18)),
             ),
+            const SizedBox(height: 20),
+            DropdownButtonFormField(
+                items: items
+                    .map((e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e.capitalize,
+                              style: Get.textTheme.headlineMedium?.copyWith(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14)),
+                        ))
+                    .toList(),
+                decoration: InputDecoration(
+                  labelText: 'Select Round',
+                  labelStyle: Get.textTheme.headlineMedium?.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onChanged: (e) {
+                  roundController.text = e.toString();
+                }),
             const SizedBox(height: 20),
             PrimaryButton(
               onTap: () {
                 // allow only digits upto 4 in length. no alphanumeric
-                if (!RegExp(r'^[0-9]{1,4}$').hasMatch(roundController.text)) {
-                  errorSnackBar('Please enter a valid round number',
-                      forceDialogOpen: true);
-                  return;
-                }
+                // if (!RegExp(r'^[0-9]{1,4}$').hasMatch(roundController.text)) {
+                //   errorSnackBar('Please enter a valid round number',
+                //       forceDialogOpen: true);
+                //   return;
+                // }
 
                 if (widget.tournament.authority != authController.state?.id) {
                   errorSnackBar('You are not authorized to organize the match',
@@ -307,7 +343,7 @@ class _InputRoundNumberState extends State<_InputRoundNumber> {
                 Get.to(
                   () => SelectOrganizeTeam(
                     tournament: widget.tournament,
-                    round: int.parse(roundController.text),
+                    round: roundController.text,
                   ),
                 );
               },

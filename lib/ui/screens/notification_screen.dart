@@ -12,6 +12,7 @@ class NotificationScreen extends GetView<NotificationController> {
 
   @override
   Widget build(BuildContext context) {
+    controller.markAllAsRead();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,

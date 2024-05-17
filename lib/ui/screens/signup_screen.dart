@@ -65,9 +65,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
 
                 const Spacer(), const Spacer(),
-                Text(
-                  '${AppLocalizations.of(context)!.signup}/ ${AppLocalizations.of(context)!.login}',
-                  style: Get.textTheme.titleLarge,
+                FittedBox(
+                  child: Text(
+                    '${AppLocalizations.of(context)!.signup}/ ${AppLocalizations.of(context)!.login}',
+                    style: Get.textTheme.titleLarge,
+                  ),
                 ),
                 const Spacer(),
                 // create a container sign up with google

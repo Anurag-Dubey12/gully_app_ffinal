@@ -616,7 +616,7 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                 CustomTextField(
                   controller: nameController,
                   maxLen: 23,
-                  textInputType: TextInputType.name,
+                  textInputType: TextInputType.text,
                   validator: (value) {
                     if (value!.isEmpty) {
                       return AppLocalizations.of(context)!.fillAllFields;
@@ -625,7 +625,7 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                     if (value.trim().isEmpty) {
                       return AppLocalizations.of(context)!.fillAllFields;
                     }
-                    if (!value.contains(RegExp(r'^[a-zA-Z ]+$'))) {
+                    if (!value.contains(RegExp(r'^[a-zA-Z -]+$'))) {
                       return AppLocalizations.of(context)!.validName;
                     }
                     return null;
@@ -686,13 +686,13 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                     FocusScope.of(context).unfocus();
                     if (!_key.currentState!.validate()) return;
                     // check if the name contains only alphabets and spaces
-                    if (!nameController.text
-                        .contains(RegExp(r'^[a-zA-Z ]+$'))) {
-                      setState(() {
-                        errorText = AppLocalizations.of(context)!.validName;
-                      });
-                      return;
-                    }
+                    // if (!nameController.text
+                    //     .contains(RegExp(r'^[a-zA-Z ]+$'))) {
+                    //   setState(() {
+                    //     errorText = AppLocalizations.of(context)!.validName;
+                    //   });
+                    //   return;
+                    // }
 
                     if (!phoneController.text.isPhoneNumber ||
                         phoneController.text.length != 10 ||

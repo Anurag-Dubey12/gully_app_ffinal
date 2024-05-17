@@ -215,7 +215,15 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                                     controller.events
                                         .contains(EventType.wicket)) {
                                   errorSnackBar(
-                                      'You can not add a five and a wide ball');
+                                      'You can not add a five, wicket and a wide ball');
+                                  return;
+                                }
+                                if (controller.events
+                                        .contains(EventType.noBall) &&
+                                    controller.events
+                                        .contains(EventType.wicket)) {
+                                  errorSnackBar(
+                                      'You can not add a five , no ball and a wicket');
                                   return;
                                 }
                                 if (controller.events.contains(EventType.bye) ||
@@ -244,6 +252,14 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                                     .contains(EventType.wide)) {
                                   errorSnackBar(
                                       'You can not add a six and a wide ball');
+                                  return;
+                                }
+                                if (controller.events
+                                        .contains(EventType.noBall) &&
+                                    controller.events
+                                        .contains(EventType.wicket)) {
+                                  errorSnackBar(
+                                      'You can not add six runs , a no ball and a wide');
                                   return;
                                 }
                                 if (controller.events

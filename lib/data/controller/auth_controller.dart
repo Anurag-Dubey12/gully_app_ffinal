@@ -29,7 +29,9 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
   RxString location = ''.obs;
 
   Future<void> getCurrentLocation() async {
-    final coordinates = await determinePosition();
+    final coordinates = await determinePosition(
+        accuracy: LocationAccuracy.bestForNavigation,
+        forceAndroidLocationManager: true);
 
     location.value =
         await getAddressFromLatLng(coordinates.latitude, coordinates.longitude);
@@ -42,14 +44,22 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
     try {
       change(GetStatus.loading());
 
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn.standard(
+          scopes: [
+            "email",
+            "https://www.googleapis.com/auth/userinfo.profile"
+          ]).signIn();
+
       if (googleUser == null) {
+        errorSnackBar('User not found at Google');
         change(GetStatus.empty());
         return false;
       }
+      // successSnackBar('User  found at Google ${googleUser.displayName}');
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
       logger.t("googleAuth: $googleAuth");
+      // successSnackBar('Google Auth: ${googleAuth.accessToken}');
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -57,32 +67,49 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
 
       final userCred =
           await FirebaseAuth.instance.signInWithCredential(credential);
+      // successSnackBar('User Cred: ${userCred.user}');
       if (userCred.user == null) {
         errorSnackBar("User not found");
       }
-      final Position position =
-          await determinePosition(accuracy: LocationAccuracy.low);
-      final placeName =
-          await getAddressFromLatLng(position.latitude, position.longitude);
-      final applinks = AppLinks();
-      final uri = await applinks.getLatestAppLink();
+      Position? position;
+      String placeName = 'Default Location';
+      try {
+        position = await determinePosition(
+          accuracy: LocationAccuracy.best,
+        );
+        placeName =
+            await getAddressFromLatLng(position.latitude, position.longitude);
+      } catch (e) {
+        position = null;
+        errorSnackBar(e.toString());
+      }
+      // successSnackBar(
+      //     'Got Position: ${position.latitude} ${position.longitude}');
+      // successSnackBar(
+      //     'Got Position: ${position.latitude} ${position.longitude}');
       var body = {
         'fullName': userCred.user!.displayName,
         'email': userCred.user!.email,
         'coordinates': {
-          'latitude': position.latitude,
-          'longitude': position.longitude,
+          'latitude': position?.latitude ?? 12.1,
+          'longitude': position?.longitude ?? 11.1,
           'placeName': placeName,
+          // 'latitude': 12.3,
+          // 'longitude': 11.3,
+          // 'placeName': 'Demo',
         }
       };
+      // successSnackBar('Body: $body');
+      final applinks = AppLinks();
+      final uri = await applinks.getLatestAppLink();
       if (uri != null) {
         body['phoneNumber'] = uri.queryParameters["refer_id"];
       }
-
+      // successSnackBar('Body + AFTER LINK : $body');
       final response = await repo.loginViaGoogle(body);
       final user = UserModel.fromJson(response.data!['user']);
       final accessToken = response.data!['user']['accessToken'];
-
+      // successSnackBar('User DONE: $user');
       final prefs = Get.find<Preferences>();
       prefs.storeToken(accessToken);
       change(GetStatus.success(user));
@@ -98,7 +125,7 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       errorSnackBar(e.message ?? "Something went wrong at Firebase Auth");
       return false;
     } catch (e) {
-      errorSnackBar(e.toString());
+      errorSnackBar('Something went wrong');
       change(GetStatus.error(e.toString()));
       return false;
     }

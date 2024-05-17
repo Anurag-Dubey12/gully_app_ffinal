@@ -13,7 +13,6 @@ import 'package:gully_app/ui/screens/select_location.dart';
 import 'package:gully_app/ui/widgets/create_tournament/form_input.dart';
 import 'package:gully_app/ui/widgets/create_tournament/top_card.dart';
 import 'package:gully_app/ui/widgets/custom_drop_down_field.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
@@ -422,7 +421,11 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             controller: _nameController,
                             label: AppLocalizations.of(context)!.tournamentName,
                             validator: (p0) {
-                              if (p0![0] == " ") {
+                              if (p0!.isEmpty) {
+                                return AppLocalizations.of(context)!
+                                    .pleaseEnterTournamentName;
+                              }
+                              if (p0[0] == " ") {
                                 return "First character should not be a space";
                               }
                               if (p0.trim().isEmpty) {
@@ -434,7 +437,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                               }
                               if (p0.isNotEmpty &&
                                   !RegExp(r'^[a-zA-Z]+$').hasMatch(p0[0])) {
-                                return "First character should be an alphabet";
+                                return "Please enter valid name";
                               }
                               if (!p0.contains(RegExp(r'^[a-zA-Z0-9- ]*$'))) {
                                 return "Special characters are not allowed (except -)";
@@ -579,7 +582,10 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             label: AppLocalizations.of(context)!.cohost1Name,
                             textInputType: TextInputType.text,
                             validator: (e) {
-                              if (e![0] == " ") {
+                              if (e!.isEmpty) {
+                                return null;
+                              }
+                              if (e[0] == " ") {
                                 return "First character should not be a space";
                               }
                               if (e.trim().isEmpty &&
@@ -614,16 +620,21 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             textInputType: TextInputType.number,
                             maxLength: 10,
                             validator: (e) {
-                              if (e![0] == " ") {
+                              if (e!.isEmpty) {
+                                return null;
+                              }
+                              if (e.trim().isEmpty) {
                                 return "First character should not be a space";
                               }
                               if ((_cohost1Name.text.isNotEmpty) && e.isEmpty) {
                                 return AppLocalizations.of(context)!
                                     .pleaseEnterCohost1ContactNo;
                               }
-                              if (e.isEmpty) {
-                                return null;
+
+                              if ((_cohost1Name.text.isEmpty) && e.isNotEmpty) {
+                                return "Please enter co-host 1 name";
                               }
+
                               if (!RegExp(r'^\d+$').hasMatch(e)) {
                                 return AppLocalizations.of(context)!
                                     .pleaseEnterValidCohost1ContactNo;
@@ -715,9 +726,12 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                 return AppLocalizations.of(context)!
                                     .pleaseEnterRules;
                               }
-                              if (!e.contains(RegExp(r'^[a-zA-Z0-9\/. ]*$'))) {
-                                return "Rules should not contain special characters except (/) and (.)";
-                              }
+                              // RegExp regex = RegExp(
+                              //     r'^(?:(?![\u2000-\u3300]|[\uE000-\uF8FF]|[\uD800-\uDBFF]|[\uDC00-\uDFFF]).)*$');
+                              // if (!regex.hasMatch(e)) {
+                              //   return "Please enter valid rules";
+                              // }
+
                               return null;
                             },
                             maxLines: 5,
@@ -729,12 +743,10 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             textInputType: TextInputType.multiline,
                             validator: (e) {
                               if (e!.trim().isEmpty) {
-                                return AppLocalizations.of(context)!
-                                    .pleaseEnterRules;
+                                return "Please enter prizes";
                               }
                               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                return AppLocalizations.of(context)!
-                                    .rulesCannotContainEmojis;
+                                return 'Prizes cannot contain emojis or special characters';
                               }
                               return null;
                             },
@@ -769,7 +781,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                         location = l;
                                       });
                                     }
-                                    logger.d('location: $l');
+
                                     FocusScope.of(context).unfocus();
                                   },
                                   initialLocation: LatLng(

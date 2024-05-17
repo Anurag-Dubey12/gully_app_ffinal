@@ -7,6 +7,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -47,6 +48,8 @@ void main() async {
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await GetStorage.init();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   HttpOverrides.global = MyHttpOverrides();
   FlutterError.onError = (errorDetails) {
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
@@ -158,7 +161,7 @@ class _MyAppState extends State<MyApp> {
             )),
         // Bind.lazyPut<AuthApi>(() => AuthApi(client: Get.find())),
         Bind.put<AuthApi>(AuthApi(client: Get.find())),
-        Bind.lazyPut<MiscApi>(() => MiscApi(repo: Get.find())),
+        Bind.put<MiscApi>(MiscApi(repo: Get.find())),
         Bind.lazyPut<TournamentApi>(() => TournamentApi(repo: Get.find())),
         Bind.lazyPut<ScoreboardApi>(() => ScoreboardApi(repo: Get.find())),
         Bind.put<TeamApi>(TeamApi(repo: Get.find())),
@@ -168,7 +171,7 @@ class _MyAppState extends State<MyApp> {
             ScoreBoardController(scoreboardApi: Get.find())),
         Bind.lazyPut<TournamentController>(
             () => TournamentController(Get.find())),
-        Bind.lazyPut<MiscController>(() => MiscController(repo: Get.find())),
+        Bind.put<MiscController>(MiscController(repo: Get.find())),
       ],
       defaultTransition: Transition.cupertino,
       title: AppConstants.appName,

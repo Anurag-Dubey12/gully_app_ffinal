@@ -15,7 +15,7 @@ NotificationModel _$NotificationModelFromJson(Map<String, dynamic> json) =>
       notificationType: json['notificationType'] as String?,
       notificationId: json['notificationId'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
-    );
+    )..isRead = json['isRead'] as bool;
 
 Map<String, dynamic> _$NotificationModelToJson(NotificationModel instance) =>
     <String, dynamic>{
@@ -26,4 +26,5 @@ Map<String, dynamic> _$NotificationModelToJson(NotificationModel instance) =>
       'notificationType': instance.notificationType,
       'notificationId': instance.notificationId,
       'createdAt': instance.createdAt.toIso8601String(),
+      'isRead': instance.isRead,
     };

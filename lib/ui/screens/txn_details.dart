@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/auth_controller.dart';
+import 'package:gully_app/ui/screens/txn_history_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +15,7 @@ class TxnDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<AuthController>();
     return GradientBuilder(
         child: Scaffold(
       backgroundColor: Colors.transparent,
@@ -61,16 +64,15 @@ class TxnDetailsView extends StatelessWidget {
                           )),
                       const Spacer(),
                       Chip(
-                        label: Text(transaction.status,
+                        label: Text(generateStatusText(transaction.status),
                             style: const TextStyle(
                                 color: Colors.white, fontWeight: FontWeight.w600
                                 // fontSize: 14,
                                 )),
-                        backgroundColor: transaction.status == 'captured'
-                            ? Colors.green
-                            : transaction.status == 'failed'
-                                ? Colors.red
-                                : Colors.orange,
+                        backgroundColor:
+                            generateStatusText(transaction.status) == "Success"
+                                ? Colors.green
+                                : Colors.red,
                         shape: RoundedRectangleBorder(
                             side: const BorderSide(width: 0),
                             borderRadius: BorderRadius.circular(10)),
@@ -134,7 +136,8 @@ class TxnDetailsView extends StatelessWidget {
                             fontSize: 14,
                           )),
                       const Spacer(),
-                      Text('₹${transaction.amountWithoutCoupon}',
+                      Text(
+                          '₹${transaction.amountWithoutCoupon - transaction.amount}',
                           style: const TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 14,
@@ -209,6 +212,36 @@ class TxnDetailsView extends StatelessWidget {
                       Text(
                           DateFormat('dd/MM/yyyy')
                               .format(DateTime.parse(transaction.endDate)),
+                          style: const TextStyle(
+                            // color: AppTheme.secondaryYellowColor,
+                            fontSize: 14,
+                          )),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text('Payment: ',
+                          style: TextStyle(
+                            // color: AppTheme.secondaryYellowColor,
+                            fontSize: 14,
+                          )),
+                      const Spacer(),
+                      Text('₹ ${transaction.amount} ',
+                          style: const TextStyle(
+                            // color: AppTheme.secondaryYellowColor,
+                            fontSize: 14,
+                          )),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text('Phone Number: ',
+                          style: TextStyle(
+                            // color: AppTheme.secondaryYellowColor,
+                            fontSize: 14,
+                          )),
+                      const Spacer(),
+                      Text(controller.state?.phoneNumber ?? "",
                           style: const TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 14,

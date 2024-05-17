@@ -14,7 +14,7 @@ class NotificationController extends GetxController {
   void onInit() {
     super.onInit();
     logger.i("NotificationController onInit");
-    getNotifications();
+    _getNotifications();
 
     messaging.requestPermission(
       alert: true,
@@ -63,8 +63,22 @@ class NotificationController extends GetxController {
     preferences.setNotifications(notifications);
   }
 
-  Future<void> getNotifications() async {
+  Future<void> _getNotifications() async {
     notifications.value = await preferences.getNotifications();
     notifications.refresh();
+  }
+
+  Future<void> markAllAsRead() async {
+    for (var element in notifications) {
+      element.isRead = true;
+    }
+    notifications.refresh();
+    preferences.setNotifications(notifications);
+  }
+
+  Future<void> addNotification(NotificationModel notification) async {
+    notifications.value.add(notification);
+    notifications.refresh();
+    preferences.setNotifications(notifications);
   }
 }

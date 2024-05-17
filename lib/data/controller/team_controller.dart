@@ -110,13 +110,13 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
         playerId: playerId,
       );
       logger.i("70");
-      players.value.removeWhere((element) => element.id == playerId);
-      players.refresh();
 
       if (response.status == false) {
         errorSnackBar(response.message!);
         return false;
       }
+      players.value.removeWhere((element) => element.id == playerId);
+      players.refresh();
       return true;
     } catch (e) {
       logger.i(e);

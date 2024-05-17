@@ -158,7 +158,7 @@ class _TeamCard extends GetView<TeamController> {
                   )
                 ],
               ),
-            if (team.playersCount == 15)
+            if (team.playersCount! >= 15)
               Material(
                 child: InkWell(
                   borderRadius: BorderRadius.circular(09),

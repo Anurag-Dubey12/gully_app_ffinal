@@ -41,8 +41,8 @@ class ScoreBoardController extends GetxController with StateMixin {
       socket.value!.on('scoreboard', (data) {
         logger.i('Scoreboard updated to channel ');
         // showDrawPopup();
-        if (hideDialog) {
-          showWinnerPopup();
+        if (hideDialog == false) {
+          showPopups();
         }
         if (data != null) {
           if (data['scoreBoard'] != null) {
@@ -56,8 +56,8 @@ class ScoreBoardController extends GetxController with StateMixin {
         logger.d('connect ${scoreboard.value?.matchId}');
         // check if match is drawn
         // showDrawPopup();
-        if (hideDialog) {
-          showWinnerPopup();
+        if (hideDialog == false) {
+          showPopups();
         }
         socket.value?.emit('joinRoom', {
           'matchId': scoreboard.value?.matchId,
@@ -74,7 +74,7 @@ class ScoreBoardController extends GetxController with StateMixin {
     }
   }
 
-  showWinnerPopup() {
+  showPopups() {
     if (scoreboard.value?.isSecondInningsOver ?? false) {
       final firstInning = scoreboard.value?.firstInnings!.totalScore;
       final secondInning = scoreboard.value?.secondInnings!.totalScore;
@@ -87,6 +87,9 @@ class ScoreBoardController extends GetxController with StateMixin {
       if (firstInning == secondInning) {
         errorSnackBar('The Match is Drawn');
       }
+    } else if (scoreboard.value?.isFirstInningsOver ?? false) {
+      successSnackBar(
+          'First Innings has been completed you can start 2nd inning');
     }
   }
 

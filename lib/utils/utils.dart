@@ -20,11 +20,11 @@ class ApiResponse {
 }
 
 Future errorSnackBar(String errorMessage,
-        {bool forceDialogOpen = false}) async =>
+        {bool forceDialogOpen = false, String? title}) async =>
     (Get.isDialogOpen ?? false) && !forceDialogOpen
         ? null
         : Get.defaultDialog(
-            title: 'Oops!',
+            title: title ?? 'Oops!',
             contentPadding: const EdgeInsets.all(10),
             titlePadding: const EdgeInsets.all(10),
             titleStyle: const TextStyle(
@@ -52,48 +52,77 @@ Future errorSnackBar(String errorMessage,
             middleText: errorMessage,
           );
 
-Future successSnackBar(String successMessage) async => Get.isDialogOpen ?? false
-    ? null
-    : await Get.defaultDialog(
-        title: 'Yayy!',
-        contentPadding: const EdgeInsets.all(10),
-        titlePadding: const EdgeInsets.all(10),
-        titleStyle: const TextStyle(
-          color: Colors.green,
-          fontWeight: FontWeight.w500,
-        ),
-        confirm: InkWell(
-          onTap: () {
-            Get.back();
-          },
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-              color: AppTheme.primaryColor,
+Future successSnackBar(String successMessage, {String? title}) async =>
+    Get.isDialogOpen ?? false
+        ? null
+        : await Get.defaultDialog(
+            title: title ?? 'Yayy!',
+            contentPadding: const EdgeInsets.all(10),
+            titlePadding: const EdgeInsets.all(10),
+            titleStyle: const TextStyle(
+              color: Colors.green,
+              fontWeight: FontWeight.w500,
             ),
-            child: const Text('OK',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                )),
-          ),
-        ),
-        middleText: successMessage,
-      );
+            confirm: InkWell(
+              onTap: () {
+                Get.back();
+              },
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  color: AppTheme.primaryColor,
+                ),
+                child: const Text('OK',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    )),
+              ),
+            ),
+            middleText: successMessage,
+          );
 
 Future<String> getAddressFromLatLng(double latitude, double longitude) async {
   final address = await placemarkFromCoordinates(latitude, longitude)
       .then((List<Placemark> placemarks) {
+    if (placemarks.isEmpty) {
+      logger.d('No address found');
+      return 'Click here to Select Location';
+    }
     Placemark place = placemarks[0];
+    logger.d('Place ::${place.toJson()}');
+    String currentAddress = "";
+    //  currentAddress =
+    //     '${place.name} ${place.subLocality}  ${place.subAdministrativeArea} ${place.administrativeArea}';
+    // modify above line to get the address in the format you want, if name is not available, you can use place.street,if subLocality is not available, you can use place.locality and so on
+    if (place.name != null) {
+      currentAddress += place.name ?? "";
+    } else {
+      currentAddress += place.street ?? "";
+    }
+    currentAddress += ", ";
+    if (place.subLocality != null) {
+      currentAddress += place.subLocality ?? "";
+    } else {
+      currentAddress += place.locality ?? "";
+    }
+    currentAddress += ", ";
+    if (place.subAdministrativeArea != null) {
+      currentAddress += place.subAdministrativeArea ?? "";
+    }
+    if (place.administrativeArea != null &&
+        (place.name == null || place.name == "")) {
+      currentAddress += place.administrativeArea ?? "";
+    }
 
-    final currentAddress =
-        '${place.subLocality}  ${place.subAdministrativeArea} ${place.administrativeArea}';
     logger.d('Location ::$currentAddress');
     return currentAddress;
   }).catchError((e) {
+    errorSnackBar('Unable to fetch address $e');
     logger.e(e);
-    return 'Select Location';
+    throw e;
   });
   return address;
 }

@@ -52,8 +52,12 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Change Batsman',
-                style: Get.textTheme.headlineMedium,
+                'Select Wicket Type',
+                style: Get.textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  fontSize: 18 * Get.textScaleFactor,
+                  color: Colors.black,
+                ),
               ),
               Row(
                 children: [
@@ -67,7 +71,11 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                           outType = e!;
                         });
                       },
-                      title: const Text('Run Out'),
+                      title: const Text(
+                        'Run Out',
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                   Expanded(
@@ -103,7 +111,11 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                           outType = e.toString();
                         });
                       },
-                      title: const Text('Caught'),
+                      title: const Text(
+                        'Caught',
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                 ],
@@ -138,7 +150,11 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                           outType = e!;
                         });
                       },
-                      title: const Text('Bowled'),
+                      title: const Text(
+                        'Bowled',
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                   Expanded(
@@ -167,13 +183,14 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                           outType = e!;
                         });
                       },
-                      title: const Text('Stumped'),
+                      title: const Text(
+                        'Stumped',
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                 ],
-              ),
-              const SizedBox(
-                height: 30,
               ),
               Row(
                 children: [
@@ -205,7 +222,11 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                           outType = e!;
                         });
                       },
-                      title: const Text('Leg Before Wicket'),
+                      title: const Text(
+                        'Leg Before Wicket',
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                   Expanded(
@@ -234,19 +255,28 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                           outType = e!;
                         });
                       },
-                      title: const Text('Hit Wicket'),
+                      title: const Text(
+                        'Hit Wicket',
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
                 ],
               ),
-              const Text('Choose Player ',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  )),
               const SizedBox(
                 height: 30,
               ),
+              outType == "RO"
+                  ? Text(
+                      'Choose Player ',
+                      style: Get.textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 18 * Get.textScaleFactor,
+                        color: Colors.black,
+                      ),
+                    )
+                  : const SizedBox(),
               outType == "RO"
                   ? Row(
                       children: [
@@ -260,8 +290,9 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                                 playerToOut = e!;
                               });
                             },
-                            title:
-                                Text(controller.scoreboard.value!.striker.name),
+                            title: Text(
+                              controller.scoreboard.value!.striker.name,
+                            ),
                           ),
                         ),
                         Expanded(
@@ -281,31 +312,33 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                       ],
                     )
                   : const SizedBox(),
-              PlayerDropDownWidget(
-                onSelect: (e) {
-                  setState(() {
-                    selectedBatsman = e;
-                  });
+              if (controller.scoreboard.value!.lastBall.wickets < 9)
+                PlayerDropDownWidget(
+                  onSelect: (e) {
+                    setState(() {
+                      selectedBatsman = e;
+                    });
 
-                  Get.back();
-                },
-                items: players,
-                selectedValue: selectedBatsman?.name ?? 'Select Batsman',
-                title: 'Select Batsman',
-              ),
+                    Get.back();
+                  },
+                  items: players,
+                  selectedValue: selectedBatsman?.name ?? 'Select Batsman',
+                  title: 'Select Batsman',
+                ),
               PrimaryButton(
                 onTap: () {
-                  if (selectedBatsman == null) {
+                  if (selectedBatsman == null &&
+                      controller.scoreboard.value!.lastBall.wickets < 9) {
                     errorSnackBar('Please select a batsman');
                     return;
-                  }
+                  } else {}
                   Navigator.pop(context, {
-                    'batsmanId': selectedBatsman!.id,
+                    'batsmanId': selectedBatsman?.id ?? players.first.id,
                     'outType': outType,
                     'playerToOut': outType == 'RO' ? playerToOut : null,
                   });
                 },
-                title: 'Change Batsman',
+                title: 'Submit',
               )
             ],
           ),

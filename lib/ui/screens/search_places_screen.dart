@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
@@ -44,9 +45,15 @@ class SearchPlacesScreenState extends State<SearchPlacesScreen> {
                     title: const Text('Use current location',
                         style: TextStyle(color: Colors.blue, fontSize: 16)),
                     onTap: () async {
-                      final postion = await determinePosition();
+                      logger.d('Use current location');
+                      final postion = await determinePosition(
+                          accuracy: LocationAccuracy.medium,
+                          forceAndroidLocationManager: true);
+                      // await successSnackBar(
+                      //     ' ${postion.latitude} ${postion.longitude}');
                       final address = await getAddressFromLatLng(
                           postion.latitude, postion.longitude);
+
                       widget.onSelected?.call(Prediction(
                           description: address,
                           lat: postion.latitude.toString(),

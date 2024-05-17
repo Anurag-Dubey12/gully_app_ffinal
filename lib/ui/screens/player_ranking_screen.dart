@@ -238,37 +238,47 @@ class _TeamCard extends StatelessWidget {
         child: Row(
           children: [
             CircleAvatar(
-              radius: 29,
+              radius: 23,
               backgroundColor: Colors.grey.shade300,
               backgroundImage:
                   NetworkImage(toImageUrl(player.profilePhoto ?? "")),
             ),
             const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(player.playerName,
-                    style: Get.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.black)),
-                if (selectedChildTab == 'batting')
-                  Text(
-                    'Inn ${player.innings} | SR:${player.strikeRate?.toStringAsFixed(2)} | Runs: ${player.runs} |\nFours: ${player.fours} | Sixes: ${player.sixes}',
-                    style: Get.textTheme.bodyMedium
-                        ?.copyWith(color: Colors.black54, fontSize: 12),
-                  ),
-                if (selectedChildTab == 'bowling')
-                  Text(
-                    'Wickets ${player.wickets} | Economy:${player.economy?.toStringAsFixed(2)} | Runs: ${player.runs} |\nFours: ${player.fours} | Sixes: ${player.sixes}',
-                    style: Get.textTheme.bodyMedium
-                        ?.copyWith(color: Colors.black54, fontSize: 12),
-                  ),
-                if (selectedChildTab == 'all-rounder')
-                  Text(
-                    'Inn ${player.innings} | SR:${player.strikeRate?.toStringAsFixed(2)} | Runs: ${player.runs} |Fours: ${player.fours} | Sixes: ${player.sixes} \n| Wickets ${player.wickets} | Economy:${player.economy?.toStringAsFixed(2)}',
-                    style: Get.textTheme.bodyMedium
-                        ?.copyWith(color: Colors.black54, fontSize: 12),
-                  ),
-              ],
+            Expanded(
+              child: Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(player.playerName,
+                        style: Get.textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 19)),
+                    if (selectedChildTab == 'batting')
+                      Text(
+                        'Inn ${player.innings} | SR:${player.strikeRate?.toStringAsFixed(2)} | Runs: ${player.runs} |\nFours: ${player.fours} | Sixes: ${player.sixes}',
+                        style: Get.textTheme.bodyMedium
+                            ?.copyWith(color: Colors.black54, fontSize: 12),
+                      ),
+                    if (selectedChildTab == 'bowling')
+                      FittedBox(
+                        child: Text(
+                          'Wickets ${player.wickets} | Economy:${player.economy?.toStringAsFixed(2)} | Runs: ${player.runs} |\nFours: ${player.fours} | Sixes: ${player.sixes}',
+                          style: Get.textTheme.bodyMedium
+                              ?.copyWith(color: Colors.black54, fontSize: 12),
+                        ),
+                      ),
+                    if (selectedChildTab == 'all-rounder')
+                      FittedBox(
+                        child: Text(
+                          'Inn ${player.innings} | SR:${player.strikeRate?.toStringAsFixed(2)} | Runs: ${player.runs} |Fours: ${player.fours} | Sixes: ${player.sixes} \n| Wickets ${player.wickets} | Economy:${player.economy?.toStringAsFixed(2)}',
+                          style: Get.textTheme.bodyMedium
+                              ?.copyWith(color: Colors.black54, fontSize: 13),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             )
           ],
         ),

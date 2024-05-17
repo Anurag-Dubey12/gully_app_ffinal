@@ -26,12 +26,14 @@ class RankingApi {
     return ApiResponse.fromJson(response.body);
   }
 
-  Future<ApiResponse> getTopPerformers(String ballType) async {
+  Future<ApiResponse> getTopPerformers(
+      String ballType, DateTime startDate) async {
     final position = Get.find<TournamentController>().coordinates.value;
     var response = await client.post('/match/topPerformers', {
       'filter': ballType,
       'latitude': position.latitude,
-      'longitude': position.longitude
+      'longitude': position.longitude,
+      'startDate': startDate.toIso8601String()
     });
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';

@@ -143,7 +143,7 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
                         },
                         decoration: InputDecoration(
                           isDense: true,
-
+                          counter: const SizedBox(),
                           suffixIcon: const Icon(
                             CupertinoIcons.search,
                             color: AppTheme.secondaryYellowColor,
@@ -438,7 +438,7 @@ class _Challenges extends StatelessWidget {
             const Spacer(),
             Row(
               children: [
-                isChallengedByMe
+                isChallengedByMe && team.status == "Pending"
                     ? Container(
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(90),

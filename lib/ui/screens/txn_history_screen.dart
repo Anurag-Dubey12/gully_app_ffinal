@@ -25,7 +25,7 @@ class TxnHistoryScreen extends GetView<TournamentController> {
                 ?.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
           )),
       body: Padding(
-        padding: const EdgeInsets.all(18.0),
+        padding: const EdgeInsets.all(12.0),
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -82,56 +82,87 @@ class _TxnHistoryCard extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
           ),
           child: Padding(
-            padding: const EdgeInsets.all(18.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Row(
                   children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: transaction.status == "captured"
-                              ? Colors.green
-                              : transaction.status == "created"
-                                  ? Colors.orange
-                                  : Colors.red,
-                          // child:  Icon(Icons.warning),
-                          child: transaction.status == "captured"
-                              ? const Icon(Icons.check)
-                              : transaction.status == "created"
-                                  ? const Icon(Icons.warning)
-                                  : const Icon(Icons.error),
-                        ),
-                        const SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(transaction.tournamentName,
-                                style: Get.textTheme.bodyMedium?.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 19)),
-                            Text(
-                              DateFormat('dd/MM/yyyy @hh:mm a').format(
-                                  DateTime.parse(transaction.createdAt)),
-                              style: Get.textTheme.bodySmall
-                                  ?.copyWith(color: Colors.grey),
-                            )
-                          ],
-                        )
-                      ],
+                    Expanded(
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                              radius: 18,
+                              backgroundColor:
+                                  generateStatusText(transaction.status) ==
+                                          "Success"
+                                      ? Colors.green
+                                      : Colors.red,
+                              // child:  Icon(Icons.warning),
+                              child: generateStatusText(transaction.status) ==
+                                      "Success"
+                                  ? const Icon(Icons.check_rounded)
+                                  : Padding(
+                                      padding: const EdgeInsets.all(9.0),
+                                      child: Image.asset(
+                                        "assets/images/cancel.png",
+                                        scale: 0.4,
+                                      ),
+                                    )),
+                          const SizedBox(width: 10),
+                          FittedBox(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(transaction.tournamentName,
+                                    style: Get.textTheme.bodyMedium?.copyWith(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 18)),
+                                Text(
+                                  DateFormat('MMMM dd, yyyy - hh:mm a').format(
+                                      DateTime.parse(transaction.createdAt)),
+                                  style: Get.textTheme.bodySmall?.copyWith(
+                                      color: Colors.grey.shade700,
+                                      fontSize: 12),
+                                ),
+                                const SizedBox(
+                                  height: 4,
+                                ),
+                                SizedBox(
+                                  width: Get.width * 0.53,
+                                  child: Text(
+                                    "Transaction ID: ${transaction.orderId.toUpperCase()}",
+                                    // maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Get.textTheme.bodySmall?.copyWith(
+                                        color: Colors.grey, fontSize: 10),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ),
-                    const Spacer(),
+                    const SizedBox(
+                      width: 30,
+                    ),
                     Chip(
-                      label: Text(transaction.status.capitalize,
-                          style: Get.textTheme.bodyMedium?.copyWith(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600)),
+                      padding: EdgeInsets.zero,
+                      labelPadding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 1),
+                      label: FittedBox(
+                        child: Text(generateStatusText(transaction.status),
+                            style: Get.textTheme.bodyMedium?.copyWith(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w700)),
+                      ),
                       backgroundColor: transaction.status == "captured"
                           ? Colors.green
                           : transaction.status == "created"
-                              ? Colors.orange
+                              ? Colors.red
                               : Colors.red,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -146,6 +177,19 @@ class _TxnHistoryCard extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+String generateStatusText(String status) {
+  switch (status) {
+    case 'captured':
+      return 'Success';
+    case 'created':
+      return 'Failed';
+    case 'failed':
+      return 'Failed';
+    default:
+      return 'Failed';
   }
 }
 

@@ -11,6 +11,7 @@ class NotificationModel {
   final String? notificationType;
   final String? notificationId;
   final DateTime createdAt;
+  bool isRead = false;
 
   NotificationModel(
       {required this.title,

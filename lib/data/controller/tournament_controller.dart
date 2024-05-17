@@ -309,7 +309,7 @@ class TournamentController extends GetxController
     try {
       final response = await tournamentApi.getTransactions();
 
-      return response.data!['transactions']
+      return response.data!['transactions']['history']
           .map<Transaction>((e) => Transaction.fromJson(e))
           .toList();
     } catch (e) {

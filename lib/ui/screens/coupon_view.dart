@@ -27,7 +27,7 @@ class _CouponViewState extends State<CouponView> {
         backgroundColor: Colors.transparent,
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
-          title: const Text('Promocodes for you',
+          title: const Text('Promo code for you',
               style: TextStyle(color: Colors.white, fontSize: 23)),
           centerTitle: true,
           backgroundColor: AppTheme.primaryColor,
@@ -43,7 +43,7 @@ class _CouponViewState extends State<CouponView> {
                   decoration: InputDecoration(
                     isDense: true,
                     filled: true,
-                    hintText: 'Enter Coupon Code',
+                    hintText: 'Type promo code here',
                     hintStyle:
                         const TextStyle(color: Colors.grey, fontSize: 14),
                     suffixIcon: TextButton(
@@ -84,7 +84,7 @@ class _CouponViewState extends State<CouponView> {
                           itemBuilder: ((context, index) {
                             return Container(
                               margin: const EdgeInsets.all(10),
-                              padding: const EdgeInsets.all(4),
+                              // padding: const EdgeInsets.all(4),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(20),
@@ -100,8 +100,8 @@ class _CouponViewState extends State<CouponView> {
                                       children: [
                                         Text(snapshot.data![index].title,
                                             style: const TextStyle(
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600)),
+                                                fontSize: 22,
+                                                fontWeight: FontWeight.w700)),
                                         // description
                                         Text(snapshot.data![index].description,
                                             style: TextStyle(

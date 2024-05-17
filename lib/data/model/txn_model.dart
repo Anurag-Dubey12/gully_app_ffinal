@@ -22,9 +22,9 @@ class Transaction {
   //to convert json to model
   factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
-      tournamentName: json['tournamentId']['tournamentName'],
-      startDate: json['tournamentId']['tournamentStartDateTime'],
-      endDate: json['tournamentId']['tournamentEndDateTime'],
+      tournamentName: json['tournament']['tournamentName'],
+      startDate: json['tournament']['tournamentStartDateTime'],
+      endDate: json['tournament']['tournamentEndDateTime'],
       status: json['status'],
       amount: double.parse(json['amount'].toString()),
       coupon: json['coupon'],

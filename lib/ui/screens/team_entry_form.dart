@@ -108,7 +108,7 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                               height: 20,
                                             ),
                                             const Text(
-                                              'Your request has been sent to the organizer. You will be notified once your request is accepted.',
+                                              'Your team request has been sent to the organizer. Please wait for them to accept.',
                                               textAlign: TextAlign.center,
                                               style: TextStyle(
                                                 fontSize: 14,

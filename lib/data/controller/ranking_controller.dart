@@ -36,9 +36,10 @@ class RankingController extends GetxController {
   }
 
   //topperformers
-  Future<List<PlayerRankingModel>> getTopPerformers(String ballType) async {
+  Future<List<PlayerRankingModel>> getTopPerformers(
+      String ballType, DateTime startDate) async {
     try {
-      final response = await api.getTopPerformers(ballType);
+      final response = await api.getTopPerformers(ballType, startDate);
 
       return response.data!['topPerformers']
           .map<PlayerRankingModel>((e) => PlayerRankingModel.fromJson(e))

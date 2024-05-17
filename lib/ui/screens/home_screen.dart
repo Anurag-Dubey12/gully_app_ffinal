@@ -32,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     Get.find<AuthController>().getUser();
+    Get.find<MiscController>().getBanners();
     FirebaseMessaging.instance.getToken().then((value) {
       Get.find<AuthController>().updateProfile(fcmToken: value);
     });
@@ -170,6 +171,26 @@ class HomePage extends StatelessWidget {
                           const SizedBox(
                             height: 20,
                           ),
+                          // TextButton(
+                          //     onPressed: () {
+                          //       FirebaseMessaging.instance
+                          //           .getToken()
+                          //           .then((value) {
+                          //         logger.d(value);
+                          //         // Get.find<AuthController>()
+                          //         //     .updateProfile(fcmToken: value);
+                          //         Get.find<NotificationController>()
+                          //             .addNotification(NotificationModel(
+                          //                 title: 'Testnotification',
+                          //                 body: 'Testnotification',
+                          //                 image: null,
+                          //                 deepLink: null,
+                          //                 notificationType: null,
+                          //                 notificationId: null,
+                          //                 createdAt: DateTime.now()));
+                          //       });
+                          //     },
+                          //     child: const Text('FCM')),
                           const FullBannerSlider(),
                           const SizedBox(height: 20),
                           const DateTimesCard(),

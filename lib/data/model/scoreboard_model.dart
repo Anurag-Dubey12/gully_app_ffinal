@@ -252,6 +252,17 @@ class ScoreboardModel {
     }
   }
 
+  bool get isFirstInningsOver {
+    logger.i('Checking if first innings is over $matchId');
+    if (currentInnings == 1) {
+      if (currentOver == totalOvers || lastBall.wickets == 10) {
+        logger.i('First innings over');
+        return true;
+      }
+    }
+    return false;
+  }
+
   bool get isSecondInningsOver {
     logger.i('Checking if second innings is over $matchId');
     if (currentInnings == 2) {
@@ -303,6 +314,7 @@ class ScoreboardModel {
 
   Future<void> addRuns(int runs,
       {List<EventType>? events, List<EventType>? extraEvents}) async {
+    bool shouldAddRuns = true;
     events ??= [];
     int extraRuns = 0;
     int wickets = 0;
@@ -312,7 +324,9 @@ class ScoreboardModel {
 
     if (!events.contains(EventType.legByes) &&
         !events.contains(EventType.bye) &&
-        !events.contains(EventType.wide)) {
+        !events.contains(EventType.wide) &&
+        !events.contains(EventType.wicket)) {
+      logger.d("Adding runs to striker");
       striker.batting!.runs = striker.batting!.runs + runs;
       _partnershipStriker.batting!.runs =
           _partnershipStriker.batting!.runs + runs;
@@ -354,7 +368,14 @@ class ScoreboardModel {
       logger.i(res);
 
       wickets += 1;
-
+      if (res['outType'] == "RO") {
+        logger.i('Adding runs to striker on run out');
+        striker.batting!.runs = striker.batting!.runs + runs;
+        _partnershipStriker.batting!.runs =
+            _partnershipStriker.batting!.runs + runs;
+      } else {
+        shouldAddRuns = false;
+      }
       if (res['playerToOut'] != null) {
         if (res['playerToOut'] == strikerId) {
           striker.batting!.outType = res['outType'];
@@ -400,6 +421,7 @@ class ScoreboardModel {
       }
 
       extraRuns += 1;
+
       currentInningsScore += runs + extraRuns;
       ballsToBowl += 1;
       logger.d(key);
@@ -416,21 +438,23 @@ class ScoreboardModel {
       });
       bowler.bowling!.addRuns(runs, events: events);
     } else {
-      currentInningsScore += runs;
-      logger.d(key);
+      if (shouldAddRuns) {
+        currentInningsScore += runs;
+      }
+
       ballsToBowl += 1;
       getCurrentInnings.addAll({
         key: OverModel(
           over: over,
           ball: ball,
-          run: runs,
+          run: shouldAddRuns ? runs : 0,
           wickets: lastBall.wickets + wickets,
           extra: extraRuns,
           total: currentInningsScore,
           events: events,
         ),
       });
-      bowler.bowling!.addRuns(runs, events: events);
+      bowler.bowling!.addRuns(shouldAddRuns ? runs : 0, events: events);
     }
 
     // generate text for the second innings eg : Mi needs 100 runs in 10 overs

@@ -1,36 +1,96 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="main.dart" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/lib/main.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
   </component>
-  <component name="ToolWindowManager">
-    <editor active="true" />
-    <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-    </layout>
+  <component name="ChangeListManager">
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gully_app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/gully_app.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/api/ranking_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/ranking_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/auth_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/auth_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/notification_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/notification_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/ranking_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/ranking_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/notification_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/notification_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/notification_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/notification_model.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/txn_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/txn_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/contact_us_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/contact_us_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/coupon_view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/coupon_view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/my_teams.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/my_teams.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/notification_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/notification_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/payment_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/payment_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/player_ranking_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/player_ranking_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/search_challenge_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/search_challenge_team.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/search_places_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/search_places_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/signup_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/signup_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/txn_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/txn_details.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/txn_history_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/txn_history_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/sports_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/sports_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/top_header.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/top_header.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/batting_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/batting_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/change_batter.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/change_batter.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/event_cards.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/event_cards.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/event_handler.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/event_handler.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/geo_locator_helper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils/geo_locator_helper.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/utils.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils/utils.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="2gXnNtSesvuJqDz6uUGrsz3SXA0" />
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1">
-    </navigator>
+    <navigator currentView="ProjectPane" proportions="" version="1" />
     <panes>
       <pane id="ProjectPane">
         <option name="show-excluded-files" value="false" />
       </pane>
     </panes>
   </component>
-  <component name="PropertiesComponent">
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="dart.analysis.tool.window.force.activate" value="true" />
-    <property name="show.migrate.to.gradle.popup" value="false" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "cidr.known.project.marker": "true",
+    "com.android.tools.idea.devicemanager.tab": "Physical",
+    "dart.analysis.tool.window.visible": "false",
+    "last_opened_file_path": "/Users/inderpalsingh/Work/Projects/NileeGames/gully_app",
+    "show.migrate.to.gradle.popup": "false"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="" />
+      <created>1715852752954</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1715852752954</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <editor active="true" />
+    <layout>
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+    </layout>
   </component>
 </project>

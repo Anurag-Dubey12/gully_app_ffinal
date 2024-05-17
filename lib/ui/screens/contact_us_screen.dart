@@ -197,7 +197,9 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     const SizedBox(
                       width: 10,
                     ),
-                    Text(AppLocalizations.of(context)!.addressInfo),
+                    SizedBox(
+                        width: Get.width * 0.7,
+                        child: Text(AppLocalizations.of(context)!.addressInfo)),
                   ],
                 ),
                 SizedBox(

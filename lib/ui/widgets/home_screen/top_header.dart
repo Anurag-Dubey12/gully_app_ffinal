@@ -54,11 +54,16 @@ class TopHeader extends GetView<AuthController> {
                   },
                   child: Obx(() => SizedBox(
                         width: Get.width * 0.5,
-                        child: Text(
-                          controller.state!.captializedName,
-                          style: Get.textTheme.titleLarge?.copyWith(
-                            color: Colors.white,
-                            fontSize: Get.textScaleFactor * 24,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            controller.state!.captializedName,
+                            textAlign: TextAlign.start,
+                            style: Get.textTheme.titleLarge?.copyWith(
+                              color: Colors.white,
+                              fontSize: Get.textScaleFactor * 24,
+                            ),
                           ),
                         ),
                       )),
@@ -109,18 +114,21 @@ class _NotificationIcon extends GetView<NotificationController> {
               Icons.notifications,
               size: 23,
             ),
-            controller.notifications.value.isNotEmpty
-                ? Positioned(
-                    right: 0,
-                    child: Container(
-                      width: 10,
-                      height: 10,
-                      decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(99)),
-                    ),
-                  )
-                : const SizedBox(),
+            Obx(
+              () => controller.notifications.value
+                      .any((element) => element.isRead == false)
+                  ? Positioned(
+                      right: 0,
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(99)),
+                      ),
+                    )
+                  : const SizedBox(),
+            )
           ],
         ),
         onPressed: () {
@@ -145,9 +153,9 @@ class LocationBuilder extends GetView<AuthController> {
       onTap: () {
         Get.to(() => SearchPlacesScreen(
               showSelectCurrentLocation: true,
-              // title: 'Select Location',
               title: AppLocalizations.of(context)!.selectLocation,
               onSelected: (e) async {
+                logger.f('Location Description: ${e.description}');
                 controller.setLocation = e.description ?? 'Fetching Location';
                 final tournamentController = Get.find<TournamentController>();
 

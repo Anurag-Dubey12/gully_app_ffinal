@@ -115,11 +115,12 @@ class BatterPlayerStat extends StatelessWidget {
                   child: Text(player.batting!.sixes.toString(),
                       style: Get.textTheme.labelMedium))),
           Expanded(
-              child: Center(
-                  child: Text(
-                      '${player.batting!.strikeRate.toStringAsFixed(1)}%',
-                      style:
-                          Get.textTheme.labelMedium?.copyWith(fontSize: 11))))
+              child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Center(
+                child: Text('${player.batting!.strikeRate.toStringAsFixed(1)}%',
+                    style: Get.textTheme.labelMedium?.copyWith(fontSize: 11))),
+          ))
         ],
       ),
     );

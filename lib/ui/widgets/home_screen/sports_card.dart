@@ -44,11 +44,13 @@ class SportsCard extends StatelessWidget {
                       width: 18,
                     ),
               const SizedBox(height: 5),
-              Text(
-                index != 0 ? 'Upcoming' : 'Cricket',
-                style: TextStyle(
-                    color: index == 0 ? Colors.white : Colors.grey,
-                    fontSize: 10),
+              FittedBox(
+                child: Text(
+                  index != 0 ? 'Upcoming' : 'Cricket',
+                  style: TextStyle(
+                      color: index == 0 ? Colors.white : Colors.grey,
+                      fontSize: 10),
+                ),
               )
             ],
           ),

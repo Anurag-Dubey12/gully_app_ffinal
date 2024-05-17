@@ -4,6 +4,7 @@ import 'package:gully_app/data/model/player_ranking_model.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/ranking_controller.dart';
+import '../../utils/date_time_helpers.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
@@ -16,6 +17,7 @@ class TopPerformersScreen extends StatefulWidget {
 
 class _TopPerformersScreenState extends State<TopPerformersScreen> {
   int _selectedTab = 0;
+  DateTime? selectedDate;
   @override
   Widget build(BuildContext context) {
     final controller = Get.putOrFind(() => RankingController(Get.find()));
@@ -95,7 +97,6 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                                 text: 'Tennis ball',
                                 onTap: (st) {
                                   setState(() {
-                                    // ignore: unnecessary_statements
                                     _selectedTab = st;
                                   });
                                 },
@@ -103,22 +104,86 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                             ],
                           ),
                         ),
-                        // Center(
-                        //   child: Padding(
-                        //     padding: const EdgeInsets.all(8.0),
-                        //     child: Text('Most matches played in Mumbai',
-                        //         style: Get.textTheme.bodyMedium?.copyWith(
-                        //             fontWeight: FontWeight.w400,
-                        //             color: Colors.black)),
-                        //   ),
-                        // ),
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text('Daily top Perfomer',
+                                style: Get.textTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.grey.shade800,
+                                )),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          color: Colors.black26,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    showDatePicker(
+                                            context: context,
+                                            initialDate: DateTime.now(),
+                                            firstDate: DateTime(2021),
+                                            lastDate: DateTime(2025))
+                                        .then((value) {
+                                      setState(() {
+                                        selectedDate = value;
+                                      });
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(40)),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const SizedBox(width: 10),
+                                          Text(
+                                              selectedDate == null
+                                                  ? 'Today'
+                                                  : formatDateTime(
+                                                      'dd MMMM yyyy',
+                                                      selectedDate!),
+                                              style: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14)),
+                                          const SizedBox(width: 10),
+                                          const Icon(
+                                            Icons.calendar_month,
+                                            color:
+                                                AppTheme.secondaryYellowColor,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
                         Expanded(
                           child: Container(
                             color: Colors.black26,
                             // height: Get.height * 0.6,
                             child: FutureBuilder<List<PlayerRankingModel>>(
                                 future: controller.getTopPerformers(
-                                    _selectedTab == 0 ? 'leather' : 'tennis'),
+                                    _selectedTab == 0 ? 'leather' : 'tennis',
+                                    selectedDate ?? DateTime.now()),
                                 builder: (context, snapshot) {
                                   return ListView.separated(
                                       padding: const EdgeInsets.all(20),

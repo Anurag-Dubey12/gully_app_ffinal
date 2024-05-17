@@ -9,7 +9,6 @@ class MiscController extends GetxController with StateMixin {
 
   MiscController({required this.repo}) {
     change(GetStatus.empty());
-    getBanners();
   }
   RxList<BannerModel> banners = <BannerModel>[].obs;
   Future<String> getContent(String slug) async {

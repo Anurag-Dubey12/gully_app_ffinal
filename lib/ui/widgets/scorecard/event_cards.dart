@@ -73,17 +73,25 @@ class PartnershipDialog extends GetView<ScoreBoardController> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(partnerships.values
-                                                .elementAt(index)
-                                                .player1
-                                                .name),
+                                            Text(
+                                                partnerships.values
+                                                    .elementAt(index)
+                                                    .player1
+                                                    .name,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w600)),
                                             const SizedBox(height: 10),
-                                            Text(partnerships.values
-                                                .elementAt(index)
-                                                .player1
-                                                .batting!
-                                                .runs
-                                                .toString())
+                                            Text(
+                                                partnerships.values
+                                                    .elementAt(index)
+                                                    .player1
+                                                    .batting!
+                                                    .runs
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 16))
                                           ],
                                         )),
                                     const SizedBox(width: 10),
@@ -91,13 +99,13 @@ class PartnershipDialog extends GetView<ScoreBoardController> {
                                         child: Column(
                                       children: [
                                         Text(
-                                            '(${partnerships.values.elementAt(index).runs})',
+                                            '${partnerships.values.elementAt(index).runs}',
                                             style: const TextStyle(
                                                 fontSize: 18,
                                                 fontWeight: FontWeight.w900,
                                                 color: Colors.green)),
                                         Text(
-                                            '${partnerships.values.elementAt(index).balls} balls',
+                                            '(${partnerships.values.elementAt(index).balls} balls)',
                                             style: const TextStyle(
                                               fontSize: 13,
                                             )),
@@ -109,16 +117,25 @@ class PartnershipDialog extends GetView<ScoreBoardController> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.end,
                                           children: [
-                                            Text(partnerships.values
-                                                .elementAt(index)
-                                                .player2
-                                                .name),
-                                            Text(partnerships.values
-                                                .elementAt(index)
-                                                .player2
-                                                .batting!
-                                                .runs
-                                                .toString()),
+                                            Text(
+                                                partnerships.values
+                                                    .elementAt(index)
+                                                    .player2
+                                                    .name,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w600)),
+                                            const SizedBox(height: 10),
+                                            Text(
+                                                partnerships.values
+                                                    .elementAt(index)
+                                                    .player2
+                                                    .batting!
+                                                    .runs
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.w600,
+                                                    fontSize: 16)),
                                             const SizedBox(height: 10),
                                           ],
                                         )),

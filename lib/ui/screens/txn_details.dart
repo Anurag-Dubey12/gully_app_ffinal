@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_media_downloader/flutter_media_downloader.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/txn_history_screen.dart';
@@ -9,9 +10,16 @@ import 'package:intl/intl.dart';
 import '../../data/model/txn_model.dart';
 import 'payment_page.dart';
 
-class TxnDetailsView extends StatelessWidget {
+class TxnDetailsView extends StatefulWidget {
   final Transaction transaction;
   const TxnDetailsView({super.key, required this.transaction});
+
+  @override
+  State<TxnDetailsView> createState() => _TxnDetailsViewState();
+}
+
+class _TxnDetailsViewState extends State<TxnDetailsView> {
+  final _flutterMediaDownloaderPlugin = MediaDownload();
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +56,58 @@ class TxnDetailsView extends StatelessWidget {
               child: Wrap(
                 runSpacing: 10,
                 children: [
+                  // Center(
+                  //   child: ElevatedButton(
+
+                  //       child: const Text('Media Download')),
+                  // ),
                   Center(
-                    child: Text(transaction.tournamentName.capitalize,
+                    child: Text(widget.transaction.tournamentName.capitalize,
                         style: const TextStyle(
                             color: AppTheme.secondaryYellowColor,
                             fontSize: 24,
                             fontWeight: FontWeight.bold)),
                   ),
+                  if (widget.transaction.invoiceUrl != null)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () async {
+                            _flutterMediaDownloaderPlugin.downloadMedia(
+                              context,
+                              widget.transaction.invoiceUrl!,
+                            );
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.grey.shade400),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                // mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/images/invoice.png',
+                                    height: 20,
+                                    width: 20,
+                                  ),
+                                  const SizedBox(width: 10),
+                                  const Text('Download Invoice',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500)),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   Row(
                     children: [
                       const Text('Transaction Status',
@@ -64,13 +117,15 @@ class TxnDetailsView extends StatelessWidget {
                           )),
                       const Spacer(),
                       Chip(
-                        label: Text(generateStatusText(transaction.status),
+                        label: Text(
+                            generateStatusText(widget.transaction.status),
                             style: const TextStyle(
                                 color: Colors.white, fontWeight: FontWeight.w600
                                 // fontSize: 14,
                                 )),
                         backgroundColor:
-                            generateStatusText(transaction.status) == "Success"
+                            generateStatusText(widget.transaction.status) ==
+                                    "Success"
                                 ? Colors.green
                                 : Colors.red,
                         shape: RoundedRectangleBorder(
@@ -87,7 +142,7 @@ class TxnDetailsView extends StatelessWidget {
                             fontSize: 14,
                           )),
                       const Spacer(),
-                      Text(transaction.orderId,
+                      Text(widget.transaction.orderId,
                           style: const TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 14,
@@ -103,8 +158,8 @@ class TxnDetailsView extends StatelessWidget {
                           )),
                       const Spacer(),
                       Text(
-                          DateFormat('dd/MM/yyyy @hh:mm a')
-                              .format(DateTime.parse(transaction.createdAt)),
+                          DateFormat('MMMM dd, yyyy - hh:mm a').format(
+                              DateTime.parse(widget.transaction.createdAt)),
                           style: const TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 14,
@@ -114,13 +169,13 @@ class TxnDetailsView extends StatelessWidget {
                   //fee
                   Row(
                     children: [
-                      const Text('Transaction Fee',
+                      const Text('Transaction Fees',
                           style: TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 14,
                           )),
                       const Spacer(),
-                      Text('₹ ${transaction.amountWithoutCoupon}',
+                      Text('₹ ${widget.transaction.amountWithoutCoupon}',
                           style: const TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 14,
@@ -137,7 +192,7 @@ class TxnDetailsView extends StatelessWidget {
                           )),
                       const Spacer(),
                       Text(
-                          '₹${transaction.amountWithoutCoupon - transaction.amount}',
+                          '- ₹${widget.transaction.amountWithoutCoupon - widget.transaction.amount}',
                           style: const TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 14,
@@ -153,7 +208,7 @@ class TxnDetailsView extends StatelessWidget {
                             fontSize: 14,
                           )),
                       const Spacer(),
-                      Text('₹ ${transaction.amount}',
+                      Text('₹ ${widget.transaction.amount}',
                           style: const TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 22,
@@ -193,8 +248,8 @@ class TxnDetailsView extends StatelessWidget {
                           )),
                       const Spacer(),
                       Text(
-                          DateFormat('dd/MM/yyyy')
-                              .format(DateTime.parse(transaction.startDate)),
+                          DateFormat('dd/MM/yyyy').format(
+                              DateTime.parse(widget.transaction.startDate)),
                           style: const TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 14,
@@ -210,8 +265,8 @@ class TxnDetailsView extends StatelessWidget {
                           )),
                       const Spacer(),
                       Text(
-                          DateFormat('dd/MM/yyyy')
-                              .format(DateTime.parse(transaction.endDate)),
+                          DateFormat('dd/MM/yyyy').format(
+                              DateTime.parse(widget.transaction.endDate)),
                           style: const TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 14,
@@ -226,7 +281,7 @@ class TxnDetailsView extends StatelessWidget {
                             fontSize: 14,
                           )),
                       const Spacer(),
-                      Text('₹ ${transaction.amount} ',
+                      Text('₹ ${widget.transaction.amount} ',
                           style: const TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 14,

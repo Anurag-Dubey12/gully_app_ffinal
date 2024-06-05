@@ -8,6 +8,7 @@ class Transaction {
   final double amountWithoutCoupon;
   final String orderId;
   final String createdAt;
+  final String? invoiceUrl;
 
   Transaction(
       {required this.tournamentName,
@@ -18,6 +19,7 @@ class Transaction {
       required this.coupon,
       required this.amountWithoutCoupon,
       required this.orderId,
+      required this.invoiceUrl,
       required this.createdAt});
   //to convert json to model
   factory Transaction.fromJson(Map<String, dynamic> json) {
@@ -31,6 +33,7 @@ class Transaction {
       amountWithoutCoupon: double.parse(json['amountWithoutCoupon'].toString()),
       orderId: json['orderId'],
       createdAt: json['createdAt'],
+      invoiceUrl: json['invoiceUrl'],
     );
   }
 }

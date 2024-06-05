@@ -125,7 +125,7 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       errorSnackBar(e.message ?? "Something went wrong at Firebase Auth");
       return false;
     } catch (e) {
-      errorSnackBar('Something went wrong');
+      errorSnackBar(e.toString());
       change(GetStatus.error(e.toString()));
       return false;
     }

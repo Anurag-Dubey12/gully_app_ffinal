@@ -259,13 +259,13 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                                     controller.events
                                         .contains(EventType.wicket)) {
                                   errorSnackBar(
-                                      'You can not add six runs , a no ball and a wide');
+                                      'You cannot add six runs, a no ball and a wicket');
                                   return;
                                 }
                                 if (controller.events
                                     .contains(EventType.wicket)) {
                                   errorSnackBar(
-                                      'You can not add a six and a wicket');
+                                      'You can not add six runs and a wicket');
                                   return;
                                 }
 

@@ -85,6 +85,8 @@ PODS:
     - nanopb (< 2.30911.0, >= 2.30908.0)
     - PromisesSwift (~> 2.1)
   - Flutter (1.0.0)
+  - flutter_media_downloader (0.0.1):
+    - Flutter
   - flutter_native_contact_picker (0.0.1):
     - Flutter
   - fluttertoast (0.0.2):
@@ -198,6 +200,7 @@ DEPENDENCIES:
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
+  - flutter_media_downloader (from `.symlinks/plugins/flutter_media_downloader/ios`)
   - flutter_native_contact_picker (from `.symlinks/plugins/flutter_native_contact_picker/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - geocoding_ios (from `.symlinks/plugins/geocoding_ios/ios`)
@@ -263,6 +266,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
     :path: Flutter
+  flutter_media_downloader:
+    :path: ".symlinks/plugins/flutter_media_downloader/ios"
   flutter_native_contact_picker:
     :path: ".symlinks/plugins/flutter_native_contact_picker/ios"
   fluttertoast:
@@ -324,6 +329,7 @@ SPEC CHECKSUMS:
   FirebaseMessaging: 9f71037fd9db3376a4caa54e5a3949d1027b4b6e
   FirebaseSessions: f06853e30f99fe42aa511014d7ee6c8c319f08a3
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_media_downloader: fa9b4779cc9181aed48a0f1dbad5f54c5a5a4517
   flutter_native_contact_picker: bd430ba0fbf82768bb50c2c52a69a65759a8f907
   fluttertoast: 9f2f8e81bb5ce18facb9748d7855bf5a756fe3db
   geocoding_ios: a389ea40f6f548de6e63006a2e31bf66ff80769a

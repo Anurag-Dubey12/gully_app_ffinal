@@ -378,9 +378,11 @@ class ScoreboardModel {
       }
       if (res['playerToOut'] != null) {
         if (res['playerToOut'] == strikerId) {
+          striker.batting!.bowledBy = bowlerId;
           striker.batting!.outType = res['outType'];
           setStriker = res['batsmanId'];
         } else {
+          nonstriker.batting!.bowledBy = bowlerId;
           nonstriker.batting!.outType = res['outType'];
           setNonStriker = res['batsmanId'];
         }

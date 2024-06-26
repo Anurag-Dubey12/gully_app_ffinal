@@ -179,15 +179,6 @@ class HomePage extends StatelessWidget {
                           //         logger.d(value);
                           //         // Get.find<AuthController>()
                           //         //     .updateProfile(fcmToken: value);
-                          //         Get.find<NotificationController>()
-                          //             .addNotification(NotificationModel(
-                          //                 title: 'Testnotification',
-                          //                 body: 'Testnotification',
-                          //                 image: null,
-                          //                 deepLink: null,
-                          //                 notificationType: null,
-                          //                 notificationId: null,
-                          //                 createdAt: DateTime.now()));
                           //       });
                           //     },
                           //     child: const Text('FCM')),
@@ -329,7 +320,7 @@ class TitleWidget extends StatefulWidget {
 }
 
 class _TitleWidgetState extends State<TitleWidget> {
-  String selected = 'Past';
+  String selected = 'Current';
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();

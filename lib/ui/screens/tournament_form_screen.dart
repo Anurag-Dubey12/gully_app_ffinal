@@ -665,8 +665,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                               }
                               if (_cohost2Phone.text.trim().isEmpty &&
                                   e.isNotEmpty) {
-                                return AppLocalizations.of(context)!
-                                    .pleaseEnterCohost1ContactNo;
+                                return 'Please enter co-host 2 contact no';
                               }
                               if (e.isNotEmpty &&
                                   !RegExp(r'^[a-zA-Z]+$').hasMatch(e[0])) {
@@ -692,15 +691,13 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                             validator: (e) {
                               if ((_cohost2Name.text.isNotEmpty) &&
                                   e!.trim().isEmpty) {
-                                return AppLocalizations.of(context)!
-                                    .pleaseEnterCohost1ContactNo;
+                                return 'Please enter co-host 2 contact no';
                               }
                               if (e!.trim().isEmpty) {
                                 return null;
                               }
                               if (!RegExp(r'^\d+$').hasMatch(e)) {
-                                return AppLocalizations.of(context)!
-                                    .pleaseEnterValidCohost1ContactNo;
+                                return 'Please enter co-host 2 contact no';
                               }
                               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
                                 return AppLocalizations.of(context)!

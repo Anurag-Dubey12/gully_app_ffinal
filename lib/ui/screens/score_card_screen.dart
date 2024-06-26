@@ -9,6 +9,7 @@ import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/utils/app_logger.dart';
 
 import '../widgets/scorecard/batting_card.dart';
+import '../widgets/scorecard/bowling_card.dart';
 import '../widgets/scorecard/current_over_card.dart';
 import '../widgets/scorecard/event_handler.dart';
 import '../widgets/scorecard/top_scorecard.dart';
@@ -76,6 +77,7 @@ class _ScoreCardScreenState extends State<ScoreCardScreen> {
           child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
             ScoreCard(),
             BattingStats(),
+            BowlingStats(),
             CurrentOverStats(),
             Expanded(flex: 3, child: ScoreUpdater()),
           ]),

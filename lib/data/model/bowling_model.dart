@@ -10,16 +10,28 @@ class BowlingModel {
     "0.0": OverModel(
         over: 0, ball: 0, run: 0, wickets: 0, extra: 0, total: 0, events: [])
   };
+  double economy = 0;
   int runs = 0;
   int wickets = 0;
-  double economy = 0;
-  int currentOver = 0;
-  int currentBall = 0;
   int maidens = 0;
   int fours = 0;
   int sixes = 0;
   int wides = 0;
   int noBalls = 0;
+  int currentOver = 0;
+  int currentBall = 0;
+  @JsonKey(includeToJson: true)
+  double get economyRate {
+    // Avoid division by zero
+    if (currentOver == 0.0 && currentBall == 0) {
+      return 0.0; // No balls bowled yet
+    }
+
+    // Calculate completed overs
+    double completedOvers = currentOver + (currentBall / 6.0);
+
+    return runs / completedOvers;
+  }
 
   BowlingModel(
       {required this.runs,

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 
 import '../../../data/model/player_model.dart';
-import 'bowling_card.dart';
 
 class BattingStats extends GetView<ScoreBoardController> {
   const BattingStats({
@@ -64,7 +63,6 @@ class BattingStats extends GetView<ScoreBoardController> {
               const SizedBox(height: 3),
               BatterPlayerStat(controller.scoreboard.value!.nonstriker, false),
               const SizedBox(height: 10),
-              const BowlingStats(),
             ]),
           )),
     );

@@ -75,6 +75,7 @@ class _PaymentPageState extends State<PaymentPage> {
         totalAmount: widget.tournament.fees,
         coupon: couponCode);
     logger.f("ID $id");
+    logger.f("Fees ${fees - discount}");
     var options = {
       'key': 'rzp_live_6sW7limWXGaS3k',
       'amount': (fees - discount) * 100,
@@ -337,9 +338,9 @@ class _PaymentPageState extends State<PaymentPage> {
                                   'Promocode: $couponCode',
                                   style: const TextStyle(fontSize: 12),
                                 ),
-                                side: const BorderSide(
+                                side: BorderSide(
                                     style: BorderStyle.solid,
-                                    color: Colors.grey),
+                                    color: Colors.red.shade400),
                               )
                           ],
                         ),

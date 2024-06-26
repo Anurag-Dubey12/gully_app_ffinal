@@ -12,7 +12,7 @@ InningsModel _$InningsModelFromJson(Map<String, dynamic> json) => InningsModel(
           TeamModel.fromJson(json['battingTeam'] as Map<String, dynamic>),
       bowlingTeam:
           TeamModel.fromJson(json['bowlingTeam'] as Map<String, dynamic>),
-      ballRecord: (json['ballRecord'] as Map<String, dynamic>).map(
+      ballRecord: (json['ballRecord'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(k, OverModel.fromJson(e as Map<String, dynamic>)),
       ),
       openingStriker:
@@ -22,7 +22,7 @@ InningsModel _$InningsModelFromJson(Map<String, dynamic> json) => InningsModel(
       openingBowler:
           PlayerModel.fromJson(json['openingBowler'] as Map<String, dynamic>),
       extras: ExtraModel.fromJson(json['extras'] as Map<String, dynamic>),
-      partnerships: (json['partnerships'] as Map<String, dynamic>).map(
+      partnerships: (json['partnerships'] as Map<String, dynamic>?)?.map(
         (k, e) =>
             MapEntry(k, PartnershipModel.fromJson(e as Map<String, dynamic>)),
       ),
@@ -37,13 +37,13 @@ Map<String, dynamic> _$InningsModelToJson(InningsModel instance) =>
       'totalScore': instance.totalScore,
       'battingTeam': instance.battingTeam.toJson(),
       'bowlingTeam': instance.bowlingTeam.toJson(),
-      'ballRecord': instance.ballRecord.map((k, e) => MapEntry(k, e.toJson())),
+      'ballRecord': instance.ballRecord?.map((k, e) => MapEntry(k, e.toJson())),
       'openingStriker': instance.openingStriker.toJson(),
       'openingNonStriker': instance.openingNonStriker.toJson(),
       'openingBowler': instance.openingBowler.toJson(),
       'extras': instance.extras.toJson(),
       'partnerships':
-          instance.partnerships.map((k, e) => MapEntry(k, e.toJson())),
+          instance.partnerships?.map((k, e) => MapEntry(k, e.toJson())),
       'overs': instance.overs,
       'balls': instance.balls,
       'totalWickets': instance.totalWickets,

@@ -73,7 +73,7 @@ class _TournamentCardState extends State<TournamentCard> {
         widget.tournament.tournamentEndDateTime.difference(DateTime.now());
 
     String formattedTime =
-        '${remainingTime.inDays}d:${remainingTime.inHours.remainder(24)}h:${remainingTime.inMinutes.remainder(60)}m:${remainingTime.inSeconds.remainder(60)}s';
+        '${remainingTime.inDays}d:${remainingTime.inHours.remainder(24)}:${remainingTime.inMinutes.remainder(60)}:${remainingTime.inSeconds.remainder(60)}';
 
     _timeStreamController.add(formattedTime);
   }

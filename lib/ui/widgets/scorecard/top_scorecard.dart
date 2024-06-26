@@ -130,7 +130,7 @@ class ScoreCard extends GetView<ScoreBoardController> {
                                             ),
                                             const SizedBox(height: 15),
                                             Text(
-                                              "${controller.scoreboard.value!.firstInnings?.totalScore.toString() ?? ""}/${controller.scoreboard.value!.firstInnings?.ballRecord.entries.last.value.wickets.toString() ?? ""}",
+                                              "${controller.scoreboard.value!.firstInnings?.totalScore.toString() ?? ""}/${controller.scoreboard.value!.firstInnings?.ballRecord?.entries.last.value.wickets.toString() ?? ""}",
                                               style: Get
                                                   .textTheme.headlineMedium
                                                   ?.copyWith(

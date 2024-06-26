@@ -9,47 +9,54 @@ class BowlingStats extends GetView<ScoreBoardController> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Row(
-          children: [
-            Expanded(
-                flex: 3,
-                child: Text('Bowler', style: Get.textTheme.labelMedium)),
-            const Spacer(
-              flex: 2,
-            ),
-            Expanded(
-                child: Center(
-              child: Text(
-                'O',
-                style: Get.textTheme.labelMedium,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: Colors.white,
+      ),
+      child: Column(children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Row(
+            children: [
+              Expanded(
+                  flex: 3,
+                  child: Text('Bowler', style: Get.textTheme.labelMedium)),
+              const Spacer(
+                flex: 2,
               ),
-            )),
-            Expanded(
-              child: Center(child: Text('M', style: Get.textTheme.labelMedium)),
-            ),
-            Expanded(
+              Expanded(
+                  child: Center(
+                child: Text(
+                  'O',
+                  style: Get.textTheme.labelMedium,
+                ),
+              )),
+              Expanded(
                 child:
-                    Center(child: Text('R', style: Get.textTheme.labelMedium))),
-            Expanded(
-                child:
-                    Center(child: Text('W', style: Get.textTheme.labelMedium))),
-            Expanded(
-                child:
-                    Center(child: Text('ER', style: Get.textTheme.labelMedium)))
-          ],
+                    Center(child: Text('M', style: Get.textTheme.labelMedium)),
+              ),
+              Expanded(
+                  child: Center(
+                      child: Text('R', style: Get.textTheme.labelMedium))),
+              Expanded(
+                  child: Center(
+                      child: Text('W', style: Get.textTheme.labelMedium))),
+              Expanded(
+                  child: Center(
+                      child: Text('ER', style: Get.textTheme.labelMedium)))
+            ],
+          ),
         ),
-      ),
-      const Divider(
-        height: 10,
-        color: Colors.grey,
-      ),
-      const SizedBox(height: 3),
-      const _BowlerPlayerStat(),
-      const SizedBox(height: 4),
-    ]);
+        const Divider(
+          height: 10,
+          color: Colors.grey,
+        ),
+        const SizedBox(height: 3),
+        const _BowlerPlayerStat(),
+        const SizedBox(height: 4),
+      ]),
+    );
   }
 }
 
@@ -96,8 +103,12 @@ class _BowlerPlayerStat extends GetView<ScoreBoardController> {
               Expanded(
                   child: Center(
                       child: Text(
-                          controller.scoreboard.value!.bowler.bowling!.economy
-                              .toStringAsFixed(1),
+                          controller.scoreboard.value!.bowler.bowling!
+                                  .economyRate.isInfinite
+                              ? '0.0'
+                              : controller
+                                  .scoreboard.value!.bowler.bowling!.economyRate
+                                  .toStringAsFixed(2),
                           style: Get.textTheme.labelMedium)))
             ],
           ),

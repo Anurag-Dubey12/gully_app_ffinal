@@ -1,10 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/coupon_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/utils/app_logger.dart';
-import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/tournament_controller.dart';
 
@@ -133,13 +133,62 @@ class _CouponViewState extends State<CouponView> {
                                           snapshot.data![index].id,
                                           widget.amount);
                                       logger.f(res);
-                                      successSnackBar('Coupon Applied').then(
+                                      showCupertinoDialog(
+                                          context: context,
+                                          builder: (c) => CupertinoAlertDialog(
+                                                title: const CircleAvatar(
+                                                    child: Icon(
+                                                  Icons.check,
+                                                  weight: 3,
+                                                )),
+                                                content: Column(
+                                                  children: [
+                                                    const SizedBox(height: 10),
+                                                    const Text(
+                                                        'Promo code Applied !',
+                                                        style: TextStyle(
+                                                            color: Colors.green,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            fontSize: 18)),
+                                                    const SizedBox(height: 10),
+                                                    Text(
+                                                        'You saved ₹${double.parse(res['discount'].toString())} instantly with this promo code',
+                                                        style: const TextStyle(
+                                                            color: Colors.black,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                            fontSize: 14)),
+                                                  ],
+                                                ),
+                                                actions: [
+                                                  CupertinoButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(c);
+                                                      },
+                                                      child: const Text('OK',
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.black,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)))
+                                                ],
+                                              )).then(
                                         (value) => Get.back(result: {
                                           "code": snapshot.data![index].code,
                                           "discount": double.parse(
                                               res['discount'].toString())
                                         }),
                                       );
+
+                                      // successSnackBar('Coupon Applied').then(
+                                      //   (value) => Get.back(result: {
+                                      //     "code": snapshot.data![index].code,
+                                      //     "discount": double.parse(
+                                      //         res['discount'].toString())
+                                      //   }),
+                                      // );
                                     },
                                     child: Container(
                                         width: double.infinity,

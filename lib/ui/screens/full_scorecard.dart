@@ -326,7 +326,7 @@ class ScoreboardBowlerPlayerStat extends GetView<ScoreBoardController> {
           Expanded(
               child: Center(
                   child: Text(
-                      bowler.bowling?.economy.toStringAsFixed(1) ?? "N/A",
+                      bowler.bowling?.economyRate.toStringAsFixed(1) ?? "N/A",
                       style: Get.textTheme.labelMedium)))
         ],
       ),

@@ -1,6 +1,5 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:gully_app/utils/app_logger.dart';
-import 'package:gully_app/utils/utils.dart';
 
 Future<Position> determinePosition(
     {LocationAccuracy accuracy = LocationAccuracy.high,
@@ -18,7 +17,7 @@ Future<Position> determinePosition(
     return position;
   } catch (e) {
     logger.e(e.toString());
-    errorSnackBar(e.toString());
+    // errorSnackBar(e.toString());
     // return Future.error(e.toString());
     rethrow;
   }

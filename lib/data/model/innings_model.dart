@@ -12,12 +12,12 @@ class InningsModel {
   final int totalScore;
   final TeamModel battingTeam;
   final TeamModel bowlingTeam;
-  Map<String, OverModel> ballRecord;
+  Map<String, OverModel>? ballRecord;
   final PlayerModel openingStriker;
   final PlayerModel openingNonStriker;
   final PlayerModel openingBowler;
   final ExtraModel extras;
-  final Map<String, PartnershipModel> partnerships;
+  final Map<String, PartnershipModel>? partnerships;
   final int overs;
   final int balls;
   final int totalWickets;

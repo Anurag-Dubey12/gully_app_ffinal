@@ -14,7 +14,7 @@ class TournamentController extends GetxController
     with StateMixin<TournamentModel?> {
   final TournamentApi tournamentApi;
   TournamentController(this.tournamentApi) {
-    getTournamentList();
+    getTournamentList(filterD: 'current');
     getCurrentLocation();
     Geolocator.getServiceStatusStream().listen((event) {
       getCurrentLocation();
@@ -32,7 +32,7 @@ class TournamentController extends GetxController
   set setCoordinates(LatLng value) {
     coordinates.value = value;
     coordinates.refresh();
-    getTournamentList();
+    getTournamentList(filterD: 'current');
   }
 
   Rx<LatLng> coordinates = const LatLng(0, 0).obs;

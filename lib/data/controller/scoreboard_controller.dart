@@ -360,6 +360,7 @@ class ScoreBoardController extends GetxController with StateMixin {
     _scoreboardApi.updateFinalChallengeScoreBoard(
         scoreboard.value!.matchId, winningTeamId);
   }
+
 }
 
 enum EventType {

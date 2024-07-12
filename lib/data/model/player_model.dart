@@ -41,4 +41,5 @@ class PlayerModel {
   factory PlayerModel.fromJson(Map<String, dynamic> json) =>
       _$PlayerModelFromJson(json);
   Map<String, dynamic> toJson() => _$PlayerModelToJson(this);
+
 }

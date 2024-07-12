@@ -366,14 +366,22 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                               ),
                               const Divider(height: 10, color: Colors.grey),
                               const SizedBox(height: 3),
-                              ListView.separated(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                separatorBuilder: (c, i) => const SizedBox(height: 10),
-                                itemCount: bowlingTeam.length,
-                                itemBuilder: ((context, index) {
-                                  return ScoreboardBowlerPlayerStat(bowlingTeam[index]);
-                                }),
+                              GetBuilder<ScoreBoardController>(
+                                builder: (controller) {
+                                  final activeBowlers = bowlingTeam.where((player) =>
+                                  player.bowling != null &&
+                                      (player.bowling!.currentOver > 0 || player.bowling!.currentBall > 0 || player.bowling!.runs > 0)
+                                  ).toList();
+                                  return ListView.separated(
+                                    shrinkWrap: true,
+                                    physics: const NeverScrollableScrollPhysics(),
+                                    separatorBuilder: (c, i) => const SizedBox(height: 10),
+                                    itemCount: activeBowlers.length,
+                                    itemBuilder: ((context, index) {
+                                      return ScoreboardBowlerPlayerStat(activeBowlers[index]);
+                                    }),
+                                  );
+                                },
                               ),
                               const SizedBox(height: 4),
                             ])

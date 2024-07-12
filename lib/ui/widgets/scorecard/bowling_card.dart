@@ -66,6 +66,7 @@ class _BowlerPlayerStat extends GetView<ScoreBoardController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() => Padding(
+
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
             children: [

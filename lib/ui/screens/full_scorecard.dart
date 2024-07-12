@@ -265,7 +265,8 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                             borderRadius: BorderRadius.circular(8),
                             color: Colors.white,
                           ),
-                          child: Column(children: [
+                          child: Column(
+                              children: [
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Row(

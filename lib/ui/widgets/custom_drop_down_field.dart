@@ -56,7 +56,7 @@ class DropDownWidget extends StatelessWidget {
                                       ),
                                       onTap: () {
                                         onSelect();
-                                        Get.back();
+                                        // Get.back();
                                       },
                                       title: Text(items[index]),
                                     );

@@ -10,6 +10,8 @@ import 'package:gully_app/data/model/txn_model.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../utils/app_logger.dart';
+
 class TournamentController extends GetxController
     with StateMixin<TournamentModel?> {
   final TournamentApi tournamentApi;
@@ -43,6 +45,7 @@ class TournamentController extends GetxController
       return TournamentModel.fromJson(body.data!);
     } catch (e) {
       errorSnackBar(e.toString());
+      print("The Name Error: " + e.toString());
       rethrow;
     }
   }
@@ -317,4 +320,16 @@ class TournamentController extends GetxController
       rethrow;
     }
   }
+  Future<List<MatchupModel>> getTournamentMatches(String tournamentId) async {
+    try {
+      final response = await tournamentApi.getMatchup(tournamentId);
+      return response.data!['matches']
+          .map<MatchupModel>((e) => MatchupModel.fromJson(e))
+          .toList();
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
+
 }

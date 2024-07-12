@@ -65,7 +65,8 @@ Future successSnackBar(String successMessage, {String? title}) async =>
             ),
             confirm: InkWell(
               onTap: () {
-                Get.back();
+                Get.close();
+                // Get.back();
               },
               child: Container(
                 padding:

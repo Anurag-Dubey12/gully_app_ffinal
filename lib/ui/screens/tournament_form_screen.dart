@@ -13,6 +13,7 @@ import 'package:gully_app/ui/screens/select_location.dart';
 import 'package:gully_app/ui/widgets/create_tournament/form_input.dart';
 import 'package:gully_app/ui/widgets/create_tournament/top_card.dart';
 import 'package:gully_app/ui/widgets/custom_drop_down_field.dart';
+import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
@@ -493,7 +494,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                               setState(() {
                                 tournamentType = e;
                               });
-                              Get.back();
+                              // Get.back();
+                              Get.close();
                             },
                             selectedValue: tournamentType.toUpperCase(),
                             items: const [
@@ -517,7 +519,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                               setState(() {
                                 ballType = e;
                               });
-                              Get.back();
+                              // Get.back();
+                              Get.close();
                             },
                             selectedValue: ballType.toUpperCase(),
                             items: const [
@@ -548,7 +551,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                         setState(() {
                                           pitchType = e;
                                         });
-                                        Get.back();
+                                        Get.close();
+                                        Get.close();
                                       },
                                       selectedValue: pitchType.toUpperCase(),
                                       items: const [
@@ -754,19 +758,19 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                 .selectStadiumAddress,
                             readOnly: true,
                             onTap: () async {
-                              Get.dialog(const Dialog(
-                                child: Padding(
-                                  padding: EdgeInsets.all(28.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      CircularProgressIndicator(),
-                                    ],
-                                  ),
-                                ),
-                              ));
+                              // Get.dialog(const Dialog(
+                              //   child: Padding(
+                              //     padding: EdgeInsets.all(28.0),
+                              //     child: Column(
+                              //       mainAxisSize: MainAxisSize.min,
+                              //       children: [
+                              //         CircularProgressIndicator(),
+                              //       ],
+                              //     ),
+                              //   ),
+                              // ));
 
-                              Get.back();
+                              // Get.back();
                               Get.to(
                                 () => SelectLocationScreen(
                                   onSelected: (e, l) {
@@ -776,8 +780,19 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                     if (l != null) {
                                       setState(() {
                                         location = l;
+                                        // ScaffoldMessenger.of(context).showSnackBar(
+                                        //   SnackBar(content: Text(l.toString())),
+                                        // );
+                                        logger.d("The Location is $l");
                                       });
                                     }
+                                    // if(l==null){
+                                    //   ScaffoldMessenger.of(context).showSnackBar(
+                                    //     SnackBar(
+                                    //       content: Text("Location not selected"),
+                                    //     ),
+                                    //   );
+                                    // }
 
                                     FocusScope.of(context).unfocus();
                                   },

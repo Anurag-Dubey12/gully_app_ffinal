@@ -170,11 +170,15 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                         ClipRRect(
                                           borderRadius:
                                               BorderRadius.circular(100),
-                                          child: Image.network(
-                                            widget.match.team1.logo == null
-                                                ? ""
-                                                : widget.match.team1
-                                                    .toImageUrl(),
+                                          child: widget.match.team1.logo != null
+                                              ? Image.network(
+                                            widget.match.team1.toImageUrl(),
+                                            height: 50,
+                                            fit: BoxFit.cover,
+                                            width: 50,
+                                          )
+                                              : Image.asset(
+                                            "assets/images/logo.png",
                                             height: 50,
                                             fit: BoxFit.cover,
                                             width: 50,
@@ -219,11 +223,15 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                           child: SizedBox(
                                             height: 50,
                                             width: 50,
-                                            child: Image.network(
-                                              widget.match.team2.logo == null
-                                                  ? ""
-                                                  : widget.match.team2
-                                                      .toImageUrl(),
+                                            child:widget.match.team2.logo != null
+                                                ? Image.network(
+                                              widget.match.team2.toImageUrl(),
+                                              height: 50,
+                                              fit: BoxFit.cover,
+                                              width: 50,
+                                            )
+                                                : Image.asset(
+                                              "assets/images/logo.png",
                                               height: 50,
                                               fit: BoxFit.cover,
                                               width: 50,

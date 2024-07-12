@@ -176,6 +176,7 @@ class _MyAppState extends State<MyApp> {
       defaultTransition: Transition.cupertino,
       title: AppConstants.appName,
       theme: AppTheme.lightTheme,
+      debugShowCheckedModeBanner: false,
       home: const SplashScreen(),
     );
   }

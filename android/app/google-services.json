@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "1035765979959-fnpbvv834fs12k5akmqjcj2lqh0aceqe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nileegames.gullyteam",
+            "certificate_hash": "a5ac56eff26c6186473c24f2c5266684e60436a7"
+          }
+        },
+        {
           "client_id": "1035765979959-19kj4crndmpkbcq4rqrcne5prm1jrdha.apps.googleusercontent.com",
           "client_type": 3
         }

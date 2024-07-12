@@ -24,7 +24,6 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
   @override
   void initState() {
     super.initState();
-
     playerToOut = Get.find<ScoreBoardController>().scoreboard.value!.striker.id;
   }
 
@@ -217,7 +216,7 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                                 'Player can be only run out with Leg Byes');
                             return;
                           }
-                          logger.i(e);
+                          logger.i("The out type is $e");
 
                           outType = e!;
                         });
@@ -318,8 +317,7 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                     setState(() {
                       selectedBatsman = e;
                     });
-
-                    Get.back();
+                      Navigator.of(context).pop();
                   },
                   items: players,
                   selectedValue: selectedBatsman?.name ?? 'Select Batsman',

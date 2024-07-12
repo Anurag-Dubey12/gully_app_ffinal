@@ -5,27 +5,9 @@
 	<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-	<application android:label="Gully Team" android:name="${applicationName}" android:usesCleartextTraffic="true" android:icon="@mipmap/ic_launcher">
+	<application android:label="Gully Team"  android:usesCleartextTraffic="true" android:icon="@mipmap/ic_launcher">
 		<!-- <activity android:name=".MainActivity" android:exported="true" android:launchMode="singleTop" android:enableOnBackInvokedCallback="true" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize"> -->
 		<activity android:name=".MainActivity" android:exported="true" android:launchMode="singleInstance" android:enableOnBackInvokedCallback="true" android:theme="@style/LaunchTheme" android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
-			<intent-filter android:autoVerify="true">
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:scheme="http" android:host="www.tummle.robinj.dev" android:pathPrefix="/foo" />
-				<data android:scheme="https" android:host="www.tummle.robinj.dev" android:pathPrefix="/foo" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
-				<!--
-				Add optional android:host to distinguish your app
-				from others in case of conflicting scheme name
-				-->
-				<data android:scheme="app" android:host="open.gully_team.app" />
-				<!-- <data android:scheme="sample" /> -->
-			</intent-filter>
 			<meta-data android:name="io.flutter.embedding.android.NormalTheme" android:resource="@style/NormalTheme" />
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -43,9 +25,6 @@
     android:authorities="${applicationId}.provider"
     android:exported="false"
     android:grantUriPermissions="true">
-    <meta-data
-        android:name="android.support.FILE_PROVIDER_PATHS"
-        android:resource="@xml/provider_paths" />
 </provider>
 		<!-- If your app checks for SMS support -->
 	</application>

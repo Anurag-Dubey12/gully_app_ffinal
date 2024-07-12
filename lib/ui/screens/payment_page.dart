@@ -41,7 +41,9 @@ class _PaymentPageState extends State<PaymentPage> {
   getFee() async {
     final controller = Get.find<TournamentController>();
     fees = await controller.getTournamentFee(widget.tournament.id);
-    setState(() {});
+    setState(() {
+      logger.d(fees.toString());
+    });
   }
 
   _handlePaymentSuccess(PaymentSuccessResponse response) async {
@@ -250,8 +252,8 @@ class _PaymentPageState extends State<PaymentPage> {
                             fullscreenDialog: true);
                         if (res != null) {
                           setState(() {
-                            couponCode = res['code'];
-                            discount = res['discount'];
+                            // couponCode = res['code'];
+                            // discount = res['discount'];
                           });
                         }
                       },

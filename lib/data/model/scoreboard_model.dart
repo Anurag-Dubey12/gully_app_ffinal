@@ -378,19 +378,28 @@ class ScoreboardModel {
       }
       if (res['playerToOut'] != null) {
         if (res['playerToOut'] == strikerId) {
+          // striker.batting!.bowledBy = bowler.name;
           striker.batting!.bowledBy = bowlerId;
+          print("Theae is first $res and bowler id is:$bowlerId and bowler name is :${bowler.name}");
           striker.batting!.outType = res['outType'];
           setStriker = res['batsmanId'];
         } else {
           nonstriker.batting!.bowledBy = bowlerId;
+          // nonstriker.batting!.bowledBy = bowler.name;
+          print("Theae is second $res and bowler id is:$bowlerId and bowler name is :${bowler.name}");
           nonstriker.batting!.outType = res['outType'];
           setNonStriker = res['batsmanId'];
         }
       } else {
         striker.batting!.outType = res['outType'];
+        print("Theae is third $res and bowler id is:$bowlerId and bowler name is :${bowler.name}" );
+        striker.batting!.bowledBy=bowlerId;
+        // striker.batting!.bowledBy=bowler.name;
         setStriker = res['batsmanId'];
       }
       logger.i('Striker: $strikerId');
+      // print('Bowler id :$bowlerId');
+      // print("The res data is:${res}");
       _partnershipStriker = PlayerModel(
         name: striker.name,
         id: strikerId,

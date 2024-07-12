@@ -80,7 +80,8 @@ class _EndOfIningsDialogState extends State<EndOfIningsDialog> {
                         }
                         striker = e;
                       });
-                      Get.back();
+                      // Get.back();
+
                     },
                     selectedValue: striker?.name.toUpperCase(),
                     items: controller.scoreboard.value!.team2.players!,
@@ -100,7 +101,7 @@ class _EndOfIningsDialogState extends State<EndOfIningsDialog> {
                           }
                           nonStriker = e;
                         });
-                        Get.back();
+                        // Get.back();
                       },
                       selectedValue: nonStriker?.name.toUpperCase(),
                       items: controller.scoreboard.value!.team2.players!),
@@ -114,7 +115,7 @@ class _EndOfIningsDialogState extends State<EndOfIningsDialog> {
                         setState(() {
                           openingBowler = e;
                         });
-                        Get.back();
+                        // Get.back();
                       },
                       selectedValue: openingBowler?.name.toUpperCase(),
                       items: controller.scoreboard.value!.team1.players!),
@@ -135,8 +136,7 @@ class _EndOfIningsDialogState extends State<EndOfIningsDialog> {
                         nonStriker: nonStriker!,
                         bowler: openingBowler!,
                       );
-
-                      Get.back();
+                      // Get.back();
                     },
                     title: 'Start Innings 2',
                   ),

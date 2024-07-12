@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_media_downloader/flutter_media_downloader.dart';
+// import 'package:flutter_media_downloader/flutter_media_downloader.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/txn_history_screen.dart';
@@ -19,7 +19,7 @@ class TxnDetailsView extends StatefulWidget {
 }
 
 class _TxnDetailsViewState extends State<TxnDetailsView> {
-  final _flutterMediaDownloaderPlugin = MediaDownload();
+  // final _flutterMediaDownloaderPlugin = MediaDownload();
 
   @override
   Widget build(BuildContext context) {
@@ -74,10 +74,10 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                       children: [
                         GestureDetector(
                           onTap: () async {
-                            _flutterMediaDownloaderPlugin.downloadMedia(
-                              context,
-                              widget.transaction.invoiceUrl!,
-                            );
+                            // _flutterMediaDownloaderPlugin.downloadMedia(
+                            //   context,
+                            //   widget.transaction.invoiceUrl!,
+                            // );
                           },
                           child: Container(
                             decoration: BoxDecoration(

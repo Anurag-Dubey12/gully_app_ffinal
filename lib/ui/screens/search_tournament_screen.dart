@@ -152,7 +152,8 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                                           setState(() {
                                             sortValue = e as int;
                                           });
-                                          Get.back();
+                                          // Get.back();
+                                          Get.close();
                                         },
                                       ),
                                       RadioListTile(
@@ -165,6 +166,7 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                                             sortValue = e as int;
                                           });
                                           Get.back();
+                                          Get.close();
                                         },
                                       ),
                                     ],

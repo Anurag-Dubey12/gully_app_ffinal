@@ -157,8 +157,9 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                               CircleAvatar(
                                 radius: 49,
                                 backgroundColor: Colors.white,
-                                backgroundImage:
-                                    NetworkImage(controller.state.toImageUrl()),
+                                backgroundImage: controller.state != null?
+                                    NetworkImage(controller.state.toImageUrl()):
+                                const AssetImage('assets/images/logo.png') as ImageProvider,
                               ),
                               Positioned(
                                 bottom: 0,
@@ -363,7 +364,8 @@ class _PlayerCardState extends State<PlayerCard> {
                               actions: [
                                 TextButton(
                                   onPressed: () {
-                                    Get.back();
+                                    // Get.back();
+                                    Navigator.of(context).pop();
                                   },
                                   child: Text(AppLocalizations.of(context)!.no),
                                 ),
@@ -374,7 +376,8 @@ class _PlayerCardState extends State<PlayerCard> {
                                       playerId: widget.player.id,
                                     );
                                     setState(() {});
-                                    Get.back();
+                                    // Get.back();
+                                    Navigator.of(context).pop();
                                   },
                                   child:
                                       Text(AppLocalizations.of(context)!.yes),
@@ -711,8 +714,9 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                           role: role);
 
                       if (res) {
-                        Get.back();
-                        Get.back();
+                        // Get.back();
+                        // Get.back();
+                        Navigator.of(context).pop();
                       }
                     } catch (e) {
                       rethrow;

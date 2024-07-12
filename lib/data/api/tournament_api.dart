@@ -3,6 +3,7 @@ import 'package:gully_app/utils/date_time_helpers.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../config/api_client.dart';
+import '../model/matchup_model.dart';
 
 class TournamentApi {
   final GetConnectClient repo;
@@ -51,7 +52,6 @@ class TournamentApi {
 
     return ApiResponse.fromJson(response.body);
   }
-
   Future<ApiResponse> getOrganizerTournamentList() async {
     var response = await repo.get('/main/getCurrentTournament');
     if (!response.isOk) {

@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/model/bowling_model.dart';
-import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/scorecard/batting_card.dart';
 
 import '../../data/model/player_model.dart';
+import '../../data/model/scoreboard_model.dart';
+import '../widgets/scorecard/extras_and_total.dart';
 
 class FullScoreboardScreen extends StatefulWidget {
-  const FullScoreboardScreen({super.key});
+  final ScoreboardModel? scoreboard;
+
+  const FullScoreboardScreen({Key? key, this.scoreboard}) : super(key: key);
 
   @override
   State<FullScoreboardScreen> createState() => _FullScoreboardScreenState();
@@ -19,34 +22,182 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
   int currentInning = 1;
   List<PlayerModel> battingTeamPlayers = [];
   List<PlayerModel> bowlingTeam = [];
+  OverlayEntry? _overlayEntry;
+  String selectedTeamName = "";
+  final GlobalKey _dropdownKey = GlobalKey();
+
   @override
-  initState() {
+  void initState() {
     super.initState();
     final controller = Get.find<ScoreBoardController>();
+    if(widget.scoreboard!=null){
+      updateInningData();
+    }else{
     battingTeamPlayers =
         controller.scoreboard.value?.firstInnings?.battingTeam.players ?? [];
     bowlingTeam =
         controller.scoreboard.value?.firstInnings?.bowlingTeam.players ?? [];
+    selectedTeamName = controller.scoreboard.value?.team1.name ?? "";
+    }
+  }
+  void updateInningData() {
+    setState(() {
+      if (widget.scoreboard != null) {
+        battingTeamPlayers = currentInning == 1
+            ? widget.scoreboard?.firstInnings?.battingTeam.players ?? []
+            : widget.scoreboard?.secondInnings?.battingTeam.players ?? [];
+        bowlingTeam = currentInning == 1
+            ? widget.scoreboard?.firstInnings?.bowlingTeam.players ?? []
+            : widget.scoreboard?.secondInnings?.bowlingTeam.players ?? [];
+        selectedTeamName = currentInning == 1
+            ? widget.scoreboard?.team1.name ?? ""
+            : widget.scoreboard?.team2.name ?? "";
+      }
+    });
   }
 
   void changeInning(int selected) {
     final controller = Get.find<ScoreBoardController>();
     setState(() {
+      if(widget.scoreboard!=null){
+        setState(() {
+          currentInning = selected;
+          updateInningData();
+        });
+      }else{
       currentInning = selected;
       battingTeamPlayers = currentInning == 1
           ? controller.scoreboard.value?.firstInnings?.battingTeam.players ?? []
-          : controller.scoreboard.value?.secondInnings?.battingTeam.players ??
-              [];
+          : controller.scoreboard.value?.secondInnings?.battingTeam.players ?? [];
       bowlingTeam = currentInning == 1
           ? controller.scoreboard.value?.firstInnings?.bowlingTeam.players ?? []
-          : controller.scoreboard.value?.secondInnings?.bowlingTeam.players ??
-              [];
+          : controller.scoreboard.value?.secondInnings?.bowlingTeam.players ?? [];
+      selectedTeamName = currentInning == 1
+          ? controller.scoreboard.value?.team1.name ?? ""
+          : controller.scoreboard.value?.team2.name ?? "";
+      }
     });
+  }
+
+
+
+  void _toggleDropdown(GlobalKey key) {
+    if (_overlayEntry == null) {
+      _overlayEntry = _createOverlayEntry(key);
+      Overlay.of(context).insert(_overlayEntry!);
+    } else {
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+    }
+  }
+
+  OverlayEntry _createOverlayEntry(GlobalKey key) {
+    RenderBox renderBox = key.currentContext?.findRenderObject() as RenderBox;
+    var size = renderBox.size;
+    var offset = renderBox.localToGlobal(Offset.zero);
+    const double spacing = 5.0;
+
+    final controller = Get.find<ScoreBoardController>();
+
+    return OverlayEntry(
+      builder: (context) => GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: () {
+          _overlayEntry?.remove();
+          _overlayEntry = null;
+        },
+        child: Stack(
+          children: [
+            Positioned(
+              left: offset.dx,
+              top: offset.dy + size.height + spacing,
+              width: size.width,
+              child: Material(
+                elevation: 4.0,
+                borderRadius: BorderRadius.circular(8),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child:
+                  widget.scoreboard==null ?
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+
+                      ListTile(
+                        title: Text(
+                          controller.scoreboard.value!.team1.name,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            changeInning(1);
+                            selectedTeamName = controller.scoreboard.value!.team1.name;
+                          });
+                          _overlayEntry?.remove();
+                          _overlayEntry = null;
+                        },
+                      ),
+                      const Divider(height: 1, color: Colors.grey),
+                      ListTile(
+                        title: Text(
+                          controller.scoreboard.value!.team2.name,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        onTap: () {
+                          setState(() {
+                            changeInning(2);
+                            selectedTeamName = controller.scoreboard.value!.team2.name;
+                          });
+                          _overlayEntry?.remove();
+                          _overlayEntry = null;
+                        },
+                      ),
+                    ],
+                  ):
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ListTile(
+                        title: Text(
+                          widget.scoreboard?.team1.name ?? "Team 1",
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        onTap: () {
+                          changeInning(1);
+                          _overlayEntry?.remove();
+                          _overlayEntry = null;
+                        },
+                      ),
+                      const Divider(height: 1, color: Colors.grey),
+                      ListTile(
+                        title: Text(
+                          widget.scoreboard?.team2.name ?? "Team 2",
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        onTap: () {
+                          changeInning(2);
+                          _overlayEntry?.remove();
+                          _overlayEntry = null;
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final ScoreBoardController controller = Get.find<ScoreBoardController>();
+    final GlobalKey dropdownKey = GlobalKey();
     return GradientBuilder(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -69,218 +220,170 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
             children: [
               Row(
                 children: [
-                  // const Spacer(),
                   Expanded(
                     flex: 3,
                     child: GestureDetector(
-                      onTap: () {
-                        changeInning(1);
-                      },
+                      onTap: () => _toggleDropdown(_dropdownKey),
                       child: Container(
-                        height: 43,
-                        width: double.infinity,
+                        key: _dropdownKey,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: currentInning == 1
-                              ? AppTheme.darkYellowColor
-                              : Colors.white,
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                              child: Text(
-                                  controller.scoreboard.value!.team1.name,
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                      color: currentInning == 1
-                                          ? Colors.white
-                                          : Colors.black))),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              selectedTeamName ?? 'Select Team',
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                            const Icon(Icons.arrow_drop_down),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                  const Spacer(),
-                  Expanded(
-                    flex: 3,
-                    child: GestureDetector(
-                      onTap: () {
-                        changeInning(2);
-                      },
-                      child: Container(
-                        height: 43,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          color: currentInning == 2
-                              ? AppTheme.darkYellowColor
-                              : Colors.white,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                              child:
-                                  Text(controller.scoreboard.value!.team2.name,
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: currentInning == 2
-                                            ? Colors.white
-                                            : Colors.black,
-                                        fontWeight: FontWeight.w500,
-                                      ))),
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // const Spacer(),
                 ],
               ),
+              const SizedBox(height: 10),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
                       Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.white,
+                          ),
+                          child: Column(children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: GestureDetector(
+                                      child: selectedTeamName.isEmpty
+                                          ? Text('${controller.scoreboard.value!.team1.name} Scorecard', style: Get.textTheme.labelMedium)
+                                          : Text('$selectedTeamName Scorecard', style: Get.textTheme.labelMedium),
+                                    ),
+                                  ),
+                                  const Spacer(flex: 1),
+                                  Expanded(
+                                    child: Center(
+                                      child: Text('R', style: Get.textTheme.labelMedium),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: Text('B', style: Get.textTheme.labelMedium),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: Text('4s', style: Get.textTheme.labelMedium),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: Text('6s', style: Get.textTheme.labelMedium),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: Text('SR', style: Get.textTheme.labelMedium),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            child: Column(children: [
+                            const Divider(height: 10, color: Colors.grey),
+                            const SizedBox(height: 4),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              separatorBuilder: (c, i) => const SizedBox(height: 10),
+                              itemCount: battingTeamPlayers.length,
+                              itemBuilder: ((context, index) {
+                                return BatterPlayerStat(battingTeamPlayers[index], false);
+                              }),
+                            ),
+                            const SizedBox(height: 10),
+                            widget.scoreboard!=null?
+                            ExtrasAndTotal(
+                              currentInning: currentInning,
+                              scoreboard: widget.scoreboard,
+                            ):
+                            ExtrasAndTotal(currentInning: currentInning),
+                            const Divider(height: 20),
+                            Column(children: [
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.symmetric(horizontal: 8),
                                 child: Row(
                                   children: [
                                     Expanded(
-                                        flex: 3,
-                                        child: GestureDetector(
-                                            child: Text('Batsmans',
-                                                style: Get
-                                                    .textTheme.labelMedium))),
-                                    const Spacer(
-                                      flex: 1,
+                                      flex: 3,
+                                      child: Text('Bowler', style: Get.textTheme.labelMedium),
                                     ),
-                                    Expanded(
-                                        child: Center(
-                                            child: Text('R',
-                                                style: Get
-                                                    .textTheme.labelMedium))),
+                                    const Spacer(flex: 2),
                                     Expanded(
                                       child: Center(
-                                          child: Text('B',
-                                              style:
-                                                  Get.textTheme.labelMedium)),
+                                        child: Text('O', style: Get.textTheme.labelMedium),
+                                      ),
                                     ),
                                     Expanded(
-                                        child: Center(
-                                            child: Text('4s',
-                                                style: Get
-                                                    .textTheme.labelMedium))),
+                                      child: Center(
+                                        child: Text('M', style: Get.textTheme.labelMedium),
+                                      ),
+                                    ),
                                     Expanded(
-                                        child: Center(
-                                            child: Text('6s',
-                                                style: Get
-                                                    .textTheme.labelMedium))),
+                                      child: Center(
+                                        child: Text('R', style: Get.textTheme.labelMedium),
+                                      ),
+                                    ),
                                     Expanded(
-                                        child: Center(
-                                            child: Text('SR',
-                                                style:
-                                                    Get.textTheme.labelMedium)))
+                                      child: Center(
+                                        child: Text('W', style: Get.textTheme.labelMedium),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Center(
+                                        child: Text('ER', style: Get.textTheme.labelMedium),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
-                              const Divider(
-                                height: 10,
-                                color: Colors.grey,
-                              ),
-                              const SizedBox(height: 4),
+                              const Divider(height: 10, color: Colors.grey),
+                              const SizedBox(height: 3),
                               ListView.separated(
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
-                                separatorBuilder: (c, i) => const SizedBox(
-                                  height: 10,
-                                ),
-                                itemCount: battingTeamPlayers.length,
+                                separatorBuilder: (c, i) => const SizedBox(height: 10),
+                                itemCount: bowlingTeam.length,
                                 itemBuilder: ((context, index) {
-                                  return BatterPlayerStat(
-                                      battingTeamPlayers[index], false);
+                                  return ScoreboardBowlerPlayerStat(bowlingTeam[index]);
                                 }),
                               ),
-                              const Divider(
-                                height: 20,
-                              ),
-                              Column(children: [
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(horizontal: 8),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                          flex: 3,
-                                          child: Text('Bowler',
-                                              style:
-                                                  Get.textTheme.labelMedium)),
-                                      const Spacer(
-                                        flex: 2,
-                                      ),
-                                      Expanded(
-                                          child: Center(
-                                        child: Text(
-                                          'O',
-                                          style: Get.textTheme.labelMedium,
-                                        ),
-                                      )),
-                                      Expanded(
-                                        child: Center(
-                                            child: Text('M',
-                                                style:
-                                                    Get.textTheme.labelMedium)),
-                                      ),
-                                      Expanded(
-                                          child: Center(
-                                              child: Text('R',
-                                                  style: Get
-                                                      .textTheme.labelMedium))),
-                                      Expanded(
-                                          child: Center(
-                                              child: Text('W',
-                                                  style: Get
-                                                      .textTheme.labelMedium))),
-                                      Expanded(
-                                          child: Center(
-                                              child: Text('ER',
-                                                  style: Get
-                                                      .textTheme.labelMedium)))
-                                    ],
-                                  ),
-                                ),
-                                const Divider(
-                                  height: 10,
-                                  color: Colors.grey,
-                                ),
-                                const SizedBox(height: 3),
-                                ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  separatorBuilder: (c, i) => const SizedBox(
-                                    height: 10,
-                                  ),
-                                  itemCount: bowlingTeam.length,
-                                  itemBuilder: ((context, index) {
-                                    return ScoreboardBowlerPlayerStat(
-                                      bowlingTeam[index],
-                                    );
-                                  }),
-                                ),
-                                const SizedBox(height: 4),
-                              ])
-                            ]),
-                          )),
+                              const SizedBox(height: 4),
+                            ])
+                          ]),
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -333,6 +436,7 @@ class ScoreboardBowlerPlayerStat extends GetView<ScoreBoardController> {
     );
   }
 }
+
 
 String getCurrentBowl(BowlingModel bowling) {
   if (bowling.overs.length == 1) {

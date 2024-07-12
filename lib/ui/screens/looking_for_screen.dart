@@ -70,7 +70,8 @@ class _LookingForScreenState extends State<LookingForScreen> {
                     setState(() {
                       selectedValue = e;
                     });
-                    Get.back();
+                    Get.close();
+                    // Get.back();
                   },
                   selectedValue: selectedValue,
                   items: const [
@@ -100,8 +101,8 @@ class _LookingForScreenState extends State<LookingForScreen> {
                         ],
                       ),
                     )));
-
-                    Get.back();
+                    // Get.back();
+                    Get.close();
                     Get.to(
                       () => SearchPlacesScreen(
                         onSelected: (e) {
@@ -114,7 +115,8 @@ class _LookingForScreenState extends State<LookingForScreen> {
                                   double.parse(e.lat!), double.parse(e.lng!));
                             });
                             logger.d('location: ${e.lat} ${e.lng}');
-                            Get.back();
+                            Get.close();
+                            // Get.back();
                           }
                           FocusScope.of(context).unfocus();
                         },

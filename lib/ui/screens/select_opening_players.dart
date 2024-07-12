@@ -71,7 +71,8 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
                   }
                   striker = e;
                 });
-                Get.back();
+                // Get.back();
+                Get.close();
               },
               selectedValue: striker?.name,
               selectedPlayerId: striker?.id,
@@ -91,7 +92,8 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
                   }
                   nonStriker = e;
                 });
-                Get.back();
+                // Get.back();
+                Get.close();
               },
               selectedValue: nonStriker?.name,
               selectedPlayerId: nonStriker?.id,
@@ -106,7 +108,8 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
                 setState(() {
                   openingBowler = e;
                 });
-                Get.back();
+                // Get.back();
+                Get.close();
               },
               selectedValue: openingBowler?.name,
               selectedPlayerId: openingBowler?.id,

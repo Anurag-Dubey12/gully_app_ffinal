@@ -182,7 +182,6 @@ class ScoreBoardController extends GetxController with StateMixin {
         errorSnackBar('Oops! All out. Start 2nd Innings');
         return false;
       }
-
       errorSnackBar('Oops! All out. Match Over');
       return false;
     }

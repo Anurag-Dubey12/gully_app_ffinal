@@ -287,12 +287,72 @@ class _TeamCard extends StatelessWidget {
   }
 }
 
+//Previous Code
+// class _SelectBallTypeCard extends StatelessWidget {
+//   final int tab;
+//   final int selectedTab;
+//   final String text;
+//   final Function(int tab) onTap;
+//   final bool? isChild;
+//   const _SelectBallTypeCard({
+//     required this.onTap,
+//     required this.tab,
+//     required this.selectedTab,
+//     required this.text,
+//     this.isChild,
+//   });
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Expanded(
+//       child: Material(
+//         borderRadius: BorderRadius.circular(40),
+//         child: Ink(
+//           decoration: BoxDecoration(
+//             borderRadius: BorderRadius.circular(40),
+//             color: tab == selectedTab
+//                 ? AppTheme.secondaryYellowColor
+//                 : Colors.white,
+//             boxShadow: [
+//               BoxShadow(
+//                   color:
+//                       const Color.fromARGB(57, 255, 164, 46).withOpacity(0.3),
+//                   blurRadius: 20,
+//                   spreadRadius: 2,
+//                   offset: const Offset(0, 7))
+//             ],
+//           ),
+//           child: InkWell(
+//             borderRadius: BorderRadius.circular(40),
+//             onTap: () => onTap(tab),
+//             child: Center(
+//               child: Padding(
+//                 padding: const EdgeInsets.all(18.0),
+//                 child: Text(text,
+//                     style: Get.textTheme.bodyLarge?.copyWith(
+//                         fontSize: isChild ?? false ? 14 : 18,
+//                         color: selectedTab == tab ? Colors.white : Colors.black,
+//                         fontWeight: isChild ?? false
+//                             ? FontWeight.normal
+//                             : FontWeight.bold)),
+//               ),
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+
+//My Code
 class _SelectBallTypeCard extends StatelessWidget {
   final int tab;
   final int selectedTab;
   final String text;
   final Function(int tab) onTap;
   final bool? isChild;
+
   const _SelectBallTypeCard({
     required this.onTap,
     required this.tab,
@@ -305,35 +365,44 @@ class _SelectBallTypeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Material(
-        borderRadius: BorderRadius.circular(40),
+        borderRadius: BorderRadius.circular(20),
         child: Ink(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(40),
-            color: tab == selectedTab
-                ? AppTheme.secondaryYellowColor
-                : Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            gradient: tab == selectedTab
+                ? const LinearGradient(
+              colors: [AppTheme.secondaryYellowColor, Colors.orangeAccent],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            )
+                : LinearGradient(
+              colors: [Colors.white, Colors.grey.shade300],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
             boxShadow: [
               BoxShadow(
-                  color:
-                      const Color.fromARGB(57, 255, 164, 46).withOpacity(0.3),
-                  blurRadius: 20,
-                  spreadRadius: 2,
-                  offset: const Offset(0, 7))
+                color: const Color.fromARGB(57, 0, 0, 0).withOpacity(0.15),
+                blurRadius: 30,
+                spreadRadius: 2,
+                offset: const Offset(0, 10),
+              ),
             ],
           ),
           child: InkWell(
-            borderRadius: BorderRadius.circular(40),
+            borderRadius: BorderRadius.circular(20), // More modern, less rounded
             onTap: () => onTap(tab),
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Text(text,
-                    style: Get.textTheme.bodyLarge?.copyWith(
-                        fontSize: isChild ?? false ? 14 : 18,
-                        color: selectedTab == tab ? Colors.white : Colors.black,
-                        fontWeight: isChild ?? false
-                            ? FontWeight.normal
-                            : FontWeight.bold)),
+                padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 20.0),
+                child: Text(
+                  text,
+                  style: Get.textTheme.bodyLarge?.copyWith(
+                    fontSize: isChild ?? false ? 14 : 18,
+                    color: selectedTab == tab ? Colors.white : Colors.black,
+                    fontWeight: isChild ?? false ? FontWeight.normal : FontWeight.bold,
+                  ),
+                ),
               ),
             ),
           ),
@@ -342,3 +411,4 @@ class _SelectBallTypeCard extends StatelessWidget {
     );
   }
 }
+

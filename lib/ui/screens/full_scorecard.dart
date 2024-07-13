@@ -267,48 +267,68 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                           ),
                           child: Column(
                               children: [
-                            Padding(
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                borderRadius: BorderRadius.circular(5)
+                              ),
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
                                 children: [
                                   Expanded(
                                     flex: 3,
                                     child: GestureDetector(
-                                      child: selectedTeamName.isEmpty
-                                          ? Text('${controller.scoreboard.value!.team1.name} Scorecard', style: Get.textTheme.labelMedium)
-                                          : Text('$selectedTeamName Scorecard', style: Get.textTheme.labelMedium),
+                                      // child: selectedTeamName.isEmpty
+                                          // ? Text('${controller.scoreboard.value!.team1.name} Scorecard', style: Get.textTheme.labelMedium)
+                                          // : Text('$selectedTeamName Scorecard', style: Get.textTheme.labelMedium),
+                                      child:
+                                      Text('Batter', style: Get.textTheme.labelMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14,
+                                        color: Colors.black
+                                      )),
                                     ),
                                   ),
                                   const Spacer(flex: 1),
                                   Expanded(
                                     child: Center(
-                                      child: Text('R', style: Get.textTheme.labelMedium),
+                                      child: Text('R', style: Get.textTheme.labelMedium?.copyWith(
+                                          color: Colors.black
+                                      )),
                                     ),
                                   ),
                                   Expanded(
                                     child: Center(
-                                      child: Text('B', style: Get.textTheme.labelMedium),
+                                      child: Text('B', style: Get.textTheme.labelMedium?.copyWith(
+                                          color: Colors.black
+                                      )),
                                     ),
                                   ),
                                   Expanded(
                                     child: Center(
-                                      child: Text('4s', style: Get.textTheme.labelMedium),
+                                      child: Text('4s', style: Get.textTheme.labelMedium?.copyWith(
+                                          color: Colors.black
+                                      )),
                                     ),
                                   ),
                                   Expanded(
                                     child: Center(
-                                      child: Text('6s', style: Get.textTheme.labelMedium),
+                                      child: Text('6s', style: Get.textTheme.labelMedium?.copyWith(
+                                          color: Colors.black
+                                      )),
                                     ),
                                   ),
                                   Expanded(
                                     child: Center(
-                                      child: Text('SR', style: Get.textTheme.labelMedium),
+                                      child: Text('SR', style: Get.textTheme.labelMedium?.copyWith(
+                                          color: Colors.black
+                                      )),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            const Divider(height: 10, color: Colors.grey),
+                            const Divider(height: 1, color: Colors.grey),
                             const SizedBox(height: 4),
                             ListView.separated(
                               shrinkWrap: true,
@@ -327,14 +347,19 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                             ):
                             ExtrasAndTotal(currentInning: currentInning),
                             const Divider(height: 20),
-                            Column(children: [
-                              Padding(
+                            Column(
+                                children: [
+                              Container(
+
                                 padding: const EdgeInsets.symmetric(horizontal: 8),
                                 child: Row(
                                   children: [
                                     Expanded(
                                       flex: 3,
-                                      child: Text('Bowler', style: Get.textTheme.labelMedium),
+                                      child: Text('Bowler', style: Get.textTheme.labelMedium?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 14
+                                      )),
                                     ),
                                     const Spacer(flex: 2),
                                     Expanded(

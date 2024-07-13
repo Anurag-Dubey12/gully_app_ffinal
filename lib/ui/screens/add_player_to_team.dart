@@ -10,6 +10,7 @@ import 'package:gully_app/ui/screens/add_team.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../data/model/team_model.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 import '../widgets/custom_text_field.dart';
@@ -35,7 +36,6 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TeamController>();
-
     return Container(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -204,12 +204,25 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(18.0),
-                            child: Text(
-                              AppLocalizations.of(context)!.players,
-                              style: Get.textTheme.headlineMedium?.copyWith(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  AppLocalizations.of(context)!.players,
+                                  style: Get.textTheme.headlineMedium?.copyWith(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Obx((){
+                                  return Text("(${controller.players.length}/15)",style: Get.textTheme.headlineMedium?.copyWith(
+                                  color: Colors.black,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  );
+                                })
+
+                              ],
                             ),
                           ),
                           TeamPlayersListBuilder(teamId: controller.state.id),

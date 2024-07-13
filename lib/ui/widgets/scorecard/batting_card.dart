@@ -18,10 +18,9 @@ class BattingStats extends GetView<ScoreBoardController> {
       child: Obx(() => Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
-          color: Colors.white
+          color: Colors.white,
         ),
-        child: Column(
-            children: [
+        child: Column(children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -36,24 +35,19 @@ class BattingStats extends GetView<ScoreBoardController> {
                 ),
                 Expanded(
                     child: Center(
-                        child:
-                        Text('R', style: Get.textTheme.labelMedium))),
-                Expanded(
-                  child: Center(
-                      child: Text('B', style: Get.textTheme.labelMedium)),
-                ),
+                        child: Text('R', style: Get.textTheme.labelMedium))),
                 Expanded(
                     child: Center(
-                        child:
-                        Text('4s', style: Get.textTheme.labelMedium))),
+                        child: Text('B', style: Get.textTheme.labelMedium))),
                 Expanded(
                     child: Center(
-                        child:
-                        Text('6s', style: Get.textTheme.labelMedium))),
+                        child: Text('4s', style: Get.textTheme.labelMedium))),
                 Expanded(
                     child: Center(
-                        child:
-                        Text('SR', style: Get.textTheme.labelMedium)))
+                        child: Text('6s', style: Get.textTheme.labelMedium))),
+                Expanded(
+                    child: Center(
+                        child: Text('SR', style: Get.textTheme.labelMedium))),
               ],
             ),
           ),
@@ -73,13 +67,14 @@ class BattingStats extends GetView<ScoreBoardController> {
 }
 
 class BatterPlayerStat extends StatelessWidget {
-
   final PlayerModel player;
   final bool? isStriker;
   const BatterPlayerStat(this.player, this.isStriker, {super.key});
 
   @override
   Widget build(BuildContext context) {
+    bool hasBatted = player.batting != null && player.batting!.balls > 0  ;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Column(
@@ -95,8 +90,8 @@ class BatterPlayerStat extends StatelessWidget {
                       player.name + (isStriker == null ? '' : (isStriker! ? '*' : '')),
                       maxLines: 1,
                       style: TextStyle(
-                        color: isStriker == null ? Colors.black : (isStriker! ? Colors.blue[900] : Colors.black),
-                        fontWeight: isStriker == null ? null : (isStriker! ? FontWeight.bold : null),
+                        color: hasBatted ? Colors.black : Colors.grey,
+                        fontWeight: hasBatted ? FontWeight.bold : null,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -113,27 +108,46 @@ class BatterPlayerStat extends StatelessWidget {
               ),
               Expanded(
                   child: Center(
-                      child: Text(player.batting!.runs.toString(),
-                          style: Get.textTheme.labelMedium))),
+                      child: Text(
+                          player.batting!.runs.toString(),
+                          style: hasBatted ?
+                          Get.textTheme.labelMedium?.copyWith(color: Colors.black)
+                              : Get.textTheme.labelMedium)
+                  )),
               Expanded(
                   child: Center(
-                      child: Text(player.batting!.balls.toString(),
-                          style: Get.textTheme.labelMedium))),
+                      child: Text(
+                          player.batting!.balls.toString(),
+                          style: hasBatted ?
+                          Get.textTheme.labelMedium?.copyWith(color: Colors.black)
+                              : Get.textTheme.labelMedium)
+                  )
+              ),
               Expanded(
                   child: Center(
-                      child: Text(player.batting!.fours.toString(),
-                          style: Get.textTheme.labelMedium))),
+                      child: Text(
+                          player.batting!.fours.toString(),
+                          style: hasBatted ?
+                          Get.textTheme.labelMedium?.copyWith(color: Colors.black)
+                              : Get.textTheme.labelMedium))),
               Expanded(
                   child: Center(
-                      child: Text(player.batting!.sixes.toString(),
-                          style: Get.textTheme.labelMedium))),
+                      child: Text(
+                          player.batting!.sixes.toString(),
+                          style: hasBatted ?
+                          Get.textTheme.labelMedium?.copyWith(color: Colors.black)
+                              : Get.textTheme.labelMedium))),
               Expanded(
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Center(
-                        child: Text('${player.batting!.strikeRate.toStringAsFixed(1)}%',
-                            style: Get.textTheme.labelMedium?.copyWith(fontSize: 11))),
-                  ))
+                        child: Text(
+                            '${player.batting!.strikeRate.toStringAsFixed(1)}%',
+                            style: hasBatted ?
+                            Get.textTheme.labelMedium?.copyWith(fontSize: 11, color: Colors.black)
+                                : Get.textTheme.labelMedium?.copyWith(fontSize: 11)
+                        )),
+                  )),
             ],
           ),
         ],
@@ -141,4 +155,3 @@ class BatterPlayerStat extends StatelessWidget {
     );
   }
 }
-

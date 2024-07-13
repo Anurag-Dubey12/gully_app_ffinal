@@ -150,6 +150,10 @@ class _Card extends StatelessWidget {
                               height: 40,
                               decoration: BoxDecoration(
                                 color: Colors.red.shade400,
+                                border: Border.all(
+                                    color: Color.fromARGB(255, 255, 215, 0),
+                                    width: 2
+                                ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
@@ -161,6 +165,10 @@ class _Card extends StatelessWidget {
                               height: 40,
                               decoration: BoxDecoration(
                                 color: Colors.red.shade400,
+                                border: Border.all(
+                                    color: Color.fromARGB(255, 255, 215, 0),
+                                  width: 2
+                                ),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
@@ -173,6 +181,10 @@ class _Card extends StatelessWidget {
                             child: Container(
                               decoration: BoxDecoration(
                                 color: Colors.red,
+                                border: Border.all(
+                                    color: Color.fromARGB(255, 255, 215, 0),
+                                    width: 2
+                                ),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
@@ -180,7 +192,7 @@ class _Card extends StatelessWidget {
                                   winnerText,
                                   style: const TextStyle(
                                     color: Colors.white,
-                                    fontSize: 10,
+                                    fontSize: 11,
                                     fontWeight: FontWeight.bold,
                                   ),
                                   textAlign: TextAlign.center,

@@ -51,15 +51,15 @@ class ExtrasAndTotal extends StatelessWidget {
                 flex: 3,
                 child: Text(
                   'Extras',
-                  style: Get.textTheme.labelMedium?.copyWith(fontSize: 14, color: Colors.black),
+                  style: Get.textTheme.labelMedium?.copyWith(fontSize: 14, color: Colors.blue.shade900,fontWeight: FontWeight.bold,),
                 ),
               ),
-              const SizedBox(width: 70),
+              const SizedBox(width: 80),
               Expanded(
-                flex: 6,
+                flex: 7,
                 child: Text(
                   '${currentExtras.byes}B, ${currentExtras.legByes}L, ${currentExtras.noBalls}N, ${currentExtras.penalty}P, ${currentExtras.wides}WD ',
-                  style: Get.textTheme.labelMedium?.copyWith(fontSize: 14, color: Colors.black, fontWeight: FontWeight.bold),
+                  style: Get.textTheme.labelMedium?.copyWith(fontSize: 13, color: Colors.blue.shade600),
                 ),
               ),
             ],
@@ -71,16 +71,16 @@ class ExtrasAndTotal extends StatelessWidget {
                 flex: 3,
                 child: Text(
                   'Total runs',
-                  style: Get.textTheme.labelMedium?.copyWith(fontSize: 14, color: Colors.black),
+                  style: Get.textTheme.labelMedium?.copyWith(fontSize: 14, color: Colors.blue.shade900,fontWeight: FontWeight.bold),
                 ),
               ),
-              const SizedBox(width: 30),
+              // const SizedBox(width: 15),
               Expanded(
-                flex: 6,
+                flex: 7,
                 child: Center(
                   child: Text(
-                    '$currentTotalRuns ($currentTotalWickets wkts, ${formatOvers(currentOvers, currentBalls)} ov)',
-                    style: Get.textTheme.labelMedium?.copyWith(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black),
+                    '$currentTotalRuns($currentTotalWickets wkts, ${formatOvers(currentOvers, currentBalls)} ov)',
+                    style: Get.textTheme.labelMedium?.copyWith( fontSize: 13, color: Colors.blue.shade600),
                   ),
                 ),
               ),

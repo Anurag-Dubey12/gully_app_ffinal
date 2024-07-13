@@ -74,7 +74,7 @@ class _PaymentPageState extends State<PaymentPage> {
     final id = await controller.createOrder(
         discountAmount: fees,
         tournamentId: widget.tournament.id,
-        totalAmount: widget.tournament.fees,
+        totalAmount: fees,
         coupon: couponCode);
     logger.f("ID $id");
     logger.f("Fees ${fees - discount}");

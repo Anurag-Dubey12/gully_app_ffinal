@@ -58,8 +58,8 @@ class SearchPlacesScreenState extends State<SearchPlacesScreen> {
                           description: address,
                           lat: postion.latitude.toString(),
                           lng: postion.longitude.toString()));
-                      // Get.back();
-                      Get.close();
+                      Get.back();
+                      // Get.close();
                     },
                   )
                 : const SizedBox(),

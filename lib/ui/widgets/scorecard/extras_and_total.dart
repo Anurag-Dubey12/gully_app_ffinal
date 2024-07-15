@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
 import '../../../data/controller/scoreboard_controller.dart';
+import '../../../data/model/bowling_model.dart';
 import '../../../data/model/extras_model.dart';
 import '../../../data/model/innings_model.dart';
 
@@ -12,6 +13,9 @@ class ExtrasAndTotal extends StatelessWidget {
   const ExtrasAndTotal({Key? key, required this.currentInning, this.scoreboard}) : super(key: key);
 
   String formatOvers(int overs, int balls) {
+    if(balls==6){
+      overs+=1;
+    }
     return '$overs.${balls % 6}';
   }
 

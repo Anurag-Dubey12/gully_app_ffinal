@@ -151,22 +151,59 @@ class HomePage extends StatelessWidget {
                           const SizedBox(
                             height: 10,
                           ),
-                          SizedBox(
-                            height: 60,
-                            child: ListView.separated(
-                                scrollDirection: Axis.horizontal,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  return SportsCard(
-                                    index: index,
-                                  );
-                                },
-                                padding: const EdgeInsets.only(left: 20),
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(
-                                      width: 15,
-                                    ),
-                                itemCount: 7),
+
+                          //For multiple sports icon and text
+                          // SizedBox(
+                          //   height: 60,
+                          //   child: ListView.separated(
+                          //       scrollDirection: Axis.horizontal,
+                          //       shrinkWrap: true,
+                          //       itemBuilder: (context, index) {
+                          //         return SportsCard(
+                          //           index: index,
+                          //         );
+                          //       },
+                          //       padding: const EdgeInsets.only(left: 20),
+                          //       separatorBuilder: (context, index) =>
+                          //           const SizedBox(
+                          //             width: 15,
+                          //           ),
+                          //       itemCount: 7),
+                          // ),
+
+                          //Optional
+                          //For particular sports such as cricker
+                          Container(
+                            width:130,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 255, 157, 46),
+                              borderRadius: BorderRadius.circular(21),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: AppTheme.secondaryYellowColor.withOpacity(0.3),
+                                    blurRadius: 2,
+                                    spreadRadius: 1,
+                                    offset: const Offset(0, -1))
+                              ],
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  'assets/images/cricket_icon.png',
+                                  color:  Colors.white,
+                                  height: 30,
+                                  width: 30,
+                                ),
+                                const Text(
+                                  'Cricket',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18),
+                                ),
+                              ],
+                            ),
                           ),
                           const SizedBox(
                             height: 20,

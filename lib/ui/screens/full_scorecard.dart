@@ -270,7 +270,7 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                             Container(
                               decoration: BoxDecoration(
                                 color: Colors.grey.shade300,
-                                borderRadius: BorderRadius.circular(5)
+                                // borderRadius: BorderRadius.circular(5)
                               ),
                               padding: const EdgeInsets.all(8.0),
                               child: Row(
@@ -346,51 +346,65 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                               scoreboard: widget.scoreboard,
                             ):
                             ExtrasAndTotal(currentInning: currentInning),
-                            const Divider(height: 20),
+                            const Divider(height: 1),
                             Column(
                                 children: [
                               Container(
-
-                                padding: const EdgeInsets.symmetric(horizontal: 8),
+                                decoration: BoxDecoration(
+                                    color: Colors.grey.shade300,
+                                    // borderRadius: BorderRadius.circular()
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
                                 child: Row(
                                   children: [
                                     Expanded(
                                       flex: 3,
                                       child: Text('Bowler', style: Get.textTheme.labelMedium?.copyWith(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 14
+                                        fontSize: 14,
+                                          color: Colors.black
                                       )),
                                     ),
                                     const Spacer(flex: 2),
                                     Expanded(
                                       child: Center(
-                                        child: Text('O', style: Get.textTheme.labelMedium),
+                                        child: Text('O', style: Get.textTheme.labelMedium?.copyWith(
+                                            color: Colors.black
+                                        )),
                                       ),
                                     ),
                                     Expanded(
                                       child: Center(
-                                        child: Text('M', style: Get.textTheme.labelMedium),
+                                        child: Text('M', style: Get.textTheme.labelMedium?.copyWith(
+                                            color: Colors.black
+                                        )),
                                       ),
                                     ),
                                     Expanded(
                                       child: Center(
-                                        child: Text('R', style: Get.textTheme.labelMedium),
+                                        child: Text('R', style: Get.textTheme.labelMedium?.copyWith(
+                                            color: Colors.black
+                                        )),
                                       ),
                                     ),
                                     Expanded(
                                       child: Center(
-                                        child: Text('W', style: Get.textTheme.labelMedium),
+                                        child: Text('W', style: Get.textTheme.labelMedium?.copyWith(
+                                            color: Colors.black
+                                        )),
                                       ),
                                     ),
                                     Expanded(
                                       child: Center(
-                                        child: Text('ER', style: Get.textTheme.labelMedium),
+                                        child: Text('ER', style: Get.textTheme.labelMedium?.copyWith(
+                                            color: Colors.black
+                                        )),
                                       ),
                                     ),
                                   ],
                                 ),
                               ),
-                              const Divider(height: 10, color: Colors.grey),
+                              const Divider(height: 1, color: Colors.grey),
                               const SizedBox(height: 3),
                               GetBuilder<ScoreBoardController>(
                                 builder: (controller) {
@@ -470,8 +484,6 @@ class ScoreboardBowlerPlayerStat extends GetView<ScoreBoardController> {
     );
   }
 }
-
-
 String getCurrentBowl(BowlingModel bowling) {
   if (bowling.overs.length == 1) {
     return '0.0';
@@ -482,3 +494,6 @@ String getCurrentBowl(BowlingModel bowling) {
   }
   return '${bowling.currentOver}.${bowling.currentBall}';
 }
+
+
+

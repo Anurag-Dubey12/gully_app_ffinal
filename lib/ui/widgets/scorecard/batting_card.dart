@@ -69,12 +69,11 @@ class BattingStats extends GetView<ScoreBoardController> {
 class BatterPlayerStat extends StatelessWidget {
   final PlayerModel player;
   final bool? isStriker;
-  const BatterPlayerStat(this.player, this.isStriker, {super.key});
+  const BatterPlayerStat(this.player, this.isStriker ,{super.key});
 
   @override
   Widget build(BuildContext context) {
     bool hasBatted = player.batting != null && player.batting!.balls > 0  ;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Column(
@@ -99,7 +98,7 @@ class BatterPlayerStat extends StatelessWidget {
                       Text(
                         '${player.batting!.outType} b ${player.batting!.bowledBy}',
                         style: Get.textTheme.labelMedium?.copyWith(fontSize: 12, color: Colors.grey[600]),
-                      )
+                      ),
                   ],
                 ),
               ),

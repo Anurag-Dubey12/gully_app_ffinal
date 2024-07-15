@@ -33,7 +33,8 @@ Future errorSnackBar(String errorMessage,
             ),
             confirm: InkWell(
               onTap: () {
-                Get.back();
+                // Get.back();
+                Get.close();
               },
               child: Container(
                 padding:

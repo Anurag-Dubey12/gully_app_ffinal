@@ -69,7 +69,6 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
         _image = img;
       });
     }
-
     setState(() {});
   }
 
@@ -112,6 +111,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
     location = LatLng(postion.latitude, postion.longitude);
     setState(() {});
   }
+
 
   @override
   Widget build(BuildContext context) {

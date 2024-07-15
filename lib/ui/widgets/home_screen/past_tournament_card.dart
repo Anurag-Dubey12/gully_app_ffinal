@@ -5,7 +5,6 @@ import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 import '../../../utils/utils.dart';
-import '../../screens/TournamentMatchesScreen.dart';
 import '../../screens/full_scorecard.dart';
 import 'no_tournament_card.dart';
 
@@ -151,7 +150,7 @@ class _Card extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Colors.red.shade400,
                                 border: Border.all(
-                                    color: Color.fromARGB(255, 255, 215, 0),
+                                    color: const Color.fromARGB(255, 255, 215, 0),
                                     width: 2
                                 ),
                                 borderRadius: BorderRadius.circular(8),
@@ -166,7 +165,7 @@ class _Card extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Colors.red.shade400,
                                 border: Border.all(
-                                    color: Color.fromARGB(255, 255, 215, 0),
+                                    color: const Color.fromARGB(255, 255, 215, 0),
                                   width: 2
                                 ),
                                 borderRadius: BorderRadius.circular(8),
@@ -182,7 +181,7 @@ class _Card extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Colors.red,
                                 border: Border.all(
-                                    color: Color.fromARGB(255, 255, 215, 0),
+                                    color: const Color.fromARGB(255, 255, 215, 0),
                                     width: 2
                                 ),
                                 borderRadius: BorderRadius.circular(10),

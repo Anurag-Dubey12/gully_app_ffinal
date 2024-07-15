@@ -641,9 +641,9 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                     if (value.trim().isEmpty) {
                       return AppLocalizations.of(context)!.fillAllFields;
                     }
-                    if (!value.contains(RegExp(r'^[a-zA-Z -]+$'))) {
-                      return AppLocalizations.of(context)!.validName;
-                    }
+                    // if (!value.contains(RegExp(r'^[a-zA-Z -]+$'))) {
+                    //   return AppLocalizations.of(context)!.validName;
+                    // }
                     return null;
                   },
                 ),

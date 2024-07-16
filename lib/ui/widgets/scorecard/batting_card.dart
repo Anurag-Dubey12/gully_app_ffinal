@@ -74,6 +74,8 @@ class BatterPlayerStat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool hasBatted = player.batting != null && player.batting!.balls > 0  ;
+    final ScoreBoardController controller = Get.find<ScoreBoardController>();
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Column(
@@ -95,6 +97,10 @@ class BatterPlayerStat extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     if (!isStriker! && player.batting!.outType.isNotEmpty && player.batting!.bowledBy.isNotEmpty)
+                      // Text(
+                      //   '${player.batting!.outType} b ${player.batting!.bowledBy}',
+                      //   style: Get.textTheme.labelMedium?.copyWith(fontSize: 12, color: Colors.grey[600]),
+                      // ),
                       Text(
                         '${player.batting!.outType} b ${player.batting!.bowledBy}',
                         style: Get.textTheme.labelMedium?.copyWith(fontSize: 12, color: Colors.grey[600]),
@@ -153,4 +159,5 @@ class BatterPlayerStat extends StatelessWidget {
       ),
     );
   }
+
 }

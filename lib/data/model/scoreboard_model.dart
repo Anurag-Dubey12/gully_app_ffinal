@@ -311,7 +311,33 @@ class ScoreboardModel {
     }
     return null;
   }
-
+  String getBowlerName(String bowlerId) {
+    if (currentInnings == 1) {
+      return team2.players!
+          .firstWhere(
+              (player) => player.id == bowlerId,
+          orElse: () => PlayerModel(
+              name: 'Unknown',
+              id: 'unknown_id',
+              phoneNumber: 'unknown',
+              role: 'unknown'
+          )
+      )
+          .name;
+    } else {
+      return team1.players!
+          .firstWhere(
+              (player) => player.id == bowlerId,
+          orElse: () => PlayerModel(
+              name: 'Unknown',
+              id: 'unknown_id',
+              phoneNumber: 'unknown',
+              role: 'unknown'
+          )
+      )
+          .name;
+    }
+  }
   Future<void> addRuns(int runs,
       {List<EventType>? events, List<EventType>? extraEvents}) async {
     bool shouldAddRuns = true;
@@ -322,6 +348,7 @@ class ScoreboardModel {
     int ball = currentBall;
     int over = currentOver + 1;
 
+    final ScoreBoardController controller = Get.find<ScoreBoardController>();
     if (!events.contains(EventType.legByes) &&
         !events.contains(EventType.bye) &&
         !events.contains(EventType.wide) &&
@@ -378,28 +405,20 @@ class ScoreboardModel {
       }
       if (res['playerToOut'] != null) {
         if (res['playerToOut'] == strikerId) {
-          // striker.batting!.bowledBy = bowler.name;
-          striker.batting!.bowledBy = bowlerId;
-          print("Theae is first $res and bowler id is:$bowlerId and bowler name is :${bowler.name}");
+          striker.batting!.bowledBy = controller.getBowlerName(bowlerId);
           striker.batting!.outType = res['outType'];
           setStriker = res['batsmanId'];
         } else {
-          nonstriker.batting!.bowledBy = bowlerId;
-          // nonstriker.batting!.bowledBy = bowler.name;
-          print("Theae is second $res and bowler id is:$bowlerId and bowler name is :${bowler.name}");
+          nonstriker.batting!.bowledBy = controller.getBowlerName(bowlerId);
           nonstriker.batting!.outType = res['outType'];
           setNonStriker = res['batsmanId'];
         }
       } else {
         striker.batting!.outType = res['outType'];
-        print("Theae is third $res and bowler id is:$bowlerId and bowler name is :${bowler.name}" );
-        striker.batting!.bowledBy=bowlerId;
-        // striker.batting!.bowledBy=bowler.name;
+        striker.batting!.bowledBy=controller.getBowlerName(bowlerId);
         setStriker = res['batsmanId'];
       }
       logger.i('Striker: $strikerId');
-      // print('Bowler id :$bowlerId');
-      // print("The res data is:${res}");
       _partnershipStriker = PlayerModel(
         name: striker.name,
         id: strikerId,

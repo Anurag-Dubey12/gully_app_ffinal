@@ -167,6 +167,27 @@ class ScoreBoardController extends GetxController with StateMixin {
     _lastScoreboardInstance = scoreboard.value!;
   }
 
+  String getBowlerName(String bowlerId) {
+    if (scoreboard.value == null) {
+      return 'Unknown';
+    }
+    TeamModel bowlingTeam = scoreboard.value!.currentInnings == 1
+        ? scoreboard.value!.team2
+        : scoreboard.value!.team1;
+
+    PlayerModel? bowler = bowlingTeam.players?.firstWhere(
+            (player) => player.id == bowlerId,
+        orElse: () => PlayerModel(
+            name: 'Unknown',
+            id: 'unknown_id',
+            phoneNumber: 'unknown',
+            role: 'unknown'
+        )
+    );
+    return bowler!.name;
+  }
+
+
   Future<bool> addEvent(EventType type,
       {String? bowlerId,
       String? strikerId,

@@ -120,6 +120,7 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                               return SizedBox(
                                 height: Get.height / 1.2,
                                 child: ListView.separated(
+                                  scrollDirection: Axis.vertical,
                                   separatorBuilder: (context, index) =>
                                       const SizedBox(height: 18),
                                   shrinkWrap: true,

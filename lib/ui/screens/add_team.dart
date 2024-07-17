@@ -252,7 +252,7 @@ class _TeamAddedDialog extends GetView<TeamController> {
                     title: AppLocalizations.of(context)!.addPlayersButton,
                     onTap: () async {
                       Get.back();
-                      Get.back();
+                      // Get.back();
                       Get.to(() => const AddPlayersToTeam());
                     },
                   ),

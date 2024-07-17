@@ -145,4 +145,5 @@
   "request_sent_successfully": "Request sent successfully",
   "selectLocation": "Select Location",
   "changeLanguage": "Change Language"
+  "EmptyName": "Name Field Cannot be Empty"
 }

@@ -11,10 +11,11 @@
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify by adding new item">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/api/team_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/team_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/l10n/app_en.arb" beforeDir="false" afterPath="$PROJECT_DIR$/lib/l10n/app_en.arb" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/add_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/add_team.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/batting_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/batting_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,7 +155,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721044626521</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="modify by adding new item">
+      <option name="closed" value="true" />
+      <created>1721130620253</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1721130620253</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -204,6 +213,12 @@
           <option name="timestamp" value="1721044627693" />
           <option name="linesCode" value="27754" />
           <option name="totalLines" value="2250388" />
+          <option name="info" value="modify by adding new item" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721130621319" />
+          <option name="linesCode" value="27798" />
+          <option name="totalLines" value="2250766" />
           <option name="info" value="modify by adding new item" />
         </TimePoint>
       </list>
@@ -269,6 +284,12 @@
           <option name="linesCode" value="27754" />
           <option name="totalLines" value="2250388" />
           <option name="info" value="Jul 15, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721130621319" />
+          <option name="linesCode" value="27798" />
+          <option name="totalLines" value="2250766" />
+          <option name="info" value="Jul 16, 2024" />
         </TimePoint>
       </list>
     </option>

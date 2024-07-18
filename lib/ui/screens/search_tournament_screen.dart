@@ -43,6 +43,8 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
   final debouncer = Debouncer();
   int sortValue = 0;
   List<TournamentModel> tournaments = [];
+  bool isLoading = false;
+
 
   @override
   void initState() {
@@ -52,10 +54,14 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
     searchController.addListener(() {
       debouncer.debounce(searchController.text);
     });
+    setState(() {
+      isLoading = true;
+    });
     debouncer.onValueChanged.listen((value) {
       tournamentController.searchTournament(value).then((value) {
         setState(() {
           tournaments = value;
+          isLoading = false;
         });
       });
       // Call your API here with the debounced value
@@ -165,7 +171,7 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                                           setState(() {
                                             sortValue = e as int;
                                           });
-                                          Get.back();
+                                          // Get.back();
                                           Get.close();
                                         },
                                       ),
@@ -182,20 +188,25 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
               ),
             ),
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: tournaments.length,
-                        itemBuilder: (context, index) {
-                          return TournamentCard(
-                            tournament: tournaments[index],
-                          );
-                        })
-                  ],
-                ),
+              child: isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : tournaments.isEmpty
+                  ? const Center(child: Text('Search Tournament'))
+                  : ListView.builder(
+                shrinkWrap: true,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: tournaments.length,
+                itemBuilder: (context, index) {
+                  final tournament = tournaments[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: tournament != null
+                        ? TournamentCard(
+                      tournament: tournament,
+                    )
+                        : const SizedBox.shrink(),
+                  );
+                },
               ),
             ),
           ],

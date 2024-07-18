@@ -69,19 +69,36 @@ class _TournamentCardState extends State<TournamentCard> {
     });
   }
 
+  // void _updateTime() {
+  //   Duration remainingTime =
+  //   widget.tournament.tournamentEndDateTime.difference(DateTime.now());
+  //   String formattedTime =
+  //       '${remainingTime.inDays}d:${remainingTime.inHours.remainder(24)}h:${remainingTime.inMinutes.remainder(60)}m:${remainingTime.inSeconds.remainder(60)}s';
+  //   _timeStreamController.add(formattedTime);
+  // }
   void _updateTime() {
-    Duration remainingTime =
-    widget.tournament.tournamentEndDateTime.difference(DateTime.now());
-    String formattedTime =
-        '${remainingTime.inDays}d:${remainingTime.inHours.remainder(24)}h:${remainingTime.inMinutes.remainder(60)}m:${remainingTime.inSeconds.remainder(60)}s';
-    _timeStreamController.add(formattedTime);
+    if (widget.tournament.tournamentStartDateTime != null &&
+        widget.tournament.tournamentEndDateTime != null) {
+      DateTime now = DateTime.now();
+      if (now.isBefore(widget.tournament.tournamentStartDateTime)) {
+        Duration remainingTime = widget.tournament.tournamentStartDateTime.difference(now);
+        String formattedTime =
+            '${remainingTime.inDays}d:${remainingTime.inHours.remainder(24)}h:${remainingTime.inMinutes.remainder(60)}m:${remainingTime.inSeconds.remainder(60)}s';
+        _timeStreamController.add('Starts in: $formattedTime');
+      } else if (now.isAfter(widget.tournament.tournamentEndDateTime)) {
+        _timeStreamController.add('Tournament has ended');
+      } else {
+        _timeStreamController.add('Tournament is ongoing');
+      }
+    } else {
+      _timeStreamController.add('Date information not available');
+    }
   }
-
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
     final tournamentdata = controller.tournamentList
-        .firstWhere((t) => t.id == widget.tournament.id);
+        .firstWhereOrNull((t) => t.id == widget.tournament.id);
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
@@ -108,8 +125,8 @@ class _TournamentCardState extends State<TournamentCard> {
             ),
             child: CircleAvatar(
               radius: 50,
-              backgroundImage: tournamentdata.coverPhoto != null
-                  ? NetworkImage(toImageUrl(tournamentdata.coverPhoto!))
+              backgroundImage: tournamentdata?.coverPhoto != null
+                  ? NetworkImage(toImageUrl(tournamentdata!.coverPhoto!))
                   : const AssetImage('assets/images/logo.png') as ImageProvider,
               backgroundColor: Colors.transparent,
             ),

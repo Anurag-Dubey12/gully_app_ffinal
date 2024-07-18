@@ -28,11 +28,14 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
   List<TeamModel> leftSideteams = [];
   List<TeamModel> rightSideteams = [];
   DateTime? selectedDate;
+
   @override
   void initState() {
     super.initState();
+
     getPlayers();
   }
+
 
   Future<void> getPlayers() async {
     final controller = Get.find<TournamentController>();
@@ -40,6 +43,22 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
     if (teams.isEmpty) {
       errorSnackBar('Please register a team first').then((value) => Get.back());
     }
+    //For Finding The Won team
+    switch(widget.round){
+      case "qualifier":{
+
+        Get.snackbar("These is for ", "Qualifier");
+      }break;
+      case "semi final":{
+        Get.snackbar("These is for ", "Semi final");
+
+      }break;
+      case "final match":{
+        Get.snackbar("These is for ", " final");
+
+      }break;
+    }
+
     logger.d('TEAMS: $teams');
     // divide teams into two sides
     leftSideteams = teams.sublist(0, teams.length ~/ 2);

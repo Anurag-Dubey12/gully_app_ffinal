@@ -13,7 +13,7 @@ class ExtrasAndTotal extends StatelessWidget {
   const ExtrasAndTotal({Key? key, required this.currentInning, this.scoreboard}) : super(key: key);
 
   String formatOvers(int overs, int balls) {
-    if(balls==6){
+    if(balls==6 ){
       overs+=1;
     }
     return '$overs.${balls % 6}';

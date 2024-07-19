@@ -84,7 +84,7 @@ class _TournamentCardState extends State<TournamentCard> {
         Duration remainingTime = widget.tournament.tournamentStartDateTime.difference(now);
         String formattedTime =
             '${remainingTime.inDays}d:${remainingTime.inHours.remainder(24)}h:${remainingTime.inMinutes.remainder(60)}m:${remainingTime.inSeconds.remainder(60)}s';
-        _timeStreamController.add('Starts in: $formattedTime');
+        _timeStreamController.add(formattedTime);
       } else if (now.isAfter(widget.tournament.tournamentEndDateTime)) {
         _timeStreamController.add('Tournament has ended');
       } else {

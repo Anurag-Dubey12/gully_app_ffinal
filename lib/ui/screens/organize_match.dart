@@ -32,7 +32,6 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
   @override
   void initState() {
     super.initState();
-
     getPlayers();
   }
 
@@ -43,21 +42,37 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
     if (teams.isEmpty) {
       errorSnackBar('Please register a team first').then((value) => Get.back());
     }
+    // Find the specific teams
+    // final coastalMariners = teams.firstWhere(
+    //       (team) => team.name.toLowerCase() == 'coastal mariners',
+    //   // orElse: () => null,
+    // );
+    // final borivaliBlazer = teams.firstWhere(
+    //       (team) => team.name.toLowerCase() == 'borivali blazer',
+    //
+    // );
+    //
+    // if (coastalMariners == null || borivaliBlazer == null) {
+    //   errorSnackBar('Required teams not found').then((value) => Get.back());
+    //   return;
+    // }
+
     //For Finding The Won team
-    switch(widget.round){
-      case "qualifier":{
-
-        Get.snackbar("These is for ", "Qualifier");
-      }break;
-      case "semi final":{
-        Get.snackbar("These is for ", "Semi final");
-
-      }break;
-      case "final match":{
-        Get.snackbar("These is for ", " final");
-
-      }break;
-    }
+    // switch(widget.round){
+    //   case "qualifier":{
+    //
+    //     Get.snackbar("These is for ", "Qualifier");
+    //   }break;
+    //   case "semi final":{
+    //
+    //     Get.snackbar("These is for ", "Semi final");
+    //
+    //   }break;
+    //   case "final match":{
+    //
+    //     Get.snackbar("These is for ", " final");
+    //   }break;
+    // }
 
     logger.d('TEAMS: $teams');
     // divide teams into two sides

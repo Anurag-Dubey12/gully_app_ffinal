@@ -45,7 +45,6 @@ class TournamentController extends GetxController
       return TournamentModel.fromJson(body.data!);
     } catch (e) {
       errorSnackBar(e.toString());
-      print("The Name Error: " + e.toString());
       rethrow;
     }
   }

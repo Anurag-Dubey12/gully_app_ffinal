@@ -80,6 +80,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
       FocusScope.of(context).unfocus();
     });
     if (widget.tournament != null) {
+
       _nameController.text = widget.tournament!.tournamentName;
       _rulesController.text = widget.tournament!.rules ?? "";
       _entryFeeController.text =
@@ -158,6 +159,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                         'Please select tournament start and end date');
                                     return;
                                   }
+
                                   // tournmanent name should not contain emojis or special characters except for alphabets and numbers
 
                                   setState(() {
@@ -223,6 +225,9 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                           'Tournament Updated Successfully');
                                     }
                                   } else {
+                                    if(_image==null){
+                                      errorSnackBar('Please select an cover image');
+                                    }
                                     final tournamentModel =
                                         await tournamentController
                                             .createTournament(tournament);
@@ -231,6 +236,18 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                     Get.to(() => PaymentPage(
                                           tournament: tournamentModel,
                                         ));
+
+                                    // Get.to(() => PaymentPage(
+                                    //   tournamentData: tournament,
+                                    //   onPaymentSuccess: (TournamentModel createdTournament) {
+                                    //     authController.getUser();
+                                    //     Get.offAll(() => const HomeScreen(),
+                                    //         predicate: (route) => route.name == '/HomeScreen');
+                                    //     successSnackBar(
+                                    //       'Congratulations, Organizer!\nYour tournament has been successfully created.',
+                                    //     );
+                                    //   },
+                                    // ));
                                     // Get.back();
                                     // successSnackBar(
                                     //   'Congratulations, Organizer!\nYour tournament has been successfully created.',

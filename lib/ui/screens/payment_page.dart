@@ -105,6 +105,50 @@ class _PaymentPageState extends State<PaymentPage> {
           title: const Text('Review Tournament',
               style: TextStyle(color: Colors.white, fontSize: 18)),
         ),
+
+        //To Delete the  current filled tournament
+
+        // appBar: AppBar(
+        //   iconTheme: const IconThemeData(color: Colors.white),
+        //   backgroundColor: AppTheme.primaryColor,
+        //   leading: IconButton(
+        //     icon: const Icon(Icons.arrow_back),
+        //     onPressed: () async {
+        //       bool confirm = await showDialog(
+        //         context: context,
+        //         builder: (BuildContext context) {
+        //           return AlertDialog(
+        //             title: const Text("Cancel Tournament"),
+        //             content: const Text("Are you sure you want to cancel this tournament?"),
+        //             actions: <Widget>[
+        //               TextButton(
+        //                 child: const Text("No"),
+        //                 onPressed: () => Navigator.of(context).pop(false),
+        //               ),
+        //               TextButton(
+        //                 child: const Text("Yes"),
+        //                 onPressed: () => Navigator.of(context).pop(true),
+        //               ),
+        //             ],
+        //           );
+        //         },
+        //       );
+        //
+        //       if (confirm == true) {
+        //         final controller = Get.find<TournamentController>();
+        //         bool cancelled = await controller.cancelTournament(widget.tournament.id);
+        //         if (cancelled) {
+        //           Get.back();
+        //           successSnackBar("The tournament was successfully cancelled");
+        //         } else {
+        //           errorSnackBar("Failed to cancel the tournament. Please try again.");
+        //         }
+        //       }
+        //     },
+        //   ),
+        //   title: const Text('Review Tournament',
+        //       style: TextStyle(color: Colors.white, fontSize: 18)),
+        // ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Container(

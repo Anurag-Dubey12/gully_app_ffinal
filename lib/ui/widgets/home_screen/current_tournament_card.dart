@@ -104,12 +104,13 @@ class _Card extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
+                        FittedBox(
+                          fit: BoxFit.contain,
                           child: Center(
                             child: Text(
                               tournament.tournamentName ?? 'Unknown Tournament',
                               style: const TextStyle(
-                                fontSize: 18,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                               textAlign: TextAlign.center,

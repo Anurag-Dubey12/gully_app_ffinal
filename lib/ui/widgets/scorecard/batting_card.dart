@@ -97,10 +97,6 @@ class BatterPlayerStat extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     if (!isStriker! && player.batting!.outType.isNotEmpty && player.batting!.bowledBy.isNotEmpty)
-                      // Text(
-                      //   '${player.batting!.outType} b ${player.batting!.bowledBy}',
-                      //   style: Get.textTheme.labelMedium?.copyWith(fontSize: 12, color: Colors.grey[600]),
-                      // ),
                       Text(
                         '${player.batting!.outType} b ${player.batting!.bowledBy}',
                         style: Get.textTheme.labelMedium?.copyWith(fontSize: 12, color: Colors.grey[600]),

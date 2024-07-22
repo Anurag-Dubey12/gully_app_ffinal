@@ -16,18 +16,18 @@ class TournamentRequestScreen extends GetView<TournamentController> {
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          image: DecorationImage(
-              image: AssetImage(
-                'assets/images/sports_icon.png',
-              ),
-              fit: BoxFit.cover),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        image: DecorationImage(
+          image: AssetImage('assets/images/sports_icon.png'),
+          fit: BoxFit.cover,
         ),
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: SafeArea(
-            child: Stack(children: [
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: Stack(
+            children: [
               ClipPath(
                 clipper: ArcClipper(),
                 child: Container(
@@ -41,33 +41,34 @@ class TournamentRequestScreen extends GetView<TournamentController> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                          color: AppTheme.secondaryYellowColor.withOpacity(0.3),
-                          blurRadius: 20,
-                          spreadRadius: 2,
-                          offset: const Offset(0, 70))
+                        color: AppTheme.secondaryYellowColor.withOpacity(0.3),
+                        blurRadius: 20,
+                        spreadRadius: 2,
+                        offset: const Offset(0, 70),
+                      )
                     ],
                   ),
                   width: double.infinity,
+                  height: Get.height * 0.9,
                 ),
               ),
-              Positioned(
-                top: 0,
-                child: SizedBox(
-                  width: Get.width,
-                  child: Column(
-                    children: [
-                      AppBar(
-                        backgroundColor: Colors.transparent,
-                        elevation: 0,
-                        title: Text('Select Tournament',
-                            style: Get.textTheme.headlineMedium?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold)),
-                        leading: const BackButton(
-                          color: Colors.white,
-                        ),
+              Column(
+                children: [
+                  AppBar(
+                    backgroundColor: Colors.transparent,
+                    elevation: 0,
+                    title: Text(
+                      'Select Tournament',
+                      style: Get.textTheme.headlineMedium?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Padding(
+                    ),
+                    leading: const BackButton(color: Colors.white),
+                  ),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Padding(
                         padding: EdgeInsets.symmetric(
                           horizontal: Get.width * 0.07,
                         ),
@@ -81,28 +82,33 @@ class TournamentRequestScreen extends GetView<TournamentController> {
                               }
 
                               return ListView.separated(
-                                  separatorBuilder: (context, index) =>
-                                      const SizedBox(height: 18),
-                                  shrinkWrap: true,
-                                  itemCount: controller
-                                      .organizerTournamentList.value.length,
-                                  itemBuilder: (context, index) {
-                                    return _Card(
-                                      tournament: controller
-                                          .organizerTournamentList.value[index],
-                                    );
-                                  });
+                                separatorBuilder: (context, index) =>
+                                const SizedBox(height: 18),
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: controller
+                                    .organizerTournamentList.value.length,
+                                itemBuilder: (context, index) {
+                                  return _Card(
+                                    tournament: controller
+                                        .organizerTournamentList.value[index],
+                                  );
+                                },
+                              );
                             }),
+                            SizedBox(height: Get.height * 0.05),
                           ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              )
-            ]),
+                ],
+              ),
+            ],
           ),
-        ));
+        ),
+      ),
+    );
   }
 }
 
@@ -129,6 +135,10 @@ class _Card extends StatelessWidget {
         width: Get.width,
         decoration: BoxDecoration(
             color: Colors.white,
+            border: Border.all(
+              color: Colors.black,
+              width: 1
+            ),
             boxShadow: [
               BoxShadow(
                   color: Colors.black.withOpacity(0.1),

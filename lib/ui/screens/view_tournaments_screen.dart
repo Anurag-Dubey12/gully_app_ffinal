@@ -43,7 +43,6 @@ class _ViewTournamentScreenState extends State<ViewTournamentScreen> {
               if (controller.organizerTournamentList.isEmpty) {
                 return const EmptyTournamentWidget();
               }
-
               return Expanded(
                 child: ListView.separated(
                     separatorBuilder: (context, index) =>

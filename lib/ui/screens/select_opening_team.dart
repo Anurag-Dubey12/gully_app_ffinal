@@ -130,7 +130,12 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                               });
                             },
                           ),
-                          Text(match.team1.name),
+                          Flexible(
+                            child: Text(match.team1.name,
+                                softWrap: true,
+                                overflow: TextOverflow.visible),
+                          ),
+                          // Text(match.team1.name),
                         ],
                       ),
                       Row(
@@ -144,7 +149,12 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                               });
                             },
                           ),
-                          Text(match.team2.name),
+                          Flexible(
+                            child: Text(match.team2.name,
+                                softWrap: true,
+                                overflow: TextOverflow.visible),
+                          ),
+                          // Text(match.team2.name),
                         ],
                       ),
                     ],

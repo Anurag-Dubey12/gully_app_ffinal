@@ -22,49 +22,48 @@ class _ViewTournamentScreenState extends State<ViewTournamentScreen> {
     final controller = Get.find<TournamentController>();
     return GradientBuilder(
         child: Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        backgroundColor: AppTheme.primaryColor,
-        elevation: 0,
-        // toolbarHeight: 100,
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: Text(
-          widget.opponentView ? 'Select Tournament' : 'Your Tournaments',
-          textAlign: TextAlign.center,
-          style: Get.textTheme.headlineLarge?.copyWith(
-              color: Colors.white, fontWeight: FontWeight.w700, fontSize: 24),
-        ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(28.0),
-        child: Column(
-          children: [
-            Obx(() {
-              if (controller.organizerTournamentList.isEmpty) {
-                return const EmptyTournamentWidget();
-              }
-
-              return Expanded(
-                child: ListView.separated(
-                    separatorBuilder: (context, index) =>
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: AppTheme.primaryColor,
+            elevation: 0,
+            // toolbarHeight: 100,
+            iconTheme: const IconThemeData(color: Colors.white),
+            title: Text(
+              widget.opponentView ? 'Select Tournament' : 'Your Tournaments',
+              textAlign: TextAlign.center,
+              style: Get.textTheme.headlineLarge?.copyWith(
+                  color: Colors.white, fontWeight: FontWeight.w700, fontSize: 24),
+            ),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(28.0),
+            child: Column(
+              children: [
+                Obx(() {
+                  if (controller.organizerTournamentList.isEmpty) {
+                    return const EmptyTournamentWidget();
+                  }
+                  return Expanded(
+                    child: ListView.separated(
+                        separatorBuilder: (context, index) =>
                         const SizedBox(height: 18),
-                    shrinkWrap: true,
-                    itemCount: controller.organizerTournamentList.length,
-                    itemBuilder: (context, index) {
-                      return _TourCard(
-                          controller.organizerTournamentList[index], () {
-                        setState(() {});
-                      }
-                          // tournament: snapshot.data![index],
-                          // redirectType: redirectType,
+                        shrinkWrap: true,
+                        itemCount: controller.organizerTournamentList.length,
+                        itemBuilder: (context, index) {
+                          return _TourCard(
+                              controller.organizerTournamentList[index], () {
+                            setState(() {});
+                          }
+                            // tournament: snapshot.data![index],
+                            // redirectType: redirectType,
                           );
-                    }),
-              );
-            }),
-          ],
-        ),
-      ),
-    ));
+                        }),
+                  );
+                }),
+              ],
+            ),
+          ),
+        ));
   }
 }
 
@@ -79,17 +78,17 @@ class EmptyTournamentWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: Column(
-      children: [
-        const Image(
-          image: AssetImage('assets/images/cricketer.png'),
-          height: 230,
-        ),
-        SizedBox(height: Get.height * 0.02),
-        Text(message ?? 'You have no tournaments yet',
-            textAlign: TextAlign.center,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-      ],
-    ));
+          children: [
+            const Image(
+              image: AssetImage('assets/images/cricketer.png'),
+              height: 230,
+            ),
+            SizedBox(height: Get.height * 0.02),
+            Text(message ?? 'You have no tournaments yet',
+                textAlign: TextAlign.center,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          ],
+        ));
   }
 }
 
@@ -146,7 +145,7 @@ class _TourCard extends GetView<TournamentController> {
           Get.dialog(AlertDialog.adaptive(
             title: const Text('Cancel Tournament'),
             content:
-                const Text('Are you sure you want to cancel this tournament?'),
+            const Text('Are you sure you want to cancel this tournament?'),
             actions: [
               TextButton(
                   onPressed: () {

@@ -273,76 +273,114 @@ class _InputRoundNumberState extends State<_InputRoundNumber> {
     'semi final',
     'final match',
   ];
+  OverlayEntry? _overlayEntry;
+  final GlobalKey _dropdownKey = GlobalKey();
+
+  @override
+  void dispose() {
+    _overlayEntry?.remove();
+    super.dispose();
+  }
+
+  void _toggleDropdown() {
+    if (_overlayEntry == null) {
+      _overlayEntry = _createOverlayEntry();
+      Overlay.of(context)!.insert(_overlayEntry!);
+    } else {
+      _overlayEntry!.remove();
+      _overlayEntry = null;
+    }
+  }
+
+  OverlayEntry _createOverlayEntry() {
+    RenderBox renderBox = _dropdownKey.currentContext!.findRenderObject() as RenderBox;
+    var size = renderBox.size;
+    var offset = renderBox.localToGlobal(Offset.zero);
+
+    return OverlayEntry(
+      builder: (context) => Positioned(
+        left: offset.dx,
+        top: offset.dy + size.height,
+        width: size.width,
+        child: Material(
+          elevation: 4.0,
+          child: ListView(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            children: items
+                .map((e) => ListTile(
+              title: Text(e.capitalize),
+              onTap: () {
+                setState(() {
+                  roundController.text = e;
+                });
+                _toggleDropdown();
+              },
+            ))
+                .toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final authController = Get.find<AuthController>();
     return Dialog(
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          // crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // CustomTextField(
-            //   labelText: AppLocalizations.of(context)!.enterRoundNumberLabel,
-            //   textInputType: TextInputType.number,
-            //   controller: roundController,
-            //   autoFocus: true,
-            // ),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Text("Select Round",
-                  style: Get.textTheme.headlineMedium?.copyWith(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 18)),
-            ),
-            const SizedBox(height: 20),
-            DropdownButtonFormField(
-                items: items
-                    .map((e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(e.capitalize,
-                              style: Get.textTheme.headlineMedium?.copyWith(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14)),
-                        ))
-                    .toList(),
-                decoration: InputDecoration(
-                  labelText: 'Select Round',
-                  labelStyle: Get.textTheme.headlineMedium?.copyWith(
+            Text("Select Round",
+                style: Get.textTheme.headlineMedium?.copyWith(
                     color: Colors.black,
                     fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
+                    fontSize: 18)),
+            const SizedBox(height: 20),
+            GestureDetector(
+              onTap: _toggleDropdown,
+              child: Container(
+                key: _dropdownKey,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                onChanged: (e) {
-                  roundController.text = e.toString();
-                }),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      roundController.text.isEmpty ? 'Select Round' : roundController.text.capitalize,
+                      style: Get.textTheme.headlineMedium?.copyWith(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const Icon(Icons.arrow_drop_down),
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(height: 20),
             PrimaryButton(
               onTap: () {
-                // allow only digits upto 4 in length. no alphanumeric
-                // if (!RegExp(r'^[0-9]{1,4}$').hasMatch(roundController.text)) {
-                //   errorSnackBar('Please enter a valid round number',
-                //       forceDialogOpen: true);
-                //   return;
-                // }
-
                 if (widget.tournament.authority != authController.state?.id) {
                   errorSnackBar('You are not authorized to organize the match',
-                          forceDialogOpen: true)
+                      forceDialogOpen: true)
                       .then((value) => Get.back());
-
+                  return;
+                }
+                if (roundController.text.isEmpty) {
+                  errorSnackBar('Please select a round', forceDialogOpen: true);
                   return;
                 }
                 Get.back();
                 Get.to(
-                  () => SelectOrganizeTeam(
+                      () => SelectOrganizeTeam(
                     tournament: widget.tournament,
                     round: roundController.text,
                   ),

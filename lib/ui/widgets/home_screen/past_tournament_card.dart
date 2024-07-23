@@ -127,7 +127,7 @@ class _Card extends StatelessWidget {
                             teamName: scoreboard.team1.name,
                             score: '${scoreboard.firstInningHistory.entries.last.value.total}/${scoreboard.firstInningHistory.entries.last.value.wickets}',
                           ),
-                          const SizedBox(width: 80),
+                          const SizedBox(width: 10),
                           _TeamScore(
                             color: Colors.green,
                             teamName: scoreboard.team2.name,
@@ -227,25 +227,40 @@ class _TeamScore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Container(
-              width: 16,
-              height: 16,
-              decoration: BoxDecoration(
-                color: color,
-                shape: BoxShape.circle,
+    return SizedBox(
+      width: Get.width * 0.30,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  color: color,
+                  shape: BoxShape.circle,
+                ),
               ),
-            ),
-            const SizedBox(width: 4),
-            Text(teamName, style: Get.textTheme.bodyMedium),
-          ],
-        ),
-        Text(score, style: Get.textTheme.bodyMedium),
-      ],
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  teamName,
+                  style: Get.textTheme.bodyMedium,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 2),
+          Text(
+            score,
+            style: Get.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
     );
   }
 }
+
 

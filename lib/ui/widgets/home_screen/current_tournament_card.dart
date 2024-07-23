@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
-import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/home_screen/no_tournament_card.dart';
 
 import '../../../data/model/scoreboard_model.dart';
-import '../../../data/model/tournament_model.dart';
-import '../../../utils/date_time_helpers.dart';
 import '../../../utils/utils.dart';
 import '../dialogs/current_score_dialog.dart';
 import 'i_button_dialog.dart';
@@ -97,25 +94,28 @@ class _Card extends StatelessWidget {
             ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(5.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(width: 1),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                              tournament.tournamentName ?? 'Unknown Tournament',
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                tournament.tournamentName ?? 'Unknown Tournament',
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              textAlign: TextAlign.center,
                             ),
                           ),
-                        ),
                         IconButton(
                           onPressed: () {
                             Get.bottomSheet(
@@ -132,7 +132,7 @@ class _Card extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 1),
                     _TeamScore(
                       color: Colors.red,
                       teamName: tournament.team1.name,
@@ -182,7 +182,7 @@ class _Card extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 20,right: 10),
+              padding: const EdgeInsets.only(bottom: 1,right: 10),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
@@ -243,9 +243,11 @@ class _TeamScore extends StatelessWidget {
             teamName,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
+              fontSize: 13
             ),
           ),
         ),
+        const SizedBox(width: 1),
         Text(
           score,
           style: const TextStyle(

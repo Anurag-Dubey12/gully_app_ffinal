@@ -35,13 +35,13 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
     getPlayers();
   }
 
-
   Future<void> getPlayers() async {
     final controller = Get.find<TournamentController>();
     final teams = await controller.getRegisteredTeams(widget.tournament.id);
     if (teams.isEmpty) {
       errorSnackBar('Please register a team first').then((value) => Get.back());
     }
+
     // Find the specific teams
     // final coastalMariners = teams.firstWhere(
     //       (team) => team.name.toLowerCase() == 'coastal mariners',

@@ -79,8 +79,6 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
     });
   }
 
-
-
   void _toggleDropdown(GlobalKey key) {
     if (_overlayEntry == null) {
       _overlayEntry = _createOverlayEntry(key);

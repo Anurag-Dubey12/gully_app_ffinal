@@ -63,6 +63,10 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
   XFile? _image;
 
   pickImage() async {
+    if (widget.tournament != null && isCoHost()) {
+      errorSnackBar('Co-hosts are not allowed to change the cover photo');
+      return;
+    }
     final img = await imagePickerHelper();
     if (img != null) {
       setState(() {
@@ -71,16 +75,20 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
     }
     setState(() {});
   }
-
+  bool isCoHost() {
+    final authController = Get.find<AuthController>();
+    final currentUserId = authController.state?.id;
+    return (widget.tournament?.coHost1?.id == currentUserId) ||
+        (widget.tournament?.coHost2?.id == currentUserId);
+  }
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       FocusScope.of(context).unfocus();
     });
-    if (widget.tournament != null) {
 
+    if (widget.tournament != null) {
       _nameController.text = widget.tournament!.tournamentName;
       _rulesController.text = widget.tournament!.rules ?? "";
       _entryFeeController.text =
@@ -159,7 +167,14 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                         'Please select tournament start and end date');
                                     return;
                                   }
-
+                                  if (_image == null && widget.tournament?.coverPhoto == null) {
+                                    errorSnackBar('Please select a cover image');
+                                    return;
+                                  }
+                                  if (isCoHost()) {
+                                    errorSnackBar('Co-hosts are not allowed to edit tournament details');
+                                    return;
+                                  }
                                   // tournmanent name should not contain emojis or special characters except for alphabets and numbers
 
                                   setState(() {
@@ -225,9 +240,6 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                           'Tournament Updated Successfully');
                                     }
                                   } else {
-                                    if(_image==null){
-                                      errorSnackBar('Please select an cover image');
-                                    }
                                     final tournamentModel =
                                         await tournamentController
                                             .createTournament(tournament);
@@ -420,6 +432,10 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
+                                              // if () {
+                                              //   errorSnackBar('Co-hosts are not allowed to edit tournament details');
+                                              //   return;
+                                              // }
                                               Icon(Icons.photo),
                                               Text('Add Cover Photo',
                                                   style: TextStyle(
@@ -438,6 +454,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                           FormInput(
                             controller: _nameController,
                             label: AppLocalizations.of(context)!.tournamentName,
+                            // readOnly: widget.tournament != null && isCoHost(),
                             validator: (p0) {
                               if (p0!.isEmpty) {
                                 return AppLocalizations.of(context)!

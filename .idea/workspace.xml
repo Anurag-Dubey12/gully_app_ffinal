@@ -9,17 +9,20 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="need to solve round feature problem">
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/payment_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/payment_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/team_entry_form.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/team_entry_form.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_requests_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_requests_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_tournaments_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_tournaments_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/i_button_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/i_button_dialog.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,8 +96,8 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/abcom/Documents/gully_app&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;AndroidSdkUpdater&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/abcom/flutter&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;flutter.settings&quot;,
     &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
 }</component>
@@ -195,7 +198,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721389788068</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="modify">
+      <option name="closed" value="true" />
+      <created>1721735414853</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1721735414853</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -207,7 +218,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="modify by adding new item" />
     <MESSAGE value="need to solve round feature problem" />
-    <option name="LAST_COMMIT_MESSAGE" value="need to solve round feature problem" />
+    <MESSAGE value="modify" />
+    <option name="LAST_COMMIT_MESSAGE" value="modify" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -271,6 +283,12 @@
           <option name="linesCode" value="27824" />
           <option name="totalLines" value="3406059" />
           <option name="info" value="" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721735416033" />
+          <option name="linesCode" value="27919" />
+          <option name="totalLines" value="3405614" />
+          <option name="info" value="modify" />
         </TimePoint>
       </list>
     </option>
@@ -359,6 +377,12 @@
           <option name="linesCode" value="27824" />
           <option name="totalLines" value="3406059" />
           <option name="info" value="Jul 19, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721735416033" />
+          <option name="linesCode" value="27919" />
+          <option name="totalLines" value="3405614" />
+          <option name="info" value="Jul 23, 2024" />
         </TimePoint>
       </list>
     </option>

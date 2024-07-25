@@ -98,12 +98,17 @@ class _MatchupCard extends StatelessWidget {
                             NetworkImage(matchup.team1.toImageUrl()),
                       ),
                       const SizedBox(height: 6),
-                      Text(
-                        matchup.team1.name.capitalize,
-                        style: Get.textTheme.headlineSmall?.copyWith(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: Get.textScaleFactor * 17,
+                      SizedBox(
+                        width: 100,
+                        child: Text(
+                          matchup.team1.name.capitalize,
+                          style: Get.textTheme.headlineSmall?.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: Get.textScaleFactor * 17,
+                          ),
+                          softWrap: true,
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ],
@@ -131,12 +136,19 @@ class _MatchupCard extends StatelessWidget {
                             NetworkImage(matchup.team2.toImageUrl()),
                       ),
                       const SizedBox(height: 6),
-                      Text(
-                        matchup.team2.name.capitalize,
-                        style: Get.textTheme.headlineSmall?.copyWith(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: Get.textScaleFactor * 17,
+                      SizedBox(
+                        width: 100,
+                        child: Text(
+                          matchup.team2.name.capitalize,
+                          style: Get.textTheme.headlineSmall?.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: Get.textScaleFactor * 17,
+                          ),
+                          softWrap: true,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     ],

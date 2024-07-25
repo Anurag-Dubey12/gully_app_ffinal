@@ -155,10 +155,15 @@ class _Card extends StatelessWidget {
           child: Row(
             children: [
               const Spacer(),
-              Text(
-                tournament.tournamentName,
-                style: Get.textTheme.titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w600, fontSize: 19),
+              SizedBox(
+                width: 200,
+                child: Text(
+                  tournament.tournamentName,
+                  style: Get.textTheme.titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w600, fontSize: 19),
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                ),
               ),
               const Spacer(),
               tournament.registeredTeamsCount == tournament.tournamentLimit

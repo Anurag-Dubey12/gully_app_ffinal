@@ -122,6 +122,8 @@ class _Card extends StatelessWidget {
                               IButtonDialog(
                                 organizerName: tournamentdata.organizerName!,
                                 location: tournamentdata.stadiumAddress,
+                                tournamentName: tournamentdata.tournamentName,
+                                tournamentPrice: tournamentdata.fees.toString(),
                                 coverPhoto: tournamentdata.coverPhoto,
                               ),
                               backgroundColor: Colors.white,

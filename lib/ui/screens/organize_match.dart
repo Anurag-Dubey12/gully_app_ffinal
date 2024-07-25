@@ -42,37 +42,6 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
       errorSnackBar('Please register a team first').then((value) => Get.back());
     }
 
-    // Find the specific teams
-    // final coastalMariners = teams.firstWhere(
-    //       (team) => team.name.toLowerCase() == 'coastal mariners',
-    //   // orElse: () => null,
-    // );
-    // final borivaliBlazer = teams.firstWhere(
-    //       (team) => team.name.toLowerCase() == 'borivali blazer',
-    //
-    // );
-    //
-    // if (coastalMariners == null || borivaliBlazer == null) {
-    //   errorSnackBar('Required teams not found').then((value) => Get.back());
-    //   return;
-    // }
-
-    //For Finding The Won team
-    // switch(widget.round){
-    //   case "qualifier":{
-    //
-    //     Get.snackbar("These is for ", "Qualifier");
-    //   }break;
-    //   case "semi final":{
-    //
-    //     Get.snackbar("These is for ", "Semi final");
-    //
-    //   }break;
-    //   case "final match":{
-    //
-    //     Get.snackbar("These is for ", " final");
-    //   }break;
-    // }
 
     logger.d('TEAMS: $teams');
     // divide teams into two sides
@@ -143,69 +112,61 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                       const SizedBox(height: 20),
                                       DecoratedBox(
                                         decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 6),
+                                          padding: const EdgeInsets.symmetric(horizontal: 6),
                                           child: DropdownButton<TeamModel?>(
                                             value: selectedTeam1,
-                                            icon: const Icon(
-                                                Icons.arrow_drop_down),
+                                            icon: const Icon(Icons.arrow_drop_down),
                                             padding: EdgeInsets.zero,
                                             iconSize: 24,
-                                            // menuMaxHeight: 8,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(10),
                                             alignment: Alignment.bottomCenter,
-                                            // elevation: 16,
                                             iconEnabledColor: Colors.black,
-                                            style: const TextStyle(
-                                                color: Colors.black),
+                                            style: const TextStyle(color: Colors.black),
                                             underline: const SizedBox(),
                                             onChanged: (TeamModel? newValue) {
                                               setState(() {
                                                 selectedTeam1 = newValue!;
                                               });
                                             },
-                                            items: leftSideteams.map<
-                                                    DropdownMenuItem<
-                                                        TeamModel?>>(
-                                                (TeamModel value) {
-                                              return DropdownMenuItem<
-                                                  TeamModel?>(
-                                                value: value,
-                                                child: Text(value.name,
-                                                    style: Get
-                                                        .textTheme.labelMedium),
-                                              );
-                                            }).toList(),
+                                            items: leftSideteams.map<DropdownMenuItem<TeamModel?>>(
+                                                  (TeamModel value) {
+                                                return DropdownMenuItem<TeamModel?>(
+                                                  value: value,
+                                                  child: SizedBox(
+                                                    width: 80,
+                                                    child: Text(
+                                                      value.name,
+                                                      style: Get.textTheme.labelMedium?.copyWith(fontSize: 12),
+                                                      overflow: TextOverflow.ellipsis,
+                                                      maxLines: 2,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ).toList(),
                                           ),
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
-                                // const Spacer(),
                                 Column(
                                   children: [
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
+                                    const SizedBox(height: 20),
                                     Chip(
-                                        label: Text('VS',
-                                            style: Get.textTheme.labelLarge
-                                                ?.copyWith(
-                                                    color: Colors.white,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                        backgroundColor:
-                                            AppTheme.secondaryYellowColor,
-                                        side: BorderSide.none),
+                                      label: Text('VS',
+                                          style: Get.textTheme.labelLarge?.copyWith(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold)),
+                                      backgroundColor: AppTheme.secondaryYellowColor,
+                                      side: BorderSide.none,
+                                    ),
                                   ],
                                 ),
-
                                 Expanded(
                                   flex: 4,
                                   child: Column(
@@ -213,50 +174,47 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                       CircleAvatar(
                                         radius: 43,
                                         backgroundColor: Colors.white,
-                                        backgroundImage: NetworkImage(
-                                            selectedTeam2?.toImageUrl() ?? ""),
+                                        backgroundImage: NetworkImage(selectedTeam2?.toImageUrl() ?? ""),
                                       ),
                                       const SizedBox(height: 20),
                                       DecoratedBox(
                                         decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 12),
+                                          padding: const EdgeInsets.symmetric(horizontal: 6),
                                           child: DropdownButton<TeamModel?>(
                                             value: selectedTeam2,
-                                            icon: const Icon(
-                                                Icons.arrow_drop_down),
+                                            icon: const Icon(Icons.arrow_drop_down),
                                             padding: EdgeInsets.zero,
                                             iconSize: 24,
-                                            // menuMaxHeight: 8,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
+                                            borderRadius: BorderRadius.circular(10),
                                             alignment: Alignment.bottomCenter,
-                                            // elevation: 16,
                                             iconEnabledColor: Colors.black,
-                                            style: const TextStyle(
-                                                color: Colors.black),
+                                            style: const TextStyle(color: Colors.black),
                                             underline: const SizedBox(),
                                             onChanged: (TeamModel? newValue) {
                                               setState(() {
                                                 selectedTeam2 = newValue!;
                                               });
                                             },
-                                            items: rightSideteams.map<
-                                                    DropdownMenuItem<
-                                                        TeamModel?>>(
-                                                (TeamModel? value) {
-                                              return DropdownMenuItem<
-                                                  TeamModel?>(
-                                                value: value,
-                                                child: Text(value!.name,
-                                                    style: Get
-                                                        .textTheme.labelMedium),
-                                              );
-                                            }).toList(),
+                                            items: rightSideteams.map<DropdownMenuItem<TeamModel?>>(
+                                                  (TeamModel? value) {
+                                                return DropdownMenuItem<TeamModel?>(
+                                                  value: value,
+                                                  child: SizedBox(
+                                                    width: 80,
+                                                    child: Text(
+                                                      value!.name,
+                                                      style: Get.textTheme.labelMedium?.copyWith(fontSize: 12),
+                                                      overflow: TextOverflow.ellipsis,
+                                                      maxLines: 2,
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ).toList(),
                                           ),
                                         ),
                                       ),
@@ -302,7 +260,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius:
-                                            BorderRadius.circular(10)),
+                                        BorderRadius.circular(10)),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Row(
@@ -311,7 +269,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                               selectedDate == null
                                                   ? 'Select Date'
                                                   : DateFormat('dd MMM yyyy')
-                                                      .format(selectedDate!),
+                                                  .format(selectedDate!),
                                               style: const TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w500)),
@@ -320,20 +278,20 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                             Icons.calendar_month,
                                             size: 18,
                                             color:
-                                                AppTheme.secondaryYellowColor,
+                                            AppTheme.secondaryYellowColor,
                                           )
                                         ],
                                       ),
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 20),
+                                const SizedBox(width: 60),
                                 InkWell(
                                   onTap: () async {
                                     final time = await showTimePicker(
                                         context: context,
                                         initialEntryMode:
-                                            TimePickerEntryMode.dialOnly,
+                                        TimePickerEntryMode.dialOnly,
                                         initialTime: TimeOfDay.now());
                                     if (time != null) {
                                       setState(() {
@@ -350,7 +308,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius:
-                                            BorderRadius.circular(10)),
+                                        BorderRadius.circular(10)),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Row(
@@ -359,7 +317,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                             selectedDate == null
                                                 ? 'Select Time'
                                                 : DateFormat('hh:mm a')
-                                                    .format(selectedDate!),
+                                                .format(selectedDate!),
                                             style: const TextStyle(
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.w500),
@@ -369,7 +327,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                             Icons.timer_sharp,
                                             size: 18,
                                             color:
-                                                AppTheme.secondaryYellowColor,
+                                            AppTheme.secondaryYellowColor,
                                           )
                                         ],
                                       ),

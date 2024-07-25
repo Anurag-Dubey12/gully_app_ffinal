@@ -156,6 +156,8 @@ class _TournamentCardState extends State<TournamentCard> {
                             IButtonDialog(
                               organizerName: widget.tournament.organizerName!,
                               location: widget.tournament.stadiumAddress,
+                              tournamentName: widget.tournament.tournamentName,
+                              tournamentPrice: widget.tournament.fees.toString(),
                               coverPhoto: widget.tournament.coverPhoto,
                             ),
                             backgroundColor: Colors.white,

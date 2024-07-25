@@ -5,12 +5,17 @@ import 'package:gully_app/utils/utils.dart';
 class IButtonDialog extends StatelessWidget {
   final String organizerName;
   final String location;
+  final String tournamentName;
+  final String tournamentPrice;
   final String? coverPhoto;
   const IButtonDialog(
       {super.key,
       required this.organizerName,
       required this.location,
-      this.coverPhoto});
+      required this.tournamentName,
+      required this.tournamentPrice,
+      this.coverPhoto,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +76,17 @@ class IButtonDialog extends StatelessWidget {
                       Row(
                         children: [
                           const SizedBox(width: 10),
+                          const Text('Tournament Name:',
+                              style: TextStyle(fontSize: 14)),
+                          const Spacer(),
+                          Text(tournamentName),
+                          const SizedBox(width: 10),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          const SizedBox(width: 10),
                           const Text('Organizer Name:',
                               style: TextStyle(fontSize: 14)),
                           const Spacer(),
@@ -78,7 +94,7 @@ class IButtonDialog extends StatelessWidget {
                           const SizedBox(width: 10),
                         ],
                       ),
-                      const SizedBox(height: 30),
+                      const SizedBox(height: 20),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
@@ -93,6 +109,17 @@ class IButtonDialog extends StatelessWidget {
                                   maxLines: 3,
                                   textAlign: TextAlign.end,
                                   style: const TextStyle(fontSize: 13))),
+                          const SizedBox(width: 10),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          const SizedBox(width: 10),
+                          const Text('Entry Fees:',
+                              style: TextStyle(fontSize: 14)),
+                          const Spacer(),
+                          Text(tournamentPrice),
                           const SizedBox(width: 10),
                         ],
                       ),

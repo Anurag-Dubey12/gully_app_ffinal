@@ -107,7 +107,6 @@ class _PaymentPageState extends State<PaymentPage> {
         ),
 
         //To Delete the  current filled tournament
-
         // appBar: AppBar(
         //   iconTheme: const IconThemeData(color: Colors.white),
         //   backgroundColor: AppTheme.primaryColor,

@@ -134,13 +134,16 @@ class _MatchupCard extends GetView<ScoreBoardController> {
     final ScoreboardModel? scoreboard = matchup.scoreBoard == null
         ? null
         : ScoreboardModel.fromJson(matchup.scoreBoard!);
-
     return GestureDetector(
       onTap: () {
         if (tournamentController.state?.authority != authController.state?.id) {
           errorSnackBar('You are not authorized to update the score board');
           return;
         }
+        // if (DateTime.now().isBefore(matchup.matchDate)) {
+        //   errorSnackBar('The match has not started yet. Please wait until the scheduled date and time.');
+        //   return;
+        // }
         if (matchup.scoreBoard != null) {
           Get.off(() => const ScoreCardScreen());
           controller

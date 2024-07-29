@@ -11,7 +11,25 @@
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/full_scorecard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/full_scorecard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/txn_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/txn_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/notification_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/notification_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_team_to_register.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_team_to_register.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/txn_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/txn_details.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/txn_history_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/txn_history_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/custom_drop_down_field.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/custom_drop_down_field.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/change_bowler.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/change_bowler.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/current_over_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/current_over_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/scorecard_dialogs.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/scorecard_dialogs.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +86,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
-    &quot;DEBUGGABLE_DEVICE&quot;: &quot;lava_lxx507-adb-B25GEA23LB045463-XqA9C7._adb-tls-connect._tcp&quot;,
+    &quot;DEBUGGABLE_DEVICE&quot;: &quot;lava_lxx507-192.168.29.122:37709&quot;,
     &quot;DEBUGGABLE_PROCESS&quot;: &quot;com.nileegames.gullyteam&quot;,
     &quot;DEBUGGER_ID&quot;: &quot;Java&quot;,
     &quot;Flutter.main.dart.executor&quot;: &quot;Run&quot;,
@@ -86,7 +104,7 @@
     &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/abcom/flutter&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;flutter.settings&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
     &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
 }</component>
@@ -203,7 +221,15 @@
       <option name="project" value="LOCAL" />
       <updated>1721891489823</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="modify">
+      <option name="closed" value="true" />
+      <created>1721903874526</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1721903874526</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -291,6 +317,12 @@
           <option name="timestamp" value="1721891491211" />
           <option name="linesCode" value="27982" />
           <option name="totalLines" value="5549258" />
+          <option name="info" value="modify" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1721903875864" />
+          <option name="linesCode" value="27982" />
+          <option name="totalLines" value="5549264" />
           <option name="info" value="modify" />
         </TimePoint>
       </list>
@@ -388,10 +420,16 @@
           <option name="info" value="Jul 23, 2024" />
         </TimePoint>
         <TimePoint>
-          <option name="timestamp" value="1721891491211" />
+          <option name="timestamp" value="1721903875864" />
           <option name="linesCode" value="27982" />
-          <option name="totalLines" value="5549258" />
+          <option name="totalLines" value="5549264" />
           <option name="info" value="Jul 25, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1722252602670" />
+          <option name="linesCode" value="28083" />
+          <option name="totalLines" value="6678543" />
+          <option name="info" value="Jul 29, 2024" />
         </TimePoint>
       </list>
     </option>

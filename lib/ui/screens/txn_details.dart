@@ -151,19 +151,25 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                   ),
                   Row(
                     children: [
-                      const Text('Transaction Date & Time',
-                          style: TextStyle(
-                            // color: AppTheme.secondaryYellowColor,
-                            fontSize: 14,
-                          )),
+                      const SizedBox(
+                        width: 200,
+                        child: const Text('Transaction Date & Time',
+                            style: TextStyle(
+                              // color: AppTheme.secondaryYellowColor,
+                              fontSize: 14,
+                            ),maxLines: 1,softWrap: true),
+                      ),
                       const Spacer(),
-                      Text(
-                          DateFormat('MMMM dd, yyyy - hh:mm a').format(
-                              DateTime.parse(widget.transaction.createdAt)),
-                          style: const TextStyle(
-                            // color: AppTheme.secondaryYellowColor,
-                            fontSize: 14,
-                          )),
+                      SizedBox(
+                        width: 100,
+                        child: Text(
+                            DateFormat('MMMM dd, yyyy - hh:mm a').format(
+                                DateTime.parse(widget.transaction.createdAt)),
+                            style: const TextStyle(
+                              // color: AppTheme.secondaryYellowColor,
+                              fontSize: 14,
+                            ),maxLines: 2,softWrap: true,),
+                      ),
                     ],
                   ),
                   //fee

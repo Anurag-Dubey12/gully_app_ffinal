@@ -190,12 +190,17 @@ class NotificationCard extends StatelessWidget {
                             fontSize: 14)),
                   ),
                   const Spacer(),
-                  Text(
-                    formatDateTime(
-                      'dd/MMM/yyy hh:mm a',
-                      notification.createdAt,
+                  SizedBox(
+                    width: 120,
+                    child: Text(
+                      formatDateTime(
+                        'dd/MMM/yyy hh:mm a',
+                        notification.createdAt,
+                      ),
+                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                    maxLines: 1,
+                      softWrap: true,
                     ),
-                    style: const TextStyle(color: Colors.grey, fontSize: 12),
                   )
                 ],
               ),

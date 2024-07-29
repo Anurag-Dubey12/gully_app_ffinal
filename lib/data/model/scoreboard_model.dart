@@ -338,6 +338,180 @@ class ScoreboardModel {
           .name;
     }
   }
+  // Future<void> addRuns(int runs,
+  //     {List<EventType>? events, List<EventType>? extraEvents}) async {
+  //   bool shouldAddRuns = true;
+  //   events ??= [];
+  //   int extraRuns = 0;
+  //   int wickets = 0;
+  //   String key = '$currentOver.${ballsToBowl - 6}';
+  //   int ball = currentBall;
+  //   int over = currentOver + 1;
+  //
+  //   final ScoreBoardController controller = Get.find<ScoreBoardController>();
+  //   if (!events.contains(EventType.legByes) &&
+  //       !events.contains(EventType.bye) &&
+  //       !events.contains(EventType.wide) &&
+  //       !events.contains(EventType.wicket)) {
+  //     logger.d("Adding runs to striker");
+  //     striker.batting!.runs = striker.batting!.runs + runs;
+  //     _partnershipStriker.batting!.runs =
+  //         _partnershipStriker.batting!.runs + runs;
+  //   }
+  //
+  //   if (!events.contains(EventType.wide) &&
+  //       !events.contains(EventType.noBall)) {
+  //     _incrementBall();
+  //     ball = currentBall;
+  //     over = currentOver;
+  //   }
+  //
+  //   if (!events.contains(EventType.bye) &&
+  //       !events.contains(EventType.noBall) &&
+  //       !events.contains(EventType.wide) &&
+  //       !events.contains(EventType.legByes)) {
+  //     striker.batting!.balls = striker.batting!.balls + 1;
+  //     _partnershipStriker.batting!.balls =
+  //         _partnershipStriker.batting!.balls + 1;
+  //   }
+  //   if (events.contains(EventType.four)) {
+  //     striker.batting!.fours = striker.batting!.fours + 1;
+  //     _partnershipStriker.batting!.fours =
+  //         _partnershipStriker.batting!.fours + 1;
+  //   }
+  //   if (events.contains(EventType.six)) {
+  //     striker.batting!.sixes = striker.batting!.sixes + 1;
+  //     _partnershipStriker.batting!.sixes =
+  //         _partnershipStriker.batting!.sixes + 1;
+  //   }
+  //   if (events.contains(EventType.wicket)) {
+  //     final res = await Get.bottomSheet(
+  //         BottomSheet(
+  //             backgroundColor: Colors.white,
+  //             onClosing: () {},
+  //             builder: (c) => const ChangeBatterWidget()),
+  //         isDismissible: false,
+  //         enableDrag: false);
+  //     logger.i(res);
+  //
+  //     wickets += 1;
+  //     if (res['outType'] == "RO") {
+  //       logger.i('Adding runs to striker on run out');
+  //       striker.batting!.runs = striker.batting!.runs + runs;
+  //       _partnershipStriker.batting!.runs =
+  //           _partnershipStriker.batting!.runs + runs;
+  //     } else {
+  //       shouldAddRuns = false;
+  //     }
+  //     if (res['playerToOut'] != null) {
+  //       if (res['playerToOut'] == strikerId) {
+  //         striker.batting!.bowledBy = controller.getBowlerName(bowlerId);
+  //         striker.batting!.outType = res['outType'];
+  //         setStriker = res['batsmanId'];
+  //       } else {
+  //         nonstriker.batting!.bowledBy = controller.getBowlerName(bowlerId);
+  //         nonstriker.batting!.outType = res['outType'];
+  //         setNonStriker = res['batsmanId'];
+  //       }
+  //     } else {
+  //       striker.batting!.outType = res['outType'];
+  //       striker.batting!.bowledBy=controller.getBowlerName(bowlerId);
+  //       setStriker = res['batsmanId'];
+  //     }
+  //     logger.i('Striker: $strikerId');
+  //     _partnershipStriker = PlayerModel(
+  //       name: striker.name,
+  //       id: strikerId,
+  //       phoneNumber: striker.phoneNumber,
+  //       role: striker.role,
+  //     );
+  //     _partnershipNonStriker = PlayerModel(
+  //       name: nonstriker.name,
+  //       id: nonStrikerId,
+  //       phoneNumber: nonstriker.phoneNumber,
+  //       role: nonstriker.role,
+  //     );
+  //   }
+  //   if (events.contains(EventType.bye)) {
+  //     extras.byes += runs;
+  //   }
+  //   if (events.contains(EventType.legByes)) {
+  //     extras.legByes += runs;
+  //   }
+  //   if (events.contains(EventType.noBall) || events.contains(EventType.wide)) {
+  //     if (events.contains(EventType.noBall)) {
+  //       extras.noBalls += 1;
+  //     } else {
+  //       extras.wides += 1;
+  //     }
+  //
+  //     if (events.contains(EventType.noBall) &&
+  //         events.contains(EventType.wide)) {
+  //       events.remove(EventType.wide);
+  //     }
+  //
+  //     extraRuns += 1;
+  //
+  //     currentInningsScore += runs + extraRuns;
+  //     ballsToBowl += 1;
+  //     logger.d(key);
+  //     getCurrentInnings.addAll({
+  //       key: OverModel(
+  //         over: over,
+  //         ball: ball,
+  //         run: runs,
+  //         wickets: lastBall.wickets + wickets,
+  //         extra: extraRuns,
+  //         total: currentInningsScore,
+  //         events: events,
+  //       ),
+  //     });
+  //     bowler.bowling!.addRuns(runs, events: events);
+  //   } else {
+  //     if (shouldAddRuns) {
+  //       currentInningsScore += runs;
+  //     }
+  //
+  //     ballsToBowl += 1;
+  //     getCurrentInnings.addAll({
+  //       key: OverModel(
+  //         over: over,
+  //         ball: ball,
+  //         run: shouldAddRuns ? runs : 0,
+  //         wickets: lastBall.wickets + wickets,
+  //         extra: extraRuns,
+  //         total: currentInningsScore,
+  //         events: events,
+  //       ),
+  //     });
+  //     bowler.bowling!.addRuns(shouldAddRuns ? runs : 0, events: events);
+  //   }
+  //
+  //   // generate text for the second innings eg : Mi needs 100 runs in 10 overs
+  //
+  //   if (currentBall == 6) {
+  //     overCompleted = true;
+  //     if (runs % 2 == 0) {
+  //       logger.i('Last ball of the over and even runs, change strike');
+  //       changeStrike();
+  //     } else if (runs % 2 != 0) {
+  //       logger.i('Last ball of the over and odd runs, no strike change');
+  //     }
+  //     currentBall = 0;
+  //     currentOver += 1;
+  //     ballsToBowl = 6;
+  //   } else {
+  //     if (runs % 2 != 0) {
+  //       logger.i('Odd runs, change strike');
+  //       changeStrike();
+  //     } else {
+  //       logger.i('Even runs, no strike change');
+  //     }
+  //   }
+  //   _updateSR();
+  //   _updatePartnership();
+  // }
+
   Future<void> addRuns(int runs,
       {List<EventType>? events, List<EventType>? extraEvents}) async {
     bool shouldAddRuns = true;
@@ -487,8 +661,6 @@ class ScoreboardModel {
       bowler.bowling!.addRuns(shouldAddRuns ? runs : 0, events: events);
     }
 
-    // generate text for the second innings eg : Mi needs 100 runs in 10 overs
-
     if (currentBall == 6) {
       overCompleted = true;
       if (runs % 2 == 0) {
@@ -511,7 +683,6 @@ class ScoreboardModel {
     _updateSR();
     _updatePartnership();
   }
-
   void _updateSR() {
     striker.batting!.strikeRate =
         (striker.batting!.runs / striker.batting!.balls) * 100;

@@ -218,6 +218,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                           style: Get.textTheme.headlineMedium
                                               ?.copyWith(
                                             fontWeight: FontWeight.bold,
+                                            // color: controller.scoreboard.value?.currentInnings==2 ? Colors.grey :Colors.black,
                                             color: Colors.black,
                                             fontSize: 14,
                                           ),

@@ -229,6 +229,9 @@ class _CardState extends State<_Card> {
               offset: const Offset(0, 1),
             ),
           ],
+          // border: Border.all(
+          //   color: Colors.black
+          // ),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Padding(

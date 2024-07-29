@@ -27,45 +27,43 @@ class DropDownWidget extends StatelessWidget {
             Get.bottomSheet(BottomSheet(
                 onClosing: () {},
                 builder: (context) => Container(
-                      // height: Get.height * 0.31,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(9)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(18.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.max,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(title,
-                                style: Get.textTheme.headlineMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black)),
-                            Expanded(
-                              child: ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: items.length,
-                                  itemBuilder: (context, index) {
-                                    return ListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      leading: Radio(
-                                        value: items[index].toUpperCase(),
-                                        groupValue: selectedValue,
-                                        onChanged: (e) =>
-                                            onSelect(items[index]),
-                                      ),
-                                      onTap: () {
-                                        onSelect();
-                                        // Get.back();
-                                      },
-                                      title: Text(items[index]),
-                                    );
-                                  }),
-                            ),
-                          ],
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(9)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(title,
+                            style: Get.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black)),
+                        Expanded(
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: items.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  leading: Radio(
+                                    value: items[index].toUpperCase(),
+                                    groupValue: selectedValue,
+                                    onChanged: (e) =>
+                                        onSelect(items[index]),
+                                  ),
+                                  onTap: () {
+                                    onSelect();
+                                  },
+                                  title: Text(items[index]),
+                                );
+                              }),
                         ),
-                      ),
-                    )));
+                      ],
+                    ),
+                  ),
+                )));
           },
           child: Ink(
             width: Get.width,
@@ -77,21 +75,17 @@ class DropDownWidget extends StatelessWidget {
               padding: const EdgeInsets.all(10.0),
               child: Row(
                 children: [
-                  SizedBox(
-                    width: Get.width * 0.8,
+                  Expanded(
                     child: Text(
                       selectedValue ?? '',
                       style: Get.textTheme.labelLarge,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const Spacer(),
-                  const Align(
-                      alignment: Alignment.centerRight,
-                      child: Icon(
-                        Icons.arrow_drop_down,
-                        size: 28,
-                      )),
+                  const Icon(
+                    Icons.arrow_drop_down,
+                    size: 28,
+                  ),
                 ],
               ),
             ),

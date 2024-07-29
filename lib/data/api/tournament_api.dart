@@ -278,6 +278,7 @@ class TournamentApi {
 
   // getTransactions
   Future<ApiResponse> getTransactions() async {
+    try{
     final response = await repo.get('/payment/transactionHistory');
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');
@@ -287,5 +288,10 @@ class TournamentApi {
       throw Exception('Bad Request');
     }
     return ApiResponse.fromJson(response.body);
+    }catch(e){
+      print("Error in API call: $e");
+      rethrow;
+    }
+
   }
 }

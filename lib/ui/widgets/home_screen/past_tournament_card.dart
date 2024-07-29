@@ -101,13 +101,20 @@ class _Card extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(
-                        child: Text(
-                          tournament.tournamentName!,
-                          style: Get.textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
+                    SizedBox(
+                      width:300,
+                      height: 30,
+                      child: Center(
+                          child: Text(
+                            tournament.tournamentName!,
+                            style: Get.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                            softWrap: true,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 4),

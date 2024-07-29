@@ -331,17 +331,47 @@ class ScoreBoardController extends GetxController with StateMixin {
     scoreboard.refresh();
   }
 
+  // void checkLastBall() {
+  //   if (scoreboard.value!.currentBall == 0 &&
+  //       scoreboard.value!.currentOver != 0 ) {
+  //     scoreboard.value!.overCompleted = true;
+  //     showModalBottomSheet(
+  //         context: Get.context!,
+  //         builder: (c) => const ChangeBowlerWidget(),
+  //         enableDrag: true,
+  //         isDismissible: true);
+  //   }
+  // }
+
   void checkLastBall() {
-    if (scoreboard.value!.currentBall == 0 &&
-        scoreboard.value!.currentOver != 0) {
+    if (scoreboard.value!.currentBall == 6 ||
+        (scoreboard.value!.currentBall == 0 && scoreboard.value!.currentOver != 0)) {
       scoreboard.value!.overCompleted = true;
+      scoreboard.value!.currentBall = 0;
+      if (scoreboard.value!.currentOver == scoreboard.value!.currentOver) {
+        scoreboard.value!.currentOver++;
+      }
       showModalBottomSheet(
           context: Get.context!,
           builder: (c) => const ChangeBowlerWidget(),
           enableDrag: true,
-          isDismissible: true);
+          isDismissible: true
+      );
     }
   }
+  // void checkLastBall() {
+  //   if (scoreboard.value!.currentBall == 6) {
+  //     scoreboard.value!.overCompleted = true;
+  //     scoreboard.value!.currentBall = 0;
+  //     scoreboard.value!.currentOver++;
+  //     showModalBottomSheet(
+  //         context: Get.context!,
+  //         builder: (c) => const ChangeBowlerWidget(),
+  //         enableDrag: true,
+  //         isDismissible: true
+  //     );
+  //   }
+  // }
 
   void addEventType(EventType type) {
     if (type == EventType.noBall && events.value.contains(EventType.wide)) {

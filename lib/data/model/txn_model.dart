@@ -23,17 +23,24 @@ class Transaction {
       required this.createdAt});
   //to convert json to model
   factory Transaction.fromJson(Map<String, dynamic> json) {
-    return Transaction(
-      tournamentName: json['tournament']['tournamentName'],
-      startDate: json['tournament']['tournamentStartDateTime'],
-      endDate: json['tournament']['tournamentEndDateTime'],
-      status: json['status'],
-      amount: double.parse(json['amount'].toString()),
-      coupon: json['coupon'],
-      amountWithoutCoupon: double.parse(json['amountWithoutCoupon'].toString()),
-      orderId: json['orderId'],
-      createdAt: json['createdAt'],
-      invoiceUrl: json['invoiceUrl'],
-    );
+    print("Parsing transaction: $json");
+    try {
+      return Transaction(
+        tournamentName: json['tournament']['tournamentName'] ?? 'Unknown Tournament',
+        startDate: json['tournament']['tournamentStartDateTime'] ?? '',
+        endDate: json['tournament']['tournamentEndDateTime'] ?? '',
+        status: json['status'] ?? '',
+        amount: double.tryParse(json['amount']?.toString() ?? '0') ?? 0.0,
+        coupon: json['coupon'] ?? '',
+        amountWithoutCoupon: double.tryParse(json['amountWithoutCoupon']?.toString() ?? '0') ?? 0.0,
+        orderId: json['orderId'] ?? '',
+        createdAt: json['createdAt'] ?? '',
+        invoiceUrl: json['invoiceUrl'],
+      );
+    } catch (e) {
+      print("Error parsing transaction: $e");
+      print("Problematic JSON: $json");
+      rethrow;
+    }
   }
 }

@@ -28,7 +28,6 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
   void initState() {
     super.initState();
     logger.d('isTournament ${widget.isTournament}');
-
     optedTo = 'Bat';
   }
 
@@ -42,6 +41,8 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
   Widget build(BuildContext context) {
     final scoreBoardController = Get.find<ScoreBoardController>();
     final match = scoreBoardController.match!;
+
+    print('The Tournament team is: ${match.team1.name} vs ${match.team2.name}');
     return GradientBuilder(
         child: Scaffold(
       backgroundColor: Colors.transparent,
@@ -130,12 +131,20 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                               });
                             },
                           ),
-                          Flexible(
-                            child: Text(match.team1.name,
-                                softWrap: true,
-                                overflow: TextOverflow.visible),
+                          // Flexible(
+                          //   child: Text(match.team1.name,
+                          //       softWrap: true,
+                          //       overflow: TextOverflow.visible),
+                          // ),
+                          SizedBox(
+                            width: 90,
+                              child: Text(
+                                  match.team1.name,
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,)
                           ),
-                          // Text(match.team1.name),
+
                         ],
                       ),
                       Row(
@@ -149,12 +158,20 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                               });
                             },
                           ),
-                          Flexible(
-                            child: Text(match.team2.name,
+                          // Flexible(
+                          //   child: Text(match.team2.name,
+                          //       softWrap: true,
+                          //       overflow: TextOverflow.visible),
+                          // ),
+                          SizedBox(
+                              width: 90,
+                              child: Text(
+                                match.team2.name,
                                 softWrap: true,
-                                overflow: TextOverflow.visible),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,)
                           ),
-                          // Text(match.team2.name),
+
                         ],
                       ),
                     ],

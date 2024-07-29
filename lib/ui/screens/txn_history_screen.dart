@@ -38,7 +38,7 @@ class TxnHistoryScreen extends GetView<TournamentController> {
                   offset: const Offset(0, 10))
             ],
           ),
-          child: FutureBuilder<List<Transaction>>(
+          child:FutureBuilder<List<Transaction>>(
             future: controller.getTransactions(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -46,14 +46,24 @@ class TxnHistoryScreen extends GetView<TournamentController> {
                     width: Get.width,
                     child: const Center(child: CircularProgressIndicator()));
               }
+              if (snapshot.hasError) {
+                print("Error in FutureBuilder: ${snapshot.error}");
+                return Center(child: Text("Failed To Get Transaction History: ${snapshot.error}"));
+              }
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                print("No data in snapshot");
+                return const Center(child: Text('No transactions found'));
+              }
+              print("Building list with ${snapshot.data!.length} transactions");
               return ListView.builder(
-                  itemCount: snapshot.data?.length ?? 0,
+                  itemCount: snapshot.data!.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    return _TxnHistoryCard(
-                      snapshot.data![index],
-                    );
-                  });
+                    final transaction = snapshot.data![index];
+                    print("Building card for transaction: $transaction");
+                    return _TxnHistoryCard(transaction);
+                  }
+              );
             },
           ),
         ),
@@ -68,6 +78,7 @@ class _TxnHistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return InkWell(
       onTap: () {
         Get.to(() => TxnDetailsView(
@@ -110,11 +121,11 @@ class _TxnHistoryCard extends StatelessWidget {
                                       ),
                                     )),
                           const SizedBox(width: 10),
-                          FittedBox(
+                          Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(transaction.tournamentName,
+                                Text(transaction.tournamentName??"Unknown Tournament",
                                     style: Get.textTheme.bodyMedium?.copyWith(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600,

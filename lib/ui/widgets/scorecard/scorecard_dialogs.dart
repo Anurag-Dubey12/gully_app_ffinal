@@ -304,7 +304,8 @@ class _RetirePlayerDialogState extends State<RetirePlayerDialog> {
                           playerToRetire: playerToRetire,
                           selectedBatsmanId: newPlayer!.id);
                       if (res) {
-                        Get.back();
+                        // Get.back();
+                        Get.close();
                       }
                     },
                     title: 'Done',

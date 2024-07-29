@@ -83,7 +83,7 @@ class _TournamentCardState extends State<TournamentCard> {
       if (now.isBefore(widget.tournament.tournamentStartDateTime)) {
         Duration remainingTime = widget.tournament.tournamentStartDateTime.difference(now);
         String formattedTime =
-            '${remainingTime.inDays}d:${remainingTime.inHours.remainder(24)}h:${remainingTime.inMinutes.remainder(60)}m:${remainingTime.inSeconds.remainder(60)}s';
+            ' Time left :${remainingTime.inDays}d:${remainingTime.inHours.remainder(24)}h:${remainingTime.inMinutes.remainder(60)}m:${remainingTime.inSeconds.remainder(60)}s';
         _timeStreamController.add(formattedTime);
       } else if (now.isAfter(widget.tournament.tournamentEndDateTime)) {
         _timeStreamController.add('Tournament has ended');
@@ -140,15 +140,21 @@ class _TournamentCardState extends State<TournamentCard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        widget.tournament.tournamentName ?? "Unkown Tournament",
-                        style: Get.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color: AppTheme.darkYellowColor,
+                      SizedBox(
+                        width:150,
+                        child: Center(
+                          child: Text(
+                            widget.tournament.tournamentName ?? "Unkown Tournament",
+                            style: Get.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: AppTheme.darkYellowColor,
+                            ),
+                            softWrap: true,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
                       ),
                       IconButton(
                         onPressed: () {
@@ -215,7 +221,7 @@ class _TournamentCardState extends State<TournamentCard> {
                     stream: _timeStreamController.stream,
                     builder: (context, snapshot) {
                       return Text(
-                        'Time left: ${snapshot.data}',
+                        '${snapshot.data}',
                         style: Get.textTheme.labelMedium?.copyWith(
                           fontWeight: FontWeight.w400,
                         ),

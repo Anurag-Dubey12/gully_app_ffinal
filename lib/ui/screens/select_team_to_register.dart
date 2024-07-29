@@ -165,7 +165,7 @@ class _TeamCard extends GetView<TeamController> {
                 ],
               ),
             const SizedBox(
-              width: 10,
+              width: 5,
             ),
             if (team.playersCount! >= 10)
               Material(

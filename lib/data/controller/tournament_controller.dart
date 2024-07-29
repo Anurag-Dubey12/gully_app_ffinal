@@ -7,10 +7,10 @@ import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/data/model/txn_model.dart';
+import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 
-import '../../utils/app_logger.dart';
 
 class TournamentController extends GetxController
     with StateMixin<TournamentModel?> {
@@ -70,13 +70,51 @@ class TournamentController extends GetxController
   RxList<TournamentModel> tournamentList = <TournamentModel>[].obs;
   RxList<MatchupModel> matches = <MatchupModel>[].obs;
   RxBool isLoading = false.obs;
-  Future getTournamentList({String? filterD}) async {
-    filter.value = filterD ?? '';
-    isLoading.value = true;
-    if (coordinates.value.latitude == 0) {
-      await getCurrentLocation();
-    }
+  // Future getTournamentList({String? filterD}) async {
+  //   filter.value = filterD ?? '';
+  //   isLoading.value = true;
+  //   if (coordinates.value.latitude == 0) {
+  //     await getCurrentLocation();
+  //   }
+  //   await Future.delayed(const Duration(seconds: 1));
+  //   try {
+  //
+  //     final response = await tournamentApi.getTournamentList(
+  //       latitude: coordinates.value.latitude,
+  //       longitude: coordinates.value.longitude,
+  //       startDate: selectedDate.value,
+  //       filter: filterD,
+  //       endDate: selectedDate.value.add(const Duration(days: 7)),
+  //     );
+  //
+  //     tournamentList.value = response.data!['tournamentList']
+  //         .map<TournamentModel>((e) => TournamentModel.fromJson(e))
+  //         .toList();
+  //
+  //     matches.value = response.data!['matches']
+  //         .map<MatchupModel>((e) => MatchupModel.fromJson(e))
+  //         .toList();
+  //     isLoading.value = false;
+  //     matches.refresh();
+  //     tournamentList.refresh();
+  //   } catch (e) {
+  //     errorSnackBar(e.toString());
+  //     rethrow;
+  //   }
+  // }
+
+  //MyCode
+  Future<void> getTournamentList({String? filterD}) async {
     try {
+      filter.value = filterD ?? '';
+      isLoading.value = true;
+
+      if (coordinates.value.latitude == 0) {
+        await getCurrentLocation();
+      }
+
+      await Future.delayed(const Duration(seconds: 1));
+
       final response = await tournamentApi.getTournamentList(
         latitude: coordinates.value.latitude,
         longitude: coordinates.value.longitude,
@@ -85,22 +123,27 @@ class TournamentController extends GetxController
         endDate: selectedDate.value.add(const Duration(days: 7)),
       );
 
-      tournamentList.value = response.data!['tournamentList']
-          .map<TournamentModel>((e) => TournamentModel.fromJson(e))
-          .toList();
+      if (response.data != null) {
+        tournamentList.value = (response.data!['tournamentList'] as List<dynamic>?)
+            ?.map((e) => TournamentModel.fromJson(e as Map<String, dynamic>))
+            .toList() ?? [];
 
-      matches.value = response.data!['matches']
-          .map<MatchupModel>((e) => MatchupModel.fromJson(e))
-          .toList();
+        matches.value = (response.data!['matches'] as List<dynamic>?)
+            ?.map((e) => MatchupModel.fromJson(e as Map<String, dynamic>))
+            .toList() ?? [];
+      } else {
+        tournamentList.value = [];
+        matches.value = [];
+      }
+    } catch (e) {
+      logger.d('Error in getTournamentList: $e');
+      errorSnackBar(e.toString());
+    } finally {
       isLoading.value = false;
       matches.refresh();
       tournamentList.refresh();
-    } catch (e) {
-      errorSnackBar(e.toString());
-      rethrow;
     }
   }
-
   void setSelectedTournament(TournamentModel tournament) {
     change(GetStatus.success(tournament));
   }
@@ -209,6 +252,7 @@ class TournamentController extends GetxController
   Future<List<MatchupModel>> getMatchup(String tourId) async {
     try {
       final response = await tournamentApi.getMatchup(tourId);
+      // await Future.delayed(const Duration(seconds: 1));
       return response.data!['matches']
           .map<MatchupModel>((e) => MatchupModel.fromJson(e))
           .toList();
@@ -303,18 +347,58 @@ class TournamentController extends GetxController
       return response.data;
     } catch (e) {
       errorSnackBar(e.toString());
+
       rethrow;
     }
   }
 
+  // Future<List<Transaction>> getTransactions() async {
+  //   try {
+  //     final response = await tournamentApi.getTransactions();
+  //     print("API Response: ${response.data}");
+  //     return response.data!['transactions']['history']
+  //         .map<Transaction>((e) => Transaction.fromJson(e))
+  //         .toList();
+  //   } catch (e) {
+  //     errorSnackBar(e.toString());
+  //     rethrow;
+  //   }
+  // }
+
+  //MyCode
   Future<List<Transaction>> getTransactions() async {
     try {
       final response = await tournamentApi.getTransactions();
+      logger.d("API Response: ${response.data}");
 
-      return response.data!['transactions']['history']
-          .map<Transaction>((e) => Transaction.fromJson(e))
-          .toList();
+      if (response.data == null) {
+        logger.d("Response data is null");
+        throw Exception("Response data is null");
+      }
+      if (response.data!['transactions'] == null) {
+        logger.d("Transactions object is null");
+        throw Exception("Transactions object is null");
+      }
+
+      if (response.data!['transactions']['history'] == null) {
+        logger.d("Transaction history is null");
+        throw Exception("Transaction history is null");
+      }
+
+      List<Transaction> transactions = [];
+      for (var transactionJson in response.data!['transactions']['history']) {
+        try {
+          transactions.add(Transaction.fromJson(transactionJson));
+        } catch (e) {
+          logger.d("Error parsing transaction: $e");
+          logger.d("Problematic transaction data: $transactionJson");
+        }
+      }
+
+      logger.d("Parsed ${transactions.length} transactions");
+      return transactions;
     } catch (e) {
+      logger.d("Error in getTransactions: $e");
       errorSnackBar(e.toString());
       rethrow;
     }

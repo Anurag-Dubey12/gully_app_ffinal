@@ -293,7 +293,7 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
     final controller = Get.find<MiscController>();
     return SizedBox(
         height: 150,
-        width: Get.width,
+        width: 400,
         child: Obx(
           () => CarouselSlider(
               items: controller.banners.value

@@ -174,7 +174,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                             ClipRRect(
                                               borderRadius:
                                               BorderRadius.circular(100),
-                                              child: widget.match.team1.logo != null
+                                              child: widget.match.team1.logo != null && widget.match.team1.logo!.isNotEmpty
                                                   ? Image.network(
                                                 widget.match.team1.toImageUrl(),
                                                 height: 50,
@@ -209,6 +209,15 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                                   ),
                                                 ),
                                               );
+                                              // if (controller.scoreboard.value?.currentInnings == 1)
+                                              //   BlinkingText(
+                                              //     text: 'Batting',
+                                              //     style: TextStyle(
+                                              //       color: Colors.green,
+                                              //       fontWeight: FontWeight.bold,
+                                              //       fontSize: 10,
+                                              //     ),
+                                              //   );
                                             })
                                           ],
                                         ),
@@ -292,6 +301,15 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                             fontSize: 14,
                                           ),
                                         ),
+                                        // if (controller.scoreboard.value?.currentInnings == 2)
+                                        //   const BlinkingText(
+                                        //     text: 'Batting',
+                                        //     style: TextStyle(
+                                        //       color: Colors.green,
+                                        //       fontWeight: FontWeight.bold,
+                                        //       fontSize: 10,
+                                        //     ),
+                                        //   ),
                                         const SizedBox(
                                           height: 10,
                                         ),
@@ -343,116 +361,76 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                             const SizedBox(height: 10),
                             Row(
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Image.asset('assets/images/bat.png',
-                                            height: 14),
-                                        const SizedBox(width: 5),
-                                        const Text('Striker:  ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500)),
-                                        SizedBox(
-                                          width: 70,
-                                          child: Text(
-                                            '${controller.scoreboard.value?.striker.name}',
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        // Image.asset('assets/images/bat.png',
-                                        //     height: 14),
-                                        const SizedBox(width: 18),
-                                        const Text('Runs:  ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500)),
-                                        Text(
-                                            '${controller.scoreboard.value?.striker.batting?.runs}')
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        // Image.asset('assets/images/bat.png',
-                                        //     height: 14),
-                                        const SizedBox(width: 18),
-                                        const Text('Strike Rate:  ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500)),
-                                        Text(
-                                            '${controller.scoreboard.value?.striker.batting?.strikeRate.toStringAsFixed(2)}')
-                                      ],
-                                    ),
-                                  ],
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Image.asset('assets/images/bat.png', height: 12),
+                                          const SizedBox(width: 3),
+                                          const Text('Striker: ', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
+                                          Expanded(
+                                            child: Text(
+                                              '${controller.scoreboard.value?.striker.name}',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(fontSize: 13),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const SizedBox(width: 15),
+                                          const Text('Runs: ', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
+                                          Text('${controller.scoreboard.value?.striker.batting?.runs}', style: const TextStyle(fontSize: 13))
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const SizedBox(width: 15),
+                                          const Text('SR: ', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12)),
+                                          Text('${controller.scoreboard.value?.striker.batting?.strikeRate.toStringAsFixed(2)}', style: const TextStyle(fontSize: 13))
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                const Spacer(),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Image.asset('assets/images/bat.png',
-                                            height: 14),
-                                        const SizedBox(width: 5),
-                                        const SizedBox(
-                                          child: Text('Non Striker:  ',
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w500)),
-                                        ),
-                                        SizedBox(
-                                          width: 60,
-                                          child: Text(
-                                            '${controller.scoreboard.value?.nonstriker.name}',
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        // Image.asset('assets/images/bat.png',
-                                        //     height: 14),
-                                        const SizedBox(width: 18),
-                                        const Text('Runs:  ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500)),
-                                        Text(
-                                            '${controller.scoreboard.value?.nonstriker.batting?.runs}')
-                                      ],
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.start,
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        // Image.asset('assets/images/bat.png',
-                                        //     height: 14),
-                                        const SizedBox(width: 18),
-                                        const Text('Strike Rate:  ',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w500)),
-                                        Text(
-                                            '${controller.scoreboard.value?.nonstriker.batting?.strikeRate.toStringAsFixed(2)}')
-                                      ],
-                                    ),
-                                  ],
+                                const SizedBox(width: 1),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Image.asset('assets/images/bat.png', height: 12),
+                                          const SizedBox(width: 3),
+                                          const Text('Non Striker: ', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
+                                          Expanded(
+                                            child: Text(
+                                              '${controller.scoreboard.value?.nonstriker.name}',
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(fontSize: 13),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const SizedBox(width: 15),
+                                          const Text('Runs: ', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
+                                          Text('${controller.scoreboard.value?.nonstriker.batting?.runs}', style: const TextStyle(fontSize: 13))
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          const SizedBox(width: 15),
+                                          const Text('SR: ', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
+                                          Text('${controller.scoreboard.value?.nonstriker.batting?.strikeRate.toStringAsFixed(2)}', style: const TextStyle(fontSize: 13))
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -496,3 +474,40 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
     }
   }
 }
+// class BlinkingText extends StatefulWidget {
+//   final String text;
+//   final TextStyle style;
+//
+//   const BlinkingText({Key? key, required this.text, required this.style}) : super(key: key);
+//
+//   @override
+//   _BlinkingTextState createState() => _BlinkingTextState();
+// }
+//
+// class _BlinkingTextState extends State<BlinkingText> with SingleTickerProviderStateMixin {
+//   late AnimationController _animationController;
+//
+//   @override
+//   void initState() {
+//     _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+//     _animationController.repeat(reverse: true);
+//     super.initState();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return FadeTransition(
+//       opacity: _animationController,
+//       child: Text(
+//         widget.text,
+//         style: widget.style,
+//       ),
+//     );
+//   }
+//
+//   @override
+//   void dispose() {
+//     _animationController.dispose();
+//     super.dispose();
+//   }
+// }

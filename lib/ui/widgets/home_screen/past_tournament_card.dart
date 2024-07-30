@@ -90,9 +90,9 @@ class _Card extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 50,
-              backgroundImage: tournamentdata.coverPhoto != null
-                  ? NetworkImage(toImageUrl(tournamentdata.coverPhoto!))
-                  : const AssetImage('assets/images/logo.png') as ImageProvider,
+              backgroundImage: tournamentdata.coverPhoto != null&& tournamentdata.coverPhoto!.isNotEmpty
+                  ? NetworkImage(toImageUrl(tournamentdata.coverPhoto!))as ImageProvider
+                  :const AssetImage('assets/images/logo.png'),
               backgroundColor: Colors.transparent,
             ),
             Expanded(

@@ -86,9 +86,11 @@ class _Card extends StatelessWidget {
                 ),
               ),
               child: CircleAvatar(
-                backgroundImage: NetworkImage(
-                  toImageUrl(tournamentdata.coverPhoto ?? ''),
-                ),
+                backgroundImage: tournamentdata.coverPhoto != null && tournamentdata.coverPhoto!.isNotEmpty
+                    ? NetworkImage(
+                  toImageUrl(tournamentdata.coverPhoto!),
+                ) as ImageProvider
+                    : const AssetImage('assets/images/logo.png'),
                 backgroundColor: Colors.transparent,
               ),
             ),

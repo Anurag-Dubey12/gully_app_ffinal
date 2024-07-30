@@ -26,28 +26,39 @@ class IButtonDialog extends StatelessWidget {
         children: [
           coverPhoto != null
               ? SizedBox(
-                  height: 130,
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20)),
-                        child: SizedBox(
-                          width: Get.width,
-                          height: 120,
-                          child: Image.network(
-                            toImageUrl(coverPhoto!),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ],
+            height: 130,
+            child: Stack(
+              children: [
+                ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20)),
+                  child: SizedBox(
+                    width: Get.width,
+                    height: 120,
+                    child: coverPhoto != null && coverPhoto!.isNotEmpty
+                        ? Image.network(
+                      toImageUrl(coverPhoto!),
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          'assets/images/logo.png',
+                          fit: BoxFit.cover,
+                        );
+                      },
+                    )
+                        : Image.asset(
+                      'assets/images/logo.png',
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                )
+                ),
+              ],
+            ),
+          )
               : const SizedBox(),
           Padding(
-            padding: const EdgeInsets.all(18.0),
+            padding: const EdgeInsets.all(9.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -78,8 +89,10 @@ class IButtonDialog extends StatelessWidget {
                           const SizedBox(width: 10),
                           const Text('Tournament Name:',
                               style: TextStyle(fontSize: 14)),
-                          const Spacer(),
-                          Text(tournamentName),
+                          const SizedBox(width: 10),
+                          SizedBox(
+                              width: 150,
+                              child: Text(tournamentName,softWrap: true,maxLines:3)),
                           const SizedBox(width: 10),
                         ],
                       ),

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
+import 'package:gully_app/data/model/batting_model.dart';
 
 import '../../../data/model/extras_model.dart';
 import '../../../data/model/player_model.dart';
+import '../../../data/model/team_model.dart';
 import 'extras_and_total.dart';
 
 class BattingStats extends GetView<ScoreBoardController> {
@@ -76,6 +78,7 @@ class BatterPlayerStat extends StatelessWidget {
     bool hasBatted = player.batting != null && player.batting!.balls > 0  ;
     final ScoreBoardController controller = Get.find<ScoreBoardController>();
 
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Column(
@@ -96,9 +99,9 @@ class BatterPlayerStat extends StatelessWidget {
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    if (!isStriker! && player.batting!.outType.isNotEmpty && player.batting!.bowledBy.isNotEmpty)
+                    if (!isStriker! && player.batting!.outType.isNotEmpty)
                       Text(
-                        '${player.batting!.outType} b ${player.batting!.bowledBy}',
+                        _getOutInfo(player.batting!),
                         style: Get.textTheme.labelMedium?.copyWith(fontSize: 12, color: Colors.grey[600]),
                       ),
                   ],
@@ -156,4 +159,15 @@ class BatterPlayerStat extends StatelessWidget {
     );
   }
 
+
+
+  String _getOutInfo(BattingModel batting) {
+    if (batting.outType== 'Retired') {
+      return 'Retired';
+    } else if (batting.outType.isNotEmpty && batting.bowledBy.isNotEmpty) {
+      return '${batting.outType} b ${batting.bowledBy}';
+    } else {
+      return '';
+    }
+  }
 }

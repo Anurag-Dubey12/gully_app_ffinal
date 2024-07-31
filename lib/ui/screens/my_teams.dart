@@ -113,10 +113,8 @@ class _TeamCard extends GetView<TeamController> {
         child: Row(
           children: [
             CircleAvatar(
-              backgroundImage: team.logo != null?
-              NetworkImage(team.toImageUrl()):
-              const AssetImage('assets/images/logo.png') as ImageProvider,
-            ),
+              backgroundImage: team.logo != null &&team.logo!.isNotEmpty?
+              NetworkImage(team.toImageUrl()) : const AssetImage('assets/images/logo.png') as ImageProvider),
             const SizedBox(width: 10),
             SizedBox(
               width: Get.width / 2.7,

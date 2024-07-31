@@ -100,6 +100,10 @@ class ScoreBoardController extends GetxController with StateMixin {
       'matchId': scoreboard.value!.matchId
     });
   }
+  void resetController() {
+    scoreboard.value = null;
+    // Reset any other relevant variables
+  }
 
   void disconnect() {
     socket.value?.disconnect();
@@ -118,6 +122,16 @@ class ScoreBoardController extends GetxController with StateMixin {
       return null;
     }
   }
+  // In ScoreBoardController
+  // Future<MatchupModel?> getMatchById(String matchId) async {
+  //   try {
+  //     final response = await _scoreboardApi.getSingleMatchup(matchId);
+  //     return MatchupModel.fromJson(response.data!['match']);
+  //   } catch (e) {
+  //     logger.e('ScoreboardController::getMatchById $e');
+  //     return null;
+  //   }
+  // }
 
   void createScoreBoard({
     required TeamModel team1,
@@ -135,6 +149,7 @@ class ScoreBoardController extends GetxController with StateMixin {
     // Create sample ScoreboardModel
     logger.f("isChallenge $isChallenge");
     logger.f("matchID ${match?.id}");
+
     scoreboard.value = ScoreboardModel(
         team1: team1,
         team2: team2,
@@ -154,7 +169,6 @@ class ScoreBoardController extends GetxController with StateMixin {
         partnerships: {});
     // logger.i(scoreboard.value!.toJson());
     _lastScoreboardInstance = scoreboard.value!;
-
     if (shouldUpdate && !isChallenge) {
       _scoreboardApi.updateScoreBoard(scoreboard.value!.toJson());
     } else {

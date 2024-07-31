@@ -342,15 +342,24 @@ class _TeamCard extends StatelessWidget {
         padding: const EdgeInsets.all(18.0),
         child: Row(children: [
           CircleAvatar(
-              backgroundImage: NetworkImage(toImageUrl(team.logo ?? ""))),
+              backgroundImage:
+              team.logo!=null && team.logo!.isNotEmpty?
+              NetworkImage(toImageUrl(team.logo ?? ""))
+                  : const AssetImage('assets/images/logo.png') as ImageProvider),
           const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                team.name.capitalize,
-                style:
-                    const TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+              SizedBox(
+                width: 150,
+                child: Text(
+                  team.name.capitalize,
+                  maxLines: 2,
+                  softWrap: true,
+                  overflow: TextOverflow.ellipsis,
+                  style:
+                      const TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                ),
               ),
               // const Text(
               //   '20th April 2021',
@@ -421,12 +430,18 @@ class _Challenges extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  isChallengedByMe
-                      ? team.team2.name.capitalize
-                      : team.team1.name.capitalize,
-                  style: const TextStyle(
-                      fontSize: 17, fontWeight: FontWeight.bold),
+                SizedBox(
+                  width: 150,
+                  child: Text(
+                    isChallengedByMe
+                        ? team.team2.name.capitalize
+                        : team.team1.name.capitalize,
+                    maxLines: 2,
+                    softWrap: true,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 17, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 // const Text(
                 //   '20th April 2021',
@@ -456,7 +471,7 @@ class _Challenges extends StatelessWidget {
                       )
                     : const SizedBox(),
                 const SizedBox(
-                  width: 10,
+                  width: 1,
                 ),
                 team.status == "Accepted"
                     ? const Icon(Icons.arrow_forward_ios)

@@ -193,8 +193,9 @@ class _MatchupCard extends GetView<ScoreBoardController> {
                     children: [
                       CircleAvatar(
                         backgroundImage:
-                            NetworkImage(matchup.team1.toImageUrl()),
-                      ),
+                        matchup.team1.logo!=null && matchup.team1.logo!.isNotEmpty ?
+                        NetworkImage(matchup.team1.toImageUrl()) : const AssetImage('assets/images/logo.png') as ImageProvider),
+                            // NetworkImage(matchup.team1.toImageUrl()),
                       const SizedBox(width: 12),
                       SizedBox(
                         width: 100,
@@ -233,8 +234,9 @@ class _MatchupCard extends GetView<ScoreBoardController> {
                     children: [
                       CircleAvatar(
                         backgroundImage:
-                            NetworkImage(matchup.team2.toImageUrl()),
-                      ),
+                        matchup.team2.logo!=null && matchup.team2.logo!.isNotEmpty ?
+                        NetworkImage(matchup.team2.toImageUrl()) : const AssetImage('assets/images/logo.png') as ImageProvider),
+                            // NetworkImage(matchup.team2.toImageUrl()),
                       const SizedBox(width: 12),
                       SizedBox(
                         width: 100,

@@ -29,6 +29,7 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
     super.initState();
     logger.d('isTournament ${widget.isTournament}');
     optedTo = 'Bat';
+
   }
 
   @override
@@ -297,7 +298,10 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
             }
             logger.i('is tournament${widget.isTournament}');
             logger.i('Total overs ${totalOvers.text}');
-
+            logger.d(" The Opening Team is: "
+                " The match id are: ${match.id}"
+                "The match teams id are: team1 ${match.team1.id} and ${match.team1.name}"
+                "The match teams id are: team2 ${match.team2.id} and ${match.team2.name}");
             Get.off(
                 () => SelectOpeningPlayer(
                     match: match,
@@ -308,7 +312,8 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                     isTournament: widget.isTournament,
                     overs: int.parse(totalOvers.text)),
                 preventDuplicates: false);
-          })
+          }
+          )
         ],
       ),
     ));

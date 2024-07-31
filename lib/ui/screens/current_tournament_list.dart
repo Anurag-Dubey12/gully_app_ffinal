@@ -221,6 +221,9 @@ class _CardState extends State<_Card> {
         width: Get.width,
         decoration: BoxDecoration(
           color: Colors.white,
+          // border: Border.all(
+          //   color: Colors.black
+          // ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),

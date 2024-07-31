@@ -54,7 +54,7 @@ class _SelectTeamForChallengeState extends State<SelectTeamForChallenge> {
               margin: const EdgeInsets.only(top: 10),
               color: Colors.black26,
               child: Padding(
-                  padding: const EdgeInsets.all(18.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: FutureBuilder<List<TeamModel>>(
                       future: controller.getTeams(),
                       builder: (context, snapshot) {

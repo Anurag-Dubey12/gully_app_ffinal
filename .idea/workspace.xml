@@ -10,14 +10,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify scoreboard">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/no_internet_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/no_internet_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/i_button_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/i_button_dialog.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/batting_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/batting_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/api/team_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/team_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/team_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/team_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/my_teams.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/my_teams.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/search_challenge_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/search_challenge_team.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_opening_players.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_opening_players.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_team_for_challenge.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_team_for_challenge.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -225,7 +232,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722253642033</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="modify scoreboard">
+      <option name="closed" value="true" />
+      <created>1722340708228</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1722340708228</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -326,6 +341,12 @@
           <option name="timestamp" value="1722253643633" />
           <option name="linesCode" value="28083" />
           <option name="totalLines" value="6678543" />
+          <option name="info" value="modify scoreboard" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1722340710689" />
+          <option name="linesCode" value="28102" />
+          <option name="totalLines" value="6680218" />
           <option name="info" value="modify scoreboard" />
         </TimePoint>
       </list>
@@ -439,6 +460,18 @@
           <option name="linesCode" value="28094" />
           <option name="totalLines" value="6678429" />
           <option name="info" value="Jul 30, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1722340710689" />
+          <option name="linesCode" value="28102" />
+          <option name="totalLines" value="6680218" />
+          <option name="info" value="Jul 30, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1722419128690" />
+          <option name="linesCode" value="28118" />
+          <option name="totalLines" value="6680369" />
+          <option name="info" value="Jul 31, 2024" />
         </TimePoint>
       </list>
     </option>

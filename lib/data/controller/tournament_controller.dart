@@ -105,6 +105,7 @@ class TournamentController extends GetxController
 
   //MyCode
   Future<void> getTournamentList({String? filterD}) async {
+
     try {
       filter.value = filterD ?? '';
       isLoading.value = true;
@@ -252,6 +253,7 @@ class TournamentController extends GetxController
   Future<List<MatchupModel>> getMatchup(String tourId) async {
     try {
       final response = await tournamentApi.getMatchup(tourId);
+      print("Raw API response: ${response.data}");
       // await Future.delayed(const Duration(seconds: 1));
       return response.data!['matches']
           .map<MatchupModel>((e) => MatchupModel.fromJson(e))
@@ -261,7 +263,6 @@ class TournamentController extends GetxController
       rethrow;
     }
   }
-
   Future<bool> cancelTournament(String tourId) async {
     try {
       final response = await tournamentApi.cancelTournament(tourId);

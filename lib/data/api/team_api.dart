@@ -155,6 +155,8 @@ class TeamApi {
   //match/getChallengeMatch
   Future<ApiResponse> getChallengeMatch() async {
     final response = await repo.get('/match/getChallengeMatch');
+    logger.d('Raw response body: ${response.body}');
+
     if (response.statusCode! >= 500) {
       errorSnackBar(generateErrorMessage(response.body));
       throw Exception('Server Error');

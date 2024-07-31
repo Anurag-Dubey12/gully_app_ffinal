@@ -232,7 +232,7 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
 
       return matchList;
     } catch (e) {
-      logger.i(e.toString());
+      logger.i("The Challenge Error is :${e.toString()}");
       rethrow;
     }
   }

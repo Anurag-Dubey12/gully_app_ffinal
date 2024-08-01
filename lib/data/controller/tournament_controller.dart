@@ -254,7 +254,6 @@ class TournamentController extends GetxController
     try {
       final response = await tournamentApi.getMatchup(tourId);
       print("Raw API response: ${response.data}");
-      // await Future.delayed(const Duration(seconds: 1));
       return response.data!['matches']
           .map<MatchupModel>((e) => MatchupModel.fromJson(e))
           .toList();

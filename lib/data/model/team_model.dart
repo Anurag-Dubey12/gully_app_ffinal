@@ -14,7 +14,7 @@ class TeamModel {
   @JsonKey(disallowNullValue: false)
   final int? playersCount;
   @JsonKey(disallowNullValue: false)
-  final List<PlayerModel>? players;
+  final List<PlayerModel>? players ;
   @JsonKey(disallowNullValue: false)
   final String? status;
 
@@ -24,7 +24,6 @@ class TeamModel {
       required this.id,
       this.status,
       required this.players});
-
   factory TeamModel.fromJson(Map<String, dynamic> json) =>
       _$TeamModelFromJson(json);
 

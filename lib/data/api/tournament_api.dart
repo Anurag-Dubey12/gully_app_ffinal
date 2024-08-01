@@ -145,7 +145,6 @@ class TournamentApi {
     }
     return ApiResponse.fromJson(response.body);
   }
-
   Future<ApiResponse> createMatchup(
       {required String tourId,
       required String team1,

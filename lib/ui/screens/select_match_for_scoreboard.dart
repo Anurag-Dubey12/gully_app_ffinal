@@ -134,6 +134,7 @@ class _MatchupCard extends GetView<ScoreBoardController> {
     final ScoreboardModel? scoreboard = matchup.scoreBoard == null
         ? null
         : ScoreboardModel.fromJson(matchup.scoreBoard!);
+
     return GestureDetector(
       onTap: () {
         if (tournamentController.state?.authority != authController.state?.id) {

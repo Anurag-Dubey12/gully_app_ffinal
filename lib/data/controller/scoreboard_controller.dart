@@ -100,10 +100,6 @@ class ScoreBoardController extends GetxController with StateMixin {
       'matchId': scoreboard.value!.matchId
     });
   }
-  void resetController() {
-    scoreboard.value = null;
-    // Reset any other relevant variables
-  }
 
   void disconnect() {
     socket.value?.disconnect();

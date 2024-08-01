@@ -325,13 +325,20 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                 ),
               PrimaryButton(
                 onTap: () {
-                  if (selectedBatsman == null &&
-                      controller.scoreboard.value!.lastBall.wickets < 9) {
-                    errorSnackBar('Please select a batsman');
-                    return;
-                  } else {}
+                  String? batsmanId;
+                  if (controller.scoreboard.value!.lastBall.wickets < 9) {
+                    if (selectedBatsman == null) {
+                      errorSnackBar('Please select a batsman');
+                      return;
+                    }
+                    batsmanId = selectedBatsman!.id;
+                  } else {
+                    batsmanId = outType == 'RO'
+                        ? playerToOut
+                        : controller.scoreboard.value!.striker.id;
+                  }
                   Navigator.pop(context, {
-                    'batsmanId': selectedBatsman?.id ?? players.first.id,
+                    'batsmanId': batsmanId,
                     'outType': outType,
                     'playerToOut': outType == 'RO' ? playerToOut : null,
                   });

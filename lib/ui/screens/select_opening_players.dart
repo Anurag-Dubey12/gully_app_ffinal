@@ -23,13 +23,13 @@ class SelectOpeningPlayer extends StatefulWidget {
 
   const SelectOpeningPlayer(
       {super.key,
-      required this.match,
-      required this.battingTeam,
-      required this.bowlingTeam,
-      required this.tossWonBy,
-      required this.electedTo,
-      required this.overs,
-      required this.isTournament});
+        required this.match,
+        required this.battingTeam,
+        required this.bowlingTeam,
+        required this.tossWonBy,
+        required this.electedTo,
+        required this.overs,
+        required this.isTournament});
 
   @override
   State<SelectOpeningPlayer> createState() => _SelectOpeningPlayerState();
@@ -39,133 +39,138 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
   PlayerModel? striker;
   PlayerModel? nonStriker;
   PlayerModel? openingBowler;
+
+  @override
+  void initState() {
+    super.initState();
+    logger.d("Initialized SelectOpeningPlayer with match id: ${widget.match.id}");
+    logger.d("Batting Team: ${widget.battingTeam.name}, Players: ${widget.battingTeam.players?.map((p) => p.name).join(', ')}");
+    logger.d("Bowling Team: ${widget.bowlingTeam.name}, Players: ${widget.bowlingTeam.players?.map((p) => p.name).join(', ')}");
+  }
+
   @override
   Widget build(BuildContext context) {
+
     final controller = Get.find<ScoreBoardController>();
+    logger.d("Building SelectOpeningPlayer with match id: ${widget.match.id}");
+    logger.d("Batting Team: ${widget.battingTeam.name}, Players: ${widget.battingTeam.players?.map((p) => p.name).join(', ')}");
+    logger.d("Bowling Team: ${widget.bowlingTeam.name}, Players: ${widget.bowlingTeam.players?.map((p) => p.name).join(', ')}");
     return GradientBuilder(
         child: Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: Text('Select Opening Players',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w700,
-                fontSize: 24)),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Striker',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            PlayerDropDownWidget(
-              title: 'Select  Striker',
-              onSelect: (e) {
-                setState(() {
-                  if (e.id == nonStriker?.id) {
-                    errorSnackBar('Striker and Non Striker cannot be same');
-                    return;
-                  }
-                  striker = e;
-                });
-                // Get.back();
-                Get.close();
-              },
-              selectedValue: striker?.name,
-              selectedPlayerId: striker?.id,
-              items: widget.battingTeam.players!,
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            iconTheme: const IconThemeData(color: Colors.white),
+            title: Text('Select Opening Players',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 24)),
+          ),
+          body: Padding(
+            padding: const EdgeInsets.all(18.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Striker',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                PlayerDropDownWidget(
+                  title: 'Select Striker',
+                  onSelect: (e) {
+                    setState(() {
+                      if (e.id == nonStriker?.id) {
+                        errorSnackBar('Striker and Non Striker cannot be same');
+                        return;
+                      }
+                      striker = e;
+                    });
+                    Get.close();
+                  },
+                  selectedValue: striker?.name,
+                  selectedPlayerId: striker?.id,
+                  items: widget.battingTeam.players!,
+                ),
+                const SizedBox(height: 20),
+                const Text('Non-Striker',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                PlayerDropDownWidget(
+                  title: 'Select Non Striker',
+                  onSelect: (e) {
+                    setState(() {
+                      if (e.id == striker?.id) {
+                        errorSnackBar('Striker and Non Striker cannot be same');
+                        return;
+                      }
+                      nonStriker = e;
+                    });
+                    Get.close();
+                  },
+                  selectedValue: nonStriker?.name,
+                  selectedPlayerId: nonStriker?.id,
+                  items: widget.battingTeam.players!,
+                ),
+                const SizedBox(height: 20),
+                const Text('Opening Bowler',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                PlayerDropDownWidget(
+                  title: 'Select Opening Bowler',
+                  onSelect: (e) {
+                    setState(() {
+                      openingBowler = e;
+                    });
+                    Get.close();
+                  },
+                  selectedValue: openingBowler?.name,
+                  selectedPlayerId: openingBowler?.id,
+                  items: widget.bowlingTeam.players!,
+                ),
+                const SizedBox(height: 20),
+                const Spacer(),
+                PrimaryButton(
+                  onTap: () {
+                    if (striker == null) {
+                      errorSnackBar('Please select striker');
+                      return;
+                    }
+                    if (nonStriker == null) {
+                      errorSnackBar('Please select non striker');
+                      return;
+                    }
+                    if (openingBowler == null) {
+                      errorSnackBar('Please select opening bowler');
+                      return;
+                    }
+                    errorSnackBar("Player id are :");
+                    controller.createScoreBoard(
+                      team1: TeamModel.fromJson(widget.battingTeam.toJson()),
+                      team2: TeamModel.fromJson(widget.bowlingTeam.toJson()),
+                      matchId: widget.match.id,
+                      extras: widget.match.scoreBoard?['extras'] ??
+                          ExtraModel(
+                              wides: 0,
+                              noBalls: 0,
+                              byes: 0,
+                              legByes: 0,
+                              penalty: 0),
+                      tossWonBy: widget.tossWonBy,
+                      electedTo: widget.electedTo,
+                      overs: widget.overs,
+                      strikerId: striker!.id,
+                      nonStrikerId: nonStriker!.id,
+                      openingBowler: openingBowler!.id,
+                    );
+                    Get.off(() => const ScoreCardScreen());
+                  },
+                  title: 'Start Match',
+                )
+              ],
             ),
-            const SizedBox(height: 20),
-            const Text('Non-Striker',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-
-            PlayerDropDownWidget(
-              title: 'Select Non Striker',
-              onSelect: (e) {
-                setState(() {
-                  if (e.id == striker?.id) {
-                    errorSnackBar('Striker and Non Striker cannot be same');
-                    return;
-                  }
-                  nonStriker = e;
-                });
-                // Get.back();
-                Get.close();
-              },
-              selectedValue: nonStriker?.name,
-              selectedPlayerId: nonStriker?.id,
-              items: widget.battingTeam.players!,
-            ),
-            const SizedBox(height: 20),
-            const Text('Opening Bowler',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            PlayerDropDownWidget(
-              title: 'Select Opening Bowler',
-              onSelect: (e) {
-                setState(() {
-                  openingBowler = e;
-                });
-                // Get.back();
-                Get.close();
-              },
-              selectedValue: openingBowler?.name,
-              selectedPlayerId: openingBowler?.id,
-              items: widget.bowlingTeam.players!,
-            ),
-            // container with white bg and border radius of 10 with two items in row having text and radio btn
-            const SizedBox(height: 20),
-            const Spacer(),
-            PrimaryButton(
-              onTap: () {
-                if (striker == null) {
-                  errorSnackBar('Please select striker');
-                  return;
-                }
-                if (nonStriker == null) {
-                  errorSnackBar('Please select non striker');
-                  return;
-                }
-                if (openingBowler == null) {
-                  errorSnackBar('Please select opening bowler');
-                  return;
-                }
-                // if (widget.overs == 2) {
-                //   errorSnackBar('Please select overs');
-                //   return;
-                // }
-                errorSnackBar("Player id are :");
-                controller.createScoreBoard(
-                  team1: TeamModel.fromJson(widget.battingTeam.toJson()),
-                  team2: TeamModel.fromJson(widget.bowlingTeam.toJson()),
-                  matchId: widget.match.id,
-                  extras: widget.match.scoreBoard?['extras'] ??
-                      ExtraModel(
-                          wides: 0,
-                          noBalls: 0,
-                          byes: 0,
-                          legByes: 0,
-                          penalty: 0),
-                  tossWonBy: widget.tossWonBy,
-                  electedTo: widget.electedTo,
-                  overs: widget.overs,
-                  strikerId: striker!.id,
-                  nonStrikerId: nonStriker!.id,
-                  openingBowler: openingBowler!.id,
-                );
-                Get.off(() => const ScoreCardScreen());
-              },
-              title: 'Start Match',
-            )
-          ],
-        ),
-      ),
-    ));
+          ),
+        ));
   }
 }
+
 
 class PlayerDropDownWidget extends StatelessWidget {
   final Function(PlayerModel player) onSelect;

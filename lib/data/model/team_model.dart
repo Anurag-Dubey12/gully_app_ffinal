@@ -14,7 +14,7 @@ class TeamModel {
   @JsonKey(disallowNullValue: false)
   final int? playersCount;
   @JsonKey(disallowNullValue: false)
-  final List<PlayerModel>? players ;
+  final List<PlayerModel>? players;
   @JsonKey(disallowNullValue: false)
   final String? status;
 

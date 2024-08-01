@@ -29,7 +29,6 @@ class ScoreBoardController extends GetxController with StateMixin {
   void onInit() {
     super.onInit();
   }
-
   void connectToSocket({bool hideDialog = false}) {
     try {
       logger.d('connectToSocket ${AppConstants.websocketUrl}');

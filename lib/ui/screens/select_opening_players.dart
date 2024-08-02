@@ -30,7 +30,6 @@ class SelectOpeningPlayer extends StatefulWidget {
         required this.electedTo,
         required this.overs,
         required this.isTournament});
-
   @override
   State<SelectOpeningPlayer> createState() => _SelectOpeningPlayerState();
 }
@@ -46,6 +45,9 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
     logger.d("Initialized SelectOpeningPlayer with match id: ${widget.match.id}");
     logger.d("Batting Team: ${widget.battingTeam.name}, Players: ${widget.battingTeam.players?.map((p) => p.name).join(', ')}");
     logger.d("Bowling Team: ${widget.bowlingTeam.name}, Players: ${widget.bowlingTeam.players?.map((p) => p.name).join(', ')}");
+    striker = null;
+    nonStriker = null;
+    openingBowler = null;
   }
 
   @override
@@ -55,6 +57,9 @@ class _SelectOpeningPlayerState extends State<SelectOpeningPlayer> {
     logger.d("Building SelectOpeningPlayer with match id: ${widget.match.id}");
     logger.d("Batting Team: ${widget.battingTeam.name}, Players: ${widget.battingTeam.players?.map((p) => p.name).join(', ')}");
     logger.d("Bowling Team: ${widget.bowlingTeam.name}, Players: ${widget.bowlingTeam.players?.map((p) => p.name).join(', ')}");
+    if (controller.match?.id != widget.match.id) {
+      logger.e("Mismatch in match IDs. Controller: ${controller.match?.id}, Widget: ${widget.match.id}");
+    }
     return GradientBuilder(
         child: Scaffold(
           backgroundColor: Colors.transparent,

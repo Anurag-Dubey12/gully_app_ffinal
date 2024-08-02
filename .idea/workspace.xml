@@ -11,11 +11,8 @@
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/team_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/team_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/matchup_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/matchup_model.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_opening_players.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_opening_players.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/change_batter.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/change_batter.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +87,7 @@
     &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;C:/Users/abcom/flutter&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
 }</component>
@@ -247,7 +244,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722494378846</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="modify">
+      <option name="closed" value="true" />
+      <created>1722512121607</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1722512121607</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -366,6 +371,12 @@
           <option name="timestamp" value="1722494381056" />
           <option name="linesCode" value="28123" />
           <option name="totalLines" value="6681453" />
+          <option name="info" value="modify" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1722512123300" />
+          <option name="linesCode" value="28141" />
+          <option name="totalLines" value="6680544" />
           <option name="info" value="modify" />
         </TimePoint>
       </list>
@@ -493,9 +504,9 @@
           <option name="info" value="Jul 31, 2024" />
         </TimePoint>
         <TimePoint>
-          <option name="timestamp" value="1722494381056" />
-          <option name="linesCode" value="28123" />
-          <option name="totalLines" value="6681453" />
+          <option name="timestamp" value="1722512123300" />
+          <option name="linesCode" value="28141" />
+          <option name="totalLines" value="6680544" />
           <option name="info" value="Aug 1, 2024" />
         </TimePoint>
       </list>

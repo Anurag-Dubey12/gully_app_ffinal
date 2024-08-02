@@ -35,4 +35,15 @@ class MatchupModel {
       _$MatchupModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$MatchupModelToJson(this);
+  MatchupModel clear() {
+    return MatchupModel(
+      matchDate: DateTime.now(),
+      team1: TeamModel(0, name: '', logo: '', id: '', players: []),
+      team2: TeamModel(0, name: '', logo: '', id: '', players: []),
+      tournamentName: null,
+      tournamentId: null,
+      scoreBoard: null,
+      id: '',
+    );
+  }
 }

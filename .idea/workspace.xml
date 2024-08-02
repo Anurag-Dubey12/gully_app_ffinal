@@ -9,10 +9,10 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify">
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="need to modify select_opening_players.dart screen for player list">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/matchup_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/matchup_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_opening_players.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_opening_players.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -252,7 +252,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722512121607</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="need to modify select_opening_players.dart screen for player list">
+      <option name="closed" value="true" />
+      <created>1722595593146</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1722595593146</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -266,7 +274,8 @@
     <MESSAGE value="need to solve round feature problem" />
     <MESSAGE value="modify scoreboard" />
     <MESSAGE value="modify" />
-    <option name="LAST_COMMIT_MESSAGE" value="modify" />
+    <MESSAGE value="need to modify select_opening_players.dart screen for player list" />
+    <option name="LAST_COMMIT_MESSAGE" value="need to modify select_opening_players.dart screen for player list" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -378,6 +387,12 @@
           <option name="linesCode" value="28141" />
           <option name="totalLines" value="6680544" />
           <option name="info" value="modify" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1722595594809" />
+          <option name="linesCode" value="28158" />
+          <option name="totalLines" value="6680537" />
+          <option name="info" value="need to modify select_opening_players.dart screen " />
         </TimePoint>
       </list>
     </option>
@@ -508,6 +523,12 @@
           <option name="linesCode" value="28141" />
           <option name="totalLines" value="6680544" />
           <option name="info" value="Aug 1, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1722595594809" />
+          <option name="linesCode" value="28158" />
+          <option name="totalLines" value="6680537" />
+          <option name="info" value="Aug 2, 2024" />
         </TimePoint>
       </list>
     </option>

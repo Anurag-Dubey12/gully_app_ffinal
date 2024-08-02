@@ -98,7 +98,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
               ),
               PrimaryButton(
                 onTap: () {
-                  Get.back();
+                  Get.close();
                 },
                 title: 'Go back',
               )

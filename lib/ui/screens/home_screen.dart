@@ -77,7 +77,7 @@ class HomePage extends StatelessWidget {
             fit: BoxFit.cover),
       ),
       child: PopScope(
-        canPop: false,
+        canPop: true,
         child: Scaffold(
           endDrawer: const AppDrawer(),
           bottomNavigationBar: Container(

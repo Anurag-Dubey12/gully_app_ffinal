@@ -567,7 +567,6 @@ class ScoreboardModel {
           isDismissible: false,
           enableDrag: false);
       logger.i(res);
-
       wickets += 1;
       if (res['outType'] == "RO") {
         logger.i('Adding runs to striker on run out');
@@ -684,6 +683,8 @@ class ScoreboardModel {
     _updatePartnership();
   }
   void _updateSR() {
+
+    logger.d('Striker total Ball faced is :${striker.batting?.balls}');
     striker.batting!.strikeRate =
         (striker.batting!.runs / striker.batting!.balls) * 100;
 

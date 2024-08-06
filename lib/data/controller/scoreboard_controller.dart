@@ -170,6 +170,19 @@ class ScoreBoardController extends GetxController with StateMixin {
       _scoreboardApi.updateChallengeScoreBoard(scoreboard.value!.toJson());
     }
   }
+  String getPlayerName(String? playerId) {
+    if (playerId == null) return '';
+
+    PlayerModel? player = match?.team1.players?.firstWhere(
+            (p) => p.id == playerId,
+        orElse: () => match?.team2.players?.firstWhere(
+                (p) => p.id == playerId,
+            orElse: () => PlayerModel(name: 'Unknown', id: 'unknown', phoneNumber: 'unknown', role: 'unknown')
+        ) ?? PlayerModel(name: 'Unknown', id: 'unknown', phoneNumber: 'unknown', role: 'unknown')
+    );
+
+    return player?.name ?? 'Unknown';
+  }
 
   void setScoreBoard(ScoreboardModel scoreBoard) {
     scoreboard.value = scoreBoard;

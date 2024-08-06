@@ -67,7 +67,6 @@ class BattingStats extends GetView<ScoreBoardController> {
     );
   }
 }
-
 class BatterPlayerStat extends StatelessWidget {
   final PlayerModel player;
   final bool? isStriker;
@@ -77,8 +76,7 @@ class BatterPlayerStat extends StatelessWidget {
   Widget build(BuildContext context) {
     bool hasBatted = player.batting != null && player.batting!.balls > 0  ;
     final ScoreBoardController controller = Get.find<ScoreBoardController>();
-
-
+    double strikeRate = calculateStrikeRate(player.batting!.runs, player.batting!.balls);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Column(
@@ -146,7 +144,7 @@ class BatterPlayerStat extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     child: Center(
                         child: Text(
-                            '${player.batting!.strikeRate.toStringAsFixed(1)}%',
+                            "${strikeRate.toStringAsFixed(1)}%",
                             style: hasBatted ?
                             Get.textTheme.labelMedium?.copyWith(fontSize: 11, color: Colors.black)
                                 : Get.textTheme.labelMedium?.copyWith(fontSize: 11)
@@ -159,8 +157,10 @@ class BatterPlayerStat extends StatelessWidget {
     );
   }
 
-
-
+  double calculateStrikeRate(int runs, int balls) {
+    if (balls == 0) return 0.0;
+    return (runs / balls) * 100;
+  }
   String _getOutInfo(BattingModel batting) {
     if (batting.outType== 'Retired') {
       return 'Retired';

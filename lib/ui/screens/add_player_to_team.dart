@@ -157,9 +157,9 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                               CircleAvatar(
                                 radius: 49,
                                 backgroundColor: Colors.white,
-                                backgroundImage: controller.state != null?
-                                    NetworkImage(controller.state.toImageUrl()):
-                                const AssetImage('assets/images/logo.png') as ImageProvider,
+                                backgroundImage: controller.state.logo != null && controller.state.logo!.isNotEmpty
+                                    ? NetworkImage(controller.state.toImageUrl())
+                                    : const AssetImage('assets/images/logo.png') as ImageProvider,
                               ),
                               Positioned(
                                 bottom: 0,

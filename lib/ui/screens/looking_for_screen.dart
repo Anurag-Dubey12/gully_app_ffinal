@@ -115,8 +115,7 @@ class _LookingForScreenState extends State<LookingForScreen> {
                                   double.parse(e.lat!), double.parse(e.lng!));
                             });
                             logger.d('location: ${e.lat} ${e.lng}');
-                            Get.close();
-                            // Get.back();
+                            Get.back();
                           }
                           FocusScope.of(context).unfocus();
                         },

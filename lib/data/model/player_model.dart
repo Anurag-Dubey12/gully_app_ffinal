@@ -23,6 +23,7 @@ class PlayerModel {
       bowledBy: '',
       outType: '');
   @JsonKey(fromJson: BowlingModel.fromJson)
+
   BowlingModel? bowling = BowlingModel(
       runs: 0,
       noBalls: 0,

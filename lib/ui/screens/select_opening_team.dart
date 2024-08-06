@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
+import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/screens/select_opening_players.dart';
 import 'package:gully_app/ui/widgets/custom_text_field.dart';
@@ -42,7 +43,7 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
   Widget build(BuildContext context) {
     final scoreBoardController = Get.find<ScoreBoardController>();
     final match = scoreBoardController.match!;
-
+    final tournamentController=Get.find<TournamentController>();
     return GradientBuilder(
         child: Scaffold(
       backgroundColor: Colors.transparent,
@@ -302,18 +303,15 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
             logger.d("The Opening Team is: "
                 "Host Team id: ${match.team1.id}, Players: ${match.team1.players?.map((p) => p.name).join(', ')}"
                 "Visitor Team id: ${match.team2.id}, Players: ${match.team2.players?.map((p) => p.name).join(', ')}");
-            Get.off(
-                    () => SelectOpeningPlayer(
-                    match: match,
-                    battingTeam: battingTeam,
-                    bowlingTeam: bowlingTeam,
-                    tossWonBy: tossWonBy!,
-                    electedTo: optedTo!,
-                    isTournament: widget.isTournament,
-                    overs: int.parse(totalOvers.text,),
-                ),
-                preventDuplicates: false
-            );
+            tournamentController.updateState(
+                battingTeam: battingTeam,
+                bowlingTeam: bowlingTeam,
+                match: match,
+                tossWonBy: tossWonBy!,
+                electedTo: optedTo!,
+                overs: int.parse(totalOvers.text),
+                isTournament: widget.isTournament);
+            Get.off(()=>const SelectOpeningPlayer());
           }
           )
         ],

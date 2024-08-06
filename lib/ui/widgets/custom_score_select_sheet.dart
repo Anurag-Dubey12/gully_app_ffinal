@@ -4,7 +4,8 @@ import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 
 class CustomScoreSheet extends StatefulWidget {
-  const CustomScoreSheet({super.key});
+  final Function(int) onScoreSubmit;
+  const CustomScoreSheet({super.key,required this.onScoreSubmit});
 
   @override
   State<CustomScoreSheet> createState() => _CustomScoreSheetState();
@@ -12,6 +13,11 @@ class CustomScoreSheet extends StatefulWidget {
 
 class _CustomScoreSheetState extends State<CustomScoreSheet> {
   int _score = 7;
+  @override
+  void initState() {
+    // TODO: implement initState
+    _score=7;
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -100,7 +106,7 @@ class _CustomScoreSheetState extends State<CustomScoreSheet> {
               width: Get.width / 2,
               child: PrimaryButton(
                 onTap: () {
-                  Get.back(result: _score);
+                  widget.onScoreSubmit(_score);
                 },
                 title: 'Submit',
               ),

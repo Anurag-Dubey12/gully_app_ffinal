@@ -38,7 +38,7 @@ class ScoreCard extends GetView<ScoreBoardController> {
                                   child: Row(
                                     children: [
                                       Expanded(
-                                          flex: 2,
+                                          flex: 3,
                                           child: Text(
                                               controller.scoreboard.value!
                                                           .currentInnings ==

@@ -96,9 +96,10 @@ class _AddTeamState extends State<AddTeam> {
                         backgroundImage: (_image != null
                             ? FileImage(File(_image!.path))
                             : widget.team != null
-                                ? NetworkImage(
-                                    toImageUrl(widget.team!.logo ?? ""))
-                                : null) as ImageProvider<Object>?,
+                            ? (widget.team!.logo != null && widget.team!.logo!.isNotEmpty
+                            ? NetworkImage(toImageUrl(widget.team!.logo!))
+                            : const AssetImage('assets/images/logo.png'))
+                            : null) as ImageProvider<Object>?,
                       ),
                       Positioned(
                         bottom: 0,

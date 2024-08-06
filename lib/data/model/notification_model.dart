@@ -13,14 +13,23 @@ class NotificationModel {
   final DateTime createdAt;
   bool isRead = false;
 
+  // NotificationModel(
+  //     {required this.title,
+  //     required this.body,
+  //     required this.image,
+  //     required this.deepLink,
+  //     required this.notificationType,
+  //     required this.notificationId,
+  //     required this.createdAt});
   NotificationModel(
       {required this.title,
-      required this.body,
-      required this.image,
-      required this.deepLink,
-      required this.notificationType,
-      required this.notificationId,
-      required this.createdAt});
+        required this.body,
+        String? image,
+        required this.deepLink,
+        required this.notificationType,
+        required this.notificationId,
+        required this.createdAt})
+      : image = image ?? 'assets/images/logo.png';
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) =>
       _$NotificationModelFromJson(json);

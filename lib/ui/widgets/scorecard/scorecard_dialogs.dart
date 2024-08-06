@@ -221,7 +221,7 @@ class _RetirePlayerDialogState extends State<RetirePlayerDialog> {
                   ),
                   SizedBox(
                     width: Get.width,
-                    height: 40,
+                    height: 70,
                     child: Row(
                       children: [
                         Expanded(

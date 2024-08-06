@@ -31,7 +31,7 @@ class CurrentOverStats extends GetView<ScoreBoardController> {
                   Expanded(
                       flex: 3,
                       child: SizedBox(
-                        height: 54,
+                        height: 50,
                         child: ListView.separated(
                             shrinkWrap: true,
                             separatorBuilder: (context, index) =>

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/ui/screens/full_scorecard.dart';
 import 'package:gully_app/ui/widgets/custom_score_select_sheet.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
-
 import '../../../data/controller/scoreboard_controller.dart';
 import '../../theme/theme.dart';
 import '../primary_button.dart';
@@ -274,38 +272,9 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                             ),
                             NumberCard(
                               text: '+',
-                              disabled: controller
-                                  .scoreboard.value!.isSecondInningsOver,
-                              onTap: () async {
-                                int? runs = await Get.bottomSheet(
-                                  const CustomScoreSheet(),
-                                );
-                                logger.d(runs);
-
-                                if (runs != null) {
-                                  // if (controller.events.contains(EventType.bye) ||
-                                  //     controller.events
-                                  //         .contains(EventType.legByes)) {
-                                  //   errorSnackBar(
-                                  //       'You can not add 7 runs and a bye or leg bye');
-                                  //   return;
-                                  // }
-                                  // if (controller.events
-                                  //     .contains(EventType.wide)) {
-                                  //   errorSnackBar(
-                                  //       'You can not add 7 runs and a wide ball');
-                                  //   return;
-                                  // }
-                                  // if (controller.events
-                                  //     .contains(EventType.wicket)) {
-                                  //   errorSnackBar(
-                                  //       'You can not add 7 runs and a wicket');
-                                  //   return;
-                                  // }
-                                  // controller.addEventType(Eve)
-                                  controller.addEvent(EventType.custom,
-                                      runs: runs);
-                                }
+                              disabled: controller.scoreboard.value!.isSecondInningsOver,
+                              onTap: () {
+                                showCustomScoreSheet(context, controller);
                               },
                             ),
                           ],
@@ -329,9 +298,9 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                                   child: TextButton(
                                       style: ButtonStyle(
                                           backgroundColor:
-                                              MaterialStateProperty.all(
+                                              WidgetStateProperty.all(
                                                   AppTheme.primaryColor),
-                                          padding: MaterialStateProperty.all(
+                                          padding: WidgetStateProperty.all(
                                               const EdgeInsets.all(7))),
                                       onPressed: () {
                                         Get.bottomSheet(
@@ -359,6 +328,22 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
           ),
         ],
       ),
+    );
+  }
+  void showCustomScoreSheet(BuildContext context, ScoreBoardController controller) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext bc) {
+        return CustomScoreSheet(
+          onScoreSubmit: (int runs) async {
+            bool success = await controller.addEvent(EventType.custom, runs: runs);
+            if (success) {
+              Navigator.pop(context);
+            }
+          },
+        );
+      },
     );
   }
 }

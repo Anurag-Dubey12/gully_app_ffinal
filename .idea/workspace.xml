@@ -9,25 +9,16 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="need to modify select_opening_players.dart screen for player list">
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify">
+      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/SliverAppBarDelegate.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/notification_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/notification_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/player_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/player_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/add_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/add_team.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/looking_for_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/looking_for_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/score_card_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/score_card_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_opening_players.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_opening_players.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/custom_score_select_sheet.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/custom_score_select_sheet.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/tournament_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/tournament_list.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/batting_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/batting_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/current_over_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/current_over_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/event_handler.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/event_handler.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/scorecard_dialogs.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/scorecard_dialogs.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/top_scorecard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/top_scorecard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -286,7 +277,15 @@
       <option name="project" value="LOCAL" />
       <updated>1722599822419</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="modify">
+      <option name="closed" value="true" />
+      <created>1722945560590</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1722945560591</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -299,9 +298,9 @@
     <MESSAGE value="modify by adding new item" />
     <MESSAGE value="need to solve round feature problem" />
     <MESSAGE value="modify scoreboard" />
-    <MESSAGE value="modify" />
     <MESSAGE value="need to modify select_opening_players.dart screen for player list" />
-    <option name="LAST_COMMIT_MESSAGE" value="need to modify select_opening_players.dart screen for player list" />
+    <MESSAGE value="modify" />
+    <option name="LAST_COMMIT_MESSAGE" value="modify" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -425,6 +424,12 @@
           <option name="linesCode" value="28158" />
           <option name="totalLines" value="6680605" />
           <option name="info" value="need to modify select_opening_players.dart screen " />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1722945563484" />
+          <option name="linesCode" value="28192" />
+          <option name="totalLines" value="6681883" />
+          <option name="info" value="modify" />
         </TimePoint>
       </list>
     </option>
@@ -567,6 +572,12 @@
           <option name="linesCode" value="28159" />
           <option name="totalLines" value="6680535" />
           <option name="info" value="Aug 5, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1722945563484" />
+          <option name="linesCode" value="28192" />
+          <option name="totalLines" value="6681883" />
+          <option name="info" value="Aug 6, 2024" />
         </TimePoint>
       </list>
     </option>

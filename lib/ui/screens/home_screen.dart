@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -7,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/ui/screens/search_tournament_screen.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/app_drawer.dart';
@@ -18,6 +21,7 @@ import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../widgets/arc_clipper.dart';
+import '../widgets/home_screen/SliverAppBarDelegate.dart';
 import '../widgets/home_screen/top_header.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -96,10 +100,9 @@ class HomePage extends StatelessWidget {
                   child: PrimaryButton(
                     onTap: () {
                       Get.to(() => const TournamentFormScreen(
-                            tournament: null,
-                          ));
+                        tournament: null,
+                      ));
                     },
-                    // title: 'Create Your Tournament',
                     title: AppLocalizations.of(context)!.create_your_tournament,
                   ),
                 ),
@@ -133,103 +136,147 @@ class HomePage extends StatelessWidget {
               ),
               Positioned(
                 top: Get.statusBarHeight / 2.3,
-                // left: 20,
                 child: SizedBox(
-                  // color: Colors.red,
                   width: Get.width,
-
-                  child: SizedBox(
-                    height: Get.height - 150,
-                    child: SingleChildScrollView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      child: Column(
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: TopHeader(),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-
-                          //For multiple sports icon and text
-                          // SizedBox(
-                          //   height: 60,
-                          //   child: ListView.separated(
-                          //       scrollDirection: Axis.horizontal,
-                          //       shrinkWrap: true,
-                          //       itemBuilder: (context, index) {
-                          //         return SportsCard(
-                          //           index: index,
-                          //         );
-                          //       },
-                          //       padding: const EdgeInsets.only(left: 20),
-                          //       separatorBuilder: (context, index) =>
-                          //           const SizedBox(
-                          //             width: 15,
-                          //           ),
-                          //       itemCount: 7),
-                          // ),
-
-                          //Optional
-                          //For particular sports such as cricker
-                          Container(
-                            width:130,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 255, 157, 46),
-                              borderRadius: BorderRadius.circular(21),
-                              boxShadow: [
-                                BoxShadow(
-                                    color: AppTheme.secondaryYellowColor.withOpacity(0.3),
-                                    blurRadius: 2,
-                                    spreadRadius: 1,
-                                    offset: const Offset(0, -1))
-                              ],
+                  height: Get.height - 150,
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverToBoxAdapter(
+                        child: Column(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: TopHeader(),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/images/cricket_icon.png',
-                                  color:  Colors.white,
-                                  height: 30,
-                                  width: 30,
-                                ),
-                                const Text(
-                                  'Cricket',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18),
-                                ),
-                              ],
+                            const SizedBox(height: 20),
+                            //For multiple sports icon and text
+                            // SizedBox(
+                            //   height: 60,
+                            //   child: ListView.separated(
+                            //       scrollDirection: Axis.horizontal,
+                            //       shrinkWrap: true,
+                            //       itemBuilder: (context, index) {
+                            //         return SportsCard(
+                            //           index: index,
+                            //         );
+                            //       },
+                            //       padding: const EdgeInsets.only(left: 20),
+                            //       separatorBuilder: (context, index) =>
+                            //           const SizedBox(
+                            //             width: 15,
+                            //           ),
+                            //       itemCount: 7),
+                            // ),
+
+                            //Optional
+                            //For particular sports such as cricker
+                            Container(
+                              width: 130,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: const Color.fromARGB(255, 255, 157, 46),
+                                borderRadius: BorderRadius.circular(21),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: AppTheme.secondaryYellowColor.withOpacity(0.3),
+                                      blurRadius: 2,
+                                      spreadRadius: 1,
+                                      offset: const Offset(0, -1))
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/images/cricket_icon.png',
+                                    color: Colors.white,
+                                    height: 30,
+                                    width: 30,
+                                  ),
+                                  const Text(
+                                    'Cricket',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          // TextButton(
-                          //     onPressed: () {
-                          //       FirebaseMessaging.instance
-                          //           .getToken()
-                          //           .then((value) {
-                          //         logger.d(value);
-                          //         // Get.find<AuthController>()
-                          //         //     .updateProfile(fcmToken: value);
-                          //       });
-                          //     },
-                          //     child: const Text('FCM')),
-                          const FullBannerSlider(),
-                          const SizedBox(height: 20),
-                          const DateTimesCard(),
-                          const TitleWidget(),
-                          const TournamentList()
-                        ],
+                            const SizedBox(height: 20),
+                            const FullBannerSlider(),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
                       ),
-                    ),
+                      SliverPersistentHeader(
+                        pinned: true,
+                        delegate: SliverAppBarDelegate(
+                          minHeight: 170,
+                          maxHeight: 170,
+                          child: DecoratedBox(
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              image: DecorationImage(
+                                  image: AssetImage(
+                                    'assets/images/sports_icon.png',
+                                  ),
+                                  fit: BoxFit.cover),
+                            ),
+                            child: Column(
+                              children: [
+                                const DateTimesCard(),
+                                const TitleWidget(),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                  child: Material(
+                                    borderRadius: BorderRadius.circular(28),
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(28),
+                                      onTap: () {
+                                        Get.to(() => const SearchTournamentScreen());
+                                      },
+                                      child: Ink(
+                                        width: Get.width,
+                                        height: 50,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(
+                                            color: Colors.black
+                                          ),
+                                          borderRadius: BorderRadius.circular(28),
+                                        ),
+                                        child: const Row(
+                                          children: [
+                                            SizedBox(width: 18),
+                                            Icon(
+                                              Icons.search,
+                                              color: Colors.black,
+                                            ),
+                                            SizedBox(
+                                              width: 20,
+                                            ),
+                                            Text('Search...',style: TextStyle(color: Colors.black),),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SliverToBoxAdapter(
+                        child: Padding(
+                          padding: EdgeInsets.only(top: 10),
+                          child: TournamentList(),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -237,6 +284,7 @@ class HomePage extends StatelessWidget {
     );
   }
 }
+
 
 class _TournamentMajorDuration extends StatelessWidget {
   final String title;
@@ -295,44 +343,44 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
         height: 150,
         width: 400,
         child: Obx(
-          () => CarouselSlider(
+              () => CarouselSlider(
               items: controller.banners.value
                   .map((e) => ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Stack(
-                          children: [
-                            CachedNetworkImage(
-                              imageUrl: toImageUrl(e.imageUrl),
-                              fit: BoxFit.fill,
-                              width: double.infinity,
-                            ),
-                            Positioned(
-                                bottom: 0,
-                                left: 0,
-                                right: 0,
-                                child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      ...List.generate(
-                                        controller.banners.length,
-                                        (index) => Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Container(
-                                            height: 8,
-                                            width: 8,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(100),
-                                                color: _current == index
-                                                    ? AppTheme.darkYellowColor
-                                                    : Colors.grey.shade400),
-                                          ),
-                                        ),
-                                      )
-                                    ]))
-                          ],
-                        ),
-                      ))
+                borderRadius: BorderRadius.circular(10),
+                child: Stack(
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: toImageUrl(e.imageUrl),
+                      fit: BoxFit.fill,
+                      width: double.infinity,
+                    ),
+                    Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ...List.generate(
+                                controller.banners.length,
+                                    (index) => Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    height: 8,
+                                    width: 8,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                        BorderRadius.circular(100),
+                                        color: _current == index
+                                            ? AppTheme.darkYellowColor
+                                            : Colors.grey.shade400),
+                                  ),
+                                ),
+                              )
+                            ]))
+                  ],
+                ),
+              ))
                   .toList(),
               options: CarouselOptions(
                   viewportFraction: 0.91,

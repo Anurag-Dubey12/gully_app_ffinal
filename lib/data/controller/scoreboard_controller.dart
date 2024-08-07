@@ -283,6 +283,8 @@ class ScoreBoardController extends GetxController with StateMixin {
 
       case EventType.wicket:
         // scoreboard.value!.addWicket();
+
+
         break;
       case EventType.dotBall:
         await scoreboard.value!.addRuns(0, events: events.value);

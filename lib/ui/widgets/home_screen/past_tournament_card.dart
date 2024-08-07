@@ -88,12 +88,21 @@ class _Card extends StatelessWidget {
         ),
         child: Row(
           children: [
-            CircleAvatar(
-              radius: 50,
-              backgroundImage: tournamentdata.coverPhoto != null&& tournamentdata.coverPhoto!.isNotEmpty
-                  ? NetworkImage(toImageUrl(tournamentdata.coverPhoto!))as ImageProvider
-                  :const AssetImage('assets/images/logo.png'),
-              backgroundColor: Colors.transparent,
+            Container(
+              margin: const EdgeInsets.only(left: 2),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16),
+                  bottomLeft: Radius.circular(16),
+                ),
+              ),
+              child: CircleAvatar(
+                radius: 50,
+                backgroundImage: tournamentdata.coverPhoto != null&& tournamentdata.coverPhoto!.isNotEmpty
+                    ? NetworkImage(toImageUrl(tournamentdata.coverPhoto!))as ImageProvider
+                    :const AssetImage('assets/images/logo.png'),
+                backgroundColor: Colors.transparent,
+              ),
             ),
             Expanded(
               child: Padding(

@@ -25,8 +25,7 @@ class TournamentRequestScreen extends GetView<TournamentController> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: SafeArea(
-          child: Stack(
+        body: Stack(
             children: [
               ClipPath(
                 clipper: ArcClipper(),
@@ -107,7 +106,6 @@ class TournamentRequestScreen extends GetView<TournamentController> {
             ],
           ),
         ),
-      ),
     );
   }
 }

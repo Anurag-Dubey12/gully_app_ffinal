@@ -28,8 +28,7 @@ class TournamentTeams extends GetView<TournamentController> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: SafeArea(
-          child: Stack(
+        body: Stack(
             children: [
               ClipPath(
                 clipper: ArcClipper(),
@@ -102,7 +101,6 @@ class TournamentTeams extends GetView<TournamentController> {
             ],
           ),
         ),
-      ),
     );
   }
 }

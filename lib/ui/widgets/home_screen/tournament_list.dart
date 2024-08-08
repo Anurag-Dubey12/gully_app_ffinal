@@ -51,11 +51,9 @@ class _TournamentListState extends State<TournamentList> {
           log('Show Future Tournament Card');
           tournamentWidget = const FutureTournamentCard();
         }
-
         return Column(
           children: [
             tournamentWidget,
-            // Add more widgets here if needed
           ],
         );
       }),

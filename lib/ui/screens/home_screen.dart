@@ -63,12 +63,16 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 }
-
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({
-    super.key,
+    super.key
   });
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+class _HomePageState extends State<HomePage> {
+  final ScrollController _scrollController = ScrollController();
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(

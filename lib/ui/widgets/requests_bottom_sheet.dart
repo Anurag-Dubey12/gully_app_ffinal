@@ -23,8 +23,7 @@ class _RequestsBottomSheetState extends State<RequestsBottomSheet> {
     return SizedBox(
       width: double.infinity,
       height: Get.height / .7,
-      child: SingleChildScrollView(
-        child: Column(
+     child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -55,83 +54,84 @@ class _RequestsBottomSheetState extends State<RequestsBottomSheet> {
 
             // Create a container with 4 items in row -->  circle avatar with name and two icons in trailing
 
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FutureBuilder<List<TeamModel>>(
-                  future: controller.getTeamRequests(widget.tournament.id),
-                  builder: (context, snapshot) {
-                    if (snapshot.data?.isEmpty ?? true) {
-                      return const Center(
-                        child: Text('No Requests'),
-                      );
-                    }
-                    return ListView.separated(
-                        shrinkWrap: true,
-                        itemCount: snapshot.data?.length ?? 0,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 20),
-                        itemBuilder: (context, index) {
-                          return Container(
-                            decoration: BoxDecoration(
-                                color: const Color(0xffE9E7EF),
-                                borderRadius: BorderRadius.circular(19)),
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Row(children: [
-                                CircleAvatar(
-                                  backgroundImage: NetworkImage(
-                                      snapshot.data![index].toImageUrl()),
-                                ),
-                                const SizedBox(width: 10),
-                                Text(
-                                  snapshot.data![index].name,
-                                  style: const TextStyle(fontSize: 18),
-                                ),
-                                const Spacer(),
-                                GestureDetector(
-                                  onTap: () async {
-                                    await controller.updateTeamRequest(
-                                        widget.tournament.id,
-                                        snapshot.data![index].id,
-                                        'Accepted');
-                                    setState(() {
-                                      widget.tournament.pendingTeamsCount--;
-                                    });
-                                  },
-                                  child: const CircleAvatar(
-                                    radius: 13,
-                                    backgroundColor:
-                                        Color.fromARGB(255, 71, 224, 79),
-                                    child: Icon(Icons.add),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FutureBuilder<List<TeamModel>>(
+                    future: controller.getTeamRequests(widget.tournament.id),
+                    builder: (context, snapshot) {
+                      if (snapshot.data?.isEmpty ?? true) {
+                        return const Center(
+                          child: Text('No Requests'),
+                        );
+                      }
+                      return ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data?.length ?? 0,
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(height: 20),
+                          itemBuilder: (context, index) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                  color: const Color(0xffE9E7EF),
+                                  borderRadius: BorderRadius.circular(19)),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Row(children: [
+                                  CircleAvatar(
+                                    backgroundImage: NetworkImage(
+                                        snapshot.data![index].toImageUrl()),
                                   ),
-                                ),
-                                const SizedBox(width: 10),
-                                GestureDetector(
-                                  onTap: () async {
-                                    await controller.updateTeamRequest(
-                                        widget.tournament.id,
-                                        snapshot.data![index].id,
-                                        'Denied');
-                                    setState(() {
-                                      widget.tournament.pendingTeamsCount--;
-                                    });
-                                  },
-                                  child: const CircleAvatar(
-                                    radius: 13,
-                                    backgroundColor:
-                                        Color.fromARGB(255, 235, 17, 24),
-                                    child: Icon(Icons.person_off),
+                                  const SizedBox(width: 10),
+                                  Text(
+                                    snapshot.data![index].name,
+                                    style: const TextStyle(fontSize: 18),
                                   ),
-                                )
-                              ]),
-                            ),
-                          );
-                        });
-                  }),
+                                  const Spacer(),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await controller.updateTeamRequest(
+                                          widget.tournament.id,
+                                          snapshot.data![index].id,
+                                          'Accepted');
+                                      setState(() {
+                                        widget.tournament.pendingTeamsCount--;
+                                      });
+                                    },
+                                    child: const CircleAvatar(
+                                      radius: 13,
+                                      backgroundColor:
+                                          Color.fromARGB(255, 71, 224, 79),
+                                      child: Icon(Icons.add),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      await controller.updateTeamRequest(
+                                          widget.tournament.id,
+                                          snapshot.data![index].id,
+                                          'Denied');
+                                      setState(() {
+                                        widget.tournament.pendingTeamsCount--;
+                                      });
+                                    },
+                                    child: const CircleAvatar(
+                                      radius: 13,
+                                      backgroundColor:
+                                          Color.fromARGB(255, 235, 17, 24),
+                                      child: Icon(Icons.person_off),
+                                    ),
+                                  )
+                                ]),
+                              ),
+                            );
+                          });
+                    }),
+              ),
             )
           ],
         ),
-      ),
     );
   }
 }

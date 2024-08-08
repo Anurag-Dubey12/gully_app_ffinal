@@ -144,8 +144,8 @@ class BatterPlayerStat extends StatelessWidget {
                     fit: BoxFit.scaleDown,
                     child: Center(
                         child: Text(
-                            "${strikeRate.toStringAsFixed(1)}%",
-                            // "${player.batting!.strikeRate.toStringAsFixed(1)}%",
+                            // "${strikeRate.toStringAsFixed(1)}%",
+                            "${player.batting!.strikeRate.toStringAsFixed(1)}%",
                             style: hasBatted ?
                             Get.textTheme.labelMedium?.copyWith(fontSize: 11, color: Colors.black)
                                 : Get.textTheme.labelMedium?.copyWith(fontSize: 11)
@@ -157,7 +157,6 @@ class BatterPlayerStat extends StatelessWidget {
       ),
     );
   }
-
   double calculateStrikeRate(int runs, int balls) {
     if (balls == 0) return 0.0;
     return (runs / balls) * 100;

@@ -73,6 +73,13 @@ class HomePage extends StatefulWidget {
 }
 class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
+  bool _isBottomNavVisible = true;
+
+  void updateBottomNavVisibility(bool isVisible) {
+    setState(() {
+      _isBottomNavVisible = isVisible;
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -88,29 +95,33 @@ class _HomePageState extends State<HomePage> {
         canPop: true,
         child: Scaffold(
           endDrawer: const AppDrawer(),
-          bottomNavigationBar: Container(
-            height: 90,
-            decoration: BoxDecoration(color: Colors.white, boxShadow: [
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 5,
-                  spreadRadius: 2,
-                  offset: const Offset(0, -1))
-            ]),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(19.0),
-                  child: PrimaryButton(
-                    onTap: () {
-                      Get.to(() => const TournamentFormScreen(
-                        tournament: null,
-                      ));
-                    },
-                    title: AppLocalizations.of(context)!.create_your_tournament,
+          bottomNavigationBar: AnimatedContainer(
+            duration: const Duration(microseconds: 400),
+            height: _isBottomNavVisible ? 90 :0,
+            child: Container(
+              height: 90,
+              decoration: BoxDecoration(color: Colors.white, boxShadow: [
+                BoxShadow(
+                    color: Colors.black.withOpacity(0.1),
+                    blurRadius: 5,
+                    spreadRadius: 2,
+                    offset: const Offset(0, -1))
+              ]),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(19.0),
+                    child: PrimaryButton(
+                      onTap: () {
+                        Get.to(() => const TournamentFormScreen(
+                          tournament: null,
+                        ));
+                      },
+                      title: AppLocalizations.of(context)!.create_your_tournament,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           backgroundColor: Colors.transparent,
@@ -271,12 +282,15 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      const SliverToBoxAdapter(
+                      SliverToBoxAdapter(
                         child: Padding(
-                          padding: EdgeInsets.only(top: 10),
-                          child: TournamentList(),
+                          padding: const EdgeInsets.only(top: 10),
+                          child: TournamentList(
+                            onBottomNavVisibilityChanged: updateBottomNavVisibility,
+                          ),
                         ),
                       ),
+
                     ],
                   ),
                 ),

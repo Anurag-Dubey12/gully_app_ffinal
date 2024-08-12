@@ -568,6 +568,7 @@ class ScoreboardModel {
           enableDrag: false);
       logger.i(res);
       wickets += 1;
+      _updateSR();
       if (res['outType'] == "RO") {
         logger.i('Adding runs to striker on run out');
         striker.batting!.runs = striker.batting!.runs + runs;

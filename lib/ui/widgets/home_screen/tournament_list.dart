@@ -13,11 +13,9 @@ import 'future_tournament_card.dart';
 import 'past_tournament_card.dart';
 
 class TournamentList extends StatefulWidget {
-  final Function(bool) onBottomNavVisibilityChanged;
 
   const TournamentList({
     Key? key,
-    required this.onBottomNavVisibilityChanged,
   }) : super(key: key);
 
   @override
@@ -25,51 +23,10 @@ class TournamentList extends StatefulWidget {
 }
 
 class _TournamentListState extends State<TournamentList> {
-  final ScrollController _scrollController = ScrollController();
-  bool _isBottomNavVisible = true;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_scrollListener);
-  }
-
-  @override
-  void dispose() {
-    _scrollController.removeListener(_scrollListener);
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _scrollListener() {
-    if (_scrollController.position.userScrollDirection == ScrollDirection.reverse) {
-      if (_isBottomNavVisible) {
-        setState(() {
-          _isBottomNavVisible = false;
-        });
-        widget.onBottomNavVisibilityChanged(false);
-      }
-    } else if (_scrollController.position.userScrollDirection == ScrollDirection.forward) {
-      if (!_isBottomNavVisible) {
-        setState(() {
-          _isBottomNavVisible = true;
-        });
-        widget.onBottomNavVisibilityChanged(true);
-      }
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
-    return NotificationListener<ScrollNotification>(
-      onNotification: (scrollNotification) {
-        if (scrollNotification is ScrollUpdateNotification) {
-          _scrollListener();
-        }
-        return true;
-      },
-      child: Container(
+    return Container(
         width: Get.width,
         color: Colors.black26,
         child: Obx(() {
@@ -102,7 +59,6 @@ class _TournamentListState extends State<TournamentList> {
             ],
           );
         }),
-      ),
     );
   }
 }

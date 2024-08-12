@@ -26,7 +26,7 @@ class IButtonDialog extends StatelessWidget {
         children: [
           coverPhoto != null
               ? SizedBox(
-            height: 130,
+            height: 150,
             child: Stack(
               children: [
                 ClipRRect(
@@ -35,7 +35,7 @@ class IButtonDialog extends StatelessWidget {
                       topRight: Radius.circular(20)),
                   child: SizedBox(
                     width: Get.width,
-                    height: 120,
+                    height: 170,
                     child: coverPhoto != null && coverPhoto!.isNotEmpty
                         ? Image.network(
                       toImageUrl(coverPhoto!),

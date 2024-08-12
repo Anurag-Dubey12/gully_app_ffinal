@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
@@ -62,6 +64,8 @@ class TournamentController extends GetxController
       return false;
     }
   }
+
+
 
   final Rx<DateTime> selectedDate = DateTime.now().obs;
   final RxString filter = ''.obs;
@@ -443,6 +447,21 @@ class TournamentController extends GetxController
       errorSnackBar(e.toString());
       rethrow;
     }
+  }
+
+  final ScrollController scrollController = ScrollController();
+  RxBool isScrollingDown = false.obs;
+
+  void IsUserScrolling() {
+    scrollController.addListener(() {
+      if (scrollController.position.userScrollDirection ==
+          ScrollDirection.reverse) {
+        isScrollingDown.value = true;
+      } else if (scrollController.position.userScrollDirection ==
+          ScrollDirection.forward) {
+        isScrollingDown.value = false;
+      }
+    });
   }
 
 }

@@ -68,14 +68,6 @@ class _TournamentCardState extends State<TournamentCard> {
       _updateTime();
     });
   }
-
-  // void _updateTime() {
-  //   Duration remainingTime =
-  //   widget.tournament.tournamentEndDateTime.difference(DateTime.now());
-  //   String formattedTime =
-  //       '${remainingTime.inDays}d:${remainingTime.inHours.remainder(24)}h:${remainingTime.inMinutes.remainder(60)}m:${remainingTime.inSeconds.remainder(60)}s';
-  //   _timeStreamController.add(formattedTime);
-  // }
   void _updateTime() {
     if (widget.tournament.tournamentStartDateTime != null &&
         widget.tournament.tournamentEndDateTime != null) {
@@ -142,8 +134,7 @@ class _TournamentCardState extends State<TournamentCard> {
                     children: [
                       SizedBox(
                         width:150,
-                        child: Center(
-                          child: Text(
+                        child: Text(
                             widget.tournament.tournamentName ?? "Unkown Tournament",
                             style: Get.textTheme.headlineMedium?.copyWith(
                               fontWeight: FontWeight.bold,
@@ -152,10 +143,10 @@ class _TournamentCardState extends State<TournamentCard> {
                             ),
                             softWrap: true,
                             maxLines: 2,
+                            textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                      ),
                       IconButton(
                         onPressed: () {
                           Get.bottomSheet(
@@ -216,7 +207,7 @@ class _TournamentCardState extends State<TournamentCard> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 7),
+                  const SizedBox(height: 1),
                   StreamBuilder<String>(
                     stream: _timeStreamController.stream,
                     builder: (context, snapshot) {
@@ -228,7 +219,7 @@ class _TournamentCardState extends State<TournamentCard> {
                       );
                     },
                   ),
-                  const SizedBox(height: 5),
+                  const SizedBox(height: 2),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [

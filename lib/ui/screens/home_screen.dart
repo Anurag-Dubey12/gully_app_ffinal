@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -14,7 +12,6 @@ import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/app_drawer.dart';
 import 'package:gully_app/ui/widgets/home_screen/date_times_card.dart';
-import 'package:gully_app/ui/widgets/home_screen/sports_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/app_logger.dart';
@@ -72,14 +69,6 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 class _HomePageState extends State<HomePage> {
-  final ScrollController _scrollController = ScrollController();
-  bool _isBottomNavVisible = true;
-
-  void updateBottomNavVisibility(bool isVisible) {
-    setState(() {
-      _isBottomNavVisible = isVisible;
-    });
-  }
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -95,10 +84,7 @@ class _HomePageState extends State<HomePage> {
         canPop: true,
         child: Scaffold(
           endDrawer: const AppDrawer(),
-          bottomNavigationBar: AnimatedContainer(
-            duration: const Duration(microseconds: 400),
-            height: _isBottomNavVisible ? 90 :0,
-            child: Container(
+          bottomNavigationBar: Container(
               height: 90,
               decoration: BoxDecoration(color: Colors.white, boxShadow: [
                 BoxShadow(
@@ -122,7 +108,6 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ],
               ),
-            ),
           ),
           backgroundColor: Colors.transparent,
           body: Stack(
@@ -282,11 +267,10 @@ class _HomePageState extends State<HomePage> {
                           ),
                         ),
                       ),
-                      SliverToBoxAdapter(
+                      const SliverToBoxAdapter(
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 10),
+                          padding:  EdgeInsets.only(top: 10),
                           child: TournamentList(
-                            onBottomNavVisibilityChanged: updateBottomNavVisibility,
                           ),
                         ),
                       ),

@@ -203,7 +203,7 @@ class _ChallengePerformanceStatScreenState
                             );
                           }
                           if (snapshot.data == null || snapshot.data!.isEmpty) {
-                            logger.w("No performance data available"); // Add this line
+                            logger.w("No performance data available");
                             return const Padding(
                               padding: EdgeInsets.all(18.0),
                               child: Center(child: Text('No data available')),

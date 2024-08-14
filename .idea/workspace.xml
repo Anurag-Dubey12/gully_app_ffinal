@@ -9,17 +9,8 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/api/team_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/team_api.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/ranking_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/ranking_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/team_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/team_controller.dart" afterDir="false" />
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="performace">
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/challenge_performance_stat_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/challenge_performance_stat_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_challenge_match_for_performance.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_challenge_match_for_performance.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -319,7 +310,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723463629725</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="performace">
+      <option name="closed" value="true" />
+      <created>1723636334095</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1723636334095</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -334,7 +333,8 @@
     <MESSAGE value="modify scoreboard" />
     <MESSAGE value="need to modify select_opening_players.dart screen for player list" />
     <MESSAGE value="modify" />
-    <option name="LAST_COMMIT_MESSAGE" value="modify" />
+    <MESSAGE value="performace" />
+    <option name="LAST_COMMIT_MESSAGE" value="performace" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -470,6 +470,12 @@
           <option name="linesCode" value="28263" />
           <option name="totalLines" value="6685483" />
           <option name="info" value="modify" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1723636336003" />
+          <option name="linesCode" value="28279" />
+          <option name="totalLines" value="3389611" />
+          <option name="info" value="performace" />
         </TimePoint>
       </list>
     </option>
@@ -624,6 +630,12 @@
           <option name="linesCode" value="28263" />
           <option name="totalLines" value="6685483" />
           <option name="info" value="Aug 12, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1723636336003" />
+          <option name="linesCode" value="28279" />
+          <option name="totalLines" value="3389611" />
+          <option name="info" value="Aug 14, 2024" />
         </TimePoint>
       </list>
     </option>

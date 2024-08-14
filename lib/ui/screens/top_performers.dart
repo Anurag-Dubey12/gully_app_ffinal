@@ -183,17 +183,26 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                             child: FutureBuilder<List<PlayerRankingModel>>(
                                 future: controller.getTopPerformers(
                                     _selectedTab == 0 ? 'leather' : 'tennis',
-                                    selectedDate ?? DateTime.now()),
+                                    selectedDate ?? DateTime.now()
+                                ),
                                 builder: (context, snapshot) {
-                                  return ListView.separated(
-                                      padding: const EdgeInsets.all(20),
-                                      itemCount: snapshot.data?.length ?? 0,
-                                      shrinkWrap: true,
-                                      separatorBuilder: (c, i) =>
-                                          const SizedBox(height: 10),
-                                      itemBuilder: (c, i) => _PlayerCard(
-                                          player: snapshot.data![i]));
-                                }),
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                    return const Center(child: CircularProgressIndicator());
+                                  } else if (snapshot.hasError) {
+                                    return Center(child: Text('Error: ${snapshot.error}'));
+                                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                    return const Center(child: Text('No top performers found'));
+                                  } else {
+                                    return ListView.separated(
+                                        padding: const EdgeInsets.all(20),
+                                        itemCount: snapshot.data!.length,
+                                        shrinkWrap: true,
+                                        separatorBuilder: (c, i) => const SizedBox(height: 10),
+                                        itemBuilder: (c, i) => _PlayerCard(player: snapshot.data![i])
+                                    );
+                                  }
+                                }
+                            ),
                           ),
                         )
                       ],

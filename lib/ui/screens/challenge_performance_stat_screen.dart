@@ -5,6 +5,8 @@ import 'package:gully_app/data/model/challenge_match.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 
+import '../../utils/app_logger.dart';
+
 class ChallengePerformanceStatScreen extends StatefulWidget {
   final ChallengeMatchModel match;
   const ChallengePerformanceStatScreen({super.key, required this.match});
@@ -17,6 +19,11 @@ class ChallengePerformanceStatScreen extends StatefulWidget {
 class _ChallengePerformanceStatScreenState
     extends State<ChallengePerformanceStatScreen> {
   String innings = 'batting';
+  @override
+  void initState() {
+    super.initState();
+    logger.d("ChallengePerformanceStatScreen initialized with match ID: ${widget.match.id}");
+  }
   @override
   Widget build(BuildContext context) {
     TeamController controller = Get.find<TeamController>();
@@ -189,9 +196,17 @@ class _ChallengePerformanceStatScreenState
                                 child: CircularProgressIndicator());
                           }
                           if (snapshot.hasError) {
+                            logger.e("Error in FutureBuilder: ${snapshot.error}");
                             return const Padding(
                               padding: EdgeInsets.all(18.0),
                               child: Center(child: Text('Error fetching data')),
+                            );
+                          }
+                          if (snapshot.data == null || snapshot.data!.isEmpty) {
+                            logger.w("No performance data available"); // Add this line
+                            return const Padding(
+                              padding: EdgeInsets.all(18.0),
+                              child: Center(child: Text('No data available')),
                             );
                           }
                           if (snapshot.data!.isEmpty) {

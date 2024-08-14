@@ -296,6 +296,24 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
     }
   }
 
+  // Future<Map<String, dynamic>> getChallengePerformance({
+  //   required String matchId,
+  // }) async {
+  //   try {
+  //     final response = await repo.getChallengePerformance(
+  //       matchId: matchId,
+  //     );
+  //     logger.d("The Challenge Performance Data :${response.data}");
+  //     if (response.status == false) {
+  //       errorSnackBar(response.message!);
+  //       return {};
+  //     }
+  //     return response.data!;
+  //   } catch (e) {
+  //     logger.i(e.toString());
+  //     rethrow;
+  //   }
+  // }
   Future<Map<String, dynamic>> getChallengePerformance({
     required String matchId,
   }) async {
@@ -303,14 +321,16 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
       final response = await repo.getChallengePerformance(
         matchId: matchId,
       );
+      logger.d("The Challenge Performance Data: ${response.data}");
       if (response.status == false) {
-        errorSnackBar(response.message!);
+        logger.e("Error fetching challenge performance: ${response.message}");
         return {};
       }
-      return response.data!;
+      return response.data ?? {};
     } catch (e) {
-      logger.i(e.toString());
-      rethrow;
+      logger.e("Error in getChallengePerformance: $e");
+      return {};
     }
   }
+
 }

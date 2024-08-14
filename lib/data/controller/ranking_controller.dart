@@ -4,6 +4,8 @@ import 'package:gully_app/data/model/player_ranking_model.dart';
 import 'package:gully_app/data/model/team_ranking_model.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../utils/app_logger.dart';
+
 class RankingController extends GetxController {
   final RankingApi api;
   RankingController(this.api);
@@ -40,7 +42,7 @@ class RankingController extends GetxController {
       String ballType, DateTime startDate) async {
     try {
       final response = await api.getTopPerformers(ballType, startDate);
-
+      logger.d("The Performer Data is : ${response.data}");
       return response.data!['topPerformers']
           .map<PlayerRankingModel>((e) => PlayerRankingModel.fromJson(e))
           .toList();

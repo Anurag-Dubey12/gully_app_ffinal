@@ -42,9 +42,9 @@ class _SelectChallengeMatchForPerformanceState
             child: FutureBuilder<List<ChallengeMatchModel>>(
                 future: teamController.getChallengeMatch(),
                 builder: (context, snapshot) {
-                  final acceptedChallenges = snapshot.data
-                      ?.where((e) => e.status == 'played')
-                      .toList();
+                  // final acceptedChallenges = snapshot.data
+                  //     ?.where((e) => e.status == 'played')
+                  //     .toList();
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
@@ -54,7 +54,8 @@ class _SelectChallengeMatchForPerformanceState
                       child: Text('Error fetching data'),
                     );
                   }
-                  if (acceptedChallenges!.isEmpty) {
+                  final challenges=snapshot.data ??[];
+                  if (challenges!.isEmpty) {
                     return const Center(
                       child: Text('No matches played yet'),
                     );
@@ -66,7 +67,7 @@ class _SelectChallengeMatchForPerformanceState
                                 borderRadius: BorderRadius.circular(20)),
                             tileColor: Colors.white,
                             title: Text(
-                                '${acceptedChallenges[index].team1.name.capitalize} vs ${acceptedChallenges[index].team2.name.capitalize}',
+                                '${challenges[index].team1.name.capitalize} vs ${challenges[index].team2.name.capitalize}',
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 18,
@@ -75,7 +76,7 @@ class _SelectChallengeMatchForPerformanceState
                             minVerticalPadding: 4,
                             subtitle: Text(
                               DateFormat('dd-MMM-yyyy')
-                                  .format(acceptedChallenges[index].createdAt!),
+                                  .format(challenges[index].createdAt!),
                               style: const TextStyle(
                                 color: AppTheme.darkYellowColor,
                                 fontSize: 13,
@@ -83,9 +84,10 @@ class _SelectChallengeMatchForPerformanceState
                             ),
                             trailing: IconButton(
                               onPressed: () {
+                                logger.d("Selected match ID: ${challenges[index].id}");
                                 Get.to(() => ChallengePerformanceStatScreen(
-                                      match: acceptedChallenges[index],
-                                    ));
+                                  match: challenges[index],
+                                ));
                               },
                               icon: const Icon(
                                 Icons.arrow_forward_ios,
@@ -96,7 +98,7 @@ class _SelectChallengeMatchForPerformanceState
                       separatorBuilder: (context, index) => const SizedBox(
                             height: 20,
                           ),
-                      itemCount: acceptedChallenges.length);
+                      itemCount: challenges.length);
                 }),
           )),
     );

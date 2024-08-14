@@ -263,6 +263,7 @@ class TeamApi {
 
     return ApiResponse.fromJson(response.body);
   }
+
 }
 
 String generateErrorMessage(dynamic response) {

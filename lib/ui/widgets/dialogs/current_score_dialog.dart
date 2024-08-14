@@ -200,7 +200,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                    '${controller.scoreboard.value?.firstInningHistory.entries.last.value.total}/${controller.scoreboard.value?.firstInningHistory.entries.last.value.wickets}',
+                                                      '${controller.scoreboard.value?.firstInningHistory.entries.lastOrNull?.value.total ?? 0}/${controller.scoreboard.value?.firstInningHistory.entries.lastOrNull?.value.wickets ?? 0}',
                                                     style: Get.textTheme.headlineMedium?.copyWith(
                                                         fontWeight: FontWeight.bold,
                                                         color: Colors.white,
@@ -258,7 +258,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                    '${controller.scoreboard.value?.secondInningHistory.entries.last.value.total ?? 0}/${controller.scoreboard.value?.secondInningHistory.entries.last.value.wickets ?? 0}',
+                                                      '${controller.scoreboard.value?.secondInningHistory.entries.lastOrNull?.value.total ?? 0}/${controller.scoreboard.value?.secondInningHistory.entries.lastOrNull?.value.wickets ?? 0}',
                                                     style: Get.textTheme.headlineMedium?.copyWith(
                                                         fontWeight: FontWeight.bold,
                                                         color: Colors.white,

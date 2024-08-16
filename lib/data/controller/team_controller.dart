@@ -280,40 +280,26 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
     }
   }
 
-  Future<Map<String, dynamic>> getMyPerformance(
-      {required String matchType, required String inningsType}) async {
+  Future<Map<String, dynamic>> getMyPerformance({
+    required String matchType,
+    required String inningsType
+  }) async {
     try {
       final response = await repo.getMyPerformance(
-          matchType: matchType, inningsType: inningsType);
+          matchType: matchType,
+          inningsType: inningsType
+      );
+      logger.d("The My Performance Data: ${response.data}");
       if (response.status == false) {
         errorSnackBar(response.message!);
         return {};
       }
       return response.data!;
     } catch (e) {
-      logger.i(e.toString());
-      rethrow;
+      logger.e("Error in getMyPerformance: $e");
+      return {};
     }
   }
-
-  // Future<Map<String, dynamic>> getChallengePerformance({
-  //   required String matchId,
-  // }) async {
-  //   try {
-  //     final response = await repo.getChallengePerformance(
-  //       matchId: matchId,
-  //     );
-  //     logger.d("The Challenge Performance Data :${response.data}");
-  //     if (response.status == false) {
-  //       errorSnackBar(response.message!);
-  //       return {};
-  //     }
-  //     return response.data!;
-  //   } catch (e) {
-  //     logger.i(e.toString());
-  //     rethrow;
-  //   }
-  // }
   Future<Map<String, dynamic>> getChallengePerformance({
     required String matchId,
   }) async {
@@ -324,6 +310,7 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
       logger.d("The Challenge Performance Data: ${response.data}");
       if (response.status == false) {
         logger.e("Error fetching challenge performance: ${response.message}");
+        errorSnackBar(response.message!);
         return {};
       }
       return response.data ?? {};

@@ -99,7 +99,6 @@ class _PlayerRankingScreenState extends State<PlayerRankingScreen> {
                                 text: 'Leather ball',
                                 onTap: (st) {
                                   setState(() {
-                                    // ignore: unnecessary_statements
                                     _selectedTab = 0;
                                   });
                                 },
@@ -240,44 +239,43 @@ class _TeamCard extends StatelessWidget {
             CircleAvatar(
               radius: 23,
               backgroundColor: Colors.grey.shade300,
-              backgroundImage:
-                  NetworkImage(toImageUrl(player.profilePhoto ?? "")),
+              backgroundImage: player.profilePhoto!=null && player.profilePhoto!.isNotEmpty ?
+                  NetworkImage(toImageUrl(player.profilePhoto ?? ""))as ImageProvider
+                  : const AssetImage('assets/images/logo.png'),
             ),
             const SizedBox(width: 12),
             Expanded(
-              child: Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(player.playerName,
-                        style: Get.textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            fontSize: 19)),
-                    if (selectedChildTab == 'batting')
-                      Text(
-                        'Inn ${player.innings} | SR:${player.strikeRate?.toStringAsFixed(2)} | Runs: ${player.runs} |\nFours: ${player.fours} | Sixes: ${player.sixes}',
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(player.playerName,
+                      style: Get.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontSize: 19)),
+                  if (selectedChildTab == 'batting')
+                    Text(
+                      'Inn ${player.innings} | SR:${player.strikeRate?.toStringAsFixed(2)} | Runs: ${player.runs} |\nFours: ${player.fours} | Sixes: ${player.sixes}',
+                      style: Get.textTheme.bodyMedium
+                          ?.copyWith(color: Colors.black54, fontSize: 12),
+                    ),
+                  if (selectedChildTab == 'bowling')
+                    FittedBox(
+                      child: Text(
+                        'Wickets ${player.wickets} | Economy:${player.economy?.toStringAsFixed(2)} | Runs: ${player.runs} |\nFours: ${player.fours} | Sixes: ${player.sixes}',
                         style: Get.textTheme.bodyMedium
                             ?.copyWith(color: Colors.black54, fontSize: 12),
                       ),
-                    if (selectedChildTab == 'bowling')
-                      FittedBox(
-                        child: Text(
-                          'Wickets ${player.wickets} | Economy:${player.economy?.toStringAsFixed(2)} | Runs: ${player.runs} |\nFours: ${player.fours} | Sixes: ${player.sixes}',
-                          style: Get.textTheme.bodyMedium
-                              ?.copyWith(color: Colors.black54, fontSize: 12),
-                        ),
+                    ),
+                  if (selectedChildTab == 'all-rounder')
+                    FittedBox(
+                      child: Text(
+                        'Inn ${player.innings} | SR:${player.strikeRate?.toStringAsFixed(2)} | Runs: ${player.runs} |Fours: ${player.fours} | Sixes: ${player.sixes} \n| Wickets ${player.wickets} | Economy:${player.economy?.toStringAsFixed(2)}',
+                        style: Get.textTheme.bodyMedium
+                            ?.copyWith(color: Colors.black54, fontSize: 13),
                       ),
-                    if (selectedChildTab == 'all-rounder')
-                      FittedBox(
-                        child: Text(
-                          'Inn ${player.innings} | SR:${player.strikeRate?.toStringAsFixed(2)} | Runs: ${player.runs} |Fours: ${player.fours} | Sixes: ${player.sixes} \n| Wickets ${player.wickets} | Economy:${player.economy?.toStringAsFixed(2)}',
-                          style: Get.textTheme.bodyMedium
-                              ?.copyWith(color: Colors.black54, fontSize: 13),
-                        ),
-                      ),
-                  ],
-                ),
+                    ),
+                ],
               ),
             )
           ],
@@ -287,65 +285,6 @@ class _TeamCard extends StatelessWidget {
   }
 }
 
-//Previous Code
-// class _SelectBallTypeCard extends StatelessWidget {
-//   final int tab;
-//   final int selectedTab;
-//   final String text;
-//   final Function(int tab) onTap;
-//   final bool? isChild;
-//   const _SelectBallTypeCard({
-//     required this.onTap,
-//     required this.tab,
-//     required this.selectedTab,
-//     required this.text,
-//     this.isChild,
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Expanded(
-//       child: Material(
-//         borderRadius: BorderRadius.circular(40),
-//         child: Ink(
-//           decoration: BoxDecoration(
-//             borderRadius: BorderRadius.circular(40),
-//             color: tab == selectedTab
-//                 ? AppTheme.secondaryYellowColor
-//                 : Colors.white,
-//             boxShadow: [
-//               BoxShadow(
-//                   color:
-//                       const Color.fromARGB(57, 255, 164, 46).withOpacity(0.3),
-//                   blurRadius: 20,
-//                   spreadRadius: 2,
-//                   offset: const Offset(0, 7))
-//             ],
-//           ),
-//           child: InkWell(
-//             borderRadius: BorderRadius.circular(40),
-//             onTap: () => onTap(tab),
-//             child: Center(
-//               child: Padding(
-//                 padding: const EdgeInsets.all(18.0),
-//                 child: Text(text,
-//                     style: Get.textTheme.bodyLarge?.copyWith(
-//                         fontSize: isChild ?? false ? 14 : 18,
-//                         color: selectedTab == tab ? Colors.white : Colors.black,
-//                         fontWeight: isChild ?? false
-//                             ? FontWeight.normal
-//                             : FontWeight.bold)),
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
-
-//My Code
 class _SelectBallTypeCard extends StatelessWidget {
   final int tab;
   final int selectedTab;
@@ -364,9 +303,9 @@ class _SelectBallTypeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Material(
-        borderRadius: BorderRadius.circular(20),
-        child: Ink(
+      child:  GestureDetector(
+        onTap: () => onTap(tab),
+        child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
             gradient: tab == selectedTab
@@ -390,7 +329,7 @@ class _SelectBallTypeCard extends StatelessWidget {
             ],
           ),
           child: InkWell(
-            borderRadius: BorderRadius.circular(20), // More modern, less rounded
+            borderRadius: BorderRadius.circular(20),
             onTap: () => onTap(tab),
             child: Center(
               child: Padding(
@@ -407,7 +346,7 @@ class _SelectBallTypeCard extends StatelessWidget {
             ),
           ),
         ),
-      ),
+      )
     );
   }
 }

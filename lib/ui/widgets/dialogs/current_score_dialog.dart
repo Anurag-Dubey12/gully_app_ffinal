@@ -275,7 +275,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                               child: SizedBox(
                                                 height: 50,
                                                 width: 50,
-                                                child:widget.match.team2.logo != null
+                                                child:widget.match.team2.logo != null && widget.match.team2.logo!.isNotEmpty
                                                     ? Image.network(
                                                   widget.match.team2.toImageUrl(),
                                                   height: 50,
@@ -292,14 +292,19 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                             ),
                                           ],
                                         ),
-                                        Text(
-                                          widget.match.team2.name,
-                                          style: Get.textTheme.headlineMedium
-                                              ?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                          ),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              widget.match.team2.name,
+                                              style: Get.textTheme.headlineMedium
+                                                  ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                         // if (controller.scoreboard.value?.currentInnings == 2)
                                         //   const BlinkingText(

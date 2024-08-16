@@ -227,12 +227,9 @@ class _SelectBallTypeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Material(
-        borderRadius: BorderRadius.circular(40),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(40),
+      child: GestureDetector(
           onTap: () => onTap(tab),
-          child: Ink(
+          child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40),
               color: tab == selectedTab
@@ -257,7 +254,6 @@ class _SelectBallTypeCard extends StatelessWidget {
             ),
           ),
         ),
-      ),
     );
   }
 }

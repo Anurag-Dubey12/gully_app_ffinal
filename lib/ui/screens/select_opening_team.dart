@@ -224,7 +224,6 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                               });
                             },
                           ),
-
                           const Text('Bowl'),
                         ],
                       ),

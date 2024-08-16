@@ -230,22 +230,27 @@ class TeamApi {
     }
     return ApiResponse.fromJson(response.body);
   }
-
   Future<ApiResponse> getMyPerformance({
     required String matchType,
     required String inningsType,
   }) async {
-    final response =
-        await repo.get('/match/myPerformns/$matchType/$inningsType');
-    if (response.statusCode! >= 500) {
-      errorSnackBar(generateErrorMessage(response.body));
-      throw Exception('Server Error');
-    } else if (response.statusCode! >= 400) {
-      errorSnackBar(generateErrorMessage(response.body));
-      return ApiResponse.fromJson(response.body);
-    }
+    try {
+      final response = await repo.get('/match/myPerformns/$matchType/$inningsType');
+      logger.d("Raw API response for myPerformance: ${response.body} and matchtypes is :$matchType and inning types is :$inningsType");
 
-    return ApiResponse.fromJson(response.body);
+      if (response.statusCode! >= 500) {
+        errorSnackBar(generateErrorMessage(response.body));
+        throw Exception('Server Error');
+      } else if (response.statusCode! >= 400) {
+        errorSnackBar(generateErrorMessage(response.body));
+        return ApiResponse.fromJson(response.body);
+      }
+
+      return ApiResponse.fromJson(response.body);
+    } catch (e) {
+      logger.e("Error in getMyPerformance API call: $e");
+      rethrow;
+    }
   }
 
   Future<ApiResponse> getChallengePerformance({

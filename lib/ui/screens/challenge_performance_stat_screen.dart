@@ -19,6 +19,7 @@ class ChallengePerformanceStatScreen extends StatefulWidget {
 class _ChallengePerformanceStatScreenState
     extends State<ChallengePerformanceStatScreen> {
   String innings = 'batting';
+
   @override
   void initState() {
     super.initState();

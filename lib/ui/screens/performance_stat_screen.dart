@@ -4,6 +4,8 @@ import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 
+import '../../utils/app_logger.dart';
+
 class PerformanceStatScreen extends StatefulWidget {
   final String category;
   const PerformanceStatScreen({super.key, required this.category});
@@ -17,7 +19,8 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen> {
   @override
   Widget build(BuildContext context) {
     TeamController controller = Get.find<TeamController>();
-    return GradientBuilder(
+    return
+      GradientBuilder(
         child: Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(

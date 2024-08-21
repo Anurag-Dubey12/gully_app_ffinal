@@ -5,6 +5,7 @@ import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/ui/widgets/home_screen/no_tournament_card.dart';
 
 import '../../../data/model/scoreboard_model.dart';
+import '../../../utils/FallbackImageProvider.dart';
 import '../../../utils/utils.dart';
 import '../dialogs/current_score_dialog.dart';
 import 'i_button_dialog.dart';
@@ -87,8 +88,9 @@ class _Card extends StatelessWidget {
               ),
               child: CircleAvatar(
                 backgroundImage: tournamentdata.coverPhoto != null && tournamentdata.coverPhoto!.isNotEmpty
-                    ? NetworkImage(
+                    ? FallbackImageProvider(
                   toImageUrl(tournamentdata.coverPhoto!),
+                    'assets/images/logo.png'
                 ) as ImageProvider
                     : const AssetImage('assets/images/logo.png'),
                 backgroundColor: Colors.transparent,

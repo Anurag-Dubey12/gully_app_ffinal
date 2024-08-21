@@ -537,7 +537,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                               'corporate',
                               'series',
                               'open'
-                            ],
+                            ], isAds: false,
                           ),
                           const SizedBox(
                             height: 18,
@@ -561,7 +561,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                               'tennis',
                               'leather',
                               'others',
-                            ],
+                            ], isAds: false,
                           ),
                           tournamentType == "turf"
                               ? const SizedBox()
@@ -592,7 +592,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                       items: const [
                                         'rough',
                                         'cement',
-                                      ],
+                                      ], isAds: false,
                                     ),
                                   ],
                                 ),

@@ -4,6 +4,7 @@ import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
+import '../../../utils/FallbackImageProvider.dart';
 import '../../../utils/utils.dart';
 import '../../screens/full_scorecard.dart';
 import 'no_tournament_card.dart';
@@ -16,23 +17,23 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      // height: Get.height * 0.54,
+        // height: Get.height * 0.54,
         child: Obx(() {
-          if (controller.tournamentList.isEmpty) {
-            return const NoTournamentCard();
-          } else {
-            return ListView.builder(
-                itemCount: controller.matches.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.only(bottom: 10, top: 10),
-                itemBuilder: (context, snapshot) {
-                  return _Card(
-                    tournament: controller.matches[snapshot],
-                  );
-                });
-          }
-        }));
+      if (controller.tournamentList.isEmpty) {
+        return const NoTournamentCard();
+      } else {
+        return ListView.builder(
+            itemCount: controller.matches.length,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.only(bottom: 10, top: 10),
+            itemBuilder: (context, snapshot) {
+              return _Card(
+                tournament: controller.matches[snapshot],
+              );
+            });
+      }
+    }));
   }
 }
 
@@ -45,17 +46,20 @@ class _Card extends StatelessWidget {
     ScoreboardModel? scoreboard = tournament.scoreBoard == null
         ? null
         : ScoreboardModel?.fromJson(tournament.scoreBoard!);
-
     final controller = Get.find<TournamentController>();
     final tournamentdata = controller.tournamentList
         .firstWhere((t) => t.id == tournament.tournamentId);
 
     String winnerText = '';
+    int team1Score = 0;
+    int team2Score = 0;
+
     if (scoreboard != null) {
-      int team1Score = scoreboard.firstInningHistory.entries.last.value.total;
-      int team2Score = scoreboard.currentInnings == 1
-          ? 0
-          : scoreboard.currentInningsScore;
+      if (scoreboard.firstInningHistory.isNotEmpty) {
+        team1Score = scoreboard.firstInningHistory.entries.last.value.total;
+      }
+      team2Score =
+          scoreboard.currentInnings == 1 ? 0 : scoreboard.currentInningsScore;
 
       if (team1Score > team2Score) {
         winnerText = '${scoreboard.team1.name} won the game';
@@ -98,9 +102,14 @@ class _Card extends StatelessWidget {
               ),
               child: CircleAvatar(
                 radius: 50,
-                backgroundImage: tournamentdata.coverPhoto != null&& tournamentdata.coverPhoto!.isNotEmpty
-                    ? NetworkImage(toImageUrl(tournamentdata.coverPhoto!))as ImageProvider
-                    :const AssetImage('assets/images/logo.png'),
+                backgroundImage: tournamentdata.coverPhoto != null &&
+                        tournamentdata.coverPhoto!.isNotEmpty
+                    ? FallbackImageProvider(
+                        toImageUrl(tournamentdata.coverPhoto!),
+                        'assets/images/logo.png',
+                      )
+                    : const AssetImage('assets/images/logo.png')
+                        as ImageProvider,
                 backgroundColor: Colors.transparent,
               ),
             ),
@@ -111,18 +120,18 @@ class _Card extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(
-                      width:300,
+                      width: 300,
                       height: 30,
                       child: Center(
-                          child: Text(
-                            tournament.tournamentName!,
-                            style: Get.textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                            softWrap: true,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                        child: Text(
+                          tournament.tournamentName!,
+                          style: Get.textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                          softWrap: true,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),
@@ -141,7 +150,9 @@ class _Card extends StatelessWidget {
                           _TeamScore(
                             color: Colors.red,
                             teamName: scoreboard.team1.name,
-                            score: '${scoreboard.firstInningHistory.entries.last.value.total}/${scoreboard.firstInningHistory.entries.last.value.wickets}',
+                            score: scoreboard.firstInningHistory.isNotEmpty
+                                ? '${scoreboard.firstInningHistory.entries.last.value.total}/${scoreboard.firstInningHistory.entries.last.value.wickets}'
+                                : 'N/A',
                           ),
                           const SizedBox(width: 10),
                           _TeamScore(
@@ -149,7 +160,7 @@ class _Card extends StatelessWidget {
                             teamName: scoreboard.team2.name,
                             score: scoreboard.currentInnings == 1
                                 ? "Not Played yet"
-                                : '${scoreboard.currentInningsScore}/${scoreboard.currentOverHistory.last?.wickets ?? 0}',
+                                : '${scoreboard.currentInningsScore}/${scoreboard.currentOverHistory.lastOrNull?.wickets ?? 0}',
                           ),
                         ],
                       ),
@@ -166,9 +177,9 @@ class _Card extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Colors.red.shade400,
                                 border: Border.all(
-                                    color: const Color.fromARGB(255, 255, 215, 0),
-                                    width: 2
-                                ),
+                                    color:
+                                        const Color.fromARGB(255, 255, 215, 0),
+                                    width: 2),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
@@ -181,9 +192,9 @@ class _Card extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Colors.red.shade400,
                                 border: Border.all(
-                                    color: const Color.fromARGB(255, 255, 215, 0),
-                                  width: 2
-                                ),
+                                    color:
+                                        const Color.fromARGB(255, 255, 215, 0),
+                                    width: 2),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                             ),
@@ -197,9 +208,9 @@ class _Card extends StatelessWidget {
                               decoration: BoxDecoration(
                                 color: Colors.red,
                                 border: Border.all(
-                                    color: const Color.fromARGB(255, 255, 215, 0),
-                                    width: 2
-                                ),
+                                    color:
+                                        const Color.fromARGB(255, 255, 215, 0),
+                                    width: 2),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Center(
@@ -228,7 +239,6 @@ class _Card extends StatelessWidget {
     );
   }
 }
-
 
 class _TeamScore extends StatelessWidget {
   final Color color;
@@ -271,12 +281,11 @@ class _TeamScore extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             score,
-            style: Get.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+            style:
+                Get.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
       ),
     );
   }
 }
-
-

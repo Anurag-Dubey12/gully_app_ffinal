@@ -6,6 +6,7 @@ import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/widgets/home_screen/i_button_dialog.dart';
 
 import '../../../data/controller/tournament_controller.dart';
+import '../../../utils/FallbackImageProvider.dart';
 import '../../../utils/date_time_helpers.dart';
 import '../../../utils/utils.dart';
 import '../../screens/register_team.dart';
@@ -118,7 +119,7 @@ class _TournamentCardState extends State<TournamentCard> {
             child: CircleAvatar(
               radius: 50,
               backgroundImage: tournamentdata?.coverPhoto != null
-                  ? NetworkImage(toImageUrl(tournamentdata!.coverPhoto!))
+                  ? FallbackImageProvider(toImageUrl(tournamentdata!.coverPhoto!),'assets/images/logo.png')
                   : const AssetImage('assets/images/logo.png') as ImageProvider,
               backgroundColor: Colors.transparent,
             ),

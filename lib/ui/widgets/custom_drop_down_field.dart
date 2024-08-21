@@ -6,16 +6,19 @@ class DropDownWidget extends StatelessWidget {
   final String? selectedValue;
   final List<String> items;
   final String title;
+  final bool isAds;
   const DropDownWidget({
     super.key,
     required this.onSelect,
     this.selectedValue,
     required this.items,
     required this.title,
+    required this.isAds,
   });
 
   @override
   Widget build(BuildContext context) {
+    bool? isChecked = true;
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Material(
@@ -50,7 +53,16 @@ class DropDownWidget extends StatelessWidget {
                             shrinkWrap: true,
                             itemCount: items.length,
                             itemBuilder: (context, index) {
-                              return ListTile(
+                              return isAds ?ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: Checkbox(
+                                  tristate: true,
+                                  value: isChecked,
+                                  onChanged: (bool? value) {
+                                  },
+
+                                ),
+                              ) :ListTile(
                                 contentPadding: EdgeInsets.zero,
                                 leading: Radio<String>(
                                   value: items[index],

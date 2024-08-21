@@ -10,17 +10,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="performace">
+      <change afterPath="$PROJECT_DIR$/lib/ui/screens/purchase_ads_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/utils/FallbackImageProvider.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/api/team_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/team_api.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/team_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/team_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/challenge_performance_stat_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/challenge_performance_stat_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/performance_stat_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/performance_stat_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/player_ranking_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/player_ranking_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/team_ranking_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/team_ranking_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/looking_for_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/looking_for_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/player_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/player_profile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/custom_drop_down_field.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/custom_drop_down_field.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -336,7 +337,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723636372214</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="performace">
+      <option name="closed" value="true" />
+      <created>1723809362738</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1723809362738</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -501,6 +510,12 @@
           <option name="totalLines" value="3389611" />
           <option name="info" value="performace" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1723809364263" />
+          <option name="linesCode" value="28300" />
+          <option name="totalLines" value="3389502" />
+          <option name="info" value="performace" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -660,6 +675,12 @@
           <option name="linesCode" value="28279" />
           <option name="totalLines" value="3389611" />
           <option name="info" value="Aug 14, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1723809364263" />
+          <option name="linesCode" value="28300" />
+          <option name="totalLines" value="3389502" />
+          <option name="info" value="Aug 16, 2024" />
         </TimePoint>
       </list>
     </option>

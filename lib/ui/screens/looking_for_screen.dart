@@ -83,7 +83,7 @@ class _LookingForScreenState extends State<LookingForScreen> {
                     "I am looking for a Teammate to join as a Batsman",
                     "I am looking for a Teammate to join as a Wicket-keeper",
                     "I am looking for a Teammate to join as an All-rounder"
-                  ],
+                  ], isAds: false,
                 ),
                 const SizedBox(height: 10),
                 FormInput(

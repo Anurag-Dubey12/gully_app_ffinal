@@ -7,6 +7,8 @@ import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/home_screen/future_tournament_card.dart';
 
+import '../../utils/app_logger.dart';
+
 class Debouncer {
   final Duration delay;
   Timer? _timer;
@@ -44,8 +46,19 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
   int sortValue = 0;
   List<TournamentModel> tournaments = [];
   bool isLoading = false;
+//Temporary code for testing ads
+  final List<String> images = [
+    'assets/images/crfi.png',
+    'assets/images/main_image_sec.png',
+    'assets/images/main_img.png',
+    'assets/images/main_image_sec.png',
+    'assets/images/main_immg.png',
+    'assets/images/4.3.png',
+    'assets/images/4.png',
+  ];
 
-
+  int currentImageIndex = 0;
+  Timer? _imageTimer;
   @override
   void initState() {
     super.initState();
@@ -66,6 +79,19 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
       });
       // Call your API here with the debounced value
     });
+    _imageTimer = Timer.periodic(const Duration(seconds: 2), (Timer timer) {
+      setState(() {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        logger.d("The current image index: $currentImageIndex");
+      });
+    });
+  }
+  @override
+  void dispose() {
+    _imageTimer?.cancel();
+    debouncer.dispose();
+    searchController.dispose();
+    super.dispose();
   }
 
   void sortByName() {
@@ -207,6 +233,15 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                         : const SizedBox.shrink(),
                   );
                 },
+              ),
+            ),//Temporary code for testing ads
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Image.asset(
+                images[currentImageIndex],
+                height: 100,
+                width: Get.width,
+                fit: BoxFit.fill,
               ),
             ),
           ],

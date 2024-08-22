@@ -27,7 +27,6 @@ import '../widgets/primary_button.dart';
 class TournamentFormScreen extends StatefulWidget {
   final TournamentModel? tournament;
   const TournamentFormScreen({super.key, this.tournament});
-
   @override
   State<TournamentFormScreen> createState() => _TournamentFormScreenState();
 }
@@ -246,7 +245,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
 
                                     authController.getUser();
                                     Get.to(() => PaymentPage(
-                                          tournament: tournamentModel,
+                                          tournament: tournamentModel
                                         ));
 
                                     // Get.to(() => PaymentPage(

@@ -1,5 +1,8 @@
+import 'dart:ffi';
+
 import 'package:get/get.dart';
 import 'package:gully_app/data/api/misc_api.dart';
+import 'package:gully_app/data/model/AdvertisementModel.dart';
 import 'package:gully_app/data/model/banner_model.dart';
 import 'package:gully_app/data/model/looking_for_model.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -17,6 +20,12 @@ class MiscController extends GetxController with StateMixin {
     return response.data!['content'];
   }
 
+  Rx<AdvertisementModel?> ads=Rx<AdvertisementModel?>(null);
+
+  void updateBanner({required AdvertisementModel Ads }){
+
+    this.ads.value=Ads;
+  }
   Future<void> getBanners() async {
     var response = await repo.getBanners();
 
@@ -56,6 +65,7 @@ class MiscController extends GetxController with StateMixin {
       throw Exception(e.toString());
     }
   }
+
 
   Future<List<LookingForPlayerModel>> getLookingFor() async {
     try {

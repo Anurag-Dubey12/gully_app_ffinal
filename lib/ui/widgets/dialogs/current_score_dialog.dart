@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
@@ -7,6 +9,8 @@ import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/ui/widgets/scorecard/current_over_card.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
+
+import '../../../utils/app_logger.dart';
 
 class ScoreBottomDialog extends StatefulWidget {
   final MatchupModel match;
@@ -21,7 +25,19 @@ class ScoreBottomDialog extends StatefulWidget {
 
 class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
   late io.Socket socket;
+  //Temporary code for testing ads
+  final List<String> images = [
+    'assets/images/crfi.png',
+    'assets/images/main_image_sec.png',
+    'assets/images/main_img.png',
+    'assets/images/main_image_sec.png',
+    'assets/images/main_immg.png',
+    'assets/images/4.3.png',
+    'assets/images/4.png',
+  ];
 
+  int currentImageIndex = 0;
+  Timer? _imageTimer;
   bool isLoading = true;
   Future getMatchScoreboard() async {
     final sb = await Get.find<ScoreBoardController>()
@@ -36,10 +52,17 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
     }
   }
 
+
   @override
   void initState() {
     getMatchScoreboard();
     super.initState();
+    _imageTimer = Timer.periodic(const Duration(seconds: 2), (Timer timer) {
+      setState(() {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        logger.d("The current image index: $currentImageIndex");
+      });
+    });
   }
 
   @override
@@ -47,6 +70,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
     super.dispose();
     final controller = Get.find<ScoreBoardController>();
     controller.disconnect();
+    _imageTimer?.cancel();
   }
 
   @override
@@ -464,7 +488,17 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                 Get.to(() => const FullScoreboardScreen());
                               },
                               title: 'View Scorecard ',
-                            )
+                            ),
+                            //Temporary code for testing ads
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Image.asset(
+                                images[currentImageIndex],
+                                height: 100,
+                                width: Get.width,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
                           ],
                         ),
                       ),

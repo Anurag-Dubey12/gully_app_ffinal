@@ -9,19 +9,23 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="performace">
-      <change afterPath="$PROJECT_DIR$/lib/ui/screens/purchase_ads_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/utils/FallbackImageProvider.dart" afterDir="false" />
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="purchase ads screen to be modify">
+      <change afterPath="$PROJECT_DIR$/assets/images/4.3.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/images/4.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/images/crfi.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/images/main_image_sec.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/images/main_img.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/images/main_immg.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/data/model/AdvertisementModel.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/looking_for_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/looking_for_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/player_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/player_profile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/purchase_ads_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/purchase_ads_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/search_tournament_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/search_tournament_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/custom_drop_down_field.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/custom_drop_down_field.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,33 +83,34 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DEBUGGABLE_DEVICE&quot;: &quot;lava_lxx507-192.168.29.122:37709&quot;,
-    &quot;DEBUGGABLE_PROCESS&quot;: &quot;com.nileegames.gullyteam&quot;,
-    &quot;DEBUGGER_ID&quot;: &quot;Java&quot;,
-    &quot;Flutter.main.dart.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;SHOW_ALL_PROCESSES&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;com.android.tools.idea.devicemanager.tab&quot;: &quot;Physical&quot;,
-    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/abcom/flutter&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DEBUGGABLE_DEVICE": "lava_lxx507-192.168.29.122:37709",
+    "DEBUGGABLE_PROCESS": "com.nileegames.gullyteam",
+    "DEBUGGER_ID": "Java",
+    "Flutter.main.dart.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "SHOW_ALL_PROCESSES": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "com.android.tools.idea.devicemanager.tab": "Physical",
+    "com.google.services.firebase.aqiPopupShown": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "io.flutter.reload.alreadyRun": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/abcom/Documents/gully_app/assets/images",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "show.migrate.to.gradle.popup": "false"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\abcom\Documents\gully_app\assets\images" />
       <recent name="C:\Notes\gully_app\android\app" />
     </key>
   </component>
@@ -345,7 +350,15 @@
       <option name="project" value="LOCAL" />
       <updated>1723809362738</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="purchase ads screen to be modify">
+      <option name="closed" value="true" />
+      <created>1724241470978</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1724241470978</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -361,7 +374,8 @@
     <MESSAGE value="need to modify select_opening_players.dart screen for player list" />
     <MESSAGE value="modify" />
     <MESSAGE value="performace" />
-    <option name="LAST_COMMIT_MESSAGE" value="performace" />
+    <MESSAGE value="purchase ads screen to be modify" />
+    <option name="LAST_COMMIT_MESSAGE" value="purchase ads screen to be modify" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -515,6 +529,12 @@
           <option name="linesCode" value="28300" />
           <option name="totalLines" value="3389502" />
           <option name="info" value="performace" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724241473010" />
+          <option name="linesCode" value="28450" />
+          <option name="totalLines" value="3387435" />
+          <option name="info" value="purchase ads screen to be modify" />
         </TimePoint>
       </list>
     </option>
@@ -681,6 +701,12 @@
           <option name="linesCode" value="28300" />
           <option name="totalLines" value="3389502" />
           <option name="info" value="Aug 16, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724241473010" />
+          <option name="linesCode" value="28450" />
+          <option name="totalLines" value="3387435" />
+          <option name="info" value="Aug 21, 2024" />
         </TimePoint>
       </list>
     </option>

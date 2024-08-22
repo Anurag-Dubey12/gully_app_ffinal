@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -69,6 +71,34 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 class _HomePageState extends State<HomePage> {
+  //Temporary code for testing ads
+  final List<String> images = [
+    'assets/images/crfi.png',
+    'assets/images/main_image_sec.png',
+    'assets/images/main_img.png',
+    'assets/images/main_image_sec.png',
+    'assets/images/main_immg.png',
+    'assets/images/4.3.png',
+    'assets/images/4.png',
+  ];
+
+  int currentImageIndex = 0;
+  Timer? _imageTimer;
+  @override
+  void initState() {
+    super.initState();
+    _imageTimer = Timer.periodic(const Duration(seconds: 2), (Timer timer) {
+      setState(() {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        logger.d("The current image index: $currentImageIndex");
+      });
+    });
+  }
+  @override
+  void dispose() {
+    _imageTimer?.cancel();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -203,7 +233,17 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            const FullBannerSlider(),
+                            // const FullBannerSlider(),
+                            //Temporary code for testing ads
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Image.asset(
+                                images[currentImageIndex],
+                                height: 100,
+                                width: Get.width,
+                                fit: BoxFit.fill,
+                              ),
+                            ),
                             const SizedBox(height: 20),
                           ],
                         ),

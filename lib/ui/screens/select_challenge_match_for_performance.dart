@@ -22,7 +22,6 @@ class _SelectChallengeMatchForPerformanceState
   @override
   Widget build(BuildContext context) {
     final TeamController teamController = Get.find<TeamController>();
-
     return GradientBuilder(
       child: Scaffold(
           backgroundColor: Colors.transparent,

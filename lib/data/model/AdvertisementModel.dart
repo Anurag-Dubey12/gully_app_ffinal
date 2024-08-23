@@ -23,7 +23,6 @@ class AdvertisementModel {
     this.updatedAt,
   });
 
-  // // Factory constructor to create an AdvertisementModel from a Map (e.g., from Firestore)
   // factory AdvertisementModel.fromMap(Map<String, dynamic> map, String documentId) {
   //   return AdvertisementModel(
   //     id: documentId,
@@ -54,8 +53,6 @@ class AdvertisementModel {
   //   };
   // }
 
-  // Create a copy of the AdvertisementModel with some fields updated
-
   AdvertisementModel copyWith({
     String? id,
     String? userId,
@@ -82,7 +79,6 @@ class AdvertisementModel {
     );
   }
 
-  // Helper method to get the duration of the advertisement in days
   int get durationInDays => endDate.difference(startDate).inDays + 1;
 
   @override

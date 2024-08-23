@@ -8,6 +8,7 @@ import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/home_screen/future_tournament_card.dart';
 
 import '../../utils/app_logger.dart';
+import 'home_screen.dart';
 
 class Debouncer {
   final Duration delay;
@@ -234,15 +235,22 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                   );
                 },
               ),
-            ),//Temporary code for testing ads
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Image.asset(
-                images[currentImageIndex],
-                height: 100,
-                width: Get.width,
-                fit: BoxFit.fill,
-              ),
+            ),
+            //Temporary code for testing ads
+            // Padding(
+            //   padding: const EdgeInsets.all(16.0),
+            //   child: Image.asset(
+            //     images[currentImageIndex],
+            //     height: 100,
+            //     width: Get.width,
+            //     fit: BoxFit.fill,
+            //   ),
+            // ),
+            Container(
+              height: 100,
+              width: Get.width,
+              margin: const EdgeInsets.only(bottom: 10),
+              child: const FullBannerSlider(isAds: true,),
             ),
           ],
         ),

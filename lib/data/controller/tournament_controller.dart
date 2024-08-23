@@ -52,7 +52,23 @@ class TournamentController extends GetxController
       rethrow;
     }
   }
+  // Rx<TournamentModel?> latestCreatedTournament = Rx<TournamentModel?>(null);
+  //
+  // Future<TournamentModel> createTournament(Map<String, dynamic> tournament) async {
+  //   try {
+  //     final body = await tournamentApi.createTournament(tournament);
+  //     final createdTournament = TournamentModel.fromJson(body.data!);
+  //     latestCreatedTournament.value = createdTournament;
+  //     return createdTournament;
+  //   } catch (e) {
+  //     errorSnackBar(e.toString());
+  //     rethrow;
+  //   }
+  // }
 
+  // Future<TournamentModel?> getLatestCreatedTournament() async {
+  //   return latestCreatedTournament.value;
+  // }
   Future<bool> updateTournament(
       Map<String, dynamic> tournament, String tournamentId) async {
     try {

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/ui/screens/banner_payment_page.dart';
 import 'package:gully_app/ui/screens/payment_page.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -11,6 +12,7 @@ import '../../utils/app_logger.dart';
 import '../../utils/image_picker_helper.dart';
 import '../../utils/utils.dart';
 import '../theme/theme.dart';
+import '../widgets/advertisement/advertisement_summary.dart';
 import '../widgets/create_tournament/top_card.dart';
 import '../widgets/custom_drop_down_field.dart';
 import '../widgets/gradient_builder.dart';
@@ -44,8 +46,11 @@ class AdsScreen extends State<PurchaseAdsScreen> {
     if(image != null) {
       final File file=File(image.path);
       final decodedImage=await decodeImageFromList(file.readAsBytesSync());
-      if(decodedImage.width==1000 && decodedImage.height==560){
+      if(decodedImage.width>=100 && decodedImage.height>=560){
         final String extension=image.path.split('.').last.toLowerCase();
+        if(decodedImage.width==decodedImage.height){
+          _showErrorDialog('Invalid file ', 'Image Width And the Height Cannot be the same.');
+        }
         if(extension=='png' || extension=='jpg'|| extension=='jpeg'){
           setState(() {
             _image=image;
@@ -333,40 +338,54 @@ class AdsScreen extends State<PurchaseAdsScreen> {
               final price = screenData['price'] as int;
               final amount = price * duration;
               totalAmount += amount;
-              return _AdvertisementSummary(adType, '₹${amount.toStringAsFixed(2)}');
+              return AdvertisementSummary(
+                label: adType,
+                value: '₹${amount.toStringAsFixed(2)}',
+              );
             }).toList()
           else
-            _AdvertisementSummary('No ad type selected', '₹0.00'),
+            const AdvertisementSummary(label: 'No ad type selected', value: '₹0.00'),
           const Divider(height: 32),
-          _AdvertisementSummary('Duration', '$duration days'),
-          _AdvertisementSummary('Total Amount', '₹${totalAmount.toStringAsFixed(2)}'),
+          AdvertisementSummary(label: 'Duration', value: '$duration days'),
+          AdvertisementSummary(label: 'Total Amount', value: '₹${totalAmount.toStringAsFixed(2)}'),
           const SizedBox(height: 8),
-          _AdvertisementSummary('GST (18%)', '₹${(totalAmount * 0.18).toStringAsFixed(2)}'),
+          AdvertisementSummary(label: 'GST (18%)', value: '₹${(totalAmount * 0.18).toStringAsFixed(2)}'),
           const Divider(height: 32),
-          _AdvertisementSummary(
-              'Grand Total',
-              '₹${(totalAmount * 1.18).toStringAsFixed(2)}',
+          AdvertisementSummary(
+              label: 'Grand Total',
+              value: '₹${(totalAmount * 1.18).toStringAsFixed(2)}',
               isBold: true
           ),
           const SizedBox(height: 24),
-          _AdvertisementSummary(
-              'Payment date',
-              DateTime.now().toString().substring(0, 11)
+          AdvertisementSummary(
+              label: 'Payment date',
+            value: DateTime.now().toString().substring(0, 11),
           ),
-          _AdvertisementSummary(
-              'Advertisement Start on',
-              advertisementModel!.startDate.toString().substring(0, 11)
+          AdvertisementSummary(
+              label: 'Advertisement Start on',
+              value:advertisementModel!.startDate.toString().substring(0, 11)
           ),
-          _AdvertisementSummary(
-              'Advertisement End on',
-              advertisementModel!.endDate.toString().substring(0, 11)),
-          _AdvertisementSummary('Payment method', 'RazorPay'),
+          AdvertisementSummary(
+              label: 'Advertisement End on',
+              value:advertisementModel!.endDate.toString().substring(0, 11)),
+          const AdvertisementSummary(
+              label: 'Payment method',value:  'RazorPay'),
           const SizedBox(height: 24),
           PrimaryButton(
               title: 'Pay Now',
               onTap:   () {
-                logger.d('Advertisement Data :${advertisementModel?.endDate.toString()}');
-                // Get.to(()=>const PaymentPage(isAdvertisement: true));
+                if (advertisementModel != null) {
+                  advertisementModel = advertisementModel!.copyWith(
+                    startDate: from!,
+                    endDate: to!,
+                    totalAmount: totalAmount* 1.18,
+                  );
+                  Get.to(() => BannerPaymentPage(
+                    ads: advertisementModel!,
+                    screens: _screens,
+
+                  ));
+                }
               }
           )
         ],
@@ -374,27 +393,4 @@ class AdsScreen extends State<PurchaseAdsScreen> {
     );
   }
 
-  Widget _AdvertisementSummary(String label, String value, {bool isBold = false}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              color: isBold ? Colors.black : Colors.grey,
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-            ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

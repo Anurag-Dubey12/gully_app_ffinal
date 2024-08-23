@@ -11,6 +11,7 @@ import 'package:gully_app/ui/widgets/scorecard/current_over_card.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import '../../../utils/app_logger.dart';
+import '../../screens/home_screen.dart';
 
 class ScoreBottomDialog extends StatefulWidget {
   final MatchupModel match;
@@ -481,7 +482,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                             ),
                             const CurrentOverStats(),
                             const SizedBox(
-                              height: 20,
+                              height: 10,
                             ),
                             PrimaryButton(
                               onTap: () {
@@ -490,14 +491,20 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                               title: 'View Scorecard ',
                             ),
                             //Temporary code for testing ads
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Image.asset(
-                                images[currentImageIndex],
-                                height: 100,
-                                width: Get.width,
-                                fit: BoxFit.fill,
-                              ),
+                            // Padding(
+                            //   padding: const EdgeInsets.all(16.0),
+                            //   child: Image.asset(
+                            //     images[currentImageIndex],
+                            //     height: 100,
+                            //     width: Get.width,
+                            //     fit: BoxFit.fill,
+                            //   ),
+                            // ),
+                            Container(
+                              height: 100,
+                              width: Get.width,
+                              margin: const EdgeInsets.only(bottom: 10,top: 5),
+                              child: const FullBannerSlider(isAds: true,),
                             ),
                           ],
                         ),
@@ -513,40 +520,3 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
     }
   }
 }
-// class BlinkingText extends StatefulWidget {
-//   final String text;
-//   final TextStyle style;
-//
-//   const BlinkingText({Key? key, required this.text, required this.style}) : super(key: key);
-//
-//   @override
-//   _BlinkingTextState createState() => _BlinkingTextState();
-// }
-//
-// class _BlinkingTextState extends State<BlinkingText> with SingleTickerProviderStateMixin {
-//   late AnimationController _animationController;
-//
-//   @override
-//   void initState() {
-//     _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
-//     _animationController.repeat(reverse: true);
-//     super.initState();
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return FadeTransition(
-//       opacity: _animationController,
-//       child: Text(
-//         widget.text,
-//         style: widget.style,
-//       ),
-//     );
-//   }
-//
-//   @override
-//   void dispose() {
-//     _animationController.dispose();
-//     super.dispose();
-//   }
-// }

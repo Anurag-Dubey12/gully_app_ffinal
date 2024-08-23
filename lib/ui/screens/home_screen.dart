@@ -72,33 +72,33 @@ class HomePage extends StatefulWidget {
 }
 class _HomePageState extends State<HomePage> {
   //Temporary code for testing ads
-  final List<String> images = [
-    'assets/images/crfi.png',
-    'assets/images/main_image_sec.png',
-    'assets/images/main_img.png',
-    'assets/images/main_image_sec.png',
-    'assets/images/main_immg.png',
-    'assets/images/4.3.png',
-    'assets/images/4.png',
-  ];
-
-  int currentImageIndex = 0;
-  Timer? _imageTimer;
-  @override
-  void initState() {
-    super.initState();
-    _imageTimer = Timer.periodic(const Duration(seconds: 2), (Timer timer) {
-      setState(() {
-        currentImageIndex = (currentImageIndex + 1) % images.length;
-        logger.d("The current image index: $currentImageIndex");
-      });
-    });
-  }
-  @override
-  void dispose() {
-    _imageTimer?.cancel();
-    super.dispose();
-  }
+  // final List<String> images = [
+  //   'assets/images/crfi.png',
+  //   'assets/images/main_image_sec.png',
+  //   'assets/images/main_img.png',
+  //   'assets/images/main_image_sec.png',
+  //   'assets/images/main_immg.png',
+  //   'assets/images/4.3.png',
+  //   'assets/images/4.png',
+  // ];
+  //
+  // int currentImageIndex = 0;
+  // Timer? _imageTimer;
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _imageTimer = Timer.periodic(const Duration(seconds: 2), (Timer timer) {
+  //     setState(() {
+  //       currentImageIndex = (currentImageIndex + 1) % images.length;
+  //       logger.d("The current image index: $currentImageIndex");
+  //     });
+  //   });
+  // }
+  // @override
+  // void dispose() {
+  //   _imageTimer?.cancel();
+  //   super.dispose();
+  // }
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -233,17 +233,17 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            // const FullBannerSlider(),
+                            const FullBannerSlider(isAds: false),
                             //Temporary code for testing ads
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Image.asset(
-                                images[currentImageIndex],
-                                height: 100,
-                                width: Get.width,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
+                            // Padding(
+                            //   padding: const EdgeInsets.all(16.0),
+                            //   child: Image.asset(
+                            //     images[currentImageIndex],
+                            //     height: 100,
+                            //     width: Get.width,
+                            //     fit: BoxFit.fill,
+                            //   ),
+                            // ),
                             const SizedBox(height: 20),
                           ],
                         ),
@@ -370,7 +370,8 @@ class _TournamentMajorDuration extends StatelessWidget {
 }
 
 class FullBannerSlider extends StatefulWidget {
-  const FullBannerSlider({super.key});
+  final bool isAds;
+  const FullBannerSlider({super.key,required this.isAds});
 
   @override
   State<FullBannerSlider> createState() => _FullBannerSliderState();
@@ -382,60 +383,89 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
   Widget build(BuildContext context) {
     final controller = Get.find<MiscController>();
     return SizedBox(
-        height: 150,
-        width: 400,
-        child: Obx(
-              () => CarouselSlider(
-              items: controller.banners.value
-                  .map((e) => ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Stack(
-                  children: [
-                    CachedNetworkImage(
-                      imageUrl: toImageUrl(e.imageUrl),
-                      fit: BoxFit.fill,
-                      width: double.infinity,
-                    ),
-                    Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ...List.generate(
-                                controller.banners.length,
-                                    (index) => Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Container(
-                                    height: 8,
-                                    width: 8,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                        BorderRadius.circular(100),
-                                        color: _current == index
-                                            ? AppTheme.darkYellowColor
-                                            : Colors.grey.shade400),
-                                  ),
-                                ),
-                              )
-                            ]))
-                  ],
+      height: 150,
+      width: 400,
+      child: Obx(
+            () => CarouselSlider(
+          items: controller.banners.value.map((e) => ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                CachedNetworkImage(
+                  imageUrl: toImageUrl(e.imageUrl),
+                    fit: BoxFit.fill,
+                    width: double.infinity
                 ),
-              ))
-                  .toList(),
-              options: CarouselOptions(
-                  viewportFraction: 0.91,
-                  enableInfiniteScroll: true,
-                  autoPlay: true,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      _current = index;
-                    });
-                  },
-                  enlargeCenterPage: true,
-                  aspectRatio: 16 / 9)),
-        ));
+                if (widget.isAds)
+                  Positioned(
+                    top: 2,
+                    right: 10,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Text(
+                        "Ad",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  )
+                else
+                  Positioned(
+                    bottom: 10,
+                    left: 0,
+                    right: 0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(
+                        controller.banners.length,
+                            (index) => AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          margin: const EdgeInsets.symmetric(horizontal: 3),
+                          height: 8,
+                          width: _current == index ? 15 : 8,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            color: _current == index
+                                ? AppTheme.darkYellowColor
+                                : Colors.grey.withOpacity(0.5),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          )).toList(),
+          options: CarouselOptions(
+            viewportFraction: 0.91,
+            enableInfiniteScroll: true,
+            autoPlay: true,
+            onPageChanged: (index, reason) {
+              setState(() {
+                _current = index;
+              });
+            },
+            enlargeCenterPage: true,
+            aspectRatio: 16 / 9,
+          ),
+        ),
+      ),
+    );
   }
 }
 

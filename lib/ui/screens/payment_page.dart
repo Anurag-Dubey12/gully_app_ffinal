@@ -15,7 +15,6 @@ import '../../utils/app_logger.dart';
 
 class PaymentPage extends StatefulWidget {
   final TournamentModel tournament;
-
   const PaymentPage({super.key, required this.tournament});
 
   @override

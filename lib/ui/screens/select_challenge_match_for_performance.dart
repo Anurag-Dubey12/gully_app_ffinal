@@ -13,12 +13,10 @@ class SelectChallengeMatchForPerformance extends StatefulWidget {
   const SelectChallengeMatchForPerformance({super.key});
 
   @override
-  State<SelectChallengeMatchForPerformance> createState() =>
-      _SelectChallengeMatchForPerformanceState();
+  State<SelectChallengeMatchForPerformance> createState() => _SelectChallengeMatchForPerformanceState();
 }
 
-class _SelectChallengeMatchForPerformanceState
-    extends State<SelectChallengeMatchForPerformance> {
+class _SelectChallengeMatchForPerformanceState extends State<SelectChallengeMatchForPerformance> {
   @override
   Widget build(BuildContext context) {
     final TeamController teamController = Get.find<TeamController>();
@@ -54,7 +52,7 @@ class _SelectChallengeMatchForPerformanceState
                     );
                   }
                   final challenges=snapshot.data ??[];
-                  if (challenges!.isEmpty) {
+                  if (challenges.isEmpty) {
                     return const Center(
                       child: Text('No matches played yet'),
                     );

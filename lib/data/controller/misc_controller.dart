@@ -7,6 +7,8 @@ import 'package:gully_app/data/model/banner_model.dart';
 import 'package:gully_app/data/model/looking_for_model.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../utils/app_logger.dart';
+
 class MiscController extends GetxController with StateMixin {
   final MiscApi repo;
 
@@ -16,7 +18,7 @@ class MiscController extends GetxController with StateMixin {
   RxList<BannerModel> banners = <BannerModel>[].obs;
   Future<String> getContent(String slug) async {
     var response = await repo.getContent(slug);
-
+    logger.d("The Content Data is:${response.data}");
     return response.data!['content'];
   }
 

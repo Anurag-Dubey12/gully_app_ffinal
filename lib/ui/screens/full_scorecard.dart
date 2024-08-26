@@ -7,6 +7,7 @@ import 'package:gully_app/ui/widgets/scorecard/batting_card.dart';
 
 import '../../data/model/player_model.dart';
 import '../../data/model/scoreboard_model.dart';
+import '../../utils/app_logger.dart';
 import '../widgets/scorecard/extras_and_total.dart';
 
 class FullScoreboardScreen extends StatefulWidget {
@@ -25,7 +26,6 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
   OverlayEntry? _overlayEntry;
   String selectedTeamName = "";
   final GlobalKey _dropdownKey = GlobalKey();
-
   @override
   void initState() {
     super.initState();
@@ -45,10 +45,10 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
       if (widget.scoreboard != null) {
         battingTeamPlayers = currentInning == 1
             ? widget.scoreboard?.firstInnings?.battingTeam.players ?? []
-            : widget.scoreboard?.secondInnings?.battingTeam.players ?? [];
+            : widget.scoreboard?.secondInnings?.battingTeam.players ?? widget.scoreboard?.team2.players?? [];
         bowlingTeam = currentInning == 1
             ? widget.scoreboard?.firstInnings?.bowlingTeam.players ?? []
-            : widget.scoreboard?.secondInnings?.bowlingTeam.players ?? [];
+            : widget.scoreboard?.secondInnings?.bowlingTeam.players ?? widget.scoreboard?.team1.players?? [];
         selectedTeamName = currentInning == 1
             ? widget.scoreboard?.team1.name ?? ""
             : widget.scoreboard?.team2.name ?? "";
@@ -191,7 +191,11 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
       ),
     );
   }
-
+  bool isInningStarted(int inning){
+    if(widget.scoreboard==null) return false;
+    final StartedInning=inning==1 ?widget.scoreboard!.firstInnings : widget.scoreboard!.secondInnings;
+    return StartedInning==null || (StartedInning.battingTeam.players!.any((player)=>player.batting !=null &&player.batting!.balls >0));
+  }
   @override
   Widget build(BuildContext context) {
     final ScoreBoardController controller = Get.find<ScoreBoardController>();
@@ -256,7 +260,7 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      Padding(
+                    Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4),
                         child: Container(
                           decoration: BoxDecoration(
@@ -265,6 +269,18 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                           ),
                           child: Column(
                               children: [
+                                // if (!isInningStarted(currentInning))
+                                //   const Padding(
+                                //     padding: EdgeInsets.all(8.0),
+                                //     child: Text(
+                                //       "This inning hasn't started yet. Showing lineup.",
+                                //       style: TextStyle(
+                                //         color: Colors.white,
+                                //         fontSize: 16,
+                                //         fontWeight: FontWeight.bold,
+                                //       ),
+                                //     ),
+                                //   ),
                             Container(
                               decoration: BoxDecoration(
                                 color: Colors.grey.shade300,
@@ -328,15 +344,15 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                             ),
                             const Divider(height: 1, color: Colors.grey),
                             const SizedBox(height: 4),
-                            ListView.separated(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              separatorBuilder: (c, i) => const SizedBox(height: 10),
-                              itemCount: battingTeamPlayers.length,
-                              itemBuilder: ((context, index) {
-                                return BatterPlayerStat(battingTeamPlayers[index], false);
-                              }),
-                            ),
+                                ListView.separated(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  separatorBuilder: (c, i) => const SizedBox(height: 10),
+                                  itemCount: battingTeamPlayers.length,
+                                  itemBuilder: ((context, index) {
+                                    return BatterPlayerStat(battingTeamPlayers[index], false,true);
+                                  }),
+                                ),
                             const SizedBox(height: 10),
                             widget.scoreboard!=null?
                             ExtrasAndTotal(

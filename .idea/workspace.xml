@@ -9,20 +9,13 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="added temprory ads screen and need to add payment screen for banner purchase">
-      <change afterPath="$PROJECT_DIR$/lib/ui/screens/banner_payment_page.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/advertisement/advertisement_summary.dart" afterDir="false" />
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify advertisment summary screen">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/AdvertisementModel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/AdvertisementModel.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/payment_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/payment_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/purchase_ads_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/purchase_ads_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/search_tournament_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/search_tournament_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/full_scorecard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/full_scorecard.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_challenge_match_for_performance.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_challenge_match_for_performance.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/batting_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/batting_card.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -363,7 +356,15 @@
       <option name="project" value="LOCAL" />
       <updated>1724327404926</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="modify advertisment summary screen">
+      <option name="closed" value="true" />
+      <created>1724413886311</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1724413886311</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -377,11 +378,12 @@
     <MESSAGE value="need to solve round feature problem" />
     <MESSAGE value="modify scoreboard" />
     <MESSAGE value="need to modify select_opening_players.dart screen for player list" />
-    <MESSAGE value="modify" />
     <MESSAGE value="performace" />
     <MESSAGE value="purchase ads screen to be modify" />
     <MESSAGE value="added temprory ads screen and need to add payment screen for banner purchase" />
-    <option name="LAST_COMMIT_MESSAGE" value="added temprory ads screen and need to add payment screen for banner purchase" />
+    <MESSAGE value="modify" />
+    <MESSAGE value="modify advertisment summary screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="modify advertisment summary screen" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -547,6 +549,12 @@
           <option name="linesCode" value="28981" />
           <option name="totalLines" value="4220001" />
           <option name="info" value="added temprory ads screen and need to add payment " />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724413887927" />
+          <option name="linesCode" value="29299" />
+          <option name="totalLines" value="4217439" />
+          <option name="info" value="modify advertisment summary screen" />
         </TimePoint>
       </list>
     </option>
@@ -725,6 +733,12 @@
           <option name="linesCode" value="28981" />
           <option name="totalLines" value="4220001" />
           <option name="info" value="Aug 22, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724413887927" />
+          <option name="linesCode" value="29299" />
+          <option name="totalLines" value="4217439" />
+          <option name="info" value="Aug 23, 2024" />
         </TimePoint>
       </list>
     </option>

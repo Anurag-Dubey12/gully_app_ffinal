@@ -184,6 +184,7 @@ class ScoreBoardController extends GetxController with StateMixin {
     return player?.name ?? 'Unknown';
   }
 
+
   void setScoreBoard(ScoreboardModel scoreBoard) {
     scoreboard.value = scoreBoard;
     _lastScoreboardInstance = scoreboard.value!;

@@ -7,7 +7,7 @@ import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/add_team.dart';
 import 'package:gully_app/ui/screens/my_teams.dart';
 import 'package:gully_app/ui/screens/opponent_tournament_list.dart';
-import 'package:gully_app/ui/screens/purchase_ads_screen.dart';
+import 'package:gully_app/ui/screens/promote_banner_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -233,7 +233,7 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                             ProfileTileCard(
                               text: 'Purchase Ads',
                               onTap: () {
-                                Get.to(() => const PurchaseAdsScreen());
+                                Get.to(() => const PromoteBannerScreen());
                               },
                             ),
                           ],

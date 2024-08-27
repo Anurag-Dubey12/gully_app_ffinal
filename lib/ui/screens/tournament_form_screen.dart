@@ -513,7 +513,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                 }
                                 to = e;
                               });
-                            },
+                            }, isAds: false,
                           ),
                           Text(AppLocalizations.of(context)!.tournamentCategory,
                               style: Get.textTheme.headlineMedium?.copyWith(

@@ -22,6 +22,7 @@ class FullScoreboardScreen extends StatefulWidget {
 class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
   int currentInning = 1;
   List<PlayerModel> battingTeamPlayers = [];
+  List<PlayerModel> opponentBattingTeamPlayers = [];
   List<PlayerModel> bowlingTeam = [];
   OverlayEntry? _overlayEntry;
   String selectedTeamName = "";
@@ -35,6 +36,11 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
     }else{
     battingTeamPlayers =
         controller.scoreboard.value?.firstInnings?.battingTeam.players ?? [];
+        controller.scoreboard.value?.firstInnings?.battingTeam.players ?? [];
+    opponentBattingTeamPlayers = currentInning == 1
+        ? widget.scoreboard?.secondInnings?.bowlingTeam.players ?? []
+        : widget.scoreboard?.firstInnings?.bowlingTeam.players ?? [];
+
     bowlingTeam =
         controller.scoreboard.value?.firstInnings?.bowlingTeam.players ?? [];
     selectedTeamName = controller.scoreboard.value?.team1.name ?? "";
@@ -46,6 +52,9 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
         battingTeamPlayers = currentInning == 1
             ? widget.scoreboard?.firstInnings?.battingTeam.players ?? []
             : widget.scoreboard?.secondInnings?.battingTeam.players ?? widget.scoreboard?.team2.players?? [];
+        opponentBattingTeamPlayers = currentInning == 1
+            ? widget.scoreboard?.secondInnings?.bowlingTeam.players ?? []
+            : widget.scoreboard?.firstInnings?.bowlingTeam.players ?? [];
         bowlingTeam = currentInning == 1
             ? widget.scoreboard?.firstInnings?.bowlingTeam.players ?? []
             : widget.scoreboard?.secondInnings?.bowlingTeam.players ?? widget.scoreboard?.team1.players?? [];
@@ -55,30 +64,36 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
       }
     });
   }
-
   void changeInning(int selected) {
     final controller = Get.find<ScoreBoardController>();
     setState(() {
-      if(widget.scoreboard!=null){
-        setState(() {
-          currentInning = selected;
-          updateInningData();
-        });
-      }else{
-      currentInning = selected;
-      battingTeamPlayers = currentInning == 1
-          ? controller.scoreboard.value?.firstInnings?.battingTeam.players ?? []
-          : controller.scoreboard.value?.secondInnings?.battingTeam.players ?? [];
-      bowlingTeam = currentInning == 1
-          ? controller.scoreboard.value?.firstInnings?.bowlingTeam.players ?? []
-          : controller.scoreboard.value?.secondInnings?.bowlingTeam.players ?? [];
-      selectedTeamName = currentInning == 1
-          ? controller.scoreboard.value?.team1.name ?? ""
-          : controller.scoreboard.value?.team2.name ?? "";
+      if (widget.scoreboard != null) {
+        currentInning = selected;
+        updateInningData();
+      } else {
+        currentInning = selected;
+        battingTeamPlayers = currentInning == 1
+            ? controller.scoreboard.value?.firstInnings?.battingTeam.players ?? []
+            : controller.scoreboard.value?.secondInnings?.battingTeam.players ?? [];
+
+        opponentBattingTeamPlayers = currentInning == 1
+            ? controller.scoreboard.value?.secondInnings?.bowlingTeam.players ?? []
+            : controller.scoreboard.value?.firstInnings?.bowlingTeam.players ?? [];
+
+        bowlingTeam = currentInning == 1
+            ? controller.scoreboard.value?.firstInnings?.bowlingTeam.players ?? []
+            : controller.scoreboard.value?.secondInnings?.bowlingTeam.players ?? [];
+
+        selectedTeamName = currentInning == 1
+            ? controller.scoreboard.value?.team1.name ?? ""
+            : controller.scoreboard.value?.team2.name ?? "";
       }
     });
-  }
 
+    logger.d("Current inning: $currentInning");
+    logger.d("Batting team players: ${battingTeamPlayers.map((player) => player.name)}");
+    logger.d("Opponent batting team players: ${opponentBattingTeamPlayers.map((player) => player.name)}");
+  }
   void _toggleDropdown(GlobalKey key) {
     if (_overlayEntry == null) {
       _overlayEntry = _createOverlayEntry(key);
@@ -191,11 +206,11 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
       ),
     );
   }
-  bool isInningStarted(int inning){
-    if(widget.scoreboard==null) return false;
-    final StartedInning=inning==1 ?widget.scoreboard!.firstInnings : widget.scoreboard!.secondInnings;
-    return StartedInning==null || (StartedInning.battingTeam.players!.any((player)=>player.batting !=null &&player.batting!.balls >0));
-  }
+  // bool isInningStarted(int inning){
+  //   if(widget.scoreboard==null) return false;
+  //   final StartedInning=inning==1 ?widget.scoreboard!.firstInnings : widget.scoreboard!.secondInnings;
+  //   return StartedInning==null || (StartedInning.battingTeam.players!.any((player)=>player.batting !=null &&player.batting!.balls >0));
+  // }
   @override
   Widget build(BuildContext context) {
     final ScoreBoardController controller = Get.find<ScoreBoardController>();
@@ -292,9 +307,6 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                                   Expanded(
                                     flex: 3,
                                     child: GestureDetector(
-                                      // child: selectedTeamName.isEmpty
-                                          // ? Text('${controller.scoreboard.value!.team1.name} Scorecard', style: Get.textTheme.labelMedium)
-                                          // : Text('$selectedTeamName Scorecard', style: Get.textTheme.labelMedium),
                                       child:
                                       Text('Batter', style: Get.textTheme.labelMedium?.copyWith(
                                         fontWeight: FontWeight.bold,
@@ -348,11 +360,21 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
                                   separatorBuilder: (c, i) => const SizedBox(height: 10),
-                                  itemCount: battingTeamPlayers.length,
+                                  itemCount: currentInning == 1 ? battingTeamPlayers.length : opponentBattingTeamPlayers.length,
                                   itemBuilder: ((context, index) {
-                                    return BatterPlayerStat(battingTeamPlayers[index], false,true);
+                                    final player = currentInning == 1 ? battingTeamPlayers[index] : opponentBattingTeamPlayers[index];
+                                    return BatterPlayerStat(player, false, currentInning == 1);
                                   }),
                                 ),
+                                // ListView.separated(
+                                //   shrinkWrap: true,
+                                //   physics: const NeverScrollableScrollPhysics(),
+                                //   separatorBuilder: (c, i) => const SizedBox(height: 10),
+                                //   itemCount: currentInning==1 ?battingTeamPlayers.length :opponentBattingTeamPlayers.length,
+                                //   itemBuilder: ((context, index) {
+                                //     return BatterPlayerStat(battingTeamPlayers[index], false,true);
+                                //   }),
+                                // ),
                             const SizedBox(height: 10),
                             widget.scoreboard!=null?
                             ExtrasAndTotal(

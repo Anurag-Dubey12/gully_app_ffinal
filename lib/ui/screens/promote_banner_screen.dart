@@ -3,41 +3,48 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/ui/screens/banner_payment_page.dart';
-import 'package:gully_app/ui/screens/payment_page.dart';
+import 'package:gully_app/ui/screens/select_location.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../data/model/AdvertisementModel.dart';
 import '../../utils/app_logger.dart';
-import '../../utils/image_picker_helper.dart';
+import '../../utils/geo_locator_helper.dart';
 import '../../utils/utils.dart';
-import '../theme/theme.dart';
 import '../widgets/advertisement/advertisement_summary.dart';
+import '../widgets/create_tournament/form_input.dart';
 import '../widgets/create_tournament/top_card.dart';
 import '../widgets/custom_drop_down_field.dart';
 import '../widgets/gradient_builder.dart';
+import '../widgets/home_screen/top_header.dart';
 import '../widgets/primary_button.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class PurchaseAdsScreen extends StatefulWidget {
-  const PurchaseAdsScreen({super.key});
+class PromoteBannerScreen extends StatefulWidget {
+  const PromoteBannerScreen({super.key});
 
   @override
   State<StatefulWidget> createState() => AdsScreen();
 }
 
-class AdsScreen extends State<PurchaseAdsScreen> {
+class AdsScreen extends State<PromoteBannerScreen> {
   AdvertisementModel? advertisementModel;
   List<String> selectedAdsTypes = [];
   DateTime? from;
   DateTime? to;
   XFile? _image;
   final TextEditingController _DateController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  late LatLng location;
 
   final List<Map<String, dynamic>> _screens = [
     {'name': 'Home Screen', 'price': 100},
     {'name': 'Score Summary', 'price': 50},
     {'name': 'Search Screen', 'price': 50},
   ];
+
+
 
   Future<void> pickImage() async {
   final ImagePicker picker = ImagePicker();
@@ -123,6 +130,11 @@ class AdsScreen extends State<PurchaseAdsScreen> {
       },
     );
   }
+  fetchLocation() async {
+    final postion = await determinePosition();
+    location = LatLng(postion.latitude, postion.longitude);
+    setState(() {});
+  }
 // String? base64;
   // if (_image != null) {
   // base64 =
@@ -136,11 +148,12 @@ class AdsScreen extends State<PurchaseAdsScreen> {
       imageUrl: '',
       adPlacement: [],
       startDate: DateTime.now(),
-      endDate: DateTime.now().add(Duration(days: 1)),
+      endDate: DateTime.now().add(const Duration(days: 1)),
       totalAmount: 0,
       status: 'pending',
       createdAt: DateTime.now(),
     );
+    fetchLocation();
   }
   @override
   Widget build(BuildContext context) {
@@ -159,10 +172,10 @@ class AdsScreen extends State<PurchaseAdsScreen> {
             backgroundColor: Colors.transparent,
             elevation: 0,
             title: const Text(
-              'Purchase Ads',
+              'Promote Your Banner',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 30,
+                fontSize: 25,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -241,7 +254,7 @@ class AdsScreen extends State<PurchaseAdsScreen> {
                   ),
                   const SizedBox(height: 10),
                   DropDownWidget(
-                    title: "Advertise On",
+                    title: "Promote Your Banner On",
                     onSelect: (dynamic selectedItems) {
                       setState(() {
                         if (selectedItems is List<String>) {
@@ -272,8 +285,8 @@ class AdsScreen extends State<PurchaseAdsScreen> {
                     onFromChanged: (e) {
                       setState(() {
                         if (to != null && e.isAfter(to)) {
-                          // errorSnackBar(AppLocalizations.of(context)!
-                          //     .tournamentStartDateShouldBeLessThanEndDate);
+                          errorSnackBar(AppLocalizations.of(context)!
+                              .tournamentStartDateShouldBeLessThanEndDate);
                           // return;
                         }
                         from = e;
@@ -282,21 +295,45 @@ class AdsScreen extends State<PurchaseAdsScreen> {
                     onToChanged: (e) {
                       setState(() {
                         if (from == null) {
-                          // errorSnackBar(AppLocalizations.of(context)!
-                          //     .pleaseSelectTournamentStartDate);
+                          errorSnackBar(AppLocalizations.of(context)!
+                              .pleaseSelectTournamentStartDate);
                           return;
                         }
                         if (e.isBefore(from!)) {
-                          // errorSnackBar(AppLocalizations.of(context)!
-                          //     .tournamentEndDateShouldBeGreaterThanStartDate);
+                          errorSnackBar(AppLocalizations.of(context)!
+                              .tournamentEndDateShouldBeGreaterThanStartDate);
                           return;
                         }
                         to = e;
                       });
+                    }, isAds: true,
+                  ),
+                  FormInput(
+                    controller: _addressController,
+                    label: 'Select ',
+                    readOnly: true,
+                    onTap: () async {
+                      Get.to(
+                            () => SelectLocationScreen(
+                          onSelected: (e, l) {
+                            setState(() {
+                              _addressController.text = e;
+                            });
+                            if (l != null) {
+                              setState(() {
+                                location = l;
+                                logger.d("The Location is $l");
+                              });
+                            }
+                            FocusScope.of(context).unfocus();
+                          },
+                          initialLocation: LatLng(
+                              location.latitude, location.longitude),
+                        ),
+                      );
                     },
                   ),
                   const SizedBox(height: 16),
-                  // if (selectedAdsTypes.isNotEmpty && from != null && to != null)
                     _buildSummary(),
                 ],
               ),

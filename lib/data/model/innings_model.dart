@@ -43,4 +43,5 @@ class InningsModel {
       _$InningsModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$InningsModelToJson(this);
+
 }

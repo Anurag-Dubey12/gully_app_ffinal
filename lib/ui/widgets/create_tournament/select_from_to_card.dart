@@ -10,12 +10,15 @@ class SelectFromToCard extends StatelessWidget {
   final DateTime? to;
   final Function onFromChanged;
   final Function onToChanged;
+  final bool isAds;
   const SelectFromToCard(
       {super.key,
       required this.from,
       required this.to,
       required this.onFromChanged,
-      required this.onToChanged});
+      required this.onToChanged,
+      required this.isAds
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +44,10 @@ class SelectFromToCard extends StatelessWidget {
                     final date = await showDatePicker(
                         context: context,
                         initialDate:
+                        isAds ? DateTime.now():
                             DateTime.now().add(const Duration(days: 4)),
-                        firstDate: DateTime.now().add(const Duration(days: 4)),
-                        lastDate:
+                        firstDate: isAds ? DateTime.now():DateTime.now().add(const Duration(days: 4)),
+                        lastDate: isAds ? DateTime.now():
                             DateTime.now().add(const Duration(days: 365)));
                     if (date != null) {
                       logger.d('Date: $date');
@@ -91,8 +95,8 @@ class SelectFromToCard extends StatelessWidget {
               onTap: () async {
                 final date0 = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now().add(const Duration(days: 4)),
-                    firstDate: DateTime.now().add(const Duration(days: 4)),
+                    initialDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
+                    firstDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
                     lastDate: DateTime.now().add(const Duration(days: 365)));
 
                 if (date0 != null) {

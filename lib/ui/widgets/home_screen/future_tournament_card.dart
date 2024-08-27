@@ -7,6 +7,7 @@ import 'package:gully_app/ui/widgets/home_screen/i_button_dialog.dart';
 
 import '../../../data/controller/tournament_controller.dart';
 import '../../../utils/FallbackImageProvider.dart';
+import '../../../utils/app_logger.dart';
 import '../../../utils/date_time_helpers.dart';
 import '../../../utils/utils.dart';
 import '../../screens/register_team.dart';
@@ -92,6 +93,7 @@ class _TournamentCardState extends State<TournamentCard> {
     final controller = Get.find<TournamentController>();
     final tournamentdata = controller.tournamentList
         .firstWhereOrNull((t) => t.id == widget.tournament.id);
+    logger.d("Launched tournament");
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(

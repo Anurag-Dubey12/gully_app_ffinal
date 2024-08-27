@@ -225,6 +225,7 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                 itemCount: tournaments.length,
                 itemBuilder: (context, index) {
                   final tournament = tournaments[index];
+
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
                     child: tournament != null

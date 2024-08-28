@@ -9,14 +9,16 @@ class TopCard extends StatefulWidget {
   final DateTime? from;
   final DateTime? to;
   final TextEditingController controller;
-
+  final bool isAds;
   const TopCard(
       {super.key,
-      required this.controller,
-      required this.onFromChanged,
-      required this.onToChanged,
-      this.from,
-      this.to});
+        required this.controller,
+        required this.onFromChanged,
+        required this.onToChanged,
+        this.from,
+        this.to,
+        required this.isAds
+      });
 
   @override
   State<TopCard> createState() => _TopCardState();
@@ -36,9 +38,10 @@ class _TopCardState extends State<TopCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SelectFromToCard(
+              isAds: widget.isAds,
               onFromChanged: (e) {
                 setState(
-                  () {
+                      () {
                     setState(() {
                       from = e;
                       widget.onFromChanged(e);

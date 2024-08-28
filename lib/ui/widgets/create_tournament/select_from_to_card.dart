@@ -10,12 +10,15 @@ class SelectFromToCard extends StatelessWidget {
   final DateTime? to;
   final Function onFromChanged;
   final Function onToChanged;
+  final bool isAds;
   const SelectFromToCard(
       {super.key,
-      required this.from,
-      required this.to,
-      required this.onFromChanged,
-      required this.onToChanged});
+        required this.from,
+        required this.to,
+        required this.onFromChanged,
+        required this.onToChanged,
+        required this.isAds
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +44,11 @@ class SelectFromToCard extends StatelessWidget {
                     final date = await showDatePicker(
                         context: context,
                         initialDate:
-                            DateTime.now().add(const Duration(days: 4)),
-                        firstDate: DateTime.now().add(const Duration(days: 4)),
-                        lastDate:
-                            DateTime.now().add(const Duration(days: 365)));
+                        isAds ? DateTime.now():
+                        DateTime.now().add(const Duration(days: 4)),
+                        firstDate: isAds ? DateTime.now():DateTime.now().add(const Duration(days: 4)),
+                        lastDate: isAds ? DateTime.now():
+                        DateTime.now().add(const Duration(days: 365)));
                     if (date != null) {
                       logger.d('Date: $date');
                       onFromChanged(date);
@@ -65,11 +69,11 @@ class SelectFromToCard extends StatelessWidget {
                               color: Colors.grey[100]),
                           child: Center(
                               child: Text(
-                            from != null
-                                ? DateFormat('dd/MM/yyyy').format(from!)
-                                : "",
-                            style: Get.textTheme.labelMedium,
-                          )),
+                                from != null
+                                    ? DateFormat('dd/MM/yyyy').format(from!)
+                                    : "",
+                                style: Get.textTheme.labelMedium,
+                              )),
                         ),
                         const Spacer(),
                         const Icon(
@@ -91,8 +95,8 @@ class SelectFromToCard extends StatelessWidget {
               onTap: () async {
                 final date0 = await showDatePicker(
                     context: context,
-                    initialDate: DateTime.now().add(const Duration(days: 4)),
-                    firstDate: DateTime.now().add(const Duration(days: 4)),
+                    initialDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
+                    firstDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
                     lastDate: DateTime.now().add(const Duration(days: 365)));
 
                 if (date0 != null) {
@@ -125,11 +129,11 @@ class SelectFromToCard extends StatelessWidget {
                               color: Colors.grey[100]),
                           child: Center(
                               child: Text(
-                            to != null
-                                ? DateFormat('dd/MM/yyyy').format(to!)
-                                : "",
-                            style: Get.textTheme.labelMedium,
-                          )),
+                                to != null
+                                    ? DateFormat('dd/MM/yyyy').format(to!)
+                                    : "",
+                                style: Get.textTheme.labelMedium,
+                              )),
                         ),
                         const Spacer(),
                         const Icon(

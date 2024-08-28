@@ -64,7 +64,7 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
   void initState() {
     super.initState();
     final TournamentController tournamentController =
-        Get.find<TournamentController>();
+    Get.find<TournamentController>();
     searchController.addListener(() {
       debouncer.debounce(searchController.text);
     });
@@ -149,19 +149,19 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                         const SizedBox(width: 18),
                         Expanded(
                             child: TextField(
-                          autofocus: true,
-                          controller: searchController,
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(
-                              Icons.search,
-                              color: AppTheme.secondaryYellowColor,
-                            ),
-                            contentPadding: EdgeInsets.only(top: 12),
-                            hintText: 'Search Tournament...',
-                            hintStyle: TextStyle(fontSize: 16),
-                            border: InputBorder.none,
-                          ),
-                        )),
+                              autofocus: true,
+                              controller: searchController,
+                              decoration: const InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.search,
+                                  color: AppTheme.secondaryYellowColor,
+                                ),
+                                contentPadding: EdgeInsets.only(top: 12),
+                                hintText: 'Search Tournament...',
+                                hintStyle: TextStyle(fontSize: 16),
+                                border: InputBorder.none,
+                              ),
+                            )),
                         IconButton(
                             onPressed: () {
                               Get.bottomSheet(
@@ -225,6 +225,7 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                 itemCount: tournaments.length,
                 itemBuilder: (context, index) {
                   final tournament = tournaments[index];
+
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
                     child: tournament != null

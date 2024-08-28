@@ -188,8 +188,8 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
                         ),
                       ],
                     ),
-                    if (widget!.ads.adPlacement.isNotEmpty)
-                      ...widget!.ads.adPlacement.map((adType) {
+                    if (widget.ads.adPlacement.isNotEmpty)
+                      ...widget.ads.adPlacement.map((adType) {
                         final screenData = widget.screens.firstWhere((s) => s['name'] == adType);
                         final pricePerDay = screenData['price'] as int;
                         final duration = widget.ads.endDate.difference(widget.ads.startDate).inDays + 1;

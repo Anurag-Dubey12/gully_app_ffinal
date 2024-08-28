@@ -92,42 +92,9 @@ class TournamentController extends GetxController
   RxList<TournamentModel> tournamentList = <TournamentModel>[].obs;
   RxList<MatchupModel> matches = <MatchupModel>[].obs;
   RxBool isLoading = false.obs;
-  // Future getTournamentList({String? filterD}) async {
-  //   filter.value = filterD ?? '';
-  //   isLoading.value = true;
-  //   if (coordinates.value.latitude == 0) {
-  //     await getCurrentLocation();
-  //   }
-  //   await Future.delayed(const Duration(seconds: 1));
-  //   try {
-  //
-  //     final response = await tournamentApi.getTournamentList(
-  //       latitude: coordinates.value.latitude,
-  //       longitude: coordinates.value.longitude,
-  //       startDate: selectedDate.value,
-  //       filter: filterD,
-  //       endDate: selectedDate.value.add(const Duration(days: 7)),
-  //     );
-  //
-  //     tournamentList.value = response.data!['tournamentList']
-  //         .map<TournamentModel>((e) => TournamentModel.fromJson(e))
-  //         .toList();
-  //
-  //     matches.value = response.data!['matches']
-  //         .map<MatchupModel>((e) => MatchupModel.fromJson(e))
-  //         .toList();
-  //     isLoading.value = false;
-  //     matches.refresh();
-  //     tournamentList.refresh();
-  //   } catch (e) {
-  //     errorSnackBar(e.toString());
-  //     rethrow;
-  //   }
-  // }
 
-  //MyCode
+
   Future<void> getTournamentList({String? filterD}) async {
-
     try {
       filter.value = filterD ?? '';
       isLoading.value = true;

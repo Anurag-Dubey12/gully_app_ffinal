@@ -73,22 +73,28 @@ class BatterPlayerStat extends StatelessWidget {
   final bool? isStriker;
   final bool isFullScreenBoard;
 
-  const BatterPlayerStat(this.player, this.isStriker, this.isFullScreenBoard, {super.key});
+  // const BatterPlayerStat(this.player, this.isStriker, {super.key});
+  // const BatterPlayerStat(this.player, this.isStriker, {this.isFullScreenBoard = false, super.key});
+  const BatterPlayerStat(this.player, this.isStriker, this.isFullScreenBoard);
 
   @override
   Widget build(BuildContext context) {
+    bool hasBatted = player.batting != null && player.batting!.balls > 0;
     final ScoreBoardController controller = Get.find<ScoreBoardController>();
-
-
-    bool isCurrentlyBatting = player.id == controller.scoreboard.value?.strikerId ||
-        player.id == controller.scoreboard.value?.nonStrikerId;
-    bool hasBatted = player.batting != null && (player.batting!.balls > 0 || isCurrentlyBatting);
+    // double strikeRate = calculateStrikeRate(player.batting!.runs, player.batting!.balls);
+    // bool isStriker = Get.find<ScoreBoardController>().scoreboard.value?.striker != null &&
+    //     player == Get.find<ScoreBoardController>().scoreboard.value!.striker;
     final isCaptain = player.role.toLowerCase() == 'captain';
     final isWicketkeeper = player.role.toLowerCase() == 'wicket keeper';
+    String? strikerid=controller.scoreboard.value?.striker.id;
+    String? nonstrikerid=controller.scoreboard.value?.nonstriker.id;
 
     bool isCurrentBatsman = player.id == controller.scoreboard.value?.striker.id ||
         player.id == controller.scoreboard.value?.nonstriker.id;
 
+
+    logger.d("The current striker is :$strikerid and non Striker id is:$nonstrikerid status is $isCurrentBatsman" );
+    // bool shouldShowNotOut = isCurrentBatsman ;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Column(
@@ -101,7 +107,8 @@ class BatterPlayerStat extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${player.name}${isCaptain && isFullScreenBoard ? '(C)' : ''}${isWicketkeeper && isFullScreenBoard ? '(WK)' : ''}',
+                      '${player.name}${isCaptain && isFullScreenBoard ? ' (C)' : ''}${isWicketkeeper && isFullScreenBoard?'(WK)':''}',
+                      // player.name + (isStriker == null ? '' : (isStriker! ? '*' : '')),
                       maxLines: 1,
                       style: TextStyle(
                         color: hasBatted ? Colors.black : Colors.grey,
@@ -109,11 +116,11 @@ class BatterPlayerStat extends StatelessWidget {
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
-                    if (!isStriker! && player.batting?.outType.isNotEmpty == true)
+                    if (!isStriker! && player.batting!.outType.isNotEmpty)
                       Text(
                         _getOutInfo(player.batting!),
                         style: Get.textTheme.labelMedium?.copyWith(fontSize: 12, color: Colors.grey[600]),
-                        maxLines: 2,
+                      maxLines: 2,
                       ),
                     if (isCurrentBatsman && isFullScreenBoard)
                       Text(
@@ -123,65 +130,57 @@ class BatterPlayerStat extends StatelessWidget {
                   ],
                 ),
               ),
-              const Spacer(flex: 1),
-              Expanded(
-                child: Center(
-                  child: Text(
-                    player.batting?.runs.toString() ?? "0",
-                    style: hasBatted
-                        ? Get.textTheme.labelMedium?.copyWith(color: Colors.black)
-                        : Get.textTheme.labelMedium,
-                  ),
-                ),
+              const Spacer(
+                flex: 1,
               ),
               Expanded(
-                child: Center(
-                  child: Text(
-                    player.batting?.balls.toString() ?? "0",
-                    style: hasBatted
-                        ? Get.textTheme.labelMedium?.copyWith(color: Colors.black)
-                        : Get.textTheme.labelMedium,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Center(
-                  child: Text(
-                    player.batting?.fours.toString() ?? "0",
-                    style: hasBatted
-                        ? Get.textTheme.labelMedium?.copyWith(color: Colors.black)
-                        : Get.textTheme.labelMedium,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Center(
-                  child: Text(
-                    player.batting?.sixes.toString() ?? "0",
-                    style: hasBatted
-                        ? Get.textTheme.labelMedium?.copyWith(color: Colors.black)
-                        : Get.textTheme.labelMedium,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
                   child: Center(
-                    child: Text(
-                      "${player.batting?.strikeRate.toStringAsFixed(1) ?? "0.0"}%",
-                      style: hasBatted
-                          ? Get.textTheme.labelMedium?.copyWith(fontSize: 11, color: Colors.black)
-                          : Get.textTheme.labelMedium?.copyWith(fontSize: 11),
-                    ),
-                  ),
-                ),
-              ),
+                      child: Text(
+                          player.batting!.runs.toString(),
+                          style: hasBatted
+                              ? Get.textTheme.labelMedium?.copyWith(color: Colors.black)
+                              : Get.textTheme.labelMedium))),
+              Expanded(
+                  child: Center(
+                      child: Text(
+                          player.batting!.balls.toString(),
+                          style: hasBatted
+                              ? Get.textTheme.labelMedium?.copyWith(color: Colors.black)
+                              : Get.textTheme.labelMedium))),
+              Expanded(
+                  child: Center(
+                      child: Text(
+                          player.batting!.fours.toString(),
+                          style: hasBatted
+                              ? Get.textTheme.labelMedium?.copyWith(color: Colors.black)
+                              : Get.textTheme.labelMedium))),
+              Expanded(
+                  child: Center(
+                      child: Text(
+                          player.batting!.sixes.toString(),
+                          style: hasBatted
+                              ? Get.textTheme.labelMedium?.copyWith(color: Colors.black)
+                              : Get.textTheme.labelMedium))),
+              Expanded(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Center(
+                        child: Text(
+                            "${player.batting!.strikeRate.toStringAsFixed(1)}%",
+                            style: hasBatted
+                                ? Get.textTheme.labelMedium?.copyWith(fontSize: 11, color: Colors.black)
+                                : Get.textTheme.labelMedium?.copyWith(fontSize: 11))),
+                  )),
             ],
           ),
         ],
       ),
     );
+  }
+
+  double calculateStrikeRate(int runs, int balls) {
+    if (balls == 0) return 0.0;
+    return (runs / balls) * 100;
   }
 
   String _getOutInfo(BattingModel batting) {
@@ -194,3 +193,4 @@ class BatterPlayerStat extends StatelessWidget {
     }
   }
 }
+

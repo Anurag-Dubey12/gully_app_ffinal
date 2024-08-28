@@ -330,6 +330,7 @@ class AdsScreen extends State<PromoteBannerScreen> {
                                     .firstWhere((tournament) => tournament.tournamentName == selectedItem);
                               });
                             },
+
                             selectedValue: selectedTournament?.tournamentName ?? '',
                             items: tournamentController.organizerTournamentList
                                 .map((tournament) => tournament.tournamentName)

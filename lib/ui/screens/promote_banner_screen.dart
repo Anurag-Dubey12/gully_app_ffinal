@@ -323,7 +323,7 @@ class AdsScreen extends State<PromoteBannerScreen> {
                             return const Text('No tournaments available');
                           }
                           return DropDownWidget(
-                            title: "Select Tournament",
+                            title: "Select Your Tournament",
                             onSelect: (dynamic selectedItem) {
                               setState(() {
                                 selectedTournament = tournamentController.organizerTournamentList

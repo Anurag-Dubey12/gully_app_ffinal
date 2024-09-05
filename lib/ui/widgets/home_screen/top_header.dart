@@ -15,7 +15,9 @@ import '../../screens/organizer_profile.dart';
 import '../../screens/player_profile_screen.dart';
 
 class TopHeader extends GetView<AuthController> {
-  const TopHeader({super.key});
+  final Color? color;
+  final double? fontSize;
+  const TopHeader({super.key,this.color,this.fontSize});
 
   @override
   Widget build(BuildContext context) {
@@ -61,14 +63,14 @@ class TopHeader extends GetView<AuthController> {
                             controller.state!.captializedName,
                             textAlign: TextAlign.start,
                             style: Get.textTheme.titleLarge?.copyWith(
-                              color: Colors.white,
-                              fontSize: Get.textScaleFactor * 24,
+                              color: color??Colors.white,
+                              fontSize: fontSize ?? Get.textScaleFactor * 24,
                             ),
                           ),
                         ),
                       )),
                 ),
-                const LocationBuilder(),
+                LocationBuilder(textColor: color ?? Colors.white,fontSize: fontSize),
               ],
             ),
           ],
@@ -142,9 +144,11 @@ class _NotificationIcon extends GetView<NotificationController> {
 
 class LocationBuilder extends GetView<AuthController> {
   final Color? textColor;
+  final double? fontSize;
   const LocationBuilder({
     super.key,
     this.textColor,
+    this.fontSize,
   });
 
   @override
@@ -174,6 +178,7 @@ class LocationBuilder extends GetView<AuthController> {
                 overflow: TextOverflow.ellipsis,
                 color: textColor ?? Colors.white,
                 decoration: TextDecoration.underline,
+                fontSize: fontSize,
                 decorationColor: textColor ?? Colors.white))),
       ),
     );

@@ -6,6 +6,7 @@ import 'package:gully_app/ui/widgets/home_screen/no_tournament_card.dart';
 
 import '../../../data/model/scoreboard_model.dart';
 import '../../../utils/FallbackImageProvider.dart';
+import '../../../utils/image_picker_helper.dart';
 import '../../../utils/utils.dart';
 import '../dialogs/current_score_dialog.dart';
 import 'i_button_dialog.dart';
@@ -76,50 +77,45 @@ class _Card extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(
-              width: 100,
-              height: 100,
-              margin: const EdgeInsets.only(left: 5),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  bottomLeft: Radius.circular(16),
-                ),
-              ),
-              child: CircleAvatar(
-                backgroundImage: tournamentdata.coverPhoto != null && tournamentdata.coverPhoto!.isNotEmpty
-                    ? FallbackImageProvider(
-                  toImageUrl(tournamentdata.coverPhoto!),
-                    'assets/images/logo.png'
-                ) as ImageProvider
-                    : const AssetImage('assets/images/logo.png'),
-                backgroundColor: Colors.transparent,
-              ),
-            ),
+             Padding(
+               padding: const EdgeInsets.only(left: 5),
+               child: GestureDetector(
+                 onTap: () {
+                   imageViewer(context,tournamentdata.coverPhoto);
+                 },
+                 child: CircleAvatar(
+                    radius: 40,
+                    backgroundImage: tournamentdata.coverPhoto != null && tournamentdata.coverPhoto!.isNotEmpty
+                        ? FallbackImageProvider(
+                      toImageUrl(tournamentdata.coverPhoto!),
+                        'assets/images/logo.png'
+                    ) as ImageProvider
+                        : const AssetImage('assets/images/logo.png'),
+                    backgroundColor: Colors.transparent,
+                  ),
+               ),
+             ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(width: 1),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                          Expanded(
-                            child: Center(
-                              child: Text(
-                                tournament.tournamentName ?? 'Unknown Tournament',
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                textAlign: TextAlign.center,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                        Center(
+                          child: Text(
+                            tournament.tournamentName ?? 'Unknown Tournament',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
+                        ),
                         IconButton(
                           onPressed: () {
                             Get.bottomSheet(
@@ -138,7 +134,7 @@ class _Card extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 1),
+                    // const SizedBox(height: 1),
                     _TeamScore(
                       color: Colors.red,
                       teamName: tournament.team1.name,
@@ -188,12 +184,12 @@ class _Card extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 1,right: 10),
+              padding: const EdgeInsets.only(bottom: 10,right: 10),
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 decoration: BoxDecoration(
                   color: Colors.green,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Text(
                   "Live",
@@ -236,28 +232,29 @@ class _TeamScore extends StatelessWidget {
     return Row(
       children: [
         Container(
-          width: 16,
-          height: 16,
+          width: 10,
+          height: 10,
           decoration: BoxDecoration(
             color: color,
             shape: BoxShape.circle,
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: 3),
         Expanded(
           child: Text(
             teamName,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
-              fontSize: 13
+              fontSize: 12
             ),
           ),
         ),
-        const SizedBox(width: 1),
+        const SizedBox(width: 6),
         Text(
           score,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
+              fontSize: 13
           ),
         ),
       ],

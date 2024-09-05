@@ -9,6 +9,7 @@ import '../../../data/controller/tournament_controller.dart';
 import '../../../utils/FallbackImageProvider.dart';
 import '../../../utils/app_logger.dart';
 import '../../../utils/date_time_helpers.dart';
+import '../../../utils/image_picker_helper.dart';
 import '../../../utils/utils.dart';
 import '../../screens/register_team.dart';
 import '../../theme/theme.dart';
@@ -22,8 +23,6 @@ class FutureTournamentCard extends GetView<TournamentController> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      // width: 340,
-      // height: 250,
       child: Obx(() {
         if (controller.tournamentList.isEmpty) {
           return const NoTournamentCard();
@@ -63,7 +62,6 @@ class _TournamentCardState extends State<TournamentCard> {
   @override
   void initState() {
     super.initState();
-
     _timeStreamController = StreamController<String>();
     _updateTime();
     Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -93,7 +91,6 @@ class _TournamentCardState extends State<TournamentCard> {
     final controller = Get.find<TournamentController>();
     final tournamentdata = controller.tournamentList
         .firstWhereOrNull((t) => t.id == widget.tournament.id);
-    logger.d("Launched tournament");
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
@@ -110,22 +107,18 @@ class _TournamentCardState extends State<TournamentCard> {
         ),
         child: Row(
           children: [
-            Container(
-              margin: const EdgeInsets.only(left: 10),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  bottomLeft: Radius.circular(16),
+           GestureDetector(
+             onTap: () {
+               imageViewer(context,tournamentdata?.coverPhoto);
+             },
+             child: CircleAvatar(
+                  radius: 40,
+                  backgroundImage: tournamentdata?.coverPhoto != null
+                      ? FallbackImageProvider(toImageUrl(tournamentdata!.coverPhoto!),'assets/images/logo.png')
+                      : const AssetImage('assets/images/logo.png') as ImageProvider,
+                  backgroundColor: Colors.transparent,
                 ),
-              ),
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: tournamentdata?.coverPhoto != null
-                    ? FallbackImageProvider(toImageUrl(tournamentdata!.coverPhoto!),'assets/images/logo.png')
-                    : const AssetImage('assets/images/logo.png') as ImageProvider,
-                backgroundColor: Colors.transparent,
-              ),
-            ),
+           ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(left: 8),
@@ -133,23 +126,25 @@ class _TournamentCardState extends State<TournamentCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SizedBox(
-                          width:150,
-                          child: Text(
-                            widget.tournament.tournamentName ?? "Unkown Tournament",
-                            style: Get.textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: AppTheme.darkYellowColor,
+                        Expanded(
+                          child: Center(
+                            child: Text(
+                              widget.tournament.tournamentName ?? "Unkown Tournament",
+                              style: Get.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                color: AppTheme.darkYellowColor,
+                              ),
+                              softWrap: true,
+                              maxLines: 2,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            softWrap: true,
-                            maxLines: 2,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
+                        const SizedBox(width: 8),
                         IconButton(
                           onPressed: () {
                             Get.bottomSheet(
@@ -210,7 +205,7 @@ class _TournamentCardState extends State<TournamentCard> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 1),
+                    // const SizedBox(height: 1),
                     StreamBuilder<String>(
                       stream: _timeStreamController.stream,
                       builder: (context, snapshot) {
@@ -222,7 +217,7 @@ class _TournamentCardState extends State<TournamentCard> {
                         );
                       },
                     ),
-                    const SizedBox(height: 2),
+                    // const SizedBox(height: 2),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [

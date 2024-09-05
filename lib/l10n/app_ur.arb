@@ -144,5 +144,21 @@
   "deleteAccountConfirmation": "اگر آپ اپنا اکاؤنٹ حذف کرنا چاہتے ہیں، تو براہ کرم نیچے دیے گئے بٹن پر کلک کریں۔ آپ کا اکاؤنٹ مستقل طور پر حذف کر دیا جائے گا اور آپ اسے دوبارہ حاصل نہیں کر سکیں گے۔",
   "request_sent_successfully": "درخواست کامیابی سے بھیجی گئی",
   "selectLocation": "مقام منتخب کریں",
-  "changeLanguage": "زبان تبدیل کریں"
+  "changeLanguage": "زبان تبدیل کریں",
+
+  "addTeam": "ٹیم شامل کریں",
+  "viewMyTeam": "میری ٹیم دیکھیں",
+  "viewOpponent": "مخالف کو دیکھیں",
+  "request": "درخواست",
+  "currentMatches": "موجودہ میچ",
+  "manageTournamentAuthority": "ٹورنامنٹ اتھارٹی کو منظم کریں",
+  "organize": "منظم کریں",
+  "viewMatchup": "میچ دیکھیں",
+  "scoreboard": "اسکور بورڈ",
+  "editTournamentForm": "ٹورنامنٹ فارم میں ترمیم کریں",
+  "promoteYourBanner": "اپنے بینر کو فروغ دیں",
+  "transactionHistory": "لین دین کی تاریخ",
+  "viewYourTournament": "اپنے ٹورنامنٹ کو دیکھیں"
+
+
 }

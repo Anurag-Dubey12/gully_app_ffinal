@@ -144,5 +144,22 @@
   "deleteAccountConfirmation": "If you want to delete your account, please click the button below. Your account will be deleted permanently and you will not be able to recover it.",
   "request_sent_successfully": "Request sent successfully",
   "selectLocation": "Select Location",
-  "changeLanguage": "Change Language"
+  "changeLanguage": "Change Language",
+
+
+  "search_tournament":"Search Tournament...",
+  "addTeam": "Add Team",
+  "viewMyTeam": "View My Team",
+  "viewOpponent": "View Opponent",
+  "request": "Request",
+  "currentMatches": "Current Matches",
+  "manageTournamentAuthority": "Manage Tournament Authority",
+  "organize": "Organize",
+  "viewMatchup": "View Matchup",
+  "scoreboard": "Scoreboard",
+  "editTournamentForm": "Edit Tournament Form",
+  "promoteYourBanner": "Promote Your Banner",
+  "transactionHistory": "Transaction History",
+  "viewYourTournament": "View Your Tournament"
+
 }

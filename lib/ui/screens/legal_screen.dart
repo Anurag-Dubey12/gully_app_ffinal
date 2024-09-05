@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
-
+import 'package:html/parser.dart' as htmlparser;
 import '../../data/controller/misc_controller.dart';
 
 class LegalViewScreen extends StatefulWidget {
@@ -14,9 +14,9 @@ class LegalViewScreen extends StatefulWidget {
   final bool? hideDeleteButton;
   const LegalViewScreen(
       {super.key,
-      required this.title,
-      required this.slug,
-      this.hideDeleteButton});
+        required this.title,
+        required this.slug,
+        this.hideDeleteButton});
 
   @override
   State<LegalViewScreen> createState() => _LegalViewScreenState();
@@ -37,10 +37,10 @@ class _LegalViewScreenState extends State<LegalViewScreen> {
           title: Text(
             widget.title,
             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
           ),
           iconTheme: const IconThemeData(color: Colors.white),
         ),
@@ -73,134 +73,187 @@ class _LegalViewScreenState extends State<LegalViewScreen> {
                                   .textTheme
                                   .headlineMedium
                                   ?.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black,
-                                      fontSize: 17),
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black,
+                                  fontSize: 17),
                             ),
                           );
                         }
-                        return HtmlWidget(snapshot.data ?? 'Error');
+                        final content=snapshot.data ??' ';
+                        final isFAQ=content.contains('type: faq') || content.contains('<strong');
+                        if(isFAQ){
+                          final document=htmlparser.parse(content);
+                          final paragraph=document.getElementsByTagName('p');
+                          List<Map<String,String>> FaqItems=[];
+                          String currentQuestion='';
+                          String curretAnswer='';
+                          for(var i=0;i< paragraph.length;i++){
+                            final p=paragraph[i];
+                            if(p.text.trim().startsWith(RegExp(r'\d+\.'))||p.getElementsByTagName('string').isNotEmpty){
+                              if(currentQuestion.isNotEmpty){
+                                FaqItems.add({
+                                  'question':currentQuestion,
+                                  'answer':curretAnswer.trim()
+                                });
+                              }
+                              currentQuestion=p.text.trim();
+                              curretAnswer=' ';
+                            }else{
+                              curretAnswer += '${p.text}\n\n';
+                            }
+                          }
+                          if (currentQuestion.isNotEmpty) {
+                            FaqItems.add({'question': currentQuestion, 'answer': curretAnswer.trim()});
+                          }
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: FaqItems.length,
+                            itemBuilder: (context, index) {
+                              return ExpansionTile(
+                                title: Text(
+                                    FaqItems[index]['question']!,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    )
+                                ),
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Text(
+                                      FaqItems[index]['answer']!,
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        } else {
+                          return HtmlWidget(content);
+                        }
                       },
                     ),
                   ),
                   (widget.hideDeleteButton ?? false)
                       ? const SizedBox()
                       : Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                AppLocalizations.of(context)!
-                                    .deleteAccountConfirmation,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium
-                                    ?.copyWith(
-                                      color: Colors.black,
-                                      fontSize: 17,
-                                    ),
-                              ),
-                              const SizedBox(height: 20),
-                              PrimaryButton(
-                                onTap: () async {
-                                  setState(() {
-                                    isLoading = false;
-                                  });
-                                  // authController.deleteAccount();
-                                  Get.dialog(
-                                    AlertDialog(
-                                      title: Text(
-                                        AppLocalizations.of(context)!
-                                            .deleteAccountConfirmation,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headlineMedium
-                                            ?.copyWith(
-                                              color: Colors.black,
-                                              fontSize: 17,
-                                            ),
-                                      ),
-                                      content: Text(
-                                        // AppLocalizations.of(context)!
-                                        //     .deleteAccountConfirmationMessage,
-                                        'Are you sure you want to delete your account?',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headlineMedium
-                                            ?.copyWith(
-                                              color: Colors.black,
-                                              fontSize: 17,
-                                            ),
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Get.back();
-                                          },
-                                          child: Text(
-                                            AppLocalizations.of(context)!.no,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headlineMedium
-                                                ?.copyWith(
-                                                  color: Colors.black,
-                                                  fontSize: 17,
-                                                ),
-                                          ),
-                                        ),
-                                        TextButton(
-                                          onPressed: () async {
-                                            setState(() {
-                                              isLoading = true;
-                                            });
-                                            Get.dialog(
-                                              const Dialog(
-                                                child: Padding(
-                                                  padding: EdgeInsets.all(18.0),
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Center(
-                                                          child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          CircularProgressIndicator(),
-                                                        ],
-                                                      )),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ),
-                                              barrierDismissible: false,
-                                            );
-                                            await authController
-                                                .deleteAccount();
-                                            // Get.back();
-                                          },
-                                          child: Text(
-                                            AppLocalizations.of(context)!.yes,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headlineMedium
-                                                ?.copyWith(
-                                                  color: Colors.black,
-                                                  fontSize: 17,
-                                                ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
-                                title: 'Delete My Account',
-                                isLoading: isLoading,
-                              ),
-                            ],
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!
+                              .deleteAccountConfirmation,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineMedium
+                              ?.copyWith(
+                            color: Colors.black,
+                            fontSize: 17,
                           ),
-                        )
+                        ),
+                        const SizedBox(height: 20),
+                        PrimaryButton(
+                          onTap: () async {
+                            setState(() {
+                              isLoading = false;
+                            });
+                            // authController.deleteAccount();
+                            Get.dialog(
+                              AlertDialog(
+                                title: Text(
+                                  AppLocalizations.of(context)!
+                                      .deleteAccountConfirmation,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium
+                                      ?.copyWith(
+                                    color: Colors.black,
+                                    fontSize: 17,
+                                  ),
+                                ),
+                                content: Text(
+                                  // AppLocalizations.of(context)!
+                                  //     .deleteAccountConfirmationMessage,
+                                  'Are you sure you want to delete your account?',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .headlineMedium
+                                      ?.copyWith(
+                                    color: Colors.black,
+                                    fontSize: 17,
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Get.back();
+                                    },
+                                    child: Text(
+                                      AppLocalizations.of(context)!.no,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium
+                                          ?.copyWith(
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () async {
+                                      setState(() {
+                                        isLoading = true;
+                                      });
+                                      Get.dialog(
+                                        const Dialog(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(18.0),
+                                            child: Column(
+                                              mainAxisSize:
+                                              MainAxisSize.min,
+                                              children: [
+                                                Center(
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .center,
+                                                      children: [
+                                                        CircularProgressIndicator(),
+                                                      ],
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        barrierDismissible: false,
+                                      );
+                                      await authController
+                                          .deleteAccount();
+                                      // Get.back();
+                                    },
+                                    child: Text(
+                                      AppLocalizations.of(context)!.yes,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineMedium
+                                          ?.copyWith(
+                                        color: Colors.black,
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                          title: 'Delete My Account',
+                          isLoading: isLoading,
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),

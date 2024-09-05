@@ -36,7 +36,6 @@ class _TournamentListState extends State<TournamentList> {
               child: CircularProgressIndicator(),
             );
           }
-
           Widget tournamentWidget;
           if ((isDateTimeToday(controller.selectedDate.value) ||
               controller.filter.value == 'current') &&

@@ -3,8 +3,10 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
+import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 import '../../../utils/FallbackImageProvider.dart';
+import '../../../utils/image_picker_helper.dart';
 import '../../../utils/utils.dart';
 import '../../screens/full_scorecard.dart';
 import 'no_tournament_card.dart';
@@ -17,25 +19,26 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        // height: Get.height * 0.54,
+      // height: Get.height * 0.54,
         child: Obx(() {
-      if (controller.tournamentList.isEmpty) {
-        return const NoTournamentCard();
-      } else {
-        return ListView.builder(
-            itemCount: controller.matches.length,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: const EdgeInsets.only(bottom: 10, top: 10),
-            itemBuilder: (context, snapshot) {
-              return _Card(
-                tournament: controller.matches[snapshot],
-              );
-            });
-      }
-    }));
+          if (controller.tournamentList.isEmpty) {
+            return const NoTournamentCard();
+          } else {
+            return ListView.builder(
+                itemCount: controller.matches.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.only(bottom: 10, top: 10),
+                itemBuilder: (context, snapshot) {
+                  return _Card(
+                    tournament: controller.matches[snapshot],
+                  );
+                });
+          }
+        }));
   }
 }
+
 
 class _Card extends StatelessWidget {
   final MatchupModel tournament;
@@ -54,19 +57,30 @@ class _Card extends StatelessWidget {
     int team1Score = 0;
     int team2Score = 0;
 
+    int team1total=scoreboard?.firstInnings?.totalScore ?? 0;
+    int team2total=scoreboard?.secondInnings?.totalScore ?? 0;
+    int team2wickets=scoreboard?.secondInnings?.totalWickets?? 0;
+
     if (scoreboard != null) {
       if (scoreboard.firstInningHistory.isNotEmpty) {
         team1Score = scoreboard.firstInningHistory.entries.last.value.total;
       }
       team2Score =
-          scoreboard.currentInnings == 1 ? 0 : scoreboard.currentInningsScore;
+      scoreboard.currentInnings == 1 ? 0 : scoreboard.currentInningsScore;
 
       if (team1Score > team2Score) {
-        winnerText = '${scoreboard.team1.name} won the game';
-      } else if (team1Score < team2Score) {
-        winnerText = '${scoreboard.team2.name} won the game';
+        winnerText = '${scoreboard.team1.name} won by ${team1total-team2total} runs';
+        // winnerText = '${scoreboard.team1.name} won the game';
+      } else if (team2Score > team1Score) {
+        winnerText = '${scoreboard.team2.name} won by ${10 - team2wickets} wickets';
+        // winnerText = '${scoreboard.team2.name} won the game';
+      }else if(scoreboard.isSecondInningsOver){
+       winnerText = 'Match has been cancelled';
+      }
+      else if (scoreboard.isSecondInningsOver && team2total == team1total) {
+        winnerText = 'Match Tied';
       } else {
-        winnerText = 'The game was a tie';
+        winnerText = 'Match Tied';
       }
     }
 
@@ -76,161 +90,123 @@ class _Card extends StatelessWidget {
       },
       child: Container(
         width: Get.width,
-        height: 180,
-        margin: const EdgeInsets.all(8.0),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(22),
+          borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
-              blurRadius: 5,
-              spreadRadius: 2,
-              offset: const Offset(0, 1),
+              blurRadius: 8,
+              spreadRadius: 1,
+              offset: const Offset(0, 2),
             )
           ],
         ),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              margin: const EdgeInsets.only(left: 2),
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  bottomLeft: Radius.circular(16),
-                ),
-              ),
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: tournamentdata.coverPhoto != null &&
-                        tournamentdata.coverPhoto!.isNotEmpty
-                    ? FallbackImageProvider(
-                        toImageUrl(tournamentdata.coverPhoto!),
-                        'assets/images/logo.png',
-                      )
-                    : const AssetImage('assets/images/logo.png')
-                        as ImageProvider,
-                backgroundColor: Colors.transparent,
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 300,
-                      height: 30,
-                      child: Center(
-                        child: Text(
-                          tournament.tournamentName!,
-                          style: Get.textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                          softWrap: true,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      imageViewer(context,tournamentdata.coverPhoto);
+                    },
+                    child: CircleAvatar(
+                      radius: 30,
+                      backgroundImage: tournamentdata.coverPhoto != null &&
+                          tournamentdata.coverPhoto!.isNotEmpty
+                          ? FallbackImageProvider(
+                          toImageUrl(tournamentdata.coverPhoto!),
+                          'assets/images/logo.png')
+                          : const AssetImage('assets/images/logo.png')
+                      as ImageProvider,
+                      backgroundColor: Colors.transparent,
                     ),
-                    const SizedBox(height: 4),
-                    Center(
-                      child: Text(
-                        'Date: ${formatDateTime('dd/MM/yyyy', tournament.matchDate)}',
-                        style: Get.textTheme.bodySmall,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    if (scoreboard != null)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _TeamScore(
-                            color: Colors.red,
-                            teamName: scoreboard.team1.name,
-                            score: scoreboard.firstInningHistory.isNotEmpty
-                                ? '${scoreboard.firstInningHistory.entries.last.value.total}/${scoreboard.firstInningHistory.entries.last.value.wickets}'
-                                : 'N/A',
-                          ),
-                          const SizedBox(width: 10),
-                          _TeamScore(
-                            color: Colors.green,
-                            teamName: scoreboard.team2.name,
-                            score: scoreboard.currentInnings == 1
-                                ? "Not Played yet"
-                                : '${scoreboard.currentInningsScore}/${scoreboard.currentOverHistory.lastOrNull?.wickets ?? 0}',
-                          ),
-                        ],
-                      ),
-                    const Spacer(),
-                    SizedBox(
-                      height: 60,
-                      child: Stack(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: Colors.red.shade400,
-                                border: Border.all(
-                                    color:
-                                        const Color.fromARGB(255, 255, 215, 0),
-                                    width: 2),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                          ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: Colors.red.shade400,
-                                border: Border.all(
-                                    color:
-                                        const Color.fromARGB(255, 255, 215, 0),
-                                    width: 2),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            left: 20,
-                            right: 20,
-                            top: 0,
-                            bottom: 20,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.red,
-                                border: Border.all(
-                                    color:
-                                        const Color.fromARGB(255, 255, 215, 0),
-                                    width: 2),
-                                borderRadius: BorderRadius.circular(10),
-                              ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
                               child: Center(
                                 child: Text(
-                                  winnerText,
+                                  tournament.tournamentName!,
                                   style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15
                                   ),
-                                  textAlign: TextAlign.center,
+                                  softWrap: true,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ),
+                            const SizedBox(width: 8),
+                            Text(
+                              formatDateTime('dd/MM/yyyy', tournament.matchDate),
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                color: Colors.grey
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (scoreboard != null)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _TeamScore(
+                                color: AppTheme.primaryColor,
+                                teamName: scoreboard.team1.name,
+                                score: scoreboard.firstInningHistory.isNotEmpty
+                                    ? '${scoreboard.firstInningHistory.entries.last.value.total}/${scoreboard.firstInningHistory.entries.last.value.wickets}'
+                                    : 'N/A',
+                              ),
+                              Container(
+                                width: 1,
+                                height: 40,
+                                color: Colors.grey[300],
+                              ),
+                              _TeamScore(
+                                color: AppTheme.secondaryYellowColor,
+                                teamName: scoreboard.team2.name,
+                                score: scoreboard.currentInnings == 1
+                                    ? "Did Not Bat"
+                                    : '${scoreboard.currentInningsScore}/${scoreboard.currentOverHistory.lastOrNull?.wickets ?? 0}',
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    )
-                  ],
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 16),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryColor.withOpacity(0.1),
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
                 ),
+              ),
+              child: Text(
+                winnerText,
+                style: const TextStyle(
+                  color: AppTheme.primaryColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
               ),
             ),
           ],
@@ -238,7 +214,9 @@ class _Card extends StatelessWidget {
       ),
     );
   }
+
 }
+
 
 class _TeamScore extends StatelessWidget {
   final Color color;
@@ -282,10 +260,11 @@ class _TeamScore extends StatelessWidget {
           Text(
             score,
             style:
-                Get.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+            Get.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
         ],
       ),
     );
   }
 }
+

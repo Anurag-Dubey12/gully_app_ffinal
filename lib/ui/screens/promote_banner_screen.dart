@@ -38,7 +38,8 @@ class AdsScreen extends State<PromoteBannerScreen> {
   XFile? _image;
   final TextEditingController _DateController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  final TournamentController tournamentController = Get.find<TournamentController>();
+  final TournamentController tournamentController =
+      Get.find<TournamentController>();
   TournamentModel? selectedTournament;
   late LatLng location;
 
@@ -50,33 +51,43 @@ class AdsScreen extends State<PromoteBannerScreen> {
 
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
-    try{
-      final XFile? image=await picker.pickImage(source: ImageSource.gallery);
-      if(image != null) {
-        final File file=File(image.path);
-        final decodedImage=await decodeImageFromList(file.readAsBytesSync());
-        if(decodedImage.width>=100 && decodedImage.height>=560){
-          final String extension=image.path.split('.').last.toLowerCase();
-          if(decodedImage.width==decodedImage.height){
-            errorSnackBar('Image Width And the Height Cannot be the same.', title: "Invalid file!");
+    try {
+      final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        final File file = File(image.path);
+        final decodedImage = await decodeImageFromList(file.readAsBytesSync());
+
+        if (decodedImage.width >= 100 && decodedImage.height >= 560) {
+          final String extension = image.path.split('.').last.toLowerCase();
+          if (decodedImage.width == decodedImage.height) {
+            errorSnackBar('Image Width And the Height Cannot be the same.',
+                title: "Invalid file!");
+            return;
           }
-          if(extension=='png' || extension=='jpg'|| extension=='jpeg'){
-            setState(() async {
-              _image=image;
-              advertisementModel = advertisementModel!.copyWith(imageUrl: image.path);
+          if (extension == 'png' || extension == 'jpg' || extension == 'jpeg') {
+            setState(() {
+              _image = image;
+              advertisementModel =
+                  advertisementModel!.copyWith(imageUrl: image.path);
             });
           } else {
-            errorSnackBar('Please select a PNG or JPG image.', title: "Invalid file format!");
+            _image = null;
+            errorSnackBar('Please select a PNG or JPG image.',
+                title: "Invalid file format!");
           }
         } else {
-          errorSnackBar('Please select an image with dimensions where \nWidth=1000 \nHeight=560.', title: "Invalid image dimensions!");
+          errorSnackBar(
+              'Please select an image with dimensions where \nWidth=1000 \nHeight=560.',
+              title: "Invalid image dimensions!");
         }
       }
     } catch (e) {
       logger.d('Error picking image: $e');
-      errorSnackBar('An error occurred while picking the image.', title: "Error");
+      errorSnackBar('An error occurred while picking the image.',
+          title: "Error");
     }
   }
+
   Future<void> fetchLocation() async {
     try {
       final position = await determinePosition();
@@ -85,14 +96,16 @@ class AdsScreen extends State<PromoteBannerScreen> {
       });
     } catch (e) {
       logger.e('Error fetching location: $e');
-      errorSnackBar('Failed to fetch location. Please try again.', title: "Error");
+      errorSnackBar('Failed to fetch location. Please try again.',
+          title: "Error");
     }
   }
+
 // String? base64;
-  // if (_image != null) {
-  // base64 =
-  // await convertImageToBase64(_image!);
-  // }
+//   if (_image != null) {
+//   base64 =
+//   await convertImageToBase64(_image!);
+//   }
   @override
   void initState() {
     super.initState();
@@ -109,6 +122,7 @@ class AdsScreen extends State<PromoteBannerScreen> {
     );
     fetchLocation();
   }
+
   @override
   Widget build(BuildContext context) {
     return DecoratedBox(
@@ -163,47 +177,47 @@ class AdsScreen extends State<PromoteBannerScreen> {
                           ]),
                       child: _image != null
                           ? Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
-                            child: SizedBox(
-                              width: Get.width,
-                              height: 200,
-                              child: Image.file(
-                                File(
-                                  _image!.path,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(20),
+                                  child: SizedBox(
+                                    width: Get.width,
+                                    height: 200,
+                                    child: Image.file(
+                                      File(
+                                        _image!.path,
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
                                 ),
-                                fit: BoxFit.cover,
+                                Positioned(
+                                  right: 0,
+                                  bottom: 0,
+                                  child: IconButton(
+                                      onPressed: () {
+                                        pickImage();
+                                      },
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.white,
+                                      )),
+                                )
+                              ],
+                            )
+                          : const Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.photo),
+                                  Text('Add Banner Photo',
+                                      style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500)),
+                                ],
                               ),
                             ),
-                          ),
-                          Positioned(
-                            right: 0,
-                            bottom: 0,
-                            child: IconButton(
-                                onPressed: () {
-                                  pickImage();
-                                },
-                                icon: const Icon(
-                                  Icons.edit,
-                                  color: Colors.white,
-                                )),
-                          )
-                        ],
-                      )
-                          : const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.photo),
-                            Text('Add Banner Photo',
-                                style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w500)),
-                          ],
-                        ),
-                      ),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -213,12 +227,12 @@ class AdsScreen extends State<PromoteBannerScreen> {
                       setState(() {
                         if (selectedItems is List<String>) {
                           selectedAdsTypes = selectedItems;
-                          advertisementModel = advertisementModel!.copyWith(adPlacement: selectedItems);
-
+                          advertisementModel = advertisementModel!
+                              .copyWith(adPlacement: selectedItems);
                         } else if (selectedItems is String) {
                           selectedAdsTypes = [selectedItems];
-                          advertisementModel = advertisementModel!.copyWith(adPlacement: [selectedItems]);
-
+                          advertisementModel = advertisementModel!
+                              .copyWith(adPlacement: [selectedItems]);
                         }
                       });
                     },
@@ -260,16 +274,16 @@ class AdsScreen extends State<PromoteBannerScreen> {
                         }
                         to = e;
                       });
-                    }, isAds: true,
+                    },
+                    isAds: true,
                   ),
-
                   FormInput(
                     controller: _addressController,
                     label: 'Select Location',
                     readOnly: true,
                     onTap: () async {
                       Get.to(
-                            () => SelectLocationScreen(
+                        () => SelectLocationScreen(
                           onSelected: (e, l) {
                             setState(() {
                               _addressController.text = e;
@@ -282,7 +296,8 @@ class AdsScreen extends State<PromoteBannerScreen> {
                             }
                             FocusScope.of(context).unfocus();
                           },
-                          initialLocation: LatLng(location.latitude, location.longitude),
+                          initialLocation:
+                              LatLng(location.latitude, location.longitude),
                         ),
                       );
                     },
@@ -291,7 +306,7 @@ class AdsScreen extends State<PromoteBannerScreen> {
                     title: "Promote Your Banner For",
                     onSelect: (dynamic selectedItems) {
                       setState(() {
-                        promotionfor=selectedItems;
+                        promotionfor = selectedItems;
                       });
                     },
                     selectedValue: promotionfor,
@@ -309,29 +324,32 @@ class AdsScreen extends State<PromoteBannerScreen> {
                         const Text(
                           'Select a Tournament',
                           style: TextStyle(
-                            fontSize: 16,
-                            fontStyle: FontStyle.normal,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black
-                          ),
+                              fontSize: 16,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
                         ),
                         const SizedBox(height: 8),
 
                         //Dummy code for tournament that can be used to fetch the user tournament
                         Obx(() {
-                          if (tournamentController.organizerTournamentList.isEmpty) {
+                          if (tournamentController
+                              .organizerTournamentList.isEmpty) {
                             return const Text('No tournaments available');
                           }
                           return DropDownWidget(
                             title: "Select Your Tournament",
                             onSelect: (dynamic selectedItem) {
                               setState(() {
-                                selectedTournament = tournamentController.organizerTournamentList
-                                    .firstWhere((tournament) => tournament.tournamentName == selectedItem);
+                                selectedTournament = tournamentController
+                                    .organizerTournamentList
+                                    .firstWhere((tournament) =>
+                                        tournament.tournamentName ==
+                                        selectedItem);
                               });
                             },
-
-                            selectedValue: selectedTournament?.tournamentName ?? '',
+                            selectedValue:
+                                selectedTournament?.tournamentName ?? '',
                             items: tournamentController.organizerTournamentList
                                 .map((tournament) => tournament.tournamentName)
                                 .toList(),
@@ -344,7 +362,14 @@ class AdsScreen extends State<PromoteBannerScreen> {
                     const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
+                        Text(
+                          'Select a Shop',
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontStyle: FontStyle.normal,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black),
+                        ),
                       ],
                     ),
                   const SizedBox(height: 16),
@@ -360,8 +385,8 @@ class AdsScreen extends State<PromoteBannerScreen> {
 
   Widget _buildSummary() {
     var duration = (to?.difference(from ?? DateTime.now()).inDays ?? 0) + 1;
-    if(from ==null &&to==null ) {
-      duration=(to?.difference(from ?? DateTime.now()).inDays ?? 0) ;
+    if (from == null && to == null) {
+      duration = (to?.difference(from ?? DateTime.now()).inDays ?? 0);
     }
     double totalAmount = 0;
     return Container(
@@ -385,7 +410,8 @@ class AdsScreen extends State<PromoteBannerScreen> {
           if (_image != null) const SizedBox(width: 16),
           if (advertisementModel!.adPlacement.isNotEmpty)
             ...advertisementModel!.adPlacement.map((adType) {
-              final screenData = _screens.firstWhere((s) => s['name'] == adType);
+              final screenData =
+                  _screens.firstWhere((s) => s['name'] == adType);
               final price = screenData['price'] as int;
               final amount = price * duration;
               totalAmount += amount;
@@ -395,18 +421,22 @@ class AdsScreen extends State<PromoteBannerScreen> {
               );
             }).toList()
           else
-            const AdvertisementSummary(label: 'No ad type selected', value: '₹0.00'),
+            const AdvertisementSummary(
+                label: 'No ad type selected', value: '₹0.00'),
           const Divider(height: 32),
           AdvertisementSummary(label: 'Duration', value: '$duration days'),
-          AdvertisementSummary(label: 'Total Amount', value: '₹${totalAmount.toStringAsFixed(2)}'),
+          AdvertisementSummary(
+              label: 'Total Amount',
+              value: '₹${totalAmount.toStringAsFixed(2)}'),
           const SizedBox(height: 8),
-          AdvertisementSummary(label: 'GST (18%)', value: '₹${(totalAmount * 0.18).toStringAsFixed(2)}'),
+          AdvertisementSummary(
+              label: 'GST (18%)',
+              value: '₹${(totalAmount * 0.18).toStringAsFixed(2)}'),
           const Divider(height: 32),
           AdvertisementSummary(
               label: 'Grand Total',
               value: '₹${(totalAmount * 1.18).toStringAsFixed(2)}',
-              isBold: true
-          ),
+              isBold: true),
           const SizedBox(height: 24),
           AdvertisementSummary(
             label: 'Payment date',
@@ -414,15 +444,13 @@ class AdsScreen extends State<PromoteBannerScreen> {
           ),
           AdvertisementSummary(
               label: 'Advertisement Start on',
-              value:advertisementModel!.startDate.toString().substring(0, 11)
-          ),
+              value: advertisementModel!.startDate.toString().substring(0, 11)),
           AdvertisementSummary(
               label: 'Advertisement End on',
-              value:advertisementModel!.endDate.toString().substring(0, 11)),
+              value: advertisementModel!.endDate.toString().substring(0, 11)),
           const AdvertisementSummary(
-              label: 'Payment method',value:  'RazorPay'),
+              label: 'Payment method', value: 'RazorPay'),
           const SizedBox(height: 24),
-
           if (promotionfor != null)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -459,24 +487,21 @@ class AdsScreen extends State<PromoteBannerScreen> {
           const SizedBox(height: 10),
           PrimaryButton(
               title: 'Pay Now',
-              onTap:   () {
+              onTap: () {
                 if (advertisementModel != null) {
                   advertisementModel = advertisementModel!.copyWith(
                     startDate: from!,
                     endDate: to!,
-                    totalAmount: totalAmount* 1.18,
+                    totalAmount: totalAmount * 1.18,
                   );
                   Get.to(() => BannerPaymentPage(
-                    ads: advertisementModel!,
-                    screens: _screens,
-
-                  ));
+                        ads: advertisementModel!,
+                        screens: _screens,
+                      ));
                 }
-              }
-          )
+              })
         ],
       ),
     );
   }
-
 }

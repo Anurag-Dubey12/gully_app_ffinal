@@ -10,8 +10,41 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="promote banner screen modify">
+      <change afterPath="$PROJECT_DIR$/lib/data/controller/Navigation_controller.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_home.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_profile_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shop_details.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shop_home.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/shop_card.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/utils/navigation_menu.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/l10n/app_bn.arb" beforeDir="false" afterPath="$PROJECT_DIR$/lib/l10n/app_bn.arb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/l10n/app_en.arb" beforeDir="false" afterPath="$PROJECT_DIR$/lib/l10n/app_en.arb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/l10n/app_hi.arb" beforeDir="false" afterPath="$PROJECT_DIR$/lib/l10n/app_hi.arb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/l10n/app_kn.arb" beforeDir="false" afterPath="$PROJECT_DIR$/lib/l10n/app_kn.arb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/l10n/app_ml.arb" beforeDir="false" afterPath="$PROJECT_DIR$/lib/l10n/app_ml.arb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/l10n/app_mr.arb" beforeDir="false" afterPath="$PROJECT_DIR$/lib/l10n/app_mr.arb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/l10n/app_pa.arb" beforeDir="false" afterPath="$PROJECT_DIR$/lib/l10n/app_pa.arb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/l10n/app_ta.arb" beforeDir="false" afterPath="$PROJECT_DIR$/lib/l10n/app_ta.arb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/l10n/app_te.arb" beforeDir="false" afterPath="$PROJECT_DIR$/lib/l10n/app_te.arb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/l10n/app_ur.arb" beforeDir="false" afterPath="$PROJECT_DIR$/lib/l10n/app_ur.arb" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/legal_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/legal_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/search_tournament_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/search_tournament_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_location.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_location.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/top_header.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/top_header.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/tournament_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/tournament_list.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/image_picker_helper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils/image_picker_helper.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/untranslated.json" beforeDir="false" afterPath="$PROJECT_DIR$/untranslated.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,33 +107,35 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DEBUGGABLE_DEVICE&quot;: &quot;lava_lxx507-192.168.29.122:37709&quot;,
-    &quot;DEBUGGABLE_PROCESS&quot;: &quot;com.nileegames.gullyteam&quot;,
-    &quot;DEBUGGER_ID&quot;: &quot;Java&quot;,
-    &quot;Flutter.main.dart.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;SHOW_ALL_PROCESSES&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;com.android.tools.idea.devicemanager.tab&quot;: &quot;Physical&quot;,
-    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;office&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/abcom/Documents/gully_app/assets/images&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;flutter.settings&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DEBUGGABLE_DEVICE": "lava_lxx507-192.168.29.122:37709",
+    "DEBUGGABLE_PROCESS": "com.nileegames.gullyteam",
+    "DEBUGGER_ID": "Java",
+    "Flutter.main.dart.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "SHOW_ALL_PROCESSES": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "com.android.tools.idea.devicemanager.tab": "Physical",
+    "com.google.services.firebase.aqiPopupShown": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "office",
+    "ignore.virus.scanning.warn.message": "true",
+    "io.flutter.reload.alreadyRun": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/abcom/Documents/Software/gully_app",
+    "settings.editor.selected.configurable": "flutter.settings",
+    "show.migrate.to.gradle.popup": "false"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\abcom\Documents\Software\gully_app" />
+      <recent name="C:\Users\abcom\Documents\Software\gully_app\lib" />
       <recent name="C:\Users\abcom\Documents\gully_app\assets\images" />
       <recent name="C:\Notes\gully_app\android\app" />
     </key>
@@ -389,7 +424,15 @@
       <option name="project" value="LOCAL" />
       <updated>1724846444241</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="promote banner screen modify">
+      <option name="closed" value="true" />
+      <created>1724906106648</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1724906106649</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -601,6 +644,12 @@
           <option name="totalLines" value="4217682" />
           <option name="info" value="promote banner screen modify" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724906108433" />
+          <option name="linesCode" value="29424" />
+          <option name="totalLines" value="4217682" />
+          <option name="info" value="promote banner screen modify" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -796,6 +845,12 @@
           <option name="linesCode" value="29424" />
           <option name="totalLines" value="4217682" />
           <option name="info" value="Aug 28, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1724906108433" />
+          <option name="linesCode" value="29424" />
+          <option name="totalLines" value="4217682" />
+          <option name="info" value="Aug 29, 2024" />
         </TimePoint>
       </list>
     </option>

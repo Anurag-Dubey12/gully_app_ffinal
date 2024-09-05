@@ -144,5 +144,19 @@
   "topPerformerTitle": "टॉप परफॉर्मर",
   "deleteAccountConfirmation": "जर तुम्हाला आपले खाते हटवायचे आहे तर, कृपया खाते हटवण्यासाठी खालील बटणावर क्लिक करा. आपले खाते क्लियर केले जाईल आणि आपल्याला त्याला परत मिळवू शकत नाही.",
   "request_sent_successfully": "विनंती यशस्वीरित्या पाठविली गेली आहे",
-  "selectLocation": "स्थान निवडा"
+  "selectLocation": "स्थान निवडा",
+
+  "addTeam": "संघ जोडा",
+  "viewMyTeam": "माझी टीम बघा",
+  "viewOpponent": "प्रतिस्पर्धक बघा",
+  "request": "विनंती",
+  "currentMatches": "चालू सामने",
+  "manageTournamentAuthority": "स्पर्धा प्राधिकरण व्यवस्थापन",
+  "organize": "आयोजित करा",
+  "viewMatchup": "सामना बघा",
+  "scoreboard": "स्कोअरबोर्ड",
+  "editTournamentForm": "स्पर्धा फॉर्म संपादित करा",
+  "promoteYourBanner": "तुमचा बॅनर प्रमोट करा",
+  "transactionHistory": "व्यवहार इतिहास",
+  "viewYourTournament": "आपला स्पर्धा बघा"
 }

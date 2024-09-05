@@ -6,7 +6,7 @@ import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/home_screen/future_tournament_card.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../utils/app_logger.dart';
 import 'home_screen.dart';
 
@@ -47,19 +47,7 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
   int sortValue = 0;
   List<TournamentModel> tournaments = [];
   bool isLoading = false;
-//Temporary code for testing ads
-  final List<String> images = [
-    'assets/images/crfi.png',
-    'assets/images/main_image_sec.png',
-    'assets/images/main_img.png',
-    'assets/images/main_image_sec.png',
-    'assets/images/main_immg.png',
-    'assets/images/4.3.png',
-    'assets/images/4.png',
-  ];
 
-  int currentImageIndex = 0;
-  Timer? _imageTimer;
   @override
   void initState() {
     super.initState();
@@ -80,16 +68,9 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
       });
       // Call your API here with the debounced value
     });
-    _imageTimer = Timer.periodic(const Duration(seconds: 2), (Timer timer) {
-      setState(() {
-        currentImageIndex = (currentImageIndex + 1) % images.length;
-        logger.d("The current image index: $currentImageIndex");
-      });
-    });
   }
   @override
   void dispose() {
-    _imageTimer?.cancel();
     debouncer.dispose();
     searchController.dispose();
     super.dispose();
@@ -236,22 +217,6 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                   );
                 },
               ),
-            ),
-            //Temporary code for testing ads
-            // Padding(
-            //   padding: const EdgeInsets.all(16.0),
-            //   child: Image.asset(
-            //     images[currentImageIndex],
-            //     height: 100,
-            //     width: Get.width,
-            //     fit: BoxFit.fill,
-            //   ),
-            // ),
-            Container(
-              height: 100,
-              width: Get.width,
-              margin: const EdgeInsets.only(bottom: 10),
-              child: const FullBannerSlider(isAds: true,),
             ),
           ],
         ),

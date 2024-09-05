@@ -232,5 +232,20 @@
   "loginFailed": "ലോഗിൻ പരാജയപ്പെട്ടു",
   "changePasswordSuccessMessage": "പാസ്വേഡ് വിജയകരമായി മാറ്റി",
   "forgotPasswordSuccessMessage": "പാസ്വേഡ് വിജയകരമായി മറന്നുപോയി",
-  "logoutConfirmation": "നിങ്ങൾ ലോഗ് അവുട്ട് ചെയ്യുകയാണോ?"
+  "logoutConfirmation": "നിങ്ങൾ ലോഗ് അവുട്ട് ചെയ്യുകയാണോ?",
+
+  "addTeam": "ടീം ചേർക്കുക",
+  "viewMyTeam": "എൻ്റെ ടീം കാണുക",
+  "viewOpponent": "എതിരാളിയെ കാണുക",
+  "request": "അഭ്യർത്ഥിക്കുക",
+  "currentMatches": "നിലവിലുള്ള മത്സരങ്ങൾ",
+  "manageTournamentAuthority": "ടൂർണമെന്റ് അധികാരം നയിക്കുക",
+  "organize": "സംഘടിപ്പിക്കുക",
+  "viewMatchup": "മത്സരം കാണുക",
+  "scoreboard": "സ്കോർബോർഡ്",
+  "editTournamentForm": "ടൂർണമെന്റ് ഫോം തിരുത്തുക",
+  "promoteYourBanner": "നിങ്ങളുടെ ബാനർ പ്രമോട്ട് ചെയ്യുക",
+  "transactionHistory": "ഇടപാട് ചരിത്രം",
+  "viewYourTournament": "നിങ്ങളുടെ ടൂർണമെന്റ് കാണുക"
+
 }

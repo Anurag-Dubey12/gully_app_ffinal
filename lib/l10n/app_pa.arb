@@ -224,5 +224,19 @@
   "teamName": "ਟੀਮ ਦਾ ਨਾਮ",
   "request_sent_successfully": "ਬੇਨਤੀ ਸਫਲਤਾਪੂਰਵਕ ਭੇਜੀ ਗਈ ਹੈ",
   "selectLocation": "ਸਥਾਨ ਚੁਣੋ",
-  "changeLanguage": "ਭਾਸ਼ਾ ਬਦਲੋ"
+  "changeLanguage": "ਭਾਸ਼ਾ ਬਦਲੋ",
+
+  "addTeam": "ਟੀਮ ਸ਼ਾਮਲ ਕਰੋ",
+  "viewMyTeam": "ਮੇਰੀ ਟੀਮ ਵੇਖੋ",
+  "viewOpponent": "ਵਿਰੋਧੀ ਵੇਖੋ",
+  "request": "ਬੇਨਤੀ",
+  "currentMatches": "ਮੌਜੂਦਾ ਮੈਚ",
+  "manageTournamentAuthority": "ਟੂਰਨਾਮੈਂਟ ਅਥਾਰਟੀ ਦਾ ਪ੍ਰਬੰਧਨ ਕਰੋ",
+  "organize": "ਆਯੋਜਨ ਕਰੋ",
+  "viewMatchup": "ਮੈਚ ਵੇਖੋ",
+  "scoreboard": "ਸਕੋਰ ਬੋਰਡ",
+  "editTournamentForm": "ਟੂਰਨਾਮੈਂਟ ਫਾਰਮ ਦੀ ਸੰਪਾਦਨਾ ਕਰੋ",
+  "promoteYourBanner": "ਆਪਣੇ ਬੈਨਰ ਨੂੰ ਪ੍ਰਮੋਟ ਕਰੋ",
+  "transactionHistory": "ਲੈਣ-ਦੇਣ ਦੀ ਇਤਿਹਾਸ",
+  "viewYourTournament": "ਆਪਣਾ ਟੂਰਨਾਮੈਂਟ ਵੇਖੋ"
 }

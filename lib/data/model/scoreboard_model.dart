@@ -263,6 +263,7 @@ class ScoreboardModel {
     return false;
   }
 
+
   bool get isSecondInningsOver {
     logger.i('Checking if second innings is over $matchId');
     if (currentInnings == 2) {

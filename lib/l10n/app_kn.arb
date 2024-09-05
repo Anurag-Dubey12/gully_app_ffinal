@@ -143,5 +143,19 @@
   "topPerformerTitle": "ಟಾಪ್ ಪ್ರದರ್ಶಕ",
   "deleteAccountConfirmation": "ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಅಳಿಸಲು ಬಯಸುವಿರಾ? ದಯವಿಟ್ಟು ಕೆಳಗಿನ ಬಟನ್‌ಗಳನ್ನು ಒತ್ತಿ. ನಿಮ್ಮ ಖಾತೆಯನ್ನು ಶಾಶ್ವತವಾಗಿ ಅಳಿಸಲಾಗುತ್ತದೆ ಮತ್ತು ನೀವು ಅದನ್ನು ಮರುಹೊಂದಿಸಲಾಗುವುದಿಲ್ಲ.",
   "request_sent_successfully": "ವಿನಂತಿ ಯಶಸ್ವಿಯಾಗಿ ಕಳುಹಿಸಲಾಗಿದೆ",
-  "selectLocation": "ಸ್ಥಳ ಆಯ್ಕೆಮಾಡಿ"
+  "selectLocation": "ಸ್ಥಳ ಆಯ್ಕೆಮಾಡಿ",
+
+  "addTeam": "ತಂಡವನ್ನು ಸೇರಿಸಿ",
+  "viewMyTeam": "ನನ್ನ ತಂಡವನ್ನು ವೀಕ್ಷಿಸಿ",
+  "viewOpponent": "ಪ್ರತಿಸ್ಪರ್ಧಿಯನ್ನು ನೋಡಿ",
+  "request": "ವಿನಂತಿ",
+  "currentMatches": "ಪ್ರಸ್ತುತ ಪಂದ್ಯಗಳು",
+  "manageTournamentAuthority": "ಟೂರ್ನಮೆಂಟ್ ಪ್ರಾಧಿಕಾರವನ್ನು ನಿರ್ವಹಿಸಿ",
+  "organize": "ಆಯೋಜಿಸು",
+  "viewMatchup": "ಪಂದ್ಯವನ್ನು ನೋಡಿ",
+  "scoreboard": "ಅಂಕಪಟ್ಟಿಕೆ",
+  "editTournamentForm": "ಟೂರ್ನಮೆಂಟ್ ಫಾರ್ಮನ್ನು ಸಂಪಾದಿಸು",
+  "promoteYourBanner": "ನಿಮ್ಮ ಬ್ಯಾನರ್ ಅನ್ನು ಪ್ರಚಾರ ಮಾಡು",
+  "transactionHistory": "ವಹಿವಾಟಿನ ಇತಿಹಾಸ",
+  "viewYourTournament": "ನಿಮ್ಮ ಟೂರ್ನಮೆಂಟ್ ಅನ್ನು ನೋಡಿ"
 }

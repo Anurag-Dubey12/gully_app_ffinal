@@ -145,5 +145,19 @@
   "deleteAccountConfirmation": "अगर आप अपने खाते को हटाना चाहते हैं, तो कृपया नीचे दिए गए बटन पर क्लिक करें। आपका खाता स्थायी रूप से हटा दिया जाएगा और आप इसे पुनः प्राप्त नहीं कर सकेंगे।",
   "request_sent_successfully": "अनुरोध सफलतापूर्वक भेजा गया",
   "selectLocation": "स्थान चुनें",
-  "changeLanguage": "भाषा बदलें"
+  "changeLanguage": "भाषा बदलें",
+
+  "addTeam": "टीम जोड़ें",
+  "viewMyTeam": "मेरी टीम देखें",
+  "viewOpponent": "प्रतिद्वंद्वी को देखें",
+  "request": "अनुरोध",
+  "currentMatches": "वर्तमान मैच",
+  "manageTournamentAuthority": "टूर्नामेंट प्राधिकरण प्रबंधित करें",
+  "organize": "व्यवस्थित करें",
+  "viewMatchup": "मैचअप देखें",
+  "scoreboard": "स्कोरबोर्ड",
+  "editTournamentForm": "टूर्नामेंट फॉर्म संपादित करें",
+  "promoteYourBanner": "अपने बैनर को प्रचार  करें",
+  "transactionHistory": "ट्रांजेक्शन इतिहास",
+  "viewYourTournament": "अपना टूर्नामेंट देखें"
 }

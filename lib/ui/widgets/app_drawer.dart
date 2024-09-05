@@ -7,7 +7,10 @@ import 'package:gully_app/ui/screens/choose_lang_screen.dart';
 import 'package:gully_app/ui/screens/player_profile_screen.dart';
 import 'package:gully_app/ui/screens/select_performance_type.dart';
 import 'package:gully_app/ui/screens/select_team_for_challenge.dart';
+import 'package:gully_app/ui/screens/service/service_screen.dart';
+import 'package:gully_app/ui/screens/shop/shop_home.dart';
 import 'package:gully_app/utils/utils.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../screens/contact_us_screen.dart';
@@ -242,6 +245,24 @@ class AppDrawer extends GetView<AuthController> {
                         ));
                   },
                   icon: Icons.auto_graph,
+                ),
+
+                DrawerCard(
+                  // title: 'About us',
+                  title: 'Shop',
+                  onTap: () {
+                    Get.to(() => const ShopHome());
+                  },
+                  icon: Iconsax.shop,
+                ),
+
+                DrawerCard(
+                  // title: 'About us',
+                  title: 'Service',
+                  onTap: () {
+                    Get.to(() => const ServiceScreen());
+                  },
+                  icon: Icons.sports_cricket_rounded,
                 ),
                 DrawerCard(
                   // title: 'About us',

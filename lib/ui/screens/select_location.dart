@@ -58,7 +58,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
     return PopScope(
       canPop: false,
       child: PopScope(
-        canPop: false,
+        // canPop: false,
         child: GradientBuilder(
             child: DecoratedBox(
           decoration: const BoxDecoration(

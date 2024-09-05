@@ -144,5 +144,19 @@
   "deleteAccountConfirmation": "మీరు మీ ఖాతాను తొలగించాలా, దయచేసి కొనసాగించుటకు బటన్‌ను నొక్కండి. మీ ఖాతా స్థాయికి మరియు మీరు అదుపుతున్న కార్యాలను మీరు పూర్తిగా తిరిగి పొందగలరు.",
   "request_sent_successfully": "అభ్యర్ధన విజయవంతంగా పంపబడింది",
   "selectLocation": "లొకేషన్ ఎంచుకోండి",
-  "changeLanguage": "భాషను మార్చుకోండి"
+  "changeLanguage": "భాషను మార్చుకోండి",
+
+  "addTeam": "జట్టును జోడించండి",
+  "viewMyTeam": "నా జట్టును చూడండి",
+  "viewOpponent": "ప్రత్యర్థిని చూడండి",
+  "request": "అభ్యర్థన",
+  "currentMatches": "ప్రస్తుత మ్యాచ్‌లు",
+  "manageTournamentAuthority": "టోర్నమెంట్ అథారిటీని నిర్వహించండి",
+  "organize": "నిర్వహించండి",
+  "viewMatchup": "మాచ్‌ను చూడండి",
+  "scoreboard": "స్కోర్బోర్డ్",
+  "editTournamentForm": "టోర్నమెంట్ ఫారమ్‌ని సవరించండి",
+  "promoteYourBanner": "మీ బానర్‌ను ప్రమోట్ చేయండి",
+  "transactionHistory": "లావాదేవీ చరిత్ర",
+  "viewYourTournament": "మీ టోర్నమెంట్‌ను"
 }

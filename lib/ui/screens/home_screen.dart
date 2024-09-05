@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -9,7 +7,9 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/ui/screens/organizer_profile.dart';
 import 'package:gully_app/ui/screens/search_tournament_screen.dart';
+import 'package:gully_app/ui/screens/shop/shop_home.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/app_drawer.dart';
@@ -18,10 +18,12 @@ import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
+import 'package:iconsax/iconsax.dart';
 
 import '../widgets/arc_clipper.dart';
 import '../widgets/home_screen/SliverAppBarDelegate.dart';
 import '../widgets/home_screen/top_header.dart';
+import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -62,17 +64,20 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 }
+
 class HomePage extends StatefulWidget {
-  const HomePage({
-    super.key
-  });
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
+
 class _HomePageState extends State<HomePage> {
+  String selected = 'Current';
+
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<TournamentController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -86,8 +91,82 @@ class _HomePageState extends State<HomePage> {
         canPop: true,
         child: Scaffold(
           endDrawer: const AppDrawer(),
-          bottomNavigationBar: Container(
-            height: 90,
+          // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          // floatingActionButton: Padding(
+          //   padding: const EdgeInsets.only(right: 15, bottom: 15),
+          //   child: FloatingActionButton(
+          //     onPressed: () {
+          //       Get.to(()=>const TournamentFormScreen());
+          //     },
+          //     foregroundColor: Colors.white,
+          //     backgroundColor: AppTheme.primaryColor,
+          //     hoverColor: Colors.white,
+          //     splashColor: Colors.white,
+          //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+          //     tooltip: 'Create Your Tournament',
+          //     elevation: 10.0,
+          //     child: const Icon(Icons.add),
+          //
+          //   ),
+          // ),
+          bottomNavigationBar:
+              // SizedBox(
+              //   height: 60,
+              //   // decoration: BoxDecoration(
+              //   //   color: Colors.white,
+              //   //   border: Border.all(
+              //   //     color: Colors.grey,
+              //   //     width: 2,
+              //   //   ),
+              //   //   borderRadius: BorderRadius.only(
+              //   //     topLeft: Radius.circular(50.0),
+              //   //     topRight: Radius.circular(50.0),
+              //   //   ),
+              //   //   boxShadow: [
+              //   //     BoxShadow(
+              //   //       color: Colors.black12,
+              //   //       spreadRadius: 5,
+              //   //       blurRadius: 10,
+              //   //     ),
+              //   //   ],
+              //   // ),
+              //   child: FlashyTabBar(
+              //       backgroundColor: AppTheme.primaryColor,
+              //       selectedIndex: _index,
+              //       showElevation: false,
+              //       onItemSelected: (index) {
+              //         setState(() {
+              //           switch(index){
+              //             case 0:{
+              //               Get.to(()=>ShopHome());
+              //             }
+              //             case 1:{
+              //               Get.to(()=>ShopHome());
+              //             }
+              //           }
+              //         });
+              //
+              //       },
+              //       items: [
+              //         FlashyTabBarItem(
+              //           icon: const Icon(Iconsax.shopping_cart,size: 25,),
+              //           activeColor: Colors.white,
+              //           inactiveColor: Colors.white,
+              //           title: const Text('Shop'),
+              //         ),
+              //
+              //         FlashyTabBarItem(
+              //           icon: const Icon(Icons.sports_cricket_rounded,size: 25),
+              //           activeColor: Colors.white,
+              //           inactiveColor: Colors.white,
+              //           title: const Text('History'),
+              //         ),
+              //       ],
+              //     ),
+              // ),
+              //Old Create tournament Button
+              Container(
+            height: 60,
             decoration: BoxDecoration(color: Colors.white, boxShadow: [
               BoxShadow(
                   color: Colors.black.withOpacity(0.1),
@@ -98,12 +177,12 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(19.0),
+                  padding: const EdgeInsets.all(5.0),
                   child: PrimaryButton(
                     onTap: () {
                       Get.to(() => const TournamentFormScreen(
-                        tournament: null,
-                      ));
+                            tournament: null,
+                          ));
                     },
                     title: AppLocalizations.of(context)!.create_your_tournament,
                   ),
@@ -138,6 +217,7 @@ class _HomePageState extends State<HomePage> {
               ),
               Positioned(
                 top: Get.statusBarHeight / 2.3,
+                bottom: 0,
                 child: SizedBox(
                   width: Get.width,
                   height: Get.height - 150,
@@ -180,7 +260,8 @@ class _HomePageState extends State<HomePage> {
                                 borderRadius: BorderRadius.circular(21),
                                 boxShadow: [
                                   BoxShadow(
-                                      color: AppTheme.secondaryYellowColor.withOpacity(0.3),
+                                      color: AppTheme.secondaryYellowColor
+                                          .withOpacity(0.3),
                                       blurRadius: 2,
                                       spreadRadius: 1,
                                       offset: const Offset(0, -1))
@@ -198,8 +279,7 @@ class _HomePageState extends State<HomePage> {
                                   const Text(
                                     'Cricket',
                                     style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 18),
+                                        color: Colors.white, fontSize: 18),
                                   ),
                                 ],
                               ),
@@ -213,8 +293,8 @@ class _HomePageState extends State<HomePage> {
                       SliverPersistentHeader(
                         pinned: true,
                         delegate: SliverAppBarDelegate(
-                          minHeight: 170,
-                          maxHeight: 170,
+                          minHeight: 90,
+                          maxHeight: 90,
                           child: DecoratedBox(
                             decoration: const BoxDecoration(
                               color: Colors.white,
@@ -227,41 +307,114 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               children: [
                                 const DateTimesCard(),
-                                const TitleWidget(),
+                                // const TitleWidget(),
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                                  child: Material(
-                                    borderRadius: BorderRadius.circular(28),
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.circular(28),
-                                      onTap: () {
-                                        Get.to(() => const SearchTournamentScreen());
-                                      },
-                                      child: Ink(
-                                        width: Get.width,
-                                        height: 50,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(
-                                              color: Colors.black
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 5),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Material(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                          child: InkWell(
+                                            borderRadius:
+                                                BorderRadius.circular(28),
+                                            onTap: () {
+                                              Get.to(() =>
+                                                  const SearchTournamentScreen());
+                                            },
+                                            child: Ink(
+                                              height: 35,
+                                              decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                    color: Colors.black,
+                                                    width: 0.5),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: const Row(
+                                                children: [
+                                                  SizedBox(width: 18),
+                                                  Icon(Icons.search,
+                                                      color: Colors.black),
+                                                  SizedBox(width: 20),
+                                                  Text('Search...',
+                                                      style: TextStyle(
+                                                          color: Colors.black)),
+                                                ],
+                                              ),
+                                            ),
                                           ),
-                                          borderRadius: BorderRadius.circular(28),
-                                        ),
-                                        child: const Row(
-                                          children: [
-                                            SizedBox(width: 18),
-                                            Icon(
-                                              Icons.search,
-                                              color: Colors.black,
-                                            ),
-                                            SizedBox(
-                                              width: 20,
-                                            ),
-                                            Text('Search...',style: TextStyle(color: Colors.black),),
-                                          ],
                                         ),
                                       ),
-                                    ),
+                                      const SizedBox(width: 10),
+                                      PopupMenuButton<String>(
+                                        onSelected: (String value) {
+                                          setState(() {
+                                            selected = value;
+                                            controller.getTournamentList(
+                                                filterD: value.toLowerCase());
+                                          });
+                                        },
+                                        itemBuilder: (BuildContext context) =>
+                                            <PopupMenuEntry<String>>[
+                                          const PopupMenuItem<String>(
+                                            value: 'Past',
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.history,
+                                                    color: Colors.blue),
+                                                SizedBox(width: 10),
+                                                Text('Past'),
+                                              ],
+                                            ),
+                                          ),
+                                          const PopupMenuItem<String>(
+                                            value: 'Current',
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.event,
+                                                    color: Colors.green),
+                                                SizedBox(width: 10),
+                                                Text('Current'),
+                                              ],
+                                            ),
+                                          ),
+                                          const PopupMenuItem<String>(
+                                            value: 'Upcoming',
+                                            child: Row(
+                                              children: [
+                                                Icon(Icons.schedule,
+                                                    color: Colors.orange),
+                                                SizedBox(width: 10),
+                                                Text('Upcoming'),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        color: Colors.white,
+                                        elevation: 8,
+                                        child: Container(
+                                          height: 40,
+                                          width: 40,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border:
+                                                Border.all(color: Colors.black),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: const Icon(Icons.filter_list,
+                                              color: Colors.black),
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 ),
                               ],
@@ -270,10 +423,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       const SliverToBoxAdapter(
-                        child: Padding(
-                          padding:  EdgeInsets.only(top: 10),
-                          child: TournamentList(),
-                        ),
+                        child: TournamentList(),
                       ),
                     ],
                   ),
@@ -286,7 +436,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
 
 class _TournamentMajorDuration extends StatelessWidget {
   final String title;
@@ -331,7 +480,7 @@ class _TournamentMajorDuration extends StatelessWidget {
 
 class FullBannerSlider extends StatefulWidget {
   final bool isAds;
-  const FullBannerSlider({super.key,required this.isAds});
+  const FullBannerSlider({super.key, required this.isAds});
 
   @override
   State<FullBannerSlider> createState() => _FullBannerSliderState();
@@ -346,71 +495,74 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
       height: 150,
       width: 400,
       child: Obx(
-            () => CarouselSlider(
-          items: controller.banners.value.map((e) => ClipRRect(
-            borderRadius: BorderRadius.circular(15),
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                CachedNetworkImage(
-                    imageUrl: toImageUrl(e.imageUrl),
-                    fit: BoxFit.fill,
-                    width: double.infinity
-                ),
-                if (widget.isAds)
-                  Positioned(
-                    top: 2,
-                    right: 10,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6),
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
+        () => CarouselSlider(
+          items: controller.banners.value
+              .map((e) => ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        CachedNetworkImage(
+                            imageUrl: toImageUrl(e.imageUrl),
+                            fit: BoxFit.fill,
+                            width: double.infinity),
+                        if (widget.isAds)
+                          Positioned(
+                            top: 2,
+                            right: 10,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.6),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: const Text(
+                                "Ad",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          )
+                        else
+                          Positioned(
+                            bottom: 10,
+                            left: 0,
+                            right: 0,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: List.generate(
+                                controller.banners.length,
+                                (index) => AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  margin:
+                                      const EdgeInsets.symmetric(horizontal: 3),
+                                  height: 8,
+                                  width: _current == index ? 15 : 8,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(4),
+                                    color: _current == index
+                                        ? AppTheme.darkYellowColor
+                                        : Colors.grey.withOpacity(0.5),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
-                      child: const Text(
-                        "Ad",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      ],
                     ),
-                  )
-                else
-                  Positioned(
-                    bottom: 10,
-                    left: 0,
-                    right: 0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(
-                        controller.banners.length,
-                            (index) => AnimatedContainer(
-                          duration: const Duration(milliseconds: 300),
-                          margin: const EdgeInsets.symmetric(horizontal: 3),
-                          height: 8,
-                          width: _current == index ? 15 : 8,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            color: _current == index
-                                ? AppTheme.darkYellowColor
-                                : Colors.grey.withOpacity(0.5),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-          )).toList(),
+                  ))
+              .toList(),
           options: CarouselOptions(
             viewportFraction: 0.91,
             enableInfiniteScroll: true,

@@ -144,5 +144,19 @@
   "deleteAccountConfirmation": "உங்கள் கணக்கை நீக்க விரும்பினால், தயாரிக்கப்பட்ட பொதுவான பொருள் உள்ளீடு மூலம் நீங்கள் அதை நிரந்தரமாக நீக்கலாம்.",
   "request_sent_successfully": "கோரிக்கை வெற்றிகரமாக அனுப்பப்பட்டது",
   "selectLocation": "இடத்தை தேர்வு செய்யவும்",
-  "changeLanguage": "மொழியை மாற்று"
+  "changeLanguage": "மொழியை மாற்று",
+
+  "addTeam": "அணியைச் சேர்க்கவும்",
+  "viewMyTeam": "எனது அணியைப் பாருங்கள்",
+  "viewOpponent": "எதிரியைப் பாருங்கள்",
+  "request": "கோரிக்கை",
+  "currentMatches": "தற்போதைய போட்டிகள்",
+  "manageTournamentAuthority": "போட்டி ஆணையத்தை நிர்வகிக்கவும்",
+  "organize": "ஒழுங்கமைக்கவும்",
+  "viewMatchup": "போட்டியைப் பாருங்கள்",
+  "scoreboard": "மதிப்பெண் பலகை",
+  "editTournamentForm": "போட்டி படிவத்தை திருத்தவும்",
+  "promoteYourBanner": "உங்கள் பதாகையைப் பிரச்சாரம் செய்யுங்கள்",
+  "transactionHistory": "பரிவர்த்தனை வரலாறு",
+  "viewYourTournament": "உங்கள் போட்டியைப் பாருங்கள்"
 }

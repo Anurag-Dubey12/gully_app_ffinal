@@ -80,7 +80,7 @@ class _LegalViewScreenState extends State<LegalViewScreen> {
                           );
                         }
                         final content=snapshot.data ??' ';
-                        final isFAQ=content.contains('type: faq') || content.contains('<strong');
+                        final isFAQ=content.contains('type: faq') || content.contains('<strong>');
                         if(isFAQ){
                           final document=htmlparser.parse(content);
                           final paragraph=document.getElementsByTagName('p');
@@ -89,7 +89,7 @@ class _LegalViewScreenState extends State<LegalViewScreen> {
                           String curretAnswer='';
                           for(var i=0;i< paragraph.length;i++){
                             final p=paragraph[i];
-                            if(p.text.trim().startsWith(RegExp(r'\d+\.'))||p.getElementsByTagName('string').isNotEmpty){
+                            if(p.text.trim().startsWith(RegExp(r'\d+\.'))||p.getElementsByTagName('strong').isNotEmpty){
                               if(currentQuestion.isNotEmpty){
                                 FaqItems.add({
                                   'question':currentQuestion,

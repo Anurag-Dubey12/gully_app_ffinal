@@ -332,12 +332,12 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                                 ));
                               },
                             ),
-                            ProfileTileCard(
-                              text: 'Promote Your Banner',
-                              onTap: () {
-                                Get.to(() => const PromoteBannerScreen());
-                              },
-                            ),
+                            // ProfileTileCard(
+                            //   text: 'Promote Your Banner',
+                            //   onTap: () {
+                            //     Get.to(() => const PromoteBannerScreen());
+                            //   },
+                            // ),
                             ProfileTileCard(
                               text: 'Transaction History',
                               onTap: () {

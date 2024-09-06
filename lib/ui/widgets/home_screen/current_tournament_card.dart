@@ -60,7 +60,7 @@ class _Card extends StatelessWidget {
 
     return Padding(
       key: super.key,
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: Container(
         width: Get.width,
         decoration: BoxDecoration(
@@ -75,84 +75,85 @@ class _Card extends StatelessWidget {
             )
           ],
         ),
-        child: Row(
+        child: Stack(
           children: [
-             Padding(
-               padding: const EdgeInsets.only(left: 5),
-               child: GestureDetector(
-                 onTap: () {
-                   imageViewer(context,tournamentdata.coverPhoto);
-                 },
-                 child: CircleAvatar(
-                    radius: 40,
-                    backgroundImage: tournamentdata.coverPhoto != null && tournamentdata.coverPhoto!.isNotEmpty
-                        ? FallbackImageProvider(
-                      toImageUrl(tournamentdata.coverPhoto!),
-                        'assets/images/logo.png'
-                    ) as ImageProvider
-                        : const AssetImage('assets/images/logo.png'),
-                    backgroundColor: Colors.transparent,
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      imageViewer(context, tournamentdata.coverPhoto);
+                    },
+                    child: CircleAvatar(
+                      radius: 40,
+                      backgroundImage: tournamentdata.coverPhoto != null && tournamentdata.coverPhoto!.isNotEmpty
+                          ? FallbackImageProvider(
+                          toImageUrl(tournamentdata.coverPhoto!),
+                          'assets/images/logo.png'
+                      ) as ImageProvider
+                          : const AssetImage('assets/images/logo.png'),
+                      backgroundColor: Colors.transparent,
+                    ),
                   ),
-               ),
-             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: Text(
-                            tournament.tournamentName ?? 'Unknown Tournament',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            Get.bottomSheet(
-                              IButtonDialog(
-                                organizerName: tournamentdata.organizerName!,
-                                location: tournamentdata.stadiumAddress,
-                                tournamentName: tournamentdata.tournamentName,
-                                tournamentPrice: tournamentdata.fees.toString(),
-                                coverPhoto: tournamentdata.coverPhoto,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              tournament.tournamentName ?? 'Unknown Tournament',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
                               ),
-                              backgroundColor: Colors.white,
-                            );
-                          },
-                          icon: const Icon(Icons.info_outline_rounded, size: 18),
-                          color: Colors.grey,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            IconButton(
+                              onPressed: () {
+                                Get.bottomSheet(
+                                  IButtonDialog(
+                                    organizerName: tournamentdata.organizerName!,
+                                    location: tournamentdata.stadiumAddress,
+                                    tournamentName: tournamentdata.tournamentName,
+                                    tournamentPrice: tournamentdata.fees.toString(),
+                                    coverPhoto: tournamentdata.coverPhoto,
+                                  ),
+                                  backgroundColor: Colors.white,
+                                );
+                              },
+                              icon: const Icon(Icons.info_outline_rounded, size: 18),
+                              color: Colors.grey,
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    // const SizedBox(height: 1),
-                    _TeamScore(
-                      color: Colors.red,
-                      teamName: tournament.team1.name,
-                      score: _getScore(scoreboard?.firstInnings),
-                    ),
-                    const SizedBox(height: 4),
-                    _TeamScore(
-                      teamName: tournament.team2.name,
-                      score: _getScore(scoreboard?.secondInnings),
-                      color: Colors.green.shade600,
-                    ),
-                    const SizedBox(height: 8),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20),
-                      child: Align(
-                        alignment: Alignment.center,
+                      ),
+                      const SizedBox(height: 4),
+                      _TeamScore(
+                        color: Colors.red,
+                        teamName: tournament.team1.name,
+                        score: _getScore(scoreboard?.firstInnings),
+                      ),
+                      const SizedBox(height: 4),
+                      _TeamScore(
+                        teamName: tournament.team2.name,
+                        score: _getScore(scoreboard?.secondInnings),
+                        color: Colors.green.shade600,
+                      ),
+                      const SizedBox(height: 8),
+                      Align(
+                        alignment: Alignment.bottomCenter,
                         child: SizedBox(
-                          height: 34,
+                          height: 30,
                           width: 100,
                           child: ElevatedButton(
                               onPressed: () {
@@ -168,38 +169,27 @@ class _Card extends StatelessWidget {
                                 );
                               },
                               style: ButtonStyle(
-                                padding:
-                                WidgetStateProperty.all(const EdgeInsets.all(6)),
+                                padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 8)),
                               ),
                               child: Text('View Score',
-                                  style: Get.textTheme.bodyLarge?.copyWith(
+                                  style: Get.textTheme.bodyMedium?.copyWith(
                                       fontWeight: FontWeight.w500,
-                                      fontSize: 14,
-                                      color: Colors.white))),
+                                      color: Colors.white
+                                  )
+                              )
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10,right: 10),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Text(
-                  "Live",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
+                      const SizedBox(height: 8),
+                    ],
                   ),
                 ),
-              ),
+              ],
+            ),
+            Positioned(
+              top: 8,
+              right: 8,
+              child: BlinkingLiveText(),
             ),
           ],
         ),
@@ -216,6 +206,50 @@ class _Card extends StatelessWidget {
   }
 }
 
+class BlinkingLiveText extends StatefulWidget {
+  @override
+  _BlinkingLiveTextState createState() => _BlinkingLiveTextState();
+}
+
+class _BlinkingLiveTextState extends State<BlinkingLiveText> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
+    _animationController.repeat(reverse: true);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _animationController,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+        decoration: BoxDecoration(
+          color: Colors.green,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: const Text(
+          "Live",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+}
+
 class _TeamScore extends StatelessWidget {
   final String teamName;
   final String score;
@@ -229,35 +263,37 @@ class _TeamScore extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 10,
-          height: 10,
-          decoration: BoxDecoration(
-            color: color,
-            shape: BoxShape.circle,
-          ),
-        ),
-        const SizedBox(width: 3),
-        Expanded(
-          child: Text(
-            teamName,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 12
+    return SizedBox(
+      width: 220,
+      child: Row(
+        children: [
+          Container(
+            width: 10,
+            height: 10,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
             ),
           ),
-        ),
-        const SizedBox(width: 6),
-        Text(
-          score,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-              fontSize: 13
+          const SizedBox(width: 3),
+          Expanded(
+            child: Text(
+              teamName,
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13
+              ),
+            ),
           ),
-        ),
-      ],
+          Text(
+            score,
+            style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 13
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

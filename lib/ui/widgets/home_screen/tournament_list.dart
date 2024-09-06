@@ -26,9 +26,10 @@ class _TournamentListState extends State<TournamentList> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
-    return Container(
+    return SizedBox(
         width: Get.width,
-        color: Colors.black26,
+        // height: 270,
+        // color: Colors.black26,
         child: Obx(() {
           if (controller.isLoading.value) {
             return const Center(

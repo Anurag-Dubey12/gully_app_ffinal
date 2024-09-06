@@ -500,12 +500,6 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                             //     fit: BoxFit.fill,
                             //   ),
                             // ),
-                            Container(
-                              height: 100,
-                              width: Get.width,
-                              margin: const EdgeInsets.only(bottom: 10,top: 5),
-                              child: const FullBannerSlider(isAds: true,),
-                            ),
                           ],
                         ),
                       ),

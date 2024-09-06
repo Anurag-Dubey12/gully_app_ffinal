@@ -206,11 +206,7 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
       ),
     );
   }
-  // bool isInningStarted(int inning){
-  //   if(widget.scoreboard==null) return false;
-  //   final StartedInning=inning==1 ?widget.scoreboard!.firstInnings : widget.scoreboard!.secondInnings;
-  //   return StartedInning==null || (StartedInning.battingTeam.players!.any((player)=>player.batting !=null &&player.batting!.balls >0));
-  // }
+
   @override
   Widget build(BuildContext context) {
     Get.find<ScoreBoardController>();
@@ -283,19 +279,19 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                           ),
                           child: Column(
                               children: [
-                                widget.scoreboard?.secondInnings==null && opponentBattingTeamPlayers.isNotEmpty ?
-                                  const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "This inning hasn't started yet. Showing lineup.",
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ):const SizedBox.shrink(),
+                                // widget.scoreboard?.secondInnings==null && opponentBattingTeamPlayers.isNotEmpty ?
+                                //   const Padding(
+                                //     padding: EdgeInsets.all(8.0),
+                                //     child: Text(
+                                //       "This inning has not Started. Showing lineup.",
+                                //       style: TextStyle(
+                                //         color: Colors.black,
+                                //         fontSize: 14,
+                                //         fontWeight: FontWeight.bold,
+                                //       ),
+                                //       textAlign: TextAlign.center,
+                                //     ),
+                                //   ):const SizedBox.shrink(),
                                 Container(
                                   decoration: BoxDecoration(
                                     color: Colors.grey.shade300,
@@ -360,10 +356,12 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),
                                   separatorBuilder: (c, i) => const SizedBox(height: 10),
-                                  itemCount: currentInning == 1 ? battingTeamPlayers.length : opponentBattingTeamPlayers.length,
+                                  // itemCount: currentInning == 1 ? battingTeamPlayers.length : opponentBattingTeamPlayers.length,
+                                  itemCount: battingTeamPlayers.length,
                                   itemBuilder: ((context, index) {
-                                    final player = currentInning == 1 ? battingTeamPlayers[index] : opponentBattingTeamPlayers[index];
-                                    return BatterPlayerStat(player, false, currentInning == 1);
+                                    // final player = currentInning == 1 ? battingTeamPlayers[index] : opponentBattingTeamPlayers[index];
+                                    // return BatterPlayerStat(player, false, currentInning == 1);
+                                    return BatterPlayerStat(battingTeamPlayers[index], false, currentInning == 1);
                                   }),
                                 ),
                                 const SizedBox(height: 10),

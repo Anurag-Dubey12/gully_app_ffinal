@@ -65,7 +65,7 @@ class _LookingForScreenState extends State<LookingForScreen> {
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 DropDownWidget(
-                  title: 'Select Team Name',
+                  title: 'What Are You Looking  For?',
                   onSelect: (e) {
                     setState(() {
                       selectedValue = e;

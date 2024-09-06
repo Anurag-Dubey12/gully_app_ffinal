@@ -21,7 +21,7 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
     return SizedBox(
       // height: Get.height * 0.54,
         child: Obx(() {
-          if (controller.tournamentList.isEmpty) {
+          if (controller.matches.isEmpty) {
             return const NoTournamentCard();
           } else {
             return ListView.builder(

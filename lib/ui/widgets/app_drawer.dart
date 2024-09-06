@@ -226,44 +226,44 @@ class AppDrawer extends GetView<AuthController> {
                   },
                   icon: Icons.compare,
                 ),
-                DrawerCard(
-                  // title: 'Challenge Team',
-                  title: AppLocalizations.of(context)!.my_performance,
-                  onTap: () {
-                    Get.to(() => SelectPerformanceCategory(
-                          onChallengeTap: () {
-                            Get.to(
-                                () => const SelectChallengeMatchForPerformance(
-                                    // category: 'challenge',
-                                    ));
-                          },
-                          onTouranmentTap: () {
-                            Get.to(() => const PerformanceStatScreen(
-                                  category: 'tournaments',
-                                ));
-                          },
-                        ));
-                  },
-                  icon: Icons.auto_graph,
-                ),
+                // DrawerCard(
+                //   // title: 'Challenge Team',
+                //   title: AppLocalizations.of(context)!.my_performance,
+                //   onTap: () {
+                //     Get.to(() => SelectPerformanceCategory(
+                //           onChallengeTap: () {
+                //             Get.to(
+                //                 () => const SelectChallengeMatchForPerformance(
+                //                     // category: 'challenge',
+                //                     ));
+                //           },
+                //           onTouranmentTap: () {
+                //             Get.to(() => const PerformanceStatScreen(
+                //                   category: 'tournaments',
+                //                 ));
+                //           },
+                //         ));
+                //   },
+                //   icon: Icons.auto_graph,
+                // ),
 
-                DrawerCard(
-                  // title: 'About us',
-                  title: 'Shop',
-                  onTap: () {
-                    Get.to(() => const ShopHome());
-                  },
-                  icon: Iconsax.shop,
-                ),
-
-                DrawerCard(
-                  // title: 'About us',
-                  title: 'Service',
-                  onTap: () {
-                    Get.to(() => const ServiceScreen());
-                  },
-                  icon: Icons.sports_cricket_rounded,
-                ),
+                // DrawerCard(
+                //   // title: 'About us',
+                //   title: 'Shop',
+                //   onTap: () {
+                //     Get.to(() => const ShopHome());
+                //   },
+                //   icon: Iconsax.shop,
+                // ),
+                //
+                // DrawerCard(
+                //   // title: 'About us',
+                //   title: 'Service',
+                //   onTap: () {
+                //     Get.to(() => const ServiceScreen());
+                //   },
+                //   icon: Icons.sports_cricket_rounded,
+                // ),
                 DrawerCard(
                   // title: 'About us',
                   title: AppLocalizations.of(context)!.about_us,

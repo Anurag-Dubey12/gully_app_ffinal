@@ -8,11 +8,12 @@ class NoTournamentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           color: Colors.white,
+          border: Border.all(color: Colors.black),
         ),
         width: Get.width,
         // height: 100,
@@ -24,7 +25,7 @@ class NoTournamentCard extends StatelessWidget {
               const SizedBox(height: 30),
               Image.asset(
                 "assets/images/empty.png",
-                scale: 3,
+                scale: 2.5,
               ),
               const SizedBox(height: 10),
               // Text(

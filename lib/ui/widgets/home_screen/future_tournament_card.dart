@@ -92,7 +92,7 @@ class _TournamentCardState extends State<TournamentCard> {
     final tournamentdata = controller.tournamentList
         .firstWhereOrNull((t) => t.id == widget.tournament.id);
     return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
+        margin: const EdgeInsets.only(left: 10,right: 10),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),
@@ -107,44 +107,45 @@ class _TournamentCardState extends State<TournamentCard> {
         ),
         child: Row(
           children: [
-           GestureDetector(
-             onTap: () {
-               imageViewer(context,tournamentdata?.coverPhoto);
-             },
-             child: CircleAvatar(
-                  radius: 40,
-                  backgroundImage: tournamentdata?.coverPhoto != null
-                      ? FallbackImageProvider(toImageUrl(tournamentdata!.coverPhoto!),'assets/images/logo.png')
-                      : const AssetImage('assets/images/logo.png') as ImageProvider,
-                  backgroundColor: Colors.transparent,
-                ),
+           Container(
+             margin: const EdgeInsets.only(left:10),
+             child: GestureDetector(
+               onTap: () {
+                 imageViewer(context,tournamentdata?.coverPhoto);
+               },
+               child: CircleAvatar(
+                    radius: 45,
+                    backgroundImage: tournamentdata?.coverPhoto != null
+                        ? FallbackImageProvider(toImageUrl(tournamentdata!.coverPhoto!),'assets/images/logo.png')
+                        : const AssetImage('assets/images/logo.png') as ImageProvider,
+                    backgroundColor: Colors.transparent,
+                  ),
+             ),
            ),
             Expanded(
               child: Padding(
-                padding: const EdgeInsets.only(left: 8),
+                padding: const EdgeInsets.only(left: 15),
                 child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: Center(
-                            child: Text(
-                              widget.tournament.tournamentName ?? "Unkown Tournament",
-                              style: Get.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: AppTheme.darkYellowColor,
-                              ),
-                              softWrap: true,
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
+                        Center(
+                          child: Text(
+                            widget.tournament.tournamentName ?? "Unkown Tournament",
+                            style: Get.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: AppTheme.darkYellowColor,
                             ),
+                            softWrap: true,
+                            maxLines: 2,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        const SizedBox(width: 8),
                         IconButton(
                           onPressed: () {
                             Get.bottomSheet(

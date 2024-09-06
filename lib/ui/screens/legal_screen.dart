@@ -7,6 +7,7 @@ import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:html/parser.dart' as htmlparser;
 import '../../data/controller/misc_controller.dart';
+import '../../utils/app_logger.dart';
 
 class LegalViewScreen extends StatefulWidget {
   final String title;
@@ -28,6 +29,7 @@ class _LegalViewScreenState extends State<LegalViewScreen> {
   Widget build(BuildContext context) {
     final controller = Get.find<MiscController>();
     final authController = Get.find<AuthController>();
+    logger.d("The Slug Type is :${widget.slug}");
     return GradientBuilder(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -81,6 +83,10 @@ class _LegalViewScreenState extends State<LegalViewScreen> {
                         }
                         final content=snapshot.data ??' ';
                         final isFAQ=content.contains('type: faq') || content.contains('<strong>');
+                        final isPolicy=content.contains('type: privacy-policy') || content.contains('Privacy Policy');
+                        if(isPolicy){
+                           return HtmlWidget(content);
+                        }
                         if(isFAQ){
                           final document=htmlparser.parse(content);
                           final paragraph=document.getElementsByTagName('p');
@@ -110,23 +116,37 @@ class _LegalViewScreenState extends State<LegalViewScreen> {
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: FaqItems.length,
                             itemBuilder: (context, index) {
-                              return ExpansionTile(
-                                title: Text(
-                                    FaqItems[index]['question']!,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    )
-                                ),
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Text(
-                                      FaqItems[index]['answer']!,
-                                      style: Theme.of(context).textTheme.bodyMedium,
-                                    ),
+                              return Container(
+                                width: Get.width,
+                                margin: const EdgeInsets.symmetric(vertical: 5),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.black12,
+                                    width: 1,
                                   ),
-                                ],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Theme(
+                                  data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                                  child: ExpansionTile(
+                                    title: Text(
+                                        FaqItems[index]['question']!,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        )
+                                    ),
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 20,right: 5),
+                                        child: Text(
+                                          FaqItems[index]['answer']!,
+                                          style: Theme.of(context).textTheme.bodyMedium,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               );
                             },
                           );

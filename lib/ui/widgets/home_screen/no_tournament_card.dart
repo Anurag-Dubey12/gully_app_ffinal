@@ -28,10 +28,6 @@ class NoTournamentCard extends StatelessWidget {
                 scale: 2.5,
               ),
               const SizedBox(height: 10),
-              // Text(
-              //   'Oops, No matches on this day.',
-              //   style: TextStyle(color: Colors.grey.shade700, fontSize: 16),
-              // ),
               Text(
                 AppLocalizations.of(context)!.no_matches,
                 style: TextStyle(color: Colors.grey.shade700, fontSize: 16),

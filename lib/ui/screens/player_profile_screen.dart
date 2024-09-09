@@ -230,12 +230,12 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                                     ));
                               },
                             ),
-                            ProfileTileCard(
-                              text: 'Purchase Ads',
-                              onTap: () {
-                                Get.to(() => const PromoteBannerScreen());
-                              },
-                            ),
+                            // ProfileTileCard(
+                            //   text: 'Purchase Ads',
+                            //   onTap: () {
+                            //     Get.to(() => const PromoteBannerScreen());
+                            //   },
+                            // ),
                           ],
                         ),
                       ),

@@ -23,7 +23,7 @@ class CurrentTournamentCard extends GetView<TournamentController> {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: Obx(() {
-          if (controller.matches.isEmpty) {
+          if (controller.tournamentList.isEmpty) {
             return const NoTournamentCard();
           } else {
             return ListView.builder(
@@ -57,7 +57,6 @@ class _Card extends StatelessWidget {
     ScoreboardModel? scoreboard = tournament.scoreBoard == null
         ? null
         : ScoreboardModel.fromJson(tournament.scoreBoard!);
-
     return Padding(
       key: super.key,
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
@@ -169,7 +168,7 @@ class _Card extends StatelessWidget {
                                 );
                               },
                               style: ButtonStyle(
-                                padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal: 8)),
+                                padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 8)),
                               ),
                               child: Text('View Score',
                                   style: Get.textTheme.bodyMedium?.copyWith(
@@ -186,7 +185,7 @@ class _Card extends StatelessWidget {
                 ),
               ],
             ),
-            Positioned(
+            const Positioned(
               top: 8,
               right: 8,
               child: BlinkingLiveText(),
@@ -198,7 +197,7 @@ class _Card extends StatelessWidget {
   }
 
   String _getScore(dynamic innings) {
-    if (innings == null) return 'yet to bat';
+    if (innings == null) return 'YTB';
     int? totalScore = innings.totalScore;
     int? totalWickets = innings.totalWickets;
     if (totalScore == null || totalWickets == null) return 'N/A';
@@ -207,6 +206,8 @@ class _Card extends StatelessWidget {
 }
 
 class BlinkingLiveText extends StatefulWidget {
+  const BlinkingLiveText({super.key});
+
   @override
   _BlinkingLiveTextState createState() => _BlinkingLiveTextState();
 }

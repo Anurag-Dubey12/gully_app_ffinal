@@ -177,7 +177,7 @@ class _CardState extends State<_Card> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
-
+    logger.d("The Total Tournament: ${controller.tournamentList.map((t)=>t.tournamentName)}");
     logger.d('build');
     return GestureDetector(
       onTap: () {

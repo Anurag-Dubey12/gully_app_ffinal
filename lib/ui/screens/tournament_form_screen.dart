@@ -39,13 +39,12 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
   DateTime? to;
   bool tncAccepted = false;
   final TextEditingController _nameController = TextEditingController();
-
   final TextEditingController _rulesController = TextEditingController();
   final TextEditingController _prizesController = TextEditingController();
   final TextEditingController _entryFeeController = TextEditingController();
   final TextEditingController _ballChargesController = TextEditingController();
   final TextEditingController _breakfastChargesController =
-  TextEditingController();
+      TextEditingController();
   final TextEditingController _teamLimitController = TextEditingController();
 
   final TextEditingController _addressController = TextEditingController();
@@ -74,12 +73,14 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
     }
     setState(() {});
   }
+
   bool isCoHost() {
     final authController = Get.find<AuthController>();
     final currentUserId = authController.state?.id;
     return (widget.tournament?.coHost1?.id == currentUserId) ||
         (widget.tournament?.coHost2?.id == currentUserId);
   }
+
   @override
   void initState() {
     super.initState();
@@ -120,11 +121,10 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
     setState(() {});
   }
 
-
   @override
   Widget build(BuildContext context) {
     final TournamentController tournamentController =
-    Get.find<TournamentController>();
+        Get.find<TournamentController>();
 
     final AuthController authController = Get.find<AuthController>();
     return DecoratedBox(
@@ -158,126 +158,117 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                     child: isLoading
                         ? const CircularProgressIndicator()
                         : PrimaryButton(
-                      onTap: () async {
-                        try {
-                          if (_key.currentState!.validate()) {
-                            if (from == null || to == null) {
-                              errorSnackBar(
-                                  'Please select tournament start and end date');
-                              return;
-                            }
-                            if (_image == null && widget.tournament?.coverPhoto == null) {
-                              errorSnackBar('Please select a cover image');
-                              return;
-                            }
-                            if (isCoHost()) {
-                              errorSnackBar('Co-hosts are not allowed to edit tournament details');
-                              return;
-                            }
-                            // tournmanent name should not contain emojis or special characters except for alphabets and numbers
+                            onTap: () async {
+                              try {
+                                if (_key.currentState!.validate()) {
+                                  if (from == null || to == null) {
+                                    errorSnackBar(
+                                        'Please select tournament start and end date');
+                                    return;
+                                  }
+                                  if (_image == null &&
+                                      widget.tournament?.coverPhoto == null) {
+                                    errorSnackBar(
+                                        'Please select a cover image');
+                                    return;
+                                  }
+                                  if (isCoHost()) {
+                                    errorSnackBar(
+                                        'Co-hosts are not allowed to edit tournament details');
+                                    return;
+                                  }
+                                  // tournmanent name should not contain emojis or special characters except for alphabets and numbers
 
-                            setState(() {
-                              isLoading = true;
-                            });
+                                  setState(() {
+                                    isLoading = true;
+                                  });
 
-                            String? base64;
-                            if (_image != null) {
-                              base64 =
-                              await convertImageToBase64(_image!);
-                            }
-                            Map<String, dynamic> tournament = {
-                              "tournamentStartDateTime":
-                              from?.toIso8601String(),
-                              "tournamentEndDateTime":
-                              to?.toIso8601String(),
-                              "tournamentName": _nameController.text,
-                              "tournamentCategory": tournamentType,
-                              "ballType": ballType.toLowerCase(),
-                              "pitchType": pitchType,
-                              "matchType": "Tennis ball cricket match",
-                              "tournamentPrize": _prizesController.text,
-                              "fees": _entryFeeController.text,
-                              "ballCharges": _ballChargesController.text,
-                              "breakfastCharges":
-                              _breakfastChargesController.text,
-                              "stadiumAddress": _addressController.text,
-                              "tournamentLimit":
-                              _teamLimitController.text,
-                              "gameType": "CRICKET",
-                              "selectLocation": _addressController.text,
-                              "latitude": tournamentController
-                                  .coordinates.value.latitude,
-                              "longitude": tournamentController
-                                  .coordinates.value.longitude,
-                              "rules": _rulesController.text,
-                              'coverPhoto': base64,
-                              'coHost1Name':
-                              _cohost1Name.text.trim().isEmpty
-                                  ? null
-                                  : _cohost1Name.text,
-                              'coHost1Phone':
-                              _cohost1Phone.text.trim().isEmpty
-                                  ? null
-                                  : _cohost1Phone.text,
-                              'coHost2Name': _cohost2Name.text.isEmpty
-                                  ? null
-                                  : _cohost2Name.text,
-                              'coHost2Phone': _cohost2Phone.text.isEmpty
-                                  ? null
-                                  : _cohost2Phone.text,
-                              // 'disclaimer': _disclaimerController.text,
-                            };
-                            if (widget.tournament != null) {
-                              bool isOk = await tournamentController
-                                  .updateTournament({
-                                ...tournament,
-                              }, widget.tournament!.id);
-                              if (isOk) {
-                                Get.back();
-                                Get.forceAppUpdate();
-                                successSnackBar(
-                                    'Tournament Updated Successfully');
+                                  String? base64;
+                                  if (_image != null) {
+                                    base64 =
+                                        await convertImageToBase64(_image!);
+                                  }
+                                  Map<String, dynamic> tournament = {
+                                    "tournamentStartDateTime":
+                                        from?.toIso8601String(),
+                                    "tournamentEndDateTime":
+                                        to?.toIso8601String(),
+                                    "tournamentName": _nameController.text,
+                                    "tournamentCategory": tournamentType,
+                                    "ballType": ballType.toLowerCase(),
+                                    "pitchType": pitchType,
+                                    "matchType": "Tennis ball cricket match",
+                                    "tournamentPrize": _prizesController.text,
+                                    "fees": _entryFeeController.text,
+                                    "ballCharges": _ballChargesController.text,
+                                    "breakfastCharges":
+                                        _breakfastChargesController.text,
+                                    "stadiumAddress": _addressController.text,
+                                    "tournamentLimit":
+                                        _teamLimitController.text,
+                                    "gameType": "CRICKET",
+                                    "selectLocation": _addressController.text,
+                                    "latitude": tournamentController
+                                        .coordinates.value.latitude,
+                                    "longitude": tournamentController
+                                        .coordinates.value.longitude,
+                                    "rules": _rulesController.text,
+                                    'coverPhoto': base64,
+                                    'coHost1Name':
+                                        _cohost1Name.text.trim().isEmpty
+                                            ? null
+                                            : _cohost1Name.text,
+                                    'coHost1Phone':
+                                        _cohost1Phone.text.trim().isEmpty
+                                            ? null
+                                            : _cohost1Phone.text,
+                                    'coHost2Name': _cohost2Name.text.isEmpty
+                                        ? null
+                                        : _cohost2Name.text,
+                                    'coHost2Phone': _cohost2Phone.text.isEmpty
+                                        ? null
+                                        : _cohost2Phone.text,
+                                    // 'disclaimer': _disclaimerController.text,
+                                  };
+                                  if (widget.tournament != null) {
+                                    bool isOk = await tournamentController
+                                        .updateTournament({
+                                      ...tournament,
+                                    }, widget.tournament!.id);
+                                    if (isOk) {
+                                      Get.back();
+                                      Get.forceAppUpdate();
+                                      successSnackBar(
+                                          'Tournament Updated Successfully');
+                                    }
+                                  } else {
+                                    final tournamentModel =
+                                        await tournamentController
+                                            .createTournament(tournament);
+
+                                    authController.getUser();
+                                    // if (tournament != null) {
+                                    //   final result = await Get.to(() => PaymentPage(tournament: tournamentModel));
+                                    //   if (result == null || result == false) {
+                                    //     await tournamentController.cancelTournament(tournamentModel.id);
+                                    //     Get.snackbar("Tournament", "Your tournament Deleted Successfully");
+                                    //   }
+                                    // }
+                                    Get.to(() => PaymentPage(
+                                        tournament: tournamentModel));
+
+                                  }
+                                }
+                              } finally {
+                                setState(() {
+                                  isLoading = false;
+                                });
                               }
-                            } else {
-                              final tournamentModel =
-                              await tournamentController
-                                  .createTournament(tournament);
-
-                              authController.getUser();
-                              Get.to(() => PaymentPage(
-                                  tournament: tournamentModel
-                              ));
-
-                              // Get.to(() => PaymentPage(
-                              //   tournamentData: tournament,
-                              //   onPaymentSuccess: (TournamentModel createdTournament) {
-                              //     authController.getUser();
-                              //     Get.offAll(() => const HomeScreen(),
-                              //         predicate: (route) => route.name == '/HomeScreen');
-                              //     successSnackBar(
-                              //       'Congratulations, Organizer!\nYour tournament has been successfully created.',
-                              //     );
-                              //   },
-                              // ));
-                              // Get.back();
-                              // successSnackBar(
-                              //   'Congratulations, Organizer!\nYour tournament has been successfully created.',
-                              // ).then((value) => Get.offAll(
-                              //     () => const HomeScreen(),
-                              //     predicate: (route) =>
-                              //         route.name == '/HomeScreen'));
-                            }
-                          }
-                        } finally {
-                          setState(() {
-                            isLoading = false;
-                          });
-                        }
-                        // Get.to(() => const SelectLocationScreen());
-                      },
-                      isDisabled: !tncAccepted,
-                      title: 'Submit',
-                    ),
+                              // Get.to(() => const SelectLocationScreen());
+                            },
+                            isDisabled: !tncAccepted,
+                            title: 'Submit',
+                          ),
                   ),
                 ],
               ),
@@ -299,7 +290,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                       boxShadow: [
                         BoxShadow(
                             color:
-                            AppTheme.secondaryYellowColor.withOpacity(0.3),
+                                AppTheme.secondaryYellowColor.withOpacity(0.3),
                             blurRadius: 20,
                             spreadRadius: 2,
                             offset: const Offset(0, 70))
@@ -360,91 +351,91 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                   ]),
                               child: _image != null
                                   ? SizedBox(
-                                height: 130,
-                                child: Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius:
-                                      BorderRadius.circular(20),
-                                      child: SizedBox(
-                                        width: Get.width,
-                                        height: 120,
-                                        child: Image.file(
-                                          File(
-                                            _image!.path,
+                                      height: 130,
+                                      child: Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            child: SizedBox(
+                                              width: Get.width,
+                                              height: 120,
+                                              child: Image.file(
+                                                File(
+                                                  _image!.path,
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
                                           ),
-                                          fit: BoxFit.cover,
-                                        ),
+                                          Positioned(
+                                            right: 0,
+                                            bottom: 0,
+                                            child: IconButton(
+                                                onPressed: () {
+                                                  pickImage();
+                                                },
+                                                icon: const Icon(
+                                                  Icons.edit,
+                                                  color: Colors.white,
+                                                )),
+                                          )
+                                        ],
                                       ),
-                                    ),
-                                    Positioned(
-                                      right: 0,
-                                      bottom: 0,
-                                      child: IconButton(
-                                          onPressed: () {
-                                            pickImage();
-                                          },
-                                          icon: const Icon(
-                                            Icons.edit,
-                                            color: Colors.white,
-                                          )),
                                     )
-                                  ],
-                                ),
-                              )
                                   : widget.tournament?.coverPhoto != null
-                                  ? SizedBox(
-                                height: 130,
-                                child: Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius:
-                                      BorderRadius.circular(20),
-                                      child: SizedBox(
-                                        width: Get.width,
-                                        height: 120,
-                                        child: Image.network(
-                                          toImageUrl(widget
-                                              .tournament!
-                                              .coverPhoto!),
-                                          fit: BoxFit.cover,
+                                      ? SizedBox(
+                                          height: 130,
+                                          child: Stack(
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                                child: SizedBox(
+                                                  width: Get.width,
+                                                  height: 120,
+                                                  child: Image.network(
+                                                    toImageUrl(widget
+                                                        .tournament!
+                                                        .coverPhoto!),
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                                ),
+                                              ),
+                                              Positioned(
+                                                right: 0,
+                                                bottom: 0,
+                                                child: IconButton(
+                                                    onPressed: () {
+                                                      pickImage();
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.edit,
+                                                      color: Colors.white,
+                                                    )),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      : const Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              // if () {
+                                              //   errorSnackBar('Co-hosts are not allowed to edit tournament details');
+                                              //   return;
+                                              // }
+                                              Icon(Icons.photo),
+                                              Text('Add Cover Photo',
+                                                  style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      right: 0,
-                                      bottom: 0,
-                                      child: IconButton(
-                                          onPressed: () {
-                                            pickImage();
-                                          },
-                                          icon: const Icon(
-                                            Icons.edit,
-                                            color: Colors.white,
-                                          )),
-                                    )
-                                  ],
-                                ),
-                              )
-                                  : const Center(
-                                child: Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.center,
-                                  children: [
-                                    // if () {
-                                    //   errorSnackBar('Co-hosts are not allowed to edit tournament details');
-                                    //   return;
-                                    // }
-                                    Icon(Icons.photo),
-                                    Text('Add Cover Photo',
-                                        style: TextStyle(
-                                            color: Colors.grey,
-                                            fontSize: 12,
-                                            fontWeight:
-                                            FontWeight.w500)),
-                                  ],
-                                ),
-                              ),
                             ),
                           ),
                           const SizedBox(
@@ -513,7 +504,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                 }
                                 to = e;
                               });
-                            }, isAds: false,
+                            },
+                            isAds: false,
                           ),
                           Text(AppLocalizations.of(context)!.tournamentCategory,
                               style: Get.textTheme.headlineMedium?.copyWith(
@@ -536,7 +528,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                               'corporate',
                               'series',
                               'open'
-                            ], isAds: false,
+                            ],
+                            isAds: false,
                           ),
                           const SizedBox(
                             height: 18,
@@ -560,41 +553,43 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                               'tennis',
                               'leather',
                               'others',
-                            ], isAds: false,
+                            ],
+                            isAds: false,
                           ),
                           tournamentType == "turf"
                               ? const SizedBox()
                               : Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const SizedBox(
-                                height: 18,
-                              ),
-                              Text(
-                                  AppLocalizations.of(context)!.pitchType,
-                                  style: Get.textTheme.headlineMedium
-                                      ?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                      fontSize: 16)),
-                              DropDownWidget(
-                                title: AppLocalizations.of(context)!
-                                    .selectPitchType,
-                                onSelect: (e) {
-                                  setState(() {
-                                    pitchType = e;
-                                  });
-                                  Get.close();
-                                  Get.close();
-                                },
-                                selectedValue: pitchType.toUpperCase(),
-                                items: const [
-                                  'rough',
-                                  'cement',
-                                ], isAds: false,
-                              ),
-                            ],
-                          ),
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(
+                                      height: 18,
+                                    ),
+                                    Text(
+                                        AppLocalizations.of(context)!.pitchType,
+                                        style: Get.textTheme.headlineMedium
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.black,
+                                                fontSize: 16)),
+                                    DropDownWidget(
+                                      title: AppLocalizations.of(context)!
+                                          .selectPitchType,
+                                      onSelect: (e) {
+                                        setState(() {
+                                          pitchType = e;
+                                        });
+                                        Get.close();
+                                        Get.close();
+                                      },
+                                      selectedValue: pitchType.toUpperCase(),
+                                      items: const [
+                                        'rough',
+                                        'cement',
+                                      ],
+                                      isAds: false,
+                                    ),
+                                  ],
+                                ),
                           const SizedBox(
                             height: 9,
                           ),
@@ -653,7 +648,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                           FormInput(
                             controller: _cohost1Phone,
                             label:
-                            AppLocalizations.of(context)!.cohost1ContactNo,
+                                AppLocalizations.of(context)!.cohost1ContactNo,
                             textInputType: TextInputType.number,
                             maxLength: 10,
                             validator: (e) {
@@ -722,7 +717,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                           FormInput(
                             controller: _cohost2Phone,
                             label:
-                            AppLocalizations.of(context)!.cohost2ContactNo,
+                                AppLocalizations.of(context)!.cohost2ContactNo,
                             textInputType: TextInputType.number,
                             maxLength: 10,
                             validator: (e) {
@@ -805,7 +800,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
 
                               // Get.back();
                               Get.to(
-                                    () => SelectLocationScreen(
+                                () => SelectLocationScreen(
                                   onSelected: (e, l) {
                                     setState(() {
                                       _addressController.text = e;
@@ -884,7 +879,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                           FormInput(
                             controller: _breakfastChargesController,
                             label:
-                            AppLocalizations.of(context)!.breakfastCharges,
+                                AppLocalizations.of(context)!.breakfastCharges,
                             textInputType: TextInputType.number,
                             validator: (e) {
                               if (e == null || e.trim().isEmpty) {
@@ -945,7 +940,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                           Get.bottomSheet(BottomSheet(
                                             onClosing: () {},
                                             builder: (builder) =>
-                                            const LegalViewScreen(
+                                                const LegalViewScreen(
                                               title: 'Terms and Conditions',
                                               slug: 'terms',
                                               hideDeleteButton: true,
@@ -967,10 +962,10 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                           Get.bottomSheet(BottomSheet(
                                             onClosing: () {},
                                             builder: (builder) =>
-                                            const LegalViewScreen(
-                                                title: 'Disclaimer',
-                                                slug: 'disclaimer',
-                                                hideDeleteButton: true),
+                                                const LegalViewScreen(
+                                                    title: 'Disclaimer',
+                                                    slug: 'disclaimer',
+                                                    hideDeleteButton: true),
                                           ));
                                         },
                                       style: const TextStyle(

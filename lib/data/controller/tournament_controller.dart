@@ -27,7 +27,7 @@ class TournamentController extends GetxController
     });
   }
   RxString location = ''.obs;
-
+  RxString TournName = ''.obs;
   Future<void> getCurrentLocation() async {
     final position = await determinePosition();
 
@@ -112,12 +112,11 @@ class TournamentController extends GetxController
         filter: filterD,
         endDate: selectedDate.value.add(const Duration(days: 7)),
       );
-
+      logger.d("The entire Response: ${response.data}");
       if (response.data != null) {
         tournamentList.value = (response.data!['tournamentList'] as List<dynamic>?)
             ?.map((e) => TournamentModel.fromJson(e as Map<String, dynamic>))
             .toList() ?? [];
-
         matches.value = (response.data!['matches'] as List<dynamic>?)
             ?.map((e) => MatchupModel.fromJson(e as Map<String, dynamic>))
             .toList() ?? [];
@@ -146,6 +145,7 @@ class TournamentController extends GetxController
       organizerTournamentList.value = response.data!['tournamentList']
           .map<TournamentModel>((e) => TournamentModel.fromJson(e))
           .toList();
+
       organizerTournamentList.refresh();
       // change(GetStatus.success(null));
     } catch (e) {
@@ -369,20 +369,6 @@ class TournamentController extends GetxController
     }
   }
 
-  // Future<List<Transaction>> getTransactions() async {
-  //   try {
-  //     final response = await tournamentApi.getTransactions();
-  //     print("API Response: ${response.data}");
-  //     return response.data!['transactions']['history']
-  //         .map<Transaction>((e) => Transaction.fromJson(e))
-  //         .toList();
-  //   } catch (e) {
-  //     errorSnackBar(e.toString());
-  //     rethrow;
-  //   }
-  // }
-
-  //MyCode
   Future<List<Transaction>> getTransactions() async {
     try {
       final response = await tournamentApi.getTransactions();

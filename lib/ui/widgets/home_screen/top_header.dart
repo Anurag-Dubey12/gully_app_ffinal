@@ -78,6 +78,7 @@ class TopHeader extends GetView<AuthController> {
         Row(
           children: [
             const _NotificationIcon(),
+            const SizedBox(width: 10),
             SizedBox(
               width: 30,
               child: IconButton(
@@ -92,6 +93,7 @@ class TopHeader extends GetView<AuthController> {
                 color: Colors.white,
               ),
             ),
+            const SizedBox(width: 15),
           ],
         )
       ],

@@ -7,9 +7,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
-import 'package:gully_app/ui/screens/organizer_profile.dart';
 import 'package:gully_app/ui/screens/search_tournament_screen.dart';
-import 'package:gully_app/ui/screens/shop/shop_home.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/app_drawer.dart';
@@ -18,12 +16,8 @@ import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
-import 'package:iconsax/iconsax.dart';
-
-import '../widgets/arc_clipper.dart';
 import '../widgets/home_screen/SliverAppBarDelegate.dart';
 import '../widgets/home_screen/top_header.dart';
-import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -193,242 +187,265 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.transparent,
           body: Stack(
             children: [
-              ClipPath(
-                clipper: ArcClipper(),
+              // ClipPath(
+              //   clipper: ArcClipper(),
+              //   child: Container(
+              //     decoration: BoxDecoration(
+              //       gradient: const RadialGradient(
+              //         colors: [
+              //           Color(0xff368EBF),
+              //           AppTheme.primaryColor,
+              //         ],
+              //         center: Alignment(-0.4, -0.8),
+              //       ),
+              //       boxShadow: [
+              //         BoxShadow(
+              //             color: AppTheme.secondaryYellowColor.withOpacity(0.3),
+              //             blurRadius: 20,
+              //             spreadRadius: 2,
+              //             offset: const Offset(0, 70))
+              //       ],
+              //     ),
+              //     width: double.infinity,
+              //   ),
+              // ),
+              Positioned(
+                top: 0,
+                left: 0,
+                right: 0,
                 child: Container(
-                  decoration: BoxDecoration(
-                    gradient: const RadialGradient(
-                      colors: [
-                        Color(0xff368EBF),
-                        AppTheme.primaryColor,
-                      ],
-                      center: Alignment(-0.4, -0.8),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                          color: AppTheme.secondaryYellowColor.withOpacity(0.3),
-                          blurRadius: 20,
-                          spreadRadius: 2,
-                          offset: const Offset(0, 70))
-                    ],
-                  ),
-                  width: double.infinity,
+                  width: Get.width,
+                  height: MediaQuery.of(context).padding.top + 55,
+                  decoration: const BoxDecoration(
+                      gradient: RadialGradient(colors: [
+                    Color(0xff368EBF),
+                    AppTheme.primaryColor,
+                  ], center: Alignment(-0.4, -0.8))),
                 ),
               ),
               Positioned(
-                top: Get.statusBarHeight / 2.3,
-                bottom: 0,
-                child: SizedBox(
-                  width: Get.width,
-                  height: Get.height - 150,
-                  child: CustomScrollView(
-                    slivers: [
-                      SliverToBoxAdapter(
-                        child: Column(
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: TopHeader(),
-                            ),
-                            const SizedBox(height: 20),
-                            //For multiple sports icon and text
-                            // SizedBox(
-                            //   height: 60,
-                            //   child: ListView.separated(
-                            //       scrollDirection: Axis.horizontal,
-                            //       shrinkWrap: true,
-                            //       itemBuilder: (context, index) {
-                            //         return SportsCard(
-                            //           index: index,
-                            //         );
-                            //       },
-                            //       padding: const EdgeInsets.only(left: 20),
-                            //       separatorBuilder: (context, index) =>
-                            //           const SizedBox(
-                            //             width: 15,
-                            //           ),
-                            //       itemCount: 7),
-                            // ),
-
-                            //Optional
-                            //For particular sports such as cricker
-                            Container(
-                              width: 130,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: const Color.fromARGB(255, 255, 157, 46),
-                                borderRadius: BorderRadius.circular(21),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: AppTheme.secondaryYellowColor
-                                          .withOpacity(0.3),
-                                      blurRadius: 2,
-                                      spreadRadius: 1,
-                                      offset: const Offset(0, -1))
-                                ],
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    'assets/images/cricket_icon.png',
-                                    color: Colors.white,
-                                    height: 30,
-                                    width: 30,
-                                  ),
-                                  const Text(
-                                    'Cricket',
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 18),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            const FullBannerSlider(isAds: false),
-                            const SizedBox(height: 20),
-                          ],
-                        ),
-                      ),
-                      SliverPersistentHeader(
-                        pinned: true,
-                        delegate: SliverAppBarDelegate(
-                          minHeight: 90,
-                          maxHeight: 90,
-                          child: DecoratedBox(
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              image: DecorationImage(
-                                  image: AssetImage(
-                                    'assets/images/sports_icon.png',
-                                  ),
-                                  fit: BoxFit.cover),
-                            ),
-                            child: Column(
-                              children: [
-                                const DateTimesCard(),
-                                // const TitleWidget(),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 5),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Material(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                          child: InkWell(
-                                            borderRadius:
-                                                BorderRadius.circular(28),
-                                            onTap: () {
-                                              Get.to(() =>
-                                                  const SearchTournamentScreen());
-                                            },
-                                            child: Ink(
-                                              height: 35,
-                                              decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                border: Border.all(
-                                                    color: Colors.black,
-                                                    width: 0.5),
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                              ),
-                                              child: const Row(
-                                                children: [
-                                                  SizedBox(width: 18),
-                                                  Icon(Icons.search,
-                                                      color: Colors.black),
-                                                  SizedBox(width: 20),
-                                                  Text('Search...',
-                                                      style: TextStyle(
-                                                          color: Colors.black)),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      PopupMenuButton<String>(
-                                        onSelected: (String value) {
-                                          setState(() {
-                                            selected = value;
-                                            controller.getTournamentList(
-                                                filterD: value.toLowerCase());
-                                          });
-                                        },
-                                        itemBuilder: (BuildContext context) =>
-                                            <PopupMenuEntry<String>>[
-                                          const PopupMenuItem<String>(
-                                            value: 'Past',
-                                            child: Row(
-                                              children: [
-                                                Icon(Icons.history,
-                                                    color: Colors.blue),
-                                                SizedBox(width: 10),
-                                                Text('Past'),
-                                              ],
-                                            ),
-                                          ),
-                                          const PopupMenuItem<String>(
-                                            value: 'Current',
-                                            child: Row(
-                                              children: [
-                                                Icon(Icons.event,
-                                                    color: Colors.green),
-                                                SizedBox(width: 10),
-                                                Text('Current'),
-                                              ],
-                                            ),
-                                          ),
-                                          const PopupMenuItem<String>(
-                                            value: 'Upcoming',
-                                            child: Row(
-                                              children: [
-                                                Icon(Icons.schedule,
-                                                    color: Colors.orange),
-                                                SizedBox(width: 10),
-                                                Text('Upcoming'),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                        ),
-                                        color: Colors.white,
-                                        elevation: 8,
-                                        child: Container(
-                                          height: 40,
-                                          width: 40,
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            border:
-                                                Border.all(color: Colors.black),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: const Icon(Icons.filter_list,
-                                              color: Colors.black),
-                                        ),
-                                      )
+                  top: MediaQuery.of(context).padding.top,
+                  bottom: 0,
+                  child: SizedBox(
+                    width: Get.width,
+                    height: Get.height - 150,
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: Column(
+                            children: [
+                              Container(
+                                decoration: const BoxDecoration(
+                                  gradient: RadialGradient(
+                                    colors: [
+                                      Color(0xff368EBF),
+                                      AppTheme.primaryColor,
                                     ],
                                   ),
                                 ),
-                              ],
+                                width: double.infinity,
+                                child: const TopHeader(),
+                              ),
+                              // const SizedBox(height: 20),
+                              //For multiple sports icon and text
+                              // SizedBox(
+                              //   height: 60,
+                              //   child: ListView.separated(
+                              //       scrollDirection: Axis.horizontal,
+                              //       shrinkWrap: true,
+                              //       itemBuilder: (context, index) {
+                              //         return SportsCard(
+                              //           index: index,
+                              //         );
+                              //       },
+                              //       padding: const EdgeInsets.only(left: 20),
+                              //       separatorBuilder: (context, index) =>
+                              //           const SizedBox(
+                              //             width: 15,
+                              //           ),
+                              //       itemCount: 7),
+                              // ),
+
+                              //Optional
+                              //For particular sports such as cricker
+                              // Container(
+                              //   width: 130,
+                              //   height: 50,
+                              //   decoration: BoxDecoration(
+                              //     color:
+                              //         const Color.fromARGB(255, 255, 157, 46),
+                              //     borderRadius: BorderRadius.circular(21),
+                              //     boxShadow: [
+                              //       BoxShadow(
+                              //           color: AppTheme.secondaryYellowColor
+                              //               .withOpacity(0.3),
+                              //           blurRadius: 2,
+                              //           spreadRadius: 1,
+                              //           offset: const Offset(0, -1))
+                              //     ],
+                              //   ),
+                              //   child: Row(
+                              //     mainAxisAlignment: MainAxisAlignment.center,
+                              //     children: [
+                              //       Image.asset(
+                              //         'assets/images/cricket_icon.png',
+                              //         color: Colors.white,
+                              //         height: 30,
+                              //         width: 30,
+                              //       ),
+                              //       const Text(
+                              //         'Cricket',
+                              //         style: TextStyle(
+                              //             color: Colors.white, fontSize: 18),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
+                              const SizedBox(height: 10),
+                              const FullBannerSlider(isAds: false),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                        ),
+                        SliverPersistentHeader(
+                          pinned: true,
+                          delegate: SliverAppBarDelegate(
+                            minHeight: 90,
+                            maxHeight: 90,
+                            child: DecoratedBox(
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                image: DecorationImage(
+                                    image: AssetImage(
+                                      'assets/images/sports_icon.png',
+                                    ),
+                                    fit: BoxFit.cover),
+                              ),
+                              child: Column(
+                                children: [
+                                  const DateTimesCard(),
+                                  // const TitleWidget(),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 5),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Material(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            child: InkWell(
+                                              borderRadius:
+                                                  BorderRadius.circular(28),
+                                              onTap: () {
+                                                Get.to(() =>
+                                                    const SearchTournamentScreen());
+                                              },
+                                              child: Ink(
+                                                height: 35,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  border: Border.all(
+                                                      color: Colors.black,
+                                                      width: 0.5),
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                child: const Row(
+                                                  children: [
+                                                    SizedBox(width: 18),
+                                                    Icon(Icons.search,
+                                                        color: Colors.black),
+                                                    SizedBox(width: 20),
+                                                    Text('Search...',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.black)),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        PopupMenuButton<String>(
+                                          onSelected: (String value) {
+                                            setState(() {
+                                              selected = value;
+                                              controller.getTournamentList(
+                                                  filterD: value);
+                                            });
+                                          },
+                                          itemBuilder: (BuildContext context) =>
+                                              <PopupMenuEntry<String>>[
+                                            const PopupMenuItem<String>(
+                                              value: 'past',
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.history,
+                                                      color: Colors.blue),
+                                                  SizedBox(width: 10),
+                                                  Text('Past'),
+                                                ],
+                                              ),
+                                            ),
+                                            const PopupMenuItem<String>(
+                                              value: 'current',
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.event,
+                                                      color: Colors.green),
+                                                  SizedBox(width: 10),
+                                                  Text('Current'),
+                                                ],
+                                              ),
+                                            ),
+                                            const PopupMenuItem<String>(
+                                              value: 'upcoming',
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.schedule,
+                                                      color: Colors.orange),
+                                                  SizedBox(width: 10),
+                                                  Text('Upcoming'),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          color: Colors.white,
+                                          elevation: 8,
+                                          child: Container(
+                                            height: 40,
+                                            width: 40,
+                                            decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              border: Border.all(
+                                                  color: Colors.black),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                            child: const Icon(Icons.filter_list,
+                                                color: Colors.black),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SliverToBoxAdapter(
-                        child: TournamentList(),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+                        const SliverToBoxAdapter(
+                          child: TournamentList(),
+                        ),
+                      ],
+                    ),
+                  ))
             ],
           ),
         ),

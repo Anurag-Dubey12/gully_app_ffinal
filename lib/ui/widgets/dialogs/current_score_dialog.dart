@@ -26,19 +26,7 @@ class ScoreBottomDialog extends StatefulWidget {
 
 class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
   late io.Socket socket;
-  //Temporary code for testing ads
-  final List<String> images = [
-    'assets/images/crfi.png',
-    'assets/images/main_image_sec.png',
-    'assets/images/main_img.png',
-    'assets/images/main_image_sec.png',
-    'assets/images/main_immg.png',
-    'assets/images/4.3.png',
-    'assets/images/4.png',
-  ];
 
-  int currentImageIndex = 0;
-  Timer? _imageTimer;
   bool isLoading = true;
   Future getMatchScoreboard() async {
     final sb = await Get.find<ScoreBoardController>()
@@ -58,12 +46,6 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
   void initState() {
     getMatchScoreboard();
     super.initState();
-    _imageTimer = Timer.periodic(const Duration(seconds: 2), (Timer timer) {
-      setState(() {
-        currentImageIndex = (currentImageIndex + 1) % images.length;
-        logger.d("The current image index: $currentImageIndex");
-      });
-    });
   }
 
   @override
@@ -71,7 +53,6 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
     super.dispose();
     final controller = Get.find<ScoreBoardController>();
     controller.disconnect();
-    _imageTimer?.cancel();
   }
 
   @override

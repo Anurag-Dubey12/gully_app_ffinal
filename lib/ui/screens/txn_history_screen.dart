@@ -6,7 +6,7 @@ import 'package:gully_app/ui/screens/txn_details.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:intl/intl.dart';
-
+import 'package:pdf/widgets.dart' as pw;
 class TxnHistoryScreen extends GetView<TournamentController> {
   const TxnHistoryScreen({super.key});
 

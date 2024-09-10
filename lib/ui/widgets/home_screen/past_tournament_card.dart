@@ -21,10 +21,9 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
     return SizedBox(
       // height: Get.height * 0.54,
         child: Obx(() {
-          if (controller.tournamentList.isEmpty) {
-
+          if (controller.tournamentList.isEmpty ||controller.matches.isEmpty) {
             return const NoTournamentCard();
-          } else {
+          }else {
             return ListView.builder(
                 itemCount: controller.matches.length,
                 shrinkWrap: true,
@@ -75,8 +74,6 @@ class _Card extends StatelessWidget {
       } else if (team2Score > team1Score) {
         winnerText = '${scoreboard.team2.name} won by ${10 - team2wickets} wickets';
         // winnerText = '${scoreboard.team2.name} won the game';
-      }else if(scoreboard.isSecondInningsOver){
-       winnerText = 'Match has been cancelled';
       }
       else if (scoreboard.isSecondInningsOver && team2total == team1total) {
         winnerText = 'Match Tied';

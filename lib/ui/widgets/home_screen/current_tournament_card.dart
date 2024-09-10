@@ -25,7 +25,11 @@ class CurrentTournamentCard extends GetView<TournamentController> {
         child: Obx(() {
           if (controller.tournamentList.isEmpty) {
             return const NoTournamentCard();
-          } else {
+          }
+          if(controller.matches.isEmpty){
+            return const NoTournamentCard();
+          }
+          else {
             return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: controller.matches.length,

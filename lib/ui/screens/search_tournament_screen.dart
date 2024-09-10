@@ -6,9 +6,6 @@ import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/home_screen/future_tournament_card.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../utils/app_logger.dart';
-import 'home_screen.dart';
 
 class Debouncer {
   final Duration delay;
@@ -198,8 +195,8 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
             Expanded(
               child: isLoading
                   ? const Center(child: CircularProgressIndicator())
-                  : tournaments.isEmpty
-                  ? const Center(child: Text('Search Tournament'))
+                  // : tournaments.isEmpty
+                  // ? const Center(child: Text('Search Tournament'))
                   : ListView.builder(
                 shrinkWrap: true,
                 physics: const AlwaysScrollableScrollPhysics(),

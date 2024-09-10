@@ -235,6 +235,7 @@ class _HomePageState extends State<HomePage> {
                           child: Column(
                             children: [
                               Container(
+                                margin: const EdgeInsets.only(left: 5),
                                 decoration: const BoxDecoration(
                                   gradient: RadialGradient(
                                     colors: [

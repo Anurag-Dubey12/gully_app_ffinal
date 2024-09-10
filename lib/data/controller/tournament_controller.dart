@@ -27,7 +27,6 @@ class TournamentController extends GetxController
     });
   }
   RxString location = ''.obs;
-  RxString TournName = ''.obs;
   Future<void> getCurrentLocation() async {
     final position = await determinePosition();
 

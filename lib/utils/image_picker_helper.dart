@@ -4,12 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/FallbackImageProvider.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
-import 'package:photo_view/photo_view.dart';
 
 Future<XFile?> imagePickerHelper() async {
   final ImagePicker picker = ImagePicker();

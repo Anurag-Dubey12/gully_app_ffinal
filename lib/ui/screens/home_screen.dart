@@ -27,6 +27,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
+
   @override
   void initState() {
     super.initState();
@@ -68,6 +70,19 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String selected = 'Current';
+  bool isLoading = false;
+
+  //For refreshing
+  Future<void> _handleRefresh() async {
+    setState(() {
+      isLoading = true;
+    });
+    final controller = Get.find<TournamentController>();
+    controller.getTournamentList(filterD: selected);
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -441,8 +456,10 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         ),
-                        const SliverToBoxAdapter(
-                          child: TournamentList(),
+                        SliverToBoxAdapter(
+                          child: isLoading
+                              ? const Center(child: CircularProgressIndicator())
+                              : const TournamentList(),
                         ),
                       ],
                     ),

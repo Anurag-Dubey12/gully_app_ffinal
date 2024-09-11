@@ -299,10 +299,10 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                     width: double.infinity,
                   ),
                 ),
-                const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [],
-                ),
+                // const Column(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [],
+                // ),
                 Container(
                   width: Get.width,
                   height: Get.height,

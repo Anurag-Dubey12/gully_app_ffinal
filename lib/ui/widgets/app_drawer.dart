@@ -247,23 +247,23 @@ class AppDrawer extends GetView<AuthController> {
                 //   icon: Icons.auto_graph,
                 // ),
 
-                // DrawerCard(
-                //   // title: 'About us',
-                //   title: 'Shop',
-                //   onTap: () {
-                //     Get.to(() => const ShopHome());
-                //   },
-                //   icon: Iconsax.shop,
-                // ),
-                //
-                // DrawerCard(
-                //   // title: 'About us',
-                //   title: 'Service',
-                //   onTap: () {
-                //     Get.to(() => const ServiceScreen());
-                //   },
-                //   icon: Icons.sports_cricket_rounded,
-                // ),
+                DrawerCard(
+                  // title: 'About us',
+                  title: 'Shop',
+                  onTap: () {
+                    Get.to(() => const ShopHome());
+                  },
+                  icon: Iconsax.shop,
+                ),
+
+                DrawerCard(
+                  // title: 'About us',
+                  title: 'Service',
+                  onTap: () {
+                    Get.to(() => const ServiceScreen());
+                  },
+                  icon: Icons.sports_cricket_rounded,
+                ),
                 DrawerCard(
                   // title: 'About us',
                   title: AppLocalizations.of(context)!.about_us,

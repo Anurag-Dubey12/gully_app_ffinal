@@ -111,7 +111,7 @@ class _Card extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      imageViewer(context,tournamentdata.coverPhoto);
+                      imageViewer(context,tournamentdata.coverPhoto,true);
                     },
                     child: CircleAvatar(
                       radius: 30,

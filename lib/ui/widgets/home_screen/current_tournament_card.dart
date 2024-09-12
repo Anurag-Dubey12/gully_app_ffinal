@@ -87,7 +87,7 @@ class _Card extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
-                      imageViewer(context, tournamentdata.coverPhoto);
+                      imageViewer(context, tournamentdata.coverPhoto,true);
                     },
                     child: CircleAvatar(
                       radius: 40,

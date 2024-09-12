@@ -8,10 +8,13 @@ import 'package:gully_app/ui/screens/add_team.dart';
 import 'package:gully_app/ui/screens/my_teams.dart';
 import 'package:gully_app/ui/screens/opponent_tournament_list.dart';
 import 'package:gully_app/ui/screens/promote_banner_screen.dart';
+import 'package:gully_app/ui/screens/select_match_type_for_scoreboard.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../data/controller/tournament_controller.dart';
 
 class PlayerProfileScreen extends StatefulWidget {
   const PlayerProfileScreen({super.key});
@@ -228,6 +231,19 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                                 Get.to(() => const OpponentTournamentsScreen(
                                       opponentView: true,
                                     ));
+                              },
+                            ),
+                            ProfileTileCard(
+                              text: 'Score Board',
+                              onTap: () {
+                                final controller =
+                                Get.find<TournamentController>();
+                                controller.getOrganizerTournamentList();
+
+                                // Get.to(() => const CurrentTournamentListScreen(
+                                //       redirectType: RedirectType.scoreboard,
+                                //     ));
+                                Get.to(() => const SelectMatchCategory());
                               },
                             ),
                             // ProfileTileCard(

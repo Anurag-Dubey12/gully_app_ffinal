@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +12,18 @@ import 'package:mime/mime.dart';
 
 Future<XFile?> imagePickerHelper() async {
   final ImagePicker picker = ImagePicker();
-
   final XFile? image =
       await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
 
   return image;
 }
-
+Future<List<XFile?>?> multipleimagePickerHelper() async {
+  final ImagePicker picker = ImagePicker();
+  final List<XFile> images = await picker.pickMultiImage();
+  // final XFile? image =
+  // await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
+  return images ??[];
+}
 Future<String> convertImageToBase64(XFile image) async {
   final bytes = await image.readAsBytes();
   final mimeType = lookupMimeType(image.path);
@@ -26,7 +32,7 @@ Future<String> convertImageToBase64(XFile image) async {
   return mimeType != null ? 'data:$mimeType;base64,$base64Image' : base64Image;
 }
 
-void imageViewer(BuildContext context, String? photoUrl) {
+void imageViewer(BuildContext context, String? photoUrl,bool isnetworkimage) {
   if (photoUrl == null || photoUrl.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('No image available')),
@@ -53,7 +59,8 @@ void imageViewer(BuildContext context, String? photoUrl) {
                 child: InteractiveViewer(
                   minScale: 0.5,
                   maxScale: 4.0,
-                  child: Container(
+                  child: isnetworkimage ?
+                  Container(
                     width: Get.width,
                     height: Get.height,
                     decoration: BoxDecoration(
@@ -65,12 +72,22 @@ void imageViewer(BuildContext context, String? photoUrl) {
                         fit: BoxFit.contain,
                       ),
                     ),
-                  ),
+                  ):
+                  Container(
+                    width: Get.width,
+                    height: Get.height,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: FileImage(File(photoUrl)),
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  )
                 ),
               ),
             ),
             Positioned(
-              top: 40,
+              top: 50,
               right: 20,
               child: IconButton(
                 icon: const Icon(Icons.close, color: Colors.white, size: 30),
@@ -82,4 +99,15 @@ void imageViewer(BuildContext context, String? photoUrl) {
       },
     ),
   );
+}
+
+ImageProvider _getImageProvider(String photoUrl) {
+  if (photoUrl.startsWith('http://') || photoUrl.startsWith('https://')) {
+    return FallbackImageProvider(
+      toImageUrl(photoUrl),
+      'assets/images/logo.png',
+    );
+  } else {
+    return FileImage(File(photoUrl));
+  }
 }

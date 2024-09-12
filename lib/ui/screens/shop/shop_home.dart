@@ -14,6 +14,7 @@ class ShopHome extends StatefulWidget{
 
 class ShopHomeState extends State<ShopHome>{
   final controller=Get.find<AuthController>();
+
   bool isLoading=false;
   final List<Map<String, dynamic>> shopItems = [
     {
@@ -95,7 +96,6 @@ class ShopHomeState extends State<ShopHome>{
       ]
     },
   ];
-
 
   @override
   Widget build(BuildContext context) {

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:gully_app/ui/screens/service/my_service.dart';
 import 'package:gully_app/ui/screens/service/service_register.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -157,7 +158,7 @@ class profile extends State<ServiceProfile> {
                             ProfileTileCard(
                               text: 'View My Service',
                               onTap: () {
-                                Get.to(() => const AddTeam());
+                                Get.to(() => const MyServiceScreen());
                               },
                             ),
                             ProfileTileCard(

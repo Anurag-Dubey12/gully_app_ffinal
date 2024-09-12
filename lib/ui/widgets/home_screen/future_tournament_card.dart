@@ -111,7 +111,8 @@ class _TournamentCardState extends State<TournamentCard> {
              margin: const EdgeInsets.only(left:10),
              child: GestureDetector(
                onTap: () {
-                 imageViewer(context,tournamentdata?.coverPhoto);
+                 imageViewer(context,tournamentdata?.coverPhoto,true);
+                 logger.e("The image url is ${tournamentdata?.coverPhoto}");
                },
                child: CircleAvatar(
                     radius: 45,

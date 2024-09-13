@@ -22,7 +22,7 @@ class ExtrasAndTotal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (scoreboard != null) {
-      return _buildContent(
+      return _extrasData(
           currentInning == 1 ? scoreboard!.firstInnings : scoreboard!.secondInnings
       );
     } else {
@@ -31,13 +31,13 @@ class ExtrasAndTotal extends StatelessWidget {
           final InningsModel? currentInningsModel = currentInning == 1
               ? controller.scoreboard.value?.firstInnings
               : controller.scoreboard.value?.secondInnings;
-          return _buildContent(currentInningsModel);
+          return _extrasData(currentInningsModel);
         },
       );
     }
   }
 
-  Widget _buildContent(InningsModel? inningsModel) {
+  Widget _extrasData(InningsModel? inningsModel) {
     final ExtraModel currentExtras = inningsModel?.extras ??
         ExtraModel(wides: 0, noBalls: 0, byes: 0, legByes: 0, penalty: 0);
     final int currentTotalRuns = inningsModel?.totalScore ?? 0;

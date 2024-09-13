@@ -4,6 +4,8 @@ import 'package:gully_app/data/model/player_model.dart';
 
 import '../../data/controller/team_controller.dart';
 import '../../data/model/team_model.dart';
+import '../../utils/FallbackImageProvider.dart';
+import '../../utils/utils.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
@@ -101,8 +103,12 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
                                           CircleAvatar(
                                             radius: 49,
                                             backgroundColor: Colors.white,
-                                            backgroundImage: NetworkImage(
-                                                widget.teamModel.toImageUrl()),
+                                            backgroundImage: widget.teamModel.toImageUrl().isNotEmpty && widget.teamModel.toImageUrl()!=null ?
+                                            FallbackImageProvider(
+                                                toImageUrl(widget.teamModel.logo ?? "assets/images/logo.png"),
+                                                'assets/images/logo.png'
+                                            ) as ImageProvider
+                                                : const AssetImage('assets/images/logo.png')
                                           ),
                                         ],
                                       ),
@@ -163,7 +169,7 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .w500,
-                                                                  fontSize: 25),
+                                                                  fontSize: 20),
                                                         ),
                                                         Text(
                                                           snapshot.data![index]

@@ -97,9 +97,36 @@ class ShopHomeState extends State<ShopHome>{
     },
   ];
 
+  int _selectedIndex = 0;
+  final PageController _pageController = PageController(initialPage: 0);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle_outlined),
+            label: 'Profile',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        showUnselectedLabels: true,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+            _pageController.jumpToPage(index);
+          });
+        },
+        backgroundColor: Colors.white,
+        elevation: 10,
+        type: BottomNavigationBarType.fixed,
+      ),
       appBar: AppBar(
         title: Row(
           mainAxisAlignment: MainAxisAlignment.end,

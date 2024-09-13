@@ -361,7 +361,8 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                                   itemBuilder: ((context, index) {
                                     // final player = currentInning == 1 ? battingTeamPlayers[index] : opponentBattingTeamPlayers[index];
                                     // return BatterPlayerStat(player, false, currentInning == 1);
-                                    return BatterPlayerStat(battingTeamPlayers[index], false, currentInning == 1);
+                                    // return BatterPlayerStat(battingTeamPlayers[index], false, currentInning == 1);
+                                    return BatterPlayerStat(battingTeamPlayers[index], false,true);
                                   }),
                                 ),
                                 const SizedBox(height: 10),

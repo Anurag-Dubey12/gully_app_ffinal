@@ -72,29 +72,19 @@ class BatterPlayerStat extends StatelessWidget {
   final PlayerModel player;
   final bool? isStriker;
   final bool isFullScreenBoard;
-
-  // const BatterPlayerStat(this.player, this.isStriker, {super.key});
-  // const BatterPlayerStat(this.player, this.isStriker, {this.isFullScreenBoard = false, super.key});
-  const BatterPlayerStat(this.player, this.isStriker, this.isFullScreenBoard);
+  const BatterPlayerStat(this.player, this.isStriker, this.isFullScreenBoard, {super.key});
 
   @override
   Widget build(BuildContext context) {
     bool hasBatted = player.batting != null && player.batting!.balls > 0;
     final ScoreBoardController controller = Get.find<ScoreBoardController>();
-    // double strikeRate = calculateStrikeRate(player.batting!.runs, player.batting!.balls);
-    // bool isStriker = Get.find<ScoreBoardController>().scoreboard.value?.striker != null &&
-    //     player == Get.find<ScoreBoardController>().scoreboard.value!.striker;
     final isCaptain = player.role.toLowerCase() == 'captain';
     final isWicketkeeper = player.role.toLowerCase() == 'wicket keeper';
-    String? strikerid=controller.scoreboard.value?.striker.id;
-    String? nonstrikerid=controller.scoreboard.value?.nonstriker.id;
 
     bool isCurrentBatsman = player.id == controller.scoreboard.value?.striker.id ||
         player.id == controller.scoreboard.value?.nonstriker.id;
 
-
-    logger.d("The current striker is :$strikerid and non Striker id is:$nonstrikerid status is $isCurrentBatsman" );
-    // bool shouldShowNotOut = isCurrentBatsman ;
+    logger.d("The Current Status is:${controller.scoreboard.value?.striker.role} and ${controller.scoreboard.value?.nonstriker.role} ");
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Column(

@@ -27,8 +27,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-
   @override
   void initState() {
     super.initState();
@@ -326,8 +324,8 @@ class _HomePageState extends State<HomePage> {
                         SliverPersistentHeader(
                           pinned: true,
                           delegate: SliverAppBarDelegate(
-                            minHeight: 90,
-                            maxHeight: 90,
+                            minHeight: 95,
+                            maxHeight: 95,
                             child: DecoratedBox(
                               decoration: const BoxDecoration(
                                 color: Colors.white,

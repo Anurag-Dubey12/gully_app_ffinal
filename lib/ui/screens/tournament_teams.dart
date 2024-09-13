@@ -6,6 +6,8 @@ import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/screens/team_players_list.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 
+import '../../utils/FallbackImageProvider.dart';
+import '../../utils/utils.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
@@ -146,7 +148,12 @@ class _Card extends GetView<TournamentController> {
             children: [
               CircleAvatar(
                 radius: 24,
-                backgroundImage: NetworkImage(team.toImageUrl()),
+                backgroundImage:team.toImageUrl().isNotEmpty && team.toImageUrl()!=null ?
+                FallbackImageProvider(
+                    toImageUrl(team.logo ?? "assets/images/logo.png"),
+                    'assets/images/logo.png'
+                ) as ImageProvider
+                    : const AssetImage('assets/images/logo.png'),
               ),
               const Spacer(),
               Text(

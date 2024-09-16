@@ -13,7 +13,6 @@ import 'package:intl/intl.dart';
 
 import '../../data/controller/team_controller.dart';
 import '../../data/model/scoreboard_model.dart';
-import '../../data/model/txn_model.dart';
 import '../../utils/utils.dart';
 import 'score_card_screen.dart';
 import 'select_opening_team.dart';

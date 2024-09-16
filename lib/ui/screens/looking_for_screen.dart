@@ -70,7 +70,7 @@ class _LookingForScreenState extends State<LookingForScreen> {
                     setState(() {
                       selectedValue = e;
                     });
-                    Get.close();
+                    // Get.close();
                     // Get.back();
                   },
                   selectedValue: selectedValue,

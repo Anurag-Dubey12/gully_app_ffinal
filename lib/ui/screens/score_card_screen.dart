@@ -46,16 +46,16 @@ class _ScoreCardScreenState extends State<ScoreCardScreen> {
       return GradientBuilder(
           child: Scaffold(
             backgroundColor: Colors.transparent,
-            floatingActionButton: kDebugMode
-                ? FloatingActionButton(
-              onPressed: () {
-                // copy to clipboard
-                Clipboard.setData(ClipboardData(
-                    text: jsonEncode(controller.scoreboard.value!.toJson())));
-              },
-              child: const Icon(Icons.copy),
-            )
-                : null,
+            // floatingActionButton: kDebugMode
+            //     ? FloatingActionButton(
+            //   onPressed: () {
+            //     // copy to clipboard
+            //     Clipboard.setData(ClipboardData(
+            //         text: jsonEncode(controller.scoreboard.value!.toJson())));
+            //   },
+            //   child: const Icon(Icons.copy),
+            // )
+            //     : null,
             appBar: AppBar(
               backgroundColor: Colors.transparent,
               iconTheme: const IconThemeData(color: Colors.white),

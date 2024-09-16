@@ -148,7 +148,8 @@ class PartnershipDialog extends GetView<ScoreBoardController> {
                     const SizedBox(height: 30),
                     PrimaryButton(
                       onTap: () {
-                        Get.back();
+                        // Get.back();
+                        Get.close();
                       },
                       title: 'Done',
                     )
@@ -206,7 +207,8 @@ class ExtrasDialog extends GetView<ScoreBoardController> {
                   const SizedBox(height: 30),
                   PrimaryButton(
                     onTap: () {
-                      Get.back();
+                      // Get.back();
+                      Get.close();
                     },
                     title: 'Done',
                   )
@@ -357,9 +359,9 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                       height: 30,
                       child: TextButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
+                              backgroundColor: WidgetStateProperty.all(
                                   AppTheme.primaryColor),
-                              padding: MaterialStateProperty.all(
+                              padding: WidgetStateProperty.all(
                                   const EdgeInsets.all(7))),
                           onPressed: () {
                             controller.addEvent(EventType.changeStriker);
@@ -374,9 +376,9 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                       height: 30,
                       child: TextButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
+                              backgroundColor: WidgetStateProperty.all(
                                   AppTheme.primaryColor),
-                              padding: MaterialStateProperty.all(
+                              padding: WidgetStateProperty.all(
                                   const EdgeInsets.all(7))),
                           onPressed: () {
                             if ((controller
@@ -403,31 +405,6 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                                   color: Colors.white,
                                   fontSize: 10,
                                   fontWeight: FontWeight.w500)))),
-                  // SizedBox(
-                  //     // width: 120,
-                  //     height: 40,
-                  //     child: IconButton(
-                  //         onPressed: () {
-                  // if ((controller
-                  //         .scoreboard.value?.isSecondInningsOver ??
-                  //     false)) {
-                  //   errorSnackBar('Match Over');
-                  //   return;
-                  // }
-                  // if ((controller
-                  //         .scoreboard.value?.inningsCompleted ??
-                  //     false)) {
-                  //   errorSnackBar('Innings Completed');
-                  //   return;
-                  // }
-
-                  // showModalBottomSheet(
-                  //     context: Get.context!,
-                  //     builder: (c) => const ChangeBowlerWidget(),
-                  //     enableDrag: true,
-                  //     isDismissible: true);
-                  //         },
-                  //         icon: Image.asset('assets/images/change.png'))),
                 ],
               ),
             ]),

@@ -14,7 +14,6 @@ import '../../../utils/geo_locator_helper.dart';
 import '../../../utils/image_picker_helper.dart';
 import '../../../utils/utils.dart';
 import '../../theme/theme.dart';
-import '../../widgets/arc_clipper.dart';
 import '../../widgets/create_tournament/form_input.dart';
 import '../../widgets/custom_drop_down_field.dart';
 import '../../widgets/primary_button.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/player_model.dart';
+import 'package:gully_app/utils/image_picker_helper.dart';
 
 import '../../data/controller/team_controller.dart';
 import '../../data/model/team_model.dart';
@@ -100,15 +101,30 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
                                       padding: const EdgeInsets.all(3.0),
                                       child: Stack(
                                         children: [
-                                          CircleAvatar(
-                                            radius: 49,
-                                            backgroundColor: Colors.white,
-                                            backgroundImage: widget.teamModel.toImageUrl().isNotEmpty && widget.teamModel.toImageUrl()!=null ?
-                                            FallbackImageProvider(
-                                                toImageUrl(widget.teamModel.logo ?? "assets/images/logo.png"),
-                                                'assets/images/logo.png'
-                                            ) as ImageProvider
-                                                : const AssetImage('assets/images/logo.png')
+                                          GestureDetector(
+                                            onTap: () {
+                                              imageViewer(context,
+                                                  widget.teamModel.logo, true);
+                                            },
+                                            child: CircleAvatar(
+                                                radius: 49,
+                                                backgroundColor: Colors.white,
+                                                backgroundImage: widget
+                                                            .teamModel
+                                                            .toImageUrl()
+                                                            .isNotEmpty &&
+                                                        widget.teamModel
+                                                                .toImageUrl() !=
+                                                            null
+                                                    ? FallbackImageProvider(
+                                                            toImageUrl(widget
+                                                                    .teamModel
+                                                                    .logo ??
+                                                                "assets/images/logo.png"),
+                                                            'assets/images/logo.png')
+                                                        as ImageProvider
+                                                    : const AssetImage(
+                                                        'assets/images/logo.png')),
                                           ),
                                         ],
                                       ),

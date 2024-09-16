@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/choose_lang_screen.dart';
 import 'package:gully_app/ui/screens/player_profile_screen.dart';
-import 'package:gully_app/ui/screens/select_performance_type.dart';
 import 'package:gully_app/ui/screens/select_team_for_challenge.dart';
 import 'package:gully_app/ui/screens/service/service_screen.dart';
 import 'package:gully_app/ui/screens/shop/shop_home.dart';
@@ -105,7 +104,6 @@ class AppDrawer extends GetView<AuthController> {
                   // title: 'Looking',
                   title: AppLocalizations.of(context)!.looking,
                   icon: Icons.search,
-
                   child: Column(
                     children: [
                       GestureDetector(

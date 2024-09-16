@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:get/get.dart';
 import 'package:gully_app/data/api/misc_api.dart';
 import 'package:gully_app/data/model/AdvertisementModel.dart';

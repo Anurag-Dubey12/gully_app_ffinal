@@ -18,7 +18,6 @@ import '../widgets/create_tournament/form_input.dart';
 import '../widgets/create_tournament/top_card.dart';
 import '../widgets/custom_drop_down_field.dart';
 import '../widgets/gradient_builder.dart';
-import '../widgets/home_screen/top_header.dart';
 import '../widgets/primary_button.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 

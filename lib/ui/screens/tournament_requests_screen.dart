@@ -152,14 +152,15 @@ class _Card extends StatelessWidget {
           ),
           child: Row(
             children: [
-              const Spacer(),
+              // const Spacer(),
               SizedBox(
-                width: 200,
+                width: 180,
                 child: Text(
                   tournament.tournamentName,
                   style: Get.textTheme.titleMedium
                       ?.copyWith(fontWeight: FontWeight.w600, fontSize: 19),
                   softWrap: true,
+                  maxLines: 2,
                   textAlign: TextAlign.center,
                 ),
               ),

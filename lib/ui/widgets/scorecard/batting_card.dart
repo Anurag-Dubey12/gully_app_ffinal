@@ -83,8 +83,6 @@ class BatterPlayerStat extends StatelessWidget {
 
     bool isCurrentBatsman = player.id == controller.scoreboard.value?.striker.id ||
         player.id == controller.scoreboard.value?.nonstriker.id;
-
-    logger.d("The Current Status is:${controller.scoreboard.value?.striker.role} and ${controller.scoreboard.value?.nonstriker.role} ");
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Column(
@@ -98,9 +96,9 @@ class BatterPlayerStat extends StatelessWidget {
                   children: [
                     Text(
                       '${player.name}${isCaptain && isFullScreenBoard ? ' (C)' : ''}${isWicketkeeper && isFullScreenBoard?'(WK)':''}',
-                      // player.name + (isStriker == null ? '' : (isStriker! ? '*' : '')),
                       maxLines: 1,
                       style: TextStyle(
+                        fontSize: 13,
                         color: hasBatted ? Colors.black : Colors.grey,
                         fontWeight: hasBatted ? FontWeight.bold : null,
                       ),
@@ -109,7 +107,7 @@ class BatterPlayerStat extends StatelessWidget {
                     if (!isStriker! && player.batting!.outType.isNotEmpty)
                       Text(
                         _getOutInfo(player.batting!),
-                        style: Get.textTheme.labelMedium?.copyWith(fontSize: 12, color: Colors.grey[600]),
+                        style: Get.textTheme.labelMedium?.copyWith(fontSize: 11, color: Colors.grey[600]),
                       maxLines: 2,
                       ),
                     if (isCurrentBatsman && isFullScreenBoard)

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gully_app/ui/screens/service/service_home.dart';
 import 'package:gully_app/ui/screens/service/service_profile.dart';
-import 'package:gully_app/ui/theme/theme.dart';
-import 'package:iconsax/iconsax.dart';
 
 class ServiceScreen extends StatefulWidget {
   const ServiceScreen({super.key});

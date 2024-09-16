@@ -9,8 +9,6 @@ import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/ui/screens/add_team.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:share_plus/share_plus.dart';
-
-import '../../data/model/team_model.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 import '../widgets/custom_text_field.dart';

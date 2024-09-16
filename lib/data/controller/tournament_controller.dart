@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/api/tournament_api.dart';
-import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/model/coupon_model.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/team_model.dart';

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/screens/select_opening_players.dart';

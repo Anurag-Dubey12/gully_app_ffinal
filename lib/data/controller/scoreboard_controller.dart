@@ -117,16 +117,7 @@ class ScoreBoardController extends GetxController with StateMixin {
       return null;
     }
   }
-  // In ScoreBoardController
-  // Future<MatchupModel?> getMatchById(String matchId) async {
-  //   try {
-  //     final response = await _scoreboardApi.getSingleMatchup(matchId);
-  //     return MatchupModel.fromJson(response.data!['match']);
-  //   } catch (e) {
-  //     logger.e('ScoreboardController::getMatchById $e');
-  //     return null;
-  //   }
-  // }
+
 
   void createScoreBoard({
     required TeamModel team1,

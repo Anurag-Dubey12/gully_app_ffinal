@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:gully_app/utils/utils.dart';
 
 class IButtonDialog extends StatelessWidget {
   final String organizerName;
@@ -24,56 +22,58 @@ class IButtonDialog extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          coverPhoto != null
-              ? SizedBox(
-            height: 150,
-            child: Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20)),
-                  child: SizedBox(
-                    width: Get.width,
-                    height: 170,
-                    child: coverPhoto != null && coverPhoto!.isNotEmpty
-                        ? Image.network(
-                      toImageUrl(coverPhoto!),
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
-                          'assets/images/logo.png',
-                          fit: BoxFit.cover,
-                        );
-                      },
-                    )
-                        : Image.asset(
-                      'assets/images/logo.png',
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-              : const SizedBox(),
+          // coverPhoto != null
+          //     ? SizedBox(
+          //   height: 150,
+          //   child: Stack(
+          //     children: [
+          //       ClipRRect(
+          //         borderRadius: const BorderRadius.only(
+          //             topLeft: Radius.circular(20),
+          //             topRight: Radius.circular(20)),
+          //         child: SizedBox(
+          //           width: Get.width,
+          //           height: 170,
+          //           child: coverPhoto != null && coverPhoto!.isNotEmpty
+          //               ? Image.network(
+          //             toImageUrl(coverPhoto!),
+          //             fit: BoxFit.cover,
+          //             errorBuilder: (context, error, stackTrace) {
+          //               return Image.asset(
+          //                 'assets/images/logo.png',
+          //                 fit: BoxFit.cover,
+          //               );
+          //             },
+          //           )
+          //               : Image.asset(
+          //             'assets/images/logo.png',
+          //             fit: BoxFit.cover,
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // )
+          //     : const SizedBox(),
           Padding(
             padding: const EdgeInsets.all(9.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text(
-                  'Info',
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                const Center(
+                  child: Text(
+                    'Info',
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
                 ),
                 const SizedBox(
-                  height: 30,
+                  height: 5,
                 ),
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
-                      color: const Color.fromARGB(237, 226, 216, 255),
+                      color: const Color(0xffbecbff),
                       boxShadow: const [
                         BoxShadow(
                             color: Color(0x0fe9e7ef),
@@ -89,10 +89,8 @@ class IButtonDialog extends StatelessWidget {
                           const SizedBox(width: 10),
                           const Text('Tournament Name:',
                               style: TextStyle(fontSize: 14)),
-                          const SizedBox(width: 10),
-                          SizedBox(
-                              width: 150,
-                              child: Text(tournamentName,softWrap: true,maxLines:3)),
+                          const Spacer(),
+                          Text(tournamentName,softWrap: true,maxLines:3),
                           const SizedBox(width: 10),
                         ],
                       ),

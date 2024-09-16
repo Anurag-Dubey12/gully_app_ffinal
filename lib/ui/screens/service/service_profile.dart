@@ -13,7 +13,6 @@ import 'package:image_picker/image_picker.dart';
 import '../../../data/controller/auth_controller.dart';
 import '../../../utils/utils.dart';
 import '../../widgets/home_screen/top_header.dart';
-import '../add_team.dart';
 import '../organizer_profile.dart';
 
 class ServiceProfile extends StatefulWidget {

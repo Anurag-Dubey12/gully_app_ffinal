@@ -520,7 +520,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                 tournamentType = e;
                               });
                               // Get.back();
-                              Get.close();
+                              // Get.close();
                             },
                             selectedValue: tournamentType.toUpperCase(),
                             items: const [
@@ -546,7 +546,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                 ballType = e;
                               });
                               // Get.back();
-                              Get.close();
+                              // Get.close();
                             },
                             selectedValue: ballType.toUpperCase(),
                             items: const [
@@ -578,8 +578,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen> {
                                         setState(() {
                                           pitchType = e;
                                         });
-                                        Get.close();
-                                        Get.close();
+                                        // Get.close();
+                                        // Get.close();
                                       },
                                       selectedValue: pitchType.toUpperCase(),
                                       items: const [

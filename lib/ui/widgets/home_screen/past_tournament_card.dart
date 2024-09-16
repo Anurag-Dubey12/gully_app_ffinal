@@ -88,9 +88,12 @@ class _Card extends StatelessWidget {
       },
       child: Container(
         width: Get.width,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
         decoration: BoxDecoration(
           color: Colors.white,
+          // border: Border.all(
+          //   color: Colors.black
+          // ),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(

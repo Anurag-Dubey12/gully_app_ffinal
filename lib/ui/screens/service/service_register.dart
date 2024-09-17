@@ -42,6 +42,7 @@ class RegisterService extends State<ServiceRegister> {
   LatLng? location;
   String? charges_durations = '';
   String? package_duration = '';
+  Map<String, dynamic> selectedPackage = {};
   List<XFile> _documentImages = [];
 
 
@@ -514,8 +515,13 @@ class RegisterService extends State<ServiceRegister> {
                 ),
                 const SizedBox(height: 10),
                 GestureDetector(
-                  onTap: (){
-                    Get.to(()=>PackageScreen());
+                  onTap: ()async {
+                    final result = await Get.to(() => const PackageScreen());
+                    if (result != null && result is Map<String, dynamic>) {
+                      setState(() {
+                        selectedPackage = result;
+                      });
+                    }
                   },
                   child: Container(
                     padding: const EdgeInsets.all(12),
@@ -524,9 +530,9 @@ class RegisterService extends State<ServiceRegister> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
-                      package_duration!.isEmpty
+                      selectedPackage.isEmpty
                           ? 'Select a package'
-                          : package_duration!,
+                          : '${selectedPackage['package']} - ${selectedPackage['Duration']} - ₹${selectedPackage['price']}',
                       style: const TextStyle(color: Colors.black54),
                     ),
                   ),

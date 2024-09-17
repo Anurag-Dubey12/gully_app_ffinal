@@ -10,21 +10,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify">
-      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/service/package_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/my_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/user_service_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_list.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_profile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/user_service_details.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_homescreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/untranslated.json" beforeDir="false" afterPath="$PROJECT_DIR$/untranslated.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/service/package_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/service/package_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -477,7 +465,15 @@
       <option name="project" value="LOCAL" />
       <updated>1726228423156</updated>
     </task>
-    <option name="localTasksCounter" value="44" />
+    <task id="LOCAL-00044" summary="modify">
+      <option name="closed" value="true" />
+      <created>1726577902365</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1726577902366</updated>
+    </task>
+    <option name="localTasksCounter" value="45" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -746,6 +742,12 @@
           <option name="totalLines" value="8397971" />
           <option name="info" value="modify" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1726577903317" />
+          <option name="linesCode" value="32084" />
+          <option name="totalLines" value="2891077" />
+          <option name="info" value="modify" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -995,6 +997,12 @@
           <option name="linesCode" value="31764" />
           <option name="totalLines" value="8397971" />
           <option name="info" value="Sep 13, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1726577903317" />
+          <option name="linesCode" value="32084" />
+          <option name="totalLines" value="2891077" />
+          <option name="info" value="17-Sep-2024" />
         </TimePoint>
       </list>
     </option>

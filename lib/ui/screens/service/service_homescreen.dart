@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gully_app/ui/screens/service/service_home.dart';
+import 'package:gully_app/ui/screens/service/service_list.dart';
 import 'package:gully_app/ui/screens/service/service_profile.dart';
 
 class ServiceScreen extends StatefulWidget {

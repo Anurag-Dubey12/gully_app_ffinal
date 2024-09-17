@@ -2,7 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/service/service_profile_screen.dart';
+import 'package:gully_app/ui/screens/service/user_service_details.dart';
 
 class ServiceHomeScreen extends StatefulWidget{
   const ServiceHomeScreen({super.key});

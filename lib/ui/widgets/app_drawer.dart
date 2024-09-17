@@ -6,7 +6,7 @@ import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/choose_lang_screen.dart';
 import 'package:gully_app/ui/screens/player_profile_screen.dart';
 import 'package:gully_app/ui/screens/select_team_for_challenge.dart';
-import 'package:gully_app/ui/screens/service/service_screen.dart';
+import 'package:gully_app/ui/screens/service/service_homescreen.dart';
 import 'package:gully_app/ui/screens/shop/shop_home.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:iconsax/iconsax.dart';
@@ -20,6 +20,7 @@ import '../screens/others_looking_for.dart';
 import '../screens/performance_stat_screen.dart';
 import '../screens/player_ranking_screen.dart';
 import '../screens/select_challenge_match_for_performance.dart';
+import '../screens/service/service_register.dart';
 import '../screens/team_ranking_screen.dart';
 import '../screens/top_performers.dart';
 import 'home_screen/drawer_card.dart';
@@ -244,24 +245,66 @@ class AppDrawer extends GetView<AuthController> {
                 //   },
                 //   icon: Icons.auto_graph,
                 // ),
-
                 DrawerCard(
-                  // title: 'About us',
-                  title: 'Shop',
-                  onTap: () {
-                    Get.to(() => const ShopHome());
-                  },
-                  icon: Iconsax.shop,
+                  title: "Services",
+                  icon: Icons.search,
+                  child: Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Get.to(() => const ServiceRegister());
+                        },
+                        child: Container(
+                          // width: 200,
+                          height: 30,
+                          decoration: transBg(),
+                          child: const Center(
+                              child: Text(
+                                'Add My Service',
+                                style: TextStyle(color: Colors.white),
+                              )),
+                        ),
+                      ),
+                      SizedBox(
+                        width: Get.width * 0.3,
+                        child: Divider(
+                          height: 0,
+                          color: Colors.white.withOpacity(0.3),
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () {
+                          Get.to(() => const ServiceScreen());
+                        },
+                        child: Container(
+                          // width: 200,
+                          height: 30,
+                          decoration: transBg(),
+                          child: Center(
+                              child: Text(
+                                "Add My Shop",
+                                style: const TextStyle(color: Colors.white),
+                              )),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
-
-                DrawerCard(
-                  // title: 'About us',
-                  title: 'Service',
-                  onTap: () {
-                    Get.to(() => const ServiceScreen());
-                  },
-                  icon: Icons.sports_cricket_rounded,
-                ),
+                // DrawerCard(
+                //   title: 'Shop',
+                //   onTap: () {
+                //     Get.to(() => const ShopHome());
+                //   },
+                //   icon: Iconsax.shop,
+                // ),
+                // DrawerCard(
+                //   // title: 'About us',
+                //   title: 'Service',
+                //   onTap: () {
+                //     Get.to(() => const ServiceScreen());
+                //   },
+                //   icon: Icons.sports_cricket_rounded,
+                // ),
                 DrawerCard(
                   // title: 'About us',
                   title: AppLocalizations.of(context)!.about_us,

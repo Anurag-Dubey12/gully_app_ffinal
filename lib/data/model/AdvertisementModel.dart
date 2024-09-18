@@ -23,36 +23,6 @@ class AdvertisementModel {
     this.updatedAt,
   });
 
-  // factory AdvertisementModel.fromMap(Map<String, dynamic> map, String documentId) {
-  //   return AdvertisementModel(
-  //     id: documentId,
-  //     userId: map['userId'] as String,
-  //     imageUrl: map['imageUrl'] as String,
-  //     adPlacement: List<String>.from(map['adPlacement']),
-  //     startDate: (map['startDate'] as Timestamp).toDate(),
-  //     endDate: (map['endDate'] as Timestamp).toDate(),
-  //     totalAmount: (map['totalAmount'] as num).toDouble(),
-  //     status: map['status'] as String,
-  //     createdAt: (map['createdAt'] as Timestamp).toDate(),
-  //     updatedAt: map['updatedAt'] != null ? (map['updatedAt'] as Timestamp).toDate() : null,
-  //   );
-  // }
-
-  // Convert the AdvertisementModel to a Map
-  // Map<String, dynamic> toMap() {
-  //   return {
-  //     'userId': userId,
-  //     'imageUrl': imageUrl,
-  //     'adPlacement': adPlacement,
-  //     'startDate': Timestamp.fromDate(startDate),
-  //     'endDate': Timestamp.fromDate(endDate),
-  //     'totalAmount': totalAmount,
-  //     'status': status,
-  //     'createdAt': Timestamp.fromDate(createdAt),
-  //     'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-  //   };
-  // }
-
   AdvertisementModel copyWith({
     String? id,
     String? userId,

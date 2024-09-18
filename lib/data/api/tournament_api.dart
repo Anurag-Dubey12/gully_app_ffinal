@@ -287,7 +287,7 @@ class TournamentApi {
     }
     return ApiResponse.fromJson(response.body);
     }catch(e){
-      print("Error in API call: $e");
+      logger.d("Error in API call: $e");
       rethrow;
     }
 

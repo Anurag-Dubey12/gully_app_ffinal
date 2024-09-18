@@ -99,12 +99,6 @@ class AdsScreen extends State<PromoteBannerScreen> {
           title: "Error");
     }
   }
-
-// String? base64;
-//   if (_image != null) {
-//   base64 =
-//   await convertImageToBase64(_image!);
-//   }
   @override
   void initState() {
     super.initState();

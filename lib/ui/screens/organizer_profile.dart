@@ -7,6 +7,7 @@ import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/ui/screens/accepted_challenges.dart';
 import 'package:gully_app/ui/screens/current_tournament_list.dart';
+import 'package:gully_app/ui/screens/promote_banner_screen.dart';
 import 'package:gully_app/ui/screens/select_match_type_for_scoreboard.dart';
 import 'package:gully_app/ui/screens/select_performance_type.dart';
 import 'package:gully_app/ui/screens/tournament_requests_screen.dart';
@@ -331,12 +332,12 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                                 ));
                               },
                             ),
-                            // ProfileTileCard(
-                            //   text: 'Promote Your Banner',
-                            //   onTap: () {
-                            //     Get.to(() => const PromoteBannerScreen());
-                            //   },
-                            // ),
+                            ProfileTileCard(
+                              text: 'Promote Your Banner',
+                              onTap: () {
+                                Get.to(() => const PromoteBannerScreen());
+                              },
+                            ),
                             ProfileTileCard(
                               text: 'Transaction History',
                               onTap: () {

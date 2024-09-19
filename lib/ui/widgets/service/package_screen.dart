@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:intl/intl.dart';
 
 import '../../../utils/app_logger.dart';
 import '../../theme/theme.dart';
@@ -17,13 +16,15 @@ class PackageScreen extends StatefulWidget {
 
 class PackageScreenState extends State<PackageScreen> {
   String? selectedPackage;
+  String? endDate;
 
   final List<Map<String, dynamic>> packages = [
+
     {
       'package': 'Basic',
       'price': 1000,
       'Duration': '3 Months',
-      'Border_color': Colors.orange
+      'Border_color': Colors.orange,
     },
     {
       'package': 'Standard',
@@ -43,6 +44,26 @@ class PackageScreenState extends State<PackageScreen> {
   void initState() {
     super.initState();
     selectedPackage = widget.selectedPackages?['package'];
+  }
+  void update_EndDate(String packagename){
+    final package=packages.firstWhere((p)=>p['package']==packagename);
+    final duration=package['Duration'];
+    late DateTime endDateTime;
+
+    switch(duration){
+      case '3 Months':
+        endDateTime=DateTime.now().add(const Duration(days: 90));
+        break;
+      case '6 Months':
+        endDateTime=DateTime.now().add(const Duration(days: 180));
+        break;
+      case '1 Year':
+        endDateTime=DateTime.now().add(const Duration(days: 365));
+        break;
+    }
+    setState(() {
+      endDate=DateFormat('dd/MM/yyyy').format(endDateTime);
+    });
   }
 
   @override
@@ -83,6 +104,7 @@ class PackageScreenState extends State<PackageScreen> {
                       (package) => package['package'] == selectedPackage,
                   orElse: () => {},
                 );
+                selectedPackageDetails['EndDate']=endDate;
                 Get.back(result: selectedPackageDetails);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -108,6 +130,7 @@ class PackageScreenState extends State<PackageScreen> {
                     onSelect: () {
                       setState(() {
                         selectedPackage = package['package'];
+                        update_EndDate(selectedPackage!);
                         logger.d("Package Selected: ${package['package']}");
                       });
                     },

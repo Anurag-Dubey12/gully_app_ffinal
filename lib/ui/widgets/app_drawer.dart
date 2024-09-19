@@ -7,9 +7,7 @@ import 'package:gully_app/ui/screens/choose_lang_screen.dart';
 import 'package:gully_app/ui/screens/player_profile_screen.dart';
 import 'package:gully_app/ui/screens/select_team_for_challenge.dart';
 import 'package:gully_app/ui/screens/service/service_homescreen.dart';
-import 'package:gully_app/ui/screens/shop/shop_home.dart';
 import 'package:gully_app/utils/utils.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../screens/contact_us_screen.dart';
@@ -17,10 +15,10 @@ import '../screens/legal_screen.dart';
 import '../screens/looking_for_screen.dart';
 import '../screens/organizer_profile.dart';
 import '../screens/others_looking_for.dart';
-import '../screens/performance_stat_screen.dart';
 import '../screens/player_ranking_screen.dart';
-import '../screens/select_challenge_match_for_performance.dart';
 import '../screens/service/service_register.dart';
+import '../screens/shop/register_shop.dart';
+import '../screens/shop/shop_home.dart';
 import '../screens/team_ranking_screen.dart';
 import '../screens/top_performers.dart';
 import 'home_screen/drawer_card.dart';
@@ -274,7 +272,7 @@ class AppDrawer extends GetView<AuthController> {
                       ),
                       InkWell(
                         onTap: () {
-                          Get.to(() => const ServiceScreen());
+                          Get.to(() => const RegisterShop());
                         },
                         child: Container(
                           // width: 200,

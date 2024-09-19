@@ -8,6 +8,7 @@ class ServiceModel {
   final String providerimage;
   final String providerPhoneNumber;
   final int providerAge;
+  final int service_charges;
   final String description;
   final int yearsOfExperience;
   final List<String> offeredServices;
@@ -23,6 +24,7 @@ class ServiceModel {
     required this.providerimage,
     required this.providerPhoneNumber,
     required this.providerAge,
+    required this.service_charges,
     required this.description,
     required this.yearsOfExperience,
     required this.offeredServices,
@@ -37,6 +39,7 @@ class ServiceModel {
     required String providerimage,
     required String providerPhoneNumber,
     required int providerAge,
+    required int service_charges,
     required String description,
     required int yearsOfExperience,
     required List<String> offeredServices,
@@ -52,6 +55,7 @@ class ServiceModel {
       providerimage: providerimage,
       providerPhoneNumber: providerPhoneNumber,
       providerAge: providerAge,
+      service_charges: service_charges,
       description: description,
       yearsOfExperience: yearsOfExperience,
       offeredServices: offeredServices,
@@ -62,6 +66,7 @@ class ServiceModel {
         name: selectedPackage['package'] ?? '',
         duration: selectedPackage['Duration'] ?? '',
         price: (selectedPackage['price'] as num?)?.toDouble() ?? 0.0,
+        endDate: selectedPackage['EndDate'] ?? '',
       ),
     );
   }
@@ -73,6 +78,7 @@ class ServiceModel {
     String? providerimage,
     String? providerPhoneNumber,
     int? providerAge,
+    int? service_charges,
     String? description,
     int? yearsOfExperience,
     List<String>? offeredServices,
@@ -88,6 +94,7 @@ class ServiceModel {
       providerimage: providerimage ?? this.providerimage,
       providerPhoneNumber: providerPhoneNumber ?? this.providerPhoneNumber,
       providerAge: providerAge ?? this.providerAge,
+      service_charges: service_charges ?? this.service_charges,
       description: description ?? this.description,
       yearsOfExperience: yearsOfExperience ?? this.yearsOfExperience,
       offeredServices: offeredServices ?? this.offeredServices,
@@ -109,6 +116,7 @@ class ServiceModel {
           providerimage == other.providerimage &&
           providerPhoneNumber == other.providerPhoneNumber &&
           providerAge == other.providerAge &&
+          service_charges == other.service_charges &&
           description == other.description &&
           yearsOfExperience == other.yearsOfExperience &&
           listEquals(offeredServices, other.offeredServices) &&
@@ -125,6 +133,7 @@ class ServiceModel {
       providerimage.hashCode ^
       providerPhoneNumber.hashCode ^
       providerAge.hashCode ^
+      service_charges.hashCode ^
       description.hashCode ^
       yearsOfExperience.hashCode ^
       offeredServices.hashCode ^
@@ -135,6 +144,6 @@ class ServiceModel {
 
   @override
   String toString() {
-    return 'Service(id: $id, name: $name, providerName: $providerName,providerimage: $providerimage, providerPhoneNumber: $providerPhoneNumber, providerAge: $providerAge, description: $description, yearsOfExperience: $yearsOfExperience, offeredServices: $offeredServices, location: $location, imageUrls: $imageUrls, documentUrls: $documentUrls, package: $package)';
+    return 'Service(id: $id, name: $name, providerName: $providerName,providerimage: $providerimage, providerPhoneNumber: $providerPhoneNumber, providerAge: $providerAge,service charges: $service_charges, description: $description, yearsOfExperience: $yearsOfExperience, offeredServices: $offeredServices, location: $location, imageUrls: $imageUrls, documentUrls: $documentUrls, package: $package)';
   }
 }

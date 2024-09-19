@@ -94,13 +94,14 @@ class RegisterService extends State<ServiceRegister> {
       providerPhoneNumber: authController.state!.phoneNumber ??" ",
       providerimage: authController.state!.profilePhoto,
       providerAge: 0,
+      service_charges: 0,
       description: '',
       yearsOfExperience: 0,
       offeredServices: [],
       location: '',
       imageUrls: [],
       documentUrls: [],
-      package: PackageModel(name: '', duration: '', price: 0),
+      package: PackageModel(name: '', duration: '', price: 0,endDate: ''),
     );
   }
 
@@ -226,6 +227,7 @@ class RegisterService extends State<ServiceRegister> {
                               providerPhoneNumber: authController.state!.phoneNumber ?? "",
                               providerimage: authController.state!.profilePhoto,
                               providerAge: int.parse(_ageController.text),
+                              service_charges: int.parse(_serviceChargesController.text),
                               description: _descriptionController.text,
                               yearsOfExperience: int.parse(_expController.text),
                               offeredServices: selectedServices,

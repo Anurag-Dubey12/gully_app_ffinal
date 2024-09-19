@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/utils/FallbackImageProvider.dart';
-import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../data/controller/auth_controller.dart';
 import '../../data/model/service_model.dart';
@@ -10,6 +8,7 @@ import '../../utils/utils.dart';
 import '../theme/theme.dart';
 import '../widgets/gradient_builder.dart';
 import '../widgets/advertisement/advertisement_summary.dart';
+import '../widgets/service/ServiceOfferItem.dart';
 import 'home_screen.dart';
 
 class ServicePaymentPage extends StatefulWidget {
@@ -99,48 +98,104 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 12),
-                    Center(
+                    // SizedBox(
+                    //   width: Get.width,
+                    //   height: 200,
+                    //   child: Image.network(toImageUrl(authController.state?.profilePhoto ??
+                    //       ""),fit: BoxFit.cover,)),
+                    // Center(
+                    //   child: Text(
+                    //     widget.service.name,
+                    //     style: TextStyle(
+                    //       fontSize: 18,
+                    //       color: Colors.grey.shade800,
+                    //       fontWeight: FontWeight.w600,
+                    //     ),
+                    //   ),
+                    // ),
+                    const Center(
                       child: Text(
-                        widget.service.name,
+                        'Service Details',
                         style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey.shade800,
+                          fontSize: 16,
+                          color: Colors.black,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
                     const SizedBox(height: 5),
-                    Text(
-                      'Contact Number: ${widget.service.providerPhoneNumber}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.grey.shade800,
-                        fontWeight: FontWeight.w500,
-                      ),
+                    AdvertisementSummary(
+                      label: 'Name',
+                      value: widget.service.name,
+                    ),
+                    AdvertisementSummary(
+                      label: 'Contact Number',
+                      value: widget.service.providerPhoneNumber,
+                    ),
+                    AdvertisementSummary(
+                      label: 'Year of Experience',
+                      value: widget.service.yearsOfExperience.toString(),
+                    ),
+                    AdvertisementSummary(
+                      label: 'Location',
+                      value: widget.service.location,
+                    ),
+                    AdvertisementSummary(
+                      label: 'Charges',
+                      value: widget.service.service_charges.toString(),
                     ),
                     const SizedBox(height: 10),
-                    const Text(
-                      'Package Details',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.black,
-                        fontWeight: FontWeight.w600,
+                    const Center(
+                      child: Text(
+                        'Package Details',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 12),
                     AdvertisementSummary(
                       label: 'Package Name',
-                      value: widget.service.package.name?? "djjfff",
+                      value: widget.service.package.name,
                     ),
                     AdvertisementSummary(
                       label: 'Duration',
-                      value: widget.service.package.duration?? "djjfff",
+                      value: widget.service.package.duration,
                     ),
-                    // AdvertisementSummary(
-                    //   label: 'End Date',
-                    //   value: DateFormat('dd MMM yyyy').format(endDate),
-                    // ),
-                    const SizedBox(height: 22),
+                    AdvertisementSummary(
+                      label: 'End Date',
+                      value: widget.service.package.endDate,
+                    ),
+                    const Center(
+                      child: Text(
+                        'Service Offering',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    if (widget.service.offeredServices.isNotEmpty)
+                      ...widget.service.offeredServices.asMap().entries.map((entry) {
+                        return ServiceOfferItem(
+                          index: entry.key + 1,
+                          service: entry.value,
+                        );
+                      }),
+                    if (widget.service.offeredServices.isEmpty)
+                      const Center(
+                        child: Text(
+                          'No services offered',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      ),
                     Text(
                       'Payment Summary',
                       style: TextStyle(
@@ -162,7 +217,7 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                         ),
                         const Spacer(),
                         Text(
-                          '₹${fees/1.18?? "djjfff"}',
+                          '₹${fees/1.18}',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey.shade800,
@@ -183,7 +238,7 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                         ),
                         const Spacer(),
                         Text(
-                          '₹${fees-(fees/1.18)?? "djjfff"}',
+                          '₹${fees-(fees/1.18)}',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey.shade800,
@@ -206,7 +261,7 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                         ),
                         const Spacer(),
                         Text(
-                          '- ₹${discount?? "djjfff"}',
+                          '- ₹${discount}',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey.shade800,
@@ -228,7 +283,7 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                         ),
                         const Spacer(),
                         Text(
-                          '₹${fees - discount?? "djjfff"}',
+                          '₹${fees - discount}',
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.grey.shade800,

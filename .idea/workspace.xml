@@ -9,18 +9,17 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="service screen">
-      <change afterPath="$PROJECT_DIR$/lib/ui/screens/shop/register_shop.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/service/ServiceOfferItem.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/vendor_details.dart" afterDir="false" />
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="shop screen">
+      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/shop_details.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/package_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/package_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/service_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/service_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service_payment_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service_payment_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/service/package_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/service/package_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/register_shop.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/register_shop.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/shop/vendor_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/vendor_details.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/image_picker_helper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils/image_picker_helper.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/untranslated.json" beforeDir="false" afterPath="$PROJECT_DIR$/untranslated.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -514,7 +513,8 @@
     <MESSAGE value="modify service screen and also update player profile screen by adding scoreboard option" />
     <MESSAGE value="modify" />
     <MESSAGE value="service screen" />
-    <option name="LAST_COMMIT_MESSAGE" value="service screen" />
+    <MESSAGE value="shop screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="shop screen" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">

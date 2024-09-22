@@ -20,10 +20,11 @@ Future<XFile?> imagePickerHelper() async {
 Future<List<XFile?>?> multipleimagePickerHelper() async {
   final ImagePicker picker = ImagePicker();
   final List<XFile> images = await picker.pickMultiImage();
-  // final XFile? image =
-  // await picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
   return images ??[];
 }
+
+
+
 Future<String> convertImageToBase64(XFile image) async {
   final bytes = await image.readAsBytes();
   final mimeType = lookupMimeType(image.path);

@@ -16,7 +16,8 @@ class VendorDetails extends StatefulWidget {
   final GlobalKey<FormState> formKey;
   final Map<String, dynamic> formData;
 
-  const VendorDetails({Key? key, required this.formKey, required this.formData}) : super(key: key);
+  const VendorDetails({Key? key, required this.formKey, required this.formData})
+      : super(key: key);
 
   @override
   _VendorDetailsState createState() => _VendorDetailsState();

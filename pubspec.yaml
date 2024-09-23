@@ -35,7 +35,7 @@ dependencies:
   flutter_widget_from_html: ^0.14.11
   firebase_messaging: ^14.7.10
   get_storage: ^2.1.1
-  flutter_native_contact_picker: ^0.0.6
+  flutter_native_contact_picker: ^0.0.7
   flutter_cache_manager: ^3.3.1
   restart_app: ^1.2.1
   carousel_slider: ^5.0.0

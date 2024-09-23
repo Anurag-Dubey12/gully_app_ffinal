@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gully_app/ui/widgets/shop/vendor_details.dart';
 import '../../../utils/app_logger.dart';
 import '../../theme/theme.dart';
+import '../../widgets/shop/product_details.dart';
 import '../../widgets/shop/shop_details.dart';
 
 class RegisterShop extends StatefulWidget {
@@ -92,7 +93,7 @@ class _ShopState extends State<RegisterShop> with SingleTickerProviderStateMixin
       case 1:
         return ShopDetails(formKey: _formKeys[1], formData: formData);
       case 2:
-      //   return VerificationDetails(formKey: _formKeys[2], formData: formData);
+        return ProductDetails(formKey: _formKeys[2], formData: formData);
       case 3:
       //   return ProductDetails(formKey: _formKeys[3], formData: formData);
       default:

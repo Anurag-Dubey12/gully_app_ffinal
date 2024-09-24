@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
+import 'package:flutter_native_contact_picker/model/contact.dart';
 import 'package:get/get.dart'; //
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/player_model.dart';
@@ -487,8 +488,8 @@ class _AddPlayerDialog extends GetView<TeamController> {
                 const SizedBox(height: 20),
                 GestureDetector(
                   onTap: () async {
-                    final FlutterContactPicker contactPicker =
-                        FlutterContactPicker();
+                    final FlutterNativeContactPicker  contactPicker =
+                    FlutterNativeContactPicker ();
                     Contact? contact = await contactPicker.selectContact();
 
                     if (contact == null) return;

@@ -10,15 +10,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="service screen">
-      <change afterPath="$PROJECT_DIR$/lib/ui/screens/shop/add_product.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/business_hours.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/product_details.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_SDK.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/register_shop.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/register_shop.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/shop/shop_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/shop_details.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/shop/vendor_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/vendor_details.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/add_product.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/add_product.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/shop/product_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/product_details.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -103,7 +99,7 @@
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/abcom/Documents/Software/gully_app&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/abcom/Documents/Software/project/gully_app-main&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;flutter.settings&quot;,
     &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
@@ -488,7 +484,15 @@
       <option name="project" value="LOCAL" />
       <updated>1726660364279</updated>
     </task>
-    <option name="localTasksCounter" value="46" />
+    <task id="LOCAL-00046" summary="service screen">
+      <option name="closed" value="true" />
+      <created>1727092513140</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1727092513140</updated>
+    </task>
+    <option name="localTasksCounter" value="47" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -770,6 +774,12 @@
           <option name="totalLines" value="2944237" />
           <option name="info" value="service screen" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1727092514942" />
+          <option name="linesCode" value="33882" />
+          <option name="totalLines" value="5300057" />
+          <option name="info" value="service screen" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1031,6 +1041,12 @@
           <option name="linesCode" value="33075" />
           <option name="totalLines" value="2944237" />
           <option name="info" value="Sep 18, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1727092514942" />
+          <option name="linesCode" value="33882" />
+          <option name="totalLines" value="5300057" />
+          <option name="info" value="Sep 23, 2024" />
         </TimePoint>
       </list>
     </option>

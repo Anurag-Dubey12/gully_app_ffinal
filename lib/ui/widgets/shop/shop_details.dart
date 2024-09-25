@@ -12,6 +12,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../../utils/app_logger.dart';
 import '../../../utils/utils.dart';
 import '../create_tournament/form_input.dart';
+import 'image_upload.dart';
 
 class ShopDetails extends StatefulWidget{
   final GlobalKey<FormState> formKey;
@@ -158,214 +159,47 @@ class ShopDetailsState extends State<ShopDetails>{
               textInputType: TextInputType.emailAddress,
             ),
             const Text("Upload GST Certificate"),
-            GestureDetector(
+            ImageUploadWidget(
+              image: _Gstcertificate,
               onTap: () => pickImage(ImageType.GST_Certificate),
-              child: Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: _Gstcertificate == null
-                      ? const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add_photo_alternate,
-                          size: 40,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  )
-                      : Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: SizedBox(
-                          width: Get.width,
-                          height: 200,
-                          child: GestureDetector(
-                            onLongPress: (){
-                              imageViewer(context, _Gstcertificate!.path, false);
-                            },
-                            child: Image.file(
-                              File(
-                                _Gstcertificate!.path,
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: IconButton(
-                            onPressed: () {
-                              pickImage(ImageType.GST_Certificate);
-                            },
-                            icon: const Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                            )),
-                      )
-                    ],
-                  )
-              ),
+              hintText: "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
             ),
             const SizedBox(height: 10),
             const Text("Upload Shop Registration Certificate"),
             const SizedBox(height: 5),
-            GestureDetector(
+            ImageUploadWidget(
+              image: _Rstcertificate,
               onTap: () => pickImage(ImageType.Registration_Certificate),
-              child: Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: _Rstcertificate == null
-                      ? const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add_photo_alternate,
-                          size: 40,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  )
-                      : Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: SizedBox(
-                          width: Get.width,
-                          height: 200,
-                          child: GestureDetector(
-                            onLongPress: (){
-                              imageViewer(context, _Rstcertificate!.path, false);
-                            },
-                            child: Image.file(
-                              File(
-                                _Rstcertificate!.path,
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: IconButton(
-                            onPressed: () {
-                              pickImage(ImageType.Registration_Certificate);
-                            },
-                            icon: const Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                            )),
-                      )
-                    ],
-                  )
-              ),
+              hintText: "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
             ),
             const SizedBox(height: 10),
             const Text("Upload Shop Logo/Image"),
             const SizedBox(height: 5),
-            GestureDetector(
+            ImageUploadWidget(
+              image: _shopLogo,
               onTap: () => pickImage(ImageType.shop_logo),
-              child: Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: _shopLogo == null
-                      ? const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add_photo_alternate,
-                          size: 40,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  )
-                      : Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: SizedBox(
-                          width: Get.width,
-                          height: 200,
-                          child: GestureDetector(
-                            onLongPress: (){
-                              imageViewer(context, _shopLogo!.path, false);
-                            },
-                            child: Image.file(
-                              File(
-                                _shopLogo!.path,
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: IconButton(
-                            onPressed: () {
-                              pickImage(ImageType.shop_logo);
-                            },
-                            icon: const Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                            )),
-                      )
-                    ],
-                  )
-              ),
+              hintText: "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
             ),
             const SizedBox(height: 10),
             const Text("Business Hours"),
-            ListTile(
-              title: Text(_getBusinessHoursSummary()),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () async {
-                final result = await Get.to(() => BusinessHoursScreen(initialHours: _businessHours));
-                if (result != null && result is Map<String, BusinessHours>) {
-                  setState(() {
-                    _businessHours = result;
-                  });
-                }
-              },
+            const SizedBox(height: 10),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: ListTile(
+                title: Text(_getBusinessHoursSummary()),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () async {
+                  final result = await Get.to(() => BusinessHoursScreen(initialHours: _businessHours));
+                  if (result != null && result is Map<String, BusinessHours>) {
+                    setState(() {
+                      _businessHours = result;
+                    });
+                  }
+                },
+              ),
             ),
             const SizedBox(height: 10),
             FormInput(
@@ -378,200 +212,29 @@ class ShopDetailsState extends State<ShopDetails>{
               label: "Shop Description (Short summary about the shop and services)",
               textInputType: TextInputType.multiline,
             ),
+            const SizedBox(height: 10),
             const Text("Upload Shop Location Proof (e.g., Utility bill, Rent agreement, etc.)"),
-            const SizedBox(height: 5),
-            GestureDetector(
+            const SizedBox(height: 10),
+            ImageUploadWidget(
+              image: _shop_Location,
               onTap: () => pickImage(ImageType.shop_location),
-              child: Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: _shop_Location == null
-                      ? const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add_photo_alternate,
-                          size: 40,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  )
-                      : Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: SizedBox(
-                          width: Get.width,
-                          height: 200,
-                          child: GestureDetector(
-                            onLongPress: (){
-                              imageViewer(context, _shop_Location!.path, false);
-                            },
-                            child: Image.file(
-                              File(
-                                _shop_Location!.path,
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: IconButton(
-                            onPressed: () {
-                              pickImage(ImageType.shop_location);
-                            },
-                            icon: const Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                            )),
-                      )
-                    ],
-                  )
-              ),
+              hintText: "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
             ),
+            const SizedBox(height: 10),
             const Text("Upload Business License"),
-            const SizedBox(height: 5),
-            GestureDetector(
+            const SizedBox(height: 10),
+            ImageUploadWidget(
+              image: _Business_license,
               onTap: () => pickImage(ImageType.Business_License),
-              child: Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: _Business_license == null
-                      ? const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add_photo_alternate,
-                          size: 40,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  )
-                      : Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: SizedBox(
-                          width: Get.width,
-                          height: 200,
-                          child: GestureDetector(
-                            onLongPress: (){
-                              imageViewer(context, _Business_license!.path, false);
-                            },
-                            child: Image.file(
-                              File(
-                                _Business_license!.path,
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: IconButton(
-                            onPressed: () {
-                              pickImage(ImageType.Business_License);
-                            },
-                            icon: const Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                            )),
-                      )
-                    ],
-                  )
-              ),
+              hintText: "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
             ),
+            const SizedBox(height: 10),
             const Text("Upload VAT or Sales Tax Certificate (if applicable)"),
-            const SizedBox(height: 5),
-            GestureDetector(
+            const SizedBox(height: 10),
+            ImageUploadWidget(
+              image: _tax_certificate,
               onTap: () => pickImage(ImageType.Tax_Certificate),
-              child: Container(
-                  height: 150,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: _tax_certificate == null
-                      ? const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add_photo_alternate,
-                          size: 40,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  )
-                      : Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: SizedBox(
-                          width: Get.width,
-                          height: 200,
-                          child: GestureDetector(
-                            onLongPress: (){
-                              imageViewer(context, _tax_certificate!.path, false);
-                            },
-                            child: Image.file(
-                              File(
-                                _tax_certificate!.path,
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: IconButton(
-                            onPressed: () {
-                              pickImage(ImageType.Tax_Certificate);
-                            },
-                            icon: const Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                            )),
-                      )
-                    ],
-                  )
-              ),
+              hintText: "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
             ),
           ],
         ),

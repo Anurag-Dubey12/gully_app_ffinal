@@ -87,25 +87,25 @@ class _VendorDetailsState extends State<VendorDetails> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // const Text("Vendors Details"),
-            Center(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.transparent,
-                    border: Border.all(
-                        color:
-                        const Color.fromARGB(255, 142, 133, 133),
-                        width: 2)),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Obx(() => CircleAvatar(
-                      radius: 50,
-                      backgroundImage: CachedNetworkImageProvider(
-                          toImageUrl(authController.state?.profilePhoto ??
-                              "")))),
-                ),
-              ),
-            ),
+            // Center(
+            //   child: DecoratedBox(
+            //     decoration: BoxDecoration(
+            //         shape: BoxShape.circle,
+            //         color: Colors.transparent,
+            //         border: Border.all(
+            //             color:
+            //             const Color.fromARGB(255, 142, 133, 133),
+            //             width: 2)),
+            //     child: Padding(
+            //       padding: const EdgeInsets.all(8.0),
+            //       child: Obx(() => CircleAvatar(
+            //           radius: 50,
+            //           backgroundImage: CachedNetworkImageProvider(
+            //               toImageUrl(authController.state?.profilePhoto ??
+            //                   "")))),
+            //     ),
+            //   ),
+            // ),
             FormInput(
               controller: _nameController,
               label: "Name",
@@ -145,7 +145,7 @@ class _VendorDetailsState extends State<VendorDetails> {
               child: Container(
                   height: 150,
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
+                    border: Border.all(color: Colors.black),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: _Documentimage == null
@@ -156,13 +156,13 @@ class _VendorDetailsState extends State<VendorDetails> {
                         Icon(
                           Icons.add_photo_alternate,
                           size: 40,
-                          color: Colors.grey,
+                          color: Colors.black,
                         ),
                         SizedBox(height: 10),
                         Text(
                           "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
+                          style: TextStyle(color: Colors.black),
                         ),
                       ],
                     ),

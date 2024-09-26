@@ -7,17 +7,17 @@ part of 'overs_model.dart';
 // **************************************************************************
 
 OverModel _$OverModelFromJson(Map<String, dynamic> json) => OverModel(
-      over: json['over'] as int,
+      over: (json['over'] as num).toInt(),
       bowlerId: json['bowlerId'] as String?,
       strikerId: json['strikerId'] as String?,
       nonStrikerId: json['nonStrikerId'] as String?,
       wicketTakerId: json['wicketTakerId'] as String?,
       wicketType: json['wicketType'] as String?,
-      ball: json['ball'] as int,
-      run: json['run'] as int,
-      wickets: json['wickets'] as int,
-      extra: json['extra'] as int,
-      total: json['total'] as int,
+      ball: (json['ball'] as num).toInt(),
+      run: (json['run'] as num).toInt(),
+      wickets: (json['wickets'] as num).toInt(),
+      extra: (json['extra'] as num).toInt(),
+      total: (json['total'] as num).toInt(),
       events: (json['events'] as List<dynamic>)
           .map((e) => $enumDecode(_$EventTypeEnumMap, e))
           .toList(),

@@ -7,10 +7,10 @@ part of 'batting_model.dart';
 // **************************************************************************
 
 BattingModel _$BattingModelFromJson(Map<String, dynamic> json) => BattingModel(
-      runs: json['runs'] as int,
-      balls: json['balls'] as int,
-      fours: json['fours'] as int,
-      sixes: json['sixes'] as int,
+      runs: (json['runs'] as num).toInt(),
+      balls: (json['balls'] as num).toInt(),
+      fours: (json['fours'] as num).toInt(),
+      sixes: (json['sixes'] as num).toInt(),
       strikeRate: (json['strikeRate'] as num).toDouble(),
       bowledBy: json['bowledBy'] as String,
       outType: json['outType'] as String,

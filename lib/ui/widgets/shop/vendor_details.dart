@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../data/controller/shop_controller.dart';
+import '../../../data/model/vendor_model.dart';
 import '../../../utils/app_logger.dart';
 import '../../../utils/image_picker_helper.dart';
 import '../../../utils/utils.dart';
@@ -14,24 +16,71 @@ import '../custom_drop_down_field.dart';
 
 class VendorDetails extends StatefulWidget {
   final GlobalKey<FormState> formKey;
-  final Map<String, dynamic> formData;
+  final Function(bool) onDocumentImageSelected;
+  final Function(vendor_model) onVendorDataChanged;
 
-  const VendorDetails({Key? key, required this.formKey, required this.formData})
-      : super(key: key);
+  const VendorDetails({
+    Key? key,
+    required this.formKey,
+    required this.onDocumentImageSelected,
+    required this.onVendorDataChanged,
+
+  }) : super(key: key);
 
   @override
-  _VendorDetailsState createState() => _VendorDetailsState();
+  State<StatefulWidget> createState()=>_VendorDetailsState();
+
 }
 
 class _VendorDetailsState extends State<VendorDetails> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _numberController = TextEditingController();
-  final TextEditingController _alternate_numberController = TextEditingController();
+  final TextEditingController _alternate_numberController =
+      TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _id_proofController = TextEditingController();
   XFile? _Documentimage;
+  late vendor_model _vendorData;
+  @override
+  void initState() {
+    super.initState();
+    final AuthController authController = Get.find<AuthController>();
+    final ShopController shopController = Get.find<ShopController>();
 
+
+    _vendorData = shopController.getVendorDetails() ?? vendor_model(name: '', email: '', phoneNumber: '', id: '');
+
+    if (_vendorData.name.isEmpty) {
+      _vendorData = vendor_model(
+        name: authController.state?.fullName ?? '',
+        email: authController.state?.email ?? '',
+        phoneNumber: authController.state?.phoneNumber?.toString() ?? '',
+        id: authController.state?.id.toString()??'',
+      );
+    }
+
+    _nameController.text = _vendorData.name;
+    _emailController.text = _vendorData.email;
+    _numberController.text = _vendorData.phoneNumber;
+    _alternate_numberController.text = _vendorData.alternatePhoneNumber?.toString() ?? '';
+    _addressController.text = _vendorData.address ?? '';
+
+    shopController.updateVendorDetails(_vendorData);
+  }
+
+  void _updateVendorData() {
+    _vendorData = vendor_model(
+      name: _nameController.text,
+      email: _emailController.text,
+      phoneNumber: _numberController.text,
+      id: _vendorData.id,
+      alternatePhoneNumber: int.tryParse(_alternate_numberController.text),
+      address: _addressController.text,
+      id_proof: '',
+    );
+    widget.onVendorDataChanged(_vendorData);
+  }
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     try {
@@ -41,31 +90,37 @@ class _VendorDetailsState extends State<VendorDetails> {
         final decodedImage = await decodeImageFromList(file.readAsBytesSync());
         int fileSizeInBytes = await file.length();
         double fileSizeInMB = fileSizeInBytes / (1024 * 1024);
-        if (fileSizeInMB >2) {
+        if (fileSizeInMB > 2) {
           errorSnackBar('File size should be less than 2MB.',
               title: "File too large!");
+
           return;
         }
-          final String extension = image.path.split('.').last.toLowerCase();
-          if (decodedImage.width == decodedImage.height) {
-            errorSnackBar('Image Width And the Height Cannot be the same.',
-                title: "Invalid file!");
-            return;
-          }
-          if (extension == 'png' || extension == 'jpg' || extension == 'jpeg') {
-            setState(() {
-              _Documentimage = image;
-            });
-          } else {
-            _Documentimage = null;
-            errorSnackBar('Please select a PNG or JPG image.',
-                title: "Invalid file format!");
-          }
-        } else {
-          errorSnackBar(
-              'Please select an image with dimensions where \nWidth=1000 \nHeight=560.',
-              title: "Invalid image dimensions!");
+        final String extension = image.path.split('.').last.toLowerCase();
+        if (decodedImage.width == decodedImage.height) {
+          errorSnackBar('Image Width And the Height Cannot be the same.',
+              title: "Invalid file!");
+          return;
         }
+        if (extension == 'png' || extension == 'jpg' || extension == 'jpeg') {
+          setState(() {
+            _Documentimage = image;
+            widget.onDocumentImageSelected(true);
+            _updateVendorData();
+
+          });
+        } else {
+          _Documentimage = null;
+          widget.onDocumentImageSelected(false);
+
+          errorSnackBar('Please select a PNG or JPG image.',
+              title: "Invalid file format!");
+        }
+      } else {
+        errorSnackBar(
+            'Please select an image with dimensions where \nWidth=1000 \nHeight=560.',
+            title: "Invalid image dimensions!");
+      }
     } catch (e) {
       logger.d('Error picking image: $e');
       errorSnackBar('An error occurred while picking the image.',
@@ -86,26 +141,7 @@ class _VendorDetailsState extends State<VendorDetails> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // const Text("Vendors Details"),
-            // Center(
-            //   child: DecoratedBox(
-            //     decoration: BoxDecoration(
-            //         shape: BoxShape.circle,
-            //         color: Colors.transparent,
-            //         border: Border.all(
-            //             color:
-            //             const Color.fromARGB(255, 142, 133, 133),
-            //             width: 2)),
-            //     child: Padding(
-            //       padding: const EdgeInsets.all(8.0),
-            //       child: Obx(() => CircleAvatar(
-            //           radius: 50,
-            //           backgroundImage: CachedNetworkImageProvider(
-            //               toImageUrl(authController.state?.profilePhoto ??
-            //                   "")))),
-            //     ),
-            //   ),
-            // ),
+
             FormInput(
               controller: _nameController,
               label: "Name",
@@ -132,11 +168,16 @@ class _VendorDetailsState extends State<VendorDetails> {
             ),
             FormInput(
               controller: _addressController,
-              label: "Shop Address",
+              label: " Address",
               textInputType: TextInputType.multiline,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Address cannot be empty.";
+                }
+              },
             ),
             const SizedBox(height: 16),
-            Text(
+            const Text(
               "ID Proof Document",
             ),
             const SizedBox(height: 8),
@@ -150,53 +191,52 @@ class _VendorDetailsState extends State<VendorDetails> {
                   ),
                   child: _Documentimage == null
                       ? const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.add_photo_alternate,
-                          size: 40,
-                          color: Colors.black,
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ],
-                    ),
-                  )
-                      : Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: SizedBox(
-                          width: Get.width,
-                          height: 200,
-                          child: Image.file(
-                            File(
-                              _Documentimage!.path,
-                            ),
-                            fit: BoxFit.cover,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.add_photo_alternate,
+                                size: 40,
+                                color: Colors.black,
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ],
                           ),
-                        ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: IconButton(
-                            onPressed: () {
-                              pickImage();
-                            },
-                            icon: const Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                            )),
-                      )
-                    ],
-                  )
-              ),
+                        )
+                      : Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: SizedBox(
+                                width: Get.width,
+                                height: 200,
+                                child: Image.file(
+                                  File(
+                                    _Documentimage!.path,
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: IconButton(
+                                  onPressed: () {
+                                    pickImage();
+                                  },
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: Colors.white,
+                                  )),
+                            )
+                          ],
+                        )),
             ),
           ],
         ),

@@ -7,7 +7,7 @@ part of 'innings_model.dart';
 // **************************************************************************
 
 InningsModel _$InningsModelFromJson(Map<String, dynamic> json) => InningsModel(
-      totalScore: json['totalScore'] as int,
+      totalScore: (json['totalScore'] as num).toInt(),
       battingTeam:
           TeamModel.fromJson(json['battingTeam'] as Map<String, dynamic>),
       bowlingTeam:
@@ -26,9 +26,9 @@ InningsModel _$InningsModelFromJson(Map<String, dynamic> json) => InningsModel(
         (k, e) =>
             MapEntry(k, PartnershipModel.fromJson(e as Map<String, dynamic>)),
       ),
-      overs: json['overs'] as int,
-      balls: json['balls'] as int,
-      totalWickets: json['totalWickets'] as int,
+      overs: (json['overs'] as num).toInt(),
+      balls: (json['balls'] as num).toInt(),
+      totalWickets: (json['totalWickets'] as num).toInt(),
       isOver: json['isOver'] as bool? ?? false,
     );
 

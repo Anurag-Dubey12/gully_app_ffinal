@@ -15,11 +15,12 @@ TournamentModel _$TournamentModelFromJson(Map<String, dynamic> json) =>
       tournamentPrize: TournamentModel.extractName(
           json['tournamentPrize'] as Map<String, dynamic>),
       organizerName: json['organizerName'] as String?,
-      ballCharges: json['ballCharges'] as int,
-      pendingTeamsCount: json['pendingTeamsCount'] as int? ?? 0,
+      ballCharges: (json['ballCharges'] as num).toInt(),
+      pendingTeamsCount: (json['pendingTeamsCount'] as num?)?.toInt() ?? 0,
       phoneNumber: json['phoneNumber'] as String?,
-      tournamentLimit: json['tournamentLimit'] as int? ?? 0,
-      registeredTeamsCount: json['registeredTeamsCount'] as int? ?? 0,
+      tournamentLimit: (json['tournamentLimit'] as num?)?.toInt() ?? 0,
+      registeredTeamsCount:
+          (json['registeredTeamsCount'] as num?)?.toInt() ?? 0,
       stadiumAddress: json['stadiumAddress'] as String,
       tournamentStartDateTime:
           DateTime.parse(json['tournamentStartDateTime'] as String),
@@ -27,7 +28,7 @@ TournamentModel _$TournamentModelFromJson(Map<String, dynamic> json) =>
           DateTime.parse(json['tournamentEndDateTime'] as String),
       pitchType: TournamentModel.extractName(
           json['pitchType'] as Map<String, dynamic>),
-      breakfastCharges: json['breakfastCharges'] as int,
+      breakfastCharges: (json['breakfastCharges'] as num).toInt(),
       ballType:
           TournamentModel.extractName(json['ballType'] as Map<String, dynamic>),
       user: CoHostModel.fromJson(json['user'] as Map<String, dynamic>),

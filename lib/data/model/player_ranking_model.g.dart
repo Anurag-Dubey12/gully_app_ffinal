@@ -9,18 +9,18 @@ part of 'player_ranking_model.dart';
 PlayerRankingModel _$PlayerRankingModelFromJson(Map<String, dynamic> json) =>
     PlayerRankingModel(
       playerName: json['playerName'] as String,
-      balls: json['balls'] as int? ?? 0,
-      fours: json['fours'] as int? ?? 0,
-      sixes: json['sixes'] as int? ?? 0,
+      balls: (json['balls'] as num?)?.toInt() ?? 0,
+      fours: (json['fours'] as num?)?.toInt() ?? 0,
+      sixes: (json['sixes'] as num?)?.toInt() ?? 0,
       strikeRate: (json['strikeRate'] as num?)?.toDouble() ?? 0.0,
       profilePhoto: json['profilePhoto'] as String? ?? '',
-      over: json['over'] as int? ?? 0,
-      wickets: json['wickets'] as int? ?? 0,
-      runs: json['runs'] as int? ?? 0,
-      total: json['total'] as int? ?? 0,
-      average: json['average'] as int? ?? 0,
+      over: (json['over'] as num?)?.toInt() ?? 0,
+      wickets: (json['wickets'] as num?)?.toInt() ?? 0,
+      runs: (json['runs'] as num?)?.toInt() ?? 0,
+      total: (json['total'] as num?)?.toInt() ?? 0,
+      average: (json['average'] as num?)?.toInt() ?? 0,
       economy: (json['economy'] as num?)?.toDouble() ?? 0.0,
-      innings: json['innings'] as int? ?? 0,
+      innings: (json['innings'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$PlayerRankingModelToJson(PlayerRankingModel instance) =>

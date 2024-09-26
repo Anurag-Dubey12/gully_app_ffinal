@@ -6,12 +6,9 @@ import 'package:gully_app/ui/screens/txn_history_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:intl/intl.dart';
-import 'package:pdf/pdf.dart';
-import 'package:printing/printing.dart';
 
 import '../../data/model/txn_model.dart';
 import 'payment_page.dart';
-import 'package:pdf/widgets.dart' as pw;
 
 class TxnDetailsView extends StatefulWidget {
   final Transaction transaction;
@@ -89,7 +86,7 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                             ),
                             child: GestureDetector(
                               onTap: () {
-                                _generateTransactionPdf(widget.transaction);
+
                               },
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
@@ -333,137 +330,5 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
         ),
       ),
     ));
-  }
-
-  Future<void> _generateTransactionPdf(Transaction transaction) async {
-    final pdf = pw.Document();
-    final controller = Get.find<AuthController>();
-
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) {
-          return pw.Container(
-            padding: const pw.EdgeInsets.all(16),
-            decoration: pw.BoxDecoration(
-              borderRadius: pw.BorderRadius.circular(30),
-              color: PdfColors.white,
-            ),
-            child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Center(
-                  child: pw.Text(
-                    transaction.tournamentName.capitalize,
-                    style: pw.TextStyle(
-                      color: PdfColors.orange,
-                      fontSize: 24,
-                      fontWeight: pw.FontWeight.bold,
-                    ),
-                  ),
-                ),
-                pw.SizedBox(height: 20),
-                _pdfData('Transaction Status',
-                    generateStatusText(transaction.status),
-                    isChip: true),
-                _pdfData('Transaction ID', transaction.orderId, isBold: true),
-                _pdfData(
-                    'Transaction Date & Time',
-                    DateFormat('MMMM dd, yyyy - hh:mm a')
-                        .format(DateTime.parse(transaction.createdAt)),
-                    isBold: true),
-                _pdfData(
-                    'Transaction Fees', ' ${transaction.amountWithoutCoupon}'),
-                _pdfData('Discount',
-                    '- ${transaction.amountWithoutCoupon - transaction.amount}'),
-                pw.Divider(),
-                _pdfData('Total Amount', '${transaction.amount}', isBold: true),
-                pw.Divider(),
-                _pdfData('Payment Mode', 'Razorpay'),
-                pw.SizedBox(height: 20),
-                pw.Text('Tournament Details',
-                    style: pw.TextStyle(
-                        fontSize: 20, fontWeight: pw.FontWeight.bold)),
-                pw.SizedBox(height: 10),
-                _pdfData(
-                    'Start Date',
-                    DateFormat('dd/MM/yyyy')
-                        .format(DateTime.parse(transaction.startDate))),
-                _pdfData(
-                    'End Date',
-                    DateFormat('dd/MM/yyyy')
-                        .format(DateTime.parse(transaction.endDate))),
-                _pdfData('Payment:', '${transaction.amount}'),
-                _pdfData('Phone Number:', controller.state?.phoneNumber ?? ""),
-                pw.Divider(),
-                pw.Container(
-                  width: double.infinity,
-                  decoration: pw.BoxDecoration(
-                    color: PdfColors.grey200,
-                    borderRadius: pw.BorderRadius.circular(12),
-                  ),
-                  child: pw.Padding(
-                    padding: const pw.EdgeInsets.all(12.0),
-                    child: pw.Column(
-                      mainAxisAlignment: pw.MainAxisAlignment.start,
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Text('Cancellation Policy:',
-                            style: const pw.TextStyle(
-                              // color: AppTheme.secondaryYellowColor,
-                              fontSize: 18,
-                              color: PdfColors.black,
-                            )),
-                        pw.SizedBox(height: 12),
-                        pw.Text(
-                            'The tournament fee is non-refundable. In case of any issue, kindly contact Gully Support.',
-                            style: const pw.TextStyle(
-                              // color: AppTheme.secondaryYellowColor,
-                              fontSize: 14,
-                              color: PdfColors.black,
-                            )),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
-          );
-        },
-      ),
-    );
-
-    await Printing.layoutPdf(
-        onLayout: (PdfPageFormat format) async => pdf.save());
-  }
-
-  pw.Widget _pdfData(String label, String value,
-      {bool isChip = false, bool isBold = false}) {
-    return pw.Padding(
-      padding: const pw.EdgeInsets.symmetric(vertical: 4),
-      child: pw.Row(
-        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-        children: [
-          pw.Text(label, style: const pw.TextStyle(fontSize: 14)),
-          isChip
-              ? pw.Container(
-                  padding:
-                      const pw.EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: pw.BoxDecoration(
-                    color: value == "Success" ? PdfColors.green : PdfColors.red,
-                    borderRadius: pw.BorderRadius.circular(10),
-                  ),
-                  child: pw.Text(value,
-                      style: pw.TextStyle(
-                          color: PdfColors.white,
-                          fontWeight: pw.FontWeight.bold)),
-                )
-              : pw.Text(value,
-                  style: pw.TextStyle(
-                    fontSize: isBold ? 15 : 14,
-                    fontWeight: pw.FontWeight.normal,
-                  )),
-        ],
-      ),
-    );
   }
 }

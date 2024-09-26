@@ -10,7 +10,7 @@ TeamRankingModel _$TeamRankingModelFromJson(Map<String, dynamic> json) =>
     TeamRankingModel(
       teamName: json['teamName'] as String,
       teamLogo: json['teamLogo'] as String?,
-      numberOfWins: json['numberOfWins'] as int,
+      numberOfWins: (json['numberOfWins'] as num).toInt(),
       registeredAt: DateTime.parse(json['registeredAt'] as String),
     );
 

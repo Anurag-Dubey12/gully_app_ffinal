@@ -7,11 +7,11 @@ part of 'extras_model.dart';
 // **************************************************************************
 
 ExtraModel _$ExtraModelFromJson(Map<String, dynamic> json) => ExtraModel(
-      wides: json['wides'] as int,
-      noBalls: json['noBalls'] as int,
-      byes: json['byes'] as int,
-      legByes: json['legByes'] as int,
-      penalty: json['penalty'] as int,
+      wides: (json['wides'] as num).toInt(),
+      noBalls: (json['noBalls'] as num).toInt(),
+      byes: (json['byes'] as num).toInt(),
+      legByes: (json['legByes'] as num).toInt(),
+      penalty: (json['penalty'] as num).toInt(),
     );
 
 Map<String, dynamic> _$ExtraModelToJson(ExtraModel instance) =>

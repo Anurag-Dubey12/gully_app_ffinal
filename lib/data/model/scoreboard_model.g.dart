@@ -9,12 +9,12 @@ part of 'scoreboard_model.dart';
 ScoreboardModel _$ScoreboardModelFromJson(Map<String, dynamic> json) =>
     ScoreboardModel(
       team1: TeamModel.fromJson(json['team1'] as Map<String, dynamic>),
-      currentInnings: json['currentInnings'] as int,
+      currentInnings: (json['currentInnings'] as num).toInt(),
       team2: TeamModel.fromJson(json['team2'] as Map<String, dynamic>),
       matchId: json['matchId'] as String,
       tossWonBy: json['tossWonBy'] as String,
       electedTo: json['electedTo'] as String?,
-      totalOvers: json['totalOvers'] as int,
+      totalOvers: (json['totalOvers'] as num).toInt(),
       extras: ExtraModel.fromJson(json['extras'] as Map<String, dynamic>),
       firstInningHistory:
           (json['firstInningHistory'] as Map<String, dynamic>?)?.map(
@@ -45,10 +45,10 @@ ScoreboardModel _$ScoreboardModelFromJson(Map<String, dynamic> json) =>
       ..secondInnings = json['secondInnings'] == null
           ? null
           : InningsModel.fromJson(json['secondInnings'] as Map<String, dynamic>)
-      ..ballsToBowl = json['ballsToBowl'] as int
-      ..currentOver = json['currentOver'] as int
-      ..currentBall = json['currentBall'] as int
-      ..currentInningsScore = json['currentInningsScore'] as int;
+      ..ballsToBowl = (json['ballsToBowl'] as num).toInt()
+      ..currentOver = (json['currentOver'] as num).toInt()
+      ..currentBall = (json['currentBall'] as num).toInt()
+      ..currentInningsScore = (json['currentInningsScore'] as num).toInt();
 
 // ignore: unused_element
 abstract class _$ScoreboardModelPerFieldToJson {

@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 
 import '../../../data/controller/auth_controller.dart';
 import '../../widgets/shop/shop_card.dart';
@@ -205,7 +204,7 @@ class ShopHomeState extends State<ShopHome>{
                 InkWell(
                     onTap: () {
                     },
-                    child: const Icon(Iconsax.filter,size: 30,))
+                    child: const Icon(Icons.filter,size: 30,))
               ],
             ),
             Expanded(

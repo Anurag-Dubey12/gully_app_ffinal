@@ -37,6 +37,7 @@ class _BusinessHoursScreenState extends State<BusinessHoursScreen> {
     );
     if (picked != null) {
       setState(() {
+        final timeString = '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
         if (isOpenTime) {
           _businessHours[days]!.openTime = picked;
         } else {
@@ -46,6 +47,17 @@ class _BusinessHoursScreenState extends State<BusinessHoursScreen> {
     }
   }
 
+  TimeOfDay _parseTimeString(String? timeString) {
+    if (timeString == null) return const TimeOfDay(hour: 9, minute: 0);
+    final parts = timeString.split(':');
+    return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+  }
+
+  String _formatTimeString(String? timeString) {
+    if (timeString == null) return '00:00';
+    final time = _parseTimeString(timeString);
+    return time.format(context);
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(

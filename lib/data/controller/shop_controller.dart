@@ -25,6 +25,7 @@ class ShopController extends GetxController {
     return vendor.value;
   }
 
+
   XFile? getVendorDocumentImage() {
     return vendorDocumentImage.value;
   }

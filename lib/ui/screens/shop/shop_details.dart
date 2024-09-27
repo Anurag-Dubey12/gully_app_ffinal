@@ -9,7 +9,6 @@ class ShopDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final products = shop['products'] ?? [];
     return Scaffold(
-
       body: CustomScrollView(
         slivers: [
           SliverAppBar(

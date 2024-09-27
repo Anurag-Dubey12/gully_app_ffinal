@@ -18,4 +18,5 @@ class business_hours_model {
   factory business_hours_model.fromJson(Map<String, dynamic> json) => _$business_hours_modelFromJson(json);
 
   Map<String, dynamic> toJson() => _$business_hours_modelToJson(this);
+
 }

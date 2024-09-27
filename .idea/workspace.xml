@@ -10,43 +10,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="shop screen">
-      <change afterPath="$PROJECT_DIR$/lib/data/controller/shop_controller.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/data/model/business_hours_model.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/data/model/shop_model.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/data/model/vendor_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/authority_user_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/authority_user_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/banner_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/banner_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/batting_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/batting_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/bowling_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/bowling_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/challenge_match.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/challenge_match.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/co_host_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/co_host_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/coupon_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/coupon_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/extras_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/extras_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/innings_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/innings_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/looking_for_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/looking_for_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/matchup_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/matchup_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/notification_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/notification_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/opponent_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/opponent_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/overs_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/overs_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/partnership_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/partnership_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/player_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/player_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/player_ranking_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/player_ranking_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/scoreboard_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/scoreboard_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/team_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/team_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/team_ranking_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/team_ranking_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/tournament_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/tournament_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/user_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/user_model.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/shop_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/shop_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/business_hours_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/business_hours_model.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/register_shop.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/register_shop.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shop_home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shop_home.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shop_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shop_details.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shop_payment_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shop_payment_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/txn_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/txn_details.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/txn_history_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/txn_history_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/shop/business_hours.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/business_hours.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/shop/shop_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/shop_details.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/shop/social_media_link.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/social_media_link.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/shop/vendor_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/vendor_details.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -538,7 +511,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727263316189</updated>
     </task>
-    <option name="localTasksCounter" value="49" />
+    <task id="LOCAL-00049" summary="shop screen">
+      <option name="closed" value="true" />
+      <created>1727351416256</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1727351416257</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -840,6 +821,12 @@
           <option name="totalLines" value="4797669" />
           <option name="info" value="shop screen" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1727351424737" />
+          <option name="linesCode" value="34462" />
+          <option name="totalLines" value="7584233" />
+          <option name="info" value="shop screen" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1119,6 +1106,12 @@
           <option name="linesCode" value="34118" />
           <option name="totalLines" value="4797669" />
           <option name="info" value="Sep 25, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1727351424737" />
+          <option name="linesCode" value="34462" />
+          <option name="totalLines" value="7584233" />
+          <option name="info" value="Sep 26, 2024" />
         </TimePoint>
       </list>
     </option>

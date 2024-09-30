@@ -15,13 +15,12 @@ import '../coupon_view.dart';
 import '../home_screen.dart';
 import '../payment_page.dart';
 
-class ShopPaymentPage extends StatefulWidget{
+class ShopPaymentPage extends StatefulWidget {
   final shop_model? shopData;
-  const ShopPaymentPage({super.key,this.shopData});
+  const ShopPaymentPage({super.key, this.shopData});
 
   @override
-  State<StatefulWidget> createState()=>PaymentPage();
-
+  State<StatefulWidget> createState() => PaymentPage();
 }
 
 class PaymentPage extends State<ShopPaymentPage> {
@@ -44,13 +43,15 @@ class PaymentPage extends State<ShopPaymentPage> {
       'Congratulations! Your transaction has been successful. Your Shop is now active!',
       title: "Payment Successful",
     ).then(
-          (value) => Get.offAll(() => const HomeScreen(), predicate: (route) => route.name == '/HomeScreen'),
+      (value) => Get.offAll(() => const HomeScreen(),
+          predicate: (route) => route.name == '/HomeScreen'),
     );
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     logger.f('Payment Error ${response.message.toString()}');
-    errorSnackBar('Your transaction has failed. Please try again!', title: "Payment Failed!");
+    errorSnackBar('Your transaction has failed. Please try again!',
+        title: "Payment Failed!");
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
@@ -72,38 +73,41 @@ class PaymentPage extends State<ShopPaymentPage> {
     };
     _razorpay.open(options);
   }
+
   @override
   Widget build(BuildContext context) {
     return GradientBuilder(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
-          backgroundColor: AppTheme.primaryColor,
-          title: const Text('Review Banner', style: TextStyle(color: Colors.white, fontSize: 18)),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(22),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: SingleChildScrollView(
-                child: Column(
+        child: Scaffold(
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: AppTheme.primaryColor,
+        title: const Text('Review Banner',
+            style: TextStyle(color: Colors.white, fontSize: 18)),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(22),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: SingleChildScrollView(
+              child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.shopData!.shopLogo!.isNotEmpty )
+                    if (widget.shopData!.shopLogo!.isNotEmpty)
                       Container(
                         height: 200,
                         width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
                           image: DecorationImage(
-                            image: FileImage(File(widget.shopData!.shopLogo ??'')),
+                            image: FileImage(
+                                File(widget.shopData!.shopLogo ?? '')),
                             fit: BoxFit.cover,
                           ),
                         ),
@@ -118,7 +122,7 @@ class PaymentPage extends State<ShopPaymentPage> {
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text(widget.shopData!.shopName ??'',
+                        Text(widget.shopData!.shopName ?? '',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey.shade800,
@@ -136,7 +140,7 @@ class PaymentPage extends State<ShopPaymentPage> {
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text(widget.shopData!.shopNumber ??'Not Added',
+                        Text(widget.shopData!.shopNumber ?? 'Not Added',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey.shade800,
@@ -154,7 +158,7 @@ class PaymentPage extends State<ShopPaymentPage> {
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text(widget.shopData!.shopEmail ??'Not Added',
+                        Text(widget.shopData!.shopEmail ?? 'Not Added',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey.shade800,
@@ -171,7 +175,7 @@ class PaymentPage extends State<ShopPaymentPage> {
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text(widget.shopData!.gstNumber ??'Not Added',
+                        Text(widget.shopData!.gstNumber ?? 'Not Added',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey.shade800,
@@ -180,40 +184,40 @@ class PaymentPage extends State<ShopPaymentPage> {
                       ],
                     ),
                     const SizedBox(height: 10),
-              //       Row(
-              //         children: [
-              //           Expanded(
-              //             flex: 2,
-              //             child: Text(
-              //               'Shop Business Hours',
-              //               style: TextStyle(
-              //                 fontSize: 14,
-              //                 color: Colors.grey.shade800,
-              //                 fontWeight: FontWeight.w400,
-              //               ),
-              //             ),
-              //           ),
-              //           if (widget.shopData!.businessHours != null && widget.shopData!.businessHours!.isNotEmpty)
-              //             ...widget.shopData!.businessHours!.entries.map((entry) {
-              //               final day = entry.key;
-              //               final hours = entry.value;
-              //               final hoursString = hours.isOpen
-              //                   ? '${hours.openTime ?? '00:00'} - ${hours.closeTime ?? '00:00'}'
-              //                   : 'Closed';
-              //               return BusinessHoursSummary(
-              //                 day: day,
-              //                 hours: hoursString,
-              //               );
-              //             }).toList(),
-              //           if (widget.shopData!.businessHours == null || widget.shopData!.businessHours!.isEmpty)
-              //             Text('No business hours set'),
+                    //       Row(
+                    //         children: [
+                    //           Expanded(
+                    //             flex: 2,
+                    //             child: Text(
+                    //               'Shop Business Hours',
+                    //               style: TextStyle(
+                    //                 fontSize: 14,
+                    //                 color: Colors.grey.shade800,
+                    //                 fontWeight: FontWeight.w400,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           if (widget.shopData!.businessHours != null && widget.shopData!.businessHours!.isNotEmpty)
+                    //             ...widget.shopData!.businessHours!.entries.map((entry) {
+                    //               final day = entry.key;
+                    //               final hours = entry.value;
+                    //               final hoursString = hours.isOpen
+                    //                   ? '${hours.openTime ?? '00:00'} - ${hours.closeTime ?? '00:00'}'
+                    //                   : 'Closed';
+                    //               return BusinessHoursSummary(
+                    //                 day: day,
+                    //                 hours: hoursString,
+                    //               );
+                    //             }).toList(),
+                    //           if (widget.shopData!.businessHours == null || widget.shopData!.businessHours!.isEmpty)
+                    //             Text('No business hours set'),
                     GestureDetector(
                       onTap: () async {
                         final res = await Get.to(
-                                () => CouponView(
-                              tournamentId: '',
-                              amount: fees,
-                            ),
+                            () => CouponView(
+                                  tournamentId: '',
+                                  amount: fees,
+                                ),
                             fullscreenDialog: true);
                         if (res != null) {
                           setState(() {
@@ -226,7 +230,7 @@ class PaymentPage extends State<ShopPaymentPage> {
                         decoration: BoxDecoration(
                           border: Border.all(
                             color:
-                            AppTheme.secondaryYellowColor.withOpacity(0.8),
+                                AppTheme.secondaryYellowColor.withOpacity(0.8),
                             width: 2,
                           ),
                           borderRadius: BorderRadius.circular(12),
@@ -272,7 +276,7 @@ class PaymentPage extends State<ShopPaymentPage> {
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text('₹${500/1.18}',
+                        Text('₹${500 / 1.18}',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey.shade800,
@@ -289,7 +293,7 @@ class PaymentPage extends State<ShopPaymentPage> {
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text('₹${100-(fees/1.18)}',
+                        Text('₹${100 - (fees / 1.18)}',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey.shade800,
@@ -315,7 +319,7 @@ class PaymentPage extends State<ShopPaymentPage> {
                             if (couponCode != null)
                               Chip(
                                 label: Text(
-                                  'Promocode: $couponCode',
+                                  'Promo code: $couponCode',
                                   style: const TextStyle(fontSize: 12),
                                 ),
                                 side: BorderSide(
@@ -374,13 +378,11 @@ class PaymentPage extends State<ShopPaymentPage> {
                     ),
                     const SizedBox(height: 22),
                     const CancellationPolicyWidget()
-              ]
-              ),
+                  ]),
             ),
           ),
         ),
       ),
-    )
-    );
+    ));
   }
 }

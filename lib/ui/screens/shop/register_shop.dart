@@ -1,15 +1,12 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/ui/screens/shop/shop_payment_screen.dart';
 import 'package:gully_app/ui/widgets/shop/social_media_link.dart';
-import 'package:gully_app/ui/widgets/shop/vendor_details.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../data/controller/auth_controller.dart';
-import '../../../data/controller/shop_controller.dart';
 import '../../../data/model/business_hours_model.dart';
 import '../../../data/model/shop_model.dart';
 import '../../../data/model/vendor_model.dart';
@@ -19,8 +16,6 @@ import '../../widgets/create_tournament/form_input.dart';
 import '../../widgets/primary_button.dart';
 import '../../widgets/shop/business_hours.dart';
 import '../../widgets/shop/image_upload.dart';
-import '../../widgets/shop/product_details.dart';
-import '../../widgets/shop/shop_details.dart';
 
 class RegisterShop extends StatefulWidget {
   const RegisterShop({Key? key}) : super(key: key);
@@ -182,7 +177,6 @@ class _ShopState extends State<RegisterShop>
       isValid = false;
     }
 
-    // Optional images
     if (_shop_Gst_Controller.text.isNotEmpty && _Gstcertificate == null) {
       missingImages.add("GST Certificate");
       isValid = false;

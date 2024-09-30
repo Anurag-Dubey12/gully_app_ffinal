@@ -148,7 +148,7 @@ class _Card extends GetView<TournamentController> {
             children: [
               CircleAvatar(
                 radius: 24,
-                backgroundImage:team.toImageUrl().isNotEmpty && team.toImageUrl()!=null ?
+                backgroundImage:team.toImageUrl().isNotEmpty && team.toImageUrl() !=null ?
                 FallbackImageProvider(
                     toImageUrl(team.logo ?? "assets/images/logo.png"),
                     'assets/images/logo.png'

@@ -1,56 +1,48 @@
 {
   "project_info": {
-    "project_number": "1035765979959",
-    "project_id": "gully-team-1939a",
-    "storage_bucket": "gully-team-1939a.appspot.com"
+    "project_number": "625133380",
+    "project_id": "gully-team",
+    "storage_bucket": "gully-team.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1035765979959:android:1c7408a48eedfb2f2a98b2",
+        "mobilesdk_app_id": "1:625133380:android:e00a86b1962d545e1bb911",
         "android_client_info": {
           "package_name": "com.nileegames.gullyteam"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1035765979959-54nvb9eshu9dl7b577nmb0s2eil6f0e8.apps.googleusercontent.com",
+          "client_id": "625133380-l8f5kh9vrgtc4gbkvkjsq0eic0mucqjo.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.nileegames.gullyteam",
-            "certificate_hash": "5caafbf3ebec387a896ef4071c5834d5a1d26e93"
+            "certificate_hash": "dbad2cc688baf9323fe2d588265ba8aaa9857604"
           }
         },
         {
-          "client_id": "1035765979959-fnpbvv834fs12k5akmqjcj2lqh0aceqe.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.nileegames.gullyteam",
-            "certificate_hash": "a5ac56eff26c6186473c24f2c5266684e60436a7"
-          }
-        },
-        {
-          "client_id": "1035765979959-19kj4crndmpkbcq4rqrcne5prm1jrdha.apps.googleusercontent.com",
+          "client_id": "625133380-hrntakbsvj485ei4uk7ej7vjfmvtt6cg.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBdceGIPPiXSKJ0H_kJ84f0QdZyN8wHf6E"
+          "current_key": "AIzaSyBvE3O60gMucTB2eaPKo27xg-_XUmNGp3g"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1035765979959-19kj4crndmpkbcq4rqrcne5prm1jrdha.apps.googleusercontent.com",
+              "client_id": "625133380-hrntakbsvj485ei4uk7ej7vjfmvtt6cg.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "1035765979959-tro06q0ra1phi5oqu9v2mj08fuvffesl.apps.googleusercontent.com",
+              "client_id": "625133380-lovspuomoojkkroghl6pni8957jl0sc8.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.nileegames.gullyteam"
+                "bundle_id": "com.nileegames.gullyApp"
               }
             }
           ]

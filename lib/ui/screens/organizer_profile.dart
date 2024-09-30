@@ -10,6 +10,7 @@ import 'package:gully_app/ui/screens/current_tournament_list.dart';
 import 'package:gully_app/ui/screens/promote_banner_screen.dart';
 import 'package:gully_app/ui/screens/select_match_type_for_scoreboard.dart';
 import 'package:gully_app/ui/screens/select_performance_type.dart';
+import 'package:gully_app/ui/screens/shop/my_shop.dart';
 import 'package:gully_app/ui/screens/tournament_requests_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
@@ -330,6 +331,12 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                                 Get.to(() => const CurrentTournamentListScreen(
                                   redirectType: RedirectType.editForm,
                                 ));
+                              },
+                            ),
+                            ProfileTileCard(
+                              text: 'View My Shop',
+                              onTap: () {
+                                Get.to(() => const MyShop());
                               },
                             ),
                             ProfileTileCard(

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:gully_app/config/api_client.dart';
+import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'dart:io';
 
@@ -70,15 +74,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         items: images.map((imagePath) {
                           return Builder(
                             builder: (BuildContext context) {
-                              return Container(
-                                width: MediaQuery.of(context).size.width,
-                                margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                child: Image.file(
-                                  File(imagePath),
-                                  fit: BoxFit.cover,
+                              return GestureDetector(
+                                onTap: ()=>imageViewer(context, imagePath, false),
+                                child: Container(
+                                  width: Get.width,
+                                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Image.file(
+                                    File(imagePath),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               );
                             },

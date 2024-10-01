@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/ui/screens/shop/shop_payment_screen.dart';
 import 'package:gully_app/ui/widgets/shop/social_media_link.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -200,6 +201,7 @@ class _ShopState extends State<RegisterShop>
 
   @override
   Widget build(BuildContext context) {
+
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -247,6 +249,7 @@ class _ShopState extends State<RegisterShop>
                           // setState(() {
                           //   isLoading = true;
                           // });
+                          final ShopController controller = Get.put(ShopController());
                           final shopData = shop_model(
                             shopName: _shopnameController.text,
                             shopAddress: _shop_address_Controller.text,
@@ -276,6 +279,8 @@ class _ShopState extends State<RegisterShop>
                               id_proof: _documentImage?.path, id: '',
                             ),
                           );
+                          controller.addShop(shopData);
+                          logger.d('The shop data is saved');
                           Get.to(()=>ShopPaymentPage(shopData: shopData,));
                         }else{
                           setState(() {

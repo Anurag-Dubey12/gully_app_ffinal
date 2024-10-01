@@ -1,20 +1,17 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/model/shop_model.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../theme/theme.dart';
-import '../../widgets/arc_clipper.dart';
+import 'package:gully_app/ui/screens/shop/shop_dashboard.dart';
+import 'package:gully_app/ui/theme/theme.dart';
+import 'package:gully_app/ui/widgets/arc_clipper.dart';
 
-class MyShop extends GetView<ShopController>{
-  const MyShop({super.key});
+class MyShop extends GetView<ShopController> {
+  const MyShop({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final ShopController controller = Get.put(ShopController());
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -50,80 +47,72 @@ class MyShop extends GetView<ShopController>{
                 width: double.infinity,
               ),
             ),
-            Positioned(
-              top: 0,
-              child: SizedBox(
-                width: Get.width,
-                height: Get.height,
-                child: Column(
-                  children: [
-                    AppBar(
-                      backgroundColor: Colors.transparent,
-                      elevation: 0,
-                      title: Text(
-                        "My Shop",
-                        style: Get.textTheme.headlineMedium?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 24,
-                        ),
-                      ),
-                      leading: const BackButton(
-                        color: Colors.white,
-                      ),
+            Column(
+              children: [
+                AppBar(
+                  backgroundColor: Colors.transparent,
+                  elevation: 0,
+                  title: Text(
+                    "My Shops",
+                    style: Get.textTheme.headlineMedium?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 24,
                     ),
-                    Padding(
+                  ),
+                  leading: const BackButton(
+                    color: Colors.white,
+                  ),
+                ),
+                Expanded(
+                  child: Obx(() {
+                    if (controller.shops.isEmpty) {
+                      return Center(
+                        child: Text(
+                          "No shops available",
+                          style: Get.textTheme.titleMedium,
+                        ),
+                      );
+                    }
+                    return ListView.builder(
+                      itemCount: controller.shops.length,
                       padding: EdgeInsets.symmetric(
                         horizontal: Get.width * 0.07,
+                        vertical: Get.height * 0.02,
                       ),
-                    child:_Card(
-                        shop:shop_model()
-                    ) ,
-
-                    ),
-                  ],
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16.0),
+                          child: _ShopCard(shop: controller.shops[index]),
+                        );
+                      },
+                    );
+                  }),
                 ),
-              ),
-            )
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 }
-class _Card extends StatefulWidget {
+
+class _ShopCard extends StatelessWidget {
   final shop_model shop;
 
-  const _Card({required this.shop});
-
-  @override
-  State<_Card> createState() => _CardState();
-}
-
-class _CardState extends State<_Card> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  dispose() {
-    super.dispose();
-  }
+  const _ShopCard({Key? key, required this.shop}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-
+        Get.to(()=>ShopDashboard(shopName: shop.shopName.toString(),shopId: '1',));
       },
       child: Container(
         width: Get.width,
         decoration: BoxDecoration(
           color: Colors.white,
-          // border: Border.all(
-          //   color: Colors.black
-          // ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -132,9 +121,6 @@ class _CardState extends State<_Card> {
               offset: const Offset(0, 1),
             ),
           ],
-          // border: Border.all(
-          //   color: Colors.black
-          // ),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Padding(
@@ -142,17 +128,16 @@ class _CardState extends State<_Card> {
             horizontal: Get.width * 0.05,
             vertical: Get.height * 0.02,
           ),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Spacer(),
               Text(
-                "Shop two",
+                shop.shopName ?? "No Shop Name",
                 style: Get.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w600,
                   fontSize: 19,
                 ),
               ),
-              const Spacer(),
             ],
           ),
         ),

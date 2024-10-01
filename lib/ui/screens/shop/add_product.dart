@@ -21,6 +21,7 @@ class AddProduct extends StatefulWidget{
 }
 class Product extends State<AddProduct>{
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _Product_name = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _discountController = TextEditingController();
   List<XFile> _product_image = [];
@@ -38,7 +39,7 @@ class Product extends State<AddProduct>{
     'Hockey': ['Hockey Stick', 'Hockey Ball', 'Jersey', 'Shorts', 'Shoes', 'Shin Guards'],
     'Football': ['Football', 'Football Boots', 'Goalkeeper Gloves', 'Shin Guards', 'Socks', 'Jerseys', 'Shorts', 'Goalkeeper Jersey', 'Cones', 'Training Bibs', 'Nets', 'Goal Posts', 'Pumps', 'Bags', 'Corner Flags', 'Whistles', 'Captain Armbands', 'Kit Bag', 'Agility Ladders', 'Speed Hurdles', 'Water Bottles', 'Training Balls', 'Medical Kit', 'Coaching Clipboard', 'Marker Discs'],
   };
-  List<Map<String, dynamic>> _addedProducts = [];
+  final List<Map<String, dynamic>> _addedProducts = [];
 
   String? selectedCategory;
   String? _selected_subcategory;
@@ -71,6 +72,7 @@ class Product extends State<AddProduct>{
 
   Map<String,dynamic> _getCurrentProductDetails(){
     return{
+      'name':_Product_name.text,
       'category': selectedCategory,
       'subcategory': _selected_subcategory,
       'description': _descriptionController.text,
@@ -81,6 +83,7 @@ class Product extends State<AddProduct>{
   }
   void _resetform() {
     setState(() {
+      _Product_name.clear();
       _descriptionController.clear();
       _priceController.clear();
       _discountController.clear();
@@ -166,6 +169,11 @@ class Product extends State<AddProduct>{
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                FormInput(
+                  controller: _Product_name,
+                  label: "Product Name",
+                  textInputType: TextInputType.text,
+                ),
                 const Text("Select The Product Category"),
                 DropDownWidget(
                     onSelect: (value){

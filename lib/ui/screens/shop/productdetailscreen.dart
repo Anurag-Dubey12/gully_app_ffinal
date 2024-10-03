@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:gully_app/config/api_client.dart';
+import 'package:gully_app/ui/screens/shop/add_product.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'dart:io';
@@ -39,13 +40,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
-            title: Text(
-              widget.product['name'] ?? 'Product Detail',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+            title: Row(
+              children: [
+                Text(
+                  widget.product['name'] ?? 'Product Detail',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(width: 120),
+                GestureDetector(
+                    onTap: (){
+                      Get.to(()=>AddProduct(product: widget.product,));
+                    },
+                    child: const Icon(Icons.edit_rounded,color: Colors.white,)),
+                const SizedBox(width: 10),
+                GestureDetector(child: const Icon(Icons.delete_outlined,color: Colors.white,))
+              ],
             ),
             leading: const BackButton(
               color: Colors.white,
@@ -93,7 +106,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         }).toList(),
                       ),
                       const SizedBox(height: 16),
-                      // Smooth Page Indicator (Dots)
                       Center(
                         child: AnimatedSmoothIndicator(
                           activeIndex: _currentImageIndex,
@@ -126,7 +138,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     _ProductInfo('Name', widget.product['name'] ?? 'N/A'),
                     _ProductInfo('Category', widget.product['category'] ?? 'N/A'),
                     _ProductInfo('Subcategory', widget.product['subcategory'] ?? 'N/A'),
-                    _ProductInfo('Price', '\$${widget.product['price'] ?? 'N/A'}'),
+                    _ProductInfo('Price', '${widget.product['price'] ?? 'N/A'}'),
                     _ProductInfo('Discount', '${widget.product['discount'] ?? '0'}%'),
                   ],
                 ),

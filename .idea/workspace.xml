@@ -11,8 +11,15 @@
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="shop screen modify">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/business_hours_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/business_hours_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/shop_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/shop_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/player_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/player_profile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/add_product.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/add_product.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/productdetailscreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/productdetailscreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/register_shop.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/register_shop.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shop_dashboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shop_dashboard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shop_payment_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop_payment_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -96,7 +103,7 @@
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/abcom/Documents/Software/gully_app/android/app&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/abcom/Documents/eSchoolParent&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;flutter.settings&quot;,
     &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
@@ -108,6 +115,9 @@
       <recent name="C:\Users\abcom\Documents\Software\gully_app" />
       <recent name="C:\Users\abcom\Documents\gully_app\assets\images" />
       <recent name="C:\Notes\gully_app\android\app" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\abcom\Documents\Software\gully_app\lib\ui\screens" />
     </key>
   </component>
   <component name="RunAnythingCache">
@@ -157,14 +167,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00004" summary="modify by adding new item">
-      <option name="closed" value="true" />
-      <created>1720859211539</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1720859211539</updated>
     </task>
     <task id="LOCAL-00005" summary="modify by adding new item">
       <option name="closed" value="true" />
@@ -550,7 +552,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727783417705</updated>
     </task>
-    <option name="localTasksCounter" value="53" />
+    <task id="LOCAL-00053" summary="shop screen modify">
+      <option name="closed" value="true" />
+      <created>1727783942255</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1727783942255</updated>
+    </task>
+    <option name="localTasksCounter" value="54" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -889,6 +899,12 @@
           <option name="totalLines" value="4392470" />
           <option name="info" value="shop screen modify" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1727783942609" />
+          <option name="linesCode" value="35417" />
+          <option name="totalLines" value="4392476" />
+          <option name="info" value="shop screen modify" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1188,9 +1204,9 @@
           <option name="info" value="Sep 30, 2024" />
         </TimePoint>
         <TimePoint>
-          <option name="timestamp" value="1727783419537" />
-          <option name="linesCode" value="35414" />
-          <option name="totalLines" value="4392470" />
+          <option name="timestamp" value="1727783942609" />
+          <option name="linesCode" value="35417" />
+          <option name="totalLines" value="4392476" />
           <option name="info" value="Oct 1, 2024" />
         </TimePoint>
       </list>

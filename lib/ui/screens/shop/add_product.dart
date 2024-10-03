@@ -14,7 +14,8 @@ import '../../widgets/create_tournament/form_input.dart';
 import '../../widgets/primary_button.dart';
 
 class AddProduct extends StatefulWidget{
-  const AddProduct({super.key});
+  final Map<String,dynamic>? product;
+  const AddProduct({super.key,this.product});
 
   @override
   State<StatefulWidget> createState()=>Product();
@@ -43,7 +44,30 @@ class Product extends State<AddProduct>{
 
   String? selectedCategory;
   String? _selected_subcategory;
+  int _productIdCounter = 1;
 
+  @override
+  void initState() {
+    super.initState();
+    if(widget.product!=null) {
+      final product = widget.product!;
+      _Product_name.text = product['name'] ?? '';
+      _descriptionController.text = product['description'] ?? '';
+      _priceController.text = product['price']?.toString() ?? '';
+      _discountController.text = product['discount']?.toString() ?? '';
+      selectedCategory = product['category'];
+      _selected_subcategory = product['subcategory'];
+      _product_image = (product['images'] as List<dynamic>?)
+          ?.map((path) => XFile(path))
+          .toList() ?? [];
+    }
+  }
+
+  String _generateProductId() {
+    String id = _productIdCounter.toString().padLeft(4, '0');
+    _productIdCounter++;
+    return id;
+  }
   pickImages() async {
     final imgs = await multipleimagePickerHelper();
 
@@ -72,6 +96,7 @@ class Product extends State<AddProduct>{
 
   Map<String,dynamic> _getCurrentProductDetails(){
     return{
+      'id': _generateProductId(),
       'name':_Product_name.text,
       'category': selectedCategory,
       'subcategory': _selected_subcategory,
@@ -108,7 +133,14 @@ class Product extends State<AddProduct>{
           iconTheme: const IconThemeData(color: Colors.white),
           backgroundColor: AppTheme.primaryColor,
           elevation: 0,
-          title: const Text(
+          title: widget.product!=null ? Text(
+            'Edit Product',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+            ),
+          ):Text(
             'Add Product',
             style: TextStyle(
               color: Colors.white,
@@ -123,6 +155,7 @@ class Product extends State<AddProduct>{
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
+              widget.product==null?
               Expanded(
                 child: PrimaryButton(
                   onTap: (){
@@ -138,18 +171,18 @@ class Product extends State<AddProduct>{
                   },
                   title: 'Add More Product',
                 ),
-              ),
-              const SizedBox(width: 16),
+              ):const SizedBox.shrink(),
+              widget.product==null ?
+              const SizedBox(width: 16):const SizedBox.shrink(),
               Expanded(
                 child: PrimaryButton(
                   onTap: () async {
                     if(validatedCurrentProduct()){
                       _addedProducts.add(_getCurrentProductDetails());
-
                       for (var product in _addedProducts) {
                         logger.d("The total product are:$product");
                       }
-                      Get.back(result: _addedProducts);
+                      widget.product==null ?Get.back(result: _addedProducts):Get.back(result: _addedProducts);
                     }else{
                       logger.d("Caught some error");
                     }

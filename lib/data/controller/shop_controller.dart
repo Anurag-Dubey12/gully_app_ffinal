@@ -103,4 +103,16 @@ class ShopController extends GetxController with StateMixin {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('products_$shopId', json.encode(products.toList()));
   }
+  Future<void> updateProductForShop(String shopId, String productId, Map<String, dynamic> updatedProduct) async {
+    await loadProductsForShop(shopId);
+
+    int index = products.indexWhere((product) => product['id'] == productId);
+    if (index != -1) {
+      products[index] = updatedProduct;
+      await saveProductsForShop(shopId);
+      logger.d('Product updated successfully: $productId');
+    } else {
+      logger.d('Product not found: $productId');
+    }
+  }
 }

@@ -3,17 +3,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/shop_model.dart';
+import 'package:gully_app/ui/screens/shop/my_shop.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-import '../../../data/controller/auth_controller.dart';
-import '../../../utils/app_logger.dart';
-import '../../../utils/utils.dart';
-import '../../theme/theme.dart';
-import '../../widgets/gradient_builder.dart';
-import '../coupon_view.dart';
-import '../home_screen.dart';
-import '../payment_page.dart';
+import '../../data/controller/auth_controller.dart';
+import '../../utils/app_logger.dart';
+import '../../utils/utils.dart';
+import '../theme/theme.dart';
+import '../widgets/gradient_builder.dart';
+import 'coupon_view.dart';
+import 'home_screen.dart';
+import 'payment_page.dart';
 
 class ShopPaymentPage extends StatefulWidget {
   final shop_model? shopData;
@@ -43,8 +44,8 @@ class PaymentPage extends State<ShopPaymentPage> {
       'Congratulations! Your transaction has been successful. Your Shop is now active!',
       title: "Payment Successful",
     ).then(
-      (value) => Get.offAll(() => const HomeScreen(),
-          predicate: (route) => route.name == '/HomeScreen'),
+      (value) => Get.offAll(() => const MyShop(),
+          predicate: (route) => route.name == '/ShopScreen'),
     );
   }
 

@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
@@ -8,6 +11,9 @@ import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/ui/screens/search_tournament_screen.dart';
+import 'package:gully_app/ui/screens/service/my_service_screen.dart';
+import 'package:gully_app/ui/screens/service/service_homescreen.dart';
+import 'package:gully_app/ui/screens/shop/shop_home.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/app_drawer.dart';
@@ -69,17 +75,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String selected = 'Current';
   bool isLoading = false;
+  int _currentIndex = 0;
+  final PageController _pageController = PageController();
 
-  //For refreshing
-  Future<void> _handleRefresh() async {
-    setState(() {
-      isLoading = true;
-    });
-    final controller = Get.find<TournamentController>();
-    controller.getTournamentList(filterD: selected);
-    setState(() {
-      isLoading = false;
-    });
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -98,374 +100,217 @@ class _HomePageState extends State<HomePage> {
         canPop: true,
         child: Scaffold(
           endDrawer: const AppDrawer(),
-          // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          // floatingActionButton: Padding(
-          //   padding: const EdgeInsets.only(right: 15, bottom: 15),
-          //   child: FloatingActionButton(
-          //     onPressed: () {
-          //       Get.to(()=>const TournamentFormScreen());
-          //     },
-          //     foregroundColor: Colors.white,
-          //     backgroundColor: AppTheme.primaryColor,
-          //     hoverColor: Colors.white,
-          //     splashColor: Colors.white,
-          //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-          //     tooltip: 'Create Your Tournament',
-          //     elevation: 10.0,
-          //     child: const Icon(Icons.add),
-          //
-          //   ),
-          // ),
-          bottomNavigationBar:
-              // SizedBox(
-              //   height: 60,
-              //   // decoration: BoxDecoration(
-              //   //   color: Colors.white,
-              //   //   border: Border.all(
-              //   //     color: Colors.grey,
-              //   //     width: 2,
-              //   //   ),
-              //   //   borderRadius: BorderRadius.only(
-              //   //     topLeft: Radius.circular(50.0),
-              //   //     topRight: Radius.circular(50.0),
-              //   //   ),
-              //   //   boxShadow: [
-              //   //     BoxShadow(
-              //   //       color: Colors.black12,
-              //   //       spreadRadius: 5,
-              //   //       blurRadius: 10,
-              //   //     ),
-              //   //   ],
-              //   // ),
-              //   child: FlashyTabBar(
-              //       backgroundColor: AppTheme.primaryColor,
-              //       selectedIndex: _index,
-              //       showElevation: false,
-              //       onItemSelected: (index) {
-              //         setState(() {
-              //           switch(index){
-              //             case 0:{
-              //               Get.to(()=>ShopHome());
-              //             }
-              //             case 1:{
-              //               Get.to(()=>ShopHome());
-              //             }
-              //           }
-              //         });
-              //
-              //       },
-              //       items: [
-              //         FlashyTabBarItem(
-              //           icon: const Icon(Iconsax.shopping_cart,size: 25,),
-              //           activeColor: Colors.white,
-              //           inactiveColor: Colors.white,
-              //           title: const Text('Shop'),
-              //         ),
-              //
-              //         FlashyTabBarItem(
-              //           icon: const Icon(Icons.sports_cricket_rounded,size: 25),
-              //           activeColor: Colors.white,
-              //           inactiveColor: Colors.white,
-              //           title: const Text('History'),
-              //         ),
-              //       ],
-              //     ),
-              // ),
-              //Old Create tournament Button
-              Container(
-            height: 60,
-            decoration: BoxDecoration(color: Colors.white, boxShadow: [
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 5,
-                  spreadRadius: 2,
-                  offset: const Offset(0, -1))
-            ]),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: PrimaryButton(
-                    onTap: () {
-                      Get.to(() => const TournamentFormScreen(
-                            tournament: null,
-                          ));
-                    },
-                    title: AppLocalizations.of(context)!.create_your_tournament,
-                  ),
-                ),
-              ],
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: FloatingActionButton(
+              onPressed: () {
+                Get.to(() => const TournamentFormScreen());
+              },
+              backgroundColor: AppTheme.primaryColor,
+              child: const Icon(Icons.add),
             ),
           ),
-          backgroundColor: Colors.transparent,
-          body: Stack(
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar:
+          Stack(
             children: [
-              // ClipPath(
-              //   clipper: ArcClipper(),
-              //   child: Container(
-              //     decoration: BoxDecoration(
-              //       gradient: const RadialGradient(
-              //         colors: [
-              //           Color(0xff368EBF),
-              //           AppTheme.primaryColor,
-              //         ],
-              //         center: Alignment(-0.4, -0.8),
-              //       ),
-              //       boxShadow: [
-              //         BoxShadow(
-              //             color: AppTheme.secondaryYellowColor.withOpacity(0.3),
-              //             blurRadius: 20,
-              //             spreadRadius: 2,
-              //             offset: const Offset(0, 70))
-              //       ],
-              //     ),
-              //     width: double.infinity,
-              //   ),
-              // ),
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: Container(
-                  width: Get.width,
-                  height: MediaQuery.of(context).padding.top + 55,
-                  decoration: const BoxDecoration(
-                      gradient: RadialGradient(colors: [
-                    Color(0xff368EBF),
-                    AppTheme.primaryColor,
-                  ], center: Alignment(-0.4, -0.8))),
+              SizedBox(
+                height: 70,
+                child: FlashyTabBar(
+                  backgroundColor: AppTheme.primaryColor,
+                  selectedIndex: _currentIndex,
+                  showElevation: false,
+                  onItemSelected: (index) {
+                    setState(() => _currentIndex = index);
+                    _pageController.animateToPage(
+                      index,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                  items: [
+                    FlashyTabBarItem(
+                      icon: const Icon(Icons.home_filled, size: 25),
+                      activeColor: Colors.white,
+                      inactiveColor: Colors.white,
+                      title: const Text('Home'),
+                    ),
+                    FlashyTabBarItem(
+                      icon: const Icon(Icons.shopping_cart, size: 25),
+                      activeColor: Colors.white,
+                      inactiveColor: Colors.white,
+                      title: const Text('Shop'),
+                    ),
+                    FlashyTabBarItem(
+                      icon: const Icon(Icons.sports_cricket_rounded, size: 25),
+                      activeColor: Colors.white,
+                      inactiveColor: Colors.white,
+                      title: const Text('Service'),
+                    ),
+                    FlashyTabBarItem(
+                      icon: const Icon(Icons.sports_cricket_rounded, size: 25),
+                      activeColor: Colors.white,
+                      inactiveColor: Colors.white,
+                      title: const Text('Service'),
+                    ),
+                  ],
                 ),
               ),
-              Positioned(
-                  top: MediaQuery.of(context).padding.top,
-                  bottom: 0,
-                  child: SizedBox(
-                    width: Get.width,
-                    height: Get.height - 150,
-                    child: CustomScrollView(
-                      slivers: [
-                        SliverToBoxAdapter(
-                          child: Column(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(left: 5),
-                                decoration: const BoxDecoration(
-                                  gradient: RadialGradient(
-                                    colors: [
-                                      Color(0xff368EBF),
-                                      AppTheme.primaryColor,
-                                    ],
-                                  ),
-                                ),
-                                width: double.infinity,
-                                child: const TopHeader(),
-                              ),
-                              // const SizedBox(height: 20),
-                              //For multiple sports icon and text
-                              // SizedBox(
-                              //   height: 60,
-                              //   child: ListView.separated(
-                              //       scrollDirection: Axis.horizontal,
-                              //       shrinkWrap: true,
-                              //       itemBuilder: (context, index) {
-                              //         return SportsCard(
-                              //           index: index,
-                              //         );
-                              //       },
-                              //       padding: const EdgeInsets.only(left: 20),
-                              //       separatorBuilder: (context, index) =>
-                              //           const SizedBox(
-                              //             width: 15,
-                              //           ),
-                              //       itemCount: 7),
-                              // ),
-
-                              //Optional
-                              //For particular sports such as cricker
-                              // Container(
-                              //   width: 130,
-                              //   height: 50,
-                              //   decoration: BoxDecoration(
-                              //     color:
-                              //         const Color.fromARGB(255, 255, 157, 46),
-                              //     borderRadius: BorderRadius.circular(21),
-                              //     boxShadow: [
-                              //       BoxShadow(
-                              //           color: AppTheme.secondaryYellowColor
-                              //               .withOpacity(0.3),
-                              //           blurRadius: 2,
-                              //           spreadRadius: 1,
-                              //           offset: const Offset(0, -1))
-                              //     ],
-                              //   ),
-                              //   child: Row(
-                              //     mainAxisAlignment: MainAxisAlignment.center,
-                              //     children: [
-                              //       Image.asset(
-                              //         'assets/images/cricket_icon.png',
-                              //         color: Colors.white,
-                              //         height: 30,
-                              //         width: 30,
-                              //       ),
-                              //       const Text(
-                              //         'Cricket',
-                              //         style: TextStyle(
-                              //             color: Colors.white, fontSize: 18),
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
-                              const SizedBox(height: 10),
-                              const FullBannerSlider(isAds: false),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                        SliverPersistentHeader(
-                          pinned: true,
-                          delegate: SliverAppBarDelegate(
-                            minHeight: 95,
-                            maxHeight: 95,
-                            child: DecoratedBox(
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                image: DecorationImage(
-                                    image: AssetImage(
-                                      'assets/images/sports_icon.png',
-                                    ),
-                                    fit: BoxFit.cover),
-                              ),
-                              child: Column(
-                                children: [
-                                  const DateTimesCard(),
-                                  // const TitleWidget(),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 5),
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Material(
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            child: InkWell(
-                                              borderRadius:
-                                                  BorderRadius.circular(28),
-                                              onTap: () {
-                                                Get.to(() =>
-                                                    const SearchTournamentScreen());
-                                              },
-                                              child: Ink(
-                                                height: 35,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(
-                                                      color: Colors.black,
-                                                      width: 0.5),
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                ),
-                                                child: const Row(
-                                                  children: [
-                                                    SizedBox(width: 18),
-                                                    Icon(Icons.search,
-                                                        color: Colors.black),
-                                                    SizedBox(width: 20),
-                                                    Text('Search...',
-                                                        style: TextStyle(
-                                                            color:
-                                                                Colors.black)),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        PopupMenuButton<String>(
-                                          onSelected: (String value) {
-                                            setState(() {
-                                              selected = value;
-                                              controller.getTournamentList(
-                                                  filterD: value);
-                                            });
-                                          },
-                                          itemBuilder: (BuildContext context) =>
-                                              <PopupMenuEntry<String>>[
-                                            const PopupMenuItem<String>(
-                                              value: 'past',
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.history,
-                                                      color: Colors.blue),
-                                                  SizedBox(width: 10),
-                                                  Text('Past'),
-                                                ],
-                                              ),
-                                            ),
-                                            const PopupMenuItem<String>(
-                                              value: 'current',
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.event,
-                                                      color: Colors.green),
-                                                  SizedBox(width: 10),
-                                                  Text('Current'),
-                                                ],
-                                              ),
-                                            ),
-                                            const PopupMenuItem<String>(
-                                              value: 'upcoming',
-                                              child: Row(
-                                                children: [
-                                                  Icon(Icons.schedule,
-                                                      color: Colors.orange),
-                                                  SizedBox(width: 10),
-                                                  Text('Upcoming'),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          color: Colors.white,
-                                          elevation: 8,
-                                          child: Container(
-                                            height: 40,
-                                            width: 40,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              border: Border.all(
-                                                  color: Colors.black),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                            child: const Icon(Icons.filter_list,
-                                                color: Colors.black),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        SliverToBoxAdapter(
-                          child: isLoading
-                              ? const Center(child: CircularProgressIndicator())
-                              : const TournamentList(),
-                        ),
-                      ],
-                    ),
-                  ))
+            ],
+          ),
+              //Old Create tournament Button
+          //     Container(
+          //   height: 60,
+          //   decoration: BoxDecoration(color: Colors.white, boxShadow: [
+          //     BoxShadow(
+          //         color: Colors.black.withOpacity(0.1),
+          //         blurRadius: 5,
+          //         spreadRadius: 2,
+          //         offset: const Offset(0, -1))
+          //   ]),
+          //   child: Column(
+          //     children: [
+          //       Padding(
+          //         padding: const EdgeInsets.all(5.0),
+          //         child: PrimaryButton(
+          //           onTap: () {
+          //             Get.to(() => const TournamentFormScreen(
+          //                   tournament: null,
+          //                 ));
+          //           },
+          //           title: AppLocalizations.of(context)!.create_your_tournament,
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          backgroundColor: Colors.transparent,
+          body: PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            onPageChanged: (index) {
+              setState(() => _currentIndex = index);
+            },
+            children: [
+              HomeScreenContent(),
+              const ShopHome(),
+              const ServiceScreen(),
             ],
           ),
         ),
       ),
+    );
+  }
+  Widget HomeScreenContent() {
+    return Stack(
+      children: [
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            width: Get.width,
+            height: MediaQuery.of(context).padding.top + 55,
+            decoration: const BoxDecoration(
+              gradient: RadialGradient(
+                colors: [Color(0xff368EBF), AppTheme.primaryColor],
+                center: Alignment(-0.4, -0.8),
+              ),
+            ),
+          ),
+        ),
+        Positioned(
+          top: MediaQuery.of(context).padding.top,
+          bottom: 0,
+          child: SizedBox(
+            width: Get.width,
+            height: Get.height - 150,
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left: 5),
+                        decoration: const BoxDecoration(
+                          gradient: RadialGradient(
+                            colors: [Color(0xff368EBF), AppTheme.primaryColor],
+                          ),
+                        ),
+                        width: double.infinity,
+                        child: const TopHeader(),
+                      ),
+                      const SizedBox(height: 10),
+                      const FullBannerSlider(isAds: false),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: SliverAppBarDelegate(
+                    minHeight: 95,
+                    maxHeight: 95,
+                    child: DecoratedBox(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/sports_icon.png'),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          const DateTimesCard(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Material(
+                                    borderRadius: BorderRadius.circular(20),
+                                    child: InkWell(
+                                      borderRadius: BorderRadius.circular(28),
+                                      onTap: () {
+                                        Get.to(() => const SearchTournamentScreen());
+                                      },
+                                      child: Ink(
+                                        height: 35,
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          border: Border.all(color: Colors.black, width: 0.5),
+                                          borderRadius: BorderRadius.circular(20),
+                                        ),
+                                        child: const Row(
+                                          children: [
+                                            SizedBox(width: 18),
+                                            Icon(Icons.search, color: Colors.black),
+                                            SizedBox(width: 20),
+                                            Text('Search...', style: TextStyle(color: Colors.black)),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                // Filter button (PopupMenuButton) code here
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                const SliverToBoxAdapter(
+                  child: TournamentList(),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
-import 'package:gully_app/ui/screens/shop/shop_payment_screen.dart';
+import 'package:gully_app/ui/screens/shop_payment_screen.dart';
 import 'package:gully_app/ui/widgets/shop/social_media_link.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';

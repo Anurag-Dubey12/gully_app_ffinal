@@ -51,7 +51,7 @@ class ShopCard extends StatelessWidget {
                       shop['name'],
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Text(
                       shop['details'],
                       style: TextStyle(color: Colors.grey[600], fontSize: 14),

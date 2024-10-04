@@ -6,7 +6,7 @@ import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/choose_lang_screen.dart';
 import 'package:gully_app/ui/screens/player_profile_screen.dart';
 import 'package:gully_app/ui/screens/select_team_for_challenge.dart';
-import 'package:gully_app/ui/screens/service/service_homescreen.dart';
+import 'package:gully_app/ui/screens/service/service_home_screen.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -18,7 +18,7 @@ import '../screens/others_looking_for.dart';
 import '../screens/player_ranking_screen.dart';
 import '../screens/service/service_register.dart';
 import '../screens/shop/register_shop.dart';
-import '../screens/shop/shop_home.dart';
+import '../screens/shop/shops_home_screen.dart';
 import '../screens/team_ranking_screen.dart';
 import '../screens/top_performers.dart';
 import 'home_screen/drawer_card.dart';

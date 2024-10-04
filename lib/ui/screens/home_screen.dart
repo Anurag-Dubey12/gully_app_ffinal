@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
@@ -12,8 +11,8 @@ import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/ui/screens/search_tournament_screen.dart';
 import 'package:gully_app/ui/screens/service/my_service_screen.dart';
-import 'package:gully_app/ui/screens/service/service_homescreen.dart';
-import 'package:gully_app/ui/screens/shop/shop_home.dart';
+import 'package:gully_app/ui/screens/service/service_home_screen.dart';
+import 'package:gully_app/ui/screens/shop/shops_home_screen.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/app_drawer.dart';
@@ -22,6 +21,7 @@ import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../widgets/home_screen/SliverAppBarDelegate.dart';
 import '../widgets/home_screen/top_header.dart';
 
@@ -72,21 +72,83 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
-  String selected = 'Current';
+class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin  {
   bool isLoading = false;
-  int _currentIndex = 0;
-  final PageController _pageController = PageController();
+  late PersistentTabController _controller;
+  late AnimationController _animationController;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = PersistentTabController(initialIndex: 0);
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _animation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+  }
 
   @override
   void dispose() {
-    _pageController.dispose();
+    _controller.dispose();
+    _animationController.dispose();
     super.dispose();
+  }
+
+  List<Widget> _buildScreens() {
+    return [
+      const HomePageContent(),
+      const ShopHome(),
+      const SizedBox(),
+      const ServiceScreen(),
+      const ServiceScreen(),
+    ];
+  }
+
+  List<PersistentBottomNavBarItem> _navBarsItems() {
+    return [
+      PersistentBottomNavBarItem(
+        icon: const Icon(Icons.home_filled),
+        title: "Home",
+        activeColorPrimary: AppTheme.primaryColor,
+        inactiveColorPrimary: Colors.grey,
+      ),
+      PersistentBottomNavBarItem(
+        icon: const Icon(Icons.shopify_rounded),
+        title: "Shop",
+        activeColorPrimary: AppTheme.primaryColor,
+        inactiveColorPrimary: Colors.grey,
+      ),
+      PersistentBottomNavBarItem(
+        icon: const Icon(Icons.circle),
+        title: "",
+        activeColorPrimary: Colors.transparent,
+        inactiveColorPrimary: Colors.transparent,
+        onPressed: (context) {
+        },
+      ),
+      PersistentBottomNavBarItem(
+        icon: const Icon(Icons.home_repair_service),
+        title: "Service",
+        activeColorPrimary: AppTheme.primaryColor,
+        inactiveColorPrimary: Colors.grey,
+      ),
+
+      PersistentBottomNavBarItem(
+        icon: const Icon(Icons.home_repair_service),
+        title: "Service",
+        activeColorPrimary: AppTheme.primaryColor,
+        inactiveColorPrimary: Colors.grey,
+      ),
+    ];
   }
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<TournamentController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -98,110 +160,66 @@ class _HomePageState extends State<HomePage> {
       ),
       child: PopScope(
         canPop: true,
-        child: Scaffold(
+        child:Scaffold(
           endDrawer: const AppDrawer(),
           floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 20),
-            child: FloatingActionButton(
-              onPressed: () {
-                Get.to(() => const TournamentFormScreen());
-              },
-              backgroundColor: AppTheme.primaryColor,
-              child: const Icon(Icons.add),
+            padding: const EdgeInsets.only(bottom: 30),
+            child: ClipOval(
+              child: FloatingActionButton(
+                onPressed: () {
+                  Get.to(() => const TournamentFormScreen());
+                },
+                backgroundColor: AppTheme.primaryColor,
+
+                child: const Icon(Icons.add),
+              ),
             ),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          bottomNavigationBar:
-          Stack(
-            children: [
-              SizedBox(
-                height: 70,
-                child: FlashyTabBar(
-                  backgroundColor: AppTheme.primaryColor,
-                  selectedIndex: _currentIndex,
-                  showElevation: false,
-                  onItemSelected: (index) {
-                    setState(() => _currentIndex = index);
-                    _pageController.animateToPage(
-                      index,
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  },
-                  items: [
-                    FlashyTabBarItem(
-                      icon: const Icon(Icons.home_filled, size: 25),
-                      activeColor: Colors.white,
-                      inactiveColor: Colors.white,
-                      title: const Text('Home'),
-                    ),
-                    FlashyTabBarItem(
-                      icon: const Icon(Icons.shopping_cart, size: 25),
-                      activeColor: Colors.white,
-                      inactiveColor: Colors.white,
-                      title: const Text('Shop'),
-                    ),
-                    FlashyTabBarItem(
-                      icon: const Icon(Icons.sports_cricket_rounded, size: 25),
-                      activeColor: Colors.white,
-                      inactiveColor: Colors.white,
-                      title: const Text('Service'),
-                    ),
-                    FlashyTabBarItem(
-                      icon: const Icon(Icons.sports_cricket_rounded, size: 25),
-                      activeColor: Colors.white,
-                      inactiveColor: Colors.white,
-                      title: const Text('Service'),
-                    ),
-                  ],
+          body: PersistentTabView(
+            context,
+            controller: _controller,
+            screens: _buildScreens(),
+            padding: const EdgeInsets.all(8),
+            items: _navBarsItems(),
+            confineToSafeArea: true,
+            backgroundColor: Colors.white,
+            handleAndroidBackButtonPress: true,
+            resizeToAvoidBottomInset: true,
+            stateManagement: true,
+            decoration: NavBarDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              colorBehindNavBar: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 5,
+                  spreadRadius: 2,
+                  offset: const Offset(0, -1),
                 ),
-              ),
-            ],
-          ),
-              //Old Create tournament Button
-          //     Container(
-          //   height: 60,
-          //   decoration: BoxDecoration(color: Colors.white, boxShadow: [
-          //     BoxShadow(
-          //         color: Colors.black.withOpacity(0.1),
-          //         blurRadius: 5,
-          //         spreadRadius: 2,
-          //         offset: const Offset(0, -1))
-          //   ]),
-          //   child: Column(
-          //     children: [
-          //       Padding(
-          //         padding: const EdgeInsets.all(5.0),
-          //         child: PrimaryButton(
-          //           onTap: () {
-          //             Get.to(() => const TournamentFormScreen(
-          //                   tournament: null,
-          //                 ));
-          //           },
-          //           title: AppLocalizations.of(context)!.create_your_tournament,
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          backgroundColor: Colors.transparent,
-          body: PageView(
-            controller: _pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            onPageChanged: (index) {
-              setState(() => _currentIndex = index);
-            },
-            children: [
-              HomeScreenContent(),
-              const ShopHome(),
-              const ServiceScreen(),
-            ],
+              ],
+            ),
+            navBarStyle: NavBarStyle.style13,
           ),
         ),
       ),
     );
   }
-  Widget HomeScreenContent() {
+}
+
+
+class HomePageContent extends StatefulWidget {
+  const HomePageContent({super.key});
+
+  @override
+  State<HomePageContent> createState() => ScreenContent();
+}
+
+class ScreenContent extends State<HomePageContent>{
+  String selected = 'Current';
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<TournamentController>();
     return Stack(
       children: [
         Positioned(
@@ -294,7 +312,70 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                                 const SizedBox(width: 10),
-                                // Filter button (PopupMenuButton) code here
+                                PopupMenuButton<String>(
+                                  onSelected: (String value) {
+                                    setState(() {
+                                      selected = value;
+                                      controller.getTournamentList(
+                                          filterD: value);
+                                    });
+                                  },
+                                  itemBuilder: (BuildContext context) =>
+                                  <PopupMenuEntry<String>>[
+                                    const PopupMenuItem<String>(
+                                      value: 'past',
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.history,
+                                              color: Colors.blue),
+                                          SizedBox(width: 10),
+                                          Text('Past'),
+                                        ],
+                                      ),
+                                    ),
+                                    const PopupMenuItem<String>(
+                                      value: 'current',
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.event,
+                                              color: Colors.green),
+                                          SizedBox(width: 10),
+                                          Text('Current'),
+                                        ],
+                                      ),
+                                    ),
+                                    const PopupMenuItem<String>(
+                                      value: 'upcoming',
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.schedule,
+                                              color: Colors.orange),
+                                          SizedBox(width: 10),
+                                          Text('Upcoming'),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                    BorderRadius.circular(10),
+                                  ),
+                                  color: Colors.white,
+                                  elevation: 8,
+                                  child: Container(
+                                    height: 40,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(
+                                          color: Colors.black),
+                                      borderRadius:
+                                      BorderRadius.circular(10),
+                                    ),
+                                    child: const Icon(Icons.filter_list,
+                                        color: Colors.black),
+                                  ),
+                                )
                               ],
                             ),
                           ),
@@ -313,6 +394,7 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
+
 }
 
 class _TournamentMajorDuration extends StatelessWidget {

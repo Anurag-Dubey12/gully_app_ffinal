@@ -13,7 +13,6 @@ class ShopHome extends StatefulWidget{
 
 class ShopHomeState extends State<ShopHome>{
   final controller=Get.find<AuthController>();
-
   bool isLoading=false;
   final List<Map<String, dynamic>> shopItems = [
     {
@@ -94,64 +93,97 @@ class ShopHomeState extends State<ShopHome>{
         },
       ]
     },
+    {
+      'logo': 'assets/images/logo.png',
+      'name': 'Active shorts',
+      'details': 'Top-notch activewear for all your needs.',
+      'location': '789 Active Rd, Bangalore, Karnataka',
+      'rating': 4.6,
+      'followers': 760,
+      'totalProducts': 120,
+      'coverImage': 'assets/images/logo.png',
+      'products': [
+        {
+          'name': 'Running Shoes',
+          'category': 'Footwear',
+          'price': 6499.00,
+          'rating': 4.8,
+          'image': 'assets/images/logo.png'
+        },
+        {
+          'name': 'Sports Jacket',
+          'category': 'Clothing',
+          'price': 10499.00,
+          'rating': 4.7,
+          'image': 'assets/images/logo.png'
+        },
+      ]
+    },
   ];
 
   int _selectedIndex = 0;
   final PageController _pageController = PageController(initialPage: 0);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle_outlined),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
-        showUnselectedLabels: true,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-            _pageController.jumpToPage(index);
-          });
-        },
-        backgroundColor: Colors.white,
-        elevation: 10,
-        type: BottomNavigationBarType.fixed,
-      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: const <BottomNavigationBarItem>[
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.home),
+      //       label: 'Home',
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.account_circle_outlined),
+      //       label: 'Profile',
+      //     ),
+      //   ],
+      //   currentIndex: _selectedIndex,
+      //   selectedItemColor: Colors.blue,
+      //   unselectedItemColor: Colors.grey,
+      //   showUnselectedLabels: true,
+      //   onTap: (index) {
+      //     setState(() {
+      //       _selectedIndex = index;
+      //       _pageController.jumpToPage(index);
+      //     });
+      //   },
+      //   backgroundColor: Colors.white,
+      //   elevation: 10,
+      //   type: BottomNavigationBarType.fixed,
+      // ),
       appBar: AppBar(
+        backgroundColor: const Color(0xff3F5BBF),
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            const Text(
+              'Shop',
+              style: TextStyle(fontSize: 24,color: Colors.white),
+            ),
+            const SizedBox(width: 170),
             IconButton(
-              icon: const Icon(Icons.history_rounded),
+              icon: const Icon(Icons.history_rounded,color: Colors.white),
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text(
-                            "We apologize for the inconvenience. Order history data could not be fetched at the moment. Please try again later."
-                        )
-                    )
-                );
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //     const SnackBar(
+                //         content: Text(
+                //             "We apologize for the inconvenience. Order history data could not be fetched at the moment. Please try again later."
+                //         )
+                //     )
+                // );
               },
             ),
             IconButton(
-              icon: const Icon(Icons.shopping_cart),
+              icon: const Icon(Icons.shopping_cart,color: Colors.white),
               onPressed: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text(
-                            "We apologize for the inconvenience. Order history data could not be fetched at the moment. Please try again later."
-                        )
-                    )
-                );
+                // ScaffoldMessenger.of(context).showSnackBar(
+                //     const SnackBar(
+                //         content: Text(
+                //             "We apologize for the inconvenience. Order history data could not be fetched at the moment. Please try again later."
+                //         )
+                //     )
+                // );
               },
             ),
           ],
@@ -204,7 +236,7 @@ class ShopHomeState extends State<ShopHome>{
                 InkWell(
                     onTap: () {
                     },
-                    child: const Icon(Icons.filter,size: 30,))
+                    child: const Icon(Icons.filter_list,size: 30,))
               ],
             ),
             Expanded(

@@ -9,16 +9,13 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="shop screen modify">
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="home screen bottomnav ,shop screen modify">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/shop_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/shop_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/player_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/player_profile_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/add_product.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/add_product.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/productdetailscreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/productdetailscreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/register_shop.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/register_shop.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shop_dashboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shop_dashboard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shop_payment_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop_payment_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_homescreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shop_home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shops_home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/shop/shop_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/shop_card.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -167,14 +164,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00005" summary="modify by adding new item">
-      <option name="closed" value="true" />
-      <created>1720861845961</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1720861845961</updated>
     </task>
     <task id="LOCAL-00006" summary="modify by adding new item">
       <option name="closed" value="true" />
@@ -560,7 +549,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727783942255</updated>
     </task>
-    <option name="localTasksCounter" value="54" />
+    <task id="LOCAL-00054" summary="home screen bottomnav ,shop screen modify">
+      <option name="closed" value="true" />
+      <created>1727956631303</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1727956631303</updated>
+    </task>
+    <option name="localTasksCounter" value="55" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -600,7 +597,8 @@
     <MESSAGE value="shop screen" />
     <MESSAGE value="firebase id changes" />
     <MESSAGE value="shop screen modify" />
-    <option name="LAST_COMMIT_MESSAGE" value="shop screen modify" />
+    <MESSAGE value="home screen bottomnav ,shop screen modify" />
+    <option name="LAST_COMMIT_MESSAGE" value="home screen bottomnav ,shop screen modify" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -905,6 +903,12 @@
           <option name="totalLines" value="4392476" />
           <option name="info" value="shop screen modify" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1727956633109" />
+          <option name="linesCode" value="35461" />
+          <option name="totalLines" value="2423710" />
+          <option name="info" value="home screen bottomnav ,shop screen modify" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1208,6 +1212,12 @@
           <option name="linesCode" value="35417" />
           <option name="totalLines" value="4392476" />
           <option name="info" value="Oct 1, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1727956633109" />
+          <option name="linesCode" value="35461" />
+          <option name="totalLines" value="2423710" />
+          <option name="info" value="Oct 3, 2024" />
         </TimePoint>
       </list>
     </option>

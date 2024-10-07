@@ -12,11 +12,13 @@
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="home screen bottomnav ,shop screen modify">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_homescreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_home_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shop_home.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shops_home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/my_shop.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/my_shop.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/productdetailscreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/product_detail_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shop_dashboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/my_shop_dashboard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shop_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shop_details.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shops_home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shops_home_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/shop/shop_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/shop_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -164,14 +166,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00006" summary="modify by adding new item">
-      <option name="closed" value="true" />
-      <created>1721044626521</created>
-      <option name="number" value="00006" />
-      <option name="presentableId" value="LOCAL-00006" />
-      <option name="project" value="LOCAL" />
-      <updated>1721044626521</updated>
     </task>
     <task id="LOCAL-00007" summary="modify by adding new item">
       <option name="closed" value="true" />
@@ -557,7 +551,15 @@
       <option name="project" value="LOCAL" />
       <updated>1727956631303</updated>
     </task>
-    <option name="localTasksCounter" value="55" />
+    <task id="LOCAL-00055" summary="home screen bottomnav ,shop screen modify">
+      <option name="closed" value="true" />
+      <created>1728042825261</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1728042825262</updated>
+    </task>
+    <option name="localTasksCounter" value="56" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -909,6 +911,12 @@
           <option name="totalLines" value="2423710" />
           <option name="info" value="home screen bottomnav ,shop screen modify" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1728042830593" />
+          <option name="linesCode" value="35523" />
+          <option name="totalLines" value="4497382" />
+          <option name="info" value="home screen bottomnav ,shop screen modify" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1218,6 +1226,12 @@
           <option name="linesCode" value="35461" />
           <option name="totalLines" value="2423710" />
           <option name="info" value="Oct 3, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1728042830593" />
+          <option name="linesCode" value="35523" />
+          <option name="totalLines" value="4497382" />
+          <option name="info" value="Oct 4, 2024" />
         </TimePoint>
       </list>
     </option>

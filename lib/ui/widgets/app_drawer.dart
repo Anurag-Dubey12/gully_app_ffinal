@@ -278,10 +278,10 @@ class AppDrawer extends GetView<AuthController> {
                           // width: 200,
                           height: 30,
                           decoration: transBg(),
-                          child: Center(
+                          child: const Center(
                               child: Text(
                                 "Add My Shop",
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.white),
                               )),
                         ),
                       )

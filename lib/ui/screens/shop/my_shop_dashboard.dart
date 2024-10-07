@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import '../../../data/controller/shop_controller.dart';
 import '../../widgets/gradient_builder.dart';
-import 'ProductDetailScreen.dart';
+import 'product_detail_screen.dart';
 import 'add_product.dart';
 
 class ShopDashboard extends StatefulWidget {
@@ -22,7 +22,6 @@ class ShopDashboard extends StatefulWidget {
 class _DashboardState extends State<ShopDashboard> {
   final ShopController _shopController = Get.find<ShopController>();
   String _selectedCategory = 'All';
-
   @override
   void initState() {
     super.initState();
@@ -136,23 +135,49 @@ class _DashboardState extends State<ShopDashboard> {
                     itemBuilder: (context, index) {
                       final product =
                           _getProductsForCategory(_selectedCategory)[index];
-                      return Card(
+                      final totalDiscount = product['discount'] != null
+                          ? double.parse(product['discount'].toString())
+                          : 0.0;
+                      final totalPrice = product['price'] != null
+                          ? double.parse(product['price'].toString())
+                          : 0.0;
+                      final discountPrice = totalPrice - totalDiscount;
+
+                      return Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey)),
                         child: InkWell(
                           onTap: () {
-                            Get.to(() => ProductDetailScreen(product: product));
+                            Get.to(() => ProductDetailScreen(product: product,isadmin: true,));
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
-                                child: SizedBox(
-                                  width: Get.width,
-                                  child: product['images'] != null &&
-                                          product['images'].isNotEmpty
-                                      ? Image.file(File(product['images'][0]),
-                                          fit: BoxFit.cover)
-                                      : Icon(Icons.image,
-                                          color: Colors.grey[600]),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                                    color: Colors.grey[200],
+                                  ),
+                                  child: Center(
+                                    child: ClipRRect(
+                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        height: double.infinity,
+                                        child: product['images'] != null &&
+                                            product['images'].isNotEmpty
+                                            ? Image.file(
+                                          File(product['images'][0]),
+                                          fit: BoxFit.cover,
+                                        )
+                                            : Icon(Icons.image,
+                                            color: Colors.grey[600], size: 50),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                               Padding(
@@ -160,21 +185,42 @@ class _DashboardState extends State<ShopDashboard> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          product['name'] ?? '',
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        Text('₹${product['price'] ?? 0}'),
-                                      ],
+                                    Text(
+                                      product['discount'] != null
+                                          ? '₹$discountPrice'
+                                          : '₹$totalPrice',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
                                     ),
-                                    Text('${product['subcategory'] ?? 0}'),
+                                    if (product['discount'] != null)
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '₹${product['price'] ?? 0}',
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                                color: Colors.grey,
+                                                decoration:
+                                                    TextDecoration.lineThrough),
+                                          ),
+                                          const SizedBox(width: 5),
+                                          Text(
+                                            '₹ ${product['discount']} Flat Off', // Discount info
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              color: Colors.red,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    Text('${product['name'] ?? 0}'),
+                                    Text('${product['Quantity'] ?? 0}'),
                                   ],
                                 ),
                               ),
@@ -188,16 +234,18 @@ class _DashboardState extends State<ShopDashboard> {
               ],
             );
           }),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () async {
-              final result = await Get.to(() => const AddProduct());
-              if (result != null && result is List<Map<String, dynamic>>) {
-                _shopController.updateProductForShop(
-                    widget.shopId, '0001', result as Map<String, dynamic>);
-              }
-            },
-            tooltip: 'Add Product',
-            child: const Icon(Icons.add),
+          floatingActionButton: ClipOval(
+            child: FloatingActionButton(
+              onPressed: () async {
+                final result = await Get.to(() => const AddProduct());
+                if (result != null && result is List<Map<String, dynamic>>) {
+                  _shopController.updateProductForShop(
+                      widget.shopId, '0001', result as Map<String, dynamic>);
+                }
+              },
+              tooltip: 'Add Product',
+              child: const Icon(Icons.add),
+            ),
           ),
         ),
       ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/model/shop_model.dart';
-import 'package:gully_app/ui/screens/shop/shop_dashboard.dart';
+import 'package:gully_app/ui/screens/shop/my_shop_dashboard.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/arc_clipper.dart';
 

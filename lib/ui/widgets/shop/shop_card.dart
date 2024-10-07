@@ -49,18 +49,18 @@ class ShopCard extends StatelessWidget {
                   children: [
                     Text(
                       shop['name'],
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       shop['details'],
                       style: TextStyle(color: Colors.grey[600], fontSize: 14),
                     ),
-                    SizedBox(height: 8),
+                    const SizedBox(height: 8),
                     Row(
                       children: [
-                        Icon(Icons.location_on, color: Colors.red, size: 20),
-                        SizedBox(width: 4),
+                        const Icon(Icons.location_on, color: Colors.red, size: 20),
+                        const SizedBox(width: 4),
                         Expanded(
                           child: Text(
                             shop['location'],

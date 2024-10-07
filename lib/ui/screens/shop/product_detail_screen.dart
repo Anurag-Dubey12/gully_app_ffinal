@@ -12,9 +12,10 @@ import '../../widgets/gradient_builder.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Map<String, dynamic> product;
-
-  const ProductDetailScreen({Key? key, required this.product}) : super(key: key);
-
+  final bool isadmin;
+  const ProductDetailScreen(
+      {Key? key, required this.product, required this.isadmin})
+      : super(key: key);
   @override
   _ProductDetailScreenState createState() => _ProductDetailScreenState();
 }
@@ -24,7 +25,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<String>? images = widget.product['images']?.cast<String>();
+    List<String>? images = widget.isadmin
+        ? widget.product['images']?.cast<String>()
+        : widget.product['logo']?.cast<String>() ??
+            [
+              'assets/images/logo.png',
+              'assets/images/logo.png',
+              'assets/images/logo.png'
+            ];
 
     return DecoratedBox(
       decoration: const BoxDecoration(
@@ -42,22 +50,35 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             elevation: 0,
             title: Row(
               children: [
-                Text(
-                  widget.product['name'] ?? 'Product Detail',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Text(
+                    widget.product['name'] ?? 'Product Info',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 120),
+                if(widget.isadmin)
                 GestureDetector(
-                    onTap: (){
-                      Get.to(()=>AddProduct(product: widget.product,));
+                    onTap: () {
+                      Get.to(() => AddProduct(
+                            product: widget.product,
+                          ));
                     },
-                    child: const Icon(Icons.edit_rounded,color: Colors.white,)),
+                    child: const Icon(
+                      Icons.edit_rounded,
+                      color: Colors.white,
+                    )),
                 const SizedBox(width: 10),
-                GestureDetector(child: const Icon(Icons.delete_outlined,color: Colors.white,))
+                if(widget.isadmin)
+                  GestureDetector(
+                    child: const Icon(
+                  Icons.delete_outlined,
+                  color: Colors.white,
+                ))
               ],
             ),
             leading: const BackButton(
@@ -88,10 +109,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                           return Builder(
                             builder: (BuildContext context) {
                               return GestureDetector(
-                                onTap: ()=>imageViewer(context, imagePath, false),
+                                onTap: () =>
+                                    imageViewer(context, imagePath, false),
                                 child: Container(
                                   width: Get.width,
-                                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 5.0),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
@@ -136,10 +159,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   },
                   children: [
                     _ProductInfo('Name', widget.product['name'] ?? 'N/A'),
-                    _ProductInfo('Category', widget.product['category'] ?? 'N/A'),
-                    _ProductInfo('Subcategory', widget.product['subcategory'] ?? 'N/A'),
-                    _ProductInfo('Price', '${widget.product['price'] ?? 'N/A'}'),
-                    _ProductInfo('Discount', '${widget.product['discount'] ?? '0'}%'),
+                    _ProductInfo(
+                        'Category', widget.product['category'] ?? 'N/A'),
+                    _ProductInfo(
+                        'Subcategory', widget.product['subcategory'] ?? 'N/A'),
+                    _ProductInfo(
+                        'Price', '${widget.product['price'] ?? 'N/A'}'),
+                    _ProductInfo(
+                        'Discount', '${widget.product['discount'] ?? '0'}%'),
                   ],
                 ),
                 const SizedBox(height: 16),

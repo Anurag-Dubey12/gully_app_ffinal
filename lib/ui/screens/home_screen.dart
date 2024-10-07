@@ -72,7 +72,7 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin  {
+class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
   bool isLoading = false;
   late PersistentTabController _controller;
   late AnimationController _animationController;
@@ -129,6 +129,7 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
         activeColorPrimary: Colors.transparent,
         inactiveColorPrimary: Colors.transparent,
         onPressed: (context) {
+          // Handle center button press
         },
       ),
       PersistentBottomNavBarItem(
@@ -137,7 +138,6 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
         activeColorPrimary: AppTheme.primaryColor,
         inactiveColorPrimary: Colors.grey,
       ),
-
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.home_repair_service),
         title: "Service",
@@ -153,60 +153,64 @@ class _HomePageState extends State<HomePage>with SingleTickerProviderStateMixin 
       decoration: const BoxDecoration(
         color: Colors.white,
         image: DecorationImage(
-            image: AssetImage(
-              'assets/images/sports_icon.png',
-            ),
-            fit: BoxFit.cover),
+          image: AssetImage('assets/images/sports_icon.png'),
+          fit: BoxFit.cover,
+        ),
       ),
       child: PopScope(
         canPop: true,
-        child:Scaffold(
+        child: Scaffold(
           endDrawer: const AppDrawer(),
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 30),
-            child: ClipOval(
-              child: FloatingActionButton(
-                onPressed: () {
-                  Get.to(() => const TournamentFormScreen());
-                },
-                backgroundColor: AppTheme.primaryColor,
-
-                child: const Icon(Icons.add),
-              ),
-            ),
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          body: PersistentTabView(
-            context,
-            controller: _controller,
-            screens: _buildScreens(),
-            padding: const EdgeInsets.all(8),
-            items: _navBarsItems(),
-            confineToSafeArea: true,
-            backgroundColor: Colors.white,
-            handleAndroidBackButtonPress: true,
-            resizeToAvoidBottomInset: true,
-            stateManagement: true,
-            decoration: NavBarDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              colorBehindNavBar: Colors.white,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 5,
-                  spreadRadius: 2,
-                  offset: const Offset(0, -1),
+          body: Stack(
+            children: [
+              PersistentTabView(
+                context,
+                controller: _controller,
+                screens: _buildScreens(),
+                items: _navBarsItems(),
+                confineToSafeArea: true,
+                padding: EdgeInsets.zero,
+                backgroundColor: Colors.white,
+                handleAndroidBackButtonPress: true,
+                resizeToAvoidBottomInset: true,
+                stateManagement: true,
+                decoration: NavBarDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  colorBehindNavBar: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                      offset: const Offset(0, -1),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            navBarStyle: NavBarStyle.style13,
+                navBarStyle: NavBarStyle.style4,
+              ),
+              Positioned(
+                bottom: 30,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: ClipOval(
+                    child: FloatingActionButton(
+                      onPressed: () {
+                        Get.to(() => const TournamentFormScreen());
+                      },
+                      backgroundColor: AppTheme.primaryColor,
+                      child: const Icon(Icons.add),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 }
-
 
 class HomePageContent extends StatefulWidget {
   const HomePageContent({super.key});

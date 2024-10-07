@@ -165,25 +165,25 @@ class ShopHomeState extends State<ShopHome>{
             IconButton(
               icon: const Icon(Icons.history_rounded,color: Colors.white),
               onPressed: () {
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //     const SnackBar(
-                //         content: Text(
-                //             "We apologize for the inconvenience. Order history data could not be fetched at the moment. Please try again later."
-                //         )
-                //     )
-                // );
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text(
+                            "We apologize for the inconvenience. Order history data could not be fetched at the moment. Please try again later."
+                        )
+                    )
+                );
               },
             ),
             IconButton(
               icon: const Icon(Icons.shopping_cart,color: Colors.white),
               onPressed: () {
-                // ScaffoldMessenger.of(context).showSnackBar(
-                //     const SnackBar(
-                //         content: Text(
-                //             "We apologize for the inconvenience. Order history data could not be fetched at the moment. Please try again later."
-                //         )
-                //     )
-                // );
+                ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text(
+                            "We apologize for the inconvenience. Order history data could not be fetched at the moment. Please try again later."
+                        )
+                    )
+                );
               },
             ),
           ],

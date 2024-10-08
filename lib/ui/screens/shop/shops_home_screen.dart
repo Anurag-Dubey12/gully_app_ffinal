@@ -24,12 +24,14 @@ class ShopHomeState extends State<ShopHome>{
       'followers': 1250,
       'totalProducts': 150,
       'coverImage': 'assets/images/logo.png',
+      'shop_number':'1002003004',
       'products': [
         {
           'name': 'Soccer Ball',
           'category': 'Equipment',
           'price': 2499.00,
           'rating': 4.5,
+          'discount':250,
           'image': 'assets/images/logo.png'
         },
         {
@@ -37,6 +39,31 @@ class ShopHomeState extends State<ShopHome>{
           'category': 'Equipment',
           'price': 7999.00,
           'rating': 4.7,
+          'discount':250,
+          'image': 'assets/images/logo.png'
+        },
+        {
+          'name': 'Tennis Racket',
+          'category': 'Equipment',
+          'price': 7999.00,
+          'rating': 4.7,
+          'discount':250,
+          'image': 'assets/images/logo.png'
+        },
+        {
+          'name': 'Tennis Racket',
+          'category': 'Equipment',
+          'price': 7999.00,
+          'rating': 4.7,
+          'discount':250,
+          'image': 'assets/images/logo.png'
+        },
+        {
+          'name': 'Tennis Racket',
+          'category': 'Equipment',
+          'price': 7999.00,
+          'rating': 4.7,
+          'discount':250,
           'image': 'assets/images/logo.png'
         },
       ]
@@ -50,11 +77,13 @@ class ShopHomeState extends State<ShopHome>{
       'followers': 980,
       'totalProducts': 200,
       'coverImage': 'assets/image/bat.png',
+      'shop_number':'1002003004',
       'products': [
         {
           'name': 'Yoga Mat',
           'category': 'Fitness',
           'price': 3999.00,
+          'discount':250,
           'rating': 4.6,
           'image': 'assets/images/logo.png'
         },
@@ -62,9 +91,11 @@ class ShopHomeState extends State<ShopHome>{
           'name': 'Dumbbells Set',
           'category': 'Fitness',
           'price': 7499.00,
+          'discount':250,
           'rating': 4.9,
           'image': 'assets/images/logo.png'
         },
+
       ]
     },
     {
@@ -76,11 +107,13 @@ class ShopHomeState extends State<ShopHome>{
       'followers': 760,
       'totalProducts': 120,
       'coverImage': 'assets/images/logo.png',
+      'shop_number':'1002003004',
       'products': [
         {
           'name': 'Running Shoes',
           'category': 'Footwear',
           'price': 6499.00,
+          'discount':350,
           'rating': 4.8,
           'image': 'assets/images/logo.png'
         },
@@ -89,6 +122,7 @@ class ShopHomeState extends State<ShopHome>{
           'category': 'Clothing',
           'price': 10499.00,
           'rating': 4.7,
+          'discount':50,
           'image': 'assets/images/logo.png'
         },
       ]
@@ -102,12 +136,14 @@ class ShopHomeState extends State<ShopHome>{
       'followers': 760,
       'totalProducts': 120,
       'coverImage': 'assets/images/logo.png',
+      'shop_number':'1002003004',
       'products': [
         {
           'name': 'Running Shoes',
           'category': 'Footwear',
           'price': 6499.00,
           'rating': 4.8,
+          'discount':250,
           'image': 'assets/images/logo.png'
         },
         {
@@ -115,6 +151,7 @@ class ShopHomeState extends State<ShopHome>{
           'category': 'Clothing',
           'price': 10499.00,
           'rating': 4.7,
+          'discount':250,
           'image': 'assets/images/logo.png'
         },
       ]

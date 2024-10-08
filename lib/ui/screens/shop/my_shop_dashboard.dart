@@ -210,7 +210,7 @@ class _DashboardState extends State<ShopDashboard> {
                                           ),
                                           const SizedBox(width: 5),
                                           Text(
-                                            '₹ ${product['discount']} Flat Off', // Discount info
+                                            '₹ ${product['discount']} Flat Off',
                                             style: const TextStyle(
                                               fontSize: 16,
                                               color: Colors.red,

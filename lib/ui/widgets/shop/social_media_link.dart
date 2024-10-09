@@ -3,8 +3,7 @@ import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/ui/widgets/shop/social_field.dart';
 
 class SocialMedia extends StatefulWidget {
-  const SocialMedia({Key? key})
-      : super(key: key);
+  const SocialMedia({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SocialMediaState();
@@ -22,9 +21,9 @@ class _SocialMediaState extends State<SocialMedia> {
   void removeSocialLink(int index) {
     setState(() {
       socialLinks.removeAt(index);
-      if (socialLinks.isEmpty) {
-        addSocialLink();
-      }
+      // if (socialLinks.isEmpty) {
+      //   addSocialLink();
+      // }
     });
   }
 
@@ -62,20 +61,23 @@ class _SocialMediaState extends State<SocialMedia> {
                 );
               },
             ),
-            socialLinks.isEmpty ?Center(child: PrimaryButton(
-              onTap: addSocialLink,
-              title: 'Add Social Media Url',
-              fontSize: 12,
-            ),):
-            SizedBox(
-              width: 100,
-              height: 40,
-              child: PrimaryButton(
-                onTap: addSocialLink,
-                title: 'Add More Url',
-                fontSize: 12,
-              ),
-            ),
+            socialLinks.isEmpty
+                ? Center(
+                    child: PrimaryButton(
+                      onTap: addSocialLink,
+                      title: 'Add Social Media Url',
+                      fontSize: 12,
+                    ),
+                  )
+                : SizedBox(
+                    width: 100,
+                    height: 40,
+                    child: PrimaryButton(
+                      onTap: addSocialLink,
+                      title: 'Add More Url',
+                      fontSize: 12,
+                    ),
+                  ),
           ],
         ),
       ),

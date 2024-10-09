@@ -10,11 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify shop dashboard ,shop_homescreen">
+      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/service/PackageInfo.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/my_shop_dashboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/my_shop_dashboard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shop_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shop_details_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shop_details_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shop_details_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shops_home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shops_home_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/shop/shop_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/shop_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/service/package_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/service/package_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/shop/social_media_link.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/shop/social_media_link.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -162,14 +165,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00008" summary="modify by adding new item">
-      <option name="closed" value="true" />
-      <created>1721201296286</created>
-      <option name="number" value="00008" />
-      <option name="presentableId" value="LOCAL-00008" />
-      <option name="project" value="LOCAL" />
-      <updated>1721201296286</updated>
     </task>
     <task id="LOCAL-00009" summary="need to solve round feature problem">
       <option name="closed" value="true" />
@@ -555,7 +550,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728302342526</updated>
     </task>
-    <option name="localTasksCounter" value="57" />
+    <task id="LOCAL-00057" summary="modify shop dashboard ,shop_homescreen">
+      <option name="closed" value="true" />
+      <created>1728388580359</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1728388580359</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -920,6 +923,12 @@
           <option name="totalLines" value="4503840" />
           <option name="info" value="modify shop dashboard ,shop_homescreen" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1728388583561" />
+          <option name="linesCode" value="35653" />
+          <option name="totalLines" value="4472611" />
+          <option name="info" value="modify shop dashboard ,shop_homescreen" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1241,6 +1250,12 @@
           <option name="linesCode" value="35604" />
           <option name="totalLines" value="4503840" />
           <option name="info" value="Oct 7, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1728388583561" />
+          <option name="linesCode" value="35653" />
+          <option name="totalLines" value="4472611" />
+          <option name="info" value="Oct 8, 2024" />
         </TimePoint>
       </list>
     </option>

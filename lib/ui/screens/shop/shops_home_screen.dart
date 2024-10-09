@@ -28,7 +28,7 @@ class ShopHomeState extends State<ShopHome>{
       'products': [
         {
           'name': 'Soccer Ball',
-          'category': 'Equipment',
+          'category': 'Cricket',
           'price': 2499.00,
           'rating': 4.5,
           'discount':250,
@@ -36,7 +36,7 @@ class ShopHomeState extends State<ShopHome>{
         },
         {
           'name': 'Tennis Racket',
-          'category': 'Equipment',
+          'category': 'Cricket',
           'price': 7999.00,
           'rating': 4.7,
           'discount':250,
@@ -44,7 +44,7 @@ class ShopHomeState extends State<ShopHome>{
         },
         {
           'name': 'Tennis Racket',
-          'category': 'Equipment',
+          'category': 'Cricket',
           'price': 7999.00,
           'rating': 4.7,
           'discount':250,
@@ -52,7 +52,7 @@ class ShopHomeState extends State<ShopHome>{
         },
         {
           'name': 'Tennis Racket',
-          'category': 'Equipment',
+          'category': 'Soccer',
           'price': 7999.00,
           'rating': 4.7,
           'discount':250,
@@ -60,7 +60,7 @@ class ShopHomeState extends State<ShopHome>{
         },
         {
           'name': 'Tennis Racket',
-          'category': 'Equipment',
+          'category': 'Soccer',
           'price': 7999.00,
           'rating': 4.7,
           'discount':250,
@@ -81,7 +81,7 @@ class ShopHomeState extends State<ShopHome>{
       'products': [
         {
           'name': 'Yoga Mat',
-          'category': 'Fitness',
+          'category': 'Basketball',
           'price': 3999.00,
           'discount':250,
           'rating': 4.6,
@@ -89,7 +89,7 @@ class ShopHomeState extends State<ShopHome>{
         },
         {
           'name': 'Dumbbells Set',
-          'category': 'Fitness',
+          'category': 'Tennis',
           'price': 7499.00,
           'discount':250,
           'rating': 4.9,
@@ -111,7 +111,7 @@ class ShopHomeState extends State<ShopHome>{
       'products': [
         {
           'name': 'Running Shoes',
-          'category': 'Footwear',
+          'category': 'Swimming',
           'price': 6499.00,
           'discount':350,
           'rating': 4.8,
@@ -119,7 +119,7 @@ class ShopHomeState extends State<ShopHome>{
         },
         {
           'name': 'Sports Jacket',
-          'category': 'Clothing',
+          'category': 'Badminton',
           'price': 10499.00,
           'rating': 4.7,
           'discount':50,
@@ -140,7 +140,7 @@ class ShopHomeState extends State<ShopHome>{
       'products': [
         {
           'name': 'Running Shoes',
-          'category': 'Footwear',
+          'category': 'Baseball',
           'price': 6499.00,
           'rating': 4.8,
           'discount':250,
@@ -148,7 +148,7 @@ class ShopHomeState extends State<ShopHome>{
         },
         {
           'name': 'Sports Jacket',
-          'category': 'Clothing',
+          'category': 'Golf',
           'price': 10499.00,
           'rating': 4.7,
           'discount':250,

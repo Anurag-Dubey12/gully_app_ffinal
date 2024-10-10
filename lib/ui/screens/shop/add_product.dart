@@ -133,14 +133,14 @@ class Product extends State<AddProduct>{
           iconTheme: const IconThemeData(color: Colors.white),
           backgroundColor: AppTheme.primaryColor,
           elevation: 0,
-          title: widget.product!=null ? Text(
+          title: widget.product!=null ? const Text(
             'Edit Product',
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
               fontWeight: FontWeight.w800,
             ),
-          ):Text(
+          ):const Text(
             'Add Product',
             style: TextStyle(
               color: Colors.white,

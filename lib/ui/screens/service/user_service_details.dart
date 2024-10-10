@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:gully_app/ui/theme/theme.dart';
+import 'package:gully_app/ui/widgets/gradient_builder.dart';
 
 class ServiceProfileScreen extends StatelessWidget {
   final Map<String, dynamic> service;
@@ -19,7 +22,10 @@ class ServiceProfileScreen extends StatelessWidget {
           color: Colors.white,
         ),
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.black),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded,color: Colors.white,),
+          onPressed: ()=>Get.back(),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

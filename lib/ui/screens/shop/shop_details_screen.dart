@@ -66,14 +66,19 @@ class DetailsState extends State<ShopDetailsScreen> {
     final shopNumber = widget.shop['shop_number'];
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: AppTheme.primaryColor,
         title: const Text("Shop Details",
-            style: TextStyle(color: Colors.black, fontSize: 20)),
+            style: TextStyle(color: Colors.white, fontSize: 20)),
         actions: [
           IconButton(
-            icon: const Icon(Icons.share, color: Colors.black),
+            icon: const Icon(Icons.share, color: Colors.white),
             onPressed: () {},
           ),
         ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded,color: Colors.white,),
+          onPressed: ()=>Get.back(),
+        ),
       ),
       body: ListView(
         children: [
@@ -85,12 +90,12 @@ class DetailsState extends State<ShopDetailsScreen> {
                 Row(
                   children: [
                     CircleAvatar(
-                      radius: 40,
+                      radius: 35,
                       backgroundImage: AssetImage(
                         widget.shop['logo'] ?? 'assets/images/logo.png',
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,20 +103,19 @@ class DetailsState extends State<ShopDetailsScreen> {
                           Text(
                             widget.shop['name'],
                             style: const TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.bold),
+                                fontSize: 18, fontWeight: FontWeight.bold),
                           ),
-                          const SizedBox(height: 4),
                           Text(
                             widget.shop['details'],
                             style: TextStyle(
-                                fontSize: 16, color: Colors.grey[600]),
+                                fontSize: 14, color: Colors.grey[600]),
                           ),
                         ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 10),
                 Row(
                   children: [
                     const Icon(Icons.location_on, color: Colors.red),
@@ -127,7 +131,6 @@ class DetailsState extends State<ShopDetailsScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 10),
           // productList("Best Sellers", product, shopNumber),
           // const SizedBox(height: 10),
           // productList("New Arrivals", product, shopNumber),
@@ -139,7 +142,7 @@ class DetailsState extends State<ShopDetailsScreen> {
                 const Text(
                   "Product",
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -168,7 +171,7 @@ class DetailsState extends State<ShopDetailsScreen> {
                           Text(
                             'Filter',
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
                             ),
@@ -176,7 +179,7 @@ class DetailsState extends State<ShopDetailsScreen> {
                           SizedBox(width: 5),
                           Icon(
                             Iconsax.filter,
-                            size: 18,
+                            size: 16,
                             color: Colors.black,
                           ),
                         ],
@@ -249,7 +252,7 @@ class DetailsState extends State<ShopDetailsScreen> {
                 children: [
                   Text(
                     product['name'],
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 14),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -261,7 +264,6 @@ class DetailsState extends State<ShopDetailsScreen> {
                           '₹${totalPrice.toInt()}',
                           style: const TextStyle(
                             color: Colors.grey,
-                            fontWeight: FontWeight.bold,
                             decoration: TextDecoration.lineThrough,
                           ),
                         ),
@@ -287,7 +289,7 @@ class DetailsState extends State<ShopDetailsScreen> {
                   Text(
                     '₹ ${product['discount']} Flat Off',
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 13,
                       color: AppTheme.primaryColor,
                     ),
                   ),

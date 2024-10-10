@@ -29,6 +29,7 @@ class ShopHomeState extends State<ShopHome>{
         {
           'name': 'Soccer Ball',
           'category': 'Cricket',
+          'subcategory': 'Bat',
           'price': 2499.00,
           'rating': 4.5,
           'discount':250,
@@ -37,6 +38,7 @@ class ShopHomeState extends State<ShopHome>{
         {
           'name': 'Tennis Racket',
           'category': 'Cricket',
+          'subcategory': 'Ball',
           'price': 7999.00,
           'rating': 4.7,
           'discount':250,
@@ -45,6 +47,7 @@ class ShopHomeState extends State<ShopHome>{
         {
           'name': 'Tennis Racket',
           'category': 'Cricket',
+          'subcategory': 'Bat',
           'price': 7999.00,
           'rating': 4.7,
           'discount':250,
@@ -53,6 +56,7 @@ class ShopHomeState extends State<ShopHome>{
         {
           'name': 'Tennis Racket',
           'category': 'Soccer',
+          'subcategory': 'Ball',
           'price': 7999.00,
           'rating': 4.7,
           'discount':250,
@@ -60,7 +64,8 @@ class ShopHomeState extends State<ShopHome>{
         },
         {
           'name': 'Tennis Racket',
-          'category': 'Soccer',
+          'category': 'Tennis',
+          'subcategory': 'Tennis Racket',
           'price': 7999.00,
           'rating': 4.7,
           'discount':250,

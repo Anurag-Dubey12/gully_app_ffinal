@@ -142,7 +142,7 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                     ),
                     AdvertisementSummary(
                       label: 'Charges',
-                      value: widget.service.service_charges.toString(),
+                      value: widget.service.serviceCharges.toString(),
                     ),
                     const SizedBox(height: 10),
                     const Center(

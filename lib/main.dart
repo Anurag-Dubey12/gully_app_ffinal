@@ -46,7 +46,8 @@ void main() async {
       name: 'Gully Team',
       options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
+  final fcmToken = await FirebaseMessaging.instance.getToken();
+  logger.d("FCMToken $fcmToken");
   await GetStorage.init();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);

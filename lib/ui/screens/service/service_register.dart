@@ -94,7 +94,7 @@ class RegisterService extends State<ServiceRegister> {
       providerPhoneNumber: authController.state!.phoneNumber ??" ",
       providerimage: authController.state!.profilePhoto,
       providerAge: 0,
-      service_charges: 0,
+      serviceCharges: 0,
       description: '',
       yearsOfExperience: 0,
       offeredServices: [],
@@ -184,7 +184,8 @@ class RegisterService extends State<ServiceRegister> {
                             if (!tncAccepted) {
                               errorSnackBar(
                                   'Please accept the Terms and Conditions',
-                                  title: "Error");
+                                  title: "Error"
+                              );
                               return;
                             }
                             if (_images.isEmpty) {
@@ -221,22 +222,27 @@ class RegisterService extends State<ServiceRegister> {
                                   title: "Error");
                               return;
                             }
-                            final serviceModel = ServiceModel.fromForm(
+                            final serviceModel = ServiceModel(
+                              id: '',
                               name: _nameController.text,
                               providerName: authController.state!.fullName,
                               providerPhoneNumber: authController.state!.phoneNumber ?? "",
-                              providerimage: authController.state!.profilePhoto,
+                              providerimage: authController.state!.profilePhoto ?? "",
                               providerAge: int.parse(_ageController.text),
-                              service_charges: int.parse(_serviceChargesController.text),
+                              serviceCharges: int.parse(_serviceChargesController.text),
                               description: _descriptionController.text,
                               yearsOfExperience: int.parse(_expController.text),
                               offeredServices: selectedServices,
-                              address: _addressController.text,
-                              selectedPackage: selectedPackage!,
+                              location: _addressController.text,
                               imageUrls: _images.map((image) => image.path).toList(),
                               documentUrls: _documentImages.map((image) => image.path).toList(),
+                              package: PackageModel(
+                                name: selectedPackage!['package'],
+                                duration: selectedPackage!['Duration'],
+                                price: double.parse(selectedPackage!['price'].toString()),
+                                endDate: selectedPackage!['endDate'],
+                              ),
                             );
-
                             // Navigate to ServicePaymentPage
                             Get.to(() => ServicePaymentPage(service: serviceModel));
                           },

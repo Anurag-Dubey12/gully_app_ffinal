@@ -239,8 +239,7 @@ class _DashboardState extends State<ShopDashboard> {
               onPressed: () async {
                 final result = await Get.to(() => const AddProduct());
                 if (result != null && result is List<Map<String, dynamic>>) {
-                  _shopController.updateProductForShop(
-                      widget.shopId, '0001', result as Map<String, dynamic>);
+                  _shopController.addProductsToShop(widget.shopId, result);
                 }
               },
               tooltip: 'Add Product',

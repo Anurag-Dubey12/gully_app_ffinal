@@ -47,8 +47,7 @@ class SelectFromToCard extends StatelessWidget {
                         isAds ? DateTime.now():
                         DateTime.now().add(const Duration(days: 4)),
                         firstDate: isAds ? DateTime.now():DateTime.now().add(const Duration(days: 4)),
-                        lastDate: isAds ? DateTime.now():
-                        DateTime.now().add(const Duration(days: 365)));
+                        lastDate: DateTime.now().add(const Duration(days: 365)));
                     if (date != null) {
                       logger.d('Date: $date');
                       onFromChanged(date);
@@ -98,7 +97,6 @@ class SelectFromToCard extends StatelessWidget {
                     initialDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
                     firstDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
                     lastDate: DateTime.now().add(const Duration(days: 365)));
-
                 if (date0 != null) {
                   onToChanged(date0);
                 }

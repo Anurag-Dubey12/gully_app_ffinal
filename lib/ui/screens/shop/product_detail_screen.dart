@@ -166,7 +166,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     _ProductInfo(
                         'Price', '${widget.product['price'] ?? 'N/A'}'),
                     _ProductInfo(
-                        'Discount', '${widget.product['discount'] ?? '0'}%'),
+                        'Discount', '₹${widget.product['discount'] ?? '0'}'),
                   ],
                 ),
                 const SizedBox(height: 16),

@@ -11,13 +11,15 @@ class SelectFromToCard extends StatelessWidget {
   final Function onFromChanged;
   final Function onToChanged;
   final bool isAds;
+  final bool iswhite;
   const SelectFromToCard(
       {super.key,
         required this.from,
         required this.to,
         required this.onFromChanged,
         required this.onToChanged,
-        required this.isAds
+        required this.isAds,
+        this.iswhite=false
       });
 
   @override
@@ -36,7 +38,7 @@ class SelectFromToCard extends StatelessWidget {
                   child: Text('From',
                       style: Get.textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.black,
+                          color: iswhite?Colors.white :Colors.black,
                           fontSize: 16)),
                 ),
                 GestureDetector(
@@ -109,7 +111,7 @@ class SelectFromToCard extends StatelessWidget {
                     child: Text('To',
                         style: Get.textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
+                            color: iswhite ?Colors.white:Colors.black,
                             fontSize: 16)),
                   ),
                   Container(

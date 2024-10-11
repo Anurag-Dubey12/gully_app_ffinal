@@ -10,20 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify package screen ,shop screen and service screen">
-      <change afterPath="$PROJECT_DIR$/lib/data/controller/service_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/package_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/package_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/service_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/service_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/user_service_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/user_service_details.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service_payment_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service_payment_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/add_product.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/add_product.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/my_shop_dashboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/my_shop_dashboard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/product_detail_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/product_detail_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shop_details_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shop_details_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/shops_home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/shops_home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/create_tournament/form_input.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/create_tournament/form_input.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/create_tournament/select_from_to_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/create_tournament/select_from_to_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/create_tournament/top_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/create_tournament/top_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/custom_drop_down_field.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/custom_drop_down_field.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,6 +26,16 @@
   </component>
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view />
+      </state>
+    </system>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -171,14 +175,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00010" summary="need to solve round feature problem">
-      <option name="closed" value="true" />
-      <created>1721389788068</created>
-      <option name="number" value="00010" />
-      <option name="presentableId" value="LOCAL-00010" />
-      <option name="project" value="LOCAL" />
-      <updated>1721389788068</updated>
     </task>
     <task id="LOCAL-00011" summary="modify">
       <option name="closed" value="true" />
@@ -564,7 +560,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728475174722</updated>
     </task>
-    <option name="localTasksCounter" value="59" />
+    <task id="LOCAL-00059" summary="modify package screen ,shop screen and service screen">
+      <option name="closed" value="true" />
+      <created>1728561468983</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1728561468984</updated>
+    </task>
+    <option name="localTasksCounter" value="60" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -942,6 +946,12 @@
           <option name="totalLines" value="4495798" />
           <option name="info" value="modify package screen ,shop screen and service scr" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1728561492820" />
+          <option name="linesCode" value="36093" />
+          <option name="totalLines" value="5345265" />
+          <option name="info" value="modify package screen ,shop screen and service scr" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1275,6 +1285,18 @@
           <option name="linesCode" value="36052" />
           <option name="totalLines" value="4495798" />
           <option name="info" value="Oct 9, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1728561492820" />
+          <option name="linesCode" value="36093" />
+          <option name="totalLines" value="5345265" />
+          <option name="info" value="Oct 10, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1728634997223" />
+          <option name="linesCode" value="36196" />
+          <option name="totalLines" value="5345981" />
+          <option name="info" value="Oct 11, 2024" />
         </TimePoint>
       </list>
     </option>

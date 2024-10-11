@@ -653,6 +653,7 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                   controller: phoneController,
                   maxLen: 10,
                   textInputType: TextInputType.phone,
+
                 ),
                 const SizedBox(height: 20),
                 SizedBox(

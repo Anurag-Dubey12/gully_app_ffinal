@@ -203,6 +203,7 @@ class Product extends State<AddProduct>{
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FormInput(
+                  iswhite: false,
                   controller: _Product_name,
                   label: "Product Name",
                   textInputType: TextInputType.text,
@@ -234,16 +235,19 @@ class Product extends State<AddProduct>{
                       title: "Sub Category of a Product",
                       isAds: false),
                 FormInput(
+                  iswhite: false,
                   controller: _descriptionController,
                   label: "Product Short Description",
                   textInputType: TextInputType.multiline,
                 ),
                 FormInput(
+                  iswhite: false,
                   controller: _priceController,
                   label: "Product Price",
                   textInputType: TextInputType.text,
                 ),
                 FormInput(
+                  iswhite: false,
                   controller: _discountController,
                   label: "Discount(if any)",
                   textInputType: TextInputType.number,

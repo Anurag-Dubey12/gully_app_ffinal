@@ -7,12 +7,13 @@ class FormInput extends StatelessWidget {
   final TextEditingController? controller;
   final String? label;
   final TextInputType? textInputType;
-  final bool? filled;
+  final bool filled;
   final bool? readOnly;
   final bool? enabled;
   final String? Function(String?)? validator;
   final bool? autofocus;
   final int? maxLength;
+  final bool iswhite;
 //ontap
   final Function()? onTap;
   final int? maxLines;
@@ -22,12 +23,13 @@ class FormInput extends StatelessWidget {
       this.label,
       this.autofocus,
       this.textInputType,
-      this.filled,
+      this.filled=true,
       this.readOnly,
       this.enabled,
       this.validator,
       this.onTap,
       this.maxLines,
+       this.iswhite=false,
       this.maxLength});
 
   @override
@@ -40,13 +42,13 @@ class FormInput extends StatelessWidget {
           Text(label ?? '',
               style: Get.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: Colors.black,
+                  color: iswhite ? Colors.white:Colors.black,
                   fontSize: 16)),
           const SizedBox(
             height: 8,
           ),
           CustomTextField(
-            filled: true,
+            filled: filled ?true : false,
             onTap: onTap,
             autoFocus: autofocus,
             readOnly: readOnly,

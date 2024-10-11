@@ -10,6 +10,7 @@ class DropDownWidget extends StatefulWidget {
   final String title;
   final bool isAds;
   final bool? isService;
+  final bool iswhite;
 
   const DropDownWidget({
     Key? key,
@@ -19,6 +20,7 @@ class DropDownWidget extends StatefulWidget {
     required this.title,
     required this.isAds,
     this.isService = false,
+    this.iswhite = true,
   }) : super(key: key);
 
   @override
@@ -167,6 +169,9 @@ class _DropDownWidgetState extends State<DropDownWidget> {
             width: Get.width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(9),
+              border: Border.all(
+                color: widget.iswhite ?Colors.white : Colors.black
+              ),
               color: Colors.white,
             ),
             child: Padding(

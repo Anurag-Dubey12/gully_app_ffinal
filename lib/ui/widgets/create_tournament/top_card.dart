@@ -10,6 +10,7 @@ class TopCard extends StatefulWidget {
   final DateTime? to;
   final TextEditingController controller;
   final bool isAds;
+  final bool iswhite;
   const TopCard(
       {super.key,
         required this.controller,
@@ -17,7 +18,8 @@ class TopCard extends StatefulWidget {
         required this.onToChanged,
         this.from,
         this.to,
-        required this.isAds
+        required this.isAds,
+        this.iswhite=false
       });
 
   @override
@@ -51,6 +53,7 @@ class _TopCardState extends State<TopCard> {
               },
               from: widget.from,
               to: widget.to,
+              iswhite: widget.iswhite,
               onToChanged: (e) {
                 setState(() {
                   to = e;

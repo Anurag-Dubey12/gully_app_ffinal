@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/ui/screens/shop_payment_screen.dart';
+import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/shop/social_media_link.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
@@ -35,6 +36,7 @@ class _ShopState extends State<RegisterShop>
   final TextEditingController _addressController = TextEditingController();
   XFile? _documentImage;
   final _key = GlobalKey<FormState>();
+  bool tncAccepted = false;
   final TextEditingController _shopnameController = TextEditingController();
   final TextEditingController _shop_address_Controller =
       TextEditingController();
@@ -54,6 +56,22 @@ class _ShopState extends State<RegisterShop>
   bool _allImagesSelected = false;
   bool isLoading = false;
 
+  int currentStep = 0;
+  final _formKeys = [
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>()
+  ];
+  final List<String> _stepTitles = [
+    'Vendor Details',
+    'Shop Details',
+    'Additional Shop Details',
+    'Social Media Links'
+  ];
+
+  late AnimationController _progressController;
+  late Animation<double> _progressAnimation;
   List<String> summaries = [];
   Map<String, BusinessHours> _businessHours = {
     'Sunday': BusinessHours(isOpen: false),
@@ -64,6 +82,120 @@ class _ShopState extends State<RegisterShop>
     'Friday': BusinessHours(),
     'Saturday': BusinessHours(isOpen: false),
   };
+
+  void _updateProgress() {
+    setState(() {
+      double endValue = currentStep / (_formKeys.length - 1);
+      _progressAnimation = Tween<double>(
+        begin: _progressAnimation.value,
+        end: endValue,
+      ).animate(CurvedAnimation(
+        parent: _progressController,
+        curve: Curves.easeInOut,
+      ));
+      _progressController.forward(from: 0);
+    });
+  }
+
+  void _nextPage() {
+    if (_formKeys[currentStep].currentState!.validate()) {
+      _formKeys[currentStep].currentState!.save();
+
+      if (currentStep == 2 && !_validateImages()) {
+        // errorSnackBar("Please Upload All The Required Documents");
+        return;
+      }
+      if (currentStep == 0 && _documentImage==null) {
+        errorSnackBar("ID proof document required.");
+        return;
+      }
+      if (currentStep < _formKeys.length - 1) {
+        setState(() {
+          currentStep++;
+        });
+        _updateProgress();
+      }
+    }
+  }
+
+  void _previousPage() {
+    if (currentStep > 0) {
+      setState(() {
+        currentStep--;
+      });
+    }
+    _updateProgress();
+  }
+
+  void _submitForm() async {
+    // if (tncAccepted == false) {
+    //   errorSnackBar('Please accept the Terms and Conditions');
+    //   return;
+    // }
+    if (_formKeys[currentStep].currentState!.validate()) {
+      try {
+        final AuthController authController = Get.find<AuthController>();
+        if(_validateImages()){
+          // setState(() {
+          //   isLoading = true;
+          // });
+          final ShopController controller = Get.put(ShopController());
+          final shopData = shop_model(
+            shopName: _shopnameController.text,
+            shopAddress: _shop_address_Controller.text,
+            shopNumber: _shop_number_Controller.text,
+            shopEmail: _shop_email_Controller.text,
+            gstNumber: _shop_Gst_Controller.text,
+            gstCertificate: _Gstcertificate?.path,
+            registrationCertificate: _Rstcertificate?.path,
+            shopLogo: _shopLogo?.path,
+            businessHours: _businessHours.map((key, value) => MapEntry(key, business_hours_model(
+              isOpen: value.isOpen,
+              openTime: value.openTime?.format(context),
+              closeTime: value.closeTime?.format(context),
+              id: null,
+            ))),
+            websiteUrl: _shop_website_Controller.text,
+            description: _shop_description_Controller.text,
+            locationProof: _shop_Location?.path,
+            businessLicense: _Business_license?.path,
+            taxCertificate: _tax_certificate?.path,
+            vendor: vendor_model(
+              name: _nameController.text,
+              email: _emailController.text,
+              phoneNumber: _numberController.text,
+              alternatePhoneNumber: int.tryParse(_alternateNumberController.text),
+              address: _addressController.text,
+              id_proof: _documentImage?.path, id: '',
+            ),
+          );
+          controller.addShop(shopData);
+          logger.d('The shop data is saved');
+          Get.to(()=>ShopPaymentPage(shopData: shopData,));
+        }else{
+          setState(() {
+            isLoading = false;
+          });
+        }
+        // String? base64;
+        // if (_image != null) {
+        //   base64 =
+        //   await convertImageToBase64(_image!);
+        // }
+      } catch(e){
+        setState(() {
+          isLoading = false;
+        });
+        errorSnackBar("An error occurred while submitting the form.", title: "Error");
+        logger.d("Error submitting form: $e");
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -71,7 +203,12 @@ class _ShopState extends State<RegisterShop>
     _nameController.text = authController.state!.fullName;
     _emailController.text = authController.state!.email;
     _numberController.text = authController.state!.phoneNumber ?? '';
-
+    _progressController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _progressAnimation =
+        Tween<double>(begin: 0, end: 0).animate(_progressController);
   }
 
   void pickImage(ImageType imageType) async {
@@ -157,6 +294,7 @@ class _ShopState extends State<RegisterShop>
       }
     });
   }
+
   bool _validateImages() {
     bool isValid = true;
     List<String> missingImages = [];
@@ -192,7 +330,9 @@ class _ShopState extends State<RegisterShop>
     }
 
     if (!isValid) {
-      String errorMessage = "Please upload the following images: ${missingImages.join(', ')}";
+      String errorMessage =
+          // "Please upload the following images: ${missingImages.join(', ')}";
+          "Please Upload All The Required Documents";
       errorSnackBar(errorMessage, title: "Missing Images");
     }
 
@@ -201,7 +341,6 @@ class _ShopState extends State<RegisterShop>
 
   @override
   Widget build(BuildContext context) {
-
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -210,355 +349,399 @@ class _ShopState extends State<RegisterShop>
           fit: BoxFit.cover,
         ),
       ),
-      child: Scaffold(
-        backgroundColor: Colors.black26,
-        appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
-          backgroundColor: AppTheme.primaryColor,
-          elevation: 0,
-          title: const Text(
-            'Register Shop',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
+      child: GradientBuilder(
+        child: Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            iconTheme: const IconThemeData(color: Colors.white),
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            title: const Text(
+              'Register Shop',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+              ),
             ),
           ),
-        ),
-        bottomNavigationBar: Container(
-          height: 90,
-          decoration: BoxDecoration(color: Colors.white, boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 5,
-                spreadRadius: 2,
-                offset: const Offset(0, -1))
-          ]),
-          child: Column(
+          bottomNavigationBar: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 3.0),
+            width: Get.width,
+            child: currentStep == 0
+                ? _nextNavigationButton('Next', _nextPage)
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (currentStep > 0)
+                        _previousNavigationButton(_previousPage)
+                      else
+                        const SizedBox(width: 80),
+                      if (currentStep < _formKeys.length - 1)
+                        _nextNavigationButton('Next', _nextPage)
+                      else if (currentStep == _formKeys.length - 1)
+                        _nextNavigationButton('Submit', _submitForm)
+                      else
+                        const SizedBox(width: 80),
+                    ],
+                  ),
+          ),
+          body: Column(
             children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 10, top: 10),
+                    child: Text(
+                      _stepTitles[currentStep],
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 15, top: 10, right: 20),
+                    child: AnimatedBuilder(
+                      animation: _progressAnimation,
+                      builder: (context, child) {
+                        return Text(
+                          "${currentStep + 1}/${_stepTitles.length}",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 20.0, vertical: 19),
-                child: isLoading
-                    ? const CircularProgressIndicator()
-                    : PrimaryButton(
-                  onTap: () async {
-                    try{
-                      if(_key.currentState!.validate()){
-                        if(_validateImages()){
-                          // setState(() {
-                          //   isLoading = true;
-                          // });
-                          final ShopController controller = Get.put(ShopController());
-                          final shopData = shop_model(
-                            shopName: _shopnameController.text,
-                            shopAddress: _shop_address_Controller.text,
-                            shopNumber: _shop_number_Controller.text,
-                            shopEmail: _shop_email_Controller.text,
-                            gstNumber: _shop_Gst_Controller.text,
-                            gstCertificate: _Gstcertificate?.path,
-                            registrationCertificate: _Rstcertificate?.path,
-                            shopLogo: _shopLogo?.path,
-                            businessHours: _businessHours.map((key, value) => MapEntry(key, business_hours_model(
-                              isOpen: value.isOpen,
-                              openTime: value.openTime?.format(context),
-                              closeTime: value.closeTime?.format(context),
-                              id: null,
-                            ))),
-                            websiteUrl: _shop_website_Controller.text,
-                            description: _shop_description_Controller.text,
-                            locationProof: _shop_Location?.path,
-                            businessLicense: _Business_license?.path,
-                            taxCertificate: _tax_certificate?.path,
-                            vendor: vendor_model(
-                              name: _nameController.text,
-                              email: _emailController.text,
-                              phoneNumber: _numberController.text,
-                              alternatePhoneNumber: int.tryParse(_alternateNumberController.text),
-                              address: _addressController.text,
-                              id_proof: _documentImage?.path, id: '',
-                            ),
-                          );
-                          controller.addShop(shopData);
-                          logger.d('The shop data is saved');
-                          Get.to(()=>ShopPaymentPage(shopData: shopData,));
-                        }else{
-                          setState(() {
-                            isLoading = false;
-                          });
-                        }
-                      }
-                    }catch(e){
-                      setState(() {
-                        isLoading = false;
-                      });
-                      errorSnackBar("An error occurred while submitting the form.", title: "Error");
-                      logger.d("Error submitting form: $e");
-                    }
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                child: AnimatedBuilder(
+                  animation: _progressAnimation,
+                  builder: (context, child) {
+                    return LinearProgressIndicator(
+                      value: _progressAnimation.value,
+                      borderRadius: BorderRadius.circular(20),
+                      backgroundColor: Colors.white,
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                          AppTheme.primaryColor),
+                      minHeight: 12,
+                    );
                   },
-                  // isDisabled: ,
-                  title: 'Submit',
+                ),
+              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(16.0),
+              //   child: Text(
+              //     _stepTitles[currentStep],
+              //     style: const TextStyle(color: Colors.white, fontSize: 20),
+              //   ),
+              // ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: CurrentStepBuild(),
+                  ),
                 ),
               ),
             ],
           ),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Form(
-              key: _key,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Divider(
-                    height: 2,
-                  ),
-                  const Center(
-                    child: Text(
-                      "Vendor Details",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const Divider(
-                    height: 2,
-                  ),
-                  FormInput(
-                    controller: _nameController,
-                    label: "Name",
-                    enabled: false,
-                    textInputType: TextInputType.name,
-                  ),
-                  FormInput(
-                    controller: _emailController,
-                    enabled: false,
-                    label: "Email Address",
-                    textInputType: TextInputType.emailAddress,
-                  ),
-                  FormInput(
-                    controller: _numberController,
-                    enabled: false,
-                    label: "Phone Number",
-                    textInputType: TextInputType.number,
-                  ),
-                  FormInput(
-                    controller: _alternateNumberController,
-                    label: "Alternate Phone Number (Optional)",
-                    textInputType: TextInputType.number,
-                    maxLength: 10,
-                  ),
-                  FormInput(
-                    controller: _addressController,
-                    label: "Address",
-                    textInputType: TextInputType.multiline,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Address cannot be empty.";
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  const Text("ID Proof Document"),
-                  const SizedBox(height: 8),
-                  ImageUploadWidget(
-                    image: _documentImage,
-                    onTap: () => pickImage(ImageType.Id_Proof),
-                    hintText:
-                        "Select Documents for Verification\n(JPG, PNG, max 2MB)",
-                  ),
-                  const SizedBox(height: 10),
-                  const Divider(
-                    height: 2,
-                  ),
-                  const Center(
-                    child: Text(
-                      "Shop Details",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const Divider(
-                    height: 2,
-                  ),
-                  FormInput(
-                    controller: _shopnameController,
-                    label: "Shop Name",
-                    textInputType: TextInputType.name,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Enter Shop Name";
-                      }
-                      return null;
-                    },
-                  ),
-                  FormInput(
-                    controller: _shop_address_Controller,
-                    label: "Shop Address",
-                    textInputType: TextInputType.multiline,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Enter Shop Address";
-                      }
-                      return null;
-                    },
-                  ),
-                  FormInput(
-                    controller: _shop_number_Controller,
-                    label: "Shop Number",
-                    textInputType: TextInputType.number,
-                    maxLength: 10,
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return "Enter Shop Number";
-                      }
-                      return null;
-                    },
-                  ),
-                  FormInput(
-                    controller: _shop_email_Controller,
-                    label: "Shop Email Address",
-                    textInputType: TextInputType.emailAddress,
-                  ),
-                  FormInput(
-                    controller: _shop_Gst_Controller,
-                    label: "Shop GST Number(if Applicable)",
-                    textInputType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value!.isNotEmpty) {
-                        if (!RegExp(
-                                r"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$")
-                            .hasMatch(value!)) {
-                          return "Invalid GST Number";
-                        }
-                        return null;
-                      }
-                    },
-                  ),
-                  const Text("Upload GST Certificate"),
-                  ImageUploadWidget(
-                    image: _Gstcertificate,
-                    onTap: () => pickImage(ImageType.GST_Certificate),
-                    hintText:
-                        "Select Documents for Verification\n(JPG, PNG max 2MB)",
-                  ),
-                  const SizedBox(height: 10),
-                  const Text("Upload Shop Registration Certificate"),
-                  const SizedBox(height: 5),
-                  ImageUploadWidget(
-                    image: _Rstcertificate,
-                    onTap: () => pickImage(ImageType.Registration_Certificate),
-                    hintText:
-                        "Select Documents for Verification\n(JPG, PNG max 2MB)",
-                  ),
-                  const SizedBox(height: 10),
-                  const Text("Upload Shop Logo/Image"),
-                  const SizedBox(height: 5),
-                  ImageUploadWidget(
-                    image: _shopLogo,
-                    onTap: () => pickImage(ImageType.shop_logo),
-                    hintText:
-                        "Select Documents for Verification\n(JPG, PNG max 2MB)",
-                  ),
-                  const SizedBox(height: 10),
-                  const Text("Business Hours"),
-                  const SizedBox(height: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: ListTile(
-                      title: Text(_getBusinessHoursSummary()),
-                      trailing: const Icon(Icons.chevron_right),
-                      onTap: () async {
-                        final result = await Get.to(() =>
-                            BusinessHoursScreen(initialHours: _businessHours));
-                        if (result != null &&
-                            result is Map<String, BusinessHours>) {
-                          setState(() {
-                            _businessHours = result;
-                          });
-                        }
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  FormInput(
-                    controller: _shop_website_Controller,
-                    label: "Website URL (Optional)",
-                    textInputType: TextInputType.url,
-                    validator: (value) {
-                      if (value != null && value.isNotEmpty) {
-                        if (!RegExp(
-                                r"^(http|https):\/\/[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,6}(:[0-9]{1,5})?(\/.*)?$")
-                            .hasMatch(value)) {
-                          return "Invalid Website URL";
-                        }
-                      }
-                      return null;
-                    },
-                  ),
-                  FormInput(
-                    controller: _shop_description_Controller,
-                    label:
-                        "Shop Description (Short summary about the shop and services)",
-                    textInputType: TextInputType.multiline,
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                      "Upload Shop Location Proof (e.g., Utility bill, Rent agreement, etc.)"),
-                  const SizedBox(height: 10),
-                  ImageUploadWidget(
-                    image: _shop_Location,
-                    onTap: () => pickImage(ImageType.shop_location),
-                    hintText:
-                        "Select Documents for Verification\n(JPG, PNG max 2MB)",
-                  ),
-                  const SizedBox(height: 10),
-                  const Text("Upload Business License"),
-                  const SizedBox(height: 10),
-                  ImageUploadWidget(
-                    image: _Business_license,
-                    onTap: () => pickImage(ImageType.Business_License),
-                    hintText:
-                        "Select Documents for Verification\n(JPG, PNG max 2MB)",
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                      "Upload VAT or Sales Tax Certificate (if applicable)"),
-                  const SizedBox(height: 10),
-                  ImageUploadWidget(
-                    image: _tax_certificate,
-                    onTap: () => pickImage(ImageType.Tax_Certificate),
-                    hintText:
-                        "Select Documents for Verification\n(JPG, PNG  max 2MB)",
-                  ),
-                  const SizedBox(height: 10),
-                  const Divider(
-                    height: 2,
-                  ),
-                  const Center(
-                    child: Text(
-                      "Social Media Links",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  const Divider(
-                    height: 2,
-                  ),
-                  const SocialMedia()
-                ],
-              ),
+      ),
+    );
+  }
+
+  Widget CurrentStepBuild() {
+    switch (currentStep) {
+      case 0:
+        return FirstStep();
+      case 1:
+        return SecondStep();
+      case 2:
+        return ThirdStep();
+      case 3:
+        return FourthStep();
+      default:
+        return FirstStep();
+    }
+  }
+
+  Widget FirstStep() {
+    return Form(
+      key: _formKeys[0],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: Get.height * 0.04),
+          FormInput(
+            controller: _nameController,
+            label: "Name",
+            enabled: false,
+            textInputType: TextInputType.name,
+          ),
+          FormInput(
+            controller: _emailController,
+            enabled: false,
+            label: "Email Address",
+            textInputType: TextInputType.emailAddress,
+          ),
+          FormInput(
+            controller: _numberController,
+            enabled: false,
+            label: "Phone Number",
+            textInputType: TextInputType.number,
+          ),
+          FormInput(
+            controller: _alternateNumberController,
+            label: "Alternate Phone Number (Optional)",
+            textInputType: TextInputType.number,
+            maxLength: 10,
+          ),
+          FormInput(
+            controller: _addressController,
+            label: "Address",
+            textInputType: TextInputType.multiline,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "Address cannot be empty.";
+              }
+              return null;
+            },
+          ),
+          ImageUploadWidget(
+            image: _documentImage,
+            onTap: () => pickImage(ImageType.Id_Proof),
+            title: "ID Proof Document",
+            hintText: "Select Documents for Verification\n(JPG, PNG, max 2MB)",
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget SecondStep() {
+    return Form(
+      key: _formKeys[1],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FormInput(
+            controller: _shopnameController,
+            label: "Shop Name",
+            textInputType: TextInputType.name,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "Enter Shop Name";
+              }
+              return null;
+            },
+          ),
+          FormInput(
+            controller: _shop_address_Controller,
+            label: "Shop Address",
+            textInputType: TextInputType.multiline,
+            autofocus: false,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "Enter Shop Address";
+              }
+              return null;
+            },
+          ),
+          FormInput(
+            controller: _shop_number_Controller,
+            label: "Shop Number",
+            textInputType: TextInputType.number,
+            maxLength: 10,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "Enter Shop Number";
+              }
+              return null;
+            },
+          ),
+          FormInput(
+            controller: _shop_email_Controller,
+            label: "Shop Email Address",
+            textInputType: TextInputType.emailAddress,
+          ),
+          FormInput(
+            controller: _shop_Gst_Controller,
+            label: "Shop GST Number(if Applicable)",
+            textInputType: TextInputType.emailAddress,
+            validator: (value) {
+              if (value!.isNotEmpty) {
+                if (!RegExp(
+                        r"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$")
+                    .hasMatch(value!)) {
+                  return "Invalid GST Number";
+                }
+                return null;
+              }
+            },
+          ),
+          const SizedBox(height: 10),
+          const Text("Business Hours"),
+          const SizedBox(height: 10),
+          Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: ListTile(
+              title: Text(_getBusinessHoursSummary()),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () async {
+                final result = await Get.to(
+                    () => BusinessHoursScreen(initialHours: _businessHours));
+                if (result != null && result is Map<String, BusinessHours>) {
+                  setState(() {
+                    _businessHours = result;
+                  });
+                }
+              },
+            ),
+          ),
+          const SizedBox(height: 10),
+          FormInput(
+            controller: _shop_website_Controller,
+            label: "Website URL (Optional)",
+            textInputType: TextInputType.url,
+            validator: (value) {
+              if (value != null && value.isNotEmpty) {
+                if (!RegExp(
+                        r"^(http|https):\/\/[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,6}(:[0-9]{1,5})?(\/.*)?$")
+                    .hasMatch(value)) {
+                  return "Invalid Website URL";
+                }
+              }
+              return null;
+            },
+          ),
+          FormInput(
+            controller: _shop_description_Controller,
+            label:
+                "Shop Description (Short summary about the shop and services)",
+            textInputType: TextInputType.multiline,
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
+    );
+  }
+
+  Widget ThirdStep() {
+    return Form(
+        key: _formKeys[2],
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ImageUploadWidget(
+              image: _Gstcertificate,
+              onTap: () => pickImage(ImageType.GST_Certificate),
+              hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
+              title: "Upload GST Certificate",
+            ),
+            ImageUploadWidget(
+              image: _Rstcertificate,
+              onTap: () => pickImage(ImageType.Registration_Certificate),
+              hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
+              title: "Upload Shop Registration Certificate",
+            ),
+            ImageUploadWidget(
+              image: _shopLogo,
+              onTap: () => pickImage(ImageType.shop_logo),
+              hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
+              title: "Upload Shop Logo/Image",
+            ),
+            ImageUploadWidget(
+              image: _shop_Location,
+              onTap: () => pickImage(ImageType.shop_location),
+              hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
+              title: "Upload Shop Location Proof (e.g., Utility bill, Rent agreement, etc.)",
+            ),
+            ImageUploadWidget(
+              image: _Business_license,
+              onTap: () => pickImage(ImageType.Business_License),
+              hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
+    title: "Upload Business License",
+            ),
+            ImageUploadWidget(
+              image: _tax_certificate,
+              onTap: () => pickImage(ImageType.Tax_Certificate),
+              hintText: "Select Documents for Verification\n(JPG, PNG  max 2MB)",
+    title: "Upload VAT or Sales Tax Certificate (if applicable)",
+            ),
+          ],
+        ));
+  }
+
+  Widget FourthStep() {
+    return Form(key: _formKeys[3], child: SocialMedia());
+  }
+
+  Widget _previousNavigationButton(VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: 80,
+        height: 60,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Colors.white,
+          border: Border.all(
+            color: AppTheme.primaryColor,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.primaryColor.withOpacity(0.3),
+              spreadRadius: 1,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: const Center(
+            child:
+                Icon(Icons.arrow_back_rounded, color: Colors.black, size: 30)),
+      ),
+    );
+  }
+
+  Widget _nextNavigationButton(String text, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: 250,
+        height: 60,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: AppTheme.primaryColor,
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.primaryColor.withOpacity(0.3),
+              spreadRadius: 1,
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.5,
             ),
           ),
         ),

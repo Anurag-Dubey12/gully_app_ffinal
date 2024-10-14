@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../utils/app_logger.dart';
+import '../../../utils/utils.dart';
 import '../../theme/theme.dart';
 import '../primary_button.dart';
 import 'PackageInfo.dart';
@@ -100,12 +101,17 @@ class PackageScreenState extends State<PackageScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
           child: PrimaryButton(
             onTap: () {
+              if (selectedPackage == null) {
+                errorSnackBar('Please select a package', title: "Error");
+                return;
+              }
               if (selectedPackage != null) {
                 final selectedPackageDetails = packages.firstWhere(
                       (package) => package['package'] == selectedPackage,
                   orElse: () => {},
                 );
                 selectedPackageDetails['EndDate']=endDate;
+                logger.d("Select Package End Date: ${selectedPackageDetails['EndDate']}" );
                 Get.back(result: selectedPackageDetails);
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(

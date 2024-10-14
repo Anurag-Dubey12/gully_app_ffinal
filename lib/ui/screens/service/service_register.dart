@@ -6,9 +6,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gully_app/data/controller/service_controller.dart';
 import 'package:image_picker/image_picker.dart';
 import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import '../../../data/controller/auth_controller.dart';
+import '../../../data/controller/service_controller.dart';
+import '../../../data/controller/service_controller.dart';
 import '../../../data/model/package_model.dart';
 import '../../../data/model/service_model.dart';
 import '../../../utils/app_logger.dart';
@@ -140,6 +143,7 @@ class RegisterService extends State<ServiceRegister> {
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.find<AuthController>();
+    final ServiceController serviceController = Get.put(ServiceController());
     return DecoratedBox(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -240,9 +244,11 @@ class RegisterService extends State<ServiceRegister> {
                                 name: selectedPackage!['package'],
                                 duration: selectedPackage!['Duration'],
                                 price: double.parse(selectedPackage!['price'].toString()),
-                                endDate: selectedPackage!['endDate'],
+                                endDate: selectedPackage!['EndDate'],
                               ),
                             );
+                            serviceController.addService(serviceModel);
+
                             // Navigate to ServicePaymentPage
                             Get.to(() => ServicePaymentPage(service: serviceModel));
                           },

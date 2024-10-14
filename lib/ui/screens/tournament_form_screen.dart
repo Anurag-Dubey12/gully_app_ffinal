@@ -55,8 +55,6 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
   final TextEditingController _cohost2Name = TextEditingController();
   final TextEditingController _cohost2Phone = TextEditingController();
 
-  final _key = GlobalKey<FormState>();
-
   bool isLoading = false;
   int currentStep = 0;
   final _formKeys = [
@@ -162,6 +160,10 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
         errorSnackBar('Please select tournament start and end date');
         return;
       }
+      if(currentStep==0 && _image==null){
+        errorSnackBar('Please select a cover image');
+        return;
+      }
       if (currentStep < _formKeys.length - 1) {
         setState(() {
           currentStep++;
@@ -184,18 +186,14 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
     if(tncAccepted==false){
       errorSnackBar('Please accept the Terms and Conditions');
       return;
-    }else  if (_formKeys[currentStep].currentState!.validate()) {
-      _formKeys.forEach((key) => key.currentState!.save());
+    }
+    if (_formKeys[currentStep].currentState!.validate()) {
+      // _formKeys.forEach((key) => key.currentState!.save());
       try {
         final TournamentController tournamentController =
         Get.find<TournamentController>();
         final AuthController authController = Get.find<AuthController>();
-        if (_key.currentState!.validate()) {
-          if (from == null || to == null) {
-            errorSnackBar(
-                'Please select tournament start and end date');
-            return;
-          }
+        // if (_key.currentState!.validate()) {
           if (_image == null &&
               widget.tournament?.coverPhoto == null) {
             errorSnackBar(
@@ -275,6 +273,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
               successSnackBar(
                   'Tournament Updated Successfully');
             }
+          // }
           } else {
             final tournamentModel =
                 await tournamentController
@@ -291,7 +290,6 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             Get.to(() => PaymentPage(
                 tournament: tournamentModel));
           }
-        }
       } finally {
         setState(() {
           isLoading = false;

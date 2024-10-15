@@ -1,74 +1,168 @@
 import 'package:flutter/material.dart';
-import 'package:gully_app/ui/screens/service/service_list.dart';
-import 'package:gully_app/ui/screens/service/service_profile.dart';
+import 'package:get/get.dart';
+import 'package:gully_app/data/model/service_model.dart';
+import 'package:gully_app/ui/screens/service/service_profile_screen.dart';
 
-class ServiceScreen extends StatefulWidget {
-  const ServiceScreen({super.key});
+import '../../../data/controller/service_controller.dart';
+
+class ServiceHomeScreen extends StatefulWidget {
+  const ServiceHomeScreen({Key? key}) : super(key: key);
 
   @override
-  State<ServiceScreen> createState() => _ServiceScreenState();
+  State<ServiceHomeScreen> createState() => _ServiceHomeScreenState();
 }
 
-class _ServiceScreenState extends State<ServiceScreen> {
-  int _selectedIndex = 0;
-  final PageController _pageController = PageController(initialPage: 0);
-  final List<String> _titles = ['Services', 'Profile'];
+class _ServiceHomeScreenState extends State<ServiceHomeScreen> {
+  final ServiceController _serviceController = Get.put(ServiceController());
+
+  @override
+  void initState() {
+    super.initState();
+    _serviceController.loadServiceData();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // bottomNavigationBar: Container(
-        //   decoration: BoxDecoration(
-        //     border: Border(
-        //       top: BorderSide(color: Colors.grey.shade300, width: 1.0),
-        //     ),
-        //   ),
-        //   child: BottomNavigationBar(
-        //     items: const <BottomNavigationBarItem>[
-        //       BottomNavigationBarItem(
-        //         icon: Icon(Icons.home),
-        //         label: 'Home',
-        //       ),
-        //       BottomNavigationBarItem(
-        //         icon: Icon(Icons.account_circle_outlined),
-        //         label: 'Profile',
-        //       ),
-        //     ],
-        //     currentIndex: _selectedIndex,
-        //     selectedItemColor: Colors.blue,
-        //     unselectedItemColor: Colors.grey,
-        //     showUnselectedLabels: true,
-        //     onTap: (index) {
-        //       setState(() {
-        //         _selectedIndex = index;
-        //         _pageController.jumpToPage(index);
-        //       });
-        //     },
-        //     backgroundColor: Colors.white,
-        //     elevation: 10,
-        //     type: BottomNavigationBarType.fixed,
-        //   ),
-        // ),
-        appBar: AppBar(
-          title: Text(_titles[_selectedIndex]),
-          backgroundColor: const Color(0xff3F5BBF),
-          elevation: 0,
-          titleTextStyle: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-          iconTheme: const IconThemeData(color: Colors.white),
-          centerTitle: true,
+      appBar: AppBar(
+        title: const Text("Services"),
+        backgroundColor: const Color(0xff3F5BBF),
+        elevation: 0,
+        titleTextStyle: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
         ),
-        body: PopScope(
-            // canPop: true,
-            child: PageView(
-          controller: _pageController,
-          children: const <Widget>[
-            Expanded(child: ServiceHomeScreen()),
-            Expanded(child: ServiceProfile()),
-          ],
-        )));
+        iconTheme: const IconThemeData(color: Colors.white),
+        centerTitle: true,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            child: Material(
+              borderRadius: BorderRadius.circular(10),
+              elevation: 5,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(10),
+                onTap: () {
+
+                },
+                child: Ink(
+                  height: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.grey),
+                  ),
+                  child: const Row(
+                    children: [
+                      SizedBox(width: 18),
+                      Icon(
+                        Icons.search_rounded,
+                        color: Colors.grey,
+                      ),
+                      SizedBox(width: 20),
+                      Text(
+                        'Search...',
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: Obx(() => ListView.builder(
+                  itemCount: _serviceController.servicelist.length,
+                  padding: const EdgeInsets.all(16),
+                  itemBuilder: (context, index) {
+                    final service = _serviceController.servicelist[index];
+                    return Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      margin: const EdgeInsets.only(bottom: 16),
+                      child: InkWell(
+                        onTap: () {
+                          Get.to(() => ServiceProfileScreen(service: service));
+                        },
+                        borderRadius: BorderRadius.circular(12),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // ClipRRect(
+                              //   borderRadius: BorderRadius.circular(8),
+                              //   child:service.providerimage.isNotEmpty && service.providerimage!=null ? Image.asset(
+                              //     service.providerimage,
+                              //     width: 100,
+                              //     height: 100,
+                              //     fit: BoxFit.contain,
+                              //   ):Image.asset('assets/images/logo.png')
+                              // ),
+                              ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.asset(
+                                    'assets/images/logo.png',
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.contain,
+                                  )),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      service.providerName,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 6),
+                                    Text(
+                                      service.serviceDescription,
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                    Text(
+                                      '₹${service.serviceCharges}',
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                    Text(
+                                      service.providerLocation,
+                                      style: const TextStyle(
+                                        color: Colors.black54,
+                                        fontSize: 14,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                )),
+          ),
+        ],
+      ),
+    );
   }
 }

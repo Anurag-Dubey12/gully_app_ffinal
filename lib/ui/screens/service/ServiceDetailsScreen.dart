@@ -15,7 +15,7 @@ class ServiceDetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(service.name),
+        title: Text(service.providerName),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -24,7 +24,7 @@ class ServiceDetailsScreen extends StatelessWidget {
             // Image carousel
             CarouselSlider(
               options: CarouselOptions(height: 200.0),
-              items: service.imageUrls.map((url) {
+              items: service.galleryImages.map((url) {
                 return Builder(
                   builder: (BuildContext context) {
                     return Container(
@@ -47,7 +47,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    service.name,
+                    service.providerName,
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -59,7 +59,7 @@ class ServiceDetailsScreen extends StatelessWidget {
                     'Description:',
                     
                   ),
-                  Text(service.description),
+                  Text(service.serviceDescription),
                   const SizedBox(height: 16),
                   Text(
                     'Service Charges: ₹${service.serviceCharges}',
@@ -77,13 +77,13 @@ class ServiceDetailsScreen extends StatelessWidget {
                   ),
                   Wrap(
                     spacing: 8.0,
-                    children: service.offeredServices
+                    children: service.offeredServiceList
                         .map((s) => Chip(label: Text(s)))
                         .toList(),
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Location: ${service.location}',
+                    'Location: ${service.providerLocation}',
                   
                   ),
                   const SizedBox(height: 16),
@@ -92,9 +92,9 @@ class ServiceDetailsScreen extends StatelessWidget {
                     
                   ),
                   ListTile(
-                    title: Text(service.package.name),
-                    subtitle: Text(service.package.duration),
-                    trailing: Text('₹${service.package.price}'),
+                    title: Text(service.servicePackage.name),
+                    subtitle: Text(service.servicePackage.duration),
+                    trailing: Text('₹${service.servicePackage.price}'),
                   ),
                 ],
               ),

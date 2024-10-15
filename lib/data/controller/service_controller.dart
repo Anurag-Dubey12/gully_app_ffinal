@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/service_model.dart';
-import 'package:gully_app/data/model/package_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -12,7 +11,6 @@ class ServiceController extends GetxController with StateMixin {
   Rx<ServiceModel?> service = Rx<ServiceModel?>(null);
   RxList<ServiceModel> servicelist = <ServiceModel>[].obs;
 
-  // New variables to match ServiceRegister
   final RxList<String> selectedServices = <String>[].obs;
   final RxList<XFile> images = <XFile>[].obs;
   final RxList<XFile> documentImages = <XFile>[].obs;
@@ -43,8 +41,8 @@ class ServiceController extends GetxController with StateMixin {
     final prefs = await SharedPreferences.getInstance();
     final data = prefs.getString('serviceList');
     if (data != null) {
-      servicelist.clear();
-      servicelist.addAll(jsonDecode(data).map<ServiceModel>((json) => ServiceModel.fromJson(json)).toList());
+      servicelist.add(jsonDecode(data).map<ServiceModel>((json) => ServiceModel.fromJson(json)).toList());
+      logger.d('The Service data is loaded and the service list is ${servicelist.map((s) => s.toJson()).toList()}');
     }
   }
 
@@ -53,7 +51,6 @@ class ServiceController extends GetxController with StateMixin {
     saveServiceData();
   }
 
-  // New methods to match ServiceRegister functionality
   void updateSelectedServices(List<String> services) {
     selectedServices.value = services;
   }

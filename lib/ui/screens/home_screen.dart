@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -10,7 +8,6 @@ import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/ui/screens/search_tournament_screen.dart';
-import 'package:gully_app/ui/screens/service/my_service_screen.dart';
 import 'package:gully_app/ui/screens/service/service_home_screen.dart';
 import 'package:gully_app/ui/screens/shop/shops_home_screen.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
@@ -18,7 +15,6 @@ import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/app_drawer.dart';
 import 'package:gully_app/ui/widgets/home_screen/date_times_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
-import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
@@ -104,8 +100,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       const HomePageContent(),
       const ShopHome(),
       const SizedBox(),
-      const ServiceScreen(),
-      const ServiceScreen(),
+      const ServiceHomeScreen(),
+      const ServiceHomeScreen(),
     ];
   }
 

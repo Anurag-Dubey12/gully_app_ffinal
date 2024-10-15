@@ -289,7 +289,7 @@ class _InputRoundNumberState extends State<_InputRoundNumber> {
   void _toggleDropdown() {
     if (_overlayEntry == null) {
       _overlayEntry = _createOverlayEntry();
-      Overlay.of(context)!.insert(_overlayEntry!);
+      Overlay.of(context).insert(_overlayEntry!);
     } else {
       _overlayEntry!.remove();
       _overlayEntry = null;

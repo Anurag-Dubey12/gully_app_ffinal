@@ -1,21 +1,18 @@
-import 'package:flutter/foundation.dart';
 import 'package:gully_app/data/model/package_model.dart';
 import 'package:json_annotation/json_annotation.dart';
+
 part 'service_model.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class ServiceModel {
-  @JsonKey(name: '_id')
-  final String id;
+  @JsonKey(name: 'id')
+  final String serviceId;
 
-  @JsonKey(name: 'service_name')
-  final String name;
-
-  @JsonKey(name: 'Username')
+  @JsonKey(name: 'provider_name')
   final String providerName;
 
   @JsonKey(name: 'provider_image')
-  final String providerimage;
+  final String providerImageUrl;
 
   @JsonKey(name: 'provider_phone_number')
   final String providerPhoneNumber;
@@ -27,41 +24,40 @@ class ServiceModel {
   final int serviceCharges;
 
   @JsonKey(name: 'description')
-  final String description;
+  final String serviceDescription;
 
   @JsonKey(name: 'years_of_experience')
   final int yearsOfExperience;
 
   @JsonKey(name: 'offered_services')
-  final List<String> offeredServices;
+  final List<String> offeredServiceList;
 
   @JsonKey(name: 'location')
-  final String location;
+  final String providerLocation;
 
   @JsonKey(name: 'image_urls')
-  final List<String> imageUrls;
+  final List<String> galleryImages;
 
   @JsonKey(name: 'document_urls')
   final List<String> documentUrls;
 
   @JsonKey(name: 'package')
-  final PackageModel package;
+  final PackageModel servicePackage;
 
   ServiceModel({
-    required this.id,
-    required this.name,
+    required this.serviceId,
     required this.providerName,
-    required this.providerimage,
+    required this.providerImageUrl,
     required this.providerPhoneNumber,
     required this.providerAge,
     required this.serviceCharges,
-    required this.description,
+    required this.serviceDescription,
     required this.yearsOfExperience,
-    required this.offeredServices,
-    required this.location,
-    required this.imageUrls,
+    required this.offeredServiceList,
+    required this.providerLocation,
+    required this.galleryImages,
     required this.documentUrls,
-    required this.package,
+    required this.servicePackage,
   });
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) => _$ServiceModelFromJson(json);

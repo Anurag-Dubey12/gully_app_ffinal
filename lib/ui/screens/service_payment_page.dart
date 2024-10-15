@@ -126,7 +126,7 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                     const SizedBox(height: 5),
                     AdvertisementSummary(
                       label: 'Name',
-                      value: widget.service.name,
+                      value: widget.service.providerName,
                     ),
                     AdvertisementSummary(
                       label: 'Contact Number',
@@ -138,7 +138,7 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                     ),
                     AdvertisementSummary(
                       label: 'Location',
-                      value: widget.service.location,
+                      value: widget.service.providerLocation,
                     ),
                     AdvertisementSummary(
                       label: 'Charges',
@@ -157,15 +157,15 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                     ),
                     AdvertisementSummary(
                       label: 'Package Name',
-                      value: widget.service.package.name,
+                      value: widget.service.servicePackage.name,
                     ),
                     AdvertisementSummary(
                       label: 'Duration',
-                      value: widget.service.package.duration,
+                      value: widget.service.servicePackage.duration,
                     ),
                     AdvertisementSummary(
                       label: 'End Date',
-                      value: widget.service.package.endDate,
+                      value: widget.service.servicePackage.endDate,
                     ),
                     const Center(
                       child: Text(
@@ -178,14 +178,14 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    if (widget.service.offeredServices.isNotEmpty)
-                      ...widget.service.offeredServices.asMap().entries.map((entry) {
+                    if (widget.service.offeredServiceList.isNotEmpty)
+                      ...widget.service.offeredServiceList.asMap().entries.map((entry) {
                         return ServiceOfferItem(
                           index: entry.key + 1,
                           service: entry.value,
                         );
                       }),
-                    if (widget.service.offeredServices.isEmpty)
+                    if (widget.service.offeredServiceList.isEmpty)
                       const Center(
                         child: Text(
                           'No services offered',

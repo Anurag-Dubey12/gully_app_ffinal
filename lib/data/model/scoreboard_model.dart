@@ -177,19 +177,6 @@ class ScoreboardModel {
       return team1.players!.firstWhere((element) => element.id == bowlerId);
     }
   }
-
-  // String get bowlerName {
-  //   if (currentInnings == 1) {
-  //     return team2.players!
-  //         .firstWhere((element) => element.id == bowlerId)
-  //         .name;
-  //   } else {
-  //     return team1.players!
-  //         .firstWhere((element) => element.id == bowlerId)
-  //         .name;
-  //   }
-  // }
-
   ExtraModel get currentExtras {
     return extras;
   }

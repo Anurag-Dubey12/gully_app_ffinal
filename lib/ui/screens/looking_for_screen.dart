@@ -85,7 +85,7 @@ class _LookingForScreenState extends State<LookingForScreen> {
                     "I am looking for a Teammate to join as an All-rounder"
                   ], isAds: false,
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 FormInput(
                   controller: _addressController,
                   label: 'Select Location',
@@ -124,11 +124,11 @@ class _LookingForScreenState extends State<LookingForScreen> {
                     );
                   },
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 const Text('Contact No',
                     style:
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 10),
+                const SizedBox(height: 5),
                 CustomTextField(
                   controller: _contactController,
                   filled: true,
@@ -136,7 +136,7 @@ class _LookingForScreenState extends State<LookingForScreen> {
                   textInputType: TextInputType.number,
                   maxLen: 10,
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 20),
                 Center(
                   child: SizedBox(
                     width: Get.width / 2,

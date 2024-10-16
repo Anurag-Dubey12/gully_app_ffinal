@@ -798,16 +798,13 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
               setState(() {
                 tournamentType = e;
               });
-              // Get.back();
-              // Get.close();
             },
             selectedValue: tournamentType.toUpperCase(),
             items: const ['turf', 'corporate', 'series', 'open'],
             isAds: false,
-            iswhite: false,
           ),
           const SizedBox(
-            height: 18,
+            height: 10,
           ),
           Text(AppLocalizations.of(context)!.ballType,
               style: Get.textTheme.headlineMedium?.copyWith(
@@ -816,7 +813,6 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
                   fontSize: 16)),
           DropDownWidget(
             title: AppLocalizations.of(context)!.selectBallType,
-            iswhite: false,
             onSelect: (e) {
               setState(() {
                 ballType = e;
@@ -847,7 +843,6 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
                             fontSize: 16)),
                     DropDownWidget(
                       title: AppLocalizations.of(context)!.selectPitchType,
-                      iswhite: false,
                       onSelect: (e) {
                         setState(() {
                           pitchType = e;
@@ -1086,19 +1081,6 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             iswhite: false,
             filled: true,
             onTap: () async {
-              // Get.dialog(const Dialog(
-              //   child: Padding(
-              //     padding: EdgeInsets.all(28.0),
-              //     child: Column(
-              //       mainAxisSize: MainAxisSize.min,
-              //       children: [
-              //         CircularProgressIndicator(),
-              //       ],
-              //     ),
-              //   ),
-              // ));
-
-              // Get.back();
               Get.to(
                 () => SelectLocationScreen(
                   onSelected: (e, l) {
@@ -1108,20 +1090,9 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
                     if (l != null) {
                       setState(() {
                         location = l;
-                        // ScaffoldMessenger.of(context).showSnackBar(
-                        //   SnackBar(content: Text(l.toString())),
-                        // );
                         logger.d("The Location is $l");
                       });
                     }
-                    // if(l==null){
-                    //   ScaffoldMessenger.of(context).showSnackBar(
-                    //     SnackBar(
-                    //       content: Text("Location not selected"),
-                    //     ),
-                    //   );
-                    // }
-
                     FocusScope.of(context).unfocus();
                   },
                   initialLocation:

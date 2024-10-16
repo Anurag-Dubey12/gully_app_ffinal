@@ -22,15 +22,6 @@ class ServiceController extends GetxController with StateMixin {
     saveServiceData();
   }
 
-  void resetAllData() {
-    service.value = null;
-    selectedServices.clear();
-    images.clear();
-    documentImages.clear();
-    location.value = null;
-    selectedPackage.value = null;
-  }
-
   Future<void> saveServiceData() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('serviceList', jsonEncode(servicelist.map((s) => s.toJson()).toList()));
@@ -77,5 +68,14 @@ class ServiceController extends GetxController with StateMixin {
 
   void updateSelectedPackage(Map<String, dynamic> package) {
     selectedPackage.value = package;
+  }
+
+  void resetAllData() {
+    service.value = null;
+    selectedServices.clear();
+    images.clear();
+    documentImages.clear();
+    location.value = null;
+    selectedPackage.value = null;
   }
 }

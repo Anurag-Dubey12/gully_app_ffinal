@@ -161,6 +161,7 @@ class ScoreBoardController extends GetxController with StateMixin {
       _scoreboardApi.updateChallengeScoreBoard(scoreboard.value!.toJson());
     }
   }
+
   String getPlayerName(String? playerId) {
     if (playerId == null) return '';
 
@@ -232,9 +233,9 @@ class ScoreBoardController extends GetxController with StateMixin {
     if (scoreboard.value?.inningsCompleted ?? false) {
       errorSnackBar(
           'First Innings has been completed you can start 2nd Innings');
-
       return false;
     }
+
 
     _lastScoreboardInstance =
         ScoreboardModel.fromJson(scoreboard.value!.toJson());
@@ -308,6 +309,8 @@ class ScoreBoardController extends GetxController with StateMixin {
         break;
       default:
     }
+
+
     if (scoreboard.value!.isSecondInningsOver &&
         !scoreboard.value!.isChallenge!) {
       updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
@@ -375,19 +378,6 @@ class ScoreBoardController extends GetxController with StateMixin {
       );
     }
   }
-  // void checkLastBall() {
-  //   if (scoreboard.value!.currentBall == 6) {
-  //     scoreboard.value!.overCompleted = true;
-  //     scoreboard.value!.currentBall = 0;
-  //     scoreboard.value!.currentOver++;
-  //     showModalBottomSheet(
-  //         context: Get.context!,
-  //         builder: (c) => const ChangeBowlerWidget(),
-  //         enableDrag: true,
-  //         isDismissible: true
-  //     );
-  //   }
-  // }
 
   void addEventType(EventType type) {
     if (type == EventType.noBall && events.value.contains(EventType.wide)) {

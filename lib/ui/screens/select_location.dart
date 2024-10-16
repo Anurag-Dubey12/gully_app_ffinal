@@ -344,7 +344,6 @@ class _AddManualPlaceState extends State<_AddManualPlace> {
   }
 }
 
-//Sir Code
 class _SearchBar extends StatelessWidget {
   final Function(String address, LatLng? latlng)? onSelected;
   const _SearchBar({required this.onSelected});
@@ -401,79 +400,3 @@ class _SearchBar extends StatelessWidget {
     );
   }
 }
-
-//My Code
-// class _SearchBar extends StatefulWidget {
-//   final Function(String address, LatLng? latlng)? onSelected;
-//
-//   const _SearchBar({required this.onSelected});
-//
-//   @override
-//   State<_SearchBar> createState() => _SearchBarState();
-// }
-//
-// class _SearchBarState extends State<_SearchBar> {
-//   String searchText = '';
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(
-//       child: Container(
-//         height: 50,
-//         width: Get.width * 0.86,
-//         decoration: BoxDecoration(
-//           color: Colors.white,
-//           borderRadius: BorderRadius.circular(10),
-//           boxShadow: [
-//             BoxShadow(
-//               color: Colors.black.withOpacity(0.1),
-//               blurRadius: 5,
-//               spreadRadius: 2,
-//               offset: const Offset(0, 1),
-//             )
-//           ],
-//         ),
-//         child: Row(
-//           children: [
-//             const Padding(
-//               padding: EdgeInsets.symmetric(horizontal: 10.0),
-//               child: Icon(Icons.search, color: Colors.yellow),
-//             ),
-//             Expanded(
-//               child: TextField(
-//                 onTap: () {
-//                   Get.to(() => SearchPlacesScreen(
-//                     onSelected: (prediction) {
-//                       setState(() {
-//                         searchText = prediction.description ?? '';
-//                       });
-//                       widget.onSelected?.call(
-//                         prediction.description ?? 'No Address',
-//                         prediction.lat == null || prediction.lng == null
-//                             ? null
-//                             : LatLng(
-//                           double.parse(prediction.lat!),
-//                           double.parse(prediction.lng!),
-//                         ),
-//                       );
-//                       Get.back();
-//                     },
-//                   ));
-//                 },
-//                 controller: TextEditingController(text: searchText),
-//                 readOnly: true,
-//                 decoration: InputDecoration(
-//                   hintText: 'Search for a location',
-//                   hintStyle: Get.textTheme.bodyLarge?.copyWith(
-//                     color: Colors.grey,
-//                   ),
-//                   border: InputBorder.none,
-//                 ),
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

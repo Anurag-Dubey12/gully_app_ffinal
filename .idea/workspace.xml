@@ -9,14 +9,9 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify services screen">
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify google map screen">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/service_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/service_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/looking_for_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/looking_for_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_location.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_location.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,14 +169,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00014" summary="modify scoreboard">
-      <option name="closed" value="true" />
-      <created>1722253642033</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1722253642033</updated>
     </task>
     <task id="LOCAL-00015" summary="modify scoreboard">
       <option name="closed" value="true" />
@@ -567,7 +554,15 @@
       <option name="project" value="LOCAL" />
       <updated>1728993456114</updated>
     </task>
-    <option name="localTasksCounter" value="63" />
+    <task id="LOCAL-00063" summary="modify google map screen">
+      <option name="closed" value="true" />
+      <created>1729079913942</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1729079913943</updated>
+    </task>
+    <option name="localTasksCounter" value="64" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -588,7 +583,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="modify by adding new item" />
     <MESSAGE value="need to solve round feature problem" />
     <MESSAGE value="modify scoreboard" />
     <MESSAGE value="need to modify select_opening_players.dart screen for player list" />
@@ -613,7 +607,8 @@
     <MESSAGE value="modify tournament form screen" />
     <MESSAGE value="modify register shop screen and tournament form screen and register service screen" />
     <MESSAGE value="modify services screen" />
-    <option name="LAST_COMMIT_MESSAGE" value="modify services screen" />
+    <MESSAGE value="modify google map screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="modify google map screen" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -972,6 +967,12 @@
           <option name="totalLines" value="5357280" />
           <option name="info" value="modify services screen" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1729079932945" />
+          <option name="linesCode" value="36219" />
+          <option name="totalLines" value="5356917" />
+          <option name="info" value="modify google map screen" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1329,6 +1330,12 @@
           <option name="linesCode" value="36221" />
           <option name="totalLines" value="5357280" />
           <option name="info" value="Oct 15, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1729079932945" />
+          <option name="linesCode" value="36219" />
+          <option name="totalLines" value="5356917" />
+          <option name="info" value="Oct 16, 2024" />
         </TimePoint>
       </list>
     </option>

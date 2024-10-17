@@ -313,6 +313,9 @@ class ScoreBoardController extends GetxController with StateMixin {
 
     if (scoreboard.value!.isSecondInningsOver &&
         !scoreboard.value!.isChallenge!) {
+      if(scoreboard.value!.firstInnings!.totalScore==scoreboard.value!.secondInnings!.totalScore){
+
+      }
       updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
     } else if (scoreboard.value!.isSecondInningsOver &&
         scoreboard.value!.isChallenge!) {

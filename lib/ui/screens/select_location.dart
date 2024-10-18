@@ -75,7 +75,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
             child: Scaffold(
               backgroundColor: Colors.transparent,
               bottomNavigationBar: Container(
-                height: 90,
+                height: 65,
                 decoration: BoxDecoration(color: Colors.white, boxShadow: [
                   BoxShadow(
                       color: Colors.black.withOpacity(0.1),
@@ -87,7 +87,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 35.0, vertical: 19),
+                          horizontal: 10.0, vertical: 5),
                       child: PrimaryButton(
                         onTap: () async {
                           showModalBottomSheet(
@@ -103,7 +103,6 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
                                   },
                                 );
                               });
-
                           setState(() {});
                         },
                         title: 'Add Manually',

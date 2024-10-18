@@ -156,13 +156,15 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
   void _nextPage() {
     if (_formKeys[currentStep].currentState!.validate()) {
       _formKeys[currentStep].currentState!.save();
-      if(from ==null && to ==null){
-        errorSnackBar('Please select tournament start and end date');
-        return;
-      }
-      if(currentStep==0 && _image==null){
-        errorSnackBar('Please select a cover image');
-        return;
+      if (widget.tournament == null) {
+        if (from == null && to == null) {
+          errorSnackBar('Please select tournament start and end date');
+          return;
+        }
+        if (currentStep == 0 && _image == null) {
+          errorSnackBar('Please select a cover image');
+          return;
+        }
       }
       if (currentStep < _formKeys.length - 1) {
         setState(() {

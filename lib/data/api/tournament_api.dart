@@ -8,11 +8,12 @@ class TournamentApi {
   final GetConnectClient repo;
   const TournamentApi({required this.repo});
   Future<ApiResponse> createTournament(Map<String, dynamic> tournament) async {
+
     var response = await repo.post('/main/createTournament', tournament);
+    logger.d(response.body);
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }
-
     return ApiResponse.fromJson(response.body);
   }
 

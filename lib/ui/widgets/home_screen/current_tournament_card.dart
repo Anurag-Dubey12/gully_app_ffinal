@@ -201,7 +201,7 @@ class _Card extends StatelessWidget {
   }
 
   String _getScore(dynamic innings) {
-    if (innings == null) return 'YTB';
+    if (innings == null) return 'DNB';
     int? totalScore = innings.totalScore;
     int? totalWickets = innings.totalWickets;
     if (totalScore == null || totalWickets == null) return 'N/A';

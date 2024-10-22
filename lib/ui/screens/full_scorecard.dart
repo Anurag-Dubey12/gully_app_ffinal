@@ -366,12 +366,11 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                                   }),
                                 ),
                                 const SizedBox(height: 10),
-                                widget.scoreboard!=null?
+                                widget.scoreboard!=null ?
                                 ExtrasAndTotal(
                                   currentInning: currentInning,
                                   scoreboard: widget.scoreboard,
-                                ):
-                                ExtrasAndTotal(currentInning: currentInning),
+                                ):ExtrasAndTotal(currentInning: currentInning),
                                 const Divider(height: 1),
                                 Column(
                                     children: [

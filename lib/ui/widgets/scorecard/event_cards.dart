@@ -8,6 +8,7 @@ import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../../data/controller/scoreboard_controller.dart';
+import 'TieBreakerSheet.dart';
 import 'scorecard_dialogs.dart';
 
 class PartnershipDialog extends GetView<ScoreBoardController> {
@@ -298,6 +299,7 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                     title: 'Leg byes',
                     eventType: EventType.legByes,
                   ),
+
                 ],
               ),
               Row(

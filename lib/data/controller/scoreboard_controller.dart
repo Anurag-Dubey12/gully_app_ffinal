@@ -11,6 +11,7 @@ import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
+import '../../ui/widgets/scorecard/TieBreakerSheet.dart';
 import '../model/matchup_model.dart';
 
 class ScoreBoardController extends GetxController with StateMixin {
@@ -84,7 +85,21 @@ class ScoreBoardController extends GetxController with StateMixin {
         successSnackBar('Team ${scoreboard.value?.team2.name} Won the Match');
       }
       if (firstInning == secondInning) {
-        errorSnackBar('The Match is Drawn');
+        // errorSnackBar('The Match is Drawn');
+        showModalBottomSheet(
+          context: Get.context!,
+          isScrollControlled: true,
+          builder: (context) => TieBreakerSheet(
+            scoreboard: scoreboard.value!,
+            onSubmit: (String winningTeamId) {
+              final winningTeam = winningTeamId == scoreboard.value!.team1.id
+                  ? scoreboard.value!.team1.name
+                  : scoreboard.value!.team2.name;
+              successSnackBar('$winningTeam wins the match!');
+              updateFinalScoreBoard(winningTeamId);
+            },
+          ),
+        );
       }
     } else if (scoreboard.value?.isFirstInningsOver ?? false) {
       successSnackBar(
@@ -313,9 +328,10 @@ class ScoreBoardController extends GetxController with StateMixin {
 
     if (scoreboard.value!.isSecondInningsOver &&
         !scoreboard.value!.isChallenge!) {
-      if(scoreboard.value!.firstInnings!.totalScore==scoreboard.value!.secondInnings!.totalScore){
+      if (scoreboard.value!.firstInnings!.totalScore == scoreboard.value!.secondInnings!.totalScore) {
 
       }
+
       updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
     } else if (scoreboard.value!.isSecondInningsOver &&
         scoreboard.value!.isChallenge!) {

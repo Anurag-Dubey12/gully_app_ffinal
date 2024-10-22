@@ -71,6 +71,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
   late AnimationController _progressController;
   late Animation<double> _progressAnimation;
   XFile? _image;
+  String defaultImagePath = 'assets/images/logo.png';
+  bool isDefaultImage = true;
 
   pickImage() async {
     if (widget.tournament != null && isCoHost()) {
@@ -81,6 +83,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
     if (img != null) {
       setState(() {
         _image = img;
+        isDefaultImage = false;
       });
     }
     setState(() {});
@@ -196,12 +199,12 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
         Get.find<TournamentController>();
         final AuthController authController = Get.find<AuthController>();
         // if (_key.currentState!.validate()) {
-          if (_image == null &&
-              widget.tournament?.coverPhoto == null) {
-            errorSnackBar(
-                'Please select a cover image');
-            return;
-          }
+        //   if (_image == null &&
+        //       widget.tournament?.coverPhoto == null) {
+        //     errorSnackBar(
+        //         'Please select a cover image');
+        //     return;
+        //   }
           if (isCoHost()) {
             errorSnackBar(
                 'Co-hosts are not allowed to edit tournament details');
@@ -221,6 +224,13 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             base64 =
                 await convertImageToBase64(_image!);
           }
+        // if (_image != null) {
+        //   base64 = await convertImageToBase64(_image!);
+        // } else {
+        //   logger.d("Default condtion is called");
+        //   final defaultImage = XFile(defaultImagePath);
+        //   base64 = await convertImageToBase64(defaultImage);
+        // }
           Map<String, dynamic> tournament = {
             "tournamentStartDateTime":
             from?.toIso8601String(),
@@ -492,41 +502,12 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             ),
             body: Stack(
               children: [
-                // ClipPath(
-                //   clipper: ArcClipper(),
-                //   child: Container(
-                //     decoration: BoxDecoration(
-                //       gradient: const RadialGradient(
-                //         colors: [
-                //           Color(0xff368EBF),
-                //           AppTheme.primaryColor,
-                //         ],
-                //         center: Alignment(-0.4, -0.8),
-                //       ),
-                //       boxShadow: [
-                //         BoxShadow(
-                //             color: AppTheme.secondaryYellowColor
-                //                 .withOpacity(0.3),
-                //             blurRadius: 20,
-                //             spreadRadius: 2,
-                //             offset: const Offset(0, 70))
-                //       ],
-                //     ),
-                //     width: double.infinity,
-                //   ),
-                // ),
                 SizedBox(
                   width: Get.width,
                   height: Get.height,
                   // color: Colors.black26,
                   child: Column(
                     children: [
-                      // LinearProgressIndicator(
-                      //   value: (currentStep + 1) / 3,
-                      //   backgroundColor: Colors.grey[300],
-                      //   valueColor: AlwaysStoppedAnimation<Color>(
-                      //       Theme.of(context).primaryColor),
-                      // ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -1054,7 +1035,6 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
               // if (!regex.hasMatch(e)) {
               //   return "Please enter valid rules";
               // }
-
               return null;
             },
             maxLines: 5,

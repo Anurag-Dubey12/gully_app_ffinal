@@ -312,15 +312,6 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                             ),
                                           ],
                                         ),
-                                        // if (controller.scoreboard.value?.currentInnings == 2)
-                                        //   const BlinkingText(
-                                        //     text: 'Batting',
-                                        //     style: TextStyle(
-                                        //       color: Colors.green,
-                                        //       fontWeight: FontWeight.bold,
-                                        //       fontSize: 10,
-                                        //     ),
-                                        //   ),
                                         const SizedBox(
                                           height: 10,
                                         ),

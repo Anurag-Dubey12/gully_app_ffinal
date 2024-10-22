@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/ui/screens/player_profile_screen.dart';
 import 'package:gully_app/ui/screens/search_tournament_screen.dart';
 import 'package:gully_app/ui/screens/service/service_home_screen.dart';
 import 'package:gully_app/ui/screens/shop/shops_home_screen.dart';
@@ -17,9 +18,11 @@ import 'package:gully_app/ui/widgets/home_screen/date_times_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
+import 'package:iconsax/iconsax.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../widgets/home_screen/SliverAppBarDelegate.dart';
 import '../widgets/home_screen/top_header.dart';
+import 'organizer_profile.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,7 +45,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<AuthController>();
-
     return Obx(() {
       if (controller.state == null) {
         logger.i('state is null');
@@ -73,10 +75,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   late PersistentTabController _controller;
   late AnimationController _animationController;
   late Animation<double> _animation;
+  bool isOrganizer=false;
 
   @override
   void initState() {
     super.initState();
+    final controller = Get.find<AuthController>();
     _controller = PersistentTabController(initialIndex: 0);
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -86,6 +90,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       parent: _animationController,
       curve: Curves.easeInOut,
     );
+    if (controller.state!.isOrganizer) {
+      isOrganizer = true;
+    } else {
+       isOrganizer= false;
+    }
   }
 
   @override
@@ -98,10 +107,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   List<Widget> _buildScreens() {
     return [
       const HomePageContent(),
-      const ShopHome(),
       const SizedBox(),
-      const ServiceHomeScreen(),
-      const ServiceHomeScreen(),
+      isOrganizer ? const OrganizerProfileScreen(): const PlayerProfileScreen()
     ];
   }
 
@@ -114,29 +121,17 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.shopify_rounded),
-        title: "Shop",
-        activeColorPrimary: AppTheme.primaryColor,
-        inactiveColorPrimary: Colors.grey,
-      ),
-      PersistentBottomNavBarItem(
         icon: const Icon(Icons.circle),
         title: "",
         activeColorPrimary: Colors.transparent,
         inactiveColorPrimary: Colors.transparent,
         onPressed: (context) {
-          // Handle center button press
+
         },
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.home_repair_service),
-        title: "Service",
-        activeColorPrimary: AppTheme.primaryColor,
-        inactiveColorPrimary: Colors.grey,
-      ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.home_repair_service),
-        title: "Service",
+        icon: const Icon(Icons.person),
+        title: "Profile",
         activeColorPrimary: AppTheme.primaryColor,
         inactiveColorPrimary: Colors.grey,
       ),

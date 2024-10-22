@@ -10,6 +10,8 @@ import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 
+import 'app_logger.dart';
+
 Future<XFile?> imagePickerHelper() async {
   final ImagePicker picker = ImagePicker();
   final XFile? image =
@@ -30,6 +32,7 @@ Future<String> convertImageToBase64(XFile image) async {
   final mimeType = lookupMimeType(image.path);
 
   final String base64Image = base64Encode(bytes);
+  logger.d("The base64 image is: $base64Image");
   return mimeType != null ? 'data:$mimeType;base64,$base64Image' : base64Image;
 }
 

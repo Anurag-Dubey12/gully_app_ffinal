@@ -164,10 +164,10 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
           errorSnackBar('Please select tournament start and end date');
           return;
         }
-        if (currentStep == 0 && _image == null) {
-          errorSnackBar('Please select a cover image');
-          return;
-        }
+        // if (currentStep == 0 && _image == null) {
+        //   errorSnackBar('Please select a cover image');
+        //   return;
+        // }
       }
       if (currentStep < _formKeys.length - 1) {
         setState(() {
@@ -231,6 +231,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
         //   final defaultImage = XFile(defaultImagePath);
         //   base64 = await convertImageToBase64(defaultImage);
         // }
+
           Map<String, dynamic> tournament = {
             "tournamentStartDateTime":
             from?.toIso8601String(),
@@ -290,8 +291,9 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             final tournamentModel =
                 await tournamentController
                 .createTournament(tournament);
-
             authController.getUser();
+            logger.d("The Tournament id is:${tournamentModel.id}");
+
             // if (tournament != null) {
             //   final result = await Get.to(() => PaymentPage(tournament: tournamentModel));
             //   if (result == null || result == false) {

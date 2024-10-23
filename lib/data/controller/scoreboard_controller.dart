@@ -85,21 +85,8 @@ class ScoreBoardController extends GetxController with StateMixin {
         successSnackBar('Team ${scoreboard.value?.team2.name} Won the Match');
       }
       if (firstInning == secondInning) {
-        // errorSnackBar('The Match is Drawn');
-        showModalBottomSheet(
-          context: Get.context!,
-          isScrollControlled: true,
-          builder: (context) => TieBreakerSheet(
-            scoreboard: scoreboard.value!,
-            onSubmit: (String winningTeamId) {
-              final winningTeam = winningTeamId == scoreboard.value!.team1.id
-                  ? scoreboard.value!.team1.name
-                  : scoreboard.value!.team2.name;
-              successSnackBar('$winningTeam wins the match!');
-              updateFinalScoreBoard(winningTeamId);
-            },
-          ),
-        );
+        errorSnackBar('The Match is Drawn');
+
       }
     } else if (scoreboard.value?.isFirstInningsOver ?? false) {
       successSnackBar(
@@ -329,9 +316,21 @@ class ScoreBoardController extends GetxController with StateMixin {
     if (scoreboard.value!.isSecondInningsOver &&
         !scoreboard.value!.isChallenge!) {
       if (scoreboard.value!.firstInnings!.totalScore == scoreboard.value!.secondInnings!.totalScore) {
-
+        showModalBottomSheet(
+          context: Get.context!,
+          isScrollControlled: true,
+          builder: (context) => TieBreakerSheet(
+            scoreboard: scoreboard.value!,
+            onSubmit: (String winningTeamId) {
+              final winningTeam = winningTeamId == scoreboard.value!.team1.id
+                  ? scoreboard.value!.team1.name
+                  : scoreboard.value!.team2.name;
+              successSnackBar('$winningTeam wins the match!');
+              updateFinalScoreBoard(winningTeamId);
+            },
+          ),
+        );
       }
-
       updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
     } else if (scoreboard.value!.isSecondInningsOver &&
         scoreboard.value!.isChallenge!) {

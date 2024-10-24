@@ -9,13 +9,12 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="added match score tie screen">
-      <change afterPath="$PROJECT_DIR$/lib/data/api/banner_promotion_api.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/data/controller/banner_promotion_controller.dart" afterDir="false" />
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="nothing">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/google-services.json" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/google-services.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/firebase.json" beforeDir="false" afterPath="$PROJECT_DIR$/firebase.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -94,7 +93,7 @@
     "DEBUGGABLE_DEVICE": "lava_lxx507-192.168.29.122:37709",
     "DEBUGGABLE_PROCESS": "com.nileegames.gullyteam",
     "DEBUGGER_ID": "Java",
-    "Flutter.main.dart.executor": "Debug",
+    "Flutter.main.dart.executor": "Run",
     "Gradle.C:/Users/abcom/Documents/Software/gully_app [signingReport].executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -110,15 +109,15 @@
     "ignore.virus.scanning.warn.message": "true",
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/abcom/Documents/Software/gully_app/assets/images",
+    "last_opened_file_path": "C:/Users/abcom/Documents/Software/gully_app/android/app",
     "settings.editor.selected.configurable": "flutter.settings",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\abcom\Documents\Software\gully_app\assets\images" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app" />
+      <recent name="C:\Users\abcom\Documents\Software\gully_app\assets\images" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app\lib" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app" />
       <recent name="C:\Users\abcom\Documents\gully_app\assets\images" />
@@ -174,14 +173,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00018" summary="modify">
-      <option name="closed" value="true" />
-      <created>1722512121607</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1722512121607</updated>
     </task>
     <task id="LOCAL-00019" summary="need to modify select_opening_players.dart screen for player list">
       <option name="closed" value="true" />
@@ -567,7 +558,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729598123068</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="nothing">
+      <option name="closed" value="true" />
+      <created>1729684609662</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1729684609662</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -588,7 +587,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="performace" />
     <MESSAGE value="purchase ads screen to be modify" />
     <MESSAGE value="added temprory ads screen and need to add payment screen for banner purchase" />
     <MESSAGE value="modify advertisment summary screen" />
@@ -613,14 +611,15 @@
     <MESSAGE value="modify scorebord" />
     <MESSAGE value="need to modify torunament page" />
     <MESSAGE value="added match score tie screen" />
-    <option name="LAST_COMMIT_MESSAGE" value="added match score tie screen" />
+    <MESSAGE value="nothing" />
+    <option name="LAST_COMMIT_MESSAGE" value="nothing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="Dart">
-          <url>file://$PROJECT_DIR$/lib/data/api/tournament_api.dart</url>
-          <line>278</line>
+          <url>file://$PROJECT_DIR$/lib/data/controller/tournament_controller.dart</url>
+          <line>354</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
@@ -1007,6 +1006,12 @@
           <option name="totalLines" value="7725507" />
           <option name="info" value="added match score tie screen" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1729684631064" />
+          <option name="linesCode" value="36687" />
+          <option name="totalLines" value="7716847" />
+          <option name="info" value="nothing" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1388,6 +1393,12 @@
           <option name="linesCode" value="36685" />
           <option name="totalLines" value="7725507" />
           <option name="info" value="Oct 22, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1729684631064" />
+          <option name="linesCode" value="36687" />
+          <option name="totalLines" value="7716847" />
+          <option name="info" value="Oct 23, 2024" />
         </TimePoint>
       </list>
     </option>

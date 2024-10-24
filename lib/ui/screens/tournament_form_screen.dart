@@ -273,7 +273,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             'coHost2Phone': _cohost2Phone.text.isEmpty
                 ? null
                 : _cohost2Phone.text,
-            // 'disclaimer': _disclaimerController.text,
+            // 'disclaimer': _disclaimerComntroller.text,
           };
           if (widget.tournament != null) {
             bool isOk = await tournamentController
@@ -301,6 +301,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             //     Get.snackbar("Tournament", "Your tournament Deleted Successfully");
             //   }
             // }
+
             Get.to(() => PaymentPage(
                 tournament: tournamentModel));
           }

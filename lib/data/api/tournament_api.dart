@@ -86,9 +86,10 @@ class TournamentApi {
     if (!response.isOk) {
       throw response.body['error'] ?? 'Unable to Process Request';
     }
-
     return ApiResponse.fromJson(response.body);
   }
+
+
 
   Future<ApiResponse> registerTeam({
     required String teamId,
@@ -215,6 +216,8 @@ class TournamentApi {
     final response = await repo.post('/payment/tournamentFees', {
       'tournamentId': tournamentId,
     });
+    logger.d("Response Status Code: ${response.statusCode}");
+    logger.d("Response Body: ${response.body}");
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');
       throw Exception('Server Error');
@@ -291,6 +294,5 @@ class TournamentApi {
       logger.d("Error in API call: $e");
       rethrow;
     }
-
   }
 }

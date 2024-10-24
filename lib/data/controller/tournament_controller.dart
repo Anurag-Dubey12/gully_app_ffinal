@@ -51,6 +51,7 @@ class TournamentController extends GetxController
     }
   }
 
+
   Future<bool> updateTournament(
       Map<String, dynamic> tournament, String tournamentId) async {
     try {
@@ -398,21 +399,6 @@ class TournamentController extends GetxController
       errorSnackBar(e.toString());
       rethrow;
     }
-  }
-
-  final ScrollController scrollController = ScrollController();
-  RxBool isScrollingDown = false.obs;
-
-  void IsUserScrolling() {
-    scrollController.addListener(() {
-      if (scrollController.position.userScrollDirection ==
-          ScrollDirection.reverse) {
-        isScrollingDown.value = true;
-      } else if (scrollController.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        isScrollingDown.value = false;
-      }
-    });
   }
 
 }

@@ -7,22 +7,22 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:625133380:android:ddf8504cc59c17211bb911",
+        "mobilesdk_app_id": "1:625133380:android:5b2c0dc714983dc91bb911",
         "android_client_info": {
           "package_name": "com.nileegames.gullyteam"
         }
       },
       "oauth_client": [
         {
-          "client_id": "625133380-l8f5kh9vrgtc4gbkvkjsq0eic0mucqjo.apps.googleusercontent.com",
+          "client_id": "625133380-kodl6piml0049thlgnsrstssudkvglsk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.nileegames.gullyteam",
-            "certificate_hash": "dbad2cc688baf9323fe2d588265ba8aaa9857604"
+            "certificate_hash": "daa3f59230e24fde198946b55fd16d197f49d835"
           }
         },
         {
-          "client_id": "625133380-hrntakbsvj485ei4uk7ej7vjfmvtt6cg.apps.googleusercontent.com",
+          "client_id": "625133380-rs9vvkr9h3pl7f2qo83i8d2n2nu8ols6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

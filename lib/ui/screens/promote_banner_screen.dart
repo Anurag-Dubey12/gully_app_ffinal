@@ -8,7 +8,7 @@ import 'package:gully_app/ui/screens/select_location.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../data/controller/tournament_controller.dart';
-import '../../data/model/AdvertisementModel.dart';
+import '../../data/model/promote_banner_model.dart';
 import '../../data/model/tournament_model.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/geo_locator_helper.dart';
@@ -29,7 +29,7 @@ class PromoteBannerScreen extends StatefulWidget {
 }
 
 class AdsScreen extends State<PromoteBannerScreen> {
-  AdvertisementModel? advertisementModel;
+  PromoteBannerModel? advertisementModel;
   List<String> selectedAdsTypes = [];
   String? promotionfor;
   DateTime? from;
@@ -102,7 +102,7 @@ class AdsScreen extends State<PromoteBannerScreen> {
   @override
   void initState() {
     super.initState();
-    advertisementModel = AdvertisementModel(
+    advertisementModel = PromoteBannerModel(
       id: '',
       userId: '',
       imageUrl: '',

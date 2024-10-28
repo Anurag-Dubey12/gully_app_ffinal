@@ -10,12 +10,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="nothing">
+      <change afterPath="$PROJECT_DIR$/lib/firebase_options.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/app/google-services.json" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/google-services.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/firebase.json" beforeDir="false" afterPath="$PROJECT_DIR$/firebase.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/api/banner_promotion_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/banner_promotion_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/banner_promotion_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/banner_promotion_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/AdvertisementModel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/promote_banner_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/banner_payment_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/banner_payment_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,16 +112,16 @@
     "ignore.virus.scanning.warn.message": "true",
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/abcom/Documents/Software/gully_app/android/app",
+    "last_opened_file_path": "C:/Users/abcom/Documents/Software/gully_app/lib",
     "settings.editor.selected.configurable": "flutter.settings",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\abcom\Documents\Software\gully_app\lib" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app\assets\images" />
-      <recent name="C:\Users\abcom\Documents\Software\gully_app\lib" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app" />
       <recent name="C:\Users\abcom\Documents\gully_app\assets\images" />
     </key>
@@ -173,14 +176,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00019" summary="need to modify select_opening_players.dart screen for player list">
-      <option name="closed" value="true" />
-      <created>1722595593146</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1722595593146</updated>
     </task>
     <task id="LOCAL-00020" summary="need to modify select_opening_players.dart screen for player list">
       <option name="closed" value="true" />
@@ -566,7 +561,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729684609662</updated>
     </task>
-    <option name="localTasksCounter" value="68" />
+    <task id="LOCAL-00068" summary="nothing">
+      <option name="closed" value="true" />
+      <created>1729769865218</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1729769865218</updated>
+    </task>
+    <option name="localTasksCounter" value="69" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1012,6 +1015,12 @@
           <option name="totalLines" value="7716847" />
           <option name="info" value="nothing" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1729769866746" />
+          <option name="linesCode" value="36205" />
+          <option name="totalLines" value="103045" />
+          <option name="info" value="nothing" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1399,6 +1408,12 @@
           <option name="linesCode" value="36687" />
           <option name="totalLines" value="7716847" />
           <option name="info" value="Oct 23, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1729769866746" />
+          <option name="linesCode" value="36205" />
+          <option name="totalLines" value="103045" />
+          <option name="info" value="Oct 24, 2024" />
         </TimePoint>
       </list>
     </option>

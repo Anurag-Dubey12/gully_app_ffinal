@@ -1,5 +1,12 @@
-class AdvertisementModel {
+import 'package:json_annotation/json_annotation.dart';
+
+part 'promote_banner_model.g.dart';
+
+@JsonSerializable(explicitToJson: true)
+class PromoteBannerModel {
+  @JsonKey(name: '_id')
   final String id;
+
   final String userId;
   final String imageUrl;
   final List<String> adPlacement;
@@ -10,7 +17,7 @@ class AdvertisementModel {
   final DateTime createdAt;
   final DateTime? updatedAt;
 
-  AdvertisementModel({
+  PromoteBannerModel({
     required this.id,
     required this.userId,
     required this.imageUrl,
@@ -23,7 +30,7 @@ class AdvertisementModel {
     this.updatedAt,
   });
 
-  AdvertisementModel copyWith({
+  PromoteBannerModel copyWith({
     String? id,
     String? userId,
     String? imageUrl,
@@ -35,7 +42,7 @@ class AdvertisementModel {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
-    return AdvertisementModel(
+    return PromoteBannerModel(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       imageUrl: imageUrl ?? this.imageUrl,
@@ -51,8 +58,13 @@ class AdvertisementModel {
 
   int get durationInDays => endDate.difference(startDate).inDays + 1;
 
+  factory PromoteBannerModel.fromJson(Map<String, dynamic> json) =>
+      _$PromoteBannerModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PromoteBannerModelToJson(this);
+
   @override
   String toString() {
-    return 'AdvertisementModel(id: $id, userId: $userId, imageUrl: $imageUrl, adPlacement: $adPlacement, startDate: $startDate, endDate: $endDate, totalAmount: $totalAmount, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'PromoteBannerModel(id: $id, userId: $userId, imageUrl: $imageUrl, adPlacement: $adPlacement, startDate: $startDate, endDate: $endDate, totalAmount: $totalAmount, status: $status, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 }

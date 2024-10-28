@@ -7,7 +7,7 @@ import 'package:gully_app/ui/screens/payment_page.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../data/controller/auth_controller.dart';
-import '../../data/model/AdvertisementModel.dart';
+import '../../data/model/promote_banner_model.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/utils.dart';
 import '../theme/theme.dart';
@@ -16,7 +16,7 @@ import '../widgets/gradient_builder.dart';
 import 'home_screen.dart';
 
 class BannerPaymentPage extends StatefulWidget {
-  final AdvertisementModel ads;
+  final PromoteBannerModel ads;
   final List<Map<String, dynamic>> screens;
   const BannerPaymentPage({Key? key, required this.ads, required this.screens}) : super(key: key);
 

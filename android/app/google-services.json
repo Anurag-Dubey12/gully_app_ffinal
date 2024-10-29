@@ -14,11 +14,43 @@
       },
       "oauth_client": [
         {
-          "client_id": "625133380-kodl6piml0049thlgnsrstssudkvglsk.apps.googleusercontent.com",
+          "client_id": "625133380-a0k2koa16iudoip3jghkko9emuqm32ep.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.nileegames.gullyteam",
-            "certificate_hash": "daa3f59230e24fde198946b55fd16d197f49d835"
+            "certificate_hash": "d78a8a4a9814cf2d9dfc42c27c05815b99ca7024"
+          }
+        },
+        {
+          "client_id": "625133380-j078re3dc0kq1pv6dumup8nqm3indh48.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nileegames.gullyteam",
+            "certificate_hash": "14971e713c917630538433fdf0b5b3e23608488e"
+          }
+        },
+        {
+          "client_id": "625133380-n8kmrio1ssav0tsheed7j6aq8u6shqoi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nileegames.gullyteam",
+            "certificate_hash": "070624200cc84795322b15c7a3d25a93f313024c"
+          }
+        },
+        {
+          "client_id": "625133380-nmo2upmf3jgjpjbonff7rbs0db4ug67o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nileegames.gullyteam",
+            "certificate_hash": "911f94280f833282d68bb13e43dfe8320aa3c194"
+          }
+        },
+        {
+          "client_id": "625133380-rs72hbakmt2k488q662s0j9tag90uin9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nileegames.gullyteam",
+            "certificate_hash": "733541aa886a2834fb61f33d2ff50ae582422cd6"
           }
         },
         {

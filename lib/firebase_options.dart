@@ -50,16 +50,16 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBvE3O60gMucTB2eaPKo27xg-_XUmNGp3g',
-    appId: '1:625133380:android:ddf8504cc59c17211bb911',
+    apiKey: 'AIzaSyDACKH_oYvakvGk0p0U5XB2IQTGgf3Y8-E',
+    appId: '1:625133380:android:5b2c0dc714983dc91bb911',
     messagingSenderId: '625133380',
     projectId: 'gully-team',
     storageBucket: 'gully-team.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAEuDUtE-EeOc8men1Lm-Rj7bh8xurcP4c',
-    appId: '1:625133380:ios:a6ed1cd61b6d24b71bb911',
+    apiKey: 'AIzaSyDACKH_oYvakvGk0p0U5XB2IQTGgf3Y8-E',
+    appId: '1:625133380:android:5b2c0dc714983dc91bb911',
     messagingSenderId: '625133380',
     projectId: 'gully-team',
     storageBucket: 'gully-team.appspot.com',

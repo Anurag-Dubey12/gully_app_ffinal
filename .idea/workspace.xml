@@ -9,16 +9,12 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="nothing">
-      <change afterPath="$PROJECT_DIR$/lib/firebase_options.dart" afterDir="false" />
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify firebase and promote banner">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/app/google-services.json" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/google-services.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/api/banner_promotion_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/banner_promotion_api.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/banner_promotion_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/banner_promotion_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/AdvertisementModel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/promote_banner_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/banner_payment_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/banner_payment_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/firebase_options.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/firebase_options.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,36 +87,36 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DEBUGGABLE_DEVICE": "lava_lxx507-192.168.29.122:37709",
-    "DEBUGGABLE_PROCESS": "com.nileegames.gullyteam",
-    "DEBUGGER_ID": "Java",
-    "Flutter.main.dart.executor": "Run",
-    "Gradle.C:/Users/abcom/Documents/Software/gully_app [signingReport].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "SHOW_ALL_PROCESSES": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "com.android.tools.idea.devicemanager.tab": "Physical",
-    "com.google.services.firebase.aqiPopupShown": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "office",
-    "ignore.virus.scanning.warn.message": "true",
-    "io.flutter.reload.alreadyRun": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/abcom/Documents/Software/gully_app/lib",
-    "settings.editor.selected.configurable": "flutter.settings",
-    "show.migrate.to.gradle.popup": "false"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DEBUGGABLE_DEVICE&quot;: &quot;lava_lxx507-192.168.29.122:37709&quot;,
+    &quot;DEBUGGABLE_PROCESS&quot;: &quot;com.nileegames.gullyteam&quot;,
+    &quot;DEBUGGER_ID&quot;: &quot;Java&quot;,
+    &quot;Flutter.main.dart.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.C:/Users/abcom/Documents/Software/gully_app [signingReport].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;SHOW_ALL_PROCESSES&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.android.tools.idea.devicemanager.tab&quot;: &quot;Physical&quot;,
+    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;office&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/abcom/Documents/Software/gully_app/android/app&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;flutter.settings&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\abcom\Documents\Software\gully_app\lib" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app" />
+      <recent name="C:\Users\abcom\Documents\Software\gully_app\lib" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app\assets\images" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app" />
       <recent name="C:\Users\abcom\Documents\gully_app\assets\images" />
@@ -176,14 +172,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00020" summary="need to modify select_opening_players.dart screen for player list">
-      <option name="closed" value="true" />
-      <created>1722599822419</created>
-      <option name="number" value="00020" />
-      <option name="presentableId" value="LOCAL-00020" />
-      <option name="project" value="LOCAL" />
-      <updated>1722599822419</updated>
     </task>
     <task id="LOCAL-00021" summary="modify">
       <option name="closed" value="true" />
@@ -569,7 +557,15 @@
       <option name="project" value="LOCAL" />
       <updated>1729769865218</updated>
     </task>
-    <option name="localTasksCounter" value="69" />
+    <task id="LOCAL-00069" summary="modify firebase and promote banner">
+      <option name="closed" value="true" />
+      <created>1730116612710</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1730116612711</updated>
+    </task>
+    <option name="localTasksCounter" value="70" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -590,7 +586,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="purchase ads screen to be modify" />
     <MESSAGE value="added temprory ads screen and need to add payment screen for banner purchase" />
     <MESSAGE value="modify advertisment summary screen" />
     <MESSAGE value="notout,caption and wk work almost done" />
@@ -615,7 +610,8 @@
     <MESSAGE value="need to modify torunament page" />
     <MESSAGE value="added match score tie screen" />
     <MESSAGE value="nothing" />
-    <option name="LAST_COMMIT_MESSAGE" value="nothing" />
+    <MESSAGE value="modify firebase and promote banner" />
+    <option name="LAST_COMMIT_MESSAGE" value="modify firebase and promote banner" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1021,6 +1017,12 @@
           <option name="totalLines" value="103045" />
           <option name="info" value="nothing" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1730116625676" />
+          <option name="linesCode" value="36715" />
+          <option name="totalLines" value="5358983" />
+          <option name="info" value="modify firebase and promote banner" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1414,6 +1416,12 @@
           <option name="linesCode" value="36205" />
           <option name="totalLines" value="103045" />
           <option name="info" value="Oct 24, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1730116625676" />
+          <option name="linesCode" value="36715" />
+          <option name="totalLines" value="5358983" />
+          <option name="info" value="Oct 28, 2024" />
         </TimePoint>
       </list>
     </option>

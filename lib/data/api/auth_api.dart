@@ -1,6 +1,8 @@
 import 'package:gully_app/config/api_client.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../utils/app_logger.dart';
+
 class AuthApi {
   final GetConnectClient client;
 
@@ -20,6 +22,9 @@ class AuthApi {
     if (response.statusCode != 200) {
       throw Exception(response.body['message'] ?? 'Unable to Process Request');
     }
+    var responseBody = response.body as Map<String, dynamic>;
+    var accessToken = responseBody['data']['accessToken'];
+    logger.d('AccessToken: $accessToken');
     return ApiResponse.fromJson(response.body);
   }
 

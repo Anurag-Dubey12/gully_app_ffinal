@@ -18,7 +18,7 @@ class ServiceModel {
   final String providerPhoneNumber;
 
   @JsonKey(name: 'provider_age')
-  final int providerAge;
+  final String email;
 
   @JsonKey(name: 'service_charges')
   final int serviceCharges;
@@ -49,7 +49,7 @@ class ServiceModel {
     required this.providerName,
     required this.providerImageUrl,
     required this.providerPhoneNumber,
-    required this.providerAge,
+    required this.email,
     required this.serviceCharges,
     required this.serviceDescription,
     required this.yearsOfExperience,

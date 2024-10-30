@@ -71,7 +71,7 @@ class ServiceProfileScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Age: ${service.providerAge}',
+                          'Age: ${service.email}',
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.black,

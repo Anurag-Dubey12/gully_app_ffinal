@@ -38,7 +38,7 @@ class ServiceRegister extends StatefulWidget {
 class RegisterService extends State<ServiceRegister> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _serviceChargesController = TextEditingController();
   final TextEditingController _expController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
@@ -96,7 +96,7 @@ class RegisterService extends State<ServiceRegister> {
       providerName: authController.state!.fullName,
       providerPhoneNumber: authController.state!.phoneNumber ??" ",
       providerImageUrl: authController.state!.profilePhoto,
-      providerAge: 0,
+      email: '',
       serviceCharges: 0,
       serviceDescription: '',
       yearsOfExperience: 0,
@@ -208,10 +208,6 @@ class RegisterService extends State<ServiceRegister> {
                                     title: "Error");
                                 return;
                               }
-                              if (_ageController.text.isEmpty) {
-                                errorSnackBar('Please enter Your Age', title: "Error");
-                                return;
-                              }
                               if (_expController.text.isEmpty) {
                                 errorSnackBar('Please enter experience',
                                     title: "Error");
@@ -232,7 +228,7 @@ class RegisterService extends State<ServiceRegister> {
                                 providerName: authController.state!.fullName,
                                 providerPhoneNumber: authController.state!.phoneNumber ?? "",
                                 providerImageUrl: authController.state!.profilePhoto ?? "",
-                                providerAge: int.parse(_ageController.text),
+                                email: _emailController.text.toString(),
                                 serviceCharges: int.parse(_serviceChargesController.text),
                                 serviceDescription: _descriptionController.text,
                                 yearsOfExperience: int.parse(_expController.text),
@@ -280,7 +276,7 @@ class RegisterService extends State<ServiceRegister> {
                     textInputType: TextInputType.number,
                   ),
                   FormInput(
-                    controller: _ageController,
+                    controller: _emailController,
                     label: "Age",
                     textInputType: TextInputType.number,
                     validator: (value) {

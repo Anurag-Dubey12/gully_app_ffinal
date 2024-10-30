@@ -7,52 +7,12 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:625133380:android:5b2c0dc714983dc91bb911",
+        "mobilesdk_app_id": "1:625133380:android:bbca602aa8d2fda11bb911",
         "android_client_info": {
           "package_name": "com.nileegames.gullyteam"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "625133380-a0k2koa16iudoip3jghkko9emuqm32ep.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.nileegames.gullyteam",
-            "certificate_hash": "d78a8a4a9814cf2d9dfc42c27c05815b99ca7024"
-          }
-        },
-        {
-          "client_id": "625133380-j078re3dc0kq1pv6dumup8nqm3indh48.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.nileegames.gullyteam",
-            "certificate_hash": "14971e713c917630538433fdf0b5b3e23608488e"
-          }
-        },
-        {
-          "client_id": "625133380-n8kmrio1ssav0tsheed7j6aq8u6shqoi.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.nileegames.gullyteam",
-            "certificate_hash": "070624200cc84795322b15c7a3d25a93f313024c"
-          }
-        },
-        {
-          "client_id": "625133380-nmo2upmf3jgjpjbonff7rbs0db4ug67o.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.nileegames.gullyteam",
-            "certificate_hash": "911f94280f833282d68bb13e43dfe8320aa3c194"
-          }
-        },
-        {
-          "client_id": "625133380-rs72hbakmt2k488q662s0j9tag90uin9.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.nileegames.gullyteam",
-            "certificate_hash": "733541aa886a2834fb61f33d2ff50ae582422cd6"
-          }
-        },
         {
           "client_id": "625133380-rs9vvkr9h3pl7f2qo83i8d2n2nu8ols6.apps.googleusercontent.com",
           "client_type": 3

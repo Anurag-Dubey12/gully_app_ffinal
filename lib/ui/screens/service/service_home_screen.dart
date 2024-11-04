@@ -118,7 +118,7 @@ class _ServiceHomeScreenState extends State<ServiceHomeScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      service.providerName,
+                                      service.name,
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
@@ -127,14 +127,14 @@ class _ServiceHomeScreenState extends State<ServiceHomeScreen> {
                                     ),
                                     const SizedBox(height: 6),
                                     Text(
-                                      service.serviceDescription,
+                                      service.description,
                                       style: const TextStyle(
                                         color: Colors.grey,
                                         fontSize: 14,
                                       ),
                                     ),
                                     Text(
-                                      '₹${service.serviceCharges}',
+                                      '₹${service.fees}',
                                       style: const TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 16,
@@ -142,7 +142,7 @@ class _ServiceHomeScreenState extends State<ServiceHomeScreen> {
                                       ),
                                     ),
                                     Text(
-                                      service.providerLocation,
+                                      service.address,
                                       style: const TextStyle(
                                         color: Colors.black54,
                                         fontSize: 14,

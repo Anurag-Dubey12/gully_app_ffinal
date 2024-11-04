@@ -50,13 +50,16 @@ class RegisterService extends State<ServiceRegister> {
   LatLng? location;
   String? charges_durations = '';
   String? package_duration = '';
+  bool isOnline=false;
+
+
   Map<String, dynamic>? selectedPackage;
-  List<XFile> _documentImages = [];
+  // List<XFile> _documentImages = [];
+  XFile? _documentImages ;
   late  ServiceModel serviceModel;
 
-  pickImages() async {
+  void pickImages() async {
     final imgs = await multipleimagePickerHelper();
-
     if (imgs != null && imgs.isNotEmpty) {
       setState(() {
         _images.addAll(imgs.whereType<XFile>());
@@ -65,11 +68,11 @@ class RegisterService extends State<ServiceRegister> {
   }
   pickDocumentImages() async {
     final ImagePicker _picker = ImagePicker();
-    final List<XFile>? images = await _picker.pickMultiImage();
+    final XFile? images = await _picker.pickImage(source: ImageSource.gallery);
 
-    if (images != null && images.isNotEmpty) {
+    if (images != null) {
       setState(() {
-        _documentImages.addAll(images);
+        _documentImages=images;
       });
     }
   }
@@ -93,53 +96,28 @@ class RegisterService extends State<ServiceRegister> {
     _nameController.text = authController.state!.fullName;
     serviceModel = ServiceModel(
       serviceId: '',
-      providerName: authController.state!.fullName,
-      providerPhoneNumber: authController.state!.phoneNumber ??" ",
-      providerImageUrl: authController.state!.profilePhoto,
+      name: authController.state!.fullName,
+      phoneNumber: authController.state!.phoneNumber ??" ",
       email: '',
-      serviceCharges: 0,
-      serviceDescription: '',
-      yearsOfExperience: 0,
-      offeredServiceList: [],
-      providerLocation: '',
-      galleryImages: [],
-      documentUrls: [],
-      servicePackage: PackageModel(name: '', duration: '', price: 0,endDate: ''),
+      fees: 0,
+      description: '',
+      experience: 0,
+      category: [],
+      address: '',
+      serviceImages: [],
+      identityProof: '',
+      servicePackage: PackageModel(name: '', duration: '', price: 0,endDate: ''), duration: '', serviceType: '',
     );
   }
 
   List<String> cricketServices = [
-    'Batting Coaching',
-    'Bowling Coaching',
-    'Fielding Coaching',
-    'Wicketkeeping Coaching',
-    'Fitness & Conditioning Training',
-    'Mentoring & Strategy Sessions',
-    'Youth Cricket Camps',
-    'Specialized Skill Camps',
-    'Elite Player Camps',
-    'Team Selection & Analysis',
-    'Match Strategy Development',
-    'Tournament & League Organization',
-    'Net Practice Rentals',
-    'Pitch Preparation',
-    'Indoor Cricket Facilities',
-    'Cricket Gear Sales',
-    'Cricket Gear Customization',
-    'Cricket Gear Rental',
-    'Academy Enrollments',
-    'High-Performance Academies',
-    'Scholarships & Talent Scouting',
-    'Fitness Training Programs',
-    'Recovery & Physiotherapy',
-    'Nutrition Plans for Cricketers',
-    'Player Performance Analysis',
-    'Match Video Analysis',
-    'Smart Cricket Devices',
-    'Cricket Broadcasting & Commentary Services',
-    'Cricket Events & Corporate Tournaments',
-    'Cricket Clinics & Workshops'
+    "Football Coaching", "Basketball Coaching", "Cricket Coaching", "Tennis Coaching",
+    "Badminton Coaching", "Volleyball Coaching", "Table Tennis Coaching", "Rugby Coaching",
+    "Hockey Coaching", "Squash Coaching", "Golf Coaching", "Baseball Coaching",
+    "Softball Coaching", "Lacrosse Coaching", "Field Hockey Coaching", "Handball Coaching",
+    "Netball Coaching", "Archery Coaching", "Fencing Coaching", "Wrestling Coaching"
   ];
+
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.find<AuthController>();
@@ -194,7 +172,7 @@ class RegisterService extends State<ServiceRegister> {
                                 return;
                               }
                               if (_images.isEmpty) {
-                                errorSnackBar('Please select at least one image',
+                                errorSnackBar('Please select at least one image of your service',
                                     title: "Error");
                                 return;
                               }
@@ -218,30 +196,35 @@ class RegisterService extends State<ServiceRegister> {
                                     title: "Error");
                                 return;
                               }
-                              if(_documentImages.isEmpty){
+                              if(_documentImages==null){
                                 errorSnackBar('Please Add Document Images',
                                     title: "Error");
                                 return;
                               }
+
+                              Map<String,dynamic> bannerdata={
+                                "name":_nameController.text,
+
+                              };
+
                               final serviceModel = ServiceModel(
                                 serviceId: '',
-                                providerName: authController.state!.fullName,
-                                providerPhoneNumber: authController.state!.phoneNumber ?? "",
-                                providerImageUrl: authController.state!.profilePhoto ?? "",
+                                name: authController.state!.fullName,
+                                phoneNumber: authController.state!.phoneNumber ?? "",
                                 email: _emailController.text.toString(),
-                                serviceCharges: int.parse(_serviceChargesController.text),
-                                serviceDescription: _descriptionController.text,
-                                yearsOfExperience: int.parse(_expController.text),
-                                offeredServiceList: selectedServices,
-                                providerLocation: _addressController.text,
-                                galleryImages: _images.map((image) => image.path).toList(),
-                                documentUrls: _documentImages.map((image) => image.path).toList(),
+                                fees: int.parse(_serviceChargesController.text),
+                                description: _descriptionController.text,
+                                experience: int.parse(_expController.text),
+                                category: selectedServices,
+                                address: _addressController.text,
+                                serviceImages: _images.map((image) => image.path).toList(),
+                                identityProof: _documentImages.toString(),
                                 servicePackage: PackageModel(
                                   name: selectedPackage!['package'],
                                   duration: selectedPackage!['Duration'],
                                   price: double.parse(selectedPackage!['price'].toString()),
                                   endDate: selectedPackage!['EndDate'],
-                                ),
+                                ), duration: '', serviceType: '',
                               );
                               serviceController.addService(serviceModel);
 
@@ -276,42 +259,102 @@ class RegisterService extends State<ServiceRegister> {
                     textInputType: TextInputType.number,
                   ),
                   FormInput(
-                    controller: _emailController,
-                    label: "Age",
-                    textInputType: TextInputType.number,
-                    validator: (value) {
-                      int age = value as int;
-                      if (age >= 100) {
-                        errorSnackBar("Sorry But Your Age is not a valid age");
-                      }
-                    },
-                  ),
-                  FormInput(
-                    controller: _addressController,
-                    label: 'Select Location for Your Service',
+                    controller: TextEditingController(
+                        text: authController.state!.email),
+                    label: "Email",
+                    textInputType: TextInputType.emailAddress,
                     readOnly: true,
-                    onTap: () async {
-                      Get.to(
-                        () => SelectLocationScreen(
-                          onSelected: (e, l) {
-                            setState(() {
-                              _addressController.text = e;
-                            });
-                            if (l != null) {
-                              setState(() {
-                                location = l;
-                                logger.d("The Location is $l");
-                              });
-                            }
-                            FocusScope.of(context).unfocus();
-                          },
-                          initialLocation: location != null
-                              ? LatLng(location!.latitude, location!.longitude)
-                              : null,
-                        ),
-                      );
-                    },
+                    enabled: false,
+                    // validator: (value) {
+                    //   int age = value as int;
+                    //   if (age >= 100) {
+                    //     errorSnackBar("Sorry But Your Age is not a valid age");
+                    //   }
+                    // },
                   ),
+                  const SizedBox(height: 10),
+                  Container(
+                    // padding: const EdgeInsets.symmetric(horizontal: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                        color: Colors.grey
+                      )
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        const Text(
+                          'Is Your Service Online?',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        Switch(
+                          value: isOnline,
+                          activeColor: AppTheme.primaryColor,
+                          inactiveThumbImage: const AssetImage("assets/images/logo.png"),
+                          activeThumbImage: const AssetImage("assets/images/logo.png"),
+                          inactiveThumbColor: Colors.grey,
+                          activeTrackColor: Colors.grey,
+                          // trackColor: WidgetStateProperty.resolveWith<Color?>((states) {
+                          //   if (states.contains(WidgetState.selected)) {
+                          //     return Colors.grey;
+                          //   }
+                          //   return Colors.white;
+                          // }),
+                          onChanged: (bool value) {
+                            setState(() {
+                              isOnline = value;
+                              if (value) {
+                                location = null;
+                                _addressController.clear();
+                              }
+                            });
+                          },
+                        ),
+                        Text(
+                          isOnline?"Yes": "No",
+                          style: const TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (!isOnline)
+                    // FormInput(
+                    //   controller: _addressController,
+                    //   label: 'Select Location for Your Service',
+                    //   readOnly: true,
+                    //   onTap: () async {
+                    //     Get.to(
+                    //           () => SelectLocationScreen(
+                    //         onSelected: (e, l) {
+                    //           setState(() {
+                    //             _addressController.text = e;
+                    //           });
+                    //           if (l != null) {
+                    //             setState(() {
+                    //               location = l;
+                    //               logger.d("The Location is $l");
+                    //             });
+                    //           }
+                    //           FocusScope.of(context).unfocus();
+                    //         },
+                    //         initialLocation: location != null
+                    //             ? LatLng(location!.latitude, location!.longitude)
+                    //             : null,
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
+                    FormInput(
+                      controller: _addressController,
+                      label: "Address",
+                      textInputType: TextInputType.streetAddress,
+                    ),
                   const Text(
                     "Service You will Offered",
                     style: TextStyle(
@@ -477,90 +520,63 @@ class RegisterService extends State<ServiceRegister> {
                       ),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: _documentImages.isEmpty
+                    child: _documentImages == null
                         ? GestureDetector(
-                            onTap: pickDocumentImages,
-                            child: const Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.add_photo_alternate,
-                                    size: 40,
-                                    color: Colors.black,
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    "Select Documents for Verification",
-                                    style: TextStyle(color: Colors.black),
-                                  ),
-                                ],
+                      onTap: pickDocumentImages,
+                      child: const Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.add_photo_alternate,
+                              size: 40,
+                              color: Colors.black,
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              "Select Document for Verification",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                        : Stack(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              image: FileImage(File(_documentImages!.path)),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          right: 5,
+                          top: 5,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _documentImages = null;
+                              });
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.close,
+                                color: Colors.red,
+                                size: 20,
                               ),
                             ),
-                          )
-                        : ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: _documentImages.length + 1,
-                            itemBuilder: (context, index) {
-                              if (index == _documentImages.length) {
-                                return GestureDetector(
-                                  onTap: pickDocumentImages,
-                                  child: Container(
-                                    width: 100,
-                                    margin: const EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[300],
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Icon(
-                                      Icons.add_photo_alternate,
-                                      color: Colors.grey[600],
-                                      size: 40,
-                                    ),
-                                  ),
-                                );
-                              }
-                              return Stack(
-                                children: [
-                                  Container(
-                                    width: 100,
-                                    margin: const EdgeInsets.all(5),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      image: DecorationImage(
-                                        image: FileImage(
-                                            File(_documentImages[index].path)),
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  Positioned(
-                                    right: 0,
-                                    top: 0,
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          _documentImages.removeAt(index);
-                                        });
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.all(2),
-                                        decoration: const BoxDecoration(
-                                          color: Colors.white,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.close,
-                                          color: Colors.red,
-                                          size: 20,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
                           ),
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 10),
                   const Text(

@@ -10,14 +10,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="need attention on firebase">
-      <change afterPath="$PROJECT_DIR$/lib/data/api/service_api.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/app/google-services.json" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/google-services.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/firebase.json" beforeDir="false" afterPath="$PROJECT_DIR$/firebase.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/api/auth_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/auth_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/banner_promotion_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/banner_promotion_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/service_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/service_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/model/service_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/service_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/firebase_options.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/MyService.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/MyService.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/ServiceDetailsScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/ServiceDetailsScreen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_profile_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service_payment_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service_payment_page.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,14 +182,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00022" summary="modify">
-      <option name="closed" value="true" />
-      <created>1723031794597</created>
-      <option name="number" value="00022" />
-      <option name="presentableId" value="LOCAL-00022" />
-      <option name="project" value="LOCAL" />
-      <updated>1723031794597</updated>
     </task>
     <task id="LOCAL-00023" summary="modify">
       <option name="closed" value="true" />
@@ -568,7 +567,15 @@
       <option name="project" value="LOCAL" />
       <updated>1730203301178</updated>
     </task>
-    <option name="localTasksCounter" value="71" />
+    <task id="LOCAL-00071" summary="need attention on firebase">
+      <option name="closed" value="true" />
+      <created>1730291949939</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1730291949940</updated>
+    </task>
+    <option name="localTasksCounter" value="72" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -621,7 +628,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="Dart">
           <url>file://$PROJECT_DIR$/lib/data/controller/tournament_controller.dart</url>
-          <line>354</line>
+          <line>352</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>
@@ -1032,6 +1039,12 @@
           <option name="totalLines" value="6540164" />
           <option name="info" value="need attention on firebase" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1730291953809" />
+          <option name="linesCode" value="36715" />
+          <option name="totalLines" value="5358715" />
+          <option name="info" value="need attention on firebase" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1437,6 +1450,12 @@
           <option name="linesCode" value="36701" />
           <option name="totalLines" value="6540164" />
           <option name="info" value="Oct 29, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1730291953809" />
+          <option name="linesCode" value="36715" />
+          <option name="totalLines" value="5358715" />
+          <option name="info" value="Oct 30, 2024" />
         </TimePoint>
       </list>
     </option>

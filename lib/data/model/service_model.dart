@@ -7,57 +7,37 @@ part 'service_model.g.dart';
 class ServiceModel {
   @JsonKey(name: 'id')
   final String serviceId;
-
-  @JsonKey(name: 'provider_name')
-  final String providerName;
-
-  @JsonKey(name: 'provider_image')
-  final String providerImageUrl;
-
-  @JsonKey(name: 'provider_phone_number')
-  final String providerPhoneNumber;
-
-  @JsonKey(name: 'provider_age')
+  final String name;
+  final String address;
+  final String phoneNumber;
   final String email;
-
-  @JsonKey(name: 'service_charges')
-  final int serviceCharges;
-
-  @JsonKey(name: 'description')
-  final String serviceDescription;
-
-  @JsonKey(name: 'years_of_experience')
-  final int yearsOfExperience;
-
-  @JsonKey(name: 'offered_services')
-  final List<String> offeredServiceList;
-
-  @JsonKey(name: 'location')
-  final String providerLocation;
-
-  @JsonKey(name: 'image_urls')
-  final List<String> galleryImages;
-
-  @JsonKey(name: 'document_urls')
-  final List<String> documentUrls;
-
-  @JsonKey(name: 'package')
+  final String? identityProof;
+  final List<String> category;
+  final String description;
+  final int experience;
+  final String duration;
+  final int fees;
+  final String serviceType;
+  final List<String> serviceImages;
+  // final String userId;
   final PackageModel servicePackage;
 
   ServiceModel({
     required this.serviceId,
-    required this.providerName,
-    required this.providerImageUrl,
-    required this.providerPhoneNumber,
+    required this.name,
+    required this.address,
+    required this.phoneNumber,
     required this.email,
-    required this.serviceCharges,
-    required this.serviceDescription,
-    required this.yearsOfExperience,
-    required this.offeredServiceList,
-    required this.providerLocation,
-    required this.galleryImages,
-    required this.documentUrls,
+    required this.identityProof,
+    required this.category,
+    required this.experience,
+    required this.description,
+    required this.duration,
+    required this.fees,
+    required this.serviceType,
+    required this.serviceImages,
     required this.servicePackage,
+    // required this.userId,
   });
 
   factory ServiceModel.fromJson(Map<String, dynamic> json) => _$ServiceModelFromJson(json);

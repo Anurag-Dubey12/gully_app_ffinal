@@ -13,10 +13,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:gully_app/data/api/banner_promotion_api.dart';
 import 'package:gully_app/data/api/misc_api.dart';
 import 'package:gully_app/data/api/ranking_api.dart';
 import 'package:gully_app/data/api/score_board_api.dart';
 import 'package:gully_app/data/api/team_api.dart';
+import 'package:gully_app/data/controller/banner_promotion_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/notification_controller.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
@@ -161,6 +163,7 @@ class _MyAppState extends State<MyApp> {
         // Bind.lazyPut<AuthApi>(() => AuthApi(client: Get.find())),
         Bind.put<AuthApi>(AuthApi(client: Get.find())),
         Bind.put<MiscApi>(MiscApi(repo: Get.find())),
+        Bind.put<BannerApi>(BannerApi(repo: Get.find())),
         Bind.lazyPut<TournamentApi>(() => TournamentApi(repo: Get.find())),
         Bind.lazyPut<ScoreboardApi>(() => ScoreboardApi(repo: Get.find())),
         Bind.put<TeamApi>(TeamApi(repo: Get.find())),
@@ -170,6 +173,8 @@ class _MyAppState extends State<MyApp> {
             ScoreBoardController(scoreboardApi: Get.find())),
         Bind.lazyPut<TournamentController>(
             () => TournamentController(Get.find())),
+        Bind.lazyPut<PromotionController>(
+            () => PromotionController(bannerApi: Get.find())),
         Bind.put<MiscController>(MiscController(repo: Get.find())),
       ],
       defaultTransition: Transition.cupertino,

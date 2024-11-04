@@ -55,7 +55,7 @@ class ServiceProfileScreen extends StatelessWidget {
                       children: [
                         const SizedBox(height: 10),
                         Text(
-                          service.providerName,
+                          service.name,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 22,
@@ -63,7 +63,7 @@ class ServiceProfileScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          service.providerLocation,
+                          service.address,
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.grey,
@@ -79,7 +79,7 @@ class ServiceProfileScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          '${service.yearsOfExperience} Years Experience',
+                          '${service.experience} Years Experience',
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.black,
@@ -101,7 +101,7 @@ class ServiceProfileScreen extends StatelessWidget {
               ),
               Wrap(
                 spacing: 8,
-                children: service.offeredServiceList
+                children: service.category
                     .map((offeredService) => Chip(
                   label: Text(offeredService),
                   backgroundColor: Colors.blue[100],
@@ -121,7 +121,7 @@ class ServiceProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                service.serviceDescription,
+                service.description,
                 style: const TextStyle(
                   fontSize: 16,
                   color: Colors.black,
@@ -149,7 +149,7 @@ class ServiceProfileScreen extends StatelessWidget {
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
                 ),
-                itemCount: service.galleryImages.length,
+                itemCount: service.category.length,
                 itemBuilder: (context, index) {
                   return Container(
                     decoration: BoxDecoration(
@@ -162,7 +162,7 @@ class ServiceProfileScreen extends StatelessWidget {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
                       child: Image.asset(
-                        service.galleryImages[index]??"assets/images/logo.png",
+                        service.category[index]??"assets/images/logo.png",
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -184,7 +184,7 @@ class ServiceProfileScreen extends StatelessWidget {
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      '₹${service.serviceCharges}/day',
+                      '₹${service.fees}/day',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -199,7 +199,7 @@ class ServiceProfileScreen extends StatelessWidget {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    _launchCaller(service.providerPhoneNumber);
+                    _launchCaller(service.phoneNumber);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryColor,

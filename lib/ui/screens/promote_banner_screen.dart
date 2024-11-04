@@ -7,11 +7,14 @@ import 'package:gully_app/ui/screens/banner_payment_page.dart';
 import 'package:gully_app/ui/screens/select_location.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../data/controller/auth_controller.dart';
+import '../../data/controller/banner_promotion_controller.dart';
 import '../../data/controller/tournament_controller.dart';
 import '../../data/model/promote_banner_model.dart';
 import '../../data/model/tournament_model.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/geo_locator_helper.dart';
+import '../../utils/image_picker_helper.dart';
 import '../../utils/utils.dart';
 import '../widgets/advertisement/advertisement_summary.dart';
 import '../widgets/create_tournament/form_input.dart';
@@ -480,18 +483,49 @@ class AdsScreen extends State<PromoteBannerScreen> {
           const SizedBox(height: 10),
           PrimaryButton(
               title: 'Pay Now',
-              onTap: () {
-                if (advertisementModel != null) {
+              onTap: () async {
+                try{
+                  final PromotionController banner=Get.find<PromotionController>();
+                  final AuthController authController = Get.find<AuthController>();
+                  if(_image==null){
+                    errorSnackBar('Please select an image');
+                    return;
+                  }
+                  if(selectedAdsTypes.isEmpty){
+                    errorSnackBar("Select The Place you want to Display your Promotional Banner");
+                    return;
+                  }
+                  if(from==null ||to==null){
+                    errorSnackBar("Please select date for promotion");
+                    return;
+                  }
+                  String? base64;
+                  if (_image != null) {
+                    base64 =
+                        await convertImageToBase64(_image!);
+                  }
+                  // Map<String,dynamic> banner={
+                  //   "image":base64,
+                  //   "promotionLocation":location
+                  // };
+
+                   if (advertisementModel != null) {
                   advertisementModel = advertisementModel!.copyWith(
                     startDate: from!,
                     endDate: to!,
                     totalAmount: totalAmount * 1.18,
-                  );
+                  );                  
+                }
                   Get.to(() => BannerPaymentPage(
                         ads: advertisementModel!,
                         screens: _screens,
                       ));
+                }catch(e){
+                  errorSnackBar(e.toString());
+                  rethrow;
                 }
+                
+               
               })
         ],
       ),

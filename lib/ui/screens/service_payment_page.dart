@@ -126,23 +126,23 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                     const SizedBox(height: 5),
                     AdvertisementSummary(
                       label: 'Name',
-                      value: widget.service.providerName,
+                      value: widget.service.name,
                     ),
                     AdvertisementSummary(
                       label: 'Contact Number',
-                      value: widget.service.providerPhoneNumber,
+                      value: widget.service.phoneNumber,
                     ),
                     AdvertisementSummary(
                       label: 'Year of Experience',
-                      value: widget.service.yearsOfExperience.toString(),
+                      value: widget.service.experience.toString(),
                     ),
                     AdvertisementSummary(
                       label: 'Location',
-                      value: widget.service.providerLocation,
+                      value: widget.service.address,
                     ),
                     AdvertisementSummary(
                       label: 'Charges',
-                      value: widget.service.serviceCharges.toString(),
+                      value: widget.service.fees.toString(),
                     ),
                     const SizedBox(height: 10),
                     const Center(
@@ -178,14 +178,14 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    if (widget.service.offeredServiceList.isNotEmpty)
-                      ...widget.service.offeredServiceList.asMap().entries.map((entry) {
+                    if (widget.service.category.isNotEmpty)
+                      ...widget.service.category.asMap().entries.map((entry) {
                         return ServiceOfferItem(
                           index: entry.key + 1,
                           service: entry.value,
                         );
                       }),
-                    if (widget.service.offeredServiceList.isEmpty)
+                    if (widget.service.category.isEmpty)
                       const Center(
                         child: Text(
                           'No services offered',

@@ -17,6 +17,9 @@ class ServiceController extends GetxController with StateMixin {
   final Rx<LatLng?> location = Rx<LatLng?>(null);
   final Rx<Map<String, dynamic>?> selectedPackage = Rx<Map<String, dynamic>?>(null);
 
+
+
+
   void addService(ServiceModel service) {
     servicelist.add(service);
     saveServiceData();

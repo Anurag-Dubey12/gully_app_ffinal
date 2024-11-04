@@ -74,9 +74,9 @@ class _ServicesState extends State<MyService> {
                     leading: const CircleAvatar(
                       backgroundImage: AssetImage('assets/images/logo.png'),
                     ),
-                    title: Text(service.providerName),
-                    subtitle: Text(service.serviceDescription),
-                    trailing: Text('₹${service.serviceCharges}'),
+                    title: Text(service.name),
+                    subtitle: Text(service.description),
+                    trailing: Text('₹${service.fees}'),
                     onTap: () {
                       Get.to(() => ServiceProfileScreen(service: service));
                     },

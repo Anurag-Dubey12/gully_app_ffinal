@@ -343,7 +343,7 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                             ProfileTileCard(
                               text: 'View My Services',
                               onTap: () {
-                                Get.to(() =>  MyService());
+                                // Get.to(() =>  MyService());
                               },
                             ),
                             ProfileTileCard(

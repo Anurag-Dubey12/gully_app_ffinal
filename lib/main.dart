@@ -17,11 +17,13 @@ import 'package:gully_app/data/api/banner_promotion_api.dart';
 import 'package:gully_app/data/api/misc_api.dart';
 import 'package:gully_app/data/api/ranking_api.dart';
 import 'package:gully_app/data/api/score_board_api.dart';
+import 'package:gully_app/data/api/service_api.dart';
 import 'package:gully_app/data/api/team_api.dart';
 import 'package:gully_app/data/controller/banner_promotion_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/notification_controller.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
+import 'package:gully_app/data/controller/service_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/firebase_options.dart';
 import 'package:gully_app/ui/screens/no_internet_screen.dart';
@@ -164,6 +166,7 @@ class _MyAppState extends State<MyApp> {
         Bind.put<AuthApi>(AuthApi(client: Get.find())),
         Bind.put<MiscApi>(MiscApi(repo: Get.find())),
         Bind.put<BannerApi>(BannerApi(repo: Get.find())),
+        Bind.put<ServiceApi>(ServiceApi(repo: Get.find())),
         Bind.lazyPut<TournamentApi>(() => TournamentApi(repo: Get.find())),
         Bind.lazyPut<ScoreboardApi>(() => ScoreboardApi(repo: Get.find())),
         Bind.put<TeamApi>(TeamApi(repo: Get.find())),
@@ -175,6 +178,8 @@ class _MyAppState extends State<MyApp> {
             () => TournamentController(Get.find())),
         Bind.lazyPut<PromotionController>(
             () => PromotionController(bannerApi: Get.find())),
+        Bind.lazyPut<ServiceController>(
+                () => ServiceController(serviceApi: Get.find())),
         Bind.put<MiscController>(MiscController(repo: Get.find())),
       ],
       defaultTransition: Transition.cupertino,

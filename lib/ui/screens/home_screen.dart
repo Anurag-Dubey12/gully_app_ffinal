@@ -9,6 +9,7 @@ import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/ui/screens/player_profile_screen.dart';
 import 'package:gully_app/ui/screens/search_tournament_screen.dart';
+import 'package:gully_app/ui/screens/service/service_home_screen.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/app_drawer.dart';
@@ -106,6 +107,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     return [
       const HomePageContent(),
       const SizedBox(),
+      const ServiceHomeScreen(),
+      const ServiceHomeScreen(),
       isOrganizer ? const OrganizerProfileScreen(): const PlayerProfileScreen()
     ];
   }
@@ -119,6 +122,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
+        icon: const Icon(Icons.home_filled),
+        title: "vendor",
+        activeColorPrimary: AppTheme.primaryColor,
+        inactiveColorPrimary: Colors.grey,
+      ),
+      PersistentBottomNavBarItem(
         icon: const Icon(Icons.circle),
         title: "",
         activeColorPrimary: Colors.transparent,
@@ -126,6 +135,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         onPressed: (context) {
 
         },
+      ),
+      PersistentBottomNavBarItem(
+        icon: const Icon(Icons.home_filled),
+        title: "vendor",
+        activeColorPrimary: AppTheme.primaryColor,
+        inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.person),

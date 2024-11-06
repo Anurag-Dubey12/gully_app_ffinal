@@ -486,7 +486,6 @@ class AdsScreen extends State<PromoteBannerScreen> {
               onTap: () async {
                 try{
                   final PromotionController banner=Get.find<PromotionController>();
-                  final AuthController authController = Get.find<AuthController>();
                   if(_image==null){
                     errorSnackBar('Please select an image');
                     return;
@@ -504,11 +503,21 @@ class AdsScreen extends State<PromoteBannerScreen> {
                     base64 =
                         await convertImageToBase64(_image!);
                   }
-                  // Map<String,dynamic> banner={
-                  //   "image":base64,
-                  //   "promotionLocation":location
-                  // };
-
+                  Map<String, dynamic> locationData = {
+                    "point": {
+                      "type": "Point",
+                      "coordinates": [location.longitude, location.latitude]
+                    }
+                  };
+                  Map<String, dynamic> bannerdata = {
+                    "image":base64,
+                    "promotionLocation":selectedAdsTypes,
+                    "startDate": from?.toIso8601String(),
+                    "endDate": to?.toIso8601String(),
+                    "locationHistory": locationData,
+                    "promotionFor":"Shop"
+                  };
+                   banner.createBanner(bannerdata);
                    if (advertisementModel != null) {
                   advertisementModel = advertisementModel!.copyWith(
                     startDate: from!,

@@ -8,7 +8,7 @@ class BannerApi {
   BannerApi({required this.repo});
 
   Future<ApiResponse> createBanner(Map<String,dynamic> banner) async{
-    final response= await repo.post("/api/banner", banner);
+    final response= await repo.post("/banner/createbanner", banner);
     logger.d(response.body);
 
     if(!response.isOk){

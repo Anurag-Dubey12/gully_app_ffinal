@@ -37,6 +37,5 @@ class PromotionController extends GetxController with StateMixin<PromoteBannerMo
         rethrow;
       }
   }
-  
 
 }

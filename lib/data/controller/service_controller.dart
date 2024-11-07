@@ -10,7 +10,6 @@ class ServiceController extends GetxController with StateMixin<ServiceModel> {
   ServiceController({required this.serviceApi}) {
     change(GetStatus.empty());
   }
-  RxList<ServiceModel> servicelist = <ServiceModel>[].obs;
 
   RxBool isLoading = false.obs;
 
@@ -24,21 +23,21 @@ class ServiceController extends GetxController with StateMixin<ServiceModel> {
     }
   }
 
+  RxList<ServiceModel> service = <ServiceModel>[].obs;
+
   Future<List<ServiceModel>> getService() async {
     try {
       final response = await serviceApi.getService();
+      logger.d('controller API Response: ${response.data}');
       if (response.status == false) {
         logger.i('Error: ${response.message}');
         errorSnackBar(response.message ?? 'Unable to fetch vendors');
         return [];
       }
-     final List<ServiceModel> service = (response.data as List<dynamic>?)
-            ?.map((service) =>
-            ServiceModel.fromJson(service ))
-            .toList() ?? [];
-      servicelist.addAll(service);
-      logger.d("The Service list is :${servicelist.length}");
-      return servicelist;
+      service.value=(response.data!['vendors'] as List)
+      .map((e)=>ServiceModel.fromJson(e)).toList();
+      logger.d("The Service list is :${service.length}");
+      return service;
     } catch (e) {
       logger.e('Error getting vendors: $e');
       errorSnackBar('Unable to fetch vendors. Please try again later.');

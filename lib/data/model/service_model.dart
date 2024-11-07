@@ -6,21 +6,21 @@ part 'service_model.g.dart';
 @JsonSerializable(explicitToJson: true)
 class ServiceModel {
   @JsonKey(name: 'id')
-  final String serviceId;
-  final String name;
-  final String address;
-  final String phoneNumber;
-  final String email;
+  final String? serviceId;
+  final String? name;
+  final String? address;
+  final String? phoneNumber;
+  final String? email;
   final String? identityProof;
-  final List<String> category;
-  final String description;
-  final int experience;
-  final String duration;
-  final int fees;
-  final String serviceType;
-  final List<String> serviceImages;
-  // final String userId;
-  final PackageModel servicePackage;
+  final String? category;
+  final String? description;
+  final int? experience;
+  final int? duration;
+  final int? fees;
+  final String? serviceType;
+  final List<String>? serviceImages;
+  // // final String userId;
+  // final PackageModel servicePackage;
 
   ServiceModel({
     required this.serviceId,
@@ -36,7 +36,7 @@ class ServiceModel {
     required this.fees,
     required this.serviceType,
     required this.serviceImages,
-    required this.servicePackage,
+    // required this.servicePackage,
     // required this.userId,
   });
 

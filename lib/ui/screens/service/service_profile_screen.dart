@@ -55,7 +55,7 @@ class ServiceProfileScreen extends StatelessWidget {
                       children: [
                         const SizedBox(height: 10),
                         Text(
-                          service.name,
+                          service.name?? '',
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 22,
@@ -63,7 +63,7 @@ class ServiceProfileScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          service.address,
+                          service.address?? '',
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.grey,
@@ -99,16 +99,7 @@ class ServiceProfileScreen extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-              Wrap(
-                spacing: 8,
-                children: service.category
-                    .map((offeredService) => Chip(
-                  label: Text(offeredService),
-                  backgroundColor: Colors.blue[100],
-                  labelStyle: const TextStyle(fontSize: 12),
-                ))
-                    .toList(),
-              ),
+              Text("${service.category}"),
               const Center(
                 child: Text(
                   'About',
@@ -121,7 +112,7 @@ class ServiceProfileScreen extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                service.description,
+                service.description?? '',
                 style: const TextStyle(
                   fontSize: 16,
                   color: Colors.black,
@@ -141,34 +132,35 @@ class ServiceProfileScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: service.category.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.black.withOpacity(0.2),
-                        width: 0.5,
-                      ),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        service.category[index]??"assets/images/logo.png",
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  );
-                },
-              ),
+              Text("${service.category}"),
+              // GridView.builder(
+              //   shrinkWrap: true,
+              //   physics: const NeverScrollableScrollPhysics(),
+              //   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              //     crossAxisCount: 3,
+              //     crossAxisSpacing: 10,
+              //     mainAxisSpacing: 10,
+              //   ),
+              //   itemCount: service.category.length,
+              //   itemBuilder: (context, index) {
+              //     return Container(
+              //       decoration: BoxDecoration(
+              //         borderRadius: BorderRadius.circular(12),
+              //         border: Border.all(
+              //           color: Colors.black.withOpacity(0.2),
+              //           width: 0.5,
+              //         ),
+              //       ),
+              //       child: ClipRRect(
+              //         borderRadius: BorderRadius.circular(12),
+              //         child: Image.asset(
+              //           service.category[index]??"assets/images/logo.png",
+              //           fit: BoxFit.cover,
+              //         ),
+              //       ),
+              //     );
+              //   },
+              // ),
               const SizedBox(height: 15),
               Container(
                 padding: const EdgeInsets.all(16.0),
@@ -199,7 +191,7 @@ class ServiceProfileScreen extends StatelessWidget {
               Center(
                 child: ElevatedButton(
                   onPressed: () {
-                    _launchCaller(service.phoneNumber);
+                    _launchCaller(service.phoneNumber?? '');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryColor,

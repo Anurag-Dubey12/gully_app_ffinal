@@ -153,7 +153,7 @@ class ServiceListItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      service.name,
+                      service.name?? '',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 18,
@@ -162,7 +162,7 @@ class ServiceListItem extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      service.description,
+                      service.description?? '',
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 14,
@@ -177,7 +177,7 @@ class ServiceListItem extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      service.address,
+                      service.address?? '',
                       style: const TextStyle(
                         color: Colors.black54,
                         fontSize: 14,

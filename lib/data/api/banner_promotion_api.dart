@@ -14,7 +14,6 @@ class BannerApi {
     if(!response.isOk){
       throw response.body['message'] ?? 'Unable to Process Request';
     }
-
     return ApiResponse.fromJson(response.body);
   }
 }

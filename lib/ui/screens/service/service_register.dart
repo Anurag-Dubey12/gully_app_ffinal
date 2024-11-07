@@ -103,11 +103,11 @@
         fees: 0,
         description: '',
         experience: 0,
-        category: [],
+        category: '',
         address: '',
         serviceImages: [],
-        identityProof: '',
-        servicePackage: PackageModel(name: '', duration: '', price: 0,endDate: ''), duration: '', serviceType: '',
+        identityProof: '', duration:0, serviceType: '',
+        // servicePackage: PackageModel(name: '', duration: '', price: 0,endDate: ''), duration: '', serviceType: '',
       );
     }
 

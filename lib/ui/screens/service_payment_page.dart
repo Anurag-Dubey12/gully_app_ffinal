@@ -126,11 +126,11 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                     const SizedBox(height: 5),
                     AdvertisementSummary(
                       label: 'Name',
-                      value: widget.service.name,
+                      value: widget.service.name?? '',
                     ),
                     AdvertisementSummary(
                       label: 'Contact Number',
-                      value: widget.service.phoneNumber,
+                      value: widget.service.phoneNumber?? '',
                     ),
                     AdvertisementSummary(
                       label: 'Year of Experience',
@@ -138,7 +138,7 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                     ),
                     AdvertisementSummary(
                       label: 'Location',
-                      value: widget.service.address,
+                      value: widget.service.address?? '',
                     ),
                     AdvertisementSummary(
                       label: 'Charges',
@@ -155,18 +155,18 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                         ),
                       ),
                     ),
-                    AdvertisementSummary(
-                      label: 'Package Name',
-                      value: widget.service.servicePackage.name,
-                    ),
-                    AdvertisementSummary(
-                      label: 'Duration',
-                      value: widget.service.servicePackage.duration,
-                    ),
-                    AdvertisementSummary(
-                      label: 'End Date',
-                      value: widget.service.servicePackage.endDate,
-                    ),
+                    // AdvertisementSummary(
+                    //   label: 'Package Name',
+                    //   value: widget.service.servicePackage.name,
+                    // ),
+                    // AdvertisementSummary(
+                    //   label: 'Duration',
+                    //   value: widget.service.servicePackage.duration,
+                    // ),
+                    // AdvertisementSummary(
+                    //   label: 'End Date',
+                    //   value: widget.service.servicePackage.endDate,
+                    // ),
                     const Center(
                       child: Text(
                         'Service Offering',
@@ -178,24 +178,7 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    if (widget.service.category.isNotEmpty)
-                      ...widget.service.category.asMap().entries.map((entry) {
-                        return ServiceOfferItem(
-                          index: entry.key + 1,
-                          service: entry.value,
-                        );
-                      }),
-                    if (widget.service.category.isEmpty)
-                      const Center(
-                        child: Text(
-                          'No services offered',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ),
+                    Text("${widget.service.category}"),
                     Text(
                       'Payment Summary',
                       style: TextStyle(

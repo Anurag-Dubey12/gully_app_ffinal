@@ -25,7 +25,6 @@ import 'package:gully_app/data/controller/notification_controller.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/controller/service_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
-import 'package:gully_app/firebase_options.dart';
 import 'package:gully_app/ui/screens/no_internet_screen.dart';
 import 'package:gully_app/ui/widgets/location_permission_builder.dart';
 import 'package:gully_app/utils/app_logger.dart';
@@ -39,6 +38,7 @@ import '/data/controller/auth_controller.dart';
 import '/data/controller/tournament_controller.dart';
 import '/ui/screens/splash_screen.dart';
 import '/ui/theme/theme.dart';
+import 'firebase_options.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   logger.i("Handling a background message: ${message.messageId}");

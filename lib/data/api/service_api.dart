@@ -37,14 +37,6 @@ class ServiceApi{
     return ApiResponse.fromJson(response.body);
   }
 
-  Future<ApiResponse> getuserService()async{
-    var response=await repo.get("/vendors");
-    logger.d('Raw API Response: ${response.body}');
-    if (response.statusCode != 200) {
-      throw Exception(response.body['message'] ?? 'Unable to Process Request');
-    }
-    return ApiResponse.fromJson(response.body);
-  }
   Future<ApiResponse> updateService(String serviceId,Map<String,dynamic> service ) async{
     var response=await repo.put("/vendors/$serviceId", service);
     logger.d(response.body);
@@ -58,15 +50,11 @@ class ServiceApi{
     return ApiResponse.fromJson(response.body);
   }
 
-  Future<ApiResponse> deleteService(String serviceId ) async{
+  Future<ApiResponse> deleteService(String serviceId) async{
     var response=await repo.delete("/vendors/$serviceId");
     logger.d(response.body);
-    if (response.statusCode! >= 500) {
-      errorSnackBar(generateErrorMessage(response.body));
-      throw Exception('Server Error');
-    } else if (response.statusCode!!= 200) {
-      errorSnackBar(generateErrorMessage(response.body));
-      throw Exception('Bad Request');
+    if (!response.isOk) {
+      throw response.body['message'] ?? 'Unable to Process Request';
     }
     return ApiResponse.fromJson(response.body);
   }

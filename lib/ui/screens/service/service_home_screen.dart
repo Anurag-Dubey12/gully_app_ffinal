@@ -4,6 +4,7 @@ import 'package:gully_app/data/model/service_model.dart';
 import 'package:gully_app/ui/screens/service/service_profile_screen.dart';
 
 import '../../../data/controller/service_controller.dart';
+import '../../../utils/app_logger.dart';
 
 class ServiceHomeScreen extends StatefulWidget {
   const ServiceHomeScreen({Key? key}) : super(key: key);
@@ -15,11 +16,11 @@ class ServiceHomeScreen extends StatefulWidget {
 class _ServiceHomeScreenState extends State<ServiceHomeScreen> {
   final ServiceController serviceController = Get.find<ServiceController>();
 
-  @override
-  void initState() {
-    serviceController.getService();
-
-  }
+  // @override
+  // void initState() {
+  //   serviceController.getuserService();
+  //
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,7 @@ class _ServiceHomeScreenState extends State<ServiceHomeScreen> {
                 child: Ink(
                   height: 50,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: const Color(0xFFE8E5E8),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: Colors.grey),
                   ),
@@ -147,6 +148,24 @@ class ServiceListItem extends StatelessWidget {
                   fit: BoxFit.contain,
                 ),
               ),
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: GestureDetector(
+              //     onTap: () {
+              //       imageViewer(context, authController.state!.profilePhoto,true);
+              //     },
+              //     child: CircleAvatar(
+              //       radius: 40,
+              //       backgroundImage: authController.state!.profilePhoto.isNotEmpty
+              //           ? FallbackImageProvider(
+              //           toImageUrl(authController.state!.profilePhoto),
+              //           'assets/images/logo.png'
+              //       ) as ImageProvider
+              //           : const AssetImage('assets/images/logo.png'),
+              //       backgroundColor: Colors.transparent,
+              //     ),
+              //   ),
+              // ),
               const SizedBox(width: 10),
               Expanded(
                 child: Column(

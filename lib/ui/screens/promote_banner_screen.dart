@@ -102,6 +102,7 @@ class AdsScreen extends State<PromoteBannerScreen> {
           title: "Error");
     }
   }
+
   @override
   void initState() {
     super.initState();
@@ -298,76 +299,115 @@ class AdsScreen extends State<PromoteBannerScreen> {
                       );
                     },
                   ),
-                  DropDownWidget(
-                    title: "Promote Your Banner For",
-                    onSelect: (dynamic selectedItems) {
-                      setState(() {
-                        promotionfor = selectedItems;
-                      });
-                    },
-                    selectedValue: promotionfor,
-                    items: const [
-                      'Tournament',
-                      'Shop',
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Select a Tournament',
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontStyle: FontStyle.normal,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black),
+                      ),
+                      const SizedBox(height: 8),
+                      Obx(() {
+                        // if (tournamentController
+                        //     .organizerTournamentList.isEmpty) {
+                        //   return const Text('No tournaments available');
+                        // }
+                        return DropDownWidget(
+                          title: "Select Your Tournament",
+                          onSelect: (dynamic selectedItem) {
+                            setState(() {
+                              selectedTournament = tournamentController
+                                  .organizerTournamentList
+                                  .firstWhere((tournament) =>
+                              tournament.tournamentName ==
+                                  selectedItem);
+                            });
+                          },
+                          selectedValue:
+                          selectedTournament?.tournamentName ?? '',
+                          items: tournamentController.organizerTournamentList
+                              .map((tournament) => tournament.tournamentName)
+                              .toList(),
+                          isAds: false,
+                          istournament: true,
+                        );
+                      }),
                     ],
-                    isAds: false,
                   ),
-                  if (promotionfor == 'Tournament')
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Select a Tournament',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ),
-                        const SizedBox(height: 8),
-
-                        //Dummy code for tournament that can be used to fetch the user tournament
-                        Obx(() {
-                          if (tournamentController
-                              .organizerTournamentList.isEmpty) {
-                            return const Text('No tournaments available');
-                          }
-                          return DropDownWidget(
-                            title: "Select Your Tournament",
-                            onSelect: (dynamic selectedItem) {
-                              setState(() {
-                                selectedTournament = tournamentController
-                                    .organizerTournamentList
-                                    .firstWhere((tournament) =>
-                                        tournament.tournamentName ==
-                                        selectedItem);
-                              });
-                            },
-                            selectedValue:
-                                selectedTournament?.tournamentName ?? '',
-                            items: tournamentController.organizerTournamentList
-                                .map((tournament) => tournament.tournamentName)
-                                .toList(),
-                            isAds: false,
-                          );
-                        }),
-                      ],
-                    )
-                  else if (promotionfor == 'Shop')
-                    const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Select a Shop',
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontStyle: FontStyle.normal,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black),
-                        ),
-                      ],
-                    ),
+                  // DropDownWidget(
+                  //   title: "Promote Your Banner For",
+                  //   onSelect: (dynamic selectedItems) {
+                  //     setState(() {
+                  //       promotionfor = selectedItems;
+                  //     });
+                  //   },
+                  //   selectedValue: promotionfor,
+                  //   items: const [
+                  //     'Tournament',
+                  //     'Shop',
+                  //   ],
+                  //   isAds: false,
+                  // ),
+                  // if (promotionfor == 'Tournament')
+                  //   Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       const SizedBox(height: 16),
+                  //       const Text(
+                  //         'Select a Tournament',
+                  //         style: TextStyle(
+                  //             fontSize: 16,
+                  //             fontStyle: FontStyle.normal,
+                  //             fontWeight: FontWeight.bold,
+                  //             color: Colors.black),
+                  //       ),
+                  //       const SizedBox(height: 8),
+                  //
+                  //       Obx(() {
+                  //         if (tournamentController
+                  //             .organizerTournamentList.isEmpty) {
+                  //           return const Text('No tournaments available');
+                  //         }
+                  //         return DropDownWidget(
+                  //           title: "Select Your Tournament",
+                  //           onSelect: (dynamic selectedItem) {
+                  //             setState(() {
+                  //               selectedTournament = tournamentController
+                  //                   .organizerTournamentList
+                  //                   .firstWhere((tournament) =>
+                  //                       tournament.tournamentName ==
+                  //                       selectedItem);
+                  //             });
+                  //           },
+                  //           selectedValue:
+                  //               selectedTournament?.tournamentName ?? '',
+                  //           items: tournamentController.organizerTournamentList
+                  //               .map((tournament) => tournament.tournamentName)
+                  //               .toList(),
+                  //           isAds: false,
+                  //         );
+                  //       }),
+                  //     ],
+                  //   ),
+                  // else if (promotionfor == 'Shop')
+                  //   const Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       Text(
+                  //         'Select a Shop',
+                  //         style: TextStyle(
+                  //             fontSize: 16,
+                  //             fontStyle: FontStyle.normal,
+                  //             fontWeight: FontWeight.bold,
+                  //             color: Colors.black),
+                  //       ),
+                  //     ],
+                  //   ),
                   const SizedBox(height: 16),
                   _buildSummary(),
                 ],
@@ -484,24 +524,25 @@ class AdsScreen extends State<PromoteBannerScreen> {
           PrimaryButton(
               title: 'Pay Now',
               onTap: () async {
-                try{
-                  final PromotionController banner=Get.find<PromotionController>();
-                  if(_image==null){
+                try {
+                  final PromotionController banner =
+                      Get.find<PromotionController>();
+                  if (_image == null) {
                     errorSnackBar('Please select an image');
                     return;
                   }
-                  if(selectedAdsTypes.isEmpty){
-                    errorSnackBar("Select The Place you want to Display your Promotional Banner");
+                  if (selectedAdsTypes.isEmpty) {
+                    errorSnackBar(
+                        "Select The Place you want to Display your Promotional Banner");
                     return;
                   }
-                  if(from==null ||to==null){
+                  if (from == null || to == null) {
                     errorSnackBar("Please select date for promotion");
                     return;
                   }
                   String? base64;
                   if (_image != null) {
-                    base64 =
-                        await convertImageToBase64(_image!);
+                    base64 = await convertImageToBase64(_image!);
                   }
                   Map<String, dynamic> locationData = {
                     "point": {
@@ -510,31 +551,29 @@ class AdsScreen extends State<PromoteBannerScreen> {
                     }
                   };
                   Map<String, dynamic> bannerdata = {
-                    "image":base64,
-                    "promotionLocation":selectedAdsTypes,
+                    "image": base64,
+                    "promotionLocation": selectedAdsTypes,
                     "startDate": from?.toIso8601String(),
                     "endDate": to?.toIso8601String(),
                     "locationHistory": locationData,
-                    "promotionFor":"Shop"
+                    "promotionFor": "Shop"
                   };
-                   banner.createBanner(bannerdata);
-                   if (advertisementModel != null) {
-                  advertisementModel = advertisementModel!.copyWith(
-                    startDate: from!,
-                    endDate: to!,
-                    totalAmount: totalAmount * 1.18,
-                  );                  
-                }
+                  banner.createBanner(bannerdata);
+                  if (advertisementModel != null) {
+                    advertisementModel = advertisementModel!.copyWith(
+                      startDate: from!,
+                      endDate: to!,
+                      totalAmount: totalAmount * 1.18,
+                    );
+                  }
                   Get.to(() => BannerPaymentPage(
                         ads: advertisementModel!,
                         screens: _screens,
                       ));
-                }catch(e){
+                } catch (e) {
                   errorSnackBar(e.toString());
                   rethrow;
                 }
-                
-               
               })
         ],
       ),

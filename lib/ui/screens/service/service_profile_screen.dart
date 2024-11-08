@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:gully_app/data/controller/service_controller.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../data/model/service_model.dart';
+import '../../../utils/app_logger.dart';
 
 class ServiceProfileScreen extends StatelessWidget {
   final ServiceModel service;

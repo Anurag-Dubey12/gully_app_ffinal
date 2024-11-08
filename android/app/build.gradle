@@ -56,12 +56,12 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
-        manifestPlaceholders = [
-                auth0Domain : "YOUR_AUTH0_DOMAIN",
-                auth0Scheme : "YOUR_AUTH0_SCHEME",
-                applicationName : "com.nileegames.gullyteam.Gully Team"
-
-        ]
+//        manifestPlaceholders = [
+//                auth0Domain : "YOUR_AUTH0_DOMAIN",
+//                auth0Scheme : "YOUR_AUTH0_SCHEME",
+//                applicationName : "com.nileegames.gullyteam.Gully Team"
+//
+//        ]
     }
 
      signingConfigs {

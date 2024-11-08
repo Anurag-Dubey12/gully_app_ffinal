@@ -11,6 +11,7 @@ class DropDownWidget extends StatefulWidget {
   final bool isAds;
   final bool? isService;
   final bool iswhite;
+  final bool istournament;
 
   const DropDownWidget({
     Key? key,
@@ -21,6 +22,7 @@ class DropDownWidget extends StatefulWidget {
     required this.isAds,
     this.isService = false,
     this.iswhite = true,
+    this.istournament = false,
   }) : super(key: key);
 
   @override

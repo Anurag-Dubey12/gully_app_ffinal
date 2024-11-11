@@ -40,8 +40,7 @@ class AdsScreen extends State<PromoteBannerScreen> {
   XFile? _image;
   final TextEditingController _DateController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  final TournamentController tournamentController =
-      Get.find<TournamentController>();
+  final tournamentController = Get.find<TournamentController>();
   TournamentModel? selectedTournament;
   late LatLng location;
 
@@ -313,24 +312,25 @@ class AdsScreen extends State<PromoteBannerScreen> {
                       ),
                       const SizedBox(height: 8),
                       Obx(() {
-                        // if (tournamentController
-                        //     .organizerTournamentList.isEmpty) {
-                        //   return const Text('No tournaments available');
-                        // }
+                        final tournaments = tournamentController.tournamentList;
+
                         return DropDownWidget(
-                          title: "Select Your Tournament",
+                          title: tournaments.isEmpty
+                              ? "No tournaments available"
+                              : "Select Your Tournament",
                           onSelect: (dynamic selectedItem) {
-                            setState(() {
-                              selectedTournament = tournamentController
-                                  .organizerTournamentList
-                                  .firstWhere((tournament) =>
-                              tournament.tournamentName ==
-                                  selectedItem);
-                            });
+                            if (selectedItem != null && selectedItem is String) {
+                              setState(() {
+                                selectedTournament = tournaments.firstWhereOrNull(
+                                        (tournament) => tournament.tournamentName == selectedItem
+                                );
+                              });
+                            }
                           },
-                          selectedValue:
-                          selectedTournament?.tournamentName ?? '',
-                          items: tournamentController.organizerTournamentList
+                          selectedValue: selectedTournament?.tournamentName ?? '',
+                          items: tournaments.isEmpty
+                              ? ["No tournaments available"]
+                              : tournaments
                               .map((tournament) => tournament.tournamentName)
                               .toList(),
                           isAds: false,
@@ -487,40 +487,40 @@ class AdsScreen extends State<PromoteBannerScreen> {
           const AdvertisementSummary(
               label: 'Payment method', value: 'RazorPay'),
           const SizedBox(height: 24),
-          if (promotionfor != null)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'With your $promotionfor promotion, you can:',
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                if (promotionfor == 'Tournament')
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('• Increased visibility for your tournament'),
-                      Text('• Attract more participants'),
-                      Text('• Highlight tournament dates and prizes'),
-                    ],
-                  )
-                else if (promotionfor == 'Shop')
-                  const Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('• Showcase your products or services'),
-                      Text('• Reach potential customers in your area'),
-                      Text('• Promote special offers or discounts'),
-                    ],
-                  ),
-              ],
-            ),
-          const SizedBox(height: 10),
+          // if (promotionfor != null)
+          //   Column(
+          //     crossAxisAlignment: CrossAxisAlignment.start,
+          //     children: [
+          //       Text(
+          //         'With your $promotionfor promotion, you can:',
+          //         style: const TextStyle(
+          //           fontSize: 15,
+          //           fontWeight: FontWeight.bold,
+          //           color: Colors.black87,
+          //         ),
+          //       ),
+          //       const SizedBox(height: 8),
+          //       if (promotionfor == 'Tournament')
+          //         const Column(
+          //           crossAxisAlignment: CrossAxisAlignment.start,
+          //           children: [
+          //             Text('• Increased visibility for your tournament'),
+          //             Text('• Attract more participants'),
+          //             Text('• Highlight tournament dates and prizes'),
+          //           ],
+          //         )
+          //       else if (promotionfor == 'Shop')
+          //         const Column(
+          //           crossAxisAlignment: CrossAxisAlignment.start,
+          //           children: [
+          //             Text('• Showcase your products or services'),
+          //             Text('• Reach potential customers in your area'),
+          //             Text('• Promote special offers or discounts'),
+          //           ],
+          //         ),
+          //     ],
+          //   ),
+          // const SizedBox(height: 10),
           PrimaryButton(
               title: 'Pay Now',
               onTap: () async {
@@ -556,8 +556,10 @@ class AdsScreen extends State<PromoteBannerScreen> {
                     "startDate": from?.toIso8601String(),
                     "endDate": to?.toIso8601String(),
                     "locationHistory": locationData,
-                    "promotionFor": "Shop"
+                    // "promotionFor": selectedTournament!.id
+                    "promotionFor": "shop"
                   };
+                  logger.d("The tournament is selected :${selectedTournament!.id}");
                   banner.createBanner(bannerdata);
                   if (advertisementModel != null) {
                     advertisementModel = advertisementModel!.copyWith(

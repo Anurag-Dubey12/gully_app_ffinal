@@ -86,6 +86,9 @@ class ServiceController extends GetxController with StateMixin<ServiceModel> {
       rethrow;
     }
   }
+
+
+
   Future<bool> deleteService(String serviceId)
   async{
     try {

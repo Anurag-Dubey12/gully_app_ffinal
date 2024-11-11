@@ -11,7 +11,7 @@ class MyShop extends GetView<ShopController> {
 
   @override
   Widget build(BuildContext context) {
-    final ShopController controller = Get.put(ShopController());
+    final ShopController controller = Get.find<ShopController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,

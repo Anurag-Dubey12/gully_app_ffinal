@@ -11,6 +11,7 @@ import 'package:gully_app/ui/screens/promote_banner_screen.dart';
 import 'package:gully_app/ui/screens/select_match_type_for_scoreboard.dart';
 import 'package:gully_app/ui/screens/select_performance_type.dart';
 import 'package:gully_app/ui/screens/service/MyService.dart';
+import 'package:gully_app/ui/screens/service/my_register_service.dart';
 import 'package:gully_app/ui/screens/shop/my_shop.dart';
 import 'package:gully_app/ui/screens/tournament_requests_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
@@ -343,7 +344,7 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                             ProfileTileCard(
                               text: 'View My Services',
                               onTap: () {
-                                // Get.to(() =>  MyService());
+                                Get.to(() =>  MyRegisterService());
                               },
                             ),
                             ProfileTileCard(

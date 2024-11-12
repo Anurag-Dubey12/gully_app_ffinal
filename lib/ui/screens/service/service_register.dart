@@ -96,7 +96,7 @@
       final AuthController authController = Get.find<AuthController>();
       _nameController.text = authController.state!.fullName;
       serviceModel = ServiceModel(
-        serviceId: '',
+        id: '',
         name: authController.state!.fullName,
         phoneNumber: authController.state!.phoneNumber ??" ",
         email: '',

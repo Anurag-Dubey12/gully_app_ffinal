@@ -9,19 +9,16 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="service api modify">
-      <change afterPath="$PROJECT_DIR$/lib/ui/screens/service/my_register_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="keystore ,firebase problem solved">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/gradle.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/service_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/service_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/VendorResponseModel.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/my_service_screen.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop/my_shop.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop/my_shop.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/custom_drop_down_field.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/custom_drop_down_field.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/service_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/service_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/ServiceDetailsScreen.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/my_register_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/my_register_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_profile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,14 +177,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00028" summary="performace">
-      <option name="closed" value="true" />
-      <created>1723809362738</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1723809362738</updated>
     </task>
     <task id="LOCAL-00029" summary="purchase ads screen to be modify">
       <option name="closed" value="true" />
@@ -573,7 +562,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731066922252</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="keystore ,firebase problem solved">
+      <option name="closed" value="true" />
+      <created>1731326124687</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1731326124688</updated>
+    </task>
+    <option name="localTasksCounter" value="78" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -594,7 +591,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="notout,caption and wk work almost done" />
     <MESSAGE value="promote banner screen modify" />
     <MESSAGE value="modify and added pdf feature" />
     <MESSAGE value="modify register screen" />
@@ -619,18 +615,8 @@
     <MESSAGE value="modify firebase and promote banner" />
     <MESSAGE value="need attention on firebase" />
     <MESSAGE value="service api modify" />
-    <option name="LAST_COMMIT_MESSAGE" value="service api modify" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint type="Dart">
-          <url>file://$PROJECT_DIR$/lib/data/controller/tournament_controller.dart</url>
-          <line>352</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+    <MESSAGE value="keystore ,firebase problem solved" />
+    <option name="LAST_COMMIT_MESSAGE" value="keystore ,firebase problem solved" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -1073,6 +1059,12 @@
           <option name="totalLines" value="4555560" />
           <option name="info" value="service api modify" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1731326132667" />
+          <option name="linesCode" value="36679" />
+          <option name="totalLines" value="6908200" />
+          <option name="info" value="keystore ,firebase problem solved" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1514,6 +1506,12 @@
           <option name="linesCode" value="36860" />
           <option name="totalLines" value="4555560" />
           <option name="info" value="Nov 8, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1731326132667" />
+          <option name="linesCode" value="36679" />
+          <option name="totalLines" value="6908200" />
+          <option name="info" value="Nov 11, 2024" />
         </TimePoint>
       </list>
     </option>

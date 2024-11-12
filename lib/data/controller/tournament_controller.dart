@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/api/tournament_api.dart';
+import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/model/coupon_model.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
@@ -350,41 +351,88 @@ class TournamentController extends GetxController
     }
   }
 
+  // Future<List<Transaction>> getTransactions() async {
+  //   try {
+  //     final response = await tournamentApi.getTransactions();
+  //     logger.d("API Response: ${response.data}");
+  //
+  //     if (response.data == null) {
+  //       logger.d("Response data is null");
+  //       throw Exception("Response data is null");
+  //     }
+  //     if (response.data!['transactions'] == null) {
+  //       logger.d("Transactions object is null");
+  //       throw Exception("Transactions object is null");
+  //     }
+  //
+  //     if (response.data!['transactions']['history'] == null) {
+  //       logger.d("Transaction history is null");
+  //       throw Exception("Transaction history is null");
+  //     }
+  //
+  //     List<Transaction> transactions = [];
+  //     for (var transactionJson in response.data!['transactions']['history']) {
+  //       try {
+  //         transactions.add(Transaction.fromJson(transactionJson));
+  //       } catch (e) {
+  //         logger.d("Error parsing transaction: $e");
+  //         logger.d("Problematic transaction data: $transactionJson");
+  //       }
+  //     }
+  //     logger.d("Parsed ${transactions.length} transactions");
+  //     return transactions;
+  //   } catch (e) {
+  //     logger.d("Error in getTransactions: $e");
+  //     errorSnackBar(e.toString());
+  //     rethrow;
+  //   }
+  // }
+
+  final authController=Get.find<AuthController>();
+  RxList<Transaction>transactions=<Transaction>[].obs;
   Future<List<Transaction>> getTransactions() async {
     try {
+      final userid = authController.state!.id;
+      transactions.clear();
+
       final response = await tournamentApi.getTransactions();
       logger.d("API Response: ${response.data}");
 
       if (response.data == null) {
         logger.d("Response data is null");
-        throw Exception("Response data is null");
-      }
-      if (response.data!['transactions'] == null) {
-        logger.d("Transactions object is null");
-        throw Exception("Transactions object is null");
+        return [];
       }
 
-      if (response.data!['transactions']['history'] == null) {
+      final transactionData = response.data!['transactions'];
+      if (transactionData == null || transactionData['history'] == null) {
         logger.d("Transaction history is null");
-        throw Exception("Transaction history is null");
+        return [];
       }
 
-      List<Transaction> transactions = [];
-      for (var transactionJson in response.data!['transactions']['history']) {
+      final transactionsList = transactionData['history'] as List;
+
+      for (var transactionJson in transactionsList) {
         try {
-          transactions.add(Transaction.fromJson(transactionJson));
+          final tournamentData = transactionJson['tournament'];
+          if (tournamentData != null &&
+              (tournamentData['user'] == userid ||
+                  tournamentData['authority'] == userid)) {
+            final transaction = Transaction.fromJson(transactionJson);
+            transactions.add(transaction);
+          }
         } catch (e) {
           logger.d("Error parsing transaction: $e");
           logger.d("Problematic transaction data: $transactionJson");
         }
       }
 
-      logger.d("Parsed ${transactions.length} transactions");
+      logger.d("Parsed ${transactions.length} transactions for user $userid");
+      transactions.refresh();
       return transactions;
     } catch (e) {
       logger.d("Error in getTransactions: $e");
       errorSnackBar(e.toString());
-      rethrow;
+      return [];
     }
   }
   Future<List<MatchupModel>> getTournamentMatches(String tournamentId) async {

@@ -10,7 +10,6 @@ import '../../../utils/app_logger.dart';
 
 class ServiceProfileScreen extends StatelessWidget {
   final ServiceModel service;
-
   const ServiceProfileScreen({super.key, required this.service});
 
   @override

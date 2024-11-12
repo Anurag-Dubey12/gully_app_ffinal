@@ -24,6 +24,7 @@ import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/notification_controller.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/controller/service_controller.dart';
+import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/ui/screens/no_internet_screen.dart';
 import 'package:gully_app/ui/widgets/location_permission_builder.dart';
@@ -180,6 +181,8 @@ class _MyAppState extends State<MyApp> {
             () => PromotionController(bannerApi: Get.find())),
         Bind.lazyPut<ServiceController>(
                 () => ServiceController(serviceApi: Get.find())),
+        Bind.lazyPut<ShopController>(
+                () => ShopController()),
         Bind.put<MiscController>(MiscController(repo: Get.find())),
       ],
       defaultTransition: Transition.cupertino,

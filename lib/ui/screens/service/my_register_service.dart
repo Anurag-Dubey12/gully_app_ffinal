@@ -87,10 +87,10 @@ class Services extends StatelessWidget {
     final controller=Get.find<ServiceController>();
 
     return GestureDetector(
-      onTap: ()=>Get.to(()=>ServiceProfileScreen(service: service)),
+      onTap: ()=> Get.to(()=>ServiceProfileScreen(service: service,isAdmin: true)),
       child: Container(
         width: Get.width,
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           border: Border.all(
             color: Colors.grey.shade300,
@@ -109,10 +109,9 @@ class Services extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Container(

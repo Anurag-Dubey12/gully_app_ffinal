@@ -315,10 +315,6 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
 
   @override
   Widget build(BuildContext context) {
-    final TournamentController tournamentController =
-        Get.find<TournamentController>();
-
-    final AuthController authController = Get.find<AuthController>();
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();

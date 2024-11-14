@@ -29,7 +29,8 @@
   import '../service_payment_page.dart';
 
   class ServiceRegister extends StatefulWidget {
-    const ServiceRegister({super.key});
+    final ServiceModel? service;
+    const ServiceRegister({super.key,this.service});
 
     @override
     State<StatefulWidget> createState() => RegisterService();
@@ -95,22 +96,37 @@
       super.initState();
       final AuthController authController = Get.find<AuthController>();
       _nameController.text = authController.state!.fullName;
-      serviceModel = ServiceModel(
-        id: '',
-        name: authController.state!.fullName,
-        phoneNumber: authController.state!.phoneNumber ??" ",
-        email: '',
-        fees: 0,
-        description: '',
-        experience: 0,
-        category: '',
-        address: '',
-        serviceImages: [],
-        identityProof: '', duration:0, serviceType: '',
-        // servicePackage: PackageModel(name: '', duration: '', price: 0,endDate: ''), duration: '', serviceType: '',
-      );
-    }
+      if (widget.service != null) {
+        _nameController.text = widget.service!.name;
+        _descriptionController.text = widget.service!.description;
+        _serviceChargesController.text = widget.service!.fees.toString();
+        _expController.text = widget.service!.experience.toString();
+        _addressController.text = widget.service!.address ?? '';
+        selectedServices = widget.service!.category;
+        isOnline = widget.service!.serviceType == "online";
+        // if (widget.service!.servicePackage != null) {
+        //   selectedPackage = {
+        //     'package': widget.service!.servicePackage!.name,
+        //     'Duration': widget.service!.servicePackage!.duration,
+        //     'price': widget.service!.servicePackage!.price,
+        //     'EndDate': widget.service!.servicePackage!.endDate,
+        //   };
+        // }
+        if (widget.service!.serviceImages != null &&
+            widget.service!.serviceImages!.isNotEmpty) {
+          for (var imagePath in widget.service!.serviceImages!) {
+            _images.add(XFile(imagePath));
+          }
+        }
 
+        if (widget.service!.identityProof != null) {
+          _documentImages = XFile(widget.service!.identityProof!);
+        } else {
+          _nameController.text = authController.state!.fullName;
+        }
+      }
+
+    }
     List<String> cricketServices = [
       "Football Coaching", "Basketball Coaching", "Cricket Coaching", "Tennis Coaching",
       "Badminton Coaching", "Volleyball Coaching", "Table Tennis Coaching", "Rugby Coaching",
@@ -374,6 +390,7 @@
                         label: "Address",
                         textInputType: TextInputType.streetAddress,
                       ),
+                    SizedBox(height: 5,),
                     const Text(
                       "Service You will Offered",
                       style: TextStyle(

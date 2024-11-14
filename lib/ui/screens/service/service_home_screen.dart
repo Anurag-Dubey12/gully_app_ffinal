@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/service_model.dart';
@@ -15,12 +17,39 @@ class ServiceHomeScreen extends StatefulWidget {
 
 class _ServiceHomeScreenState extends State<ServiceHomeScreen> {
   final ServiceController serviceController = Get.find<ServiceController>();
+  Timer? _timer;
 
-  // @override
-  // void initState() {
-  //   serviceController.getuserService();
-  //
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _startAutoRefresh();
+  }
+
+  @override
+  void dispose() {
+    _stopAutoRefresh();
+    super.dispose();
+  }
+
+  void _startAutoRefresh() {
+    _timer = Timer.periodic(const Duration(minutes: 5), (_) {
+      _refreshData();
+    });
+  }
+
+  void _stopAutoRefresh() {
+    _timer?.cancel();
+    _timer = null;
+  }
+
+  Future<void> _refreshData() async {
+    try {
+      await serviceController.getService();
+    } catch (e) {
+      logger.e('Error refreshing data: $e');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +160,7 @@ class ServiceListItem extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 16),
       child: InkWell(
         onTap: onTap ?? () {
-          Get.to(() => ServiceProfileScreen(service: service));
+          Get.to(() => ServiceProfileScreen(service: service,isAdmin: false,));
         },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
@@ -172,11 +201,19 @@ class ServiceListItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
+                      service.category?? '',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
                       service.name?? '',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 18,
-                        color: Colors.black,
+                        fontSize: 14,
+                        color: Colors.grey,
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -186,6 +223,8 @@ class ServiceListItem extends StatelessWidget {
                         color: Colors.grey,
                         fontSize: 14,
                       ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     Text(
                       '₹${service.fees}',
@@ -195,15 +234,15 @@ class ServiceListItem extends StatelessWidget {
                         color: Colors.green,
                       ),
                     ),
-                    Text(
-                      service.address?? '',
-                      style: const TextStyle(
-                        color: Colors.black54,
-                        fontSize: 14,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+                    // Text(
+                    //   service.address?? '',
+                    //   style: const TextStyle(
+                    //     color: Colors.black54,
+                    //     fontSize: 14,
+                    //   ),
+                    //   maxLines: 1,
+                    //   overflow: TextOverflow.ellipsis,
+                    // ),
                   ],
                 ),
               ),

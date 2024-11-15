@@ -5,6 +5,7 @@ import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/ui/widgets/home_screen/no_tournament_card.dart';
 
 import '../../../data/model/scoreboard_model.dart';
+import '../../../utils/BlinkingLiveText.dart';
 import '../../../utils/FallbackImageProvider.dart';
 import '../../../utils/image_picker_helper.dart';
 import '../../../utils/utils.dart';
@@ -61,6 +62,7 @@ class _Card extends StatelessWidget {
     ScoreboardModel? scoreboard = tournament.scoreBoard == null
         ? null
         : ScoreboardModel.fromJson(tournament.scoreBoard!);
+
     return Padding(
       key: super.key,
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
@@ -206,52 +208,6 @@ class _Card extends StatelessWidget {
     int? totalWickets = innings.totalWickets;
     if (totalScore == null || totalWickets == null) return 'N/A';
     return '$totalScore/$totalWickets';
-  }
-}
-
-class BlinkingLiveText extends StatefulWidget {
-  const BlinkingLiveText({super.key});
-
-  @override
-  _BlinkingLiveTextState createState() => _BlinkingLiveTextState();
-}
-
-class _BlinkingLiveTextState extends State<BlinkingLiveText> with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-
-  @override
-  void initState() {
-    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 500));
-    _animationController.repeat(reverse: true);
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return FadeTransition(
-      opacity: _animationController,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-        decoration: BoxDecoration(
-          color: Colors.green,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: const Text(
-          "Live",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
   }
 }
 

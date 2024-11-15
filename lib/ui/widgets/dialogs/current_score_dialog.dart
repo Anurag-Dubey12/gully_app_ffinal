@@ -462,16 +462,6 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                               },
                               title: 'View Scorecard ',
                             ),
-                            //Temporary code for testing ads
-                            // Padding(
-                            //   padding: const EdgeInsets.all(16.0),
-                            //   child: Image.asset(
-                            //     images[currentImageIndex],
-                            //     height: 100,
-                            //     width: Get.width,
-                            //     fit: BoxFit.fill,
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),

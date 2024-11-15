@@ -89,11 +89,11 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       parent: _animationController,
       curve: Curves.easeInOut,
     );
-    if (controller.state!.isOrganizer) {
-      isOrganizer = true;
-    } else {
-       isOrganizer= false;
-    }
+    // if (controller.state!.isOrganizer) {
+    //   isOrganizer = true;
+    // } else {
+    //    isOrganizer= false;
+    // }
   }
 
   @override
@@ -102,14 +102,38 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     _animationController.dispose();
     super.dispose();
   }
-
+  Future<void> refreshData() async {
+    try {
+      final tournamentController = Get.find<TournamentController>();
+      tournamentController.filter.value = 'current';
+    } catch (e) {
+      logger.e('Error refreshing data: $e');
+    }
+  }
   List<Widget> _buildScreens() {
+    final tournamentController = Get.find<TournamentController>();
+    tournamentController.filter.value = 'current';
     return [
       const HomePageContent(),
       const SizedBox(),
-      const ServiceHomeScreen(),
-      const ServiceHomeScreen(),
-      isOrganizer ? const OrganizerProfileScreen(): const PlayerProfileScreen()
+      // const ServiceHomeScreen(),
+      // const ServiceHomeScreen(),
+      Scaffold(
+        appBar: AppBar(
+          title: const Text("Live Score"),
+          backgroundColor: const Color(0xff3F5BBF),
+          elevation: 0,
+          titleTextStyle: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+          iconTheme: const IconThemeData(color: Colors.white),
+        ),
+        body: const Expanded(
+          child: TournamentList(isLivescreen: true),
+        ),
+      ),
     ];
   }
 
@@ -121,12 +145,12 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         activeColorPrimary: AppTheme.primaryColor,
         inactiveColorPrimary: Colors.grey,
       ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.home_filled),
-        title: "vendor",
-        activeColorPrimary: AppTheme.primaryColor,
-        inactiveColorPrimary: Colors.grey,
-      ),
+      // PersistentBottomNavBarItem(
+      //   icon: const Icon(Icons.home_filled),
+      //   title: "vendor",
+      //   activeColorPrimary: AppTheme.primaryColor,
+      //   inactiveColorPrimary: Colors.grey,
+      // ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.circle),
         title: "",
@@ -136,15 +160,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
         },
       ),
+      // PersistentBottomNavBarItem(
+      //   icon: const Icon(Icons.home_filled),
+      //   title: "vendor",
+      //   activeColorPrimary: AppTheme.primaryColor,
+      //   inactiveColorPrimary: Colors.grey,
+      // ),
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.home_filled),
-        title: "vendor",
-        activeColorPrimary: AppTheme.primaryColor,
-        inactiveColorPrimary: Colors.grey,
-      ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.person),
-        title: "Profile",
+        icon: const Icon(Icons.live_tv_outlined),
+        title: "Live Score",
         activeColorPrimary: AppTheme.primaryColor,
         inactiveColorPrimary: Colors.grey,
       ),
@@ -330,6 +354,22 @@ class ScreenContent extends State<HomePageContent>{
                                   },
                                   itemBuilder: (BuildContext context) =>
                                   <PopupMenuEntry<String>>[
+                                    const PopupMenuItem<String>(
+                                      value: 'past',
+                                      enabled: false,
+                                      height: 10,
+                                      child: Center(
+                                        child:  Text(
+                                          'Matches',
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      )
+                                    ),
+                                    // const PopupMenuDivider(height: 1,),
                                     const PopupMenuItem<String>(
                                       value: 'past',
                                       child: Row(

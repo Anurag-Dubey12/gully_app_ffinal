@@ -287,21 +287,6 @@ class AppDrawer extends GetView<AuthController> {
                     ],
                   ),
                 ),
-                // DrawerCard(
-                //   title: 'Shop',
-                //   onTap: () {
-                //     Get.to(() => const ShopHome());
-                //   },
-                //   icon: Iconsax.shop,
-                // ),
-                // DrawerCard(
-                //   // title: 'About us',
-                //   title: 'Service',
-                //   onTap: () {
-                //     Get.to(() => const ServiceScreen());
-                //   },
-                //   icon: Icons.sports_cricket_rounded,
-                // ),
                 DrawerCard(
                   // title: 'About us',
                   title: AppLocalizations.of(context)!.about_us,
@@ -385,17 +370,17 @@ class AppDrawer extends GetView<AuthController> {
                   },
                   icon: Icons.disc_full,
                 ),
-                DrawerCard(
-                  // title: 'Disclaimer',
-                  title: AppLocalizations.of(context)!.changeLanguage,
-                  onTap: () {
-                    Get.to(() => const ChooseLanguageScreen(
-                        // title: 'Disclaimer',
-
-                        ));
-                  },
-                  icon: Icons.language,
-                ),
+                // DrawerCard(
+                //   // title: 'Disclaimer',
+                //   title: AppLocalizations.of(context)!.changeLanguage,
+                //   onTap: () {
+                //     Get.to(() => const ChooseLanguageScreen(
+                //         // title: 'Disclaimer',
+                //
+                //         ));
+                //   },
+                //   icon: Icons.language,
+                // ),
                 DrawerCard(
                   // title: 'Log out',
                   title: AppLocalizations.of(context)!.logout,

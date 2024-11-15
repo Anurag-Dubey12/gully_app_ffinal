@@ -247,24 +247,24 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                                 Get.to(() => const SelectMatchCategory());
                               },
                             ),
-                            ProfileTileCard(
-                              text: 'View My Shop',
-                              onTap: () {
-                                Get.to(() => const MyShop());
-                              },
-                            ),
-                            ProfileTileCard(
-                              text: 'View My Services',
-                              onTap: () {
-                                Get.to(() => const MyShop());
-                              },
-                            ),
-                            ProfileTileCard(
-                              text: 'Purchase Ads',
-                              onTap: () {
-                                Get.to(() => const PromoteBannerScreen());
-                              },
-                            ),
+                            // ProfileTileCard(
+                            //   text: 'View My Shop',
+                            //   onTap: () {
+                            //     Get.to(() => const MyShop());
+                            //   },
+                            // ),
+                            // ProfileTileCard(
+                            //   text: 'View My Services',
+                            //   onTap: () {
+                            //     Get.to(() => const MyShop());
+                            //   },
+                            // ),
+                            // ProfileTileCard(
+                            //   text: 'Purchase Ads',
+                            //   onTap: () {
+                            //     Get.to(() => const PromoteBannerScreen());
+                            //   },
+                            // ),
                           ],
                         ),
                       ),

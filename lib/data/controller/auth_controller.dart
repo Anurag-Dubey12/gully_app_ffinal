@@ -145,10 +145,10 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       }
       final pref = Get.put<Preferences>(Preferences(), permanent: true);
       logger.f("Language: ${pref.getLanguage()}");
-      if (!pref.languageSelected) {
-        Get.offAll(() => const ChooseLanguageScreen());
-        // return false;
-      }
+      // if (!pref.languageSelected) {
+      //   Get.offAll(() => const ChooseLanguageScreen());
+      //   // return false;
+      // }
       refresh();
       getCurrentLocation();
     } catch (e) {

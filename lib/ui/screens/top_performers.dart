@@ -79,7 +79,7 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              _SelectBallTypeCard(
+                              BallType(
                                 tab: 0,
                                 selectedTab: _selectedTab,
                                 text: 'Leather ball',
@@ -91,7 +91,7 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                                 },
                               ),
                               const SizedBox(width: 10),
-                              _SelectBallTypeCard(
+                              BallType(
                                 tab: 1,
                                 selectedTab: _selectedTab,
                                 text: 'Tennis ball',
@@ -257,13 +257,13 @@ class _PlayerCard extends StatelessWidget {
   }
 }
 
-class _SelectBallTypeCard extends StatelessWidget {
+class BallType extends StatelessWidget {
   final int tab;
   final int selectedTab;
   final String text;
   final Function(int tab) onTap;
 
-  const _SelectBallTypeCard({
+  const BallType({
     required this.onTap,
     required this.tab,
     required this.selectedTab,

@@ -9,14 +9,21 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify service screen and transaction data">
-      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/service/more_services_list.dart" afterDir="false" />
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify don't know">
+      <change afterPath="$PROJECT_DIR$/lib/utils/BlinkingLiveText.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/utils/LiquidPullToRefreshWidget.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/my_register_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/my_register_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_home_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_profile_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/auth_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/auth_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/create_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/create_profile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/player_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/player_profile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/tournament_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/tournament_list.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,32 +96,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DEBUGGABLE_DEVICE": "lava_lxx507-192.168.29.122:37709",
-    "DEBUGGABLE_PROCESS": "com.nileegames.gullyteam",
-    "DEBUGGER_ID": "Java",
-    "Flutter.main.dart.executor": "Run",
-    "Gradle.C:/Users/abcom/Documents/Software/gully_app [signingReport].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "SHOW_ALL_PROCESSES": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "com.android.tools.idea.devicemanager.tab": "Physical",
-    "com.google.services.firebase.aqiPopupShown": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "office",
-    "ignore.virus.scanning.warn.message": "true",
-    "io.flutter.reload.alreadyRun": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/abcom/Documents/Software/gully_app/lib/ui/widgets/service",
-    "settings.editor.selected.configurable": "preferences.editor",
-    "show.migrate.to.gradle.popup": "false"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DEBUGGABLE_DEVICE&quot;: &quot;lava_lxx507-192.168.29.122:37709&quot;,
+    &quot;DEBUGGABLE_PROCESS&quot;: &quot;com.nileegames.gullyteam&quot;,
+    &quot;DEBUGGER_ID&quot;: &quot;Java&quot;,
+    &quot;Flutter.main.dart.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.C:/Users/abcom/Documents/Software/gully_app [signingReport].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;SHOW_ALL_PROCESSES&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.android.tools.idea.devicemanager.tab&quot;: &quot;Physical&quot;,
+    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;office&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/abcom/Documents/Software/gully_app/lib/ui/widgets/service&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.editor&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\abcom\Documents\Software\gully_app\lib\ui\widgets\service" />
@@ -175,14 +182,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00030" summary="added temprory ads screen and need to add payment screen for banner purchase">
-      <option name="closed" value="true" />
-      <created>1724327404926</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1724327404926</updated>
     </task>
     <task id="LOCAL-00031" summary="modify advertisment summary screen">
       <option name="closed" value="true" />
@@ -568,7 +567,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731412006795</updated>
     </task>
-    <option name="localTasksCounter" value="79" />
+    <task id="LOCAL-00079" summary="modify don't know">
+      <option name="closed" value="true" />
+      <created>1731585374680</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1731585374680</updated>
+    </task>
+    <option name="localTasksCounter" value="80" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -589,7 +596,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="modify and added pdf feature" />
     <MESSAGE value="modify register screen" />
     <MESSAGE value="modify service screen and also update player profile screen by adding scoreboard option" />
     <MESSAGE value="modify" />
@@ -614,7 +620,8 @@
     <MESSAGE value="service api modify" />
     <MESSAGE value="keystore ,firebase problem solved" />
     <MESSAGE value="modify service screen and transaction data" />
-    <option name="LAST_COMMIT_MESSAGE" value="modify service screen and transaction data" />
+    <MESSAGE value="modify don't know" />
+    <option name="LAST_COMMIT_MESSAGE" value="modify don't know" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -1063,6 +1070,12 @@
           <option name="totalLines" value="6908200" />
           <option name="info" value="keystore ,firebase problem solved" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1731585381422" />
+          <option name="linesCode" value="37119" />
+          <option name="totalLines" value="2472765" />
+          <option name="info" value="modify don't know" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1510,6 +1523,12 @@
           <option name="linesCode" value="36679" />
           <option name="totalLines" value="6908200" />
           <option name="info" value="Nov 11, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1731585381422" />
+          <option name="linesCode" value="37119" />
+          <option name="totalLines" value="2472765" />
+          <option name="info" value="Nov 14, 2024" />
         </TimePoint>
       </list>
     </option>

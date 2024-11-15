@@ -13,9 +13,10 @@ import 'future_tournament_card.dart';
 import 'past_tournament_card.dart';
 
 class TournamentList extends StatefulWidget {
-
+  final bool isLivescreen ;
   const TournamentList({
     Key? key,
+    this.isLivescreen=false
   }) : super(key: key);
 
   @override
@@ -43,7 +44,7 @@ class _TournamentListState extends State<TournamentList> {
               controller.filter.value != 'upcoming' &&
               controller.filter.value != 'past') {
             log('Show Current Tournament Card');
-            tournamentWidget = const CurrentTournamentCard();
+             tournamentWidget = const CurrentTournamentCard();
           } else if ((isDateTimeInPast(controller.selectedDate.value) ||
               controller.filter.value == 'past') &&
               controller.filter.value != 'upcoming') {

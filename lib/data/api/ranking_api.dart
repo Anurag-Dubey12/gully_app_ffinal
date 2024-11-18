@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../config/api_client.dart';
+import '../../utils/app_logger.dart';
 import '../controller/tournament_controller.dart';
 
 class RankingApi {
@@ -35,6 +36,7 @@ class RankingApi {
       'longitude': position.longitude,
       'startDate': startDate.toIso8601String()
     });
+    logger.d("Response Body: ${response.body}");
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }

@@ -253,10 +253,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             _teamLimitController.text,
             "gameType": "CRICKET",
             "selectLocation": _addressController.text,
-            "latitude": tournamentController
-                .coordinates.value.latitude,
-            "longitude": tournamentController
-                .coordinates.value.longitude,
+            "latitude": location.latitude,
+            "longitude": location.longitude,
             "rules": _rulesController.text,
             'coverPhoto': base64,
             'coHost1Name':

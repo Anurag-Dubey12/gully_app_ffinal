@@ -42,10 +42,14 @@ class RankingController extends GetxController {
       String ballType, DateTime startDate) async {
     try {
       final response = await api.getTopPerformers(ballType, startDate);
-      logger.d("The Performer Data is : ${response.data}");
+      logger.d("The response Data is :${response.data}");
+      if (response.data == null || !response.data!.containsKey('topPerformers')) {
+        throw 'Invalid response format: missing topPerformers data';
+      }
       return response.data!['topPerformers']
           .map<PlayerRankingModel>((e) => PlayerRankingModel.fromJson(e))
           .toList();
+
     } catch (e) {
       errorSnackBar(e.toString());
       rethrow;

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/player_ranking_model.dart';
 import 'package:gully_app/utils/utils.dart';
+import 'package:intl/intl.dart';
 
 import '../../data/controller/ranking_controller.dart';
+import '../../utils/app_logger.dart';
 import '../../utils/date_time_helpers.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
@@ -17,7 +19,14 @@ class TopPerformersScreen extends StatefulWidget {
 
 class _TopPerformersScreenState extends State<TopPerformersScreen> {
   int _selectedTab = 0;
-  DateTime? selectedDate;
+  DateTime selectedDate = DateTime.now();
+  String? formatedDate;
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   selectedDate = DateTime.now();
+  //   formatedDate = DateFormat('yyyy-MM-dd').format(selectedDate!);
+  // }
   @override
   Widget build(BuildContext context) {
     final controller = Get.putOrFind(() => RankingController(Get.find()));
@@ -85,7 +94,6 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                                 text: 'Leather ball',
                                 onTap: (st) {
                                   setState(() {
-                                    // ignore: unnecessary_statements
                                     _selectedTab = 0;
                                   });
                                 },
@@ -107,7 +115,7 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                         Center(
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text('Daily top Perfomer',
+                            child: Text('Daily top Performer',
                                 style: Get.textTheme.headlineMedium?.copyWith(
                                   fontWeight: FontWeight.w400,
                                   color: Colors.grey.shade800,
@@ -125,17 +133,20 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 GestureDetector(
-                                  onTap: () {
-                                    showDatePicker(
-                                            context: context,
-                                            initialDate: DateTime.now(),
-                                            firstDate: DateTime(2021),
-                                            lastDate: DateTime(2025))
-                                        .then((value) {
+                                  onTap: () async {
+                                    final DateTime? picked = await showDatePicker(
+                                      context: context,
+                                      initialDate: selectedDate,
+                                      firstDate: DateTime(2021),
+                                      lastDate: DateTime.now(),
+                                    );
+
+                                    if (picked != null && picked != selectedDate) {
                                       setState(() {
-                                        selectedDate = value;
+                                        selectedDate = DateTime(picked.year, picked.month, picked.day);
+                                        logger.d("Selected date: $selectedDate");
                                       });
-                                    });
+                                    }
                                   },
                                   child: Container(
                                     decoration: const BoxDecoration(
@@ -150,16 +161,14 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                                             MainAxisAlignment.center,
                                         children: [
                                           const SizedBox(width: 10),
-                                          Text(
-                                              selectedDate == null
-                                                  ? 'Today'
-                                                  : formatDateTime(
-                                                      'dd MMMM yyyy',
-                                                      selectedDate!),
-                                              style: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14)),
+                                        Text(
+                                          DateFormat('yyyy-MM-dd').format(selectedDate),
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: 14,
+                                          ),
+                                        ),
                                           const SizedBox(width: 10),
                                           const Icon(
                                             Icons.calendar_month,
@@ -182,10 +191,11 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                             // height: Get.height * 0.6,
                             child: FutureBuilder<List<PlayerRankingModel>>(
                                 future: controller.getTopPerformers(
-                                    _selectedTab == 0 ? 'leather' : 'tennis',
-                                    selectedDate ?? DateTime.now()
+                                  _selectedTab == 0 ? 'leather' : 'tennis',
+                                  selectedDate,
                                 ),
                                 builder: (context, snapshot) {
+                                  // logger.d("The selected tab value is :$_selectedTab and date is $selectedDate");
                                   if (snapshot.connectionState == ConnectionState.waiting) {
                                     return const Center(child: CircularProgressIndicator());
                                   } else if (snapshot.hasError) {

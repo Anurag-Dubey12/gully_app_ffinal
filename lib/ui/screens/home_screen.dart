@@ -20,6 +20,7 @@ import 'package:gully_app/utils/utils.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../widgets/home_screen/SliverAppBarDelegate.dart';
+import '../widgets/home_screen/live_score_screen.dart';
 import '../widgets/home_screen/top_header.dart';
 import 'organizer_profile.dart';
 
@@ -118,22 +119,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       const SizedBox(),
       // const ServiceHomeScreen(),
       // const ServiceHomeScreen(),
-      Scaffold(
-        appBar: AppBar(
-          title: const Text("Live Score"),
-          backgroundColor: const Color(0xff3F5BBF),
-          elevation: 0,
-          titleTextStyle: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-          iconTheme: const IconThemeData(color: Colors.white),
-        ),
-        body: const Expanded(
-          child: TournamentList(isLivescreen: true),
-        ),
-      ),
+      LiveScore()
     ];
   }
 
@@ -157,7 +143,6 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         activeColorPrimary: Colors.transparent,
         inactiveColorPrimary: Colors.transparent,
         onPressed: (context) {
-
         },
       ),
       // PersistentBottomNavBarItem(

@@ -10,6 +10,7 @@ import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 
+import 'MultiImageViewerWidget.dart';
 import 'app_logger.dart';
 
 Future<XFile?> imagePickerHelper() async {
@@ -114,4 +115,30 @@ ImageProvider _getImageProvider(String photoUrl) {
   } else {
     return FileImage(File(photoUrl));
   }
+
+
 }
+void multiImageViewer(BuildContext context, List<String?> imageUrls, int initialIndex, bool isNetworkImage) {
+  if (imageUrls.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('No images available')),
+    );
+    return;
+  }
+
+  Navigator.of(context).push(
+    PageRouteBuilder(
+      opaque: false,
+      barrierColor: Colors.black87,
+      pageBuilder: (BuildContext context, _, __) {
+        return MultiImageViewerWidget(
+          imageUrls: imageUrls,
+          initialIndex: initialIndex,
+          isNetworkImage: isNetworkImage,
+        );
+      },
+    ),
+  );
+}
+
+

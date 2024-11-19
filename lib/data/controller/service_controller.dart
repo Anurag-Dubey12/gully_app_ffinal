@@ -71,7 +71,7 @@ class ServiceController extends GetxController with StateMixin<ServiceModel> {
     }
   }
 
-  Future<bool> updateservice(String serviceId,Map<String,dynamic> service)
+  Future<bool> updateservice(Map<String,dynamic> service,String serviceId)
   async{
     try {
       final response = await serviceApi.updateService(serviceId, service);
@@ -98,11 +98,30 @@ class ServiceController extends GetxController with StateMixin<ServiceModel> {
         errorSnackBar(response.message ?? 'Unable to update service');
         return false;
       }
+      userservice.removeWhere((element) => element.id == serviceId);
+      successSnackBar('Service deleted successfully');
+      await Future.wait([
+        getService(),
+        getuserService()
+      ]);
       return true;
     }catch(e){
       logger.e('Error updating service: $e');
       rethrow;
     }
   }
-
+  Future<void> refreshData() async {
+    try {
+      isLoading.value = true;
+      await Future.wait([
+        getService(),
+        getuserService()
+      ]);
+    } catch (e) {
+      logger.e('Error refreshing data: $e');
+      errorSnackBar('Error refreshing data. Please try again.');
+    } finally {
+      isLoading.value = false;
+    }
+  }
 }

@@ -16,14 +16,14 @@ class MyServices extends State<MyRegisterService> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ServiceController>();
+
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
         image: DecorationImage(
-            image: AssetImage(
-              'assets/images/sports_icon.png',
-            ),
-            fit: BoxFit.cover),
+          image: AssetImage('assets/images/sports_icon.png'),
+          fit: BoxFit.cover,
+        ),
       ),
       child: GradientBuilder(
         child: Scaffold(
@@ -48,22 +48,26 @@ class MyServices extends State<MyRegisterService> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               }
+
               if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
               }
-              if (snapshot.data == null || controller.userservice.isEmpty) {
-                return const Center(child: Text('No services available'));
-              }
-              return ListView.separated(
-                itemCount: controller.userservice.length,
-                shrinkWrap: true,
-                padding: const EdgeInsets.all(16),
-                separatorBuilder: (context, index) => const SizedBox(height: 10),
-                itemBuilder: (context, index) {
-                  final registerService = controller.userservice[index];
-                  return Services(index: index, service: registerService);
-                },
-              );
+
+              return Obx(() {
+                if (controller.userservice.isEmpty) {
+                  return const Center(child: Text('No services available'));
+                }
+                return ListView.separated(
+                  itemCount: controller.userservice.length,
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(16),
+                  separatorBuilder: (context, index) => const SizedBox(height: 10),
+                  itemBuilder: (context, index) {
+                    final registerService = controller.userservice[index];
+                    return Services(index: index, service: registerService);
+                  },
+                );
+              });
             },
           ),
         ),
@@ -84,10 +88,12 @@ class Services extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller=Get.find<ServiceController>();
+    final controller = Get.find<ServiceController>();
 
     return GestureDetector(
-      onTap: ()=> Get.to(()=>ServiceProfileScreen(service: service,isAdmin: true)),
+      onTap: () => Get.to(
+            () => ServiceProfileScreen(service: service, isAdmin: true),
+      ),
       child: Container(
         width: Get.width,
         padding: const EdgeInsets.all(10),
@@ -148,7 +154,7 @@ class Services extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey.shade600,
-                          overflow: TextOverflow.ellipsis
+                          overflow: TextOverflow.ellipsis,
                         ),
                         maxLines: 2,
                         softWrap: true,
@@ -181,16 +187,17 @@ class Services extends StatelessWidget {
                       context: context,
                       builder: (context) => AlertDialog(
                         title: const Text('Delete Service'),
-                        content:  Text('Are you sure you want to delete ${service.category} service?'),
+                        content: Text('Are you sure you want to delete ${service.category} service?'),
                         actions: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
                             child: const Text('Cancel'),
                           ),
                           TextButton(
-                            onPressed: () {
-                              controller.deleteService(service.id);
+                            onPressed: () async {
                               Get.close();
+                              await controller.deleteService(service.id);
+                              await controller.getuserService();
                             },
                             child: const Text(
                               'Delete',

@@ -10,13 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify">
-      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/utils/MultiImageViewerWidget.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/api/ranking_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/ranking_api.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/ranking_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/ranking_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/service_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/service_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/my_register_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/my_register_service.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_profile_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/image_picker_helper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils/image_picker_helper.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,14 +176,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00032" summary="notout,caption and wk work almost done">
-      <option name="closed" value="true" />
-      <created>1724673166860</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1724673166860</updated>
     </task>
     <task id="LOCAL-00033" summary="promote banner screen modify">
       <option name="closed" value="true" />
@@ -568,7 +561,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731671603732</updated>
     </task>
-    <option name="localTasksCounter" value="81" />
+    <task id="LOCAL-00081" summary="modify">
+      <option name="closed" value="true" />
+      <created>1731931049688</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1731931049740</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1075,6 +1076,12 @@
           <option name="totalLines" value="4473033" />
           <option name="info" value="modify" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1731931059615" />
+          <option name="linesCode" value="37147" />
+          <option name="totalLines" value="4517820" />
+          <option name="info" value="modify" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1534,6 +1541,12 @@
           <option name="linesCode" value="37140" />
           <option name="totalLines" value="4473033" />
           <option name="info" value="Nov 15, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1731931059615" />
+          <option name="linesCode" value="37147" />
+          <option name="totalLines" value="4517820" />
+          <option name="info" value="Nov 18, 2024" />
         </TimePoint>
       </list>
     </option>

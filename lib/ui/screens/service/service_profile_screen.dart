@@ -5,9 +5,12 @@ import 'package:gully_app/ui/screens/service/service_register.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/utils/FallbackImageProvider.dart';
+import 'package:gully_app/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../data/controller/service_controller.dart';
+import '../../../utils/image_picker_helper.dart';
 import '../../widgets/service/more_services_list.dart';
 
 class ServiceProfileScreen extends StatefulWidget {
@@ -128,13 +131,36 @@ class ProfileScreenState extends State<ServiceProfileScreen> {
               },
             ),
           if (widget.isAdmin)
+          // In ServiceProfileScreen
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.white),
-              onPressed: () {
-                serviceController.deleteService(widget.service.id);
-                Get.back();
+              onPressed: () async {
+                final confirmed = await showDialog<bool>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: const Text('Delete Service'),
+                    content: const Text('Are you sure you want to delete this service?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                      ),
+                    ],
+                  ),
+                );
+
+                if (confirmed == true) {
+                  final success = await serviceController.deleteService(widget.service.id);
+                  if (success) {
+                    Get.back(); // Navigate back after successful deletion
+                  }
+                }
               },
-            )
+            ),
         ],
       ),
       body: SingleChildScrollView(
@@ -285,6 +311,13 @@ class ProfileScreenState extends State<ServiceProfileScreen> {
                 color: Colors.black,
               ),
             ),
+             Text(
+               widget.service.description,
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.black,
+              ),
+            ),
             const Text(
               'Gallery',
               style: TextStyle(
@@ -317,19 +350,30 @@ class ProfileScreenState extends State<ServiceProfileScreen> {
                     ),
                     itemCount: widget.service.serviceImages!.length,
                     itemBuilder: (context, index) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: Colors.white24,
-                            width: 1,
-                          ),
+                      return GestureDetector(
+                        onTap: () => multiImageViewer(
+                          context,
+                          widget.service.serviceImages!,
+                          index,
+                          true,
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.network(
-                            widget.service.serviceImages![index]
-                          )
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: Colors.white24,
+                              width: 1,
+                            ),
+                          ),
+                          child: Image(
+                            image: widget.service.serviceImages != null
+                                ? FallbackImageProvider(
+                              toImageUrl(widget.service.serviceImages![index]),
+                              'assets/images/logo.png',
+                            )
+                                : const AssetImage('assets/images/logo.png') as ImageProvider,
+                            fit: BoxFit.contain,
+                          ),
                         ),
                       );
                     },

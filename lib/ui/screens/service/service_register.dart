@@ -47,6 +47,8 @@
     String selectedServices='';
     bool isLoading = false;
     bool tncAccepted = false;
+    String selectedOnlineOption = 'no';
+    String selectedDuration = 'per_hour';
     final _key = GlobalKey<FormState>();
     final List<XFile> _images = [];
     LatLng? location;
@@ -154,9 +156,9 @@
                 iconTheme: const IconThemeData(color: Colors.white),
                 backgroundColor: Colors.transparent,
                 elevation: 0,
-                title: const Text(
-                  'Register Service',
-                  style: TextStyle(
+                title: Text(
+                  widget.service!=null? 'Edit Service':'Register Service',
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
@@ -175,100 +177,82 @@
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
                       child: isLoading
                           ? const CircularProgressIndicator()
                           : PrimaryButton(
-                              onTap: () async {
-                                if (!tncAccepted) {
-                                  errorSnackBar(
-                                      'Please accept the Terms and Conditions',
-                                      title: "Error"
-                                  );
-                                  return;
-                                }
-                                if (_images.isEmpty) {
-                                  errorSnackBar('Please select at least one image of your service',
-                                      title: "Error");
-                                  return;
-                                }
-                                if (_descriptionController.text.isEmpty) {
-                                  errorSnackBar('Please enter description',
-                                      title: "Error");
-                                  return;
-                                }
-                                if (_expController.text.isEmpty) {
-                                  errorSnackBar('Please enter experience',
-                                      title: "Error");
-                                  return;
-                                }
-                                if(_images.isEmpty){
-                                  errorSnackBar('Please Add Some Images',
-                                      title: "Error");
-                                  return;
-                                }
-                                if(_documentImages==null){
-                                  errorSnackBar('Please Add Document Images',
-                                      title: "Error");
-                                  return;
-                                }
-                                List<String> serviceImagesBase64 = [];
-                                for (var image in _images) {
-                                  String? base64Image = await convertImageToBase64(image);
-                                  if (base64Image != null) {
-                                    serviceImagesBase64.add(base64Image);
-                                  }
-                                }
+                        onTap: () async {
+                          try {
+                            if (!tncAccepted) {
+                              throw Exception('Please accept the Terms and Conditions');
+                            }
+                            if (_images.isEmpty) {
+                              throw Exception('Please select at least one image of your service');
+                            }
+                            if (_descriptionController.text.isEmpty) {
+                              throw Exception('Please enter a description');
+                            }
+                            if (_expController.text.isEmpty) {
+                              throw Exception('Please enter experience');
+                            }
+                            if (_documentImages == null) {
+                              throw Exception('Please add document images');
+                            }
 
-                                String? identityProofBase64;
-                                if (_documentImages != null) {
-                                  identityProofBase64 = await convertImageToBase64(_documentImages!);
-                                }
-                                Map<String, dynamic> serviceData = {
-                                  "name": authController.state!.fullName,
-                                  "address": isOnline ? " " : _addressController.text,
-                                  "phoneNumber": authController.state!.phoneNumber,
-                                  "email": authController.state!.email,
-                                  "identityProof": identityProofBase64,
-                                  "category": selectedServices.toString(),
-                                  // "category": selectedServices.isNotEmpty ? [selectedServices.first] : [],
-                                  "description": _descriptionController.text,
-                                  "experience": int.parse(_expController.text),
-                                  // "duration": int.parse(selectedPackage?['Duration']?.replaceAll(RegExp(r'[^0-9]'), '') ?? '0'),
-                                  "duration":2,
-                                  "fees": int.parse(_serviceChargesController.text),
-                                  "serviceType": isOnline ? "online" : "offline",
-                                  "serviceImages": serviceImagesBase64,
-                                };
+                            // Convert images to Base64
+                            List<String> serviceImagesBase64 = [];
+                            for (var image in _images) {
+                              String? base64Image = await convertImageToBase64(image);
+                              if (base64Image != null) {
+                                serviceImagesBase64.add(base64Image);
+                              }
+                            }
 
-                                // final serviceModel = ServiceModel(
-                                //   serviceId: '',
-                                //   name: authController.state!.fullName,
-                                //   phoneNumber: authController.state!.phoneNumber ?? "",
-                                //   email: _emailController.text.toString(),
-                                //   fees: int.parse(_serviceChargesController.text),
-                                //   description: _descriptionController.text,
-                                //   experience: int.parse(_expController.text),
-                                //   category: selectedServices,
-                                //   address: _addressController.text,
-                                //   serviceImages: _images.map((image) => image.path).toList(),
-                                //   identityProof: _documentImages.toString(),
-                                //   servicePackage: PackageModel(
-                                //     name: selectedPackage!['package'],
-                                //     duration: selectedPackage!['Duration'],
-                                //     price: double.parse(selectedPackage!['price'].toString()),
-                                //     endDate: selectedPackage!['EndDate'],
-                                //   ), duration: '', serviceType: '',
-                                // );
+                            String? identityProofBase64;
+                            if (_documentImages != null) {
+                              identityProofBase64 = await convertImageToBase64(_documentImages!);
+                            }
 
-                                serviceController.addService(serviceData);
-                                // Navigate to ServicePaymentPage
-                                Get.to(() => ServicePaymentPage(service: serviceModel));
-                              },
-                              isDisabled: !tncAccepted,
-                              title: 'Submit',
-                            ),
+                            // Prepare service data
+                            Map<String, dynamic> serviceData = {
+                              "name": authController.state!.fullName,
+                              "address": isOnline ? " " : _addressController.text,
+                              "phoneNumber": authController.state!.phoneNumber,
+                              "email": authController.state!.email,
+                              "identityProof": identityProofBase64,
+                              "category": selectedServices.toString(),
+                              "description": _descriptionController.text,
+                              "experience": int.parse(_expController.text),
+                              "duration": charges_durations,
+                              "fees": int.parse(_serviceChargesController.text),
+                              "serviceType": selectedOnlineOption == 'yes' ? "online" : "offline",
+                              "serviceImages": serviceImagesBase64,
+                            };
+
+                            if (widget.service != null) {
+                              bool isOk = await serviceController.updateservice({
+                                ...serviceData
+                              }, widget.service!.id);
+                              if (isOk) {
+                                Get.back();
+                                Get.forceAppUpdate();
+                                successSnackBar('Service Updated Successfully');
+                              }
+                            } else {
+                              final serviceModel = await serviceController.addService(serviceData);
+                              authController.getUser();
+                              logger.d("The Service id is: ${serviceModel.id}");
+                              Get.to(() => ServicePaymentPage(service: serviceModel));
+                            }
+                          } finally {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          }
+                        },
+                        isDisabled: !tncAccepted,
+                        title: 'Submit',
+                      ),
                     ),
                   ],
                 ),
@@ -309,88 +293,59 @@
                     ),
                     const SizedBox(height: 10),
                     Container(
-                      // padding: const EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                          color: Colors.grey
-                        )
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.grey)
                       ),
+                      padding: const EdgeInsets.symmetric( horizontal: 16),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           const Text(
                             'Is Your Service Online?',
                             style: TextStyle(
                               color: Colors.black,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                          Switch(
-                            value: isOnline,
+                          Radio<String>(
+                            value: 'yes',
+                            groupValue: selectedOnlineOption,
                             activeColor: AppTheme.primaryColor,
-                            inactiveThumbImage: const AssetImage("assets/images/logo.png"),
-                            activeThumbImage: const AssetImage("assets/images/logo.png"),
-                            inactiveThumbColor: Colors.grey,
-                            activeTrackColor: Colors.grey,
-                            // trackColor: WidgetStateProperty.resolveWith<Color?>((states) {
-                            //   if (states.contains(WidgetState.selected)) {
-                            //     return Colors.grey;
-                            //   }
-                            //   return Colors.white;
-                            // }),
-                            onChanged: (bool value) {
+                            onChanged: (String? value) {
                               setState(() {
-                                isOnline = value;
-                                if (value) {
+                                selectedOnlineOption = value!;
+                                isOnline = value == 'yes';
+                                if (isOnline) {
                                   location = null;
                                   _addressController.clear();
                                 }
                               });
                             },
                           ),
-                          Text(
-                            isOnline?"Yes": "No",
-                            style: const TextStyle(
-                              color: Colors.black,
-                            ),
+                          const Text('Yes'),
+                          Radio<String>(
+                            value: 'no',
+                            groupValue: selectedOnlineOption,
+                            activeColor: AppTheme.primaryColor,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectedOnlineOption = value!;
+                                isOnline = value == 'yes';
+                              });
+                            },
                           ),
+                          const Text('No'),
                         ],
                       ),
                     ),
                     if (!isOnline)
-                      // FormInput(
-                      //   controller: _addressController,
-                      //   label: 'Select Location for Your Service',
-                      //   readOnly: true,
-                      //   onTap: () async {
-                      //     Get.to(
-                      //           () => SelectLocationScreen(
-                      //         onSelected: (e, l) {
-                      //           setState(() {
-                      //             _addressController.text = e;
-                      //           });
-                      //           if (l != null) {
-                      //             setState(() {
-                      //               location = l;
-                      //               logger.d("The Location is $l");
-                      //             });
-                      //           }
-                      //           FocusScope.of(context).unfocus();
-                      //         },
-                      //         initialLocation: location != null
-                      //             ? LatLng(location!.latitude, location!.longitude)
-                      //             : null,
-                      //       ),
-                      //     );
-                      //   },
-                      // ),
                       FormInput(
                         controller: _addressController,
                         label: "Address",
                         textInputType: TextInputType.streetAddress,
                       ),
-                    SizedBox(height: 5,),
+                    const SizedBox(height: 16),
                     const Text(
                       "Service You will Offered",
                       style: TextStyle(
@@ -425,9 +380,64 @@
                     ),
                     FormInput(
                       controller: _serviceChargesController,
-                      label: "Services Charges",
+                      label: "Service Charges",
                       textInputType: TextInputType.number,
                     ),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    //   crossAxisAlignment: CrossAxisAlignment.center,
+                    //   children: [
+                    //     Expanded(
+                    //       flex: 1,
+                    //       child: FormInput(
+                    //         controller: _serviceChargesController,
+                    //         label: "Service Charges",
+                    //         textInputType: TextInputType.number,
+                    //       ),
+                    //     ),
+                    //     Expanded(
+                    //       flex: 1,
+                    //       child: Container(
+                    //         decoration: BoxDecoration(
+                    //           color: Colors.white,
+                    //           borderRadius: BorderRadius.circular(10),
+                    //           border: Border.all(color: Colors.grey),
+                    //         ),
+                    //         padding: const EdgeInsets.symmetric(horizontal: 2),
+                    //         child: DropdownButton<String>(
+                    //           value: selectedDuration,
+                    //           isExpanded: true,
+                    //           underline: const SizedBox(),
+                    //           onChanged: (String? newValue) {
+                    //             setState(() {
+                    //               selectedDuration = newValue!;
+                    //               charges_durations = newValue;
+                    //             });
+                    //           },
+                    //           items: const [
+                    //             DropdownMenuItem(
+                    //               value: 'per_hour',
+                    //               child: Text('Per Hour'),
+                    //             ),
+                    //             DropdownMenuItem(
+                    //               value: 'per_day',
+                    //               child: Text('Per Day'),
+                    //             ),
+                    //             DropdownMenuItem(
+                    //               value: 'per_month',
+                    //               child: Text('Per Month',style: TextStyle(fontSize: 16)),
+                    //             ),
+                    //           ],
+                    //           hint: const Text(
+                    //             'Select Duration',
+                    //             style: TextStyle(color: Colors.grey),
+                    //           ),
+                    //           icon: const Icon(Icons.arrow_drop_down),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                     FormInput(
                       controller: _expController,
                       label: "Year of Experience",

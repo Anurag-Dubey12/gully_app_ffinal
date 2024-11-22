@@ -28,13 +28,13 @@ class RankingApi {
   }
 
   Future<ApiResponse> getTopPerformers(
-      String ballType, DateTime startDate) async {
+      String ballType, String startDate) async {
     final position = Get.find<TournamentController>().coordinates.value;
     var response = await client.post('/match/topPerformers', {
       'filter': ballType,
       'latitude': position.latitude,
       'longitude': position.longitude,
-      'startDate': startDate.toIso8601String()
+      'startDate': startDate
     });
     logger.d("Response Body: ${response.body}");
     if (!response.isOk) {

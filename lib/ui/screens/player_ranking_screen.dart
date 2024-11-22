@@ -4,6 +4,7 @@ import 'package:gully_app/data/model/player_ranking_model.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/ranking_controller.dart';
+import '../../utils/FallbackImageProvider.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
@@ -86,7 +87,6 @@ class _PlayerRankingScreenState extends State<PlayerRankingScreen> {
                                   fontWeight: FontWeight.w800,
                                   fontSize: 23)),
                         ),
-
                         const SizedBox(height: 30),
                         Padding(
                           padding: const EdgeInsets.all(18.0),
@@ -239,9 +239,7 @@ class _TeamCard extends StatelessWidget {
             CircleAvatar(
               radius: 23,
               backgroundColor: Colors.grey.shade300,
-              backgroundImage: player.profilePhoto!=null && player.profilePhoto!.isNotEmpty ?
-                  NetworkImage(toImageUrl(player.profilePhoto ?? ""))as ImageProvider
-                  : const AssetImage('assets/images/logo.png'),
+              backgroundImage: FallbackImageProvider(toImageUrl(player.profilePhoto),'assets/images/logo.png') as ImageProvider,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -308,6 +306,9 @@ class _SelectBallTypeCard extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
+            // border: Border.all(
+            //     color: Colors.black
+            // ),
             gradient: tab == selectedTab
                 ? const LinearGradient(
               colors: [AppTheme.secondaryYellowColor, Colors.orangeAccent],

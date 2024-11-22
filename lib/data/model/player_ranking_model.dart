@@ -10,7 +10,7 @@ class PlayerRankingModel {
     disallowNullValue: false,
     defaultValue: '',
   )
-  final String? profilePhoto;
+  final String profilePhoto;
   @JsonKey(disallowNullValue: false, defaultValue: 0)
   final int? over;
   @JsonKey(disallowNullValue: false, defaultValue: 0)
@@ -34,6 +34,7 @@ class PlayerRankingModel {
   @JsonKey(disallowNullValue: false, defaultValue: 0)
   final int? innings;
 
+  final String? name;
   PlayerRankingModel({
     required this.playerName,
     required this.balls,
@@ -48,8 +49,11 @@ class PlayerRankingModel {
     required this.average,
     required this.economy,
     required this.innings,
+    required this.name,
   });
-
+  String get displayName => playerName.isNotEmpty == true
+      ? playerName
+      : (name ?? 'Unknown Player');
   factory PlayerRankingModel.fromJson(Map<String, dynamic> json) =>
       _$PlayerRankingModelFromJson(json);
 

@@ -21,6 +21,7 @@ PlayerRankingModel _$PlayerRankingModelFromJson(Map<String, dynamic> json) =>
       average: (json['average'] as num?)?.toInt() ?? 0,
       economy: (json['economy'] as num?)?.toDouble() ?? 0.0,
       innings: (json['innings'] as num?)?.toInt() ?? 0,
+      name: json['name'] as String?,
     );
 
 Map<String, dynamic> _$PlayerRankingModelToJson(PlayerRankingModel instance) =>
@@ -38,4 +39,5 @@ Map<String, dynamic> _$PlayerRankingModelToJson(PlayerRankingModel instance) =>
       'strikeRate': instance.strikeRate,
       'economy': instance.economy,
       'innings': instance.innings,
+      'name': instance.name,
     };

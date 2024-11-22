@@ -38,8 +38,26 @@ class RankingController extends GetxController {
   }
 
   //topperformers
+  // Future<List<PlayerRankingModel>> getTopPerformers(
+  //     String ballType, String startDate) async {
+  //   try {
+  //     final response = await api.getTopPerformers(ballType, startDate);
+  //     logger.d("The response Data is :${response.data}");
+  //     if (response.data == null || !response.data!.containsKey('topPerformers')) {
+  //       throw 'Invalid response format: missing topPerformers data';
+  //     }
+  //     return response.data!['topPerformers']
+  //         .map<PlayerRankingModel>((e) => PlayerRankingModel.fromJson(e))
+  //         .toList();
+  //
+  //   } catch (e) {
+  //     errorSnackBar(e.toString());
+  //     rethrow;
+  //   }
+  // }
+
   Future<List<PlayerRankingModel>> getTopPerformers(
-      String ballType, DateTime startDate) async {
+      String ballType, String startDate) async {
     try {
       final response = await api.getTopPerformers(ballType, startDate);
       logger.d("The response Data is :${response.data}");
@@ -47,9 +65,15 @@ class RankingController extends GetxController {
         throw 'Invalid response format: missing topPerformers data';
       }
       return response.data!['topPerformers']
-          .map<PlayerRankingModel>((e) => PlayerRankingModel.fromJson(e))
-          .toList();
-
+          .map<PlayerRankingModel>((e) {
+        final playerName = e['playerName']?.isNotEmpty == true
+            ? e['playerName']
+            : (e['name'] ?? 'Unknown Player');
+        return PlayerRankingModel.fromJson({
+          ...e,
+          'playerName': playerName,
+        });
+      }).toList();
     } catch (e) {
       errorSnackBar(e.toString());
       rethrow;

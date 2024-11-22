@@ -5,8 +5,8 @@ import 'package:gully_app/utils/utils.dart';
 import 'package:intl/intl.dart';
 
 import '../../data/controller/ranking_controller.dart';
+import '../../utils/FallbackImageProvider.dart';
 import '../../utils/app_logger.dart';
-import '../../utils/date_time_helpers.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
@@ -21,12 +21,12 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
   int _selectedTab = 0;
   DateTime selectedDate = DateTime.now();
   String? formatedDate;
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   selectedDate = DateTime.now();
-  //   formatedDate = DateFormat('yyyy-MM-dd').format(selectedDate!);
-  // }
+  @override
+  void initState() {
+    super.initState();
+    selectedDate = DateTime.now();
+    formatedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
+  }
   @override
   Widget build(BuildContext context) {
     final controller = Get.putOrFind(() => RankingController(Get.find()));
@@ -140,11 +140,11 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                                       firstDate: DateTime(2021),
                                       lastDate: DateTime.now(),
                                     );
-
                                     if (picked != null && picked != selectedDate) {
                                       setState(() {
                                         selectedDate = DateTime(picked.year, picked.month, picked.day);
-                                        logger.d("Selected date: $selectedDate");
+                                        formatedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
+                                        logger.d("Selected date: $formatedDate");
                                       });
                                     }
                                   },
@@ -192,10 +192,10 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                             child: FutureBuilder<List<PlayerRankingModel>>(
                                 future: controller.getTopPerformers(
                                   _selectedTab == 0 ? 'leather' : 'tennis',
-                                  selectedDate,
+                                  formatedDate!,
                                 ),
                                 builder: (context, snapshot) {
-                                  // logger.d("The selected tab value is :$_selectedTab and date is $selectedDate");
+                                  logger.d("The selected tab value is :$_selectedTab and date is $formatedDate");
                                   if (snapshot.connectionState == ConnectionState.waiting) {
                                     return const Center(child: CircularProgressIndicator());
                                   } else if (snapshot.hasError) {
@@ -243,8 +243,10 @@ class _PlayerCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 29,
-              backgroundImage:
-                  NetworkImage(toImageUrl(player.profilePhoto ?? "")),
+              backgroundImage:FallbackImageProvider(
+                  toImageUrl(player.profilePhoto),
+                  'assets/images/logo.png'
+              ) as ImageProvider,
             ),
             const SizedBox(width: 12),
             Column(
@@ -288,15 +290,18 @@ class BallType extends StatelessWidget {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40),
+              // border: Border.all(
+              //   color: Colors.black
+              // ),
               color: tab == selectedTab
                   ? AppTheme.secondaryYellowColor
                   : Colors.white,
               boxShadow: [
                 BoxShadow(
-                    color: AppTheme.secondaryYellowColor.withOpacity(0.3),
+                    color: const Color.fromARGB(57, 0, 0, 0).withOpacity(0.15),
                     blurRadius: 20,
                     spreadRadius: 2,
-                    offset: const Offset(0, 7))
+                    offset: const Offset(0, 10))
               ],
             ),
             child: Center(

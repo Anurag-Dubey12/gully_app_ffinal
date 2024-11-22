@@ -235,7 +235,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                             fontWeight: FontWeight.bold,
                                             // color: controller.scoreboard.value?.currentInnings==2 ? Colors.grey :Colors.black,
                                             color: Colors.black,
-                                            fontSize: 14,
+                                            fontSize: 13,
                                           ),
                                           textAlign: TextAlign.left,
                                         ),
@@ -307,7 +307,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black,
-                                                fontSize: 14,
+                                                fontSize: 13,
                                               ),
                                             ),
                                           ],

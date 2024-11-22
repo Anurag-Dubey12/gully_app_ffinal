@@ -9,8 +9,6 @@ class AppConstants {
       : "http://192.168.29.9:3000/api";//Office
       // : "http://3.7.92.159:5000/api";//server
   // : "http://172.20.10.5:3000/api";
-
-  // static const baseUrl = "http://192.168.29.9:3000/api";
   static const websocketUrl =
       kReleaseMode ? "ws://65.1.61.197:3001" : "ws://65.1.61.197:3001";
   static const String s3BucketUrl =

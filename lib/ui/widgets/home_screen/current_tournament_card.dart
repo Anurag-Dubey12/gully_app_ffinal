@@ -54,6 +54,7 @@ class _Card extends StatelessWidget {
     required this.tournament,
   });
 
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
@@ -143,15 +144,15 @@ class _Card extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      _TeamScore(
+                      TeamScore(
                         color: Colors.red,
                         teamName: tournament.team1.name,
-                        score: _getScore(scoreboard?.firstInnings),
+                        score: getScore(scoreboard?.firstInnings),
                       ),
                       const SizedBox(height: 4),
-                      _TeamScore(
+                      TeamScore(
                         teamName: tournament.team2.name,
-                        score: _getScore(scoreboard?.secondInnings),
+                        score: getScore(scoreboard?.secondInnings),
                         color: Colors.green.shade600,
                       ),
                       const SizedBox(height: 8),
@@ -202,7 +203,7 @@ class _Card extends StatelessWidget {
     );
   }
 
-  String _getScore(dynamic innings) {
+  String getScore(dynamic innings) {
     if (innings == null) return 'DNB';
     int? totalScore = innings.totalScore;
     int? totalWickets = innings.totalWickets;
@@ -211,12 +212,12 @@ class _Card extends StatelessWidget {
   }
 }
 
-class _TeamScore extends StatelessWidget {
+class TeamScore extends StatelessWidget {
   final String teamName;
   final String score;
   final Color color;
 
-  const _TeamScore({
+  const TeamScore({super.key,
     required this.teamName,
     required this.score,
     required this.color,

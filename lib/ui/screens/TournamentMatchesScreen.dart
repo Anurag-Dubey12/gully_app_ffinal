@@ -42,11 +42,11 @@ class TournamentMatchesScreen extends GetView<TournamentController> {
           future: controller.getTournamentMatches(tournamentId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
+              return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('No matches found for this tournament.'));
+              return const Center(child: Text('No matches found for this tournament.'));
             }
 
             return ListView.builder(

@@ -237,10 +237,10 @@ class _SelectBallTypeCard extends StatelessWidget {
                   : Colors.white,
               boxShadow: [
                 BoxShadow(
-                    color: AppTheme.secondaryYellowColor.withOpacity(0.3),
+                    color: const Color.fromARGB(57, 0, 0, 0).withOpacity(0.15),
                     blurRadius: 20,
                     spreadRadius: 2,
-                    offset: const Offset(0, 7))
+                    offset: const Offset(0, 10))
               ],
             ),
             child: Center(

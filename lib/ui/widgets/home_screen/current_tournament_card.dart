@@ -3,12 +3,15 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/ui/widgets/home_screen/no_tournament_card.dart';
+import 'package:gully_app/utils/app_logger.dart';
 
 import '../../../data/model/scoreboard_model.dart';
 import '../../../utils/BlinkingLiveText.dart';
 import '../../../utils/FallbackImageProvider.dart';
 import '../../../utils/image_picker_helper.dart';
 import '../../../utils/utils.dart';
+import '../../screens/current_tournament_list.dart';
+import '../../screens/view_matchups_screen.dart';
 import '../dialogs/current_score_dialog.dart';
 import 'i_button_dialog.dart';
 
@@ -156,35 +159,45 @@ class _Card extends StatelessWidget {
                         color: Colors.green.shade600,
                       ),
                       const SizedBox(height: 8),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: SizedBox(
-                          height: 30,
-                          width: 100,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                Get.bottomSheet(
-                                  BottomSheet(
-                                    enableDrag: false,
-                                    builder: (context) => ScoreBottomDialog(
-                                      match: tournament,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: 30,
+                            width: 100,
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  Get.bottomSheet(
+                                    BottomSheet(
+                                      enableDrag: false,
+                                      builder: (context) => ScoreBottomDialog(
+                                        match: tournament,
+                                      ),
+                                      onClosing: () {},
                                     ),
-                                    onClosing: () {},
-                                  ),
-                                  isScrollControlled: true,
-                                );
-                              },
-                              style: ButtonStyle(
-                                padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 8)),
-                              ),
-                              child: Text('View Score',
-                                  style: Get.textTheme.bodyMedium?.copyWith(
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.white
-                                  )
-                              )
+                                    isScrollControlled: true,
+                                  );
+                                },
+                                style: ButtonStyle(
+                                  padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 8)),
+                                ),
+                                child: Text('View Score',
+                                    style: Get.textTheme.bodyMedium?.copyWith(
+                                        fontWeight: FontWeight.w500,
+                                        color: Colors.white
+                                    )
+                                )
+                            ),
                           ),
-                        ),
+                          const SizedBox(width: 8),
+                          GestureDetector(
+                            onTap: (){
+                              logger.d("The TournamentId is:${tournamentdata.id}");
+                              Get.to(() => ViewMatchupsScreen(id:tournamentdata.id,isSchedule: true,));
+                            },
+                            child: const Text("View Schedule",style: TextStyle(fontSize: 12,decoration: TextDecoration.underline),),
+                          )
+                        ],
                       ),
                       const SizedBox(height: 8),
                     ],

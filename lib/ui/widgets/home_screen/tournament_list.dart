@@ -25,6 +25,12 @@ class TournamentList extends StatefulWidget {
 
 class _TournamentListState extends State<TournamentList> {
   @override
+  void initState() {
+    super.initState();
+    final controller = Get.find<TournamentController>();
+    controller.getTournamentList();
+  }
+  @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
     return SizedBox(

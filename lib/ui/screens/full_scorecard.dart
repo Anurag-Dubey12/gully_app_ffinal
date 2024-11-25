@@ -12,7 +12,6 @@ import '../widgets/scorecard/extras_and_total.dart';
 
 class FullScoreboardScreen extends StatefulWidget {
   final ScoreboardModel? scoreboard;
-
   const FullScoreboardScreen({Key? key, this.scoreboard}) : super(key: key);
 
   @override

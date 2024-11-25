@@ -3,13 +3,17 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
+import 'package:gully_app/ui/screens/full_scorecard.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
+import 'package:gully_app/utils/utils.dart';
 
 class ViewMatchupsScreen extends GetView<TournamentController> {
-  const ViewMatchupsScreen({super.key});
+  final String? id;
+  final bool isSchedule;
+  const ViewMatchupsScreen({super.key,this.id,this.isSchedule=false});
   @override
   Widget build(BuildContext context) {
     return GradientBuilder(
@@ -37,7 +41,7 @@ class ViewMatchupsScreen extends GetView<TournamentController> {
               SizedBox(height: Get.height * 0.01),
               Expanded(
                 child: FutureBuilder(
-                    future: controller.getMatchup(controller.state!.id),
+                    future: id !=null ? controller.getMatchup(id!): controller.getMatchup(controller.state!.id),
                     builder: (context, snapshot) {
                       if (snapshot.data?.isEmpty ?? true) {
                         return const Center(
@@ -51,6 +55,7 @@ class ViewMatchupsScreen extends GetView<TournamentController> {
                               SizedBox(height: Get.height * 0.01),
                           itemBuilder: (context, index) => _MatchupCard(
                             matchup: snapshot.data![index],
+                            isSchedule: isSchedule,
                           ),
                         );
                       }
@@ -66,8 +71,10 @@ class ViewMatchupsScreen extends GetView<TournamentController> {
 
 class _MatchupCard extends StatelessWidget {
   final MatchupModel matchup;
+  final bool isSchedule;
   const _MatchupCard({
     required this.matchup,
+    this.isSchedule=false,
   });
 
   @override
@@ -155,65 +162,33 @@ class _MatchupCard extends StatelessWidget {
                   )
                 ],
               ),
-              SizedBox(height: Get.height * 0.01),
+              // SizedBox(height: Get.height * 0.01),
               Center(
                 child: Text(scoreboard?.secondInningsText ?? "",
                     style: Get.textTheme.labelMedium?.copyWith()),
               ),
-              // Center(
-              //   child: Text('20/1',
-              //       style: Get.textTheme.headlineLarge?.copyWith(
-              //           color: Colors.green, fontWeight: FontWeight.w800)),
-              // ),
-              // SizedBox(height: Get.height * 0.01),
-              // Row(
-              //   children: [
-              //     Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         RichText(
-              //             text: TextSpan(
-              //                 text: 'Overs: ',
-              //                 style: const TextStyle(
-              //                     fontSize: 13, color: Colors.black),
-              //                 children: [
-              //               TextSpan(
-              //                   text: '13.2',
-              //                   style: Get.textTheme.bodyMedium?.copyWith(
-              //                       color: Colors.black,
-              //                       fontSize: 12,
-              //                       fontWeight: FontWeight.bold))
-              //             ])),
-              //         RichText(
-              //             text: TextSpan(
-              //                 text: 'To Win: ',
-              //                 style: const TextStyle(
-              //                     fontSize: 12, color: Colors.black),
-              //                 children: [
-              //               TextSpan(
-              //                 text: '311 OFF 21 Balls',
-              //                 style: Get.textTheme.bodyMedium?.copyWith(
-              //                     color: Colors.black,
-              //                     fontSize: 12,
-              //                     fontWeight: FontWeight.bold),
-              //               ),
-              //             ]))
-              //       ],
-              //     ),
-              //     const Spacer(),
-              //     Chip(
-              //       label: Text(
-              //         'View Full Screen',
-              //         style: Get.textTheme.bodyMedium?.copyWith(
-              //             color: Colors.white,
-              //             fontWeight: FontWeight.bold,
-              //             fontSize: 10),
-              //       ),
-              //       side: BorderSide.none,
-              //       backgroundColor: AppTheme.secondaryYellowColor,
-              //     )
-              //   ],
-              // )
+                  isSchedule ?Center(
+                    child: Chip(
+                      label: GestureDetector(
+                        onTap: (){
+                          if(scoreboard==null){
+                            errorSnackBar("Please Wait for Match to Begin");
+                          }else{
+                          Get.to(()=>FullScoreboardScreen(scoreboard: scoreboard,));
+                          }
+                        },
+                        child: Text(
+                          'View Full Scoreboard',
+                          style: Get.textTheme.bodyMedium?.copyWith(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10),
+                        ),
+                      ),
+                      side: BorderSide.none,
+                      backgroundColor: AppTheme.secondaryYellowColor,
+                    ),
+                  ):const SizedBox.shrink()
             ],
           ),
         ),

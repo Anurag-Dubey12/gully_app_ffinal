@@ -9,25 +9,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify service screen and multi image view is added">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/api/ranking_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/ranking_api.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/ranking_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/ranking_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/player_ranking_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/player_ranking_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/player_ranking_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/player_ranking_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/TournamentMatchesScreen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/TournamentMatchesScreen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/player_ranking_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/player_ranking_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/team_ranking_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/team_ranking_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/custom_drop_down_field.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/custom_drop_down_field.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/full_scorecard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/full_scorecard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/create_tournament/select_from_to_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/create_tournament/select_from_to_card.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/tournament_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/tournament_list.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -186,14 +175,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00034" summary="promote banner screen modify">
-      <option name="closed" value="true" />
-      <created>1724846444241</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1724846444241</updated>
     </task>
     <task id="LOCAL-00035" summary="promote banner screen modify">
       <option name="closed" value="true" />
@@ -579,7 +560,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732017206293</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="modify">
+      <option name="closed" value="true" />
+      <created>1732276879158</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1732276879158</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -623,9 +612,9 @@
     <MESSAGE value="keystore ,firebase problem solved" />
     <MESSAGE value="modify service screen and transaction data" />
     <MESSAGE value="modify don't know" />
-    <MESSAGE value="modify" />
     <MESSAGE value="modify service screen and multi image view is added" />
-    <option name="LAST_COMMIT_MESSAGE" value="modify service screen and multi image view is added" />
+    <MESSAGE value="modify" />
+    <option name="LAST_COMMIT_MESSAGE" value="modify" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -1098,6 +1087,12 @@
           <option name="totalLines" value="2473594" />
           <option name="info" value="modify service screen and multi image view is adde" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1732276887394" />
+          <option name="linesCode" value="37663" />
+          <option name="totalLines" value="4531428" />
+          <option name="info" value="modify" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1569,6 +1564,12 @@
           <option name="linesCode" value="37388" />
           <option name="totalLines" value="2473594" />
           <option name="info" value="Nov 19, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1732276887394" />
+          <option name="linesCode" value="37663" />
+          <option name="totalLines" value="4531428" />
+          <option name="info" value="Nov 22, 2024" />
         </TimePoint>
       </list>
     </option>

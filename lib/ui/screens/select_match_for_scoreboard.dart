@@ -145,8 +145,6 @@ class _MatchupCard extends GetView<ScoreBoardController> {
         //   errorSnackBar('The match has not started yet. Please wait until the scheduled date and time.');
         //   return;
         // }
-
-
         if (matchup.scoreBoard != null) {
           Get.off(() => const ScoreCardScreen());
           controller

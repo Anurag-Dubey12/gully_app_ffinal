@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
+import 'package:gully_app/ui/screens/home_screen.dart';
 import 'package:gully_app/ui/screens/legal_screen.dart';
 import 'package:gully_app/ui/screens/payment_page.dart';
 import 'package:gully_app/ui/screens/select_location.dart';
@@ -300,8 +301,11 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             //   }
             // }
 
-            Get.to(() => PaymentPage(
-                tournament: tournamentModel));
+            successSnackBar('Tournament Create Successfully');
+            Get.offAll(() => const HomeScreen(),
+                predicate: (route) => route.name == '/HomeScreen');
+            // Get.to(() => PaymentPage(
+            //     tournament: tournamentModel));
           }
       } finally {
         setState(() {

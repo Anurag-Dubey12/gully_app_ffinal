@@ -72,6 +72,7 @@ class ViewMatchupsScreen extends GetView<TournamentController> {
 class _MatchupCard extends StatelessWidget {
   final MatchupModel matchup;
   final bool isSchedule;
+
   const _MatchupCard({
     required this.matchup,
     this.isSchedule=false,
@@ -83,113 +84,103 @@ class _MatchupCard extends StatelessWidget {
         ? null
         : ScoreboardModel.fromJson(matchup.scoreBoard!);
 
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(20)),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(formatDateTime('dd MMMM yyyy hh:mm a', matchup.matchDate),
-                  style: Get.textTheme.labelMedium?.copyWith()),
-              SizedBox(height: Get.height * 0.01),
-              Row(
-                children: [
-                  Column(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage:
-                            matchup.team1.logo!=null && matchup.team1.logo!.isNotEmpty ?
-                            NetworkImage(matchup.team1.toImageUrl()) : const AssetImage('assets/images/logo.png') as ImageProvider),
-                      const SizedBox(height: 6),
-                      SizedBox(
-                        width: 100,
-                        child: Text(
-                          matchup.team1.name.capitalize,
-                          style: Get.textTheme.headlineSmall?.copyWith(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: Get.textScaleFactor * 17,
-                          ),
-                          softWrap: true,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  Column(
-                    children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Chip(
-                          label: Text('VS',
-                              style: Get.textTheme.labelLarge?.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold)),
-                          backgroundColor: AppTheme.secondaryYellowColor,
-                          side: BorderSide.none),
-                    ],
-                  ),
-                  const Spacer(),
-                  Column(
-                    children: [
-                      CircleAvatar(
-                        backgroundImage:
-                            matchup.team2.logo!=null && matchup.team2.logo!.isNotEmpty ?
-                            NetworkImage(matchup.team2.toImageUrl()) : const AssetImage('assets/images/logo.png') as ImageProvider),
-                      const SizedBox(height: 6),
-                      SizedBox(
-                        width: 100,
-                        child: Text(
-                          matchup.team2.name.capitalize,
-                          style: Get.textTheme.headlineSmall?.copyWith(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: Get.textScaleFactor * 17,
-                          ),
-                          softWrap: true,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-              // SizedBox(height: Get.height * 0.01),
-              Center(
-                child: Text(scoreboard?.secondInningsText ?? "",
+    return GestureDetector(
+      onTap:(){
+        if(isSchedule){
+          if(scoreboard==null){
+            errorSnackBar("Please Wait for Match to Begin");
+          }else{
+            Get.to(()=>FullScoreboardScreen(scoreboard: scoreboard,));
+          }
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(20)),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 18),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(formatDateTime('dd MMMM yyyy hh:mm a', matchup.matchDate),
                     style: Get.textTheme.labelMedium?.copyWith()),
-              ),
-                  isSchedule ?Center(
-                    child: Chip(
-                      label: GestureDetector(
-                        onTap: (){
-                          if(scoreboard==null){
-                            errorSnackBar("Please Wait for Match to Begin");
-                          }else{
-                          Get.to(()=>FullScoreboardScreen(scoreboard: scoreboard,));
-                          }
-                        },
-                        child: Text(
-                          'View Full Scoreboard',
-                          style: Get.textTheme.bodyMedium?.copyWith(
-                              color: Colors.white,
+                SizedBox(height: Get.height * 0.01),
+                Row(
+                  children: [
+                    Column(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage:
+                              matchup.team1.logo!=null && matchup.team1.logo!.isNotEmpty ?
+                              NetworkImage(matchup.team1.toImageUrl()) : const AssetImage('assets/images/logo.png') as ImageProvider),
+                        const SizedBox(height: 6),
+                        SizedBox(
+                          width: 100,
+                          child: Text(
+                            matchup.team1.name.capitalize,
+                            style: Get.textTheme.headlineSmall?.copyWith(
+                              color: Colors.black,
                               fontWeight: FontWeight.bold,
-                              fontSize: 10),
+                              fontSize: Get.textScaleFactor * 17,
+                            ),
+                            softWrap: true,
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                      side: BorderSide.none,
-                      backgroundColor: AppTheme.secondaryYellowColor,
+                      ],
                     ),
-                  ):const SizedBox.shrink()
-            ],
+                    const Spacer(),
+                    Column(
+                      children: [
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Chip(
+                            label: Text('VS',
+                                style: Get.textTheme.labelLarge?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold)),
+                            backgroundColor: AppTheme.secondaryYellowColor,
+                            side: BorderSide.none),
+                      ],
+                    ),
+                    const Spacer(),
+                    Column(
+                      children: [
+                        CircleAvatar(
+                          backgroundImage:
+                              matchup.team2.logo!=null && matchup.team2.logo!.isNotEmpty ?
+                              NetworkImage(matchup.team2.toImageUrl()) : const AssetImage('assets/images/logo.png') as ImageProvider),
+                        const SizedBox(height: 6),
+                        SizedBox(
+                          width: 100,
+                          child: Text(
+                            matchup.team2.name.capitalize,
+                            style: Get.textTheme.headlineSmall?.copyWith(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: Get.textScaleFactor * 17,
+                            ),
+                            softWrap: true,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+                // SizedBox(height: Get.height * 0.01),
+                Center(
+                  child: Text(scoreboard?.secondInningsText ?? "",
+                      style: Get.textTheme.labelMedium?.copyWith()),
+                ),
+
+              ],
+            ),
           ),
         ),
       ),

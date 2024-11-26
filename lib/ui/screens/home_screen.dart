@@ -103,6 +103,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     _animationController.dispose();
     super.dispose();
   }
+
   Future<void> refreshData() async {
     try {
       final tournamentController = Get.find<TournamentController>();
@@ -119,7 +120,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       const SizedBox(),
       // const ServiceHomeScreen(),
       // const ServiceHomeScreen(),
-      LiveScore()
+      const LiveScore()
     ];
   }
 

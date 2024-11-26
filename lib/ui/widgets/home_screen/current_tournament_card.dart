@@ -5,6 +5,7 @@ import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/ui/widgets/home_screen/no_tournament_card.dart';
 import 'package:gully_app/utils/app_logger.dart';
 
+import '../../../data/controller/scoreboard_controller.dart';
 import '../../../data/model/scoreboard_model.dart';
 import '../../../utils/BlinkingLiveText.dart';
 import '../../../utils/FallbackImageProvider.dart';
@@ -16,7 +17,9 @@ import '../dialogs/current_score_dialog.dart';
 import 'i_button_dialog.dart';
 
 class CurrentTournamentCard extends GetView<TournamentController> {
+  final bool isLive;
   const CurrentTournamentCard({
+    this.isLive=false,
     super.key,
   });
 
@@ -50,25 +53,31 @@ class CurrentTournamentCard extends GetView<TournamentController> {
     );
   }
 }
-
-class _Card extends StatelessWidget {
+class _Card extends StatefulWidget {
   final MatchupModel tournament;
+
   const _Card({
     required this.tournament,
-  });
+    Key? key,
+  }) : super(key: key);
 
+  @override
+  State<_Card> createState() => _CardState();
+}
+
+class _CardState extends State<_Card> {
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
     final tournamentdata = controller.tournamentList
-        .firstWhere((t) => t.id == tournament.tournamentId);
-    ScoreboardModel? scoreboard = tournament.scoreBoard == null
+        .firstWhere((t) => t.id == widget.tournament.tournamentId);
+    ScoreboardModel? scoreboard = widget.tournament.scoreBoard == null
         ? null
-        : ScoreboardModel.fromJson(tournament.scoreBoard!);
+        : ScoreboardModel.fromJson(widget.tournament.scoreBoard!);
 
+    logger.d("The match Id of Tournament are :${widget.tournament.id}");
     return Padding(
-      key: super.key,
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: Container(
         width: Get.width,
@@ -117,7 +126,7 @@ class _Card extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              tournament.tournamentName ?? 'Unknown Tournament',
+                              widget.tournament.tournamentName ?? 'Unknown Tournament',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -149,12 +158,12 @@ class _Card extends StatelessWidget {
                       const SizedBox(height: 4),
                       TeamScore(
                         color: Colors.red,
-                        teamName: tournament.team1.name,
+                        teamName: widget.tournament.team1.name,
                         score: getScore(scoreboard?.firstInnings),
                       ),
                       const SizedBox(height: 4),
                       TeamScore(
-                        teamName: tournament.team2.name,
+                        teamName: widget.tournament.team2.name,
                         score: getScore(scoreboard?.secondInnings),
                         color: Colors.green.shade600,
                       ),
@@ -171,7 +180,7 @@ class _Card extends StatelessWidget {
                                     BottomSheet(
                                       enableDrag: false,
                                       builder: (context) => ScoreBottomDialog(
-                                        match: tournament,
+                                        match: widget.tournament,
                                       ),
                                       onClosing: () {},
                                     ),

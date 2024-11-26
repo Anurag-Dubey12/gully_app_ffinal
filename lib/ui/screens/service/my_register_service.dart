@@ -16,7 +16,6 @@ class MyServices extends State<MyRegisterService> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ServiceController>();
-
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,

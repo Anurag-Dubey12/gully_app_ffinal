@@ -13,10 +13,9 @@ import 'future_tournament_card.dart';
 import 'past_tournament_card.dart';
 
 class TournamentList extends StatefulWidget {
-  final bool isLivescreen ;
+
   const TournamentList({
     Key? key,
-    this.isLivescreen=false
   }) : super(key: key);
 
   @override

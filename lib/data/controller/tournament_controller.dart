@@ -72,11 +72,12 @@ class TournamentController extends GetxController
   }
 
   RxList<TournamentModel> tournamentList = <TournamentModel>[].obs;
+  RxList<TournamentModel> Current_tournamentList = <TournamentModel>[].obs;
   RxList<MatchupModel> matches = <MatchupModel>[].obs;
+  RxList<MatchupModel> Current_matches = <MatchupModel>[].obs;
   RxBool isLoading = false.obs;
-
-
-  Future<void> getTournamentList({String? filterD}) async {
+  
+  Future<void> getTournamentList({String? filterD,bool isLive=false}) async {
     try {
       filter.value = filterD ?? '';
       isLoading.value = true;
@@ -91,20 +92,35 @@ class TournamentController extends GetxController
         latitude: coordinates.value.latitude,
         longitude: coordinates.value.longitude,
         startDate: selectedDate.value,
-        filter: filterD,
+        filter: isLive ? 'current' :filterD,
         endDate: selectedDate.value.add(const Duration(days: 7)),
       );
       logger.d("The entire Response: ${response.data}");
       if (response.data != null) {
-        tournamentList.value = (response.data!['tournamentList'] as List<dynamic>?)
-            ?.map((e) => TournamentModel.fromJson(e as Map<String, dynamic>))
-            .toList() ?? [];
-        matches.value = (response.data!['matches'] as List<dynamic>?)
-            ?.map((e) => MatchupModel.fromJson(e as Map<String, dynamic>))
-            .toList() ?? [];
+        if(isLive){
+          Current_tournamentList.value = (response.data!['tournamentList'] as List<dynamic>?)
+              ?.map((e) => TournamentModel.fromJson(e as Map<String, dynamic>))
+              .toList() ?? [];
+          Current_matches.value = (response.data!['matches'] as List<dynamic>?)
+              ?.map((e) => MatchupModel.fromJson(e as Map<String, dynamic>))
+              .toList() ?? [];
+        }else{
+          tournamentList.value = (response.data!['tournamentList'] as List<dynamic>?)
+              ?.map((e) => TournamentModel.fromJson(e as Map<String, dynamic>))
+              .toList() ?? [];
+          matches.value = (response.data!['matches'] as List<dynamic>?)
+              ?.map((e) => MatchupModel.fromJson(e as Map<String, dynamic>))
+              .toList() ?? [];
+        }
       } else {
-        tournamentList.value = [];
-        matches.value = [];
+        if(isLive){
+                Current_tournamentList.value = [];
+                Current_matches.value = [];
+        }else{
+          tournamentList.value = [];
+          matches.value = [];
+        }
+
       }
     } catch (e) {
       logger.d('Error in getTournamentList: $e');

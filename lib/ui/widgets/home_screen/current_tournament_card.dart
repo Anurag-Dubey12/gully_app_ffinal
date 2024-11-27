@@ -1,17 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/ui/widgets/home_screen/no_tournament_card.dart';
 import 'package:gully_app/utils/app_logger.dart';
-
+import 'package:socket_io_client/socket_io_client.dart' as io;
 import '../../../data/controller/scoreboard_controller.dart';
 import '../../../data/model/scoreboard_model.dart';
 import '../../../utils/BlinkingLiveText.dart';
 import '../../../utils/FallbackImageProvider.dart';
 import '../../../utils/image_picker_helper.dart';
 import '../../../utils/utils.dart';
-import '../../screens/current_tournament_list.dart';
 import '../../screens/view_matchups_screen.dart';
 import '../dialogs/current_score_dialog.dart';
 import 'i_button_dialog.dart';
@@ -66,6 +67,32 @@ class _Card extends StatefulWidget {
 }
 
 class _CardState extends State<_Card> {
+  late io.Socket socket;
+
+
+  Future getMatchScoreboard() async {
+    logger.d("Calling getMatchScoreboard");
+    final sb = await Get.find<ScoreBoardController>()
+        .getMatchScoreboard(widget.tournament.id);
+
+    logger.d("Calling Controller");
+    final controller = Get.find<ScoreBoardController>();
+
+    if (sb != null) {
+      logger.d("Received Scoreboard Data: ${sb.toJson()}");
+      logger.d("Setting Scoreboard");
+
+      controller.setScoreBoard(sb);
+      controller.connectToSocket(hideDialog: true);
+    } else {
+      logger.e("Failed to fetch scoreboard data.");
+    }
+  }
+  @override
+  void initState() {
+    getMatchScoreboard();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

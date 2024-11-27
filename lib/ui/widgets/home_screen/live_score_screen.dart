@@ -1,11 +1,11 @@
-
+import 'dart:async';  // Import for Timer class
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:gully_app/ui/widgets/home_screen/current_tournament_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 
+import '../../../data/controller/scoreboard_controller.dart';
 import '../../../data/controller/tournament_controller.dart';
 import '../../../data/model/matchup_model.dart';
 import '../../../data/model/scoreboard_model.dart';
@@ -19,8 +19,38 @@ import '../dialogs/current_score_dialog.dart';
 import 'i_button_dialog.dart';
 import 'no_tournament_card.dart';
 
-class LiveScore extends StatelessWidget {
+class LiveScore extends StatefulWidget {
   const LiveScore({super.key});
+
+  @override
+  LiveScoreState createState() => LiveScoreState();
+}
+
+class LiveScoreState extends State<LiveScore> {
+  // Timer? _timer;
+  //
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+  //     refreshData();
+  //   });
+  // }
+  //
+  // @override
+  // void dispose() {
+  //   _timer?.cancel();
+  //   super.dispose();
+  // }
+  //
+  // Future<void> refreshData() async {
+  //   try {
+  //     final tournamentController = Get.find<TournamentController>();
+  //     tournamentController.getTournamentList(isLive: true);
+  //   } catch (e) {
+  //     logger.e('Error refreshing data: $e');
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +93,7 @@ class LiveScore extends StatelessWidget {
                   padding: const EdgeInsets.all(16),
                   separatorBuilder: (context, index) => const SizedBox(height: 10),
                     itemBuilder: (context, snapshot) {
-                      return _Card(
+                      return Card(
                         tournament: controller.Current_matches[snapshot],
                       );
                     });
@@ -76,22 +106,27 @@ class LiveScore extends StatelessWidget {
     );
   }
 }
-class _Card extends StatelessWidget {
+
+class Card extends StatefulWidget{
   final MatchupModel tournament;
-  const _Card({
+  const Card({
     required this.tournament,
   });
-
-
+  @override
+  State<StatefulWidget> createState() =>CardState();
+  
+}
+class CardState extends State<Card> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
+    final scoreBoardController = Get.find<ScoreBoardController>();
     final tournamentdata = controller.tournamentList
-        .firstWhere((t) => t.id == tournament.tournamentId);
-    ScoreboardModel? scoreboard = tournament.scoreBoard == null
+        .firstWhere((t) => t.id == widget.tournament.tournamentId);
+    ScoreboardModel? scoreboard = widget.tournament.scoreBoard == null
         ? null
-        : ScoreboardModel.fromJson(tournament.scoreBoard!);
-
+        : ScoreboardModel.fromJson(widget.tournament.scoreBoard!);
+    // ScoreboardModel? scoreboard = scoreBoardController.scoreboard.value;
     return Container(
       width: Get.width,
       decoration: BoxDecoration(
@@ -139,7 +174,7 @@ class _Card extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            tournament.tournamentName ?? 'Unknown Tournament',
+                            widget.tournament.tournamentName ?? 'Unknown Tournament',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -169,15 +204,36 @@ class _Card extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
+                    // Obx((){
+                    //   return Column(
+                    //     children: [
+                    //     TeamScore(
+                    //     color: Colors.red,
+                    //     teamName: widget.tournament.team1.name,
+                    //     score: scoreboard?.firstInnings != null
+                    //         ? '${scoreboard!.firstInnings!.totalScore}/${scoreboard.firstInnings!.totalWickets}'
+                    //         : 'DNB',
+                    //   ),
+                    //   const SizedBox(height: 4),
+                    //   TeamScore(
+                    //     teamName: widget.tournament.team2.name,
+                    //     score: scoreboard?.secondInnings != null
+                    //         ? '${scoreboard!.secondInnings!.totalScore}/${scoreboard.secondInnings!.totalWickets}'
+                    //         : 'DNB',
+                    //     color: Colors.green.shade600,
+                    //   ),
+                    //     ],
+                    //   );
+                    // }),
                     TeamScore(
                       color: Colors.red,
-                      teamName: tournament.team1.name,
-                      score: getScore(scoreboard?.firstInnings),
+                      teamName: widget.tournament.team1.name,
+                      score: getScore(scoreboard!.firstInnings)
                     ),
                     const SizedBox(height: 4),
                     TeamScore(
-                      teamName: tournament.team2.name,
-                      score: getScore(scoreboard?.secondInnings),
+                      teamName: widget.tournament.team2.name,
+                      score: getScore(scoreboard!.secondInnings),
                       color: Colors.green.shade600,
                     ),
                     const SizedBox(height: 8),
@@ -193,7 +249,7 @@ class _Card extends StatelessWidget {
                                   BottomSheet(
                                     enableDrag: false,
                                     builder: (context) => ScoreBottomDialog(
-                                      match: tournament,
+                                      match: widget.tournament,
                                     ),
                                     onClosing: () {},
                                   ),

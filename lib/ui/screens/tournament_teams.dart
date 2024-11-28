@@ -4,164 +4,181 @@ import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/screens/team_players_list.dart';
-import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
-
+import 'package:gully_app/ui/screens/view_matchups_screen.dart';
 import '../../utils/FallbackImageProvider.dart';
 import '../../utils/utils.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
+import '../widgets/gradient_builder.dart';
+import 'opponent_tournament_list.dart';
 
 class TournamentTeams extends GetView<TournamentController> {
   final TournamentModel tournament;
-  const TournamentTeams({
-    super.key,
-    required this.tournament,
-  });
+
+  const TournamentTeams({super.key, required this.tournament});
 
   @override
   Widget build(BuildContext context) {
-    return DecoratedBox(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        image: DecorationImage(
-          image: AssetImage('assets/images/sports_icon.png'),
-          fit: BoxFit.cover,
-        ),
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(
-            children: [
-              ClipPath(
-                clipper: ArcClipper(),
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: const RadialGradient(
-                      colors: [
-                        Color(0xff368EBF),
-                        AppTheme.primaryColor,
-                      ],
-                      center: Alignment(-0.4, -0.8),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppTheme.secondaryYellowColor.withOpacity(0.3),
-                        blurRadius: 20,
-                        spreadRadius: 2,
-                        offset: const Offset(0, 70),
-                      )
-                    ],
-                  ),
-                  width: double.infinity,
-                  height: Get.height * 1.5,
-                ),
-              ),
-              Column(
-                children: [
-                  AppBar(
-                    backgroundColor: Colors.transparent,
-                    elevation: 0,
-                    title: Text(
-                      'Registered Teams',
-                      style: Get.textTheme.headlineMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,
-                      ),
-                    ),
-                    leading: const BackButton(color: Colors.white),
-                  ),
-                  SizedBox(height: Get.height * 0.07),
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07),
-                      child: FutureBuilder<List<TeamModel>>(
-                        future: controller.getRegisteredTeams(tournament.id),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            return const Center(child: CircularProgressIndicator());
-                          }
-                          if (snapshot.data?.isEmpty ?? true) {
-                            return const EmptyTournamentWidget(
-                              message: 'No teams have registered for this tournament yet',
-                            );
-                          }
-                          return ListView.separated(
-                            separatorBuilder: (context, index) => const SizedBox(height: 18),
-                            itemCount: snapshot.data?.length ?? 0,
-                            itemBuilder: (context, index) {
-                              return _Card(team: snapshot.data![index]);
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height:20)
-                ],
-              ),
-            ],
+    return DefaultTabController(
+      length: 2,
+      child: DecoratedBox(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          image: DecorationImage(
+            image: AssetImage('assets/images/sports_icon.png'),
+            fit: BoxFit.cover,
           ),
         ),
+        child: GradientBuilder(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: const BackButton(color: Colors.white),
+              title: const Text(
+                'Tournament Info',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              bottom: const TabBar(
+                indicatorColor: AppTheme.primaryColor,
+                dividerColor: Colors.transparent,
+                labelColor: Colors.white,
+                labelStyle: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+
+                unselectedLabelStyle: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                ),
+                tabs: [
+                  Tab(text: 'Register Teams'),
+                  Tab(text: 'Matches'),
+                ],
+              ),
+            ),
+            body: TabBarView(
+              children: [
+                registeredTeamsView(),
+                matchups()
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget registeredTeamsView() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07,vertical: 10),
+      child: FutureBuilder<List<TeamModel>>(
+        future: controller.getRegisteredTeams(tournament.id),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.data?.isEmpty ?? true) {
+            return const Center(
+              child: Text(
+                'No teams have registered for this tournament yet.',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                textAlign: TextAlign.center,
+              ),
+            );
+          }
+          return ListView.separated(
+            separatorBuilder: (context, index) => const SizedBox(height: 18),
+            itemCount: snapshot.data?.length ?? 0,
+            itemBuilder: (context, index) {
+              return _Card(team: snapshot.data![index]);
+            },
+          );
+        },
+      ),
+    );
+  }
+  Widget matchups() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07),
+      child: FutureBuilder(
+          future: tournament.id !=null ? controller.getMatchup(tournament.id!): controller.getMatchup(controller.state!.id),
+          builder: (context, snapshot) {
+            if (snapshot.data?.isEmpty ?? true) {
+              return const Center(
+                  child: EmptyTournamentWidget(
+                      message: 'No Matchups Found'));
+            } else {
+              return ListView.separated(
+                itemCount: snapshot.data?.length ?? 0,
+                shrinkWrap: true,
+                separatorBuilder: (context, index) =>
+                    SizedBox(height: Get.height * 0.01),
+                itemBuilder: (context, index) => MatchupCard(
+                  matchup: snapshot.data![index],
+                  isSchedule: true,
+                  isinfo: true,
+                ),
+              );
+            }
+          }),
     );
   }
 }
 
-class _Card extends GetView<TournamentController> {
+class _Card extends StatelessWidget {
   final TeamModel team;
 
-  const _Card({
-    required this.team,
-  });
+  const _Card({super.key, required this.team});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => ViewTeamPlayers(
-          teamModel: team,
-          // tournament: tournament,
-        ));
+        Get.to(() => ViewTeamPlayers(teamModel: team));
       },
       child: Container(
-        width: Get.width,
+        width: double.infinity,
         decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(
-              color: Colors.black,
-              width: 1,
+          color: Colors.white,
+          border: Border.all(color: Colors.black, width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 5,
+              spreadRadius: 2,
+              offset: const Offset(0, 1),
             ),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 5,
-                  spreadRadius: 2,
-                  offset: const Offset(0, 1))
-            ],
-            borderRadius: BorderRadius.circular(16)),
+          ],
+          borderRadius: BorderRadius.circular(16),
+        ),
         child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Get.width * 0.05,
-            vertical: Get.height * 0.02,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Row(
             children: [
               CircleAvatar(
                 radius: 24,
-                backgroundImage:team.toImageUrl().isNotEmpty && team.toImageUrl() !=null ?
-                FallbackImageProvider(
-                    toImageUrl(team.logo ?? "assets/images/logo.png"),
-                    'assets/images/logo.png'
-                ) as ImageProvider
-                    : const AssetImage('assets/images/logo.png'),
+                backgroundImage: FallbackImageProvider(
+                  toImageUrl(team.logo ?? ""),
+                  'assets/images/logo.png'
+              )),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Text(
+                  team.name,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                  ),
+                ),
               ),
-              const Spacer(),
-              Text(
-                team.name,
-                style: Get.textTheme.titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w600, fontSize: 19),
-              ),
-              const Spacer(),
             ],
           ),
         ),

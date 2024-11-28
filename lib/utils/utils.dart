@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/app_logger.dart';
 
+import '../ui/screens/home_screen.dart';
+
 class ApiResponse {
   final bool? status;
   final String? message;
@@ -53,7 +55,7 @@ Future errorSnackBar(String errorMessage,
             middleText: errorMessage,
           );
 
-Future successSnackBar(String successMessage, {String? title}) async =>
+Future successSnackBar(String successMessage, {String? title,bool istournamentScreen=false}) async =>
     Get.isDialogOpen ?? false
         ? null
         : await Get.defaultDialog(
@@ -66,7 +68,8 @@ Future successSnackBar(String successMessage, {String? title}) async =>
             ),
             confirm: InkWell(
               onTap: () {
-                Get.close();
+                istournamentScreen ?   Get.offAll(() => const HomeScreen(),
+                    predicate: (route) => route.name == '/HomeScreen'):Get.close();
                 // Get.back();
               },
               child: Container(

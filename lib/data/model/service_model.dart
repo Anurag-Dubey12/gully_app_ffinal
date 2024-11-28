@@ -1,4 +1,3 @@
-import 'package:gully_app/data/model/package_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'service_model.g.dart';

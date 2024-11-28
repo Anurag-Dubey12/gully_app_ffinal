@@ -232,6 +232,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
         //   final defaultImage = XFile(defaultImagePath);
         //   base64 = await convertImageToBase64(defaultImage);
         // }
+        logger.d("Start date is :${ from?.toIso8601String()} and End Date is :${ to?.toIso8601String()}");
+        logger.d("My Location Latitude is :${location.latitude} and longitude is :${location.longitude}");
 
           Map<String, dynamic> tournament = {
             "tournamentStartDateTime":
@@ -282,8 +284,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             if (isOk) {
               Get.back();
               Get.forceAppUpdate();
-              successSnackBar(
-                  'Tournament Updated Successfully');
+              successSnackBar('Tournament Updated Successfully');
             }
           // }
           } else {
@@ -292,7 +293,6 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
                 .createTournament(tournament);
             authController.getUser();
             logger.d("The Tournament id is:${tournamentModel.id}");
-
             // if (tournament != null) {
             //   final result = await Get.to(() => PaymentPage(tournament: tournamentModel));
             //   if (result == null || result == false) {
@@ -300,10 +300,9 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             //     Get.snackbar("Tournament", "Your tournament Deleted Successfully");
             //   }
             // }
-
-            successSnackBar('Tournament Create Successfully');
-            Get.offAll(() => const HomeScreen(),
-                predicate: (route) => route.name == '/HomeScreen');
+            successSnackBar('Tournament Create Successfully',istournamentScreen: true);
+            // Get.offAll(() => const HomeScreen(),
+            //     predicate: (route) => route.name == '/HomeScreen');
             // Get.to(() => PaymentPage(
             //     tournament: tournamentModel));
           }

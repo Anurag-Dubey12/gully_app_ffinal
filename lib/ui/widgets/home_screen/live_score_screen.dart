@@ -116,11 +116,12 @@ class Card extends StatefulWidget{
   State<StatefulWidget> createState() =>CardState();
   
 }
+
 class CardState extends State<Card> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
-    final scoreBoardController = Get.find<ScoreBoardController>();
+    // final scoreBoardController = Get.find<ScoreBoardController>();
     final tournamentdata = controller.tournamentList
         .firstWhere((t) => t.id == widget.tournament.tournamentId);
     ScoreboardModel? scoreboard = widget.tournament.scoreBoard == null
@@ -228,12 +229,12 @@ class CardState extends State<Card> {
                     TeamScore(
                       color: Colors.red,
                       teamName: widget.tournament.team1.name,
-                      score: getScore(scoreboard!.firstInnings)
+                      score: getScore(scoreboard?.firstInnings)
                     ),
                     const SizedBox(height: 4),
                     TeamScore(
                       teamName: widget.tournament.team2.name,
-                      score: getScore(scoreboard!.secondInnings),
+                      score: getScore(scoreboard?.secondInnings),
                       color: Colors.green.shade600,
                     ),
                     const SizedBox(height: 8),

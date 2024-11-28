@@ -7,9 +7,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
-import 'package:gully_app/ui/screens/player_profile_screen.dart';
 import 'package:gully_app/ui/screens/search_tournament_screen.dart';
-import 'package:gully_app/ui/screens/service/service_home_screen.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/app_drawer.dart';
@@ -17,12 +15,10 @@ import 'package:gully_app/ui/widgets/home_screen/date_times_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../widgets/home_screen/SliverAppBarDelegate.dart';
 import '../widgets/home_screen/live_score_screen.dart';
 import '../widgets/home_screen/top_header.dart';
-import 'organizer_profile.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

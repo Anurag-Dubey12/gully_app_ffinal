@@ -175,3 +175,4 @@ class _TourCard extends GetView<TournamentController> {
     );
   }
 }
+

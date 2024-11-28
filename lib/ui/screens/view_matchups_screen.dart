@@ -53,7 +53,7 @@ class ViewMatchupsScreen extends GetView<TournamentController> {
                           shrinkWrap: true,
                           separatorBuilder: (context, index) =>
                               SizedBox(height: Get.height * 0.01),
-                          itemBuilder: (context, index) => _MatchupCard(
+                          itemBuilder: (context, index) => MatchupCard(
                             matchup: snapshot.data![index],
                             isSchedule: isSchedule,
                           ),
@@ -69,13 +69,14 @@ class ViewMatchupsScreen extends GetView<TournamentController> {
   }
 }
 
-class _MatchupCard extends StatelessWidget {
+class MatchupCard extends StatelessWidget {
   final MatchupModel matchup;
   final bool isSchedule;
-
-  const _MatchupCard({
+  final bool isinfo;
+  const MatchupCard({
     required this.matchup,
     this.isSchedule=false,
+    this.isinfo=false,
   });
 
   @override
@@ -100,7 +101,7 @@ class _MatchupCard extends StatelessWidget {
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(20)),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 18),
+            padding:  isinfo ?const EdgeInsets.symmetric(horizontal: 10, vertical: 10) :const EdgeInsets.symmetric(horizontal: 23, vertical: 18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

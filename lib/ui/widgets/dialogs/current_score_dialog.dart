@@ -10,8 +10,6 @@ import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/ui/widgets/scorecard/current_over_card.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
-import '../../../utils/app_logger.dart';
-import '../../screens/home_screen.dart';
 
 class ScoreBottomDialog extends StatefulWidget {
   final MatchupModel match;

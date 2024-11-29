@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
+
+import '../../utils/app_logger.dart';
 
 class PerformanceStatScreen extends StatefulWidget {
   final String category;
@@ -17,6 +20,7 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen> {
   @override
   Widget build(BuildContext context) {
     TeamController controller = Get.find<TeamController>();
+    final authcontroller=Get.find<AuthController>();
     return
       GradientBuilder(
         child: Scaffold(
@@ -179,7 +183,8 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen> {
                     ),
                     FutureBuilder<Map<String, dynamic>>(
                         future: controller.getMyPerformance(
-                            matchType: widget.category, inningsType: innings),
+                          userId: authcontroller.state!.id,
+                            matchType: widget.category, category: innings),
                         builder: (context, snapshot) {
                           return ListView.builder(
                               shrinkWrap: true,

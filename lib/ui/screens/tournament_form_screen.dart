@@ -282,9 +282,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
               ...tournament,
             }, widget.tournament!.id);
             if (isOk) {
-              Get.back();
+              successSnackBar('Tournament Updated Successfully',istournamentScreen: true);
               Get.forceAppUpdate();
-              successSnackBar('Tournament Updated Successfully');
             }
           // }
           } else {

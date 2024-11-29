@@ -281,13 +281,15 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
   }
 
   Future<Map<String, dynamic>> getMyPerformance({
+    required String userId,
     required String matchType,
-    required String inningsType
+    required String category
   }) async {
     try {
       final response = await repo.getMyPerformance(
+          userId: userId,
           matchType: matchType,
-          inningsType: inningsType
+          category: category
       );
       logger.d("The My Performance Data: ${response.data}");
       if (response.status == false) {

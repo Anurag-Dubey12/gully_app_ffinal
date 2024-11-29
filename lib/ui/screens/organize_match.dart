@@ -27,6 +27,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
   TeamModel? selectedTeam2;
   List<TeamModel> leftSideteams = [];
   List<TeamModel> rightSideteams = [];
+  List<TeamModel> totalteams= [];
   DateTime? selectedDate;
 
   @override
@@ -42,7 +43,9 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
       errorSnackBar('Please register a team first').then((value) => Get.back());
     }
 
+    totalteams=teams;
 
+    logger.d("The Total Teams Are:${totalteams.length}");
     logger.d('TEAMS: $teams');
     // divide teams into two sides
     leftSideteams = teams.sublist(0, teams.length ~/ 2);
@@ -132,7 +135,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                                 selectedTeam1 = newValue!;
                                               });
                                             },
-                                            items: leftSideteams.map<DropdownMenuItem<TeamModel?>>(
+                                            items: totalteams.map<DropdownMenuItem<TeamModel?>>(
                                                   (TeamModel value) {
                                                 return DropdownMenuItem<TeamModel?>(
                                                   value: value,
@@ -199,7 +202,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                                 selectedTeam2 = newValue!;
                                               });
                                             },
-                                            items: rightSideteams.map<DropdownMenuItem<TeamModel?>>(
+                                            items: totalteams.map<DropdownMenuItem<TeamModel?>>(
                                                   (TeamModel? value) {
                                                 return DropdownMenuItem<TeamModel?>(
                                                   value: value,

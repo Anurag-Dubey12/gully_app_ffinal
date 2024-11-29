@@ -231,12 +231,16 @@ class TeamApi {
     return ApiResponse.fromJson(response.body);
   }
   Future<ApiResponse> getMyPerformance({
+    required String userId,
     required String matchType,
-    required String inningsType,
+    required String category,
   }) async {
     try {
-      final response = await repo.get('/match/myPerformns/$matchType/$inningsType');
-      logger.d("Raw API response for myPerformance: ${response.body} and matchtypes is :$matchType and inning types is :$inningsType");
+      final response = await repo.post('/match/myPerformance/$userId',{
+       'matchType': matchType,
+        'category': category,
+      });
+      logger.d("Raw API response for myPerformance: ${response.body} and matchtypes is :$matchType and inning types is :$category");
 
       if (response.statusCode! >= 500) {
         errorSnackBar(generateErrorMessage(response.body));

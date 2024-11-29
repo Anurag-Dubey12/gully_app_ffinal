@@ -9,18 +9,13 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify">
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify view tournament screen">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/service_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/service_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/create_profile_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/create_profile_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/api/team_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/team_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/team_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/team_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/performance_stat_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/performance_stat_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_tournaments_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_tournaments_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/utils.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils/utils.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -181,14 +176,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00038" summary="modify">
-      <option name="closed" value="true" />
-      <created>1725624999720</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1725624999720</updated>
     </task>
     <task id="LOCAL-00039" summary="modify">
       <option name="closed" value="true" />
@@ -574,7 +561,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732708386758</updated>
     </task>
-    <option name="localTasksCounter" value="87" />
+    <task id="LOCAL-00087" summary="modify view tournament screen">
+      <option name="closed" value="true" />
+      <created>1732795475183</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1732795475189</updated>
+    </task>
+    <option name="localTasksCounter" value="88" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -595,7 +590,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="product adding screen" />
     <MESSAGE value="shop screen" />
     <MESSAGE value="firebase id changes" />
     <MESSAGE value="shop screen modify" />
@@ -620,7 +614,8 @@
     <MESSAGE value="added Schedule screen" />
     <MESSAGE value="completed schedule screen" />
     <MESSAGE value="modify" />
-    <option name="LAST_COMMIT_MESSAGE" value="modify" />
+    <MESSAGE value="modify view tournament screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="modify view tournament screen" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -1117,6 +1112,12 @@
           <option name="totalLines" value="4533133" />
           <option name="info" value="modify" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1732795480575" />
+          <option name="linesCode" value="38010" />
+          <option name="totalLines" value="6906843" />
+          <option name="info" value="modify view tournament screen" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1612,6 +1613,12 @@
           <option name="linesCode" value="37992" />
           <option name="totalLines" value="4533133" />
           <option name="info" value="Nov 27, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1732795480575" />
+          <option name="linesCode" value="38010" />
+          <option name="totalLines" value="6906843" />
+          <option name="info" value="Nov 28, 2024" />
         </TimePoint>
       </list>
     </option>

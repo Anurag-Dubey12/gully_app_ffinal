@@ -245,51 +245,52 @@ class AppDrawer extends GetView<AuthController> {
                   },
                   icon: Icons.auto_graph,
                 ),
-                DrawerCard(
-                  title: "Services",
-                  icon: Icons.search,
-                  child: Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Get.to(() => const ServiceRegister());
-                        },
-                        child: Container(
-                          // width: 200,
-                          height: 30,
-                          decoration: transBg(),
-                          child: const Center(
-                              child: Text(
-                                'Add My Service',
-                                style: TextStyle(color: Colors.white),
-                              )),
-                        ),
-                      ),
-                      SizedBox(
-                        width: Get.width * 0.3,
-                        child: Divider(
-                          height: 0,
-                          color: Colors.white.withOpacity(0.3),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Get.to(() => const RegisterShop());
-                        },
-                        child: Container(
-                          // width: 200,
-                          height: 30,
-                          decoration: transBg(),
-                          child: const Center(
-                              child: Text(
-                                "Add My Shop",
-                                style: TextStyle(color: Colors.white),
-                              )),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                // DrawerCard(
+                //   title: "Services",
+                //   icon: Icons.search,
+                //   child: Column(
+                //     children: [
+                //       GestureDetector(
+                //         onTap: () {
+                //           Get.to(() => const ServiceRegister());
+                //         },
+                //         child: Container(
+                //           // width: 200,
+                //           height: 30,
+                //           decoration: transBg(),
+                //           child: const Center(
+                //               child: Text(
+                //                 'Add My Service',
+                //                 style: TextStyle(color: Colors.white),
+                //               )),
+                //         ),
+                //       ),
+                //       SizedBox(
+                //         width: Get.width * 0.3,
+                //         child: Divider(
+                //           height: 0,
+                //           color: Colors.white.withOpacity(0.3),
+                //         ),
+                //       ),
+                //       InkWell(
+                //         onTap: () {
+                //           Get.to(() => const RegisterShop());
+                //         },
+                //         child: Container(
+                //           // width: 200,
+                //           height: 30,
+                //           decoration: transBg(),
+                //           child: const Center(
+                //               child: Text(
+                //                 "Add My Shop",
+                //                 style: TextStyle(color: Colors.white),
+                //               )),
+                //         ),
+                //       )
+                //     ],
+                //   ),
+                // ),
+
                 DrawerCard(
                   // title: 'About us',
                   title: AppLocalizations.of(context)!.about_us,

@@ -10,6 +10,9 @@ import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../utils/app_logger.dart';
+import 'organize_match.dart';
+
 class ViewMatchupsScreen extends GetView<TournamentController> {
   final String? id;
   final bool isSchedule;
@@ -73,10 +76,14 @@ class MatchupCard extends StatelessWidget {
   final MatchupModel matchup;
   final bool isSchedule;
   final bool isinfo;
+  final VoidCallback? onDelete;
+  final VoidCallback? onEdit;
   const MatchupCard({
     required this.matchup,
     this.isSchedule=false,
     this.isinfo=false,
+    this.onDelete,
+    this.onEdit,
   });
 
   @override
@@ -91,7 +98,7 @@ class MatchupCard extends StatelessWidget {
           if(scoreboard==null){
             errorSnackBar("Please Wait for Match to Begin");
           }else{
-            Get.to(()=>FullScoreboardScreen(scoreboard: scoreboard,));
+            Get.to(()=>FullScoreboardScreen(scoreboard: scoreboard));
           }
         }
       },
@@ -101,12 +108,37 @@ class MatchupCard extends StatelessWidget {
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(20)),
           child: Padding(
-            padding:  isinfo ?const EdgeInsets.symmetric(horizontal: 10, vertical: 10) :const EdgeInsets.symmetric(horizontal: 23, vertical: 18),
+            padding:  isinfo ?
+            const EdgeInsets.symmetric(horizontal: 10, vertical: 10) :
+            const EdgeInsets.symmetric(horizontal: 23, vertical: 5),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(formatDateTime('dd MMMM yyyy hh:mm a', matchup.matchDate),
-                    style: Get.textTheme.labelMedium?.copyWith()),
+                Row(
+                  children: [
+                    Text(
+                      formatDateTime('dd MMMM yyyy hh:mm a', matchup.matchDate),
+                      style: Get.textTheme.labelMedium?.copyWith(),
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.edit, size: 20, color: Colors.blue),
+                      onPressed: () {
+                        Get.to(() => SelectOrganizeTeam(
+                          match: matchup,
+                          round: '',
+                          tourId: matchup.tournamentId,
+                        ));
+                        logger.d("The Passing Data Is ${matchup.tournamentId} and team 1 is ${matchup.team1.name}");
+                      },
+
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.delete, size: 20, color: Colors.red),
+                      onPressed: onDelete,
+                    ),
+                  ],
+                ),
                 SizedBox(height: Get.height * 0.01),
                 Row(
                   children: [

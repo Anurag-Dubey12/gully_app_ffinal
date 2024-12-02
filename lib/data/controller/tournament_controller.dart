@@ -31,7 +31,7 @@ class TournamentController extends GetxController
     coordinates.value = LatLng(position.latitude, position.longitude);
     coordinates.refresh();
   }
-
+  final RxString round=''.obs;
   set setCoordinates(LatLng value) {
     coordinates.value = value;
     coordinates.refresh();
@@ -131,6 +131,49 @@ class TournamentController extends GetxController
       tournamentList.refresh();
     }
   }
+  Future<void> getCurrentTournamentList({String? filterD,}) async {
+    try {
+      filter.value = filterD ?? '';
+      isLoading.value = true;
+
+      if (coordinates.value.latitude == 0) {
+        await getCurrentLocation();
+      }
+
+      await Future.delayed(const Duration(seconds: 1));
+
+      final response = await tournamentApi.getTournamentList(
+        latitude: coordinates.value.latitude,
+        longitude: coordinates.value.longitude,
+        startDate: selectedDate.value,
+        filter: 'current',
+        endDate: selectedDate.value.add(const Duration(days: 7)),
+      );
+      logger.d("The entire Response: ${response.data}");
+      if (response.data != null) {
+        Current_tournamentList.value = (response.data!['tournamentList'] as List<dynamic>?)
+            ?.map((e) => TournamentModel.fromJson(e as Map<String, dynamic>))
+            .toList() ?? [];
+        Current_matches.value = (response.data!['matches'] as List<dynamic>?)
+            ?.map((e) => MatchupModel.fromJson(e as Map<String, dynamic>))
+            .toList() ?? [];
+      } else {
+        Current_tournamentList.value = [];
+        Current_matches.value = [];
+
+      }
+    } catch (e) {
+      logger.d('Error in getTournamentList: $e');
+      errorSnackBar(e.toString());
+    } finally {
+      isLoading.value = false;
+      matches.refresh();
+      tournamentList.refresh();
+    }
+  }
+
+
+
   void setSelectedTournament(TournamentModel tournament) {
     change(GetStatus.success(tournament));
   }
@@ -240,7 +283,7 @@ class TournamentController extends GetxController
   Future<List<MatchupModel>> getMatchup(String tourId) async {
     try {
       final response = await tournamentApi.getMatchup(tourId);
-      print("Raw API response: ${response.data}");
+      logger.d("Raw API response: ${response.data}");
       return response.data!['matches']
           .map<MatchupModel>((e) => MatchupModel.fromJson(e))
           .toList();

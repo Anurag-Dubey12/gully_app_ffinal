@@ -46,7 +46,8 @@ class LiveScoreState extends State<LiveScore> {
   // Future<void> refreshData() async {
   //   try {
   //     final tournamentController = Get.find<TournamentController>();
-  //     tournamentController.getTournamentList(isLive: true);
+  //     tournamentController.getCurrentTournamentList();
+  //     logger.d("Called refreshData");
   //   } catch (e) {
   //     logger.e('Error refreshing data: $e');
   //   }
@@ -72,7 +73,7 @@ class LiveScoreState extends State<LiveScore> {
         child: Padding(
           padding: const EdgeInsets.only(bottom: 10),
           child: FutureBuilder(
-            future: controller.getTournamentList(isLive: true),
+            future: controller.getCurrentTournamentList(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());

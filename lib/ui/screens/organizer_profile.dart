@@ -335,18 +335,18 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                                 ));
                               },
                             ),
-                            ProfileTileCard(
-                              text: 'View My Shop',
-                              onTap: () {
-                                Get.to(() => const MyShop());
-                              },
-                            ),
-                            ProfileTileCard(
-                              text: 'View My Services',
-                              onTap: () {
-                                Get.to(() =>  MyRegisterService());
-                              },
-                            ),
+                            // ProfileTileCard(
+                            //   text: 'View My Shop',
+                            //   onTap: () {
+                            //     Get.to(() => const MyShop());
+                            //   },
+                            // ),
+                            // ProfileTileCard(
+                            //   text: 'View My Services',
+                            //   onTap: () {
+                            //     Get.to(() =>  MyRegisterService());
+                            //   },
+                            // ),
                             ProfileTileCard(
                               text: 'Promote Your Banner',
                               onTap: () {

@@ -67,32 +67,6 @@ class _Card extends StatefulWidget {
 }
 
 class _CardState extends State<_Card> {
-  late io.Socket socket;
-
-
-  Future getMatchScoreboard() async {
-    logger.d("Calling getMatchScoreboard");
-    final sb = await Get.find<ScoreBoardController>()
-        .getMatchScoreboard(widget.tournament.id);
-
-    logger.d("Calling Controller");
-    final controller = Get.find<ScoreBoardController>();
-
-    if (sb != null) {
-      logger.d("Received Scoreboard Data: ${sb.toJson()}");
-      logger.d("Setting Scoreboard");
-
-      controller.setScoreBoard(sb);
-      controller.connectToSocket(hideDialog: true);
-    } else {
-      logger.e("Failed to fetch scoreboard data.");
-    }
-  }
-  @override
-  void initState() {
-    getMatchScoreboard();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

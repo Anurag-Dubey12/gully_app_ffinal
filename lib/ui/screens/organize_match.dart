@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
@@ -12,11 +13,12 @@ import 'package:intl/intl.dart';
 import '../../data/controller/tournament_controller.dart';
 
 class SelectOrganizeTeam extends StatefulWidget {
-  final TournamentModel tournament;
+  final TournamentModel? tournament;
   final String round;
   final String? title;
-  const SelectOrganizeTeam(
-      {super.key, this.title, required this.tournament, required this.round});
+  final MatchupModel? match;
+  final String? tourId;
+  const SelectOrganizeTeam({super.key, this.title, this.tournament, required this.round,this.match,this.tourId});
 
   @override
   State<SelectOrganizeTeam> createState() => _SelectOrganizeTeamState();
@@ -38,25 +40,51 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
 
   Future<void> getPlayers() async {
     final controller = Get.find<TournamentController>();
-    final teams = await controller.getRegisteredTeams(widget.tournament.id);
+    final teams = await (widget.tourId != null
+        ? controller.getRegisteredTeams(widget.tourId!)
+        : controller.getRegisteredTeams(widget.tournament!.id));
+
     if (teams.isEmpty) {
-      errorSnackBar('Please register a team first').then((value) => Get.back());
+      errorSnackBar('Please register a team first').then((_) => Get.back());
+      return;
     }
 
-    totalteams=teams;
+    setState(() {
+      totalteams = teams;
+    });
+
+    if (widget.tourId != null) {
+      logger.d("Match data is available: ${widget.match}");
+      logger.d("Total teams: $totalteams");
+
+      setState(() {
+        selectedTeam1 = totalteams.firstWhereOrNull(
+              (team) => team.id == widget.match!.team1.id,
+        );
+        selectedTeam2 = totalteams.firstWhereOrNull(
+              (team) => team.id == widget.match!.team2.id,
+        );
+
+        selectedDate = widget.match!.matchDate;
+
+        logger.d("Selected Team 1: $selectedTeam1");
+        logger.d("Selected Team 2: $selectedTeam2");
+        logger.d("Selected Date: $selectedDate");
+      });
+    }
 
     logger.d("The Total Teams Are:${totalteams.length}");
     logger.d('TEAMS: $teams');
-    // divide teams into two sides
-    leftSideteams = teams.sublist(0, teams.length ~/ 2);
-    rightSideteams = teams.sublist(teams.length ~/ 2, teams.length);
-
-    setState(() {
-      // selectedTeam1 = leftSideteams[0];
-      // if (rightSideteams.length > 1) {
-      //   selectedTeam2 = rightSideteams[1];
-      // }
-    });
+    // // divide teams into two sides
+    // leftSideteams = teams.sublist(0, teams.length ~/ 2);
+    // rightSideteams = teams.sublist(teams.length ~/ 2, teams.length);
+    //
+    // setState(() {
+    //   // selectedTeam1 = leftSideteams[0];
+    //   // if (rightSideteams.length > 1) {
+    //   //   selectedTeam2 = rightSideteams[1];
+    //   // }
+    // });
   }
 
   @override
@@ -91,10 +119,12 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Center(
-                              child: Text('Organize',
+                              child: Text(
+                                  widget.match != null ? 'Edit Matchup' : 'Organize',
                                   style: Get.textTheme.headlineLarge?.copyWith(
                                       color: Colors.white,
-                                      fontWeight: FontWeight.bold)),
+                                      fontWeight: FontWeight.bold)
+                              ),
                             ),
                             SizedBox(height: Get.height * 0.04),
                             Row(
@@ -234,14 +264,14 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                   onTap: () async {
                                     try {
                                       logger.d(widget
-                                          .tournament.tournamentStartDateTime);
+                                          .tournament!.tournamentStartDateTime);
                                       final date = await showDatePicker(
                                           context: context,
-                                          initialDate: widget.tournament
+                                          initialDate: widget.tournament!
                                               .tournamentStartDateTime,
-                                          firstDate: widget.tournament
+                                          firstDate: widget.tournament!
                                               .tournamentStartDateTime,
-                                          lastDate: widget.tournament
+                                          lastDate: widget.tournament!
                                               .tournamentEndDateTime);
                                       setState(() {
                                         if (selectedDate != null) {
@@ -352,8 +382,12 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                   errorSnackBar('Please select teams');
                                   return;
                                 }
+                                if(selectedTeam1==selectedTeam2){
+                                  errorSnackBar('Please select different teams on Both the side');
+                                  return;
+                                }
                                 final response = await controller.createMatchup(
-                                    widget.tournament.id,
+                                    widget.tournament!.id,
                                     selectedTeam1!.id,
                                     selectedTeam2!.id,
                                     selectedDate!,

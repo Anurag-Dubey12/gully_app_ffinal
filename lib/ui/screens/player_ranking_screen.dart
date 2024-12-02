@@ -165,22 +165,6 @@ class _PlayerRankingScreenState extends State<PlayerRankingScreen> {
                             ],
                           ),
                         ),
-                        // Center(
-                        //   child: Padding(
-                        //     padding: const EdgeInsets.all(8.0),
-                        //     child: Text('Most matches played in Mumbai',
-                        //         style: Get.textTheme.bodyMedium?.copyWith(
-                        //             fontWeight: FontWeight.w400,
-                        //             color: Colors.black)),
-                        //   ),
-                        // ),
-                        // TextButton(
-                        //     onPressed: () {
-                        //       controller.getPlayerRankingList(
-                        //           _selectedTab == 0 ? 'leather' : 'tennis',
-                        //           selectedChildTab);
-                        //     },
-                        //     child: const Text('Click me')),
                         Expanded(
                           child: Container(
                             color: Colors.black26,

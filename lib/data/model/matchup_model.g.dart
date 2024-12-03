@@ -14,6 +14,8 @@ MatchupModel _$MatchupModelFromJson(Map<String, dynamic> json) => MatchupModel(
       tournamentId: json['tournamentId'] as String?,
       scoreBoard: json['scoreBoard'] as Map<String, dynamic>?,
       id: json['_id'] as String,
+      tournament: json['tournament'] as String?,
+      round: json['Round'] as String?,
     );
 
 Map<String, dynamic> _$MatchupModelToJson(MatchupModel instance) =>
@@ -25,4 +27,6 @@ Map<String, dynamic> _$MatchupModelToJson(MatchupModel instance) =>
       'scoreBoard': instance.scoreBoard,
       'tournamentName': instance.tournamentName,
       'tournamentId': instance.tournamentId,
+      'Round': instance.round,
+      'tournament': instance.tournament,
     };

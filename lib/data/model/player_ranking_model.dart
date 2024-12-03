@@ -54,6 +54,7 @@ class PlayerRankingModel {
   String get displayName => playerName.isNotEmpty == true
       ? playerName
       : (name ?? 'Unknown Player');
+
   factory PlayerRankingModel.fromJson(Map<String, dynamic> json) =>
       _$PlayerRankingModelFromJson(json);
 

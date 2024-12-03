@@ -122,7 +122,6 @@ class CardState extends State<Card> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
-    // final scoreBoardController = Get.find<ScoreBoardController>();
     final tournamentdata = controller.tournamentList
         .firstWhere((t) => t.id == widget.tournament.tournamentId);
     ScoreboardModel? scoreboard = widget.tournament.scoreBoard == null

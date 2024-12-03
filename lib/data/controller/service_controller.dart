@@ -89,8 +89,7 @@ class ServiceController extends GetxController with StateMixin<ServiceModel> {
 
 
 
-  Future<bool> deleteService(String serviceId)
-  async{
+  Future<bool> deleteService(String serviceId) async{
     try {
       final response = await serviceApi.deleteService(serviceId);
       if (response.status == false) {

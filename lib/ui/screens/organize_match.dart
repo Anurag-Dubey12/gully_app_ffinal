@@ -70,6 +70,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
         logger.d("Selected Team 1: $selectedTeam1");
         logger.d("Selected Team 2: $selectedTeam2");
         logger.d("Selected Date: $selectedDate");
+        logger.d("Selected Round: ${widget.match!.round}");
       });
     }
 

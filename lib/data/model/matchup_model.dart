@@ -18,7 +18,9 @@ class MatchupModel {
   final String? tournamentName;
   @JsonKey(name: 'tournamentId', disallowNullValue: false)
   final String? tournamentId;
-
+  @JsonKey(name: 'Round')
+  final String? round;
+  final String? tournament;
   MatchupModel({
     required this.matchDate,
     required this.team1,
@@ -27,7 +29,15 @@ class MatchupModel {
     required this.tournamentId,
     required this.scoreBoard,
     required this.id,
+    required this.tournament,
+    required this.round,
   });
+
+  String? get displayName =>
+      (tournamentId != null && tournamentId!.isNotEmpty)
+          ? tournamentId
+          : tournament ?? ' ';
+
 
   factory MatchupModel.fromJson(Map<String, dynamic> json) =>
       _$MatchupModelFromJson(json);
@@ -41,6 +51,8 @@ class MatchupModel {
       tournamentName: null,
       tournamentId: null,
       scoreBoard: null,
+      tournament: null,
+      round: null,
       id: '',
     );
   }

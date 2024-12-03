@@ -145,6 +145,7 @@ class _MatchupCard extends GetView<ScoreBoardController> {
         //   errorSnackBar('The match has not started yet. Please wait until the scheduled date and time.');
         //   return;
         // }
+
         if (matchup.scoreBoard != null) {
           Get.off(() => const ScoreCardScreen());
           controller
@@ -165,6 +166,8 @@ class _MatchupCard extends GetView<ScoreBoardController> {
                 isTournament: true,
               ));
           controller.match = MatchupModel.fromJson(matchup.toJson());
+
+          logger.d("The Matchup Data is ${matchup.toJson()}");
         }
       },
       child: Container(

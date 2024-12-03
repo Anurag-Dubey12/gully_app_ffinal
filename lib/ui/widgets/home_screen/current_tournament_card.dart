@@ -77,7 +77,7 @@ class _CardState extends State<_Card> {
         ? null
         : ScoreboardModel.fromJson(widget.tournament.scoreBoard!);
 
-    logger.d("The match Id of Tournament are :${widget.tournament.id}");
+    logger.d("The match Id of Tournament are :${widget.tournament.tournamentId}");
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: Container(

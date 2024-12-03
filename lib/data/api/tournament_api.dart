@@ -1,3 +1,4 @@
+import 'package:gully_app/data/api/team_api.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -146,6 +147,7 @@ class TournamentApi {
     }
     return ApiResponse.fromJson(response.body);
   }
+
   Future<ApiResponse> createMatchup(
       {required String tourId,
       required String team1,
@@ -172,10 +174,40 @@ class TournamentApi {
     }
     return ApiResponse.fromJson(response.body);
   }
+  Future<ApiResponse> editMatch(Map<String,dynamic> match,String matchid)async{
+    try{
+      var response=await repo.put('match/editMatch/$matchid', match);
+      logger.d(response.body);
+      if (response.statusCode! >= 500) {
+        errorSnackBar(generateErrorMessage(response.body));
+        throw Exception('Server Error');
+      } else if (response.statusCode!!= 200) {
+        errorSnackBar(generateErrorMessage(response.body));
+        throw Exception('Bad Request');
+      }
+      return ApiResponse.fromJson(response.body);
+    }catch(e){
+      logger.d("Unable to update Match Data:$e");
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse> deleteMatch(String matchId) async {
+    try {
+      final response = await repo.delete('/match/deleteMatch/$matchId');
+      return ApiResponse.fromJson(response.body);
+    } catch (e) {
+      rethrow;
+    }
+  }
 
   Future<ApiResponse> cancelTournament(String tourId) async {
     try {
       final response = await repo.post('/main/deleteTournament/$tourId', {});
+      logger.d(response.body);
+      if (!response.isOk) {
+        throw response.body['message'] ?? 'Unable to Process Request';
+      }
       return ApiResponse.fromJson(response.body);
     } catch (e) {
       rethrow;

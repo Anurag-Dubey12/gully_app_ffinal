@@ -260,29 +260,32 @@ class _CardState extends State<_Card> {
 }
 
 class _InputRoundNumber extends StatefulWidget {
+  final TournamentModel tournament;
   const _InputRoundNumber({
     required this.tournament,
   });
-
-  final TournamentModel tournament;
-
   @override
   State<_InputRoundNumber> createState() => _InputRoundNumberState();
 }
 
 class _InputRoundNumberState extends State<_InputRoundNumber> {
   var roundController = TextEditingController();
+  var roundNumberController = TextEditingController();
   List<String> items = [
     'qualifier',
     'semi final',
     'final match',
+    'round', // Added new item
   ];
   OverlayEntry? _overlayEntry;
   final GlobalKey _dropdownKey = GlobalKey();
+  bool _isRoundSelected = false;
 
   @override
   void dispose() {
     _overlayEntry?.remove();
+    roundController.dispose();
+    roundNumberController.dispose();
     super.dispose();
   }
 
@@ -317,6 +320,7 @@ class _InputRoundNumberState extends State<_InputRoundNumber> {
               onTap: () {
                 setState(() {
                   roundController.text = e;
+                  _isRoundSelected = e == 'round';
                 });
                 _toggleDropdown();
               },
@@ -369,6 +373,40 @@ class _InputRoundNumberState extends State<_InputRoundNumber> {
                 ),
               ),
             ),
+
+            // Conditionally render round number input when 'round' is selected
+            if (_isRoundSelected) ...[
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: roundNumberController,
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                        hintText: 'Enter Round Number',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  IconButton(
+                    icon: const Icon(Icons.add_circle, color: Colors.blue),
+                    onPressed: () {
+                      // You can add logic here to increment the round number
+                      // For now, it just ensures a number is entered
+                      if (roundNumberController.text.isNotEmpty) {
+                        // Optionally, you could parse and validate the number here
+                        roundController.text = 'Round ${roundNumberController.text}';
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ],
+
             const SizedBox(height: 20),
             PrimaryButton(
               onTap: () {
@@ -380,6 +418,11 @@ class _InputRoundNumberState extends State<_InputRoundNumber> {
                 }
                 if (roundController.text.isEmpty) {
                   errorSnackBar('Please select a round', forceDialogOpen: true);
+                  return;
+                }
+                // Additional validation for 'round' type
+                if (_isRoundSelected && roundNumberController.text.isEmpty) {
+                  errorSnackBar('Please enter a round number', forceDialogOpen: true);
                   return;
                 }
                 Get.back();

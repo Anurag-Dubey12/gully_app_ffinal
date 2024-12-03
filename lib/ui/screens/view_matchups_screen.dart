@@ -91,7 +91,7 @@ class MatchupCard extends StatelessWidget {
     final ScoreboardModel? scoreboard = matchup.scoreBoard == null
         ? null
         : ScoreboardModel.fromJson(matchup.scoreBoard!);
-
+    final controller=Get.find<TournamentController>();
     return GestureDetector(
       onTap:(){
         if(isSchedule){
@@ -126,16 +126,24 @@ class MatchupCard extends StatelessWidget {
                       onPressed: () {
                         Get.to(() => SelectOrganizeTeam(
                           match: matchup,
-                          round: '',
-                          tourId: matchup.tournamentId,
+                          round:matchup.round ??'',
+                          tourId: matchup.tournament,
                         ));
-                        logger.d("The Passing Data Is ${matchup.tournamentId} and team 1 is ${matchup.team1.name}");
+                        logger.d("The Passing Data Is ${matchup.tournament} and team 1 is ${matchup.team1.name}");
                       },
 
                     ),
                     IconButton(
                       icon: const Icon(Icons.delete, size: 20, color: Colors.red),
-                      onPressed: onDelete,
+                      onPressed: ()async{
+                        logger.d("The matchup id is${matchup.id}");
+                        final  isDeleted= await controller.deleteMatch(matchup.id);
+                        if(isDeleted){
+                          successSnackBar("Your match has been deleted");
+                        }else{
+                          errorSnackBar("Something went wrong");
+                        }
+                      },
                     ),
                   ],
                 ),

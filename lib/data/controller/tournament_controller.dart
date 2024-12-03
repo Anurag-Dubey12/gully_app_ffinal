@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
@@ -31,7 +32,6 @@ class TournamentController extends GetxController
     coordinates.value = LatLng(position.latitude, position.longitude);
     coordinates.refresh();
   }
-  final RxString round=''.obs;
   set setCoordinates(LatLng value) {
     coordinates.value = value;
     coordinates.refresh();
@@ -283,13 +283,45 @@ class TournamentController extends GetxController
   Future<List<MatchupModel>> getMatchup(String tourId) async {
     try {
       final response = await tournamentApi.getMatchup(tourId);
-      logger.d("Raw API response: ${response.data}");
+      logger.d("Raw Matchup API response: ${response.data}");
+      // await Clipboard.setData(ClipboardData(text: response.data.toString()));
       return response.data!['matches']
           .map<MatchupModel>((e) => MatchupModel.fromJson(e))
           .toList();
     } catch (e) {
       errorSnackBar(e.toString());
       rethrow;
+    }
+  }
+
+  Future<bool> editMatch(Map<String,dynamic> match,String matchId)async{
+    try{
+      var response=await tournamentApi.editMatch(match,matchId);
+      if (response.status == false) {
+        logger.i('Error: ${response.message}');
+        errorSnackBar(response.message ?? 'Unable to update service');
+        return false;
+      }
+      return true;
+    }catch(e){
+      logger.e('Error updating service: $e');
+      rethrow;
+    }
+  }
+
+
+  Future<bool> deleteMatch(String matchid) async {
+    try {
+      final response = await tournamentApi.deleteMatch(matchid);
+      if (response.status == false) {
+        logger.i('Error: ${response.message}');
+        errorSnackBar(response.message ?? 'Unable to update service');
+        return false;
+      }
+      return true;
+    } catch (e) {
+      errorSnackBar(e.toString());
+      return false;
     }
   }
 

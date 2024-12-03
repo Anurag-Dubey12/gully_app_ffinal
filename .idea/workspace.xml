@@ -9,16 +9,19 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify  tournament form screen">
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify viewmatchup screen">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/service_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/service_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/model/matchup_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/matchup_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/matchup_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/matchup_model.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/player_ranking_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/player_ranking_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/player_ranking_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/player_ranking_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" afterDir="false" />
     </list>
@@ -181,14 +184,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00040" summary="modify and added pdf feature">
-      <option name="closed" value="true" />
-      <created>1725969301232</created>
-      <option name="number" value="00040" />
-      <option name="presentableId" value="LOCAL-00040" />
-      <option name="project" value="LOCAL" />
-      <updated>1725969301232</updated>
     </task>
     <task id="LOCAL-00041" summary="modify register screen">
       <option name="closed" value="true" />
@@ -574,7 +569,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732881036628</updated>
     </task>
-    <option name="localTasksCounter" value="89" />
+    <task id="LOCAL-00089" summary="modify viewmatchup screen">
+      <option name="closed" value="true" />
+      <created>1733140267145</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1733140267146</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -595,7 +598,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="firebase id changes" />
     <MESSAGE value="shop screen modify" />
     <MESSAGE value="home screen bottomnav ,shop screen modify" />
     <MESSAGE value="modify shop dashboard ,shop_homescreen" />
@@ -620,7 +622,8 @@
     <MESSAGE value="modify" />
     <MESSAGE value="modify view tournament screen" />
     <MESSAGE value="modify  tournament form screen" />
-    <option name="LAST_COMMIT_MESSAGE" value="modify  tournament form screen" />
+    <MESSAGE value="modify viewmatchup screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="modify viewmatchup screen" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -1129,6 +1132,12 @@
           <option name="totalLines" value="6906784" />
           <option name="info" value="modify  tournament form screen" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1733140271792" />
+          <option name="linesCode" value="38026" />
+          <option name="totalLines" value="2092253" />
+          <option name="info" value="modify viewmatchup screen" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1636,6 +1645,12 @@
           <option name="linesCode" value="38020" />
           <option name="totalLines" value="6906784" />
           <option name="info" value="Nov 29, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1733140271792" />
+          <option name="linesCode" value="38026" />
+          <option name="totalLines" value="2092253" />
+          <option name="info" value="Dec 2, 2024" />
         </TimePoint>
       </list>
     </option>

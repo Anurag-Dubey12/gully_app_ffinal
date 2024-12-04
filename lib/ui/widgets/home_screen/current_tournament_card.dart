@@ -73,6 +73,7 @@ class _CardState extends State<_Card> {
     final controller = Get.find<TournamentController>();
     final tournamentdata = controller.tournamentList
         .firstWhere((t) => t.id == widget.tournament.tournamentId);
+
     ScoreboardModel? scoreboard = widget.tournament.scoreBoard == null
         ? null
         : ScoreboardModel.fromJson(widget.tournament.scoreBoard!);
@@ -121,41 +122,39 @@ class _CardState extends State<_Card> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              widget.tournament.tournamentName ?? 'Unknown Tournament',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.tournament.tournamentName ?? 'Unknown Tournament',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
-                            IconButton(
-                              onPressed: () {
-                                Get.bottomSheet(
-                                  IButtonDialog(
-                                    organizerName: tournamentdata.organizerName!,
-                                    location: tournamentdata.stadiumAddress,
-                                    tournamentName: tournamentdata.tournamentName,
-                                    tournamentPrice: tournamentdata.fees.toString(),
-                                    coverPhoto: tournamentdata.coverPhoto,
-                                  ),
-                                  backgroundColor: Colors.white,
-                                );
-                              },
-                              icon: const Icon(Icons.info_outline_rounded, size: 18),
-                              color: Colors.grey,
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(),
-                            ),
-                          ],
-                        ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              Get.bottomSheet(
+                                IButtonDialog(
+                                  organizerName: tournamentdata.organizerName!,
+                                  location: tournamentdata.stadiumAddress,
+                                  tournamentName: tournamentdata.tournamentName,
+                                  tournamentPrice: tournamentdata.fees.toString(),
+                                  coverPhoto: tournamentdata.coverPhoto,
+                                ),
+                                backgroundColor: Colors.white,
+                              );
+                            },
+                            icon: const Icon(Icons.info_outline_rounded, size: 18),
+                            color: Colors.grey,
+                            padding: EdgeInsets.zero,
+                            constraints: const BoxConstraints(),
+                          ),
+                        ],
                       ),
+
                       const SizedBox(height: 4),
                       TeamScore(
                         color: Colors.red,
@@ -169,6 +168,7 @@ class _CardState extends State<_Card> {
                         color: Colors.green.shade600,
                       ),
                       const SizedBox(height: 8),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

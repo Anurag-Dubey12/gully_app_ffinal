@@ -65,29 +65,27 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
               (team) => team.id == widget.match!.team2.id,
         );
 
-        selectedDate = widget.match!.matchDate;
+        // Modify this part to handle potential null scenarios
+        if (widget.match!.matchDate != null) {
+          selectedDate = widget.match!.matchDate;
+        } else {
+          // Fallback to tournament start date or current date
+          selectedDate = widget.tournament?.tournamentStartDateTime ?? DateTime.now();
+        }
 
-        logger.d("Selected Team 1: $selectedTeam1");
-        logger.d("Selected Team 2: $selectedTeam2");
+        logger.d("Selected Team 1: ${selectedTeam1?.name}");
+        logger.d("Selected Team 2: ${selectedTeam2?.name}");
         logger.d("Selected Date: $selectedDate");
         logger.d("Selected Round: ${widget.match!.round}");
       });
+    } else {
+      // Ensure selectedDate is set for new matchup creation
+      selectedDate = widget.tournament?.tournamentStartDateTime ?? DateTime.now();
     }
 
     logger.d("The Total Teams Are:${totalteams.length}");
     logger.d('TEAMS: $teams');
-    // // divide teams into two sides
-    // leftSideteams = teams.sublist(0, teams.length ~/ 2);
-    // rightSideteams = teams.sublist(teams.length ~/ 2, teams.length);
-    //
-    // setState(() {
-    //   // selectedTeam1 = leftSideteams[0];
-    //   // if (rightSideteams.length > 1) {
-    //   //   selectedTeam2 = rightSideteams[1];
-    //   // }
-    // });
   }
-
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
@@ -263,21 +261,29 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                 const Spacer(),
                                 InkWell(
                                   onTap: () async {
-                                    try {
-                                      logger.d(widget
-                                          .tournament!.tournamentStartDateTime);
-                                      final date = await showDatePicker(
-                                          context: context,
-                                          initialDate: widget.tournament!
-                                              .tournamentStartDateTime,
-                                          firstDate: widget.tournament!
-                                              .tournamentStartDateTime,
-                                          lastDate: widget.tournament!
-                                              .tournamentEndDateTime);
-                                      setState(() {
+                                    DateTime? firstDate;
+                                    DateTime? lastDate;
+                                    DateTime? initialDate;
+
+                                    if (widget.tourId != null && widget.match != null) {
+                                      initialDate = selectedDate ?? DateTime.now();
+                                      firstDate = widget.tournament?.tournamentStartDateTime ?? DateTime.now().subtract(Duration(days: 365));
+                                      lastDate = widget.tournament?.tournamentEndDateTime ?? DateTime.now().add(Duration(days: 365));
+                                    } else {
+                                      initialDate = widget.tournament!.tournamentStartDateTime;
+                                      firstDate = widget.tournament!.tournamentStartDateTime;
+                                      lastDate = widget.tournament!.tournamentEndDateTime;
+                                    }
+                                    final date = await showDatePicker(
+                                        context: context,
+                                        initialDate: widget.tournament!.tournamentStartDateTime,
+                                        firstDate: widget.tournament!.tournamentStartDateTime,
+                                        lastDate: widget.tournament!.tournamentEndDateTime);
+                                    setState(() {
+                                      if (date != null) {
                                         if (selectedDate != null) {
                                           selectedDate = DateTime(
-                                              date!.year,
+                                              date.year,
                                               date.month,
                                               date.day,
                                               selectedDate!.hour,
@@ -285,10 +291,8 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                         } else {
                                           selectedDate = date;
                                         }
-                                      });
-                                    } catch (e) {
-                                      logger.d(e);
-                                    }
+                                      }
+                                    });
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -386,6 +390,23 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                 if(selectedTeam1==selectedTeam2){
                                   errorSnackBar('Please select different teams on Both the side');
                                   return;
+                                }
+                                if(widget.tourId!=null){
+                                  final Map<String,dynamic>obj={
+                                    'tournamentId': widget.tourId,
+                                    'team1ID':  selectedTeam1!.id,
+                                    'team2ID':  selectedTeam2!.id,
+                                    'round': widget.round,
+                                    'matchNo': 1,
+                                    'dateTime':selectedDate!.toIso8601String(),
+                                  };
+                                  logger.d("Selected Date is:$selectedDate");
+                                  bool response=await controller.editMatch(obj,widget.match!.id);
+                                  logger.d(response);
+                                  if (response) {
+                                    successSnackBar('Matchup Edited')
+                                        .then((value) => Get.back());
+                                  }
                                 }
                                 final response = await controller.createMatchup(
                                     widget.tournament!.id,

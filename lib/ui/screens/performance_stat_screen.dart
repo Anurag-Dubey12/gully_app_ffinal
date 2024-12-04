@@ -28,7 +28,7 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         iconTheme: const IconThemeData(color: Colors.white),
-        title: const Text('My Perfomance',
+        title: const Text('My Performance',
             style: TextStyle(
               color: Colors.white,
               fontSize: 24,
@@ -182,99 +182,96 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen> {
                       endIndent: 2,
                     ),
                     FutureBuilder<Map<String, dynamic>>(
-                        future: controller.getMyPerformance(
-                          userId: authcontroller.state!.id,
-                            matchType: widget.category, category: innings),
-                        builder: (context, snapshot) {
-                          return ListView.builder(
-                              shrinkWrap: true,
-                              physics: const NeverScrollableScrollPhysics(),
-                              itemCount: snapshot.data?.length ?? 0,
-                              itemBuilder: (builder, index) {
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          snapshot.data!.entries
-                                              .elementAt(index)
-                                              .key
-                                              .capitalize,
-                                          textAlign: TextAlign.center,
-                                          style: _valueStyle(),
-                                        ),
-                                      ),
+                      future: controller.getMyPerformance(
+                        userId: authcontroller.state!.id,
+                        matchType: widget.category,
+                        category: innings,
+                      ),
+                      builder: (context, snapshot) {
+                        // if (snapshot.connectionState == ConnectionState.waiting) {
+                        //   return const Center(child: CircularProgressIndicator());
+                        // }
+                        if (snapshot.hasError) {
+                          return const Center(
+                            child: Text(
+                              "Something went wrong",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          );
+                        }
+                        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                          return const Center(
+                            child: Text(
+                              "No data available",
+                              style: TextStyle(color: Colors.grey),
+                            ),
+                          );
+                        }
+                        final performanceData = snapshot.data!;
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: performanceData.length,
+                          itemBuilder: (context, index) {
+                            final statKey = performanceData.keys.elementAt(index);
+                            final statValues = performanceData[statKey];
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      statKey.capitalize ?? '',
+                                      textAlign: TextAlign.center,
+                                      style: _valueStyle(),
                                     ),
-                                    SizedBox(
-                                      height: 40,
-                                      child: VerticalDivider(
-                                        color: Colors.grey.shade300,
-                                        thickness: 1,
-                                        indent: 1,
-                                        endIndent: 2,
-                                      ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 40,
+                                  child: VerticalDivider(
+                                    color: Colors.grey.shade300,
+                                    thickness: 1,
+                                    indent: 1,
+                                    endIndent: 2,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      statValues['tennis'].toString(),
+                                      textAlign: TextAlign.center,
+                                      style: _valueStyle(),
                                     ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          (snapshot.data!.entries
-                                                  .elementAt(index)
-                                                  .value['tennis'])
-                                              .toString(),
-                                          textAlign: TextAlign.center,
-                                          style: _valueStyle(),
-                                        ),
-                                      ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 40,
+                                  child: VerticalDivider(
+                                    color: Colors.grey.shade300,
+                                    thickness: 1,
+                                    indent: 1,
+                                    endIndent: 2,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      statValues['leather'].toString(),
+                                      textAlign: TextAlign.center,
+                                      style: _valueStyle(),
                                     ),
-                                    SizedBox(
-                                      height: 40,
-                                      child: VerticalDivider(
-                                        color: Colors.grey.shade300,
-                                        thickness: 1,
-                                        indent: 1,
-                                        endIndent: 2,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          snapshot.data!.entries
-                                              .elementAt(index)
-                                              .value['leather']
-                                              .toString(),
-                                          textAlign: TextAlign.center,
-                                          style: _valueStyle(),
-                                        ),
-                                      ),
-                                    ),
-                                    // SizedBox(
-                                    //   height: 40,
-                                    //   child: VerticalDivider(
-                                    //     color: Colors.grey.shade300,
-                                    //     thickness: 1,
-                                    //     indent: 1,
-                                    //     endIndent: 2,
-                                    //   ),
-                                    // ),
-                                    // Expanded(
-                                    //   child: Padding(
-                                    //     padding: const EdgeInsets.all(8.0),
-                                    //     child: Text(
-                                    //       '3',
-                                    //       textAlign: TextAlign.center,
-                                    //       style: _valueStyle(),
-                                    //     ),
-                                    //   ),
-                                    // ),
-                                  ],
-                                );
-                              });
-                        })
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    ),
                   ],
                 ),
               ),

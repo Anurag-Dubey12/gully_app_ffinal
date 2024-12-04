@@ -59,6 +59,7 @@ class ViewMatchupsScreen extends GetView<TournamentController> {
                           itemBuilder: (context, index) => MatchupCard(
                             matchup: snapshot.data![index],
                             isSchedule: isSchedule,
+                            tourid:id ?? controller.state!.id,
                           ),
                         );
                       }
@@ -76,14 +77,12 @@ class MatchupCard extends StatelessWidget {
   final MatchupModel matchup;
   final bool isSchedule;
   final bool isinfo;
-  final VoidCallback? onDelete;
-  final VoidCallback? onEdit;
+  final String? tourid;
   const MatchupCard({
     required this.matchup,
     this.isSchedule=false,
     this.isinfo=false,
-    this.onDelete,
-    this.onEdit,
+    this.tourid
   });
 
   @override
@@ -138,8 +137,10 @@ class MatchupCard extends StatelessWidget {
                       onPressed: ()async{
                         logger.d("The matchup id is${matchup.id}");
                         final  isDeleted= await controller.deleteMatch(matchup.id);
+
                         if(isDeleted){
                           successSnackBar("Your match has been deleted");
+                          controller.getMatchup(tourid??'');
                         }else{
                           errorSnackBar("Something went wrong");
                         }

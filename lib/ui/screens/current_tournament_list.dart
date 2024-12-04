@@ -131,6 +131,7 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                                       .organizerTournamentList.value.length,
                                   itemBuilder: (context, index) {
                                     return _Card(
+
                                       tournament: controller
                                           .organizerTournamentList.value[index],
                                       redirectType: redirectType,
@@ -179,13 +180,14 @@ class _CardState extends State<_Card> {
     final controller = Get.find<TournamentController>();
     logger.d("The Total Tournament: ${controller.tournamentList.map((t)=>t.tournamentName)}");
     logger.d('build');
+
     return GestureDetector(
       onTap: () {
         switch (widget.redirectType) {
           case RedirectType.organizeMatch:
             Get.dialog(
               id: Random().nextInt(1000).toString(),
-              _InputRoundNumber(
+              InputRoundNumber(
                 tournament: widget.tournament,
               ),
             );
@@ -197,6 +199,7 @@ class _CardState extends State<_Card> {
           case RedirectType.matchup:
             controller.setSelectedTournament(widget.tournament);
             Get.to(() => const ViewMatchupsScreen());
+            logger.d("Tournament Start Date is ${widget.tournament.tournamentStartDateTime} and end Date is ${widget.tournament.tournamentEndDateTime}");
             break;
           case RedirectType.editForm:
             Get.to(() => TournamentFormScreen(
@@ -259,27 +262,56 @@ class _CardState extends State<_Card> {
   }
 }
 
-class _InputRoundNumber extends StatefulWidget {
+class InputRoundNumber extends StatefulWidget {
   final TournamentModel tournament;
-  const _InputRoundNumber({
+  final String? existingRound;
+
+  const InputRoundNumber({
     required this.tournament,
+    this.existingRound,
   });
+
   @override
-  State<_InputRoundNumber> createState() => _InputRoundNumberState();
+  State<InputRoundNumber> createState() => _InputRoundNumberState();
 }
 
-class _InputRoundNumberState extends State<_InputRoundNumber> {
-  var roundController = TextEditingController();
-  var roundNumberController = TextEditingController();
+class _InputRoundNumberState extends State<InputRoundNumber> {
+  late TextEditingController roundController;
+  late TextEditingController roundNumberController;
+
   List<String> items = [
+    'Round',
     'qualifier',
     'semi final',
     'final match',
-    'round', // Added new item
   ];
+
   OverlayEntry? _overlayEntry;
   final GlobalKey _dropdownKey = GlobalKey();
   bool _isRoundSelected = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    String? extractedRound;
+    String? extractedRoundNumber;
+
+    if (widget.existingRound != null) {
+      final roundMatch = RegExp(r'Round\s*(\d+)', caseSensitive: false).firstMatch(widget.existingRound!);
+
+      if (roundMatch != null) {
+        extractedRound = 'Round';
+        extractedRoundNumber = roundMatch.group(1);
+        _isRoundSelected = true;
+      } else {
+        extractedRound = widget.existingRound;
+      }
+    }
+
+    roundController = TextEditingController(text: extractedRound ?? '');
+    roundNumberController = TextEditingController(text: extractedRoundNumber ?? '');
+  }
 
   @override
   void dispose() {
@@ -320,7 +352,12 @@ class _InputRoundNumberState extends State<_InputRoundNumber> {
               onTap: () {
                 setState(() {
                   roundController.text = e;
-                  _isRoundSelected = e == 'round';
+                  _isRoundSelected = e == 'Round';
+
+                  // Clear round number if not 'Round'
+                  if (!_isRoundSelected) {
+                    roundNumberController.clear();
+                  }
                 });
                 _toggleDropdown();
               },
@@ -373,40 +410,42 @@ class _InputRoundNumberState extends State<_InputRoundNumber> {
                 ),
               ),
             ),
-
-            // Conditionally render round number input when 'round' is selected
             if (_isRoundSelected) ...[
-              const SizedBox(height: 20),
+              const SizedBox(height: 5),
               Row(
                 children: [
                   Expanded(
-                    child: TextField(
+                    child: TextFormField(
                       controller: roundNumberController,
                       keyboardType: TextInputType.number,
                       decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                         hintText: 'Enter Round Number',
+                        hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Colors.grey.shade300),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.grey),
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 10),
                   IconButton(
                     icon: const Icon(Icons.add_circle, color: Colors.blue),
                     onPressed: () {
-                      // You can add logic here to increment the round number
-                      // For now, it just ensures a number is entered
-                      if (roundNumberController.text.isNotEmpty) {
-                        // Optionally, you could parse and validate the number here
-                        roundController.text = 'Round ${roundNumberController.text}';
-                      }
+                      int currentValue = int.tryParse(roundNumberController.text) ?? 0;
+                      setState(() {
+                        roundNumberController.text = (currentValue + 1).toString();
+                      });
                     },
                   ),
                 ],
               ),
             ],
-
             const SizedBox(height: 20),
             PrimaryButton(
               onTap: () {
@@ -420,16 +459,19 @@ class _InputRoundNumberState extends State<_InputRoundNumber> {
                   errorSnackBar('Please select a round', forceDialogOpen: true);
                   return;
                 }
-                // Additional validation for 'round' type
                 if (_isRoundSelected && roundNumberController.text.isEmpty) {
                   errorSnackBar('Please enter a round number', forceDialogOpen: true);
                   return;
                 }
+                String roundText = _isRoundSelected
+                    ? 'Round ${roundNumberController.text}'
+                    : roundController.text;
+
                 Get.back();
                 Get.to(
                       () => SelectOrganizeTeam(
                     tournament: widget.tournament,
-                    round: roundController.text,
+                    round: roundText,
                   ),
                 );
               },

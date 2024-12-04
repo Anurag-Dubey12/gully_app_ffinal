@@ -155,6 +155,7 @@ class TournamentApi {
       required DateTime date,
       required String round,
       required int matchNo}) async {
+
     final obj = {
       'dateTime': date.toIso8601String(),
       'tournamentId': tourId,
@@ -176,8 +177,8 @@ class TournamentApi {
   }
   Future<ApiResponse> editMatch(Map<String,dynamic> match,String matchid)async{
     try{
-      var response=await repo.put('match/editMatch/$matchid', match);
-      logger.d(response.body);
+      var response=await repo.put('/match/editMatch/$matchid', match);
+      logger.d("Matchup Edit Data:${response.body}");
       if (response.statusCode! >= 500) {
         errorSnackBar(generateErrorMessage(response.body));
         throw Exception('Server Error');

@@ -21,9 +21,10 @@ class MiscController extends GetxController with StateMixin {
   }
 
   Rx<PromoteBannerModel?> ads=Rx<PromoteBannerModel?>(null);
+
   Future<void> getBanners() async {
     var response = await repo.getBanners();
-
+    logger.d("The Banners Data is:${response.data}");
     banners.value = response.data!['banners']
         .map<BannerModel>((e) => BannerModel.fromJson(e))
         .toList();

@@ -347,18 +347,18 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                             //     Get.to(() =>  MyRegisterService());
                             //   },
                             // ),
-                            ProfileTileCard(
-                              text: 'Promote Your Banner',
-                              onTap: () {
-                                Get.to(() => const PromoteBannerScreen());
-                              },
-                            ),
-                            ProfileTileCard(
-                              text: 'Transaction History',
-                              onTap: () {
-                                Get.to(() => const TxnHistoryScreen());
-                              },
-                            ),
+                            // ProfileTileCard(
+                            //   text: 'Promote Your Banner',
+                            //   onTap: () {
+                            //     Get.to(() => const PromoteBannerScreen());
+                            //   },
+                            // ),
+                            // ProfileTileCard(
+                            //   text: 'Transaction History',
+                            //   onTap: () {
+                            //     Get.to(() => const TxnHistoryScreen());
+                            //   },
+                            // ),
                             ProfileTileCard(
                               text: 'View your tournament',
                               onTap: () {

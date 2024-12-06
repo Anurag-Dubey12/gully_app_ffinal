@@ -203,9 +203,10 @@ class _CardState extends State<_Card> {
                           GestureDetector(
                             onTap: (){
                               logger.d("The TournamentId is:${tournamentdata.id}");
-                              Get.to(() => ViewMatchupsScreen(id:tournamentdata.id,isSchedule: true,));
+                              controller.setScheduleStatus(true);
+                              Get.to(() => ViewMatchupsScreen(id:tournamentdata.id,isSchedule: controller.isSchedule.value));
                             },
-                            child: const Text("View Schedule",style: TextStyle(fontSize: 12,decoration: TextDecoration.underline),),
+                            child: const Text("View Schedule",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),),
                           )
                         ],
                       ),
@@ -219,6 +220,18 @@ class _CardState extends State<_Card> {
               top: 8,
               right: 8,
               child: BlinkingLiveText(),
+            ),
+            Positioned(
+              top: 10,
+              left: 10,
+              child: Text(
+              '${widget.tournament.round!.capitalize ??''} Match',
+                style: const TextStyle(
+                  fontSize: 10,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),

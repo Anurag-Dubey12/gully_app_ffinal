@@ -14,11 +14,48 @@ import 'opponent_tournament_list.dart';
 
 class TournamentTeams extends GetView<TournamentController> {
   final TournamentModel tournament;
+  final bool isTeamListOnly;
 
-  const TournamentTeams({super.key, required this.tournament});
+  const TournamentTeams({
+    super.key,
+    required this.tournament,
+    this.isTeamListOnly = false
+  });
 
   @override
   Widget build(BuildContext context) {
+    if (isTeamListOnly) {
+      return DecoratedBox(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          image: DecorationImage(
+            image: AssetImage('assets/images/sports_icon.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: GradientBuilder(
+          child: Scaffold(
+            backgroundColor: Colors.transparent,
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              leading: const BackButton(color: Colors.white),
+              title: const Text(
+                'Tournament Teams',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+            ),
+            body: registeredTeamsView(),
+          ),
+        ),
+      );
+    }
+
+    // Default behavior with TabBar
     return DefaultTabController(
       length: 2,
       child: DecoratedBox(
@@ -52,7 +89,6 @@ class TournamentTeams extends GetView<TournamentController> {
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                 ),
-
                 unselectedLabelStyle: TextStyle(
                   color: Colors.white,
                   fontSize: 14,
@@ -78,7 +114,7 @@ class TournamentTeams extends GetView<TournamentController> {
 
   Widget registeredTeamsView() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07,vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07, vertical: 10),
       child: FutureBuilder<List<TeamModel>>(
         future: controller.getRegisteredTeams(tournament.id),
         builder: (context, snapshot) {
@@ -105,6 +141,7 @@ class TournamentTeams extends GetView<TournamentController> {
       ),
     );
   }
+
   Widget matchups() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07),
@@ -133,6 +170,7 @@ class TournamentTeams extends GetView<TournamentController> {
   }
 }
 
+// The _Card widget remains unchanged
 class _Card extends StatelessWidget {
   final TeamModel team;
 
@@ -164,11 +202,11 @@ class _Card extends StatelessWidget {
           child: Row(
             children: [
               CircleAvatar(
-                radius: 24,
-                backgroundImage: FallbackImageProvider(
-                  toImageUrl(team.logo ?? ""),
-                  'assets/images/logo.png'
-              )),
+                  radius: 24,
+                  backgroundImage: FallbackImageProvider(
+                      toImageUrl(team.logo ?? ""),
+                      'assets/images/logo.png'
+                  )),
               const SizedBox(width: 16),
               Expanded(
                 child: Text(

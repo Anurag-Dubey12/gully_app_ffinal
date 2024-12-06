@@ -3,6 +3,7 @@ import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../config/api_client.dart';
+import '../../utils/app_logger.dart';
 
 class MiscApi {
   final GetConnectClient repo;
@@ -27,6 +28,7 @@ class MiscApi {
 
   Future<ApiResponse> getBanners() {
     return repo.get('/other/getBanner').then((response) {
+      logger.d("Called Banner");
       if (!response.isOk) {
         throw response.body['message'] ?? 'Unable to Process Request';
       }

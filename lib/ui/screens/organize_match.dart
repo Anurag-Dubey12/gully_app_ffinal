@@ -10,15 +10,17 @@ import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:intl/intl.dart';
 
+import '../../data/controller/auth_controller.dart';
 import '../../data/controller/tournament_controller.dart';
+import 'current_tournament_list.dart';
 
 class SelectOrganizeTeam extends StatefulWidget {
   final TournamentModel? tournament;
-  final String round;
+  final String? round;
   final String? title;
   final MatchupModel? match;
   final String? tourId;
-  const SelectOrganizeTeam({super.key, this.title, this.tournament, required this.round,this.match,this.tourId});
+  const SelectOrganizeTeam({super.key, this.title, this.tournament, this.round,this.match,this.tourId});
 
   @override
   State<SelectOrganizeTeam> createState() => _SelectOrganizeTeamState();
@@ -27,11 +29,11 @@ class SelectOrganizeTeam extends StatefulWidget {
 class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
   TeamModel? selectedTeam1;
   TeamModel? selectedTeam2;
-  List<TeamModel> leftSideteams = [];
-  List<TeamModel> rightSideteams = [];
+  // List<TeamModel> leftSideteams = [];
+  // List<TeamModel> rightSideteams = [];
   List<TeamModel> totalteams= [];
   DateTime? selectedDate;
-
+  String? selectedRound;
   @override
   void initState() {
     super.initState();
@@ -56,7 +58,6 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
     if (widget.tourId != null) {
       logger.d("Match data is available: ${widget.match}");
       logger.d("Total teams: $totalteams");
-
       setState(() {
         selectedTeam1 = totalteams.firstWhereOrNull(
               (team) => team.id == widget.match!.team1.id,
@@ -64,28 +65,43 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
         selectedTeam2 = totalteams.firstWhereOrNull(
               (team) => team.id == widget.match!.team2.id,
         );
-
-        // Modify this part to handle potential null scenarios
         if (widget.match!.matchDate != null) {
           selectedDate = widget.match!.matchDate;
         } else {
-          // Fallback to tournament start date or current date
           selectedDate = widget.tournament?.tournamentStartDateTime ?? DateTime.now();
         }
-
+        if (widget.match != null) {
+          selectedRound = widget.match!.round;
+        }
         logger.d("Selected Team 1: ${selectedTeam1?.name}");
         logger.d("Selected Team 2: ${selectedTeam2?.name}");
         logger.d("Selected Date: $selectedDate");
-        logger.d("Selected Round: ${widget.match!.round}");
+        logger.d("Selected Round: $selectedRound");
       });
     } else {
-      // Ensure selectedDate is set for new matchup creation
       selectedDate = widget.tournament?.tournamentStartDateTime ?? DateTime.now();
     }
-
-    logger.d("The Total Teams Are:${totalteams.length}");
-    logger.d('TEAMS: $teams');
+    // logger.d("Selected Round: $selectedRound");
+    // logger.d("The Total Teams Are:${totalteams.length}");
+    // logger.d('TEAMS: $teams');
   }
+  void RoundSelectionDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return InputRoundNumber(
+          existingRound: selectedRound,
+          onItemSelected: (value){
+            setState(() {
+              selectedRound = value;
+              logger.d("Selected Round: $selectedRound");
+            });
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
@@ -261,24 +277,11 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                 const Spacer(),
                                 InkWell(
                                   onTap: () async {
-                                    DateTime? firstDate;
-                                    DateTime? lastDate;
-                                    DateTime? initialDate;
-
-                                    if (widget.tourId != null && widget.match != null) {
-                                      initialDate = selectedDate ?? DateTime.now();
-                                      firstDate = widget.tournament?.tournamentStartDateTime ?? DateTime.now().subtract(Duration(days: 365));
-                                      lastDate = widget.tournament?.tournamentEndDateTime ?? DateTime.now().add(Duration(days: 365));
-                                    } else {
-                                      initialDate = widget.tournament!.tournamentStartDateTime;
-                                      firstDate = widget.tournament!.tournamentStartDateTime;
-                                      lastDate = widget.tournament!.tournamentEndDateTime;
-                                    }
                                     final date = await showDatePicker(
                                         context: context,
-                                        initialDate: widget.tournament!.tournamentStartDateTime,
-                                        firstDate: widget.tournament!.tournamentStartDateTime,
-                                        lastDate: widget.tournament!.tournamentEndDateTime);
+                                        initialDate: widget.tourId!=null ?controller.startDateForPicker :widget.tournament!.tournamentStartDateTime,
+                                        firstDate: widget.tourId!=null ?controller.startDateForPicker ?? DateTime.now():widget.tournament!.tournamentStartDateTime,
+                                        lastDate:widget.tourId!=null ?controller.endDateForPicker?? DateTime.now() : widget.tournament!.tournamentEndDateTime);
                                     setState(() {
                                       if (date != null) {
                                         if (selectedDate != null) {
@@ -376,6 +379,28 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                               ],
                             ),
                             SizedBox(height: Get.height * 0.03),
+                            InkWell(
+                              onTap: RoundSelectionDialog,
+                              child: Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      selectedRound ?? 'Select Round',
+                                      style: Get.textTheme.bodyMedium,
+                                    ),
+                                    const Icon(Icons.arrow_drop_down),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: Get.height * 0.02),
                             PrimaryButton(
                               onTap: () async {
                                 if (selectedDate == null) {
@@ -396,7 +421,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                     'tournamentId': widget.tourId,
                                     'team1ID':  selectedTeam1!.id,
                                     'team2ID':  selectedTeam2!.id,
-                                    'round': widget.round,
+                                    'round': selectedRound,
                                     'matchNo': 1,
                                     'dateTime':selectedDate!.toIso8601String(),
                                   };
@@ -408,13 +433,14 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                         .then((value) => Get.back());
                                   }
                                 }
+
                                 final response = await controller.createMatchup(
                                     widget.tournament!.id,
                                     selectedTeam1!.id,
                                     selectedTeam2!.id,
                                     selectedDate!,
                                     1,
-                                    widget.round);
+                                    selectedRound??'');
                                 logger.d(response);
                                 if (response) {
                                   successSnackBar('Matchup created')

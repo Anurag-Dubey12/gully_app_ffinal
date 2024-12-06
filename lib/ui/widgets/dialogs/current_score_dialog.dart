@@ -113,6 +113,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
     } else {
       return Container(
         width: Get.width,
+        height:900,
         // height: Get.height * 0.8,
         padding: const EdgeInsets.only(bottom: 10),
         child: Column(

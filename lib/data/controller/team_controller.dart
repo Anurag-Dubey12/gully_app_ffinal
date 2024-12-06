@@ -221,10 +221,11 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
       final response = await repo.getChallengeMatch();
 
       if (response.status == false) {
-        logger.i('error');
+        logger.i('error is in getChallengeMatch');
         errorSnackBar(response.message!);
         return [];
       }
+
       final matches = response.data!['matches'] as List;
       final matchList =
           matches.map((e) => ChallengeMatchModel.fromJson(e)).toList();

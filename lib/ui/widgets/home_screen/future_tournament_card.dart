@@ -75,7 +75,7 @@ class _TournamentCardState extends State<TournamentCard> {
       if (now.isBefore(widget.tournament.tournamentStartDateTime)) {
         Duration remainingTime = widget.tournament.tournamentStartDateTime.difference(now);
         String formattedTime =
-            ' Time left :${remainingTime.inDays}d:${remainingTime.inHours.remainder(24)}h:${remainingTime.inMinutes.remainder(60)}m:${remainingTime.inSeconds.remainder(60)}s';
+            ' ${remainingTime.inDays}d:${remainingTime.inHours.remainder(24)}h:${remainingTime.inMinutes.remainder(60)}m:${remainingTime.inSeconds.remainder(60)}s';
         _timeStreamController.add(formattedTime);
       } else if (now.isAfter(widget.tournament.tournamentEndDateTime)) {
         _timeStreamController.add('Tournament has ended');
@@ -208,16 +208,25 @@ class _TournamentCardState extends State<TournamentCard> {
                       ],
                     ),
                     // const SizedBox(height: 1),
-                    StreamBuilder<String>(
-                      stream: _timeStreamController.stream,
-                      builder: (context, snapshot) {
-                        return Text(
-                          '${snapshot.data}',
-                          style: Get.textTheme.labelMedium?.copyWith(
-                            fontWeight: FontWeight.w400,
-                          ),
-                        );
-                      },
+                    Row(
+                      children: [
+                        const Text("Time Left:",style: TextStyle(
+                          color: Colors.black,
+
+                        ),),
+                        StreamBuilder<String>(
+                          stream: _timeStreamController.stream,
+                          builder: (context, snapshot) {
+                            return Text(
+                              '${snapshot.data}',
+                              style: Get.textTheme.labelMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     ),
                     // const SizedBox(height: 2),
                     Row(

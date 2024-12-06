@@ -6,6 +6,7 @@ import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/challenge_match.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/screens/view_opponent_team.dart';
+import 'package:gully_app/utils/FallbackImageProvider.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/auth_controller.dart';
@@ -183,6 +184,16 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
                                           future: teamController
                                               .getChallengeMatch(),
                                           builder: (context, snapshot) {
+                                            // if (snapshot.hasError) {
+                                            //   return Center(
+                                            //       child: TextButton(
+                                            //           onPressed: () {
+                                            //             teamController
+                                            //                 .getChallengeMatch();
+                                            //           },
+                                            //           child: Text(
+                                            //               'Error: ${snapshot.error}')));
+                                            // }
                                             if (snapshot.hasError) {
                                               return Center(
                                                   child: TextButton(
@@ -190,8 +201,8 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
                                                         teamController
                                                             .getChallengeMatch();
                                                       },
-                                                      child: Text(
-                                                          'Error: ${snapshot.error}')));
+                                                      child: const Text(
+                                                          'No Data Found')));
                                             }
                                             final filteredMatches =
                                                 (snapshot.data ?? [])
@@ -253,7 +264,6 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
                                                       child: Text(
                                                           'Error: ${snapshot.error}')));
                                             }
-
                                             List<TeamModel>? filteredTeams =
                                                 snapshot.data;
                                             if (searchValue.text.isNotEmpty) {
@@ -342,10 +352,11 @@ class _TeamCard extends StatelessWidget {
         padding: const EdgeInsets.all(18.0),
         child: Row(children: [
           CircleAvatar(
-              backgroundImage:
-              team.logo!=null && team.logo!.isNotEmpty?
-              NetworkImage(toImageUrl(team.logo ?? ""))
-                  : const AssetImage('assets/images/logo.png') as ImageProvider),
+              backgroundImage:FallbackImageProvider(
+                toImageUrl(team.logo ?? ""),"assets/images/logo.png"
+              )
+
+          ),
           const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,

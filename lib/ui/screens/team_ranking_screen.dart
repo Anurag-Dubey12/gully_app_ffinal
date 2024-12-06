@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/team_ranking_model.dart';
+import 'package:gully_app/utils/FallbackImageProvider.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
+import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/ranking_controller.dart';
 import '../theme/theme.dart';
@@ -161,9 +163,11 @@ class _TeamCard extends StatelessWidget {
             Row(
               children: [
                 CircleAvatar(
-                  radius: 18,
-                  backgroundImage:team.teamLogo!.isNotEmpty && team.teamLogo!=null ?
-                  NetworkImage(team.teamLogo ?? ""):const AssetImage('assets/images/logo.png') as ImageProvider),
+                    radius: 18,
+                    backgroundImage:FallbackImageProvider(
+                      toImageUrl(team.teamLogo??""),"assets/images/logo.png"
+                    )
+                ),
                 const SizedBox(width: 12),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

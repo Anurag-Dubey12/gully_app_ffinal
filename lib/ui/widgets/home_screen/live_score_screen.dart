@@ -27,31 +27,15 @@ class LiveScore extends StatefulWidget {
 }
 
 class LiveScoreState extends State<LiveScore> {
-  // Timer? _timer;
-  //
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _timer = Timer.periodic(const Duration(seconds: 10), (timer) {
-  //     refreshData();
-  //   });
-  // }
-  //
-  // @override
-  // void dispose() {
-  //   _timer?.cancel();
-  //   super.dispose();
-  // }
-  //
-  // Future<void> refreshData() async {
-  //   try {
-  //     final tournamentController = Get.find<TournamentController>();
-  //     tournamentController.getCurrentTournamentList();
-  //     logger.d("Called refreshData");
-  //   } catch (e) {
-  //     logger.e('Error refreshing data: $e');
-  //   }
-  // }
+  Future<void> refreshData() async {
+    try {
+      final tournamentController = Get.find<TournamentController>();
+      await tournamentController.getCurrentTournamentList();
+      logger.d("Called refreshData");
+    } catch (e) {
+      logger.e('Error refreshing data: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,45 +52,53 @@ class LiveScoreState extends State<LiveScore> {
         ),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body:  SizedBox(
-        width: Get.width,
-        child: Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: FutureBuilder(
-            future: controller.getCurrentTournamentList(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              }
-              return Obx(() {
-                if (controller.Current_tournamentList.isEmpty|| controller.Current_matches.isEmpty) {
-                  return SizedBox(
-                    width: Get.width,
-                      height: 300,
-                      child: const NoTournamentCard());
-                }
-                return ListView.separated(
-                  itemCount: controller.Current_matches.length,
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.all(16),
-                  separatorBuilder: (context, index) => const SizedBox(height: 10),
-                    itemBuilder: (context, snapshot) {
-                      return Card(
-                        tournament: controller.Current_matches[snapshot],
-                      );
-                    });
+      body: FutureBuilder(
+        future: controller.getCurrentTournamentList(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-              });
-            },
-          ),
-        ),
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
+
+          return Obx(() {
+            if (controller.Current_tournamentList.isEmpty ||
+                controller.Current_matches.isEmpty) {
+              return RefreshIndicator(
+                onRefresh: refreshData,
+                child: ListView(
+                  children: const [
+                    SizedBox(
+                      height: 300,
+                      child: NoTournamentCard(),
+                    ),
+                  ],
+                ),
+              );
+            }
+            return RefreshIndicator(
+              displacement: 10,
+              onRefresh: refreshData,
+              child: ListView.separated(
+                itemCount: controller.Current_matches.length,
+                padding: const EdgeInsets.all(16),
+                separatorBuilder: (context, index) => const SizedBox(height: 10),
+                itemBuilder: (context, index) {
+                  return Card(
+                    tournament: controller.Current_matches[index],
+                  );
+                },
+              ),
+            );
+          });
+        },
       ),
     );
   }
 }
+
 
 class Card extends StatefulWidget{
   final MatchupModel tournament;

@@ -26,6 +26,12 @@ class TournamentController extends GetxController
     });
   }
   RxString location = ''.obs;
+  RxString tournamentId=''.obs;
+  RxBool isSchedule=false.obs;
+
+  void setScheduleStatus(bool status) {
+    isSchedule.value = status;
+  }
   Future<void> getCurrentLocation() async {
     final position = await determinePosition();
 
@@ -63,7 +69,29 @@ class TournamentController extends GetxController
     }
   }
 
+  RxString tournamentStartDate = ''.obs;
+  RxString tournamentEndDate = ''.obs;
+  RxString tournamentauthority = ''.obs;
+  void saveDates(DateTime? startDate, DateTime? endDate,String tournamentauth) {
+    if (startDate != null) {
+      tournamentStartDate.value = startDate.toIso8601String();
+    }
+    if (endDate != null) {
+      tournamentEndDate.value = endDate.toIso8601String();
+    }
+    tournamentauthority.value=tournamentauth;
+  }
+  DateTime? get startDateForPicker {
+    return tournamentStartDate.value.isNotEmpty
+        ? DateTime.parse(tournamentStartDate.value)
+        : null;
+  }
 
+  DateTime? get endDateForPicker {
+    return tournamentEndDate.value.isNotEmpty
+        ? DateTime.parse(tournamentEndDate.value)
+        : null;
+  }
 
   final Rx<DateTime> selectedDate = DateTime.now().obs;
   final RxString filter = ''.obs;
@@ -76,7 +104,7 @@ class TournamentController extends GetxController
   RxList<MatchupModel> matches = <MatchupModel>[].obs;
   RxList<MatchupModel> Current_matches = <MatchupModel>[].obs;
   RxBool isLoading = false.obs;
-  
+
   Future<void> getTournamentList({String? filterD,bool isLive=false}) async {
     try {
       filter.value = filterD ?? '';
@@ -114,8 +142,8 @@ class TournamentController extends GetxController
         }
       } else {
         if(isLive){
-                Current_tournamentList.value = [];
-                Current_matches.value = [];
+          Current_tournamentList.value = [];
+          Current_matches.value = [];
         }else{
           tournamentList.value = [];
           matches.value = [];
@@ -196,10 +224,10 @@ class TournamentController extends GetxController
   }
 
   Future<bool> updateTeamRequest(
-    String tournamentId,
-    String teamId,
-    String action,
-  ) async {
+      String tournamentId,
+      String teamId,
+      String action,
+      ) async {
     try {
       await tournamentApi.updateTeamRequest(tournamentId, teamId, action);
       getOrganizerTournamentList();
@@ -236,9 +264,9 @@ class TournamentController extends GetxController
 
   Future<bool> registerTeam(
       {required String teamId,
-      required String viceCaptainContact,
-      required String address,
-      required String tournamentId}) async {
+        required String viceCaptainContact,
+        required String address,
+        required String tournamentId}) async {
     try {
       final response = await tournamentApi.registerTeam(
           teamId: teamId,
@@ -276,18 +304,21 @@ class TournamentController extends GetxController
       return response.status!;
     } catch (e) {
       errorSnackBar(e.toString());
+      logger.e(e.toString());
       return false;
     }
   }
 
+  RxList<MatchupModel> matchups=<MatchupModel>[].obs;
   Future<List<MatchupModel>> getMatchup(String tourId) async {
     try {
       final response = await tournamentApi.getMatchup(tourId);
       logger.d("Raw Matchup API response: ${response.data}");
       // await Clipboard.setData(ClipboardData(text: response.data.toString()));
-      return response.data!['matches']
+      matchups.value= response.data!['matches']
           .map<MatchupModel>((e) => MatchupModel.fromJson(e))
           .toList();
+      return matchups;
     } catch (e) {
       errorSnackBar(e.toString());
       rethrow;
@@ -318,6 +349,10 @@ class TournamentController extends GetxController
         errorSnackBar(response.message ?? 'Unable to update service');
         return false;
       }
+      matchups.remove((element) => element.id == matchid);
+      await Future.wait([
+        getMatchup(tournamentId.toString())
+      ]);
       return true;
     } catch (e) {
       errorSnackBar(e.toString());
@@ -368,7 +403,7 @@ class TournamentController extends GetxController
       String tourId, String authority) async {
     try {
       final response =
-          await tournamentApi.updateTournamentAuthority(tourId, authority);
+      await tournamentApi.updateTournamentAuthority(tourId, authority);
       if (response.status!) {
         return response.status!;
       } else {
@@ -396,15 +431,15 @@ class TournamentController extends GetxController
 
   Future<double> getTournamentFee(String tournamentId) async {
     final res =
-        await tournamentApi.getTournamentFees(tournamentId: tournamentId);
+    await tournamentApi.getTournamentFees(tournamentId: tournamentId);
     return double.parse(res.data!['fee'].toString());
   }
 
   Future<String> createOrder(
       {required double discountAmount,
-      required String tournamentId,
-      required double totalAmount,
-      required String? coupon}) async {
+        required String tournamentId,
+        required double totalAmount,
+        required String? coupon}) async {
     try {
       final response = await tournamentApi.createOrder(
           discountAmount: discountAmount,
@@ -434,7 +469,7 @@ class TournamentController extends GetxController
       String tournamentId, String couponId, double amount) async {
     try {
       final response =
-          await tournamentApi.applyCoupon(tournamentId, couponId, amount);
+      await tournamentApi.applyCoupon(tournamentId, couponId, amount);
       return response.data;
     } catch (e) {
       errorSnackBar(e.toString());

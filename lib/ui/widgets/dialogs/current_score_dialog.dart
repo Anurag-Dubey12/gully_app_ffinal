@@ -113,7 +113,6 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
     } else {
       return Container(
         width: Get.width,
-        height:900,
         // height: Get.height * 0.8,
         padding: const EdgeInsets.only(bottom: 10),
         child: Column(
@@ -205,11 +204,11 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                      '${controller.scoreboard.value?.firstInningHistory.entries.lastOrNull?.value.total ?? 0}/${controller.scoreboard.value?.firstInningHistory.entries.lastOrNull?.value.wickets ?? 0}',
+                                                    '${controller.scoreboard.value?.firstInningHistory.entries.lastOrNull?.value.total ?? 0}/${controller.scoreboard.value?.firstInningHistory.entries.lastOrNull?.value.wickets ?? 0}',
                                                     style: Get.textTheme.headlineMedium?.copyWith(
                                                         fontWeight: FontWeight.bold,
                                                         color: Colors.white,
-                                                      fontSize: 12
+                                                        fontSize: 12
                                                     ),
                                                   ),
                                                 ),
@@ -250,7 +249,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                           mainAxisAlignment: MainAxisAlignment.center,
                                           children: [
                                             controller.scoreboard.value?.secondInnings==null ? const Text("DNB",style: TextStyle(
-                                              color: Colors.grey
+                                                color: Colors.grey
                                             ),) :
                                             Obx((){
                                               return Container(
@@ -263,11 +262,11 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(8.0),
                                                   child: Text(
-                                                      '${controller.scoreboard.value?.secondInningHistory.entries.lastOrNull?.value.total ?? 0}/${controller.scoreboard.value?.secondInningHistory.entries.lastOrNull?.value.wickets ?? 0}',
+                                                    '${controller.scoreboard.value?.secondInningHistory.entries.lastOrNull?.value.total ?? 0}/${controller.scoreboard.value?.secondInningHistory.entries.lastOrNull?.value.wickets ?? 0}',
                                                     style: Get.textTheme.headlineMedium?.copyWith(
                                                         fontWeight: FontWeight.bold,
                                                         color: Colors.white,
-                                                      fontSize: 12
+                                                        fontSize: 12
                                                     ),
                                                   ),
                                                 ),

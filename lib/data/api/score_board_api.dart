@@ -28,7 +28,7 @@ class ScoreboardApi {
 
   Future<ApiResponse> updateFinalScoreBoard(
       matchId, String winningTeamId) async {
-    var response = await repo.post('/match/updateTeamMatchsData/$matchId', {
+    var response = await repo.put('/match/updateTeamMatchsData/$matchId', {
       'winningTeamId': winningTeamId,
     });
     if (!response.isOk) {

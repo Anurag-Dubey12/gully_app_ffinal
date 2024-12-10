@@ -9,27 +9,14 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify viewmatchup edit match,performance,and delete match screen">
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="all things done">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/api/misc_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/misc_api.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/api/team_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/team_api.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/team_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/team_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/search_challenge_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/search_challenge_team.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/team_ranking_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/team_ranking_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/api/score_board_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/score_board_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/utils.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils/utils.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -190,14 +177,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00043" summary="modify">
-      <option name="closed" value="true" />
-      <created>1726228423154</created>
-      <option name="number" value="00043" />
-      <option name="presentableId" value="LOCAL-00043" />
-      <option name="project" value="LOCAL" />
-      <updated>1726228423156</updated>
     </task>
     <task id="LOCAL-00044" summary="modify">
       <option name="closed" value="true" />
@@ -583,7 +562,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733313401206</updated>
     </task>
-    <option name="localTasksCounter" value="92" />
+    <task id="LOCAL-00092" summary="all things done">
+      <option name="closed" value="true" />
+      <created>1733485651300</created>
+      <option name="number" value="00092" />
+      <option name="presentableId" value="LOCAL-00092" />
+      <option name="project" value="LOCAL" />
+      <updated>1733485651301</updated>
+    </task>
+    <option name="localTasksCounter" value="93" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -604,7 +591,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="home screen bottomnav ,shop screen modify" />
     <MESSAGE value="modify shop dashboard ,shop_homescreen" />
     <MESSAGE value="modify package screen ,shop screen and service screen" />
     <MESSAGE value="modify tournament form screen" />
@@ -629,7 +615,8 @@
     <MESSAGE value="modify  tournament form screen" />
     <MESSAGE value="modify viewmatchup screen" />
     <MESSAGE value="modify viewmatchup edit match,performance,and delete match screen" />
-    <option name="LAST_COMMIT_MESSAGE" value="modify viewmatchup edit match,performance,and delete match screen" />
+    <MESSAGE value="all things done" />
+    <option name="LAST_COMMIT_MESSAGE" value="all things done" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -1156,6 +1143,12 @@
           <option name="totalLines" value="7695543" />
           <option name="info" value="modify viewmatchup edit match,performance,and dele" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1733485656031" />
+          <option name="linesCode" value="38445" />
+          <option name="totalLines" value="4442558" />
+          <option name="info" value="all things done" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1681,6 +1674,12 @@
           <option name="linesCode" value="38268" />
           <option name="totalLines" value="7695543" />
           <option name="info" value="Dec 4, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1733485656031" />
+          <option name="linesCode" value="38445" />
+          <option name="totalLines" value="4442558" />
+          <option name="info" value="Dec 6, 2024" />
         </TimePoint>
       </list>
     </option>

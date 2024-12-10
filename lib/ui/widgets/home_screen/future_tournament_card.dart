@@ -135,14 +135,14 @@ class _TournamentCardState extends State<TournamentCard> {
                       children: [
                         Center(
                           child: Text(
-                            widget.tournament.tournamentName ?? "Unkown Tournament",
+                            widget.tournament.tournamentName,
                             style: Get.textTheme.headlineMedium?.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
                               color: AppTheme.darkYellowColor,
                             ),
                             softWrap: true,
-                            maxLines: 2,
+                            maxLines: 1,
                             textAlign: TextAlign.center,
                             overflow: TextOverflow.ellipsis,
                           ),

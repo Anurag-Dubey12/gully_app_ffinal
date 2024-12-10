@@ -77,7 +77,7 @@ class _CardState extends State<_Card> {
     ScoreboardModel? scoreboard = widget.tournament.scoreBoard == null
         ? null
         : ScoreboardModel.fromJson(widget.tournament.scoreBoard!);
-
+    // logger.d("The second inning is over:${scoreboard!.isSecondInningsOver}");
     logger.d("The match Id of Tournament are :${widget.tournament.tournamentId}");
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
@@ -202,7 +202,7 @@ class _CardState extends State<_Card> {
                           const SizedBox(width: 8),
                           GestureDetector(
                             onTap: (){
-                              logger.d("The TournamentId is:${tournamentdata.id}");
+                              logger.d("The TournamentId is:${tournamentdata.id} }");
                               controller.setScheduleStatus(true);
                               Get.to(() => ViewMatchupsScreen(id:tournamentdata.id,isSchedule: controller.isSchedule.value));
                             },

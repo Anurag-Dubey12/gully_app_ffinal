@@ -268,6 +268,7 @@ class ScoreboardModel {
   }
 
   String? get secondInningsText {
+
     if (currentInnings == 2) {
       // if (lastBall.over == totalOvers && lastBall.ball == 6) {
       //   return 'Innings Over';

@@ -93,7 +93,7 @@ class MatchupCard extends StatelessWidget {
   final bool isSchedule;
   final bool isinfo;
   final String? tourid;
-  const MatchupCard({
+  const MatchupCard({super.key,
     required this.matchup,
     this.isSchedule=false,
     this.isinfo=false,
@@ -106,6 +106,8 @@ class MatchupCard extends StatelessWidget {
         ? null
         : ScoreboardModel.fromJson(matchup.scoreBoard!);
     final controller=Get.find<TournamentController>();
+
+    logger.d("The Winner id is${matchup.winningTeam}");
     return GestureDetector(
       onTap:(){
         if(isSchedule){
@@ -228,11 +230,9 @@ class MatchupCard extends StatelessWidget {
                         },
                       ),
                     ],
-
                   ],
                 ),
                 SizedBox(height: Get.height * 0.01),
-
                 Row(
                   children: [
                     Column(

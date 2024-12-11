@@ -26,6 +26,7 @@ import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/controller/service_controller.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
+import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/ui/screens/no_internet_screen.dart';
 import 'package:gully_app/ui/widgets/location_permission_builder.dart';
 import 'package:gully_app/utils/app_logger.dart';

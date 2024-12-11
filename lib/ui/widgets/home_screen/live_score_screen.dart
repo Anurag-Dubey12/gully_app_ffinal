@@ -276,10 +276,10 @@ class CardState extends State<Card> {
               ),
             ],
           ),
-          const Positioned(
+           Positioned(
             top: 8,
             right: 8,
-            child: BlinkingLiveText(),
+            child: BlinkingLiveText(ismatchover: "Live",color: Colors.green,),
           ),
         ],
       ),

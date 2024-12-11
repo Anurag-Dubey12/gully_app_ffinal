@@ -54,7 +54,7 @@ class ScoreCard extends GetView<ScoreBoardController> {
                                                           FontWeight.w500,
                                                       fontSize: 18 *
                                                           Get.textScaleFactor,
-                                                      color: Colors.black))),
+                                                      color: Colors.black),overflow: TextOverflow.ellipsis,maxLines: 2,)),
                                       const Spacer(),
                                       Expanded(
                                           flex: 2,

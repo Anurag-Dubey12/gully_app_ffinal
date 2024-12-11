@@ -8,6 +8,7 @@ import 'package:get/get.dart'; //
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/ui/screens/add_team.dart';
+import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:share_plus/share_plus.dart';
 import '../theme/theme.dart';
@@ -305,6 +306,13 @@ class _PlayerCardState extends State<PlayerCard> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TeamController>();
+    final currentCaptain = controller.players.firstWhere(
+            (player) => player.role == 'Captain',
+        orElse: () => widget.player
+    );
+    final previousCaptainName = controller.players.firstWhere((player)=>player.role=='Captain').name;
+    final previousCaptainid = controller.players.firstWhere((player)=>player.role=='Captain').id;
+    final String newrole='';
     return Container(
       decoration: BoxDecoration(
         color: const Color.fromARGB(255, 255, 255, 255),
@@ -342,6 +350,117 @@ class _PlayerCardState extends State<PlayerCard> {
                 Text(widget.player.phoneNumber),
               ],
             ),
+            const Spacer(),
+            if(widget.player.role=='Captain')
+              InkWell(
+                onTap: () {
+                  logger.d("The Previous Captain id is:$previousCaptainid and name is $previousCaptainName");
+                  Get.bottomSheet(
+                    Container(
+                    height: Get.height* 0.65,
+                      padding: const EdgeInsets.all(8),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                      ),
+                      child: Column(
+                        children: [
+                          Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 5,
+                                width: 120,
+                                decoration: BoxDecoration(
+                                    color: Colors.grey[400],
+                                    borderRadius: BorderRadius.circular(10)),
+                              ),
+                            ),
+                          ),
+                          // Center(
+                          //   child: Text(
+                          //     "Change Captain"
+                          //   ),
+                          // ),
+                          Expanded(
+                            child: ListView.separated(
+                              itemCount: controller.players.length - 1,
+                              itemBuilder: (context, index) {
+                                final player = controller.players
+                                    .where((p) => p.role != currentCaptain.role)
+                                    .toList()[index];
+
+                                return AnimatedContainer(
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.easeInOut,
+                                  margin: const EdgeInsets.symmetric(vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                      color: Colors.grey,
+                                      width: 0.5
+                                    )
+                                  ),
+                                  child: ListTile(
+                                    // contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                    leading: Hero(
+                                      tag: 'player-avatar-${player.name}',
+                                      child: CircleAvatar(
+                                        radius: 24,
+                                        backgroundColor: Colors.transparent,
+                                        child: Image.asset(
+                                          getAssetFromRole(player.role),
+                                          width: 20,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                    title: Text(
+                                      player.name,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    subtitle: Text(
+                                      player.role,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      logger.d("The New Captain id is:${player.id} and his previous role was ${player.role}");
+                                      Get.dialog(
+                                        AlertDialog.adaptive(
+
+                                        )
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                              separatorBuilder: (context, index) => const SizedBox(height: 2),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    isScrollControlled: true,
+                  );
+                },
+                child: const CircleAvatar(
+                  backgroundColor: Color.fromARGB(255, 71, 224, 79),
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(Icons.change_circle_sharp),
+                  ),
+                ),
+              ),
+
+
+
             const Spacer(),
             widget.isEditable ?? true
                 ? InkWell(

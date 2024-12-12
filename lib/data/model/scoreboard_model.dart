@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/model/extras_model.dart';
 import 'package:gully_app/data/model/innings_model.dart';
+import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/overs_model.dart';
 import 'package:gully_app/data/model/partnership_model.dart';
 import 'package:gully_app/data/model/player_model.dart';
@@ -268,7 +269,7 @@ class ScoreboardModel {
   }
 
   String? get secondInningsText {
-
+    logger.i('Second Inning text is called');
     if (currentInnings == 2) {
       // if (lastBall.over == totalOvers && lastBall.ball == 6) {
       //   return 'Innings Over';
@@ -286,7 +287,9 @@ class ScoreboardModel {
       }
       if (isSecondInningsOver &&
           currentInningsScore == firstInnings!.totalScore) {
-        return 'Match Tied';
+        // final MatchupModel match;
+
+        return "Match Tied";
       }
       final int runsRequired =
           (firstInnings!.totalScore - currentInningsScore) + 1;
@@ -300,6 +303,12 @@ class ScoreboardModel {
     }
     return null;
   }
+  // String? _getWinningTeamNameForTiedMatch() {
+  //
+  //   MatchupModel match;
+  //   if(match.winningTeam==null){}
+  //   return null;
+  // }
   String getBowlerName(String bowlerId) {
     if (currentInnings == 1) {
       return team2.players!

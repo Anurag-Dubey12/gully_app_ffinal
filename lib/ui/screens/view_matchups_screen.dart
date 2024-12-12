@@ -107,7 +107,7 @@ class MatchupCard extends StatelessWidget {
         : ScoreboardModel.fromJson(matchup.scoreBoard!);
     final controller=Get.find<TournamentController>();
 
-    logger.d("The Winner id is${matchup.winningTeam}");
+    // logger.d("The Winner id is:${matchup.getWinningTeamName()}");
     return GestureDetector(
       onTap:(){
         if(isSchedule){

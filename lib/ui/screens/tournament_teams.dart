@@ -54,8 +54,6 @@ class TournamentTeams extends GetView<TournamentController> {
         ),
       );
     }
-
-    // Default behavior with TabBar
     return DefaultTabController(
       length: 2,
       child: DecoratedBox(
@@ -170,7 +168,6 @@ class TournamentTeams extends GetView<TournamentController> {
   }
 }
 
-// The _Card widget remains unchanged
 class _Card extends StatelessWidget {
   final TeamModel team;
 

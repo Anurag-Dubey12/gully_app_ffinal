@@ -432,11 +432,11 @@ class _PlayerCardState extends State<PlayerCard> {
                                     ),
                                     onTap: () {
                                       logger.d("The New Captain id is:${player.id} and his previous role was ${player.role}");
-                                      Get.dialog(
-                                        AlertDialog.adaptive(
-
-                                        )
-                                      );
+                                      // Get.dialog(
+                                      //   AlertDialog.adaptive(
+                                      //
+                                      //   )
+                                      // );
                                     },
                                   ),
                                 );

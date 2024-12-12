@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/player_model.dart';
+import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 
 import '../../data/controller/team_controller.dart';
@@ -109,22 +110,12 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
                                             child: CircleAvatar(
                                                 radius: 49,
                                                 backgroundColor: Colors.white,
-                                                backgroundImage: widget
-                                                            .teamModel
-                                                            .toImageUrl()
-                                                            .isNotEmpty &&
-                                                        widget.teamModel
-                                                                .toImageUrl() !=
-                                                            null
-                                                    ? FallbackImageProvider(
-                                                            toImageUrl(widget
-                                                                    .teamModel
-                                                                    .logo ??
-                                                                "assets/images/logo.png"),
-                                                            'assets/images/logo.png')
-                                                        as ImageProvider
-                                                    : const AssetImage(
-                                                        'assets/images/logo.png')),
+                                                backgroundImage:FallbackImageProvider(
+                                                    toImageUrl(widget
+                                                        .teamModel
+                                                        .logo ??
+                                                        "assets/images/logo.png"),
+                                                    'assets/images/logo.png')),
                                           ),
                                         ],
                                       ),
@@ -203,6 +194,28 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
                                                                           .w500,
                                                                   fontSize: 14),
                                                         ),
+                                                        // CircleAvatar(
+                                                        //   radius: 24,
+                                                        //   backgroundColor: Colors.transparent,
+                                                        //   child: Image.asset(
+                                                        //     getAssetFromRole( snapshot.data![index]
+                                                        //         .role),
+                                                        //     width: 20,
+                                                        //     fit: BoxFit.cover,
+                                                        //   ),
+                                                        // ),
+                                                        IconButton(
+                                                            onPressed: (){
+
+                                                              logger.d("PLayer delete Data is:\n Team id ${widget.teamModel.id} "
+                                                                  "player id ${snapshot.data![index].id}");
+                                                              // controller.removePlayerFromTeam(
+                                                              //   teamId: widget.teamModel.id,
+                                                              //   playerId: snapshot.data![index].id
+                                                              // );
+                                                            },
+                                                            icon: const Icon(Icons.delete,color: Colors.red,size: 20)
+                                                        )
                                                       ]),
                                                 ),
                                               );

@@ -322,6 +322,7 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                   items: players,
                   selectedValue: selectedBatsman?.name ?? 'Select Batsman',
                   title: 'Select Batsman',
+
                 ),
               PrimaryButton(
                 onTap: () {

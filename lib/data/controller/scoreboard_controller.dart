@@ -22,6 +22,8 @@ class ScoreBoardController extends GetxController with StateMixin {
   late ScoreboardModel _lastScoreboardInstance;
   Rx<io.Socket?> socket = Rx(null);
 
+  final RxString secondInningsText = RxString('');
+
   RxList<EventType> events = RxList<EventType>([]);
 
   ScoreBoardController({required ScoreboardApi scoreboardApi})
@@ -73,6 +75,10 @@ class ScoreBoardController extends GetxController with StateMixin {
       logger.e(e);
     }
   }
+  // String? updateSecondInningsText() {
+  //   logger.d("Launched Controller");
+  //   match!.getWinningTeamName();
+  // }
 
   showPopups() {
     if (scoreboard.value?.isSecondInningsOver ?? false) {
@@ -86,14 +92,12 @@ class ScoreBoardController extends GetxController with StateMixin {
       }
       if (firstInning == secondInning) {
         errorSnackBar('The Match is Drawn');
-
       }
     } else if (scoreboard.value?.isFirstInningsOver ?? false) {
       successSnackBar(
           'First Innings has been completed you can start 2nd inning');
     }
   }
-
   void emitEvent() {
     logger.i('Emiting Message');
     socket.value?.emit('scoreboard', {
@@ -330,8 +334,9 @@ class ScoreBoardController extends GetxController with StateMixin {
             },
           ),
         );
+      }else{
+      updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
       }
-      // updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
     } else if (scoreboard.value!.isSecondInningsOver &&
         scoreboard.value!.isChallenge!) {
       updateFinalChallengeScoreBoard(scoreboard.value!.getWinningTeam);

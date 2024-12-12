@@ -9,18 +9,17 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="updateteamdata">
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="updated matchup model,live score screen and add player screen">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/model/matchup_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/matchup_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/matchup_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/matchup_model.g.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/team_players_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/team_players_list.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/top_scorecard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/top_scorecard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/BlinkingLiveText.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils/BlinkingLiveText.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/change_batter.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/change_batter.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -95,32 +94,32 @@
     <option name="showMembers" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "DEBUGGABLE_DEVICE": "lava_lxx507-192.168.29.122:37709",
-    "DEBUGGABLE_PROCESS": "com.nileegames.gullyteam",
-    "DEBUGGER_ID": "Java",
-    "Flutter.main.dart.executor": "Run",
-    "Gradle.C:/Users/abcom/Documents/Software/gully_app [signingReport].executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.cidr.known.project.marker": "true",
-    "RunOnceActivity.readMode.enableVisualFormatting": "true",
-    "SHOW_ALL_PROCESSES": "true",
-    "cf.first.check.clang-format": "false",
-    "cidr.known.project.marker": "true",
-    "com.android.tools.idea.devicemanager.tab": "Physical",
-    "com.google.services.firebase.aqiPopupShown": "true",
-    "dart.analysis.tool.window.visible": "false",
-    "git-widget-placeholder": "office",
-    "ignore.virus.scanning.warn.message": "true",
-    "io.flutter.reload.alreadyRun": "true",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/abcom/Documents/Software/gully_app/lib/ui/widgets/service",
-    "settings.editor.selected.configurable": "AndroidSdkUpdater",
-    "show.migrate.to.gradle.popup": "false"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;DEBUGGABLE_DEVICE&quot;: &quot;lava_lxx507-192.168.29.122:37709&quot;,
+    &quot;DEBUGGABLE_PROCESS&quot;: &quot;com.nileegames.gullyteam&quot;,
+    &quot;DEBUGGER_ID&quot;: &quot;Java&quot;,
+    &quot;Flutter.main.dart.executor&quot;: &quot;Run&quot;,
+    &quot;Gradle.C:/Users/abcom/Documents/Software/gully_app [signingReport].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;SHOW_ALL_PROCESSES&quot;: &quot;true&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;com.android.tools.idea.devicemanager.tab&quot;: &quot;Physical&quot;,
+    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
+    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;office&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/abcom/Documents/Software/gully_app/lib/ui/widgets/service&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;AndroidSdkUpdater&quot;,
+    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\abcom\Documents\Software\gully_app\lib\ui\widgets\service" />
@@ -181,14 +180,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00045" summary="service screen">
-      <option name="closed" value="true" />
-      <created>1726660364279</created>
-      <option name="number" value="00045" />
-      <option name="presentableId" value="LOCAL-00045" />
-      <option name="project" value="LOCAL" />
-      <updated>1726660364279</updated>
     </task>
     <task id="LOCAL-00046" summary="service screen">
       <option name="closed" value="true" />
@@ -574,7 +565,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733831601977</updated>
     </task>
-    <option name="localTasksCounter" value="94" />
+    <task id="LOCAL-00094" summary="updated matchup model,live score screen and add player screen">
+      <option name="closed" value="true" />
+      <created>1733917475556</created>
+      <option name="number" value="00094" />
+      <option name="presentableId" value="LOCAL-00094" />
+      <option name="project" value="LOCAL" />
+      <updated>1733917475556</updated>
+    </task>
+    <option name="localTasksCounter" value="95" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -595,7 +594,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="modify package screen ,shop screen and service screen" />
     <MESSAGE value="modify tournament form screen" />
     <MESSAGE value="modify register shop screen and tournament form screen and register service screen" />
     <MESSAGE value="modify services screen" />
@@ -620,7 +618,8 @@
     <MESSAGE value="modify viewmatchup edit match,performance,and delete match screen" />
     <MESSAGE value="all things done" />
     <MESSAGE value="updateteamdata" />
-    <option name="LAST_COMMIT_MESSAGE" value="updateteamdata" />
+    <MESSAGE value="updated matchup model,live score screen and add player screen" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated matchup model,live score screen and add player screen" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -1159,6 +1158,12 @@
           <option name="totalLines" value="6657902" />
           <option name="info" value="updateteamdata" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1733917492154" />
+          <option name="linesCode" value="38611" />
+          <option name="totalLines" value="7508547" />
+          <option name="info" value="updated matchup model,live score screen and add pl" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1696,6 +1701,12 @@
           <option name="linesCode" value="38448" />
           <option name="totalLines" value="6657902" />
           <option name="info" value="Dec 10, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1733917492154" />
+          <option name="linesCode" value="38611" />
+          <option name="totalLines" value="7508547" />
+          <option name="info" value="Dec 11, 2024" />
         </TimePoint>
       </list>
     </option>

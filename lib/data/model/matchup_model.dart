@@ -61,4 +61,15 @@ class MatchupModel {
       id: '',
     );
   }
+
+  String? getWinningTeamName(){
+    if(winningTeam==null){}
+    if(winningTeam==team1.id){
+      return team1.name;
+    }
+    if(winningTeam==team2.id){
+      return team2.name;
+    }
+    return null;
+  }
 }

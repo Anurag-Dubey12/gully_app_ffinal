@@ -288,6 +288,7 @@ class ScoreboardModel {
       if (isSecondInningsOver &&
           currentInningsScore == firstInnings!.totalScore) {
         // final MatchupModel match;
+        
 
         return "Match Tied";
       }

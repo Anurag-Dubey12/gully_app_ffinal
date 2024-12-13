@@ -50,8 +50,7 @@ class TeamApi {
       {required String teamId,
       required String name,
       required String phone,
-      required String role}
-      ) async {
+      required String role}) async {
     final obj = {
       'name': name,
       'phoneNumber': phone,
@@ -103,7 +102,10 @@ class TeamApi {
     };
     logger.i(obj);
     return repo
-        .post('/team/deletePlayer/$teamId/$playerId', {}).then((response) {
+        .delete(
+      '/team/deletePlayer/$teamId/$playerId',
+    )
+        .then((response) {
       if (response.isOk) {
         return ApiResponse.fromJson(response.body);
       } else {
@@ -118,6 +120,25 @@ class TeamApi {
         }
       }
     });
+  }
+
+  Future<ApiResponse> changeCaptain({
+    required String teamId,
+    required String newCaptainId,
+  }) async {
+    final response = await repo
+        .put('/team/changeCaptain/$teamId',{
+          'newCaptainId': newCaptainId
+    });
+    logger.d("The api response for change captain is :${response.body}");
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! >= 400) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
   }
 
   Future<ApiResponse> getOpponents() async {
@@ -230,17 +251,19 @@ class TeamApi {
     }
     return ApiResponse.fromJson(response.body);
   }
+
   Future<ApiResponse> getMyPerformance({
     required String userId,
     required String matchType,
     required String category,
   }) async {
     try {
-      final response = await repo.post('/match/myPerformance/$userId',{
-       'matchType': matchType,
+      final response = await repo.post('/match/myPerformance/$userId', {
+        'matchType': matchType,
         'category': category,
       });
-      logger.d("Raw API response for myPerformance: ${response.body} and matchtypes is :$matchType and inning types is :$category");
+      logger.d(
+          "Raw API response for myPerformance: ${response.body} and matchtypes is :$matchType and inning types is :$category");
 
       if (response.statusCode! >= 500) {
         errorSnackBar(generateErrorMessage(response.body));
@@ -273,7 +296,6 @@ class TeamApi {
 
     return ApiResponse.fromJson(response.body);
   }
-
 }
 
 String generateErrorMessage(dynamic response) {

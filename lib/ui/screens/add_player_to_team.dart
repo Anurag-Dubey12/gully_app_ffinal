@@ -73,7 +73,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                           BottomSheet(
                             backgroundColor: const Color(0xffEBEBEB),
                             enableDrag: false,
-                            builder: (context) => _AddPlayerDialog(
+                            builder: (context) => AddPlayerDialog(
                               teamId: controller.state.id,
                             ),
                             onClosing: () {
@@ -354,7 +354,6 @@ class _PlayerCardState extends State<PlayerCard> {
             if(widget.player.role=='Captain')
               InkWell(
                 onTap: () {
-                  logger.d("The Previous Captain id is:$previousCaptainid and name is $previousCaptainName");
                   Get.bottomSheet(
                     Container(
                     height: Get.height* 0.65,
@@ -430,8 +429,13 @@ class _PlayerCardState extends State<PlayerCard> {
                                         color: Colors.grey[700],
                                       ),
                                     ),
-                                    onTap: () {
-                                      logger.d("The New Captain id is:${player.id} and his previous role was ${player.role}");
+                                    onTap: ()async {
+                                      logger.d("The Previous Captain Details : \n Id:$previousCaptainid \n Name :$previousCaptainName \n Role:${player.role}" );
+                                      logger.d("The New Captain Details: \n Id:${player.id} \n Name:${player.name} \n Previous Role:${player.role}");
+                                      bool isChanged=await controller.changeCaptain(teamId: widget.teamId, newCaptainId: player.id);
+                                      if(isChanged==true){
+                                        logger.d("The Captain is Changed");
+                                      }
                                       // Get.dialog(
                                       //   AlertDialog.adaptive(
                                       //
@@ -458,9 +462,6 @@ class _PlayerCardState extends State<PlayerCard> {
                   ),
                 ),
               ),
-
-
-
             const Spacer(),
             widget.isEditable ?? true
                 ? InkWell(
@@ -529,9 +530,9 @@ class _PlayerCardState extends State<PlayerCard> {
   }
 }
 
-class _AddPlayerDialog extends GetView<TeamController> {
+class AddPlayerDialog extends GetView<TeamController> {
   final String teamId;
-  const _AddPlayerDialog({required this.teamId});
+  const AddPlayerDialog({required this.teamId});
 
   @override
   Widget build(BuildContext context) {
@@ -833,8 +834,7 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                         phoneController.text.length != 10 ||
                         !phoneController.text.isNumericOnly) {
                       setState(() {
-                        errorSnackBar(
-                            AppLocalizations.of(context)!.validPhoneNumber);
+                        errorSnackBar(AppLocalizations.of(context)!.validPhoneNumber);
                       });
                       return;
                     }

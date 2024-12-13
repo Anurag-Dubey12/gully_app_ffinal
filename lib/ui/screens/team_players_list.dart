@@ -10,6 +10,8 @@ import '../../utils/FallbackImageProvider.dart';
 import '../../utils/utils.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
+import '../widgets/primary_button.dart';
+import 'add_player_to_team.dart';
 
 class ViewTeamPlayers extends StatefulWidget {
   final TeamModel teamModel;
@@ -21,9 +23,16 @@ class ViewTeamPlayers extends StatefulWidget {
 
 class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     final controller = Get.find<TeamController>();
     controller.setTeam(widget.teamModel);
+    controller.getPlayers();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<TeamController>();
     return Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -35,6 +44,53 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
         ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
+          bottomNavigationBar: Builder(
+            builder: (context) => Obx(() {
+              return Container(
+                height: 70,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                      offset: const Offset(0, -1),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20.0, vertical: 10),
+                      child: PrimaryButton(
+                        isDisabled: controller.players.value.length == 15,
+                        disabledText: 'Maximum 15 players added',
+                        onTap: () async {
+                          await Get.bottomSheet(
+                            BottomSheet(
+                              backgroundColor: const Color(0xffEBEBEB),
+                              enableDrag: false,
+                              builder: (context) => AddPlayerDialog(
+                                teamId: controller.state.id,
+                              ),
+                              onClosing: () {
+                                setState(() {});
+                              },
+                            ),
+                          );
+
+                          setState(() {});
+                        },
+                        title: "Add Player",
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ),
           body: Stack(
             children: [
               ClipPath(
@@ -110,10 +166,9 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
                                             child: CircleAvatar(
                                                 radius: 49,
                                                 backgroundColor: Colors.white,
-                                                backgroundImage:FallbackImageProvider(
+                                                backgroundImage: FallbackImageProvider(
                                                     toImageUrl(widget
-                                                        .teamModel
-                                                        .logo ??
+                                                            .teamModel.logo ??
                                                         "assets/images/logo.png"),
                                                     'assets/images/logo.png')),
                                           ),
@@ -121,109 +176,100 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
                                       ),
                                     )),
                               ),
-                              // TeamPlayersListBuilder(
-                              //     teamId: widget.teamModel.id),
                               SizedBox(height: Get.height * 0.02),
                               SizedBox(
-                                height: Get.height * 0.64,
+                                height: Get.height * 0.58,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: FutureBuilder<List<PlayerModel>>(
-                                      future: controller.getPlayers(),
-                                      builder: (context, snapshot) {
-                                        return ListView.separated(
-                                            padding: const EdgeInsets.only(
-                                                bottom: 10),
-                                            shrinkWrap: true,
-                                            itemCount:
-                                                snapshot.data?.length ?? 0,
-                                            separatorBuilder:
-                                                (context, index) =>
-                                                    const SizedBox(height: 14),
-                                            itemBuilder: (context, index) {
-                                              return Container(
-                                                decoration: BoxDecoration(
-                                                    color: const Color.fromARGB(
-                                                        255, 255, 255, 255),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            19),
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                          color: Colors.grey
-                                                              .withOpacity(0.3),
-                                                          blurRadius: 20,
-                                                          spreadRadius: 2,
-                                                          offset: const Offset(
-                                                              0, 10))
-                                                    ]),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                      16.0),
-                                                  child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          snapshot.data![index]
-                                                              .name,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: Get.textTheme
-                                                              .titleMedium
-                                                              ?.copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize: 20),
-                                                        ),
-                                                        Text(
-                                                          snapshot.data![index]
-                                                              .role,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          style: Get.textTheme
-                                                              .titleMedium
-                                                              ?.copyWith(
-                                                                  color: Colors
-                                                                          .grey[
-                                                                      600],
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontSize: 14),
-                                                        ),
-                                                        // CircleAvatar(
-                                                        //   radius: 24,
-                                                        //   backgroundColor: Colors.transparent,
-                                                        //   child: Image.asset(
-                                                        //     getAssetFromRole( snapshot.data![index]
-                                                        //         .role),
-                                                        //     width: 20,
-                                                        //     fit: BoxFit.cover,
-                                                        //   ),
-                                                        // ),
-                                                        IconButton(
-                                                            onPressed: (){
-
-                                                              logger.d("PLayer delete Data is:\n Team id ${widget.teamModel.id} "
-                                                                  "player id ${snapshot.data![index].id}");
-                                                              // controller.removePlayerFromTeam(
-                                                              //   teamId: widget.teamModel.id,
-                                                              //   playerId: snapshot.data![index].id
-                                                              // );
-                                                            },
-                                                            icon: const Icon(Icons.delete,color: Colors.red,size: 20)
-                                                        )
-                                                      ]),
-                                                ),
-                                              );
-                                            });
-                                      }),
+                                  child: Obx(() {
+                                    final playersList = controller.players;
+                                    return ListView.separated(
+                                        padding: const EdgeInsets.only(bottom: 10),
+                                        shrinkWrap: true,
+                                        itemCount: playersList.length,
+                                        separatorBuilder: (context, index) =>
+                                            const SizedBox(height: 10),
+                                        itemBuilder: (context, index) {
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              color: const Color.fromARGB(255, 255, 255, 255),
+                                              borderRadius: BorderRadius.circular(19),
+                                              border: Border.all(color: Colors.black87),
+                                              // boxShadow: [
+                                              //   BoxShadow(
+                                              //       color: Colors.grey
+                                              //           .withOpacity(0.3),
+                                              //       blurRadius: 20,
+                                              //       spreadRadius: 2,
+                                              //       offset:
+                                              //           const Offset(0, 10))
+                                              // ]
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(16.0),
+                                              child: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    SizedBox(
+                                                      width:150,
+                                                      child: Text(playersList[index].name,
+                                                        overflow: TextOverflow.ellipsis,
+                                                        style: Get.textTheme.titleMedium
+                                                            ?.copyWith(
+                                                                fontWeight: FontWeight.w500, fontSize: 18),
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      playersList[index].role,
+                                                      overflow: TextOverflow.ellipsis,
+                                                      style: Get.textTheme.titleMedium
+                                                          ?.copyWith(
+                                                              color: Colors.grey[600],
+                                                              fontWeight:
+                                                                  FontWeight.w500, fontSize: 14),
+                                                    ),
+                                                    IconButton(
+                                                      onPressed: () async {
+                                                        bool? confirm =await Get.dialog(
+                                                                AlertDialog.adaptive(
+                                                          title: const Text('Confirm Delete'),
+                                                          content: Text('Are you sure you want to remove ${playersList[index].name}?'),
+                                                          actions: [
+                                                            TextButton(
+                                                              onPressed: () {Navigator.of(context).pop(false); },
+                                                              child: const Text('Cancel'),
+                                                            ),
+                                                            TextButton(
+                                                              onPressed: () {Navigator.of(context).pop(true);},
+                                                              child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                                            ),
+                                                          ],
+                                                        ));
+                                                        if (confirm == true) {
+                                                          logger.d(
+                                                              "Player delete Data is:\n Team id ${widget.teamModel.id}\n"
+                                                              "player id ${playersList[index].id}");
+                                                          bool isRemoved = await controller.removePlayerFromTeam(
+                                                            teamId: widget.teamModel.id,
+                                                            playerId: playersList[index].id,
+                                                          );
+                                                          if (isRemoved) {
+                                                            logger.d("Player removed successfully");
+                                                          }
+                                                        }
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.delete,
+                                                          color: Colors.red,
+                                                          size: 20),
+                                                    )
+                                                  ]),
+                                            ),
+                                          );
+                                        });
+                                  }),
                                 ),
                               )
-                              //
                             ],
                           ),
                         ),

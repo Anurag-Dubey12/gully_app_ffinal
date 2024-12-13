@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:gully_app/config/api_client.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
-import 'package:gully_app/ui/theme/theme.dart';
+import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/utils/app_logger.dart';
 
 import '../../../data/controller/scoreboard_controller.dart';
@@ -26,11 +28,12 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
 
   @override
   void initState() {
-    teamStats = _calculateTeamStats();
+    teamStats = calculateTeamStats();
+    logger.d("Toss Won by:${widget.scoreboard.tossWonBy}");
     super.initState();
   }
 
-  Map<String, Map<String, int>> _calculateTeamStats() {
+  Map<String, Map<String, int>> calculateTeamStats() {
     final team1Fours = widget.scoreboard.firstInningHistory.entries
         .where((entry) => entry.value.run == 4 &&
         !entry.value.events.contains(EventType.legByes) &&
@@ -42,7 +45,6 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
         !entry.value.events.contains(EventType.legByes) &&
         !entry.value.events.contains(EventType.bye))
         .length;
-
     final team1Wickets = widget.scoreboard.firstInnings!.totalWickets ?? 0;
 
     final team2Fours = widget.scoreboard.secondInningHistory.entries
@@ -65,12 +67,14 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
         'sixes': team1Sixes,
         'wickets': team1Wickets,
         'boundaries': team1Fours + team1Sixes,
+        'toss':widget.scoreboard.tossWonBy==widget.scoreboard.team1.id ?1:0,
       },
       widget.scoreboard.team2.id: {
         'fours': team2Fours,
         'sixes': team2Sixes,
         'wickets': team2Wickets,
         'boundaries': team2Fours + team2Sixes,
+        'toss':widget.scoreboard.tossWonBy==widget.scoreboard.team2.id ?1:0,
       }
     };
   }
@@ -93,7 +97,12 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
           SelectedTeamId = team1Value < team2Value
               ? widget.scoreboard.team1.id
               : widget.scoreboard.team2.id;
-        } else {
+        } else if(SelectedCriteria=='toss'){
+          SelectedTeamId=team1Value>team2Value ?
+              widget.scoreboard.team1.id
+              : widget.scoreboard.team2.id;
+        }
+          else {
           SelectedTeamId = team1Value > team2Value
               ? widget.scoreboard.team1.id
               : widget.scoreboard.team2.id;
@@ -120,16 +129,25 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
           ),
           child: IconButton(
             onPressed: () {
-              setState(() {
-                SelectedCriteria = criteria;
-                updateSelectedTeam();
-              });
-              logger.d("Selected Types:$criteria");
+              if (criteria == 'superovers') {
+                // updateSuperOverData();
+                logger.d("Clicked Scoreboar");
+              } else {
+                setState(() {
+                  SelectedCriteria = criteria;
+                  updateSelectedTeam();
+                });
+                logger.d("Selected Types:$criteria");
+              }
             },
-            icon: Image.asset(imagePath, height: 40, width: 40,color: isSelected ?Colors.black:Colors.grey,),
+            icon: Image.asset(
+              imagePath,
+              height: 40,
+              width: 40,
+              color: isSelected ? Colors.black : Colors.grey,
+            ),
           ),
         ),
-        const SizedBox(height: 5),
         Text(
           label,
           style: TextStyle(
@@ -177,7 +195,7 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
           children: [
             Row(
               children: [
-                TeamLogo(
+                teamlogo(
                   logoUrl: imagePath,
                   isWinner: isWinner,
                   teamName: teamName,
@@ -277,7 +295,7 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
       ),
     );
   }
-  Widget TeamLogo({
+  Widget teamlogo({
     required String? logoUrl,
     required bool isWinner,
     required String teamName,
@@ -301,7 +319,7 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
             fit: BoxFit.contain,
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) return child;
-              return _loadingPlaceholder(isWinner);
+              return teamIconPlaceHolder(isWinner);
             },
             errorBuilder: (context, error, stackTrace) {
               return teamInitialsPlaceholder(teamName, isWinner);
@@ -312,7 +330,7 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
       ),
     );
   }
-  Widget _loadingPlaceholder(bool isWinner) {
+  Widget teamIconPlaceHolder(bool isWinner) {
     return Container(
       color: Colors.grey[200],
       child: Center(
@@ -398,9 +416,9 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               winnerTypes(
-                label: "Fours",
-                imagePath: "assets/images/umpire_four.png",
-                criteria: 'fours',
+                label: "Toss",
+                imagePath: "assets/images/toss.png",
+                criteria: 'toss',
               ),
               winnerTypes(
                 label: "Sixes",
@@ -411,6 +429,11 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
                 label: "Wickets",
                 imagePath: "assets/images/umpire_wicket.png",
                 criteria: 'wickets',
+              ),
+              winnerTypes(
+                label: "Super-Overs",
+                imagePath: "assets/images/umpire_wicket.png",
+                criteria: 'superovers',
               ),
             ],
           ),
@@ -431,7 +454,7 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
               const Padding(
                 padding: EdgeInsets.only(bottom: 12),
                 child: Text(
-                  "Teams have equal values. Tap on a team to select the winner.",
+                  "Teams have equal values. Tap on a team to select the winner or consider different Method to decide Winner.",
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.black,
@@ -484,5 +507,101 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
         ],
       ),
     );
+  }
+}
+class SuperOverData {
+  final String team1Id;
+  final String team2Id;
+  final int team1Score;
+  final int team2Score;
+
+  SuperOverData({
+    required this.team1Id,
+    required this.team2Id,
+    required this.team1Score,
+    required this.team2Score
+  });
+
+  int getTeamScore(String teamId) {
+    return teamId == team1Id ? team1Score : team2Score;
+  }
+}
+class SuperOverDialog extends StatefulWidget {
+  final TeamModel team1;
+  final TeamModel team2;
+  final Function(SuperOverData) onSubmit;
+
+  const SuperOverDialog({
+    super.key,
+    required this.team1,
+    required this.team2,
+    required this.onSubmit
+  });
+
+  @override
+  _SuperOverDialogState createState() => _SuperOverDialogState();
+}
+
+class _SuperOverDialogState extends State<SuperOverDialog> {
+  final TextEditingController _team1Controller = TextEditingController();
+  final TextEditingController _team2Controller = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Super Over Scores'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TextField(
+            controller: _team1Controller,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: '${widget.team1.name} Score',
+              border: const OutlineInputBorder(),
+            ),
+          ),
+          const SizedBox(height: 10),
+          TextField(
+            controller: _team2Controller,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: '${widget.team2.name} Score',
+              border: const OutlineInputBorder(),
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            final team1Score = int.tryParse(_team1Controller.text) ?? 0;
+            final team2Score = int.tryParse(_team2Controller.text) ?? 0;
+
+            final superOverData = SuperOverData(
+                team1Id: widget.team1.id,
+                team2Id: widget.team2.id,
+                team1Score: team1Score,
+                team2Score: team2Score
+            );
+
+            widget.onSubmit(superOverData);
+            Navigator.of(context).pop();
+          },
+          child: const Text('Confirm'),
+        ),
+      ],
+    );
+  }
+
+  @override
+  void dispose() {
+    _team1Controller.dispose();
+    _team2Controller.dispose();
+    super.dispose();
   }
 }

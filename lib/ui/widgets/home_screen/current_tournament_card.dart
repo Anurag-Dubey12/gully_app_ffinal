@@ -38,14 +38,27 @@ class CurrentTournamentCard extends GetView<TournamentController> {
             return const NoTournamentCard();
           }
           else {
+
+            //For sorting the match if ended it will forward towards the end of the list
+            final sortedmatch=List<MatchupModel>.from(controller.matches)
+            ..sort((live,ended){
+              bool aIsLive=live.winningTeam==null;
+              bool bIsLive=ended.winningTeam==null;
+
+              if(aIsLive && !bIsLive)return -1;
+              if(!aIsLive && bIsLive)return 1;
+              return ended.tournamentId!.compareTo(live.tournamentId ??'');
+            });
             return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: controller.matches.length,
+                // itemCount: controller.matches.length,
+                itemCount: sortedmatch.length,
                 shrinkWrap: true,
                 padding: const EdgeInsets.only(bottom: 10, top: 10),
                 itemBuilder: (context, snapshot) {
                   return _Card(
-                    tournament: controller.matches[snapshot],
+                    // tournament: controller.matches[snapshot],
+                    tournament: sortedmatch[snapshot],
                   );
                 });
           }
@@ -217,15 +230,15 @@ class _CardState extends State<_Card> {
               ],
             ),
             Positioned(
-              top: 8,
-              right: 8,
+              top: 7,
+              left: 10,
               child: BlinkingLiveText(
                 ismatchover: widget.tournament.winningTeam!=null ?"Ended":"Live",
                 color:widget.tournament.winningTeam!=null ? Colors.red :Colors.green),
             ),
             Positioned(
               top: 10,
-              left: 10,
+              right: 10,
               child: Text(
               '${widget.tournament.round!.capitalize ??''} Match',
                 style: const TextStyle(

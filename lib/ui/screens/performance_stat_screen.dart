@@ -184,13 +184,14 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen> {
                     FutureBuilder<Map<String, dynamic>>(
                       future: controller.getMyPerformance(
                         userId: authcontroller.state!.id,
-                        matchType: widget.category,
+                        matchType: "tennis",
                         category: innings,
                       ),
                       builder: (context, snapshot) {
                         // if (snapshot.connectionState == ConnectionState.waiting) {
                         //   return const Center(child: CircularProgressIndicator());
                         // }
+                        logger.d("My Peformance Details:\n userId:${authcontroller.state!.id}\nMatchType:${widget.category}\nCategory:$innings ");
                         if (snapshot.hasError) {
                           return const Center(
                             child: Text(

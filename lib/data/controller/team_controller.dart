@@ -39,6 +39,35 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
     }
   }
 
+  Future<bool> changeCaptain({
+    required String teamId,
+    required String newCaptainId,
+  }) async {
+    try {
+      change(GetStatus.loading());
+      final response = await repo.changeCaptain(
+        teamId: teamId,
+        newCaptainId: newCaptainId,
+      );
+      logger.d("The change captain response is: ${response.data}");
+      if (response.status == false) {
+        errorSnackBar(response.message ?? 'Failed to change captain');
+        change(GetStatus.error('Failed to change captain'));
+        return false;
+      }
+      if (response.data != null) {
+        change(GetStatus.success(TeamModel.fromJson(response.data!)));
+      }
+      successSnackBar('Captain changed successfully');
+      return true;
+    } catch (e) {
+      logger.e("Error changing captain: $e");
+      change(GetStatus.error(e.toString()));
+      errorSnackBar('An error occurred while changing captain');
+      return false;
+    }
+  }
+
   Future<bool> updateTeam({
     required String teamName,
     required String? teamLogo,

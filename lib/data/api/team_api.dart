@@ -254,16 +254,14 @@ class TeamApi {
 
   Future<ApiResponse> getMyPerformance({
     required String userId,
-    required String matchType,
     required String category,
   }) async {
     try {
       final response = await repo.post('/match/myPerformance/$userId', {
-        'matchType': matchType,
         'category': category,
       });
       logger.d(
-          "Raw API response for myPerformance: ${response.body} and matchtypes is :$matchType and inning types is :$category");
+          "Raw API response for myPerformance: ${response.body} \ninning types is :$category");
 
       if (response.statusCode! >= 500) {
         errorSnackBar(generateErrorMessage(response.body));

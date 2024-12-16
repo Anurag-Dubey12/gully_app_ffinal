@@ -6,9 +6,11 @@ import 'package:gully_app/data/model/scoreboard_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 import '../../../utils/FallbackImageProvider.dart';
+import '../../../utils/app_logger.dart';
 import '../../../utils/image_picker_helper.dart';
 import '../../../utils/utils.dart';
 import '../../screens/full_scorecard.dart';
+import '../../screens/view_matchups_screen.dart';
 import 'no_tournament_card.dart';
 
 class PastTournamentMatchCard extends GetView<TournamentController> {
@@ -76,7 +78,7 @@ class _Card extends StatelessWidget {
         // winnerText = '${scoreboard.team2.name} won the game';
       }
       else if (scoreboard.isSecondInningsOver && team2total == team1total) {
-        winnerText = 'Match Tied';
+        winnerText = "${tournament.getWinningTeamName()!} won the match";
       } else {
         winnerText = 'Match Tied';
       }
@@ -91,9 +93,6 @@ class _Card extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
         decoration: BoxDecoration(
           color: Colors.white,
-          // border: Border.all(
-          //   color: Colors.black
-          // ),
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -200,14 +199,27 @@ class _Card extends StatelessWidget {
                   bottomRight: Radius.circular(20),
                 ),
               ),
-              child: Text(
-                winnerText,
-                style: const TextStyle(
-                  color: AppTheme.primaryColor,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
+              child: Row(
+                children: [
+                  Text(
+                    winnerText,
+                    style: const TextStyle(
+                      color: AppTheme.primaryColor,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const Spacer(),
+                  GestureDetector(
+                    onTap: (){
+                      logger.d("The TournamentId is:${tournamentdata.id} }");
+                      controller.setScheduleStatus(true);
+                      Get.to(() => ViewMatchupsScreen(id:tournamentdata.id,isSchedule: controller.isSchedule.value));
+                    },
+                    child: const Text("View Matches",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),),
+                  )
+                ],
               ),
             ),
           ],

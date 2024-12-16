@@ -138,14 +138,18 @@ class _CardState extends State<_Card> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            widget.tournament.tournamentName ?? 'Unknown Tournament',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                          SizedBox(
+                            width:120,
+                            child: Text(
+                              widget.tournament.tournamentName ?? 'Unknown Tournament',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              maxLines: 1,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
                           IconButton(
                             onPressed: () {
@@ -237,7 +241,7 @@ class _CardState extends State<_Card> {
                 color:widget.tournament.winningTeam!=null ? Colors.red :Colors.green),
             ),
             Positioned(
-              top: 10,
+              top: 1,
               right: 10,
               child: Text(
               '${widget.tournament.round!.capitalize ??''} Match',

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
+import 'package:gully_app/utils/FallbackImageProvider.dart';
+import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/tournament_controller.dart';
 
@@ -79,8 +81,11 @@ class _RequestsBottomSheetState extends State<RequestsBottomSheet> {
                                 padding: const EdgeInsets.all(12.0),
                                 child: Row(children: [
                                   CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        snapshot.data![index].toImageUrl()),
+                                    // backgroundImage: NetworkImage(
+                                    //     snapshot.data![index].toImageUrl()),
+                                    backgroundImage: FallbackImageProvider(
+                                     snapshot.data![index].toImageUrl(),'assets/images/logo.png'
+                                    ),
                                   ),
                                   const SizedBox(width: 10),
                                   Text(

@@ -9,21 +9,15 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="need to modify current team list">
-      <change afterPath="$PROJECT_DIR$/assets/images/toss.png" afterDir="false" />
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/4.3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/images/4.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/api/team_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/team_api.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/controller/team_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/team_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/performance_stat_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/performance_stat_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/team_players_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/team_players_list.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/TieBreakerSheet.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/TieBreakerSheet.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/BlinkingLiveText.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils/BlinkingLiveText.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/requests_bottom_sheet.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/requests_bottom_sheet.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -184,14 +178,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00047" summary="product adding screen">
-      <option name="closed" value="true" />
-      <created>1727178599657</created>
-      <option name="number" value="00047" />
-      <option name="presentableId" value="LOCAL-00047" />
-      <option name="project" value="LOCAL" />
-      <updated>1727178599657</updated>
     </task>
     <task id="LOCAL-00048" summary="shop screen">
       <option name="closed" value="true" />
@@ -577,7 +563,15 @@
       <option name="project" value="LOCAL" />
       <updated>1734004614316</updated>
     </task>
-    <option name="localTasksCounter" value="96" />
+    <task id="LOCAL-00096" summary="modify">
+      <option name="closed" value="true" />
+      <created>1734091017291</created>
+      <option name="number" value="00096" />
+      <option name="presentableId" value="LOCAL-00096" />
+      <option name="project" value="LOCAL" />
+      <updated>1734091017292</updated>
+    </task>
+    <option name="localTasksCounter" value="97" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -614,7 +608,6 @@
     <MESSAGE value="modify service screen and multi image view is added" />
     <MESSAGE value="added Schedule screen" />
     <MESSAGE value="completed schedule screen" />
-    <MESSAGE value="modify" />
     <MESSAGE value="modify view tournament screen" />
     <MESSAGE value="modify  tournament form screen" />
     <MESSAGE value="modify viewmatchup screen" />
@@ -623,7 +616,8 @@
     <MESSAGE value="updateteamdata" />
     <MESSAGE value="updated matchup model,live score screen and add player screen" />
     <MESSAGE value="need to modify current team list" />
-    <option name="LAST_COMMIT_MESSAGE" value="need to modify current team list" />
+    <MESSAGE value="modify" />
+    <option name="LAST_COMMIT_MESSAGE" value="modify" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -1174,6 +1168,12 @@
           <option name="totalLines" value="7511371" />
           <option name="info" value="need to modify current team list" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1734091020791" />
+          <option name="linesCode" value="35004" />
+          <option name="totalLines" value="100086" />
+          <option name="info" value="modify" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1723,6 +1723,12 @@
           <option name="linesCode" value="38616" />
           <option name="totalLines" value="7511371" />
           <option name="info" value="Dec 12, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1734091020791" />
+          <option name="linesCode" value="35004" />
+          <option name="totalLines" value="100086" />
+          <option name="info" value="Dec 13, 2024" />
         </TimePoint>
       </list>
     </option>

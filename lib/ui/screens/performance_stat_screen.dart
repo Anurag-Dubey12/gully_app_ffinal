@@ -184,7 +184,6 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen> {
                     FutureBuilder<Map<String, dynamic>>(
                       future: controller.getMyPerformance(
                         userId: authcontroller.state!.id,
-                        matchType: "tennis",
                         category: innings,
                       ),
                       builder: (context, snapshot) {

@@ -107,7 +107,7 @@ class MatchupCard extends StatelessWidget {
         : ScoreboardModel.fromJson(matchup.scoreBoard!);
     final controller=Get.find<TournamentController>();
 
-    // logger.d("The Winner id is:${matchup.getWinningTeamName()}");
+    logger.d("The Winner id is:${matchup.getWinningTeamName()}");
     return GestureDetector(
       onTap:(){
         if(isSchedule){
@@ -307,6 +307,10 @@ class MatchupCard extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: Get.height * 0.02),
+                // Center(
+                //   child: Text("${matchup.getWinningTeamName()} Won the Match" ?? "",
+                //       style: Get.textTheme.labelMedium?.copyWith()),
+                // ),
                 Center(
                   child: Text(scoreboard?.secondInningsText ?? "",
                       style: Get.textTheme.labelMedium?.copyWith()),

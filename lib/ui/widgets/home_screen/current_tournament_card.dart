@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
+import 'package:gully_app/ui/screens/schedule_screen.dart';
 import 'package:gully_app/ui/widgets/home_screen/no_tournament_card.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -221,7 +222,7 @@ class _CardState extends State<_Card> {
                             onTap: (){
                               logger.d("The TournamentId is:${tournamentdata.id} }");
                               controller.setScheduleStatus(true);
-                              Get.to(() => ViewMatchupsScreen(id:tournamentdata.id,isSchedule: controller.isSchedule.value));
+                              Get.to(() => ScheduleScreen(id:tournamentdata.id));
                             },
                             child: const Text("View Schedule",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),),
                           )

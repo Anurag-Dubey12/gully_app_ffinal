@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
+import 'package:gully_app/ui/screens/schedule_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 import '../../../utils/FallbackImageProvider.dart';
@@ -11,6 +12,7 @@ import '../../../utils/image_picker_helper.dart';
 import '../../../utils/utils.dart';
 import '../../screens/full_scorecard.dart';
 import '../../screens/view_matchups_screen.dart';
+import 'TeamScore.dart';
 import 'no_tournament_card.dart';
 
 class PastTournamentMatchCard extends GetView<TournamentController> {
@@ -162,7 +164,7 @@ class _Card extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _TeamScore(
+                              TeamScore(
                                 color: AppTheme.primaryColor,
                                 teamName: scoreboard.team1.name,
                                 score: scoreboard.firstInningHistory.isNotEmpty
@@ -174,7 +176,7 @@ class _Card extends StatelessWidget {
                                 height: 40,
                                 color: Colors.grey[300],
                               ),
-                              _TeamScore(
+                              TeamScore(
                                 color: AppTheme.secondaryYellowColor,
                                 teamName: scoreboard.team2.name,
                                 score: scoreboard.currentInnings == 1
@@ -215,7 +217,8 @@ class _Card extends StatelessWidget {
                     onTap: (){
                       logger.d("The TournamentId is:${tournamentdata.id} }");
                       controller.setScheduleStatus(true);
-                      Get.to(() => ViewMatchupsScreen(id:tournamentdata.id,isSchedule: controller.isSchedule.value));
+                      controller.tournamentname.value=tournamentdata.tournamentName;
+                      Get.to(() => ScheduleScreen(id:tournamentdata.id));
                     },
                     child: const Text("View Matches",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),),
                   )
@@ -231,53 +234,5 @@ class _Card extends StatelessWidget {
 }
 
 
-class _TeamScore extends StatelessWidget {
-  final Color color;
-  final String teamName;
-  final String score;
 
-  const _TeamScore({
-    required this.color,
-    required this.teamName,
-    required this.score,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: Get.width * 0.30,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 12,
-                height: 12,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Text(
-                  teamName,
-                  style: Get.textTheme.bodyMedium,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 2),
-          Text(
-            score,
-            style:
-            Get.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
-  }
-}
 

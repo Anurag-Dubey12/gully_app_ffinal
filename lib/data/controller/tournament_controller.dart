@@ -28,10 +28,14 @@ class TournamentController extends GetxController
   RxString location = ''.obs;
   RxString tournamentId=''.obs;
   RxBool isSchedule=false.obs;
+  RxString tournamentname=''.obs;
+
 
   void setScheduleStatus(bool status) {
     isSchedule.value = status;
   }
+
+
   Future<void> getCurrentLocation() async {
     final position = await determinePosition();
 

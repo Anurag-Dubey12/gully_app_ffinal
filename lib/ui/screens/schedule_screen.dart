@@ -52,7 +52,14 @@ class ScheduleScreen extends GetView<TournamentController> {
                       ? controller.getMatchup(id!)
                       : controller.getMatchup(controller.state!.id),
                   builder: (context, snapshot) {
-
+                    // final sortedMatches = List<MatchupModel>.from(controller.matchups)
+                    //   ..sort((a, b) {
+                    //     if (a.status == "live" && b.status != "live") return -1;
+                    //     if (a.status != "live" && b.status == "live") return 1;
+                    //     if (a.status == "upcoming" && b.status == "ended") return -1;
+                    //     if (a.status == "ended" && b.status == "upcoming") return 1;
+                    //     return 0;
+                    //   });
                     if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     }

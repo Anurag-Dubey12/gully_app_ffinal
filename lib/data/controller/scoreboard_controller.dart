@@ -101,6 +101,7 @@ class ScoreBoardController extends GetxController with StateMixin {
                   ? scoreboard.value!.team1.name
                   : scoreboard.value!.team2.name;
               successSnackBar('$winningTeam wins the match!');
+              Navigator.pop(context);
               updateFinalScoreBoard(winningTeamId);
             },
           ),

@@ -428,7 +428,8 @@ class TournamentController extends GetxController
           .map<TournamentModel>((e) => TournamentModel.fromJson(e))
           .toList();
     } catch (e) {
-      errorSnackBar(e.toString());
+      errorSnackBar("Tournament Not Found");
+      logger.e(e.toString());
       rethrow;
     }
   }

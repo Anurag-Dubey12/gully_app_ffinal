@@ -125,10 +125,16 @@ class TeamApi {
   Future<ApiResponse> changeCaptain({
     required String teamId,
     required String newCaptainId,
+    required String newRole,
+    required String previousCaptainId,
+    required String previousCaptainRole,
   }) async {
     final response = await repo
         .put('/team/changeCaptain/$teamId',{
-          'newCaptainId': newCaptainId
+          'newCaptainId': newCaptainId,
+          'newRole':newRole,
+          'previousCaptainId':previousCaptainId,
+          'previousCaptainRole':previousCaptainRole
     });
     logger.d("The api response for change captain is :${response.body}");
     if (response.statusCode! >= 500) {

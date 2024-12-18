@@ -52,6 +52,7 @@ class ScheduleScreen extends GetView<TournamentController> {
                       ? controller.getMatchup(id!)
                       : controller.getMatchup(controller.state!.id),
                   builder: (context, snapshot) {
+
                     if (snapshot.hasError) {
                       return Center(child: Text('Error: ${snapshot.error}'));
                     }
@@ -160,6 +161,7 @@ class MatchupCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  if(matchup.winningTeam!=null)
                   Align(
                     alignment: Alignment.center,
                     child: Container(

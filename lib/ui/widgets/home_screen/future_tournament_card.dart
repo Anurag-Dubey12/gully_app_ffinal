@@ -12,6 +12,7 @@ import '../../../utils/date_time_helpers.dart';
 import '../../../utils/image_picker_helper.dart';
 import '../../../utils/utils.dart';
 import '../../screens/register_team.dart';
+import '../../screens/schedule_screen.dart';
 import '../../theme/theme.dart';
 import 'no_tournament_card.dart';
 
@@ -47,9 +48,11 @@ class FutureTournamentCard extends GetView<TournamentController> {
 
 class TournamentCard extends StatefulWidget {
   final TournamentModel tournament;
+  final bool isSearch;
   const TournamentCard({
     super.key,
     required this.tournament,
+    this.isSearch = false,
   });
 
   @override
@@ -91,199 +94,205 @@ class _TournamentCardState extends State<TournamentCard> {
     final controller = Get.find<TournamentController>();
     final tournamentdata = controller.tournamentList
         .firstWhereOrNull((t) => t.id == widget.tournament.id);
-    return Container(
-        margin: const EdgeInsets.only(left: 10,right: 10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 5,
-              spreadRadius: 2,
-              offset: const Offset(0, 1),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-           Container(
-             margin: const EdgeInsets.only(left:10),
-             child: GestureDetector(
-               onTap: () {
-                 imageViewer(context,tournamentdata?.coverPhoto,true);
-                 logger.e("The image url is ${tournamentdata?.coverPhoto}");
-               },
-               child: CircleAvatar(
-                    radius: 45,
-                    backgroundImage: tournamentdata?.coverPhoto != null
-                        ? FallbackImageProvider(toImageUrl(tournamentdata!.coverPhoto!),'assets/images/logo.png')
-                        : const AssetImage('assets/images/logo.png') as ImageProvider,
-                    backgroundColor: Colors.transparent,
-                  ),
+    return GestureDetector(
+      onTap: widget.isSearch? (){
+        logger.d("The TournamentId is:${tournamentdata!.id} }");
+        controller.setScheduleStatus(true);
+        Get.to(() => ScheduleScreen(id:tournamentdata.id));
+      }:(){},
+      child: Container(
+          margin: const EdgeInsets.only(left: 10,right: 10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 5,
+                spreadRadius: 2,
+                offset: const Offset(0, 1),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+             Container(
+               margin: const EdgeInsets.only(left:10),
+               child: GestureDetector(
+                 onTap: () {
+                   imageViewer(context,tournamentdata?.coverPhoto,true);
+                   logger.e("The image url is ${tournamentdata?.coverPhoto}");
+                 },
+                 child: CircleAvatar(
+                      radius: 45,
+                      backgroundImage: tournamentdata?.coverPhoto != null
+                          ? FallbackImageProvider(toImageUrl(tournamentdata!.coverPhoto!),'assets/images/logo.png')
+                          : const AssetImage('assets/images/logo.png') as ImageProvider,
+                      backgroundColor: Colors.transparent,
+                    ),
+               ),
              ),
-           ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(left: 15),
-                child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: Text(
-                            widget.tournament.tournamentName,
-                            style: Get.textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: AppTheme.darkYellowColor,
-                            ),
-                            softWrap: true,
-                            maxLines: 1,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            Get.bottomSheet(
-                              IButtonDialog(
-                                organizerName: widget.tournament.organizerName!,
-                                location: widget.tournament.stadiumAddress,
-                                tournamentName: widget.tournament.tournamentName,
-                                tournamentPrice: widget.tournament.fees.toString(),
-                                coverPhoto: widget.tournament.coverPhoto,
-                              ),
-                              backgroundColor: Colors.white,
-                            );
-                          },
-                          icon: const Icon(Icons.info_outline_rounded, size: 18),
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                    const Row(
-                      children: [
-                        Text(
-                          'Start Date',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          'End Date',
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 16,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          formatDateTime('dd/MM/yyyy', widget.tournament.tournamentStartDateTime),
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Text(
-                          formatDateTime('dd/MM/yyyy', widget.tournament.tournamentEndDateTime),
-                          style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 14,
-                            color: Colors.grey[700],
-                          ),
-                        ),
-                      ],
-                    ),
-                    // const SizedBox(height: 1),
-                    Row(
-                      children: [
-                        const Text("Time Left:",style: TextStyle(
-                          color: Colors.black,
-
-                        ),),
-                        StreamBuilder<String>(
-                          stream: _timeStreamController.stream,
-                          builder: (context, snapshot) {
-                            return Text(
-                              '${snapshot.data}',
-                              style: Get.textTheme.labelMedium?.copyWith(
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Column(
+                    // mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Text(
+                              widget.tournament.tournamentName,
+                              style: Get.textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 12,
+                                fontSize: 18,
+                                color: AppTheme.darkYellowColor,
                               ),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                    // const SizedBox(height: 2),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        ElevatedButton(
-                          onPressed: () {
-                            if (widget.tournament.registeredTeamsCount ==
-                                widget.tournament.tournamentLimit) {
-                              return;
-                            }
-                            controller.setSelectedTournament(widget.tournament);
-                            Get.to(() => const RegisterTeam());
-                          },
-                          style: ButtonStyle(
-                            padding: WidgetStateProperty.all(
-                              const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                              softWrap: true,
+                              maxLines: 1,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            backgroundColor:
-                            WidgetStateProperty.resolveWith((states) {
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              Get.bottomSheet(
+                                IButtonDialog(
+                                  organizerName: widget.tournament.organizerName!,
+                                  location: widget.tournament.stadiumAddress,
+                                  tournamentName: widget.tournament.tournamentName,
+                                  tournamentPrice: widget.tournament.fees.toString(),
+                                  coverPhoto: widget.tournament.coverPhoto,
+                                ),
+                                backgroundColor: Colors.white,
+                              );
+                            },
+                            icon: const Icon(Icons.info_outline_rounded, size: 18),
+                            color: Colors.grey,
+                          ),
+                        ],
+                      ),
+                      const Row(
+                        children: [
+                          Text(
+                            'Start Date',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            'End Date',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 16,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Text(
+                            formatDateTime('dd/MM/yyyy', widget.tournament.tournamentStartDateTime),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Text(
+                            formatDateTime('dd/MM/yyyy', widget.tournament.tournamentEndDateTime),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 14,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ],
+                      ),
+                      // const SizedBox(height: 1),
+                      Row(
+                        children: [
+                          const Text("Time Left:",style: TextStyle(
+                            color: Colors.black,
+                          ),),
+                          StreamBuilder<String>(
+                            stream: _timeStreamController.stream,
+                            builder: (context, snapshot) {
+                              return Text(
+                                '${snapshot.data}',
+                                style: Get.textTheme.labelMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 12,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      // const SizedBox(height: 2),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          ElevatedButton(
+                            onPressed: () {
                               if (widget.tournament.registeredTeamsCount ==
                                   widget.tournament.tournamentLimit) {
-                                return Colors.grey;
+                                return;
                               }
-                              if (states.contains(WidgetState.pressed)) {
-                                return AppTheme.secondaryYellowColor.withOpacity(0.8);
-                              } else {
-                                return AppTheme.secondaryYellowColor;
-                              }
-                            }),
-                          ),
-                          child: Text(
-                            'Join Now',
-                            style: Get.textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.w300,
-                              fontSize: 14,
-                              color: Colors.white,
+                              controller.setSelectedTournament(widget.tournament);
+                              Get.to(() => const RegisterTeam());
+                            },
+                            style: ButtonStyle(
+                              padding: WidgetStateProperty.all(
+                                const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                              ),
+                              backgroundColor:
+                              WidgetStateProperty.resolveWith((states) {
+                                if (widget.tournament.registeredTeamsCount ==
+                                    widget.tournament.tournamentLimit) {
+                                  return Colors.grey;
+                                }
+                                if (states.contains(WidgetState.pressed)) {
+                                  return AppTheme.secondaryYellowColor.withOpacity(0.8);
+                                } else {
+                                  return AppTheme.secondaryYellowColor;
+                                }
+                              }),
+                            ),
+                            child: Text(
+                              'Join Now',
+                              style: Get.textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.w300,
+                                fontSize: 14,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(width:10),
-                        Text(
-                          'Team: ${widget.tournament.registeredTeamsCount}/${widget.tournament.tournamentLimit}',
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                          const SizedBox(width:10),
+                          Text(
+                            'Team: ${widget.tournament.registeredTeamsCount}/${widget.tournament.tournamentLimit}',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        )
+            ],
+          )
+      ),
     );
   }
 }

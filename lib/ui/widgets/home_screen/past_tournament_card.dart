@@ -203,16 +203,18 @@ class _Card extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Text(
-                    winnerText,
-                    style: const TextStyle(
-                      color: AppTheme.primaryColor,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Text(
+                      winnerText,
+                      style: const TextStyle(
+                        color: AppTheme.primaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                  const Spacer(),
+                  // const Spacer(),
                   GestureDetector(
                     onTap: (){
                       logger.d("The TournamentId is:${tournamentdata.id} }");

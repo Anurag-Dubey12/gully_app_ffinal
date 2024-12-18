@@ -209,6 +209,7 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                     child: tournament != null
                         ? TournamentCard(
                       tournament: tournament,
+                      isSearch: true,
                     )
                         : const SizedBox.shrink(),
                   );

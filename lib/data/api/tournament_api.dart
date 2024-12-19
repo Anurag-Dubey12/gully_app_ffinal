@@ -116,6 +116,37 @@ class TournamentApi {
     return ApiResponse.fromJson(response.body);
   }
 
+  Future<ApiResponse> tournamentPointsTable({required String tourId}) async {
+    final response=await repo.get("/team/table/$tourId");
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> teamElimination({
+    required String tourId,
+    required List<String> teamId,
+    required String action}) async {
+    final response = await repo
+       .post('tournament/eliminate-team', {
+
+    });
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(response.body?['message'] ?? 'Bad Request');
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+
   Future<ApiResponse> organizeMatch(
       {required String tourId,
       required String team1,

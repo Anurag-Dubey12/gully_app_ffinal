@@ -279,7 +279,7 @@ class CardState extends State<Card> {
            Positioned(
             top: 8,
             right: 8,
-            child: BlinkingLiveText(ismatchover: "Live",color: Colors.green,),
+            child: BlinkingLiveText(status: "Live",color: Colors.green,),
           ),
         ],
       ),

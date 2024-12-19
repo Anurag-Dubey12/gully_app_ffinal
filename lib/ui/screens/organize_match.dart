@@ -6,12 +6,15 @@ import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/utils/FallbackImageProvider.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:intl/intl.dart';
 
 import '../../data/controller/auth_controller.dart';
 import '../../data/controller/tournament_controller.dart';
+import '../../data/model/points_table_model.dart';
+import '../../utils/CustomItemCheckbox.dart';
 import 'current_tournament_list.dart';
 
 class SelectOrganizeTeam extends StatefulWidget {
@@ -20,7 +23,13 @@ class SelectOrganizeTeam extends StatefulWidget {
   final String? title;
   final MatchupModel? match;
   final String? tourId;
-  const SelectOrganizeTeam({super.key, this.title, this.tournament, this.round,this.match,this.tourId});
+  const SelectOrganizeTeam(
+      {super.key,
+      this.title,
+      this.tournament,
+      this.round,
+      this.match,
+      this.tourId});
 
   @override
   State<SelectOrganizeTeam> createState() => _SelectOrganizeTeamState();
@@ -31,7 +40,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
   TeamModel? selectedTeam2;
   // List<TeamModel> leftSideteams = [];
   // List<TeamModel> rightSideteams = [];
-  List<TeamModel> totalteams= [];
+  List<TeamModel> totalteams = [];
   DateTime? selectedDate;
   String? selectedRound;
   @override
@@ -50,7 +59,6 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
       errorSnackBar('Please register a team first').then((_) => Get.back());
       return;
     }
-
     setState(() {
       totalteams = teams;
     });
@@ -60,15 +68,16 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
       logger.d("Total teams: $totalteams");
       setState(() {
         selectedTeam1 = totalteams.firstWhereOrNull(
-              (team) => team.id == widget.match!.team1.id,
+          (team) => team.id == widget.match!.team1.id,
         );
         selectedTeam2 = totalteams.firstWhereOrNull(
-              (team) => team.id == widget.match!.team2.id,
+          (team) => team.id == widget.match!.team2.id,
         );
         if (widget.match!.matchDate != null) {
           selectedDate = widget.match!.matchDate;
         } else {
-          selectedDate = widget.tournament?.tournamentStartDateTime ?? DateTime.now();
+          selectedDate =
+              widget.tournament?.tournamentStartDateTime ?? DateTime.now();
         }
         if (widget.match != null) {
           selectedRound = widget.match!.round;
@@ -79,19 +88,21 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
         logger.d("Selected Round: $selectedRound");
       });
     } else {
-      selectedDate = widget.tournament?.tournamentStartDateTime ?? DateTime.now();
+      selectedDate =
+          widget.tournament?.tournamentStartDateTime ?? DateTime.now();
     }
     // logger.d("Selected Round: $selectedRound");
     // logger.d("The Total Teams Are:${totalteams.length}");
     // logger.d('TEAMS: $teams');
   }
+
   void RoundSelectionDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return InputRoundNumber(
           existingRound: selectedRound,
-          onItemSelected: (value){
+          onItemSelected: (value) {
             setState(() {
               selectedRound = value;
               logger.d("Selected Round: $selectedRound");
@@ -99,6 +110,193 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
           },
         );
       },
+    );
+  }
+
+  List<TeamModel> selectedTeamsForElimination = [];
+
+  Widget _buildCustomCheckbox({
+    required bool isSelected,
+    required TeamModel team,
+    required Function(bool?) onChanged,
+  }) {
+    return InkWell(
+      onTap: () => onChanged(!isSelected),
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: isSelected ? AppTheme.secondaryYellowColor : Colors.grey[300]!,
+            width: 1,
+          ),
+          borderRadius: BorderRadius.circular(8),
+          color: isSelected ? Colors.white : Colors.grey[50],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: isSelected ? AppTheme.secondaryYellowColor : Colors.grey[400]!,
+                  width: 1,
+                ),
+                borderRadius: BorderRadius.circular(4),
+                color: isSelected ? AppTheme.secondaryYellowColor : Colors.white,
+              ),
+              child: isSelected
+                  ? const Icon(
+                Icons.check,
+                size: 14,
+                color: Colors.white,
+              )
+                  : null,
+            ),
+            const SizedBox(width: 12),
+            CircleAvatar(
+              radius: 20,
+              backgroundImage: NetworkImage(team.toImageUrl()),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                team.name,
+                style: Get.textTheme.titleMedium?.copyWith(
+                  color: Colors.black87,
+                  fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void showEliminationBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setState) => Container(
+          height: Get.height*0.95,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.all(
+              Radius.circular(10),
+            ),
+          ),
+          child: SafeArea(
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                  child: Row(
+                    children: [
+                      InkWell(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.black
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                            size: 22,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            'Eliminate Teams',
+                            style: Get.textTheme.titleLarge?.copyWith(
+                              color: Colors.black,
+                              fontSize: 20
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (selectedTeamsForElimination.isNotEmpty)
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 5,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Text(
+                            '${selectedTeamsForElimination.length} selected',
+                            style: Get.textTheme.bodyMedium?.copyWith(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                // Teams List
+                Expanded(
+                  child: ListView.builder(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    itemCount: totalteams.length,
+                    itemBuilder: (context, index) {
+                      final team = totalteams[index];
+                      return CustomItemCheckbox(
+                        isSelected: selectedTeamsForElimination.contains(team),
+                        title: team.name,
+                        imageUrl: team.toImageUrl(),
+                        selectedColor: AppTheme.primaryColor,
+                        titleStyle: Get.textTheme.titleMedium,
+                        onTap: () {
+                          setState(() {
+                            if (selectedTeamsForElimination.contains(team)) {
+                              selectedTeamsForElimination.remove(team);
+                            } else {
+                              selectedTeamsForElimination.add(team);
+                            }
+                          });
+                        },
+                      );
+                    },
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, -5),
+                      ),
+                    ],
+                  ),
+                  child: PrimaryButton(
+                    onTap: () async {
+                      if (selectedTeamsForElimination.isEmpty) {
+                        errorSnackBar('Please select teams to eliminate');
+                        return;
+                      }
+                    },
+                    title: 'Eliminate Teams',
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -135,11 +333,12 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                           children: [
                             Center(
                               child: Text(
-                                  widget.match != null ? 'Edit Matchup' : 'Organize',
+                                  widget.match != null
+                                      ? 'Edit Matchup'
+                                      : 'Organize',
                                   style: Get.textTheme.headlineLarge?.copyWith(
                                       color: Colors.white,
-                                      fontWeight: FontWeight.bold)
-                              ),
+                                      fontWeight: FontWeight.bold)),
                             ),
                             SizedBox(height: Get.height * 0.04),
                             Row(
@@ -161,35 +360,46 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                       DecoratedBox(
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 6),
                                           child: DropdownButton<TeamModel?>(
                                             value: selectedTeam1,
-                                            icon: const Icon(Icons.arrow_drop_down),
+                                            icon: const Icon(
+                                                Icons.arrow_drop_down),
                                             padding: EdgeInsets.zero,
                                             iconSize: 24,
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                             alignment: Alignment.bottomCenter,
                                             iconEnabledColor: Colors.black,
-                                            style: const TextStyle(color: Colors.black),
+                                            style: const TextStyle(
+                                                color: Colors.black),
                                             underline: const SizedBox(),
                                             onChanged: (TeamModel? newValue) {
                                               setState(() {
                                                 selectedTeam1 = newValue!;
                                               });
                                             },
-                                            items: totalteams.map<DropdownMenuItem<TeamModel?>>(
-                                                  (TeamModel value) {
-                                                return DropdownMenuItem<TeamModel?>(
+                                            items: totalteams.map<
+                                                DropdownMenuItem<TeamModel?>>(
+                                              (TeamModel value) {
+                                                return DropdownMenuItem<
+                                                    TeamModel?>(
                                                   value: value,
                                                   child: SizedBox(
                                                     width: 80,
                                                     child: Text(
                                                       value.name,
-                                                      style: Get.textTheme.labelMedium?.copyWith(fontSize: 12),
-                                                      overflow: TextOverflow.ellipsis,
+                                                      style: Get
+                                                          .textTheme.labelMedium
+                                                          ?.copyWith(
+                                                              fontSize: 12),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 2,
                                                     ),
                                                   ),
@@ -207,10 +417,12 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                     const SizedBox(height: 20),
                                     Chip(
                                       label: Text('VS',
-                                          style: Get.textTheme.labelLarge?.copyWith(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold)),
-                                      backgroundColor: AppTheme.secondaryYellowColor,
+                                          style: Get.textTheme.labelLarge
+                                              ?.copyWith(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold)),
+                                      backgroundColor:
+                                          AppTheme.secondaryYellowColor,
                                       side: BorderSide.none,
                                     ),
                                   ],
@@ -222,41 +434,53 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                       CircleAvatar(
                                         radius: 43,
                                         backgroundColor: Colors.white,
-                                        backgroundImage: NetworkImage(selectedTeam2?.toImageUrl() ?? ""),
+                                        backgroundImage: NetworkImage(
+                                            selectedTeam2?.toImageUrl() ?? ""),
                                       ),
                                       const SizedBox(height: 20),
                                       DecoratedBox(
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 6),
                                           child: DropdownButton<TeamModel?>(
                                             value: selectedTeam2,
-                                            icon: const Icon(Icons.arrow_drop_down),
+                                            icon: const Icon(
+                                                Icons.arrow_drop_down),
                                             padding: EdgeInsets.zero,
                                             iconSize: 24,
-                                            borderRadius: BorderRadius.circular(10),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
                                             alignment: Alignment.bottomCenter,
                                             iconEnabledColor: Colors.black,
-                                            style: const TextStyle(color: Colors.black),
+                                            style: const TextStyle(
+                                                color: Colors.black),
                                             underline: const SizedBox(),
                                             onChanged: (TeamModel? newValue) {
                                               setState(() {
                                                 selectedTeam2 = newValue!;
                                               });
                                             },
-                                            items: totalteams.map<DropdownMenuItem<TeamModel?>>(
-                                                  (TeamModel? value) {
-                                                return DropdownMenuItem<TeamModel?>(
+                                            items: totalteams.map<
+                                                DropdownMenuItem<TeamModel?>>(
+                                              (TeamModel? value) {
+                                                return DropdownMenuItem<
+                                                    TeamModel?>(
                                                   value: value,
                                                   child: SizedBox(
                                                     width: 80,
                                                     child: Text(
                                                       value!.name,
-                                                      style: Get.textTheme.labelMedium?.copyWith(fontSize: 12),
-                                                      overflow: TextOverflow.ellipsis,
+                                                      style: Get
+                                                          .textTheme.labelMedium
+                                                          ?.copyWith(
+                                                              fontSize: 12),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 2,
                                                     ),
                                                   ),
@@ -279,9 +503,20 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                   onTap: () async {
                                     final date = await showDatePicker(
                                         context: context,
-                                        initialDate: widget.tourId!=null ?controller.startDateForPicker :widget.tournament!.tournamentStartDateTime,
-                                        firstDate: widget.tourId!=null ?controller.startDateForPicker ?? DateTime.now():widget.tournament!.tournamentStartDateTime,
-                                        lastDate:widget.tourId!=null ?controller.endDateForPicker?? DateTime.now() : widget.tournament!.tournamentEndDateTime);
+                                        initialDate: widget.tourId != null
+                                            ? controller.startDateForPicker
+                                            : widget.tournament!
+                                                .tournamentStartDateTime,
+                                        firstDate: widget.tourId != null
+                                            ? controller.startDateForPicker ??
+                                                DateTime.now()
+                                            : widget.tournament!
+                                                .tournamentStartDateTime,
+                                        lastDate: widget.tourId != null
+                                            ? controller.endDateForPicker ??
+                                                DateTime.now()
+                                            : widget.tournament!
+                                                .tournamentEndDateTime);
                                     setState(() {
                                       if (date != null) {
                                         if (selectedDate != null) {
@@ -301,7 +536,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius:
-                                        BorderRadius.circular(10)),
+                                            BorderRadius.circular(10)),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Row(
@@ -310,7 +545,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                               selectedDate == null
                                                   ? 'Select Date'
                                                   : DateFormat('dd MMM yyyy')
-                                                  .format(selectedDate!),
+                                                      .format(selectedDate!),
                                               style: const TextStyle(
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.w500)),
@@ -319,7 +554,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                             Icons.calendar_month,
                                             size: 18,
                                             color:
-                                            AppTheme.secondaryYellowColor,
+                                                AppTheme.secondaryYellowColor,
                                           )
                                         ],
                                       ),
@@ -332,7 +567,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                     final time = await showTimePicker(
                                         context: context,
                                         initialEntryMode:
-                                        TimePickerEntryMode.dialOnly,
+                                            TimePickerEntryMode.dialOnly,
                                         initialTime: TimeOfDay.now());
                                     if (time != null) {
                                       setState(() {
@@ -349,7 +584,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius:
-                                        BorderRadius.circular(10)),
+                                            BorderRadius.circular(10)),
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
                                       child: Row(
@@ -358,7 +593,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                             selectedDate == null
                                                 ? 'Select Time'
                                                 : DateFormat('hh:mm a')
-                                                .format(selectedDate!),
+                                                    .format(selectedDate!),
                                             style: const TextStyle(
                                                 color: Colors.black,
                                                 fontWeight: FontWeight.w500),
@@ -368,7 +603,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                             Icons.timer_sharp,
                                             size: 18,
                                             color:
-                                            AppTheme.secondaryYellowColor,
+                                                AppTheme.secondaryYellowColor,
                                           )
                                         ],
                                       ),
@@ -383,13 +618,15 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                               onTap: RoundSelectionDialog,
                               child: Container(
                                 width: double.infinity,
-                                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 12, horizontal: 16),
                                 decoration: BoxDecoration(
                                   color: Colors.white,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       selectedRound ?? 'Select Round',
@@ -402,6 +639,10 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                             ),
                             SizedBox(height: Get.height * 0.02),
                             PrimaryButton(
+                              onTap: showEliminationBottomSheet,
+                              title: 'Eliminate Teams',
+                            ),
+                            PrimaryButton(
                               onTap: () async {
                                 if (selectedDate == null) {
                                   errorSnackBar('Please select a date');
@@ -412,21 +653,23 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                   errorSnackBar('Please select teams');
                                   return;
                                 }
-                                if(selectedTeam1==selectedTeam2){
-                                  errorSnackBar('Please select different teams on Both the side');
+                                if (selectedTeam1 == selectedTeam2) {
+                                  errorSnackBar(
+                                      'Please select different teams on Both the side');
                                   return;
                                 }
-                                if(widget.tourId!=null){
-                                  final Map<String,dynamic>obj={
+                                if (widget.tourId != null) {
+                                  final Map<String, dynamic> obj = {
                                     'tournamentId': widget.tourId,
-                                    'team1ID':  selectedTeam1!.id,
-                                    'team2ID':  selectedTeam2!.id,
+                                    'team1ID': selectedTeam1!.id,
+                                    'team2ID': selectedTeam2!.id,
                                     'round': selectedRound,
                                     'matchNo': 1,
-                                    'dateTime':selectedDate!.toIso8601String(),
+                                    'dateTime': selectedDate!.toIso8601String(),
                                   };
                                   logger.d("Selected Date is:$selectedDate");
-                                  bool response=await controller.editMatch(obj,widget.match!.id);
+                                  bool response = await controller.editMatch(
+                                      obj, widget.match!.id);
                                   logger.d(response);
                                   if (response) {
                                     successSnackBar('Matchup Edited')
@@ -440,7 +683,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                     selectedTeam2!.id,
                                     selectedDate!,
                                     1,
-                                    selectedRound??'');
+                                    selectedRound ?? '');
                                 logger.d(response);
                                 if (response) {
                                   successSnackBar('Matchup created')
@@ -462,3 +705,4 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
     );
   }
 }
+

@@ -144,7 +144,7 @@ class MatchupCard extends StatelessWidget {
                         matchup.team1.name,
                         scoreboard?.firstInningHistory==null
                             ? "Did Not Bat"
-                            : '${scoreboard?.firstInnings?.totalScore}/${scoreboard?.firstInnings?.totalWickets ?? 0}',
+                            : '${scoreboard?.firstInnings?.totalScore??0}/${scoreboard?.firstInnings?.totalWickets ?? 0}',
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 8.0),

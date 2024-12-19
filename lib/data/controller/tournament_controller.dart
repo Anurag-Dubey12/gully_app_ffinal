@@ -14,6 +14,8 @@ import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../model/points_table_model.dart';
+
 
 class TournamentController extends GetxController
     with StateMixin<TournamentModel?> {
@@ -433,6 +435,20 @@ class TournamentController extends GetxController
       rethrow;
     }
   }
+  RxList<PointTableModel> points_table=<PointTableModel>[].obs;
+  Future<List<PointTableModel>> tournamentPointsTable(String tourId)async{
+    try{
+      final response=await tournamentApi.tournamentPointsTable(tourId:tourId);
+      return points_table.value=response.data![''].
+            map<PointTableModel>((e)=>PointTableModel.fromJson(e)).toList();
+
+    }catch (e) {
+      errorSnackBar("Points Table Not Found");
+      logger.e(e.toString());
+      rethrow;
+    }
+  }
+
 
   Future<double> getTournamentFee(String tournamentId) async {
     final res =

@@ -20,6 +20,8 @@ class MatchupModel {
   final String? tournamentId;
   @JsonKey(name: 'Round')
   final String? round;
+  @JsonKey(name: 'status')
+  final String? status;
   @JsonKey(name: 'winningTeamId')
   final String? winningTeam;
 
@@ -34,6 +36,7 @@ class MatchupModel {
     required this.id,
     required this.tournament,
     required this.round,
+    required this.status,
     required this.winningTeam
   });
 
@@ -57,6 +60,7 @@ class MatchupModel {
       scoreBoard: null,
       tournament: null,
       round: null,
+      status: null,
       winningTeam: null,
       id: '',
     );

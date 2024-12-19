@@ -10,9 +10,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify search">
+      <change afterPath="$PROJECT_DIR$/lib/data/model/points_table_model.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/utils/CustomItemCheckbox.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/matchup_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/matchup_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/matchup_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/matchup_model.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/schedule_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/schedule_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/BlinkingLiveText.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils/BlinkingLiveText.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -173,14 +182,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00051" summary="firebase id changes">
-      <option name="closed" value="true" />
-      <created>1727697420695</created>
-      <option name="number" value="00051" />
-      <option name="presentableId" value="LOCAL-00051" />
-      <option name="project" value="LOCAL" />
-      <updated>1727697420696</updated>
     </task>
     <task id="LOCAL-00052" summary="shop screen modify">
       <option name="closed" value="true" />
@@ -566,7 +567,15 @@
       <option name="project" value="LOCAL" />
       <updated>1734523120478</updated>
     </task>
-    <option name="localTasksCounter" value="100" />
+    <task id="LOCAL-00100" summary="modify search">
+      <option name="closed" value="true" />
+      <created>1734526355917</created>
+      <option name="number" value="00100" />
+      <option name="presentableId" value="LOCAL-00100" />
+      <option name="project" value="LOCAL" />
+      <updated>1734526355917</updated>
+    </task>
+    <option name="localTasksCounter" value="101" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1187,6 +1196,12 @@
           <option name="totalLines" value="4804982" />
           <option name="info" value="modify search" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1734526358856" />
+          <option name="linesCode" value="39299" />
+          <option name="totalLines" value="4804990" />
+          <option name="info" value="modify search" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1756,9 +1771,9 @@
           <option name="info" value="Dec 17, 2024" />
         </TimePoint>
         <TimePoint>
-          <option name="timestamp" value="1734523130985" />
-          <option name="linesCode" value="39298" />
-          <option name="totalLines" value="4804982" />
+          <option name="timestamp" value="1734526358856" />
+          <option name="linesCode" value="39299" />
+          <option name="totalLines" value="4804990" />
           <option name="info" value="Dec 18, 2024" />
         </TimePoint>
       </list>

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/ui/screens/schedule_screen.dart';
+import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/home_screen/no_tournament_card.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -238,9 +239,17 @@ class _CardState extends State<_Card> {
               top: 7,
               left: 10,
               child: BlinkingLiveText(
-                ismatchover: widget.tournament.winningTeam!=null ?"Ended":"Live",
-                color:widget.tournament.winningTeam!=null ? Colors.red :Colors.green),
+                status: widget.tournament.status== 'played'?'Ended':widget.tournament.status!.capitalize??'',
+                color: widget.tournament.status == 'Live'
+                    ? Colors.green
+                    : widget.tournament.status == 'upcoming'
+                    ? AppTheme.primaryColor
+                    : widget.tournament.status == 'played'
+                    ? Colors.red
+                    : Colors.grey,
+              ),
             ),
+
             Positioned(
               top: 1,
               right: 10,

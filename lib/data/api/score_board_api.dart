@@ -60,4 +60,5 @@ class ScoreboardApi {
 
     return ApiResponse.fromJson(response.body);
   }
+
 }

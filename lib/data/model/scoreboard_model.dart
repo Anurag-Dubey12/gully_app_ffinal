@@ -47,7 +47,7 @@ class ScoreboardModel {
     name: 'extras',
   )
   ExtraModel extras =
-      ExtraModel(wides: 0, noBalls: 0, byes: 0, legByes: 0, penalty: 0);
+  ExtraModel(wides: 0, noBalls: 0, byes: 0, legByes: 0, penalty: 0);
 
   int ballsToBowl = 6;
   @JsonKey(
@@ -268,6 +268,7 @@ class ScoreboardModel {
     return false;
   }
 
+
   String? get secondInningsText {
     logger.i('Second Inning text is called');
     if (currentInnings == 2) {
@@ -288,8 +289,6 @@ class ScoreboardModel {
       if (isSecondInningsOver &&
           currentInningsScore == firstInnings!.totalScore) {
         // final MatchupModel match;
-        
-
         return "Match Tied";
       }
       final int runsRequired =
@@ -304,6 +303,7 @@ class ScoreboardModel {
     }
     return null;
   }
+
   // String? _getWinningTeamNameForTiedMatch() {
   //
   //   MatchupModel match;
@@ -525,7 +525,7 @@ class ScoreboardModel {
     }
     logger.f('Updating second Innings');
     final Map<String, PartnershipModel> tempPartnerships =
-        Map.from(partnerships);
+    Map.from(partnerships);
     partnerships.clear();
     if (currentInnings == 1) {
       firstInnings = InningsModel(
@@ -592,7 +592,7 @@ class ScoreboardModel {
     try {
       // assign partnerships to a new variable and clear the partnerships
       final Map<String, PartnershipModel> tempPartnerships =
-          Map.from(partnerships);
+      Map.from(partnerships);
       partnerships.clear();
       if (currentInnings == 1) {
         firstInnings = InningsModel(

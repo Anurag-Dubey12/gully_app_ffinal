@@ -39,6 +39,7 @@ class AuthApi {
       'base64Image': base64,
       'isNewUser': isNewUser
     });
+
     if (response.statusCode != 200) {
       throw response.body?['message'] ?? 'Unable to Process Request';
     }

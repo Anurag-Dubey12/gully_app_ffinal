@@ -21,9 +21,6 @@ class ScoreBoardController extends GetxController with StateMixin {
   MatchupModel? match;
   late ScoreboardModel _lastScoreboardInstance;
   Rx<io.Socket?> socket = Rx(null);
-
-  final RxString secondInningsText = RxString('');
-
   RxList<EventType> events = RxList<EventType>([]);
 
   ScoreBoardController({required ScoreboardApi scoreboardApi})
@@ -75,44 +72,113 @@ class ScoreBoardController extends GetxController with StateMixin {
       logger.e(e);
     }
   }
+  RxString tiename=''.obs;
   // String? updateSecondInningsText() {
   //   logger.d("Launched Controller");
   //   match!.getWinningTeamName();
   // }
 
-  showPopups() {
+  //Method used for get match winner
+  Future<String?> getWinnerNameForMatch(String matchId) async {
+    try {
+      final response = await _scoreboardApi.getSingleMatchup(matchId);
+      if (response.data != null && response.data!['match'] != null) {
+        final matchData = response.data!['match'];
+        final winningTeamId = matchData['winningTeamId'];
+        final team1 = matchData['team1'];
+        final team2 = matchData['team2'];
+
+        if (winningTeamId == team1['_id']) {
+          tiename.value = team1['teamName'];
+          return tiename.value;
+        } else if (winningTeamId == team2['_id']) {
+          tiename.value = team2['teamName'];
+          return tiename.value;
+        }
+      }
+      return null;
+    } catch (e) {
+      logger.e('Error fetching winner name: $e');
+      return null;
+    }
+  }
+  void updateTieWinner(String matchId) async {
+    final winnerName = await getWinnerNameForMatch(matchId);
+    if (winnerName != null) {
+      tiename.value = winnerName;
+      update();
+    }
+  }
+
+
+  void showPopups() async {
     if (scoreboard.value?.isSecondInningsOver ?? false) {
       final firstInning = scoreboard.value?.firstInnings!.totalScore;
       final secondInning = scoreboard.value?.secondInnings!.totalScore;
+
       if (firstInning! > secondInning!) {
         successSnackBar('Team ${scoreboard.value?.team1.name} Won the Match');
-      }
-      if (firstInning < secondInning) {
+        if (!isChallenge) {
+          await _scoreboardApi.updateFinalScoreBoard(
+              scoreboard.value!.matchId,
+              scoreboard.value!.team1.id
+          );
+        } else {
+          await _scoreboardApi.updateFinalChallengeScoreBoard(
+              scoreboard.value!.matchId,
+              scoreboard.value!.team1.id
+          );
+        }
+      } else if (firstInning < secondInning) {
         successSnackBar('Team ${scoreboard.value?.team2.name} Won the Match');
-      }
-      if (firstInning == secondInning) {
-        showModalBottomSheet(
-          context: Get.context!,
-          isScrollControlled: true,
-          builder: (context) => TieBreakerSheet(
-            scoreboard: scoreboard.value!,
-            onSubmit: (String winningTeamId) {
-              final winningTeam = winningTeamId == scoreboard.value!.team1.id
-                  ? scoreboard.value!.team1.name
-                  : scoreboard.value!.team2.name;
-              successSnackBar('$winningTeam wins the match!');
-              Navigator.pop(context);
-              updateFinalScoreBoard(winningTeamId);
-            },
-          ),
-        );
-        errorSnackBar('The Match is Drawn');
+        if (!isChallenge) {
+          await _scoreboardApi.updateFinalScoreBoard(
+              scoreboard.value!.matchId,
+              scoreboard.value!.team2.id
+          );
+        } else {
+          await _scoreboardApi.updateFinalChallengeScoreBoard(
+              scoreboard.value!.matchId,
+              scoreboard.value!.team2.id
+          );
+        }
+      } else if (firstInning == secondInning) {
+        try {
+          final winnerName = await getWinnerNameForMatch(scoreboard.value!.matchId);
+          if (winnerName != null) {
+            successSnackBar('$winnerName wins the match!');
+          } else {
+            successSnackBar('Match Tied');
+          }
+        } catch (e) {
+          logger.e('Error showing winner for tied match: $e');
+          successSnackBar('Match Tied');
+        }
       }
     } else if (scoreboard.value?.isFirstInningsOver ?? false) {
-      successSnackBar(
-          'First Innings has been completed you can start 2nd inning');
+      successSnackBar('First Innings has been completed you can start 2nd inning');
     }
   }
+
+  // showPopups() {
+  //   if (scoreboard.value?.isSecondInningsOver ?? false) {
+  //     final firstInning = scoreboard.value?.firstInnings!.totalScore;
+  //     final secondInning = scoreboard.value?.secondInnings!.totalScore;
+  //     if (firstInning! > secondInning!) {
+  //       successSnackBar('Team ${scoreboard.value?.team1.name} Won the Match');
+  //     }
+  //     if (firstInning < secondInning) {
+  //       successSnackBar('Team ${scoreboard.value?.team2.name} Won the Match');
+  //     }
+  //     if (firstInning == secondInning) {
+  //       getWinnerNameForMatch(scoreboard.value!.matchId);
+  //       errorSnackBar('The Match is Drawn');
+  //     }
+  //   } else if (scoreboard.value?.isFirstInningsOver ?? false) {
+  //     successSnackBar(
+  //         'First Innings has been completed you can start 2nd inning');
+  //   }
+  // }
   void emitEvent() {
     logger.i('Emiting Message');
     socket.value?.emit('scoreboard', {
@@ -226,13 +292,13 @@ class ScoreBoardController extends GetxController with StateMixin {
 
   Future<bool> addEvent(EventType type,
       {String? bowlerId,
-      String? strikerId,
-      String? selectedBatsmanId,
-      String? playerToRetire,
-      PlayerModel? striker,
-      PlayerModel? nonStriker,
-      PlayerModel? bowler,
-      int? runs}) async {
+        String? strikerId,
+        String? selectedBatsmanId,
+        String? playerToRetire,
+        PlayerModel? striker,
+        PlayerModel? nonStriker,
+        PlayerModel? bowler,
+        int? runs}) async {
     if (scoreboard.value?.isAllOut ?? false) {
       if (scoreboard.value?.currentInnings == 1) {
         // opps all out start 2nd inning
@@ -296,7 +362,7 @@ class ScoreBoardController extends GetxController with StateMixin {
         break;
 
       case EventType.wicket:
-        // scoreboard.value!.addWicket();
+      // scoreboard.value!.addWicket();
 
 
         break;
@@ -344,13 +410,15 @@ class ScoreBoardController extends GetxController with StateMixin {
               final winningTeam = winningTeamId == scoreboard.value!.team1.id
                   ? scoreboard.value!.team1.name
                   : scoreboard.value!.team2.name;
+              logger.d("The winner is $winningTeam");
               successSnackBar('$winningTeam wins the match!');
+              Navigator.of(context).pop();
               updateFinalScoreBoard(winningTeamId);
             },
           ),
         );
       }else{
-      updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
+        updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
       }
     } else if (scoreboard.value!.isSecondInningsOver &&
         scoreboard.value!.isChallenge!) {
@@ -370,8 +438,8 @@ class ScoreBoardController extends GetxController with StateMixin {
 
   void endOfInnings(
       {required PlayerModel striker,
-      required PlayerModel nonStriker,
-      required PlayerModel bowler}) {
+        required PlayerModel nonStriker,
+        required PlayerModel bowler}) {
     scoreboard.value!.endOfInnings(
       strikerT: striker,
       nonstrikerT: nonStriker,

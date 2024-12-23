@@ -42,25 +42,37 @@ class CurrentTournamentCard extends GetView<TournamentController> {
           else {
 
             //For sorting the match if ended it will forward towards the end of the list
-            final sortedmatch=List<MatchupModel>.from(controller.matches)
-            ..sort((live,ended){
-              bool aIsLive=live.winningTeam==null;
-              bool bIsLive=ended.winningTeam==null;
+            final sortedMatches = List<MatchupModel>.from(controller.matches)
+              ..sort((a, b) {
+                int getPriority(String? status) {
+                  switch (status?.toLowerCase()) {
+                    case 'current': return 0;
+                    case 'upcoming': return 1;
+                    case 'played': return 2;
+                    default: return 3;
+                  }
+                }
 
-              if(aIsLive && !bIsLive)return -1;
-              if(!aIsLive && bIsLive)return 1;
-              return ended.tournamentId!.compareTo(live.tournamentId ??'');
-            });
+                int priorityA = getPriority(a.status);
+                int priorityB = getPriority(b.status);
+
+                if (priorityA != priorityB) {
+                  return priorityA.compareTo(priorityB);
+                }
+
+                return (a.tournamentId ?? '').compareTo(b.tournamentId ?? '');
+              });
+
             return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 // itemCount: controller.matches.length,
-                itemCount: sortedmatch.length,
+                itemCount: sortedMatches.length,
                 shrinkWrap: true,
                 padding: const EdgeInsets.only(bottom: 10, top: 10),
                 itemBuilder: (context, snapshot) {
                   return _Card(
                     // tournament: controller.matches[snapshot],
-                    tournament: sortedmatch[snapshot],
+                    tournament: sortedMatches[snapshot],
                   );
                 });
           }
@@ -93,6 +105,7 @@ class _CardState extends State<_Card> {
         ? null
         : ScoreboardModel.fromJson(widget.tournament.scoreBoard!);
     // logger.d("The second inning is over:${widget.tournament.getWinningTeamName()}");
+    logger.d("Match Logo:${tournamentdata.coverPhoto}");
     logger.d("The match Id of Tournament are :${widget.tournament.tournamentId}");
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
@@ -239,8 +252,10 @@ class _CardState extends State<_Card> {
               top: 7,
               left: 10,
               child: BlinkingLiveText(
-                status: widget.tournament.status== 'played'?'Ended':widget.tournament.status!.capitalize??'',
-                color: widget.tournament.status == 'Live'
+                status: widget.tournament.status== 'played'?'Ended':
+                widget.tournament.status== 'current'?'Live':
+                widget.tournament.status!.capitalize??'',
+                color: widget.tournament.status == 'current'
                     ? Colors.green
                     : widget.tournament.status == 'upcoming'
                     ? AppTheme.primaryColor

@@ -185,7 +185,7 @@ class _Card extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                     side: const BorderSide(color: Colors.white)),
                 label: Text(
-                  '${tournament.pendingTeamsCount}/${tournament.tournamentLimit}',
+                  '${tournament.registeredTeamsCount}/${tournament.tournamentLimit}',
                   style: Get.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,

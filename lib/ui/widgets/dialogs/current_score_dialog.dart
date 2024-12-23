@@ -355,8 +355,9 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                             ),
                             Obx(() => Text(
                               controller.scoreboard.value
-                                  ?.secondInningsText ??
-                                  '',
+                                  ?.secondInningsText=='Match Tied'?"${widget.match.getWinningTeamName()} Won the Match"??''
+                                  :controller.scoreboard.value
+                                  ?.secondInningsText??'',
                             )),
                             const SizedBox(height: 10),
                             Row(

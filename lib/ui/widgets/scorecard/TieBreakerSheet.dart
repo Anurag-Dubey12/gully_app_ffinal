@@ -99,10 +99,10 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
               : widget.scoreboard.team2.id;
         } else if(SelectedCriteria=='toss'){
           SelectedTeamId=team1Value>team2Value ?
-              widget.scoreboard.team1.id
+          widget.scoreboard.team1.id
               : widget.scoreboard.team2.id;
         }
-          else {
+        else {
           SelectedTeamId = team1Value > team2Value
               ? widget.scoreboard.team1.id
               : widget.scoreboard.team2.id;
@@ -430,11 +430,11 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
                 imagePath: "assets/images/umpire_wicket.png",
                 criteria: 'wickets',
               ),
-              winnerTypes(
-                label: "Super-Overs",
-                imagePath: "assets/images/umpire_wicket.png",
-                criteria: 'superovers',
-              ),
+              // winnerTypes(
+              //   label: "Super-Overs",
+              //   imagePath: "assets/images/umpire_wicket.png",
+              //   criteria: 'superovers',
+              // ),
             ],
           ),
           if (SelectedCriteria != null) ...[

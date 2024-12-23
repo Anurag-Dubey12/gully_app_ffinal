@@ -52,7 +52,7 @@ class _OpponentTournamentsScreenState extends State<OpponentTournamentsScreen> {
                           }
                           if (snapshot.hasError) {
                             return Center(
-                                child: Text(snapshot.error.toString(),
+                                child: Text("Failed to Get Data",
                                     style: Get.textTheme.bodyLarge
                                         ?.copyWith(color: Colors.red)));
                           }

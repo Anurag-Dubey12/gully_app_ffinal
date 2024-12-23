@@ -435,14 +435,19 @@ class TournamentController extends GetxController
       rethrow;
     }
   }
-  RxList<PointTableModel> points_table=<PointTableModel>[].obs;
-  Future<List<PointTableModel>> tournamentPointsTable(String tourId)async{
-    try{
-      final response=await tournamentApi.tournamentPointsTable(tourId:tourId);
-      return points_table.value=response.data![''].
-            map<PointTableModel>((e)=>PointTableModel.fromJson(e)).toList();
+  final RxList<PointTableModel> points_table = <PointTableModel>[].obs;
 
-    }catch (e) {
+  Future<List<PointTableModel>> tournamentPointsTable(String tourId) async {
+    try {
+      final response = await tournamentApi.tournamentPointsTable(tourId: tourId);
+      logger.d("Raw Points Table API response: ${response.data}");
+
+      points_table.value = (response.data!['TeamPoints'] as List)
+          .map<PointTableModel>((e) => PointTableModel.fromJson(e))
+          .toList();
+
+      return points_table;
+    } catch (e) {
       errorSnackBar("Points Table Not Found");
       logger.e(e.toString());
       rethrow;

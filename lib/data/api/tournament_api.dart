@@ -21,7 +21,7 @@ class TournamentApi {
   Future<ApiResponse> editTournament(
       Map<String, dynamic> tournament, String tournamentId) async {
     var response =
-        await repo.post('/main/editTournament/$tournamentId', tournament);
+    await repo.put('/main/editTournament/$tournamentId', tournament);
     if (response.statusCode! == 404) {
       errorSnackBar('Requested Path Not Found');
       throw Exception('Requested Path Not Found');
@@ -34,10 +34,10 @@ class TournamentApi {
 
   Future<ApiResponse> getTournamentList(
       {required double latitude,
-      required double longitude,
-      required DateTime startDate,
-      required DateTime endDate,
-      String? filter}) async {
+        required double longitude,
+        required DateTime startDate,
+        required DateTime endDate,
+        String? filter}) async {
     final obj = {
       'latitude': latitude,
       'longitude': longitude,
@@ -105,7 +105,7 @@ class TournamentApi {
     };
     logger.i(obj);
     final response =
-        await repo.post('/main/entryForm/$teamId/$tournamentId', obj);
+    await repo.post('/main/entryForm/$teamId/$tournamentId', obj);
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');
       throw Exception('Server Error');
@@ -117,7 +117,7 @@ class TournamentApi {
   }
 
   Future<ApiResponse> tournamentPointsTable({required String tourId}) async {
-    final response=await repo.get("/team/table/$tourId");
+    final response=await repo.get("/team/pointsTable/$tourId");
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');
       throw Exception('Server Error');
@@ -133,7 +133,7 @@ class TournamentApi {
     required List<String> teamId,
     required String action}) async {
     final response = await repo
-       .post('tournament/eliminate-team', {
+        .post('tournament/eliminate-team', {
 
     });
     if (response.statusCode! >= 500) {
@@ -149,8 +149,8 @@ class TournamentApi {
 
   Future<ApiResponse> organizeMatch(
       {required String tourId,
-      required String team1,
-      required String team2}) async {
+        required String team1,
+        required String team2}) async {
     final obj = {
       'team1': team1,
       'team2': team2,
@@ -181,11 +181,11 @@ class TournamentApi {
 
   Future<ApiResponse> createMatchup(
       {required String tourId,
-      required String team1,
-      required String team2,
-      required DateTime date,
-      required String round,
-      required int matchNo}) async {
+        required String team1,
+        required String team2,
+        required DateTime date,
+        required String round,
+        required int matchNo}) async {
 
     final obj = {
       'dateTime': date.toIso8601String(),
@@ -294,9 +294,9 @@ class TournamentApi {
 
   Future<ApiResponse> createOrder(
       {required double discountAmount,
-      required String tournamentId,
-      required double totalAmount,
-      required String? coupon}) async {
+        required String tournamentId,
+        required double totalAmount,
+        required String? coupon}) async {
     final response = await repo.post('/payment/createOrder', {
       'amountWithoutCoupon': discountAmount,
       'tournamentId': tournamentId,
@@ -345,15 +345,15 @@ class TournamentApi {
   // getTransactions
   Future<ApiResponse> getTransactions() async {
     try{
-    final response = await repo.get('/payment/transactionHistory');
-    if (response.statusCode! >= 500) {
-      errorSnackBar('Server Error');
-      throw Exception('Server Error');
-    } else if (response.statusCode! != 200) {
-      errorSnackBar(response.body['message']);
-      throw Exception('Bad Request');
-    }
-    return ApiResponse.fromJson(response.body);
+      final response = await repo.get('/payment/transactionHistory');
+      if (response.statusCode! >= 500) {
+        errorSnackBar('Server Error');
+        throw Exception('Server Error');
+      } else if (response.statusCode! != 200) {
+        errorSnackBar(response.body['message']);
+        throw Exception('Bad Request');
+      }
+      return ApiResponse.fromJson(response.body);
     }catch(e){
       logger.d("Error in API call: $e");
       rethrow;

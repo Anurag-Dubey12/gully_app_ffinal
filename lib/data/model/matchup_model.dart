@@ -67,6 +67,7 @@ class MatchupModel {
   }
 
   String? getWinningTeamName(){
+
     if(winningTeam==null){}
     if(winningTeam==team1.id){
       return team1.name;

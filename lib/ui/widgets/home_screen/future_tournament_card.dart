@@ -95,7 +95,7 @@ class _TournamentCardState extends State<TournamentCard> {
     final tournamentdata = controller.tournamentList
         .firstWhereOrNull((t) => t.id == widget.tournament.id);
     return GestureDetector(
-      onTap: widget.isSearch? (){
+      onTap: widget.isSearch ? (){
         logger.d("The TournamentId is:${tournamentdata!.id} }");
         controller.setScheduleStatus(true);
         Get.to(() => ScheduleScreen(id:tournamentdata.id));
@@ -142,18 +142,21 @@ class _TournamentCardState extends State<TournamentCard> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Center(
-                            child: Text(
-                              widget.tournament.tournamentName,
-                              style: Get.textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: AppTheme.darkYellowColor,
+                          SizedBox(
+                            width:150,
+                            child: Center(
+                              child: Text(
+                                widget.tournament.tournamentName,
+                                style: Get.textTheme.headlineMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: AppTheme.darkYellowColor,
+                                ),
+                                softWrap: true,
+                                maxLines: 1,
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              softWrap: true,
-                              maxLines: 1,
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           IconButton(
@@ -217,6 +220,49 @@ class _TournamentCardState extends State<TournamentCard> {
                         ],
                       ),
                       // const SizedBox(height: 1),
+                      // Row(
+                      //   children: [
+                      //     StreamBuilder<String>(
+                      //       stream: _timeStreamController.stream,
+                      //       builder: (context, snapshot) {
+                      //         if (snapshot.hasData) {
+                      //           final data = snapshot.data!;
+                      //           if (data == "Tournament is ongoing") {
+                      //             return Text(
+                      //               data,
+                      //               style: Get.textTheme.labelMedium?.copyWith(
+                      //                 fontWeight: FontWeight.bold,
+                      //                 fontSize: 12,
+                      //                 color: Colors.green,
+                      //               ),
+                      //             );
+                      //           } else {
+                      //             return Row(
+                      //               children: [
+                      //                 Text(
+                      //                   "Time Left:",
+                      //                   style: TextStyle(
+                      //                     color: Colors.black,
+                      //                     fontWeight: FontWeight.w500,
+                      //                   ),
+                      //                 ),
+                      //                 const SizedBox(width: 5),
+                      //                 Text(
+                      //                   data,
+                      //                   style: Get.textTheme.labelMedium?.copyWith(
+                      //                     fontWeight: FontWeight.bold,
+                      //                     fontSize: 12,
+                      //                   ),
+                      //                 ),
+                      //               ],
+                      //             );
+                      //           }
+                      //         }
+                      //         return const SizedBox.shrink();
+                      //       },
+                      //     ),
+                      //   ],
+                      // ),
                       Row(
                         children: [
                           const Text("Time Left:",style: TextStyle(

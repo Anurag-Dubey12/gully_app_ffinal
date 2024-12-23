@@ -15,6 +15,7 @@ import '../../../utils/app_logger.dart';
 import '../../../utils/image_picker_helper.dart';
 import '../../../utils/utils.dart';
 import '../../screens/view_matchups_screen.dart';
+import '../../theme/theme.dart';
 import '../dialogs/current_score_dialog.dart';
 import 'i_button_dialog.dart';
 import 'no_tournament_card.dart';
@@ -30,8 +31,8 @@ class LiveScoreState extends State<LiveScore> {
   Future<void> refreshData() async {
     try {
       final tournamentController = Get.find<TournamentController>();
-      await tournamentController.getCurrentTournamentList();
-      logger.d("Called refreshData");
+      tournamentController.filter.value = 'current';
+      await tournamentController.getTournamentList(filterD: 'current');
     } catch (e) {
       logger.e('Error refreshing data: $e');
     }
@@ -78,16 +79,36 @@ class LiveScoreState extends State<LiveScore> {
                 ),
               );
             }
+            final sortedMatches = List<MatchupModel>.from(controller.matches)
+              ..sort((a, b) {
+                int getPriority(String? status) {
+                  switch (status?.toLowerCase()) {
+                    case 'current': return 0;
+                    case 'upcoming': return 1;
+                    case 'played': return 2;
+                    default: return 3;
+                  }
+                }
+
+                int priorityA = getPriority(a.status);
+                int priorityB = getPriority(b.status);
+
+                if (priorityA != priorityB) {
+                  return priorityA.compareTo(priorityB);
+                }
+
+                return (a.tournamentId ?? '').compareTo(b.tournamentId ?? '');
+              });
             return RefreshIndicator(
               displacement: 10,
               onRefresh: refreshData,
               child: ListView.separated(
-                itemCount: controller.Current_matches.length,
+                itemCount: sortedMatches.length,
                 padding: const EdgeInsets.all(16),
                 separatorBuilder: (context, index) => const SizedBox(height: 10),
                 itemBuilder: (context, index) {
                   return Card(
-                    tournament: controller.Current_matches[index],
+                    tournament: sortedMatches[index],
                   );
                 },
               ),
@@ -276,10 +297,34 @@ class CardState extends State<Card> {
               ),
             ],
           ),
-           Positioned(
-            top: 8,
-            right: 8,
-            child: BlinkingLiveText(status: "Live",color: Colors.green,),
+          Positioned(
+            top: 7,
+            left: 10,
+            child: BlinkingLiveText(
+              status: widget.tournament.status== 'played'?'Ended':
+              widget.tournament.status== 'current'?'Live':
+              widget.tournament.status!.capitalize??'',
+              color: widget.tournament.status == 'current'
+                  ? Colors.green
+                  : widget.tournament.status == 'upcoming'
+                  ? AppTheme.primaryColor
+                  : widget.tournament.status == 'played'
+                  ? Colors.red
+                  : Colors.grey,
+            ),
+          ),
+
+          Positioned(
+            top: 1,
+            right: 10,
+            child: Text(
+              '${widget.tournament.round!.capitalize ??''} Match',
+              style: const TextStyle(
+                fontSize: 10,
+                color: Colors.black87,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
           ),
         ],
       ),

@@ -127,7 +127,8 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           border: Border.all(
-            color: isSelected ? AppTheme.secondaryYellowColor : Colors.grey[300]!,
+            color:
+                isSelected ? AppTheme.secondaryYellowColor : Colors.grey[300]!,
             width: 1,
           ),
           borderRadius: BorderRadius.circular(8),
@@ -140,18 +141,21 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
               height: 20,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: isSelected ? AppTheme.secondaryYellowColor : Colors.grey[400]!,
+                  color: isSelected
+                      ? AppTheme.secondaryYellowColor
+                      : Colors.grey[400]!,
                   width: 1,
                 ),
                 borderRadius: BorderRadius.circular(4),
-                color: isSelected ? AppTheme.secondaryYellowColor : Colors.white,
+                color:
+                    isSelected ? AppTheme.secondaryYellowColor : Colors.white,
               ),
               child: isSelected
                   ? const Icon(
-                Icons.check,
-                size: 14,
-                color: Colors.white,
-              )
+                      Icons.check,
+                      size: 14,
+                      color: Colors.white,
+                    )
                   : null,
             ),
             const SizedBox(width: 12),
@@ -182,7 +186,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
       backgroundColor: Colors.transparent,
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => Container(
-          height: Get.height*0.95,
+          height: Get.height * 0.95,
           decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.all(
@@ -193,7 +197,8 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
                   child: Row(
                     children: [
                       InkWell(
@@ -201,9 +206,8 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.black
-                          ),
+                              shape: BoxShape.circle,
+                              color: AppTheme.primaryColor),
                           child: const Icon(
                             Icons.arrow_back,
                             color: Colors.white,
@@ -216,10 +220,8 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                         child: Center(
                           child: Text(
                             'Eliminate Teams',
-                            style: Get.textTheme.titleLarge?.copyWith(
-                              color: Colors.black,
-                              fontSize: 20
-                            ),
+                            style: Get.textTheme.titleLarge
+                                ?.copyWith(color: Colors.black, fontSize: 20),
                           ),
                         ),
                       ),
@@ -244,7 +246,6 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                     ],
                   ),
                 ),
-                // Teams List
                 Expanded(
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(vertical: 8),
@@ -639,10 +640,6 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                             ),
                             SizedBox(height: Get.height * 0.02),
                             PrimaryButton(
-                              onTap: showEliminationBottomSheet,
-                              title: 'Eliminate Teams',
-                            ),
-                            PrimaryButton(
                               onTap: () async {
                                 if (selectedDate == null) {
                                   errorSnackBar('Please select a date');
@@ -692,7 +689,25 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                 // Get.to(() => const ViewMatchupsScreen());
                               },
                               title: 'Submit',
-                            )
+                            ),
+
+                            // SizedBox(height: Get.height * 0.02),
+                            // PrimaryButton(
+                            //   onTap: showEliminationBottomSheet,
+                            //   title: 'Eliminate Teams',
+                            // ),
+                            // SizedBox(height: Get.height * 0.02),
+                            // PrimaryButton(
+                            //   // onTap: showEliminationBottomSheet,
+                            //   onTap: () {
+                            //     Get.to(() => PointsTable(
+                            //       tournamentId: widget.tournament!.id,
+                            //       tournamentName:
+                            //       widget.tournament!.tournamentName,
+                            //     ));
+                            //   },
+                            //   title: 'Points Table',
+                            // ),
                           ],
                         ))
                   ],
@@ -706,3 +721,147 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
   }
 }
 
+class PointsTable extends StatelessWidget {
+  final String tournamentId;
+  final String tournamentName;
+  const PointsTable({super.key, required this.tournamentId, required this.tournamentName});
+
+  @override
+  Widget build(BuildContext context) {
+    final TournamentController controller = Get.find<TournamentController>();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("${tournamentName.capitalize} Points Table",
+            style: const TextStyle(fontSize: 18, color: Colors.black),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis),
+        centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
+      body: FutureBuilder<List<PointTableModel>>(
+        future: controller.tournamentPointsTable(tournamentId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError) {
+            return const Center(
+              child:Text("Something went wrong")
+            );
+          }
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: SizedBox(
+              width: Get.width,
+              child: Column(
+                children: [
+                  Container(
+                    color: Colors.black,
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 12, horizontal: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        tableHeader('POS', flex: 2),
+                        tableHeader('Team', flex: 4),
+                        tableHeader('Played', flex: 2),
+                        tableHeader('Win', flex: 2),
+                        tableHeader('Loss', flex: 2),
+                        tableHeader('Ties', flex: 2),
+                        tableHeader('Points', flex: 2),
+                        tableHeader('NRR', flex: 2),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Obx(() => ListView.builder(
+                          itemCount: controller.points_table.length,
+                          itemBuilder: (context, index) {
+                            final team = controller.points_table[index];
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 12, horizontal: 5),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  teamTableData(team.rank.toString(), flex: 2),
+                                  const SizedBox(width: 2,),
+                                  teamData(team, flex: 4),
+                                  teamTableData(team.matchesPlayed.toString(),
+                                      flex: 2),
+                                  teamTableData(team.wins.toString(), flex: 2),
+                                  teamTableData(team.losses.toString(), flex: 2),
+                                  teamTableData(team.ties.toString(), flex: 2),
+                                  teamTableData(team.points.toString(), flex: 2),
+                                  teamTableData(
+                                      team.netRunRate.toStringAsFixed(3),
+                                      flex: 2),
+                                ],
+                              ),
+                            );
+                          },
+                        )),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget tableHeader(String text, {required int flex}) {
+    return Expanded(
+      flex: flex,
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          fontSize: 10,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget teamTableData(String text, {required int flex}) {
+    return Expanded(
+      flex: flex,
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 14,
+          color: Colors.black87,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  Widget teamData(PointTableModel team, {required int flex}) {
+    return Expanded(
+      flex: flex,
+      child: Flexible(
+        child: Text(
+          team.teamName.capitalize,
+          style: const TextStyle(
+            fontSize: 12,
+            color: Colors.black87,
+            fontWeight: FontWeight.bold,
+          ),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+          textAlign: TextAlign.start,
+        ),
+      ),
+    );
+  }
+}

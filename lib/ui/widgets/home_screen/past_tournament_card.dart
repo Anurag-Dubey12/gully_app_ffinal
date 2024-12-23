@@ -181,7 +181,7 @@ class _Card extends StatelessWidget {
                                 teamName: scoreboard.team2.name,
                                 score: scoreboard.currentInnings == 1
                                     ? "Did Not Bat"
-                                    : '${scoreboard.currentInningsScore}/${scoreboard.currentOverHistory.lastOrNull?.wickets ?? 0}',
+                                    : '${scoreboard.secondInnings?.totalScore??0}/${scoreboard.secondInnings?.totalWickets ?? 0}',
                               ),
                             ],
                           ),
@@ -208,7 +208,7 @@ class _Card extends StatelessWidget {
                       winnerText,
                       style: const TextStyle(
                         color: AppTheme.primaryColor,
-                        fontSize: 14,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold,
                       ),
                       textAlign: TextAlign.center,

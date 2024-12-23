@@ -229,8 +229,18 @@ class HomePageContent extends StatefulWidget {
   State<HomePageContent> createState() => ScreenContent();
 }
 
-class ScreenContent extends State<HomePageContent>{
+class ScreenContent extends State<HomePageContent> {
   String selected = 'Current';
+  Future<void> refreshData() async {
+    try {
+      final tournamentController = Get.find<TournamentController>();
+      tournamentController.filter.value = 'current';
+      await tournamentController.getTournamentList(filterD: selected);
+    } catch (e) {
+      logger.e('Error refreshing data: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
@@ -257,174 +267,167 @@ class ScreenContent extends State<HomePageContent>{
           child: SizedBox(
             width: Get.width,
             height: Get.height - 150,
-            child: CustomScrollView(
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Column(
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(left: 5),
+            child: RefreshIndicator(
+              onRefresh: refreshData,
+              child: CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(left: 5),
+                          decoration: const BoxDecoration(
+                            gradient: RadialGradient(
+                              colors: [Color(0xff368EBF), AppTheme.primaryColor],
+                            ),
+                          ),
+                          width: double.infinity,
+                          child: const TopHeader(),
+                        ),
+                        const SizedBox(height: 10),
+                        const FullBannerSlider(isAds: false),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ),
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: SliverAppBarDelegate(
+                      minHeight: 95,
+                      maxHeight: 95,
+                      child: DecoratedBox(
                         decoration: const BoxDecoration(
-                          gradient: RadialGradient(
-                            colors: [Color(0xff368EBF), AppTheme.primaryColor],
+                          color: Colors.white,
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/sports_icon.png'),
+                            fit: BoxFit.cover,
                           ),
                         ),
-                        width: double.infinity,
-                        child: const TopHeader(),
-                      ),
-                      const SizedBox(height: 10),
-                      const FullBannerSlider(isAds: false),
-                      const SizedBox(height: 20),
-                    ],
-                  ),
-                ),
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: SliverAppBarDelegate(
-                    minHeight: 95,
-                    maxHeight: 95,
-                    child: DecoratedBox(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/sports_icon.png'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          const DateTimesCard(),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Material(
-                                    borderRadius: BorderRadius.circular(20),
-                                    child: InkWell(
-                                      borderRadius: BorderRadius.circular(28),
-                                      onTap: () {
-                                        Get.to(() => const SearchTournamentScreen());
-                                      },
-                                      child: Ink(
-                                        height: 35,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          border: Border.all(color: Colors.black, width: 0.5),
-                                          borderRadius: BorderRadius.circular(20),
+                        child: Column(
+                          children: [
+                            const DateTimesCard(),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: Material(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: InkWell(
+                                        borderRadius: BorderRadius.circular(28),
+                                        onTap: () {
+                                          Get.to(() => const SearchTournamentScreen());
+                                        },
+                                        child: Ink(
+                                          height: 35,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            border: Border.all(color: Colors.black, width: 0.5),
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          child: const Row(
+                                            children: [
+                                              SizedBox(width: 18),
+                                              Icon(Icons.search, color: Colors.black),
+                                              SizedBox(width: 20),
+                                              Text('Search...', style: TextStyle(color: Colors.black)),
+                                            ],
+                                          ),
                                         ),
-                                        child: const Row(
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  PopupMenuButton<String>(
+                                    onSelected: (String value) {
+                                      setState(() {
+                                        selected = value;
+                                        controller.getTournamentList(filterD: value);
+                                      });
+                                    },
+                                    itemBuilder: (BuildContext context) =>
+                                    <PopupMenuEntry<String>>[
+                                      const PopupMenuItem<String>(
+                                        value: 'past',
+                                        enabled: false,
+                                        height: 10,
+                                        child: Center(
+                                          child: Text(
+                                            'Matches',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      const PopupMenuItem<String>(
+                                        value: 'past',
+                                        child: Row(
                                           children: [
-                                            SizedBox(width: 18),
-                                            Icon(Icons.search, color: Colors.black),
-                                            SizedBox(width: 20),
-                                            Text('Search...', style: TextStyle(color: Colors.black)),
+                                            Icon(Icons.history, color: Colors.blue),
+                                            SizedBox(width: 10),
+                                            Text('Past'),
                                           ],
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 10),
-                                PopupMenuButton<String>(
-                                  onSelected: (String value) {
-                                    setState(() {
-                                      selected = value;
-                                      controller.getTournamentList(
-                                          filterD: value);
-                                    });
-                                  },
-                                  itemBuilder: (BuildContext context) =>
-                                  <PopupMenuEntry<String>>[
-                                    const PopupMenuItem<String>(
-                                      value: 'past',
-                                      enabled: false,
-                                      height: 10,
-                                      child: Center(
-                                        child:  Text(
-                                          'Matches',
-                                          style: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
-                                          ),
+                                      const PopupMenuItem<String>(
+                                        value: 'current',
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.event, color: Colors.green),
+                                            SizedBox(width: 10),
+                                            Text('Current'),
+                                          ],
                                         ),
-                                      )
-                                    ),
-                                    // const PopupMenuDivider(height: 1,),
-                                    const PopupMenuItem<String>(
-                                      value: 'past',
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.history,
-                                              color: Colors.blue),
-                                          SizedBox(width: 10),
-                                          Text('Past'),
-                                        ],
                                       ),
-                                    ),
-                                    const PopupMenuItem<String>(
-                                      value: 'current',
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.event,
-                                              color: Colors.green),
-                                          SizedBox(width: 10),
-                                          Text('Current'),
-                                        ],
+                                      const PopupMenuItem<String>(
+                                        value: 'upcoming',
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.schedule, color: Colors.orange),
+                                            SizedBox(width: 10),
+                                            Text('Upcoming'),
+                                          ],
+                                        ),
                                       ),
+                                    ],
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
-                                    const PopupMenuItem<String>(
-                                      value: 'upcoming',
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.schedule,
-                                              color: Colors.orange),
-                                          SizedBox(width: 10),
-                                          Text('Upcoming'),
-                                        ],
+                                    color: Colors.white,
+                                    elevation: 8,
+                                    child: Container(
+                                      height: 40,
+                                      width: 40,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        border: Border.all(color: Colors.black),
+                                        borderRadius: BorderRadius.circular(10),
                                       ),
+                                      child: const Icon(Icons.filter_list, color: Colors.black),
                                     ),
-                                  ],
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                    BorderRadius.circular(10),
-                                  ),
-                                  color: Colors.white,
-                                  elevation: 8,
-                                  child: Container(
-                                    height: 40,
-                                    width: 40,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      border: Border.all(
-                                          color: Colors.black),
-                                      borderRadius:
-                                      BorderRadius.circular(10),
-                                    ),
-                                    child: const Icon(Icons.filter_list,
-                                        color: Colors.black),
-                                  ),
-                                )
-                              ],
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-                const SliverToBoxAdapter(
-                  child: TournamentList(),
-                ),
-              ],
+                  const SliverToBoxAdapter(
+                    child: TournamentList(),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ],
     );
   }
-
 }
 
 class _TournamentMajorDuration extends StatelessWidget {

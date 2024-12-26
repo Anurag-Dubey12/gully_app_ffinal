@@ -145,7 +145,25 @@ class ScoreBoardController extends GetxController with StateMixin {
       } else if (firstInning == secondInning) {
         try {
           final winnerName = await getWinnerNameForMatch(scoreboard.value!.matchId);
-          if (winnerName != null) {
+          if(winnerName==null){
+            showModalBottomSheet(
+              context: Get.context!,
+              isScrollControlled: true,
+              builder: (context) => TieBreakerSheet(
+                scoreboard: scoreboard.value!,
+                onSubmit: (String winningTeamId) {
+                  final winningTeam = winningTeamId == scoreboard.value!.team1.id
+                      ? scoreboard.value!.team1.name
+                      : scoreboard.value!.team2.name;
+                  logger.d("The winner is $winningTeam");
+                  successSnackBar('$winningTeam wins the match!');
+                  Navigator.of(context).pop();
+                  updateFinalScoreBoard(winningTeamId);
+                },
+              ),
+            );
+          }
+          else if (winnerName != null) {
             successSnackBar('$winnerName wins the match!');
           } else {
             successSnackBar('Match Tied');

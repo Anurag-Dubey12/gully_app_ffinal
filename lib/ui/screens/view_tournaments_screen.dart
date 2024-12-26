@@ -149,14 +149,16 @@ class _TourCard extends GetView<TournamentController> {
             actions: [
               TextButton(
                   onPressed: () {
-                    Get.back();
+                    // Get.back();
+                    Get.close();
                   },
                   child: const Text('No')),
               TextButton(
                   onPressed: () async {
                     await controller.cancelTournament(tournament.id);
                     onCancel();
-                    Get.back();
+                    // Get.back();
+                    Get.close();
                   },
                   child: const Text('Yes')),
             ],

@@ -32,7 +32,8 @@ class RankingController extends GetxController {
           .map<PlayerRankingModel>((e) => PlayerRankingModel.fromJson(e))
           .toList();
     } catch (e) {
-      errorSnackBar(e.toString());
+      // errorSnackBar(e.toString());
+      logger.d("GetPlayerRanking Error: " + e.toString());
       rethrow;
     }
   }

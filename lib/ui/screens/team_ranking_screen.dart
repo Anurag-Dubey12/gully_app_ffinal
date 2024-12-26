@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/team_ranking_model.dart';
+import 'package:gully_app/ui/screens/no_internet_screen.dart';
 import 'package:gully_app/utils/FallbackImageProvider.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/ranking_controller.dart';
+import '../../utils/internetConnectivty.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
@@ -18,6 +20,26 @@ class TeamRankingScreen extends StatefulWidget {
 
 class _TeamRankingScreenState extends State<TeamRankingScreen> {
   int _selectedTab = 0;
+  final Internetconnectivty _connectivityService = Internetconnectivty();
+  bool _isConnected = true;
+  @override
+  initState() {
+    super.initState();
+    _connectivityService.listenToConnectionChanges((isConnected) {
+      setState(() {
+        _isConnected = isConnected;
+      });
+      if (!isConnected) {
+        errorSnackBar("Please connect to the network");
+      }
+    });
+  }
+  @override
+  void dispose() {
+    _connectivityService.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.putOrFind(() => RankingController(Get.find()));
@@ -118,7 +140,7 @@ class _TeamRankingScreenState extends State<TeamRankingScreen> {
                           child: Container(
                             color: Colors.black26,
                             // height: Get.height * 0.6,
-                            child: FutureBuilder<List<TeamRankingModel>>(
+                            child: _isConnected ? FutureBuilder<List<TeamRankingModel>>(
                                 future: controller.getTeamRankingList(
                                     _selectedTab == 0 ? 'leather' : 'tennis'),
                                 builder: (context, snapshot) {
@@ -130,7 +152,15 @@ class _TeamRankingScreenState extends State<TeamRankingScreen> {
                                           const SizedBox(height: 10),
                                       itemBuilder: (c, i) =>
                                           _TeamCard(team: snapshot.data![i]));
-                                }),
+                                }):const Center(
+                              child:Text(
+                                'No internet connection',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 18),
+                              ),
+                            )
                           ),
                         )
                       ],

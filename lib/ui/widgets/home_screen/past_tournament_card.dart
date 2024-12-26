@@ -28,14 +28,33 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
           if (controller.tournamentList.isEmpty ||controller.matches.isEmpty) {
             return const NoTournamentCard();
           }else {
+            final matchMap = controller.matches.fold<Map<String, List<MatchupModel>>>({}, (map, match) {
+              if (match.tournamentName != null) {
+                if (match.scoreBoard == null) {
+                  logger.d("Found match with null scoreboard where tournament name is ${match.tournamentName}");
+                }
+                map.putIfAbsent(match.tournamentName!, () => []).add(match);
+              }
+              return map;
+            });
+            final filteredMap = Map.fromEntries(
+                matchMap.entries.where((entry) =>
+                    entry.value.any((match) => match.scoreBoard != null))
+            );
+            final latestMatch = filteredMap.entries.map((entry) {
+              return entry.value.reduce((latest, match) =>
+              match.matchDate.isAfter(latest.matchDate) ? match : latest);
+            }).toList();
             return ListView.builder(
-                itemCount: controller.matches.length,
+                // itemCount: controller.matches.length,
+                itemCount: latestMatch.length,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 padding: const EdgeInsets.only(bottom: 10, top: 10),
                 itemBuilder: (context, snapshot) {
                   return _Card(
-                    tournament: controller.matches[snapshot],
+                    // tournament: controller.matches[snapshot],
+                    tournament: latestMatch[snapshot],
                   );
                 });
           }

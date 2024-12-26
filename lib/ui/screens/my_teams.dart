@@ -65,6 +65,7 @@ class _MyTeamsState extends State<MyTeams> {
                             child: Text('Error ${snapshot.error}}'),
                           );
                         }
+
                         if ((snapshot.data?.isEmpty ?? true)) {
                           return SizedBox(
                             width: Get.width,

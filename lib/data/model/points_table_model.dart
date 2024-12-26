@@ -32,7 +32,7 @@ class PointTableModel {
   final int points;
 
   @JsonKey(name: 'netRunRate')
-  final double netRunRate;
+  final double? netRunRate;
 
   PointTableModel({
     required this.teamId,

@@ -239,14 +239,14 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                             //     Get.to(() => const SelectTeamToViewHistory());
                             //   },
                             // ),
-                            // ProfileTileCard(
-                            //   text: 'View Opponent',
-                            //   onTap: () {
-                            //     Get.to(() => const OpponentTournamentsScreen(
-                            //       opponentView: true,
-                            //     ));
-                            //   },
-                            // ),
+                            ProfileTileCard(
+                              text: 'View Opponent',
+                              onTap: () {
+                                Get.to(() => const OpponentTournamentsScreen(
+                                  opponentView: true,
+                                ));
+                              },
+                            ),
                             InkWell(
                               child: ProfileTileCard(
                                 onTap: () {

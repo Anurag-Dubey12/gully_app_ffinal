@@ -287,9 +287,11 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             }
           // }
           } else {
+            logger.d("Called before tourmodel called:${from?.toIso8601String()} ");
             final tournamentModel =
                 await tournamentController
                 .createTournament(tournament);
+            logger.d("After torumodel Function called:${tournamentModel.tournamentStartDateTime} ");
             authController.getUser();
             logger.d("The Tournament id is:${tournamentModel.id}");
             // if (tournament != null) {

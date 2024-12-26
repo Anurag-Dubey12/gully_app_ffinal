@@ -353,12 +353,19 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                 // const Text('To win: '),
                               ]),
                             ),
-                            Obx(() => Text(
-                              controller.scoreboard.value
-                                  ?.secondInningsText=='Match Tied'?"${widget.match.getWinningTeamName()} Won the Match"??''
-                                  :controller.scoreboard.value
-                                  ?.secondInningsText??'',
-                            )),
+                            Obx(() {
+                              final secondInningsText = controller.scoreboard.value?.secondInningsText;
+                              if (secondInningsText == 'Match Tied') {
+                                return Text(
+                                    widget.match.getWinningTeamName()==null ?
+                                    "Match Tied":"${widget.match.getWinningTeamName()} Won The Match" ?? "Match Tied",
+                                );
+                              } else {
+                                return Text(
+                                  secondInningsText ?? '',
+                                );
+                              }
+                            }),
                             const SizedBox(height: 10),
                             Row(
                               children: [

@@ -50,6 +50,7 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
     super.initState();
     final TournamentController tournamentController =
     Get.find<TournamentController>();
+    tournamentController.isSearch.value=true;
     searchController.addListener(() {
       debouncer.debounce(searchController.text);
     });
@@ -87,6 +88,8 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final TournamentController Controller =
+    Get.find<TournamentController>();
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -209,7 +212,7 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                     child: tournament != null
                         ? TournamentCard(
                       tournament: tournament,
-                      isSearch: true,
+                      isSearch: Controller.isSearch.value,
                     )
                         : const SizedBox.shrink(),
                   );

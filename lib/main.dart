@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:connectivity_widget/connectivity_widget.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -77,33 +78,45 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // StreamSubscription<List<ConnectivityResult>>? subscription;
-  // bool _isConnected = true;
-  // @override
-  // void initState() {
-  //   super.initState();
-
-  //   subscription = Connectivity()
-  //       .onConnectivityChanged
-  //       .listen((List<ConnectivityResult> result) {
-  //     if (result.contains(ConnectivityResult.none)) {
-  //       setState(() {
-  //         _isConnected = false;
-  //       });
-  //     } else {
-  //       setState(() {
-  //         _isConnected = true;
-  //       });
-  //     }
-  //   });
-  // }
+  final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
   @override
-  void dispose() {
-    // subscription?.cancel();
-    super.dispose();
+  void initState() {
+    super.initState();
+    // Initialize connectivity listener
+    Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> result) {
+      if (result.contains(ConnectivityResult.none) || result.isEmpty) {
+        _showConnectivitySnackbar(false);
+      } else {
+        _showConnectivitySnackbar(true);
+      }
+    });
   }
 
+  void _showConnectivitySnackbar(bool isConnected) {
+    scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
+    scaffoldMessengerKey.currentState?.showSnackBar(
+      SnackBar(
+        content: Row(
+          children: [
+            Icon(
+              isConnected ? Icons.wifi : Icons.wifi_off,
+              color: Colors.white,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              isConnected
+                  ? 'Internet connection restored'
+                  : 'No internet connection',
+            ),
+          ],
+        ),
+        backgroundColor: isConnected ? Colors.green : Colors.red,
+        duration: const Duration(seconds: 3),
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -135,21 +148,55 @@ class _MyAppState extends State<MyApp> {
           return LocationStreamHandler(
             child: Directionality(
               textDirection:
-                  TextDirection.rtl, // Right-to-left for Arabic or Urdu
+              TextDirection.rtl, // Right-to-left for Arabic or Urdu
               child: child!,
             ),
           );
         } else {
           return ConnectivityWidget(
-              offlineBanner: const SizedBox(),
-              builder: (BuildContext context, bool isOnline) {
-                if (!isOnline) {
-                  return const NoInternetScreen();
-                }
-                return LocationStreamHandler(
-                  child: child!,
-                );
-              });
+            offlineBanner: const SizedBox(),
+            builder: (BuildContext context, bool isOnline) {
+              if (!isOnline) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Row(
+                        children: [
+                          Icon(Icons.wifi_off, color: Colors.white),
+                          SizedBox(width: 8),
+                          Text('No internet connection'),
+                        ],
+                      ),
+                      backgroundColor: Colors.red,
+                      duration: Duration(days: 365),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                });
+              } else {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Row(
+                        children: [
+                          Icon(Icons.wifi, color: Colors.white),
+                          SizedBox(width: 8),
+                          Text('Internet connection Successfully'),
+                        ],
+                      ),
+                      backgroundColor: Colors.green,
+                      duration: Duration(seconds: 3),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                });
+              }
+              return LocationStreamHandler(
+                child: child!,
+              );
+            },
+          );
         }
       },
       locale: const Locale('en'),
@@ -162,8 +209,8 @@ class _MyAppState extends State<MyApp> {
           preferences: Get.find<Preferences>(),
         )),
         Bind.lazyPut<RankingApi>(() => RankingApi(
-              client: Get.find(),
-            )),
+          client: Get.find(),
+        )),
         // Bind.lazyPut<AuthApi>(() => AuthApi(client: Get.find())),
         Bind.put<AuthApi>(AuthApi(client: Get.find())),
         Bind.put<MiscApi>(MiscApi(repo: Get.find())),
@@ -177,9 +224,9 @@ class _MyAppState extends State<MyApp> {
         Bind.put<ScoreBoardController>(
             ScoreBoardController(scoreboardApi: Get.find())),
         Bind.lazyPut<TournamentController>(
-            () => TournamentController(Get.find())),
+                () => TournamentController(Get.find())),
         Bind.lazyPut<PromotionController>(
-            () => PromotionController(bannerApi: Get.find())),
+                () => PromotionController(bannerApi: Get.find())),
         Bind.lazyPut<ServiceController>(
                 () => ServiceController(serviceApi: Get.find())),
         Bind.lazyPut<ShopController>(

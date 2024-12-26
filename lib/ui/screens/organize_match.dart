@@ -691,23 +691,24 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                               title: 'Submit',
                             ),
 
-                            // SizedBox(height: Get.height * 0.02),
-                            // PrimaryButton(
-                            //   onTap: showEliminationBottomSheet,
-                            //   title: 'Eliminate Teams',
-                            // ),
-                            // SizedBox(height: Get.height * 0.02),
-                            // PrimaryButton(
-                            //   // onTap: showEliminationBottomSheet,
-                            //   onTap: () {
-                            //     Get.to(() => PointsTable(
-                            //       tournamentId: widget.tournament!.id,
-                            //       tournamentName:
-                            //       widget.tournament!.tournamentName,
-                            //     ));
-                            //   },
-                            //   title: 'Points Table',
-                            // ),
+                            SizedBox(height: Get.height * 0.02),
+                            PrimaryButton(
+                              onTap: showEliminationBottomSheet,
+                              title: 'Eliminate Teams',
+                            ),
+                            SizedBox(height: Get.height * 0.02),
+                            PrimaryButton(
+                              // onTap: showEliminationBottomSheet,
+                              onTap: () {
+                                logger.d("The Tournament id is:${widget.tournament!.id}");
+                                Get.to(() => PointsTable(
+                                  tournamentId: widget.tournament!.id,
+                                  tournamentName:
+                                  widget.tournament!.tournamentName,
+                                ));
+                              },
+                              title: 'Points Table',
+                            ),
                           ],
                         ))
                   ],
@@ -729,7 +730,6 @@ class PointsTable extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TournamentController controller = Get.find<TournamentController>();
-
     return Scaffold(
       appBar: AppBar(
         title: Text("${tournamentName.capitalize} Points Table",
@@ -800,7 +800,7 @@ class PointsTable extends StatelessWidget {
                                   teamTableData(team.ties.toString(), flex: 2),
                                   teamTableData(team.points.toString(), flex: 2),
                                   teamTableData(
-                                      team.netRunRate.toStringAsFixed(3),
+                                      team.netRunRate?.toStringAsFixed(3) ??'0',
                                       flex: 2),
                                 ],
                               ),

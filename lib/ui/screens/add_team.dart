@@ -14,6 +14,7 @@ import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../utils/internetConnectivty.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/primary_button.dart';
 
@@ -28,13 +29,22 @@ class AddTeam extends StatefulWidget {
 class _AddTeamState extends State<AddTeam> {
   final TextEditingController _teamNameController = TextEditingController();
   XFile? _image;
-
+  final Internetconnectivty _connectivityService = Internetconnectivty();
+  bool _isConnected = true;
   @override
   initState() {
     super.initState();
     if (widget.team != null) {
       _teamNameController.text = widget.team!.name;
     }
+    _connectivityService.listenToConnectionChanges((isConnected) {
+      setState(() {
+        _isConnected = isConnected;
+      });
+      if (!isConnected) {
+        errorSnackBar("Please connect to the network");
+      }
+    });
   }
 
   pickImage() async {
@@ -176,31 +186,35 @@ class _AddTeamState extends State<AddTeam> {
                                   return;
                                 }
                               }
-                              if (widget.team != null) {
-                                final res = await controller.updateTeam(
-                                    teamName: _teamNameController.text,
-                                    teamId: widget.team!.id,
-                                    teamLogo: base64Image);
+                              if(_isConnected){
+                                if (widget.team != null) {
+                                  final res = await controller.updateTeam(
+                                      teamName: _teamNameController.text,
+                                      teamId: widget.team!.id,
+                                      teamLogo: base64Image);
 
+                                  if (res) {
+                                    Get.bottomSheet(BottomSheet(
+                                        onClosing: () {},
+                                        builder: (context) {
+                                          return const _TeamAddedDialog(true);
+                                        }));
+                                  }
+                                  return;
+                                }
+                                // check if base64Image
+                                final res = await controller.createTeam(
+                                    teamName: _teamNameController.text,
+                                    teamLogo: base64Image);
                                 if (res) {
                                   Get.bottomSheet(BottomSheet(
                                       onClosing: () {},
                                       builder: (context) {
-                                        return const _TeamAddedDialog(true);
+                                        return const _TeamAddedDialog(false);
                                       }));
                                 }
-                                return;
-                              }
-                              // check if base64Image
-                              final res = await controller.createTeam(
-                                  teamName: _teamNameController.text,
-                                  teamLogo: base64Image);
-                              if (res) {
-                                Get.bottomSheet(BottomSheet(
-                                    onClosing: () {},
-                                    builder: (context) {
-                                      return const _TeamAddedDialog(false);
-                                    }));
+                              }else{
+                                errorSnackBar("Please connect to the internet");
                               }
                               // Get.to(() => const AddPlayersToTeam());
                             },

@@ -30,8 +30,8 @@ class TournamentController extends GetxController
   RxString location = ''.obs;
   RxString tournamentId=''.obs;
   RxBool isSchedule=false.obs;
+  RxBool isSearch=false.obs;
   RxString tournamentname=''.obs;
-
 
   void setScheduleStatus(bool status) {
     isSchedule.value = status;
@@ -55,6 +55,7 @@ class TournamentController extends GetxController
       Map<String, dynamic> tournament) async {
     try {
       final body = await tournamentApi.createTournament(tournament);
+      logger.d("The response for tournament Creation:${body.data}");
       return TournamentModel.fromJson(body.data!);
     } catch (e) {
       errorSnackBar(e.toString());

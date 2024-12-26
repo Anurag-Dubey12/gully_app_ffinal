@@ -119,83 +119,98 @@ class _Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Get.bottomSheet(BottomSheet(
-          enableDrag: false,
-          builder: (context) => RequestsBottomSheet(
-            tournament: tournament,
-          ),
-          onClosing: () {},
-        ));
-      },
-      child: Container(
-        width: Get.width,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(
-                color: Colors.black,
-                width: 1
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: () {
+            Get.bottomSheet(BottomSheet(
+              enableDrag: false,
+              builder: (context) => RequestsBottomSheet(
+                tournament: tournament,
+              ),
+              onClosing: () {},
+            ));
+          },
+          child: Container(
+            width: Get.width,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                    color: Colors.black,
+                    width: 1
+                ),
+                boxShadow: [
+                  BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      blurRadius: 5,
+                      spreadRadius: 2,
+                      offset: const Offset(0, 1))
+                ],
+                borderRadius: BorderRadius.circular(16)),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: Get.width * 0.05,
+                vertical: Get.height * 0.02,
+              ),
+              child: Row(
+                children: [
+                  // const Spacer(),
+                  SizedBox(
+                    width: 180,
+                    child: Text(
+                      tournament.tournamentName,
+                      style: Get.textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.w600, fontSize: 19),
+                      softWrap: true,
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const Spacer(),
+                  tournament.registeredTeamsCount == tournament.tournamentLimit
+                      ? Chip(
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: const BorderSide(color: Colors.white)),
+                    label: Text(
+                      'FULL',
+                      style: Get.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.white),
+                    ),
+                  )
+                      : Chip(
+                    backgroundColor: AppTheme.secondaryYellowColor,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: const BorderSide(color: Colors.white)),
+                    label: Text(
+                      '${tournament.registeredTeamsCount}/${tournament.tournamentLimit}',
+                      style: Get.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
             ),
-            boxShadow: [
-              BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 5,
-                  spreadRadius: 2,
-                  offset: const Offset(0, 1))
-            ],
-            borderRadius: BorderRadius.circular(16)),
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Get.width * 0.05,
-            vertical: Get.height * 0.02,
-          ),
-          child: Row(
-            children: [
-              // const Spacer(),
-              SizedBox(
-                width: 180,
-                child: Text(
-                  tournament.tournamentName,
-                  style: Get.textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w600, fontSize: 19),
-                  softWrap: true,
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const Spacer(),
-              tournament.registeredTeamsCount == tournament.tournamentLimit
-                  ? Chip(
-                backgroundColor: Colors.green,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    side: const BorderSide(color: Colors.white)),
-                label: Text(
-                  'FULL',
-                  style: Get.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.white),
-                ),
-              )
-                  : Chip(
-                backgroundColor: AppTheme.secondaryYellowColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                    side: const BorderSide(color: Colors.white)),
-                label: Text(
-                  '${tournament.registeredTeamsCount}/${tournament.tournamentLimit}',
-                  style: Get.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Colors.white),
-                ),
-              ),
-            ],
           ),
         ),
-      ),
+        tournament.pendingTeamsCount !=0 ? Positioned(
+          top: 0,
+          right: 10,
+          child: Text(
+            '+${tournament.pendingTeamsCount}',
+            style: Get.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Colors.red),
+          ),
+        ):const SizedBox.shrink()
+      ],
     );
   }
 }

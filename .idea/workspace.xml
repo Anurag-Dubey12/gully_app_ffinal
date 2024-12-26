@@ -9,30 +9,29 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="added elimnate team screen and added points table screen">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="final changes for testing">
+      <change afterPath="$PROJECT_DIR$/lib/utils/internetConnectivty.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/api/auth_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/auth_api.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/api/score_board_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/score_board_api.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/ranking_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/ranking_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/matchup_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/matchup_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/opponent_tournament_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/opponent_tournament_list.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/points_table_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/points_table_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/add_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/add_team.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/my_teams.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/my_teams.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/player_ranking_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/player_ranking_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/search_tournament_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/search_tournament_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/team_ranking_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/team_ranking_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_requests_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_requests_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/app_drawer.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_tournaments_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_tournaments_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/TieBreakerSheet.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/TieBreakerSheet.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -193,14 +192,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00053" summary="shop screen modify">
-      <option name="closed" value="true" />
-      <created>1727783942255</created>
-      <option name="number" value="00053" />
-      <option name="presentableId" value="LOCAL-00053" />
-      <option name="project" value="LOCAL" />
-      <updated>1727783942255</updated>
     </task>
     <task id="LOCAL-00054" summary="home screen bottomnav ,shop screen modify">
       <option name="closed" value="true" />
@@ -586,7 +577,15 @@
       <option name="project" value="LOCAL" />
       <updated>1734609404515</updated>
     </task>
-    <option name="localTasksCounter" value="102" />
+    <task id="LOCAL-00102" summary="final changes for testing">
+      <option name="closed" value="true" />
+      <created>1734960534733</created>
+      <option name="number" value="00102" />
+      <option name="presentableId" value="LOCAL-00102" />
+      <option name="project" value="LOCAL" />
+      <updated>1734960534734</updated>
+    </task>
+    <option name="localTasksCounter" value="103" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -607,7 +606,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="modify scorebord" />
     <MESSAGE value="need to modify torunament page" />
     <MESSAGE value="added match score tie screen" />
     <MESSAGE value="nothing" />
@@ -632,7 +630,8 @@
     <MESSAGE value="modify schedule screen" />
     <MESSAGE value="modify search" />
     <MESSAGE value="added elimnate team screen and added points table screen" />
-    <option name="LAST_COMMIT_MESSAGE" value="added elimnate team screen and added points table screen" />
+    <MESSAGE value="final changes for testing" />
+    <option name="LAST_COMMIT_MESSAGE" value="final changes for testing" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -1219,6 +1218,12 @@
           <option name="totalLines" value="5655780" />
           <option name="info" value="added elimnate team screen and added points table " />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1734960542437" />
+          <option name="linesCode" value="39955" />
+          <option name="totalLines" value="2102505" />
+          <option name="info" value="final changes for testing" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1798,6 +1803,12 @@
           <option name="linesCode" value="39789" />
           <option name="totalLines" value="5655780" />
           <option name="info" value="Dec 19, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1734960542437" />
+          <option name="linesCode" value="39955" />
+          <option name="totalLines" value="2102505" />
+          <option name="info" value="Dec 23, 2024" />
         </TimePoint>
       </list>
     </option>

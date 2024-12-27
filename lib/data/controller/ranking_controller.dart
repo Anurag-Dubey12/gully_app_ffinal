@@ -18,7 +18,8 @@ class RankingController extends GetxController {
           .map<TeamRankingModel>((e) => TeamRankingModel.fromJson(e))
           .toList();
     } catch (e) {
-      errorSnackBar(e.toString());
+      logger.d("Team ranking list Error:${e.toString()}");
+      // errorSnackBar(e.toString());
       rethrow;
     }
   }
@@ -76,7 +77,8 @@ class RankingController extends GetxController {
         });
       }).toList();
     } catch (e) {
-      errorSnackBar(e.toString());
+      logger.d("GetPlayerRanking Error: " + e.toString());
+      // errorSnackBar(e.toString());
       rethrow;
     }
   }

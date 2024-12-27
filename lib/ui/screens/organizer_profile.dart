@@ -20,6 +20,7 @@ import 'package:gully_app/ui/widgets/home_screen/top_header.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../data/controller/misc_controller.dart';
 import '../../utils/image_picker_helper.dart';
 import 'add_team.dart';
 import 'my_teams.dart';
@@ -35,11 +36,11 @@ class OrganizerProfileScreen extends StatefulWidget {
 
 class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
   XFile? _image;
-
+  final MiscController connectionController=Get.find<MiscController>();
   pickImage() async {
     _image = await imagePickerHelper();
     setState(() {});
-    if (_image != null) {
+    if (_image != null && connectionController.isConnected.value) {
       final controller = Get.find<AuthController>();
       final base64Image = await convertImageToBase64(_image!);
       if (!base64Image.contains(RegExp(r'data:image\/(png|jpeg);base64,'))) {
@@ -52,6 +53,8 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
           toImageUrl(controller.state!.profilePhoto));
 
       successSnackBar('Profile updated successfully');
+    }else{
+      errorSnackBar('Failed to update profile');
     }
   }
 

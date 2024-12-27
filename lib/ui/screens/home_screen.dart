@@ -16,6 +16,7 @@ import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import '../../utils/internetConnectivty.dart';
 import '../widgets/home_screen/SliverAppBarDelegate.dart';
 import '../widgets/home_screen/live_score_screen.dart';
 import '../widgets/home_screen/top_header.dart';
@@ -28,14 +29,29 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final Internetconnectivty _connectivityService = Internetconnectivty();
+  bool _isConnected = true;
   @override
   void initState() {
     super.initState();
-    Get.find<AuthController>().getUser();
-    Get.find<MiscController>().getBanners();
-    FirebaseMessaging.instance.getToken().then((value) {
-      Get.find<AuthController>().updateProfile(fcmToken: value);
+    _connectivityService.listenToConnectionChanges((isConnected) {
+      setState(() {
+        _isConnected = isConnected;
+      });
+      if (!isConnected) {
+        errorSnackBar("Please connect to the network");
+      }
     });
+    if(_isConnected){
+      Get.find<AuthController>().getUser();
+      Get.find<MiscController>().getBanners();
+      FirebaseMessaging.instance.getToken().then((value) {
+        Get.find<AuthController>().updateProfile(fcmToken: value);
+      });
+    }else{
+      errorSnackBar("Please connect to the network");
+    }
+
   }
 
   @override

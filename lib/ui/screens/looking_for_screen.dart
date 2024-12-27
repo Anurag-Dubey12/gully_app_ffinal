@@ -14,6 +14,7 @@ import 'package:intl/intl.dart';
 
 import '../../data/controller/tournament_controller.dart';
 import '../../utils/app_logger.dart';
+import '../../utils/internetConnectivty.dart';
 import '../theme/theme.dart';
 import '../widgets/custom_drop_down_field.dart';
 import 'home_screen.dart';
@@ -31,7 +32,26 @@ class _LookingForScreenState extends State<LookingForScreen> {
   final TextEditingController _contactController = TextEditingController();
   String? selectedValue;
   bool isFirstBuild = true;
-
+  final Internetconnectivty _connectivityService = Internetconnectivty();
+  bool _isConnected = true;
+  @override
+  initState() {
+    super.initState();
+    logger.d("Connectivity Status:${_isConnected}");
+    _connectivityService.listenToConnectionChanges((isConnected) {
+      setState(() {
+        _isConnected = isConnected;
+      });
+      if (!isConnected) {
+        errorSnackBar("Please connect to the network");
+      }
+    });
+  }
+  @override
+  void dispose() {
+    _connectivityService.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.find<AuthController>();
@@ -40,6 +60,7 @@ class _LookingForScreenState extends State<LookingForScreen> {
       _contactController.text = authController.state!.phoneNumber ?? "";
       isFirstBuild = false;
     }
+
     return DecoratedBox(
       decoration: const BoxDecoration(
         image: DecorationImage(
@@ -257,7 +278,7 @@ class _LookingForScreenState extends State<LookingForScreen> {
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: FutureBuilder<List<LookingForPlayerModel>>(
+                  child: _isConnected ? FutureBuilder<List<LookingForPlayerModel>>(
                       future: miscController.getMyLookings(),
                       builder: (context, snapshot) {
                         return ListView.separated(
@@ -277,7 +298,9 @@ class _LookingForScreenState extends State<LookingForScreen> {
                                 },
                               );
                             });
-                      }),
+                      }):Center(
+                    child: Text("No Data Found"),
+                  )
                 )
               ],
             ),

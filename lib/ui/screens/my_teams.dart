@@ -6,6 +6,8 @@ import 'package:gully_app/ui/screens/add_player_to_team.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 
+import '../../data/controller/misc_controller.dart';
+
 class MyTeams extends StatefulWidget {
   const MyTeams({
     super.key,
@@ -19,6 +21,7 @@ class _MyTeamsState extends State<MyTeams> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TeamController>();
+    final MiscController connectionController=Get.find<MiscController>();
     return DecoratedBox(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -51,7 +54,27 @@ class _MyTeamsState extends State<MyTeams> {
               color: Colors.black26,
               child: Padding(
                   padding: const EdgeInsets.all(18.0),
-                  child: FutureBuilder<List<TeamModel>>(
+                  child: !connectionController.isConnected.value ? const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.signal_wifi_off,
+                          size: 48,
+                          color: Colors.black54,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'No internet connection',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ): FutureBuilder<List<TeamModel>>(
                       future: controller.getTeams(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
@@ -61,11 +84,10 @@ class _MyTeamsState extends State<MyTeams> {
                           );
                         }
                         if (snapshot.hasError) {
-                          return Center(
-                            child: Text('Error ${snapshot.error}}'),
+                          return const Center(
+                            child: Text('Something went wrong'),
                           );
                         }
-
                         if ((snapshot.data?.isEmpty ?? true)) {
                           return SizedBox(
                             width: Get.width,

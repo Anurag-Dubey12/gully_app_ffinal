@@ -156,8 +156,11 @@ class _MyAppState extends State<MyApp> {
           return ConnectivityWidget(
             offlineBanner: const SizedBox(),
             builder: (BuildContext context, bool isOnline) {
+                MiscController controller =Get.find<MiscController>();
               if (!isOnline) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
+                  controller.isConnected.value=false;
+                  logger.d("Connection Status:${controller.isConnected.value}");
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Row(
@@ -175,6 +178,8 @@ class _MyAppState extends State<MyApp> {
                 });
               } else {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
+                  controller.isConnected.value=true;
+                  logger.d("Connection Status:${controller.isConnected.value}");
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(

@@ -4,6 +4,7 @@ import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 
+import '../../data/controller/misc_controller.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 import '../widgets/requests_bottom_sheet.dart';
@@ -15,6 +16,7 @@ class TournamentRequestScreen extends GetView<TournamentController> {
 
   @override
   Widget build(BuildContext context) {
+    final MiscController connectionController=Get.find<MiscController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -79,7 +81,6 @@ class TournamentRequestScreen extends GetView<TournamentController> {
                               if (controller.organizerTournamentList.isEmpty) {
                                 return const EmptyTournamentWidget();
                               }
-
                               return ListView.separated(
                                 separatorBuilder: (context, index) =>
                                 const SizedBox(height: 18),

@@ -14,6 +14,7 @@ import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../data/controller/misc_controller.dart';
 import '../../utils/internetConnectivty.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/primary_button.dart';
@@ -29,22 +30,12 @@ class AddTeam extends StatefulWidget {
 class _AddTeamState extends State<AddTeam> {
   final TextEditingController _teamNameController = TextEditingController();
   XFile? _image;
-  final Internetconnectivty _connectivityService = Internetconnectivty();
-  bool _isConnected = true;
   @override
   initState() {
     super.initState();
     if (widget.team != null) {
       _teamNameController.text = widget.team!.name;
     }
-    _connectivityService.listenToConnectionChanges((isConnected) {
-      setState(() {
-        _isConnected = isConnected;
-      });
-      if (!isConnected) {
-        errorSnackBar("Please connect to the network");
-      }
-    });
   }
 
   pickImage() async {
@@ -56,6 +47,7 @@ class _AddTeamState extends State<AddTeam> {
   Widget build(BuildContext context) {
     final GlobalKey<FormState> key = GlobalKey<FormState>();
     final TeamController controller = Get.find<TeamController>();
+    final MiscController connectionController=Get.find<MiscController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -186,7 +178,7 @@ class _AddTeamState extends State<AddTeam> {
                                   return;
                                 }
                               }
-                              if(_isConnected){
+                              if(connectionController.isConnected.value){
                                 if (widget.team != null) {
                                   final res = await controller.updateTeam(
                                       teamName: _teamNameController.text,
@@ -214,7 +206,7 @@ class _AddTeamState extends State<AddTeam> {
                                       }));
                                 }
                               }else{
-                                errorSnackBar("Please connect to the internet");
+                                errorSnackBar("Please connect to the internet to create your team named ${_teamNameController.text}");
                               }
                               // Get.to(() => const AddPlayersToTeam());
                             },

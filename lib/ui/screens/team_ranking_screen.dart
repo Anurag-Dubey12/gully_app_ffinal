@@ -1,5 +1,7 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/model/team_ranking_model.dart';
 import 'package:gully_app/ui/screens/no_internet_screen.dart';
 import 'package:gully_app/utils/FallbackImageProvider.dart';
@@ -7,42 +9,25 @@ import 'package:gully_app/utils/date_time_helpers.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/ranking_controller.dart';
+import '../../utils/app_logger.dart';
 import '../../utils/internetConnectivty.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
 class TeamRankingScreen extends StatefulWidget {
   const TeamRankingScreen({super.key});
-
   @override
   State<TeamRankingScreen> createState() => _TeamRankingScreenState();
 }
 
 class _TeamRankingScreenState extends State<TeamRankingScreen> {
   int _selectedTab = 0;
-  final Internetconnectivty _connectivityService = Internetconnectivty();
-  bool _isConnected = true;
-  @override
-  initState() {
-    super.initState();
-    _connectivityService.listenToConnectionChanges((isConnected) {
-      setState(() {
-        _isConnected = isConnected;
-      });
-      if (!isConnected) {
-        errorSnackBar("Please connect to the network");
-      }
-    });
-  }
-  @override
-  void dispose() {
-    _connectivityService.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.putOrFind(() => RankingController(Get.find()));
+    final MiscController connectionController=Get.find<MiscController>();
+    logger.d("The ranking controller is connected:${connectionController.isConnected.value}");
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -105,6 +90,7 @@ class _TeamRankingScreenState extends State<TeamRankingScreen> {
                                 tab: 0,
                                 selectedTab: _selectedTab,
                                 text: 'Leather ball',
+                                isConnected: connectionController.isConnected.value,
                                 onTap: (st) {
                                   setState(() {
                                     // ignore: unnecessary_statements
@@ -117,6 +103,7 @@ class _TeamRankingScreenState extends State<TeamRankingScreen> {
                                 tab: 1,
                                 selectedTab: _selectedTab,
                                 text: 'Tennis ball',
+                                isConnected: connectionController.isConnected.value,
                                 onTap: (st) {
                                   setState(() {
                                     // ignore: unnecessary_statements
@@ -140,34 +127,53 @@ class _TeamRankingScreenState extends State<TeamRankingScreen> {
                           child: Container(
                             color: Colors.black26,
                             // height: Get.height * 0.6,
-                            child: _isConnected ? FutureBuilder<List<TeamRankingModel>>(
-                                future: controller.getTeamRankingList(
-                                    _selectedTab == 0 ? 'leather' : 'tennis'),
-                                builder: (context, snapshot) {
-                                  return ListView.separated(
-                                      padding: const EdgeInsets.all(20),
-                                      itemCount: snapshot.data?.length ?? 0,
-                                      shrinkWrap: true,
-                                      separatorBuilder: (c, i) =>
-                                          const SizedBox(height: 10),
-                                      itemBuilder: (c, i) =>
-                                          _TeamCard(team: snapshot.data![i]));
-                                }):const Center(
-                              child:Text(
-                                'No internet connection',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 18),
+                            child:  !connectionController.isConnected.value
+                                ? const Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.signal_wifi_off,
+                                    size: 48,
+                                    color: Colors.black54,
+                                  ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'No internet connection',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ],
                               ),
                             )
+                                : FutureBuilder<List<TeamRankingModel>>(
+                              future: controller.getTeamRankingList(
+                                _selectedTab == 0 ? 'leather' : 'tennis',
+                              ),
+                              builder: (context, snapshot) {
+                                return ListView.separated(
+                                  padding: const EdgeInsets.all(20),
+                                  itemCount: snapshot.data?.length ?? 0,
+                                  shrinkWrap: true,
+                                  separatorBuilder: (c, i) =>
+                                  const SizedBox(height: 10),
+                                  itemBuilder: (c, i) =>
+                                      _TeamCard(team: snapshot.data![i]),
+                                );
+                              },
+                            ),
                           ),
-                        )
+                        ),
                       ],
                     ),
-                  ))
+                  ),
+              ),
             ],
-          )),
+          ),
+      ),
     );
   }
 }
@@ -250,19 +256,21 @@ class _SelectBallTypeCard extends StatelessWidget {
   final int selectedTab;
   final String text;
   final Function(int tab) onTap;
+  final bool isConnected;
 
   const _SelectBallTypeCard({
     required this.onTap,
     required this.tab,
     required this.selectedTab,
     required this.text,
+    this.isConnected=false
   });
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
-          onTap: () => onTap(tab),
+          onTap: () => isConnected ?onTap(tab):errorSnackBar("Connect to the network"),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40),

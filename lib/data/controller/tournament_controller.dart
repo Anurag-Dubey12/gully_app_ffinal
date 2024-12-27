@@ -225,7 +225,8 @@ class TournamentController extends GetxController
       organizerTournamentList.refresh();
       // change(GetStatus.success(null));
     } catch (e) {
-      errorSnackBar(e.toString());
+      // errorSnackBar(e.toString());
+      logger.e(e.toString());
       rethrow;
     }
   }
@@ -252,7 +253,8 @@ class TournamentController extends GetxController
           .map<TeamModel>((e) => TeamModel.fromJson(e['team']))
           .toList();
     } catch (e) {
-      errorSnackBar(e.toString());
+      // errorSnackBar(e.toString());
+      logger.e("Request Team Error:${e.toString()}");
       return [];
     }
   }

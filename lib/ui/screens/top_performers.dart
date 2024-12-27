@@ -4,9 +4,11 @@ import 'package:gully_app/data/model/player_ranking_model.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:intl/intl.dart';
 
+import '../../data/controller/misc_controller.dart';
 import '../../data/controller/ranking_controller.dart';
 import '../../utils/FallbackImageProvider.dart';
 import '../../utils/app_logger.dart';
+import '../../utils/internetConnectivty.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
@@ -30,6 +32,7 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.putOrFind(() => RankingController(Get.find()));
+    final MiscController connectionController=Get.find<MiscController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -92,6 +95,7 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                                 tab: 0,
                                 selectedTab: _selectedTab,
                                 text: 'Leather ball',
+                                isConnected: connectionController.isConnected.value,
                                 onTap: (st) {
                                   setState(() {
                                     _selectedTab = 0;
@@ -103,6 +107,7 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                                 tab: 1,
                                 selectedTab: _selectedTab,
                                 text: 'Tennis ball',
+                                isConnected: connectionController.isConnected.value,
                                 onTap: (st) {
                                   setState(() {
                                     _selectedTab = st;
@@ -189,7 +194,29 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                           child: Container(
                             color: Colors.black26,
                             // height: Get.height * 0.6,
-                            child: FutureBuilder<List<PlayerRankingModel>>(
+                            child: !connectionController.isConnected.value ? const Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.signal_wifi_off,
+                                    size: 48,
+                                    color: Colors.black54,
+                                  ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'No internet connection',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                                :
+                            FutureBuilder<List<PlayerRankingModel>>(
                                 future: controller.getTopPerformers(
                                   _selectedTab == 0 ? 'leather' : 'tennis',
                                   formatedDate!,
@@ -198,9 +225,11 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                                   logger.d("The selected tab value is :$_selectedTab and date is $formatedDate");
                                   if (snapshot.connectionState == ConnectionState.waiting) {
                                     return const Center(child: CircularProgressIndicator());
-                                  } else if (snapshot.hasError) {
-                                    return Center(child: Text('Error: ${snapshot.error}'));
-                                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                                  }
+                                  else if (snapshot.hasError) {
+                                    return const Center(child: Text('Something went Wrong '));
+                                  }
+                                  else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                                     return const Center(child: Text('No top performers found'));
                                   } else {
                                     return ListView.separated(
@@ -212,7 +241,7 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                                     );
                                   }
                                 }
-                            ),
+                            )
                           ),
                         )
                       ],
@@ -252,9 +281,12 @@ class _PlayerCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(player.playerName,
-                    style: Get.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold, color: Colors.black)),
+                SizedBox(
+                  width: 200,
+                  child: Text(player.playerName,
+                      style: Get.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold, color: Colors.black),maxLines: 2,overflow: TextOverflow.ellipsis,),
+                ),
                 // Text(
                 //   'Since ${formatDateTime('dd.MM.yyyy', player.registeredAt)}',
                 //   style:
@@ -274,19 +306,20 @@ class BallType extends StatelessWidget {
   final int selectedTab;
   final String text;
   final Function(int tab) onTap;
-
+  final bool isConnected;
   const BallType({
     required this.onTap,
     required this.tab,
     required this.selectedTab,
     required this.text,
+    required this.isConnected,
   });
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
-          onTap: () => onTap(tab),
+          onTap: () => isConnected ?onTap(tab):errorSnackBar("Please Connect to the network"),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40),

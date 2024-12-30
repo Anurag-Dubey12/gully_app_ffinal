@@ -4,6 +4,7 @@ import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 
+import '../../data/controller/misc_controller.dart';
 import '../../data/controller/team_controller.dart';
 import '../../data/model/team_model.dart';
 import '../../utils/FallbackImageProvider.dart';
@@ -33,6 +34,7 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TeamController>();
+    final MiscController connectionController=Get.find<MiscController>();
     return Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -65,8 +67,10 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 20.0, vertical: 10),
                       child: PrimaryButton(
-                        isDisabled: controller.players.value.length == 15,
-                        disabledText: 'Maximum 15 players added',
+                        isDisabled: controller.players.value.length == 15 ||!connectionController.isConnected.value,
+                        disabledText: !connectionController.isConnected.value
+                            ? 'Connect to the Internet to add Players'
+                            : 'Maximum 15 players added',
                         onTap: () async {
                           await Get.bottomSheet(
                             BottomSheet(
@@ -183,7 +187,32 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Obx(() {
                                     final playersList = controller.players;
-                                    return ListView.separated(
+
+                                    return !connectionController.isConnected.value ? Center(
+                                      child: SizedBox(
+                                        width: Get.width,
+                                        height: Get.height,
+                                        child: const Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.signal_wifi_off,
+                                              size: 48,
+                                              color: Colors.black54,
+                                            ),
+                                            SizedBox(height: 16),
+                                            Text(
+                                              'No internet connection',
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 18,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ):ListView.separated(
                                         padding: const EdgeInsets.only(bottom: 10),
                                         shrinkWrap: true,
                                         itemCount: playersList.length,

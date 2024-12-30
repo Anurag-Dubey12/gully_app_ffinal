@@ -17,6 +17,7 @@ import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../data/controller/misc_controller.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 
@@ -36,9 +37,9 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
     super.key,
     required this.redirectType,
   });
-
   @override
   Widget build(BuildContext context) {
+    final MiscController connectionController=Get.find<MiscController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -49,7 +50,7 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body: Stack(
+        body:Stack(
           children: [
             ClipPath(
               clipper: ArcClipper(),
@@ -110,13 +111,37 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                               return const EmptyTournamentWidget();
                             }
                             if (controller.status.isError) {
-                              return Center(
+                              return const Center(
                                 child: Text(
-                                  'Error: ${controller.status.errorMessage}',
+                                  'Something went wrong',
                                 ),
                               );
                             }
-                            return SizedBox(
+                            return !connectionController.isConnected.value ? Center(
+                              child: SizedBox(
+                                width: Get.width,
+                                height: Get.height * 0.7,
+                                child: const Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.signal_wifi_off,
+                                      size: 48,
+                                      color: Colors.black54,
+                                    ),
+                                    SizedBox(height: 16),
+                                    Text(
+                                      'No internet connection',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ):SizedBox(
                               height: Get.height / 1.2,
                               child: ListView.separated(
                                 scrollDirection: Axis.vertical,
@@ -219,7 +244,6 @@ class _CardState extends State<_Card> {
             } else {
               logger.e("Start date or end date is null for this tournament.");
             }
-
             Get.to(() => ViewMatchupsScreen(isSchedule:controller.isSchedule.value ));
             controller.tournamentId.value=widget.tournament.id;
             logger.d("The Contoller Tournament Id is ${controller.tournamentId.value}");

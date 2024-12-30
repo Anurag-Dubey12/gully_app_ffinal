@@ -11,19 +11,19 @@
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modifying connection issue">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/ranking_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/ranking_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/add_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/add_team.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/looking_for_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/looking_for_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/my_teams.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/my_teams.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/team_ranking_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/team_ranking_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_requests_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_requests_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/score_card_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/score_card_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/team_players_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/team_players_list.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_tournaments_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_tournaments_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/event_handler.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/event_handler.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/LiquidPullToRefreshWidget.dart" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -184,14 +184,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00055" summary="home screen bottomnav ,shop screen modify">
-      <option name="closed" value="true" />
-      <created>1728042825261</created>
-      <option name="number" value="00055" />
-      <option name="presentableId" value="LOCAL-00055" />
-      <option name="project" value="LOCAL" />
-      <updated>1728042825262</updated>
     </task>
     <task id="LOCAL-00056" summary="modify shop dashboard ,shop_homescreen">
       <option name="closed" value="true" />
@@ -577,7 +569,15 @@
       <option name="project" value="LOCAL" />
       <updated>1735214595976</updated>
     </task>
-    <option name="localTasksCounter" value="104" />
+    <task id="LOCAL-00104" summary="modifying connection issue">
+      <option name="closed" value="true" />
+      <created>1735300981425</created>
+      <option name="number" value="00104" />
+      <option name="presentableId" value="LOCAL-00104" />
+      <option name="project" value="LOCAL" />
+      <updated>1735300981427</updated>
+    </task>
+    <option name="localTasksCounter" value="105" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -1222,6 +1222,12 @@
           <option name="totalLines" value="5304126" />
           <option name="info" value="modifying connection issue" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1735300988760" />
+          <option name="linesCode" value="40302" />
+          <option name="totalLines" value="4813143" />
+          <option name="info" value="modifying connection issue" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1813,6 +1819,12 @@
           <option name="linesCode" value="40249" />
           <option name="totalLines" value="5304126" />
           <option name="info" value="Dec 26, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1735300988760" />
+          <option name="linesCode" value="40302" />
+          <option name="totalLines" value="4813143" />
+          <option name="info" value="Dec 27, 2024" />
         </TimePoint>
       </list>
     </option>

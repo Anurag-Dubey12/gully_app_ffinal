@@ -5,6 +5,7 @@ import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/screens/team_players_list.dart';
 import 'package:gully_app/ui/screens/view_matchups_screen.dart';
+import '../../data/controller/misc_controller.dart';
 import '../../utils/FallbackImageProvider.dart';
 import '../../utils/utils.dart';
 import '../theme/theme.dart';
@@ -24,6 +25,7 @@ class TournamentTeams extends GetView<TournamentController> {
 
   @override
   Widget build(BuildContext context) {
+
     if (isTeamListOnly) {
       return DecoratedBox(
         decoration: const BoxDecoration(
@@ -111,9 +113,34 @@ class TournamentTeams extends GetView<TournamentController> {
   }
 
   Widget registeredTeamsView() {
+    final MiscController connectionController=Get.find<MiscController>();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07, vertical: 10),
-      child: FutureBuilder<List<TeamModel>>(
+      child: !connectionController.isConnected.value ? Center(
+        child: SizedBox(
+          width: Get.width,
+          height: Get.height,
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.signal_wifi_off,
+                size: 48,
+                color: Colors.black54,
+              ),
+              SizedBox(height: 16),
+              Text(
+                'No internet connection',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ):FutureBuilder<List<TeamModel>>(
         future: controller.getRegisteredTeams(tournament.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -128,6 +155,7 @@ class TournamentTeams extends GetView<TournamentController> {
               ),
             );
           }
+
           return ListView.separated(
             separatorBuilder: (context, index) => const SizedBox(height: 18),
             itemCount: snapshot.data?.length ?? 0,
@@ -141,9 +169,34 @@ class TournamentTeams extends GetView<TournamentController> {
   }
 
   Widget matchups() {
+    final MiscController connectionController=Get.find<MiscController>();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07),
-      child: FutureBuilder(
+      child: !connectionController.isConnected.value ? Center(
+        child: SizedBox(
+          width: Get.width,
+          height: Get.height,
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.signal_wifi_off,
+                size: 48,
+                color: Colors.black54,
+              ),
+              SizedBox(height: 16),
+              Text(
+                'No internet connection',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ):FutureBuilder(
           future: tournament.id !=null ? controller.getMatchup(tournament.id!): controller.getMatchup(controller.state!.id),
           builder: (context, snapshot) {
             if (snapshot.data?.isEmpty ?? true) {

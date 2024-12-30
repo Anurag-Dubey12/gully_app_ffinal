@@ -12,6 +12,7 @@ import 'package:gully_app/utils/utils.dart';
 import 'package:intl/intl.dart';
 
 import '../../data/controller/auth_controller.dart';
+import '../../data/controller/misc_controller.dart';
 import '../../data/controller/tournament_controller.dart';
 import '../../data/model/points_table_model.dart';
 import '../../utils/CustomItemCheckbox.dart';
@@ -304,6 +305,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
+    final MiscController connectionController=Get.find<MiscController>();
     return GradientBuilder(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -641,6 +643,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                             SizedBox(height: Get.height * 0.02),
                             PrimaryButton(
                               onTap: () async {
+                                if(connectionController.isConnected.value){
                                 if (selectedDate == null) {
                                   errorSnackBar('Please select a date');
                                   return;
@@ -653,6 +656,10 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                 if (selectedTeam1 == selectedTeam2) {
                                   errorSnackBar(
                                       'Please select different teams on Both the side');
+                                  return;
+                                }
+                                if(selectedRound==null){
+                                  errorSnackBar('Please select a round ');
                                   return;
                                 }
                                 if (widget.tourId != null) {
@@ -686,29 +693,32 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                   successSnackBar('Matchup created')
                                       .then((value) => Get.back());
                                 }
+                                }else{
+                                  errorSnackBar('Please Connect to the internet to create matchup between the two teams');
+                                }
                                 // Get.to(() => const ViewMatchupsScreen());
                               },
                               title: 'Submit',
                             ),
 
                             SizedBox(height: Get.height * 0.02),
-                            PrimaryButton(
-                              onTap: showEliminationBottomSheet,
-                              title: 'Eliminate Teams',
-                            ),
-                            SizedBox(height: Get.height * 0.02),
-                            PrimaryButton(
-                              // onTap: showEliminationBottomSheet,
-                              onTap: () {
-                                logger.d("The Tournament id is:${widget.tournament!.id}");
-                                Get.to(() => PointsTable(
-                                  tournamentId: widget.tournament!.id,
-                                  tournamentName:
-                                  widget.tournament!.tournamentName,
-                                ));
-                              },
-                              title: 'Points Table',
-                            ),
+                            // PrimaryButton(
+                            //   onTap: showEliminationBottomSheet,
+                            //   title: 'Eliminate Teams',
+                            // ),
+                            // SizedBox(height: Get.height * 0.02),
+                            // PrimaryButton(
+                            //   // onTap: showEliminationBottomSheet,
+                            //   onTap: () {
+                            //     logger.d("The Tournament id is:${widget.tournament!.id}");
+                            //     Get.to(() => PointsTable(
+                            //       tournamentId: widget.tournament!.id,
+                            //       tournamentName:
+                            //       widget.tournament!.tournamentName,
+                            //     ));
+                            //   },
+                            //   title: 'Points Table',
+                            // ),
                           ],
                         ))
                   ],

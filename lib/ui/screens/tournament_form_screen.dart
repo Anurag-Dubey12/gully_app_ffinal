@@ -21,6 +21,7 @@ import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../data/controller/auth_controller.dart';
+import '../../data/controller/misc_controller.dart';
 import '../../utils/image_picker_helper.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
@@ -199,6 +200,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
         final TournamentController tournamentController =
         Get.find<TournamentController>();
         final AuthController authController = Get.find<AuthController>();
+        final MiscController connectionController=Get.find<MiscController>();
         // if (_key.currentState!.validate()) {
         //   if (_image == null &&
         //       widget.tournament?.coverPhoto == null) {
@@ -276,36 +278,40 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
                 : _cohost2Phone.text,
             // 'disclaimer': _disclaimerComntroller.text,
           };
-          if (widget.tournament != null) {
-            bool isOk = await tournamentController
-                .updateTournament({
-              ...tournament,
-            }, widget.tournament!.id);
-            if (isOk) {
-              successSnackBar('Tournament Updated Successfully',istournamentScreen: true);
-              Get.forceAppUpdate();
+          if(connectionController.isConnected.value){
+            if (widget.tournament != null) {
+              bool isOk = await tournamentController
+                  .updateTournament({
+                ...tournament,
+              }, widget.tournament!.id);
+              if (isOk) {
+                successSnackBar('Tournament Updated Successfully',istournamentScreen: true);
+                Get.forceAppUpdate();
+              }
+              // }
+            } else {
+              logger.d("Called before tourmodel called:${from?.toIso8601String()} ");
+              final tournamentModel =
+              await tournamentController
+                  .createTournament(tournament);
+              logger.d("After torumodel Function called:${tournamentModel.tournamentStartDateTime} ");
+              authController.getUser();
+              logger.d("The Tournament id is:${tournamentModel.id}");
+              // if (tournament != null) {
+              //   final result = await Get.to(() => PaymentPage(tournament: tournamentModel));
+              //   if (result == null || result == false) {
+              //     await tournamentController.cancelTournament(tournamentModel.id);
+              //     Get.snackbar("Tournament", "Your tournament Deleted Successfully");
+              //   }
+              // }
+              successSnackBar('Tournament Create Successfully',istournamentScreen: true);
+              // Get.offAll(() => const HomeScreen(),
+              //     predicate: (route) => route.name == '/HomeScreen');
+              // Get.to(() => PaymentPage(
+              //     tournament: tournamentModel));
             }
-          // }
-          } else {
-            logger.d("Called before tourmodel called:${from?.toIso8601String()} ");
-            final tournamentModel =
-                await tournamentController
-                .createTournament(tournament);
-            logger.d("After torumodel Function called:${tournamentModel.tournamentStartDateTime} ");
-            authController.getUser();
-            logger.d("The Tournament id is:${tournamentModel.id}");
-            // if (tournament != null) {
-            //   final result = await Get.to(() => PaymentPage(tournament: tournamentModel));
-            //   if (result == null || result == false) {
-            //     await tournamentController.cancelTournament(tournamentModel.id);
-            //     Get.snackbar("Tournament", "Your tournament Deleted Successfully");
-            //   }
-            // }
-            successSnackBar('Tournament Create Successfully',istournamentScreen: true);
-            // Get.offAll(() => const HomeScreen(),
-            //     predicate: (route) => route.name == '/HomeScreen');
-            // Get.to(() => PaymentPage(
-            //     tournament: tournamentModel));
+          }else{
+            errorSnackBar('No Internet Connection. Please try again later.');
           }
       } finally {
         setState(() {

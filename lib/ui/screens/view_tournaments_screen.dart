@@ -6,6 +6,7 @@ import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 
+import '../../data/controller/misc_controller.dart';
 import '../../data/controller/tournament_controller.dart';
 
 class ViewTournamentScreen extends StatefulWidget {
@@ -20,6 +21,7 @@ class _ViewTournamentScreenState extends State<ViewTournamentScreen> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
+    final MiscController connectionController=Get.find<MiscController>();
     return GradientBuilder(
         child: Scaffold(
           backgroundColor: Colors.transparent,
@@ -44,7 +46,31 @@ class _ViewTournamentScreenState extends State<ViewTournamentScreen> {
                     return const EmptyTournamentWidget();
                   }
                   return Expanded(
-                    child: ListView.separated(
+                    child: !connectionController.isConnected.value ? Center(
+                      child: SizedBox(
+                        width: Get.width,
+                        height: Get.height * 0.7,
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.signal_wifi_off,
+                              size: 48,
+                              color: Colors.black54,
+                            ),
+                            SizedBox(height: 16),
+                            Text(
+                              'No internet connection',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w700,
+                                fontSize: 18,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ):ListView.separated(
                         separatorBuilder: (context, index) =>
                         const SizedBox(height: 18),
                         shrinkWrap: true,

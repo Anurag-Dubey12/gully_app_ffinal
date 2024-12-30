@@ -78,45 +78,83 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
+  late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
+  final Connectivity _connectivity = Connectivity();
 
   @override
   void initState() {
     super.initState();
-    // Initialize connectivity listener
-    Connectivity().onConnectivityChanged.listen((List<ConnectivityResult> result) {
-      if (result.contains(ConnectivityResult.none) || result.isEmpty) {
-        _showConnectivitySnackbar(false);
-      } else {
-        _showConnectivitySnackbar(true);
-      }
+    _initConnectivity();
+  }
+
+  Future<void> _initConnectivity() async {
+    try {
+      final List<ConnectivityResult> results = await _connectivity.checkConnectivity();
+      _updateConnectionStatus(results);
+    } catch (e) {
+      logger.e('Could not check connectivity status', error: e);
+    }
+
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      _updateConnectionStatus(results);
     });
   }
 
-  void _showConnectivitySnackbar(bool isConnected) {
-    scaffoldMessengerKey.currentState?.hideCurrentSnackBar();
-    scaffoldMessengerKey.currentState?.showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            Icon(
-              isConnected ? Icons.wifi : Icons.wifi_off,
-              color: Colors.white,
+  void _updateConnectionStatus(List<ConnectivityResult> results) {
+    if (!mounted) return;
+
+    final isConnected = results.any((result) => result != ConnectivityResult.none);
+
+    try {
+      final MiscController controller = Get.find<MiscController>();
+      controller.isConnected.value = isConnected;
+      logger.d("Connection Status: ${controller.isConnected.value}");
+
+      if (Get.context != null) {
+        if (!isConnected) {
+          ScaffoldMessenger.of(Get.context!).showSnackBar(
+            const SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.wifi_off, color: Colors.white),
+                  SizedBox(width: 8),
+                  Text('No internet connection'),
+                ],
+              ),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+              behavior: SnackBarBehavior.floating,
             ),
-            const SizedBox(width: 8),
-            Text(
-              isConnected
-                  ? 'Internet connection restored'
-                  : 'No internet connection',
+          );
+        } else {
+          ScaffoldMessenger.of(Get.context!).hideCurrentSnackBar();
+          ScaffoldMessenger.of(Get.context!).showSnackBar(
+            const SnackBar(
+              content: Row(
+                children: [
+                  Icon(Icons.wifi, color: Colors.white),
+                  SizedBox(width: 8),
+                  Text('Internet connection restored'),
+                ],
+              ),
+              backgroundColor: Colors.green,
+              duration: Duration(seconds: 3),
+              behavior: SnackBarBehavior.floating,
             ),
-          ],
-        ),
-        backgroundColor: isConnected ? Colors.green : Colors.red,
-        duration: const Duration(seconds: 3),
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
+          );
+        }
+      }
+    } catch (e) {
+      logger.e('Error updating connection status', error: e);
+    }
   }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -152,57 +190,62 @@ class _MyAppState extends State<MyApp> {
               child: child!,
             ),
           );
-        } else {
-          return ConnectivityWidget(
-            offlineBanner: const SizedBox(),
-            builder: (BuildContext context, bool isOnline) {
-                MiscController controller =Get.find<MiscController>();
-              if (!isOnline) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  controller.isConnected.value=false;
-                  logger.d("Connection Status:${controller.isConnected.value}");
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Row(
-                        children: [
-                          Icon(Icons.wifi_off, color: Colors.white),
-                          SizedBox(width: 8),
-                          Text('No internet connection'),
-                        ],
-                      ),
-                      backgroundColor: Colors.red,
-                      duration: Duration(days: 365),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                });
-              } else {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  controller.isConnected.value=true;
-                  logger.d("Connection Status:${controller.isConnected.value}");
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Row(
-                        children: [
-                          Icon(Icons.wifi, color: Colors.white),
-                          SizedBox(width: 8),
-                          Text('Internet connection Successfully'),
-                        ],
-                      ),
-                      backgroundColor: Colors.green,
-                      duration: Duration(seconds: 3),
-                      behavior: SnackBarBehavior.floating,
-                    ),
-                  );
-                });
-              }
-              return LocationStreamHandler(
-                child: child!,
-              );
-            },
-          );
         }
+        return LocationStreamHandler(
+          child: child!,
+        );
+        // else {
+        //   // return ConnectivityWidget(
+        //   //   offlineBanner: const SizedBox(),
+        //   //   builder: (BuildContext context, bool isOnline) {
+        //   //       MiscController controller =Get.find<MiscController>();
+        //   //     if (!isOnline) {
+        //   //       WidgetsBinding.instance.addPostFrameCallback((_) {
+        //   //         controller.isConnected.value=false;
+        //   //         logger.d("Connection Status:${controller.isConnected.value}");
+        //   //         ScaffoldMessenger.of(context).showSnackBar(
+        //   //           const SnackBar(
+        //   //             content: Row(
+        //   //               children: [
+        //   //                 Icon(Icons.wifi_off, color: Colors.white),
+        //   //                 SizedBox(width: 8),
+        //   //                 Text('No internet connection'),
+        //   //               ],
+        //   //             ),
+        //   //             backgroundColor: Colors.red,
+        //   //             duration: Duration(days: 365),
+        //   //             behavior: SnackBarBehavior.floating,
+        //   //           ),
+        //   //         );
+        //   //       });
+        //   //     } else {
+        //   //       WidgetsBinding.instance.addPostFrameCallback((_) {
+        //   //         controller.isConnected.value=true;
+        //   //         logger.d("Connection Status:${controller.isConnected.value}");
+        //   //         ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        //   //         ScaffoldMessenger.of(context).showSnackBar(
+        //   //           const SnackBar(
+        //   //             content: Row(
+        //   //               children: [
+        //   //                 Icon(Icons.wifi, color: Colors.white),
+        //   //                 SizedBox(width: 8),
+        //   //                 Text('Internet connection Successfully'),
+        //   //               ],
+        //   //             ),
+        //   //             backgroundColor: Colors.green,
+        //   //             duration: Duration(seconds: 3),
+        //   //             behavior: SnackBarBehavior.floating,
+        //   //           ),
+        //   //         );
+        //   //       });
+        //   //     }
+        //   //     return LocationStreamHandler(
+        //   //       child: child!,
+        //   //     );
+        //   //   },
+        //   // );
+        //
+        // }
       },
       locale: const Locale('en'),
       binds: [

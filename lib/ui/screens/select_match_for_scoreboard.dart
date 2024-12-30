@@ -9,6 +9,7 @@ import 'package:gully_app/ui/screens/select_opening_team.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../data/controller/misc_controller.dart';
 import '../../data/model/matchup_model.dart';
 import '../../utils/app_logger.dart';
 import '../theme/theme.dart';
@@ -19,6 +20,7 @@ class SelectMatchForScoreBoard extends GetView<TournamentController> {
 
   @override
   Widget build(BuildContext context) {
+    final MiscController connectionController = Get.find<MiscController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -73,42 +75,69 @@ class SelectMatchForScoreBoard extends GetView<TournamentController> {
                         color: Colors.white,
                       )),
                   Expanded(
-                    child: FutureBuilder(
-                        future: controller.getMatchup(controller.state!.id),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Center(
-                              child: Text('Error: ${snapshot.error}'),
-                            );
-                          }
-                          if (snapshot.data?.isEmpty ?? true) {
-                            return const Center(
-                                child: Text('No Matchup has been organized yet',
+                    child: !connectionController.isConnected.value
+                        ? Center(
+                            child: SizedBox(
+                              width: Get.width,
+                              height: Get.height,
+                              child: const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.signal_wifi_off,
+                                    size: 48,
+                                    color: Colors.black54,
+                                  ),
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'No internet connection',
                                     style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold)));
-                          }
-                          return ListView.separated(
-                            itemCount: snapshot.data?.length ?? 0,
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(
-                              height: 10,
-                            ),
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) => Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: _MatchupCard(
-                                matchup: snapshot.data![index],
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 18,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        }),
+                          )
+                        : FutureBuilder(
+                            future: controller.getMatchup(controller.state!.id),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                  child: Text('Error: ${snapshot.error}'),
+                                );
+                              }
+                              if (snapshot.data?.isEmpty ?? true) {
+                                return const Center(
+                                    child: Text(
+                                        'No Matchup has been organized yet',
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold)));
+                              }
+                              return ListView.separated(
+                                itemCount: snapshot.data?.length ?? 0,
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(
+                                  height: 10,
+                                ),
+                                shrinkWrap: true,
+                                itemBuilder: (context, index) => Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: _MatchupCard(
+                                    matchup: snapshot.data![index],
+                                  ),
+                                ),
+                              );
+                            }),
                   ),
                 ],
               ),
@@ -196,10 +225,12 @@ class _MatchupCard extends GetView<ScoreBoardController> {
                   Column(
                     children: [
                       CircleAvatar(
-                        backgroundImage:
-                        matchup.team1.logo!=null && matchup.team1.logo!.isNotEmpty ?
-                        NetworkImage(matchup.team1.toImageUrl()) : const AssetImage('assets/images/logo.png') as ImageProvider),
-                            // NetworkImage(matchup.team1.toImageUrl()),
+                          backgroundImage: matchup.team1.logo != null &&
+                                  matchup.team1.logo!.isNotEmpty
+                              ? NetworkImage(matchup.team1.toImageUrl())
+                              : const AssetImage('assets/images/logo.png')
+                                  as ImageProvider),
+                      // NetworkImage(matchup.team1.toImageUrl()),
                       const SizedBox(width: 12),
                       SizedBox(
                         width: 100,
@@ -237,10 +268,12 @@ class _MatchupCard extends GetView<ScoreBoardController> {
                   Column(
                     children: [
                       CircleAvatar(
-                        backgroundImage:
-                        matchup.team2.logo!=null && matchup.team2.logo!.isNotEmpty ?
-                        NetworkImage(matchup.team2.toImageUrl()) : const AssetImage('assets/images/logo.png') as ImageProvider),
-                            // NetworkImage(matchup.team2.toImageUrl()),
+                          backgroundImage: matchup.team2.logo != null &&
+                                  matchup.team2.logo!.isNotEmpty
+                              ? NetworkImage(matchup.team2.toImageUrl())
+                              : const AssetImage('assets/images/logo.png')
+                                  as ImageProvider),
+                      // NetworkImage(matchup.team2.toImageUrl()),
                       const SizedBox(width: 12),
                       SizedBox(
                         width: 100,

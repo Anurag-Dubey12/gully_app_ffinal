@@ -12,6 +12,7 @@ import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../data/controller/misc_controller.dart';
 import '../../utils/app_logger.dart';
 import 'current_tournament_list.dart';
 import 'organize_match.dart';
@@ -22,6 +23,7 @@ class ViewMatchupsScreen extends GetView<TournamentController> {
   const ViewMatchupsScreen({super.key,this.id,required this.isSchedule});
   @override
   Widget build(BuildContext context) {
+    final MiscController connectionController=Get.find<MiscController>();
     return GradientBuilder(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -52,9 +54,8 @@ class ViewMatchupsScreen extends GetView<TournamentController> {
                       : controller.getMatchup(controller.state!.id),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
+                      return const Center(child: Text('Something went wrong'));
                     }
-
                     if (controller.matchups.isEmpty) {
                       return const Center(
                           child: EmptyTournamentWidget(
@@ -62,7 +63,33 @@ class ViewMatchupsScreen extends GetView<TournamentController> {
                           )
                       );
                     }
-
+                    if(!connectionController.isConnected.value){
+                     return Center(
+                        child: SizedBox(
+                          width: Get.width,
+                          height: Get.height,
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.signal_wifi_off,
+                                size: 48,
+                                color: Colors.black54,
+                              ),
+                              SizedBox(height: 16),
+                              Text(
+                                'No internet connection',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 18,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
                     return ListView.separated(
                       itemCount: controller.matchups.length,
                       shrinkWrap: true,

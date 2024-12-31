@@ -37,7 +37,7 @@ class CurrentOverStats extends GetView<ScoreBoardController> {
                             separatorBuilder: (context, index) =>
                             const SizedBox(width: 14),
                             itemCount: controller
-                                .scoreboard.value!.currentOverHistory.length,
+                                .scoreboard.value?.currentOverHistory.length ??0,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
                               return Column(

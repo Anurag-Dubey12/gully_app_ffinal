@@ -35,6 +35,7 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
   Widget build(BuildContext context) {
     final TournamentController controller = Get.find<TournamentController>();
     final AuthController authController = Get.find<AuthController>();
+    final MiscController connectionController=Get.find<MiscController>();
     return DecoratedBox(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -54,13 +55,13 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                   spreadRadius: 2,
                   offset: const Offset(0, -1))
             ]),
-            child: Column(
+            child:Column(
               children: [
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: 35.0, vertical: 19),
                   child: PrimaryButton(
-                    isDisabled: !rulesAccepted || !termsAccepted,
+                    isDisabled: !rulesAccepted || !termsAccepted || !connectionController.isConnected.value,
                     onTap: () {
                       if (_formKey.currentState!.validate()) {
                         controller

@@ -159,7 +159,7 @@ class TournamentController extends GetxController
       }
     } catch (e) {
       logger.d('Error in getTournamentList: $e');
-      errorSnackBar(e.toString());
+      // errorSnackBar(e.toString());
     } finally {
       isLoading.value = false;
       matches.refresh();
@@ -199,7 +199,7 @@ class TournamentController extends GetxController
       }
     } catch (e) {
       logger.d('Error in getTournamentList: $e');
-      errorSnackBar(e.toString());
+      // errorSnackBar(e.toString());
     } finally {
       isLoading.value = false;
       matches.refresh();

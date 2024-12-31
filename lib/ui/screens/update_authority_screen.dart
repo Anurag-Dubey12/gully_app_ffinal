@@ -7,6 +7,8 @@ import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../data/controller/misc_controller.dart';
+
 class UpdateAuthorityScreen extends StatefulWidget {
   final TournamentModel tournament;
   const UpdateAuthorityScreen({super.key, required this.tournament});
@@ -63,6 +65,7 @@ class _UpdateAuthorityScreenState extends State<UpdateAuthorityScreen> {
   @override
   Widget build(BuildContext context) {
     final TournamentController tournamentController = Get.find();
+    final MiscController connectionController=Get.find<MiscController>();
     return GradientBuilder(
         child: Scaffold(
       backgroundColor: Colors.transparent,
@@ -124,6 +127,8 @@ class _UpdateAuthorityScreenState extends State<UpdateAuthorityScreen> {
             const SizedBox(height: 20),
             PrimaryButton(
               onTap: () async {
+                if(connectionController.isConnected.value){
+
                 if (selectedValue.isEmpty) {
                   return errorSnackBar('Please Select Authority');
                 }
@@ -143,6 +148,9 @@ class _UpdateAuthorityScreenState extends State<UpdateAuthorityScreen> {
                     Get.back();
                     Get.back();
                   });
+                }
+                }else{
+                  errorSnackBar("Connect to The Internet to Update Authority");
                 }
               },
               isLoading: isLoading,

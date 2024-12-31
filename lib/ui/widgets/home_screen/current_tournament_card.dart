@@ -62,6 +62,38 @@ class CurrentTournamentCard extends GetView<TournamentController> {
 
                 return (a.tournamentId ?? '').compareTo(b.tournamentId ?? '');
               });
+            // final sortedMatches = List.from(controller.matches)
+            //   ..sort((a, b) {
+            //     int getPriority(String? status) {
+            //       switch (status?.toLowerCase()) {
+            //         case 'current':
+            //           return 0;
+            //         case 'upcoming':
+            //           return 1;
+            //         case 'played':
+            //           return 2;
+            //         default:
+            //           return 3;
+            //       }
+            //     }
+            //     int priorityA = getPriority(a.status);
+            //     int priorityB = getPriority(b.status);
+            //     if (priorityA != priorityB) {
+            //       return priorityA.compareTo(priorityB);
+            //     }
+            //     return (a.tournamentId ?? '').compareTo(b.tournamentId ?? '');
+            //   });
+            //
+            // // Group matches by tournament ID and get the latest match for each tournament
+            // final Map<String, dynamic> latestMatchesByTournament = {};
+            // for (var match in sortedMatches) {
+            //   final tournamentId = match.tournamentId ?? '';
+            //   if (!latestMatchesByTournament.containsKey(tournamentId)) {
+            //     latestMatchesByTournament[tournamentId] = match;
+            //   }
+            // }
+            // // Convert the map values back to a list
+            // final latestMatches = latestMatchesByTournament.values.toList();
 
             return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -236,6 +268,7 @@ class _CardState extends State<_Card> {
                             onTap: (){
                               logger.d("The TournamentId is:${tournamentdata.id} }");
                               controller.setScheduleStatus(true);
+                              controller.tournamentname.value=tournamentdata.tournamentName;
                               Get.to(() => ScheduleScreen(id:tournamentdata.id));
                             },
                             child: const Text("View Schedule",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),),

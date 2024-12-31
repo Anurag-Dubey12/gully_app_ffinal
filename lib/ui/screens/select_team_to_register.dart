@@ -8,6 +8,8 @@ import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../data/controller/misc_controller.dart';
+
 class SelectTeamToRegister extends StatefulWidget {
   final Function onTeamSelected;
   const SelectTeamToRegister({
@@ -23,6 +25,7 @@ class _SelectTeamToRegisterState extends State<SelectTeamToRegister> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TeamController>();
+    final MiscController connectionController=Get.find<MiscController>();
     controller.getTeams();
     return DecoratedBox(
         decoration: const BoxDecoration(
@@ -56,7 +59,31 @@ class _SelectTeamToRegisterState extends State<SelectTeamToRegister> {
               color: Colors.black26,
               child: Padding(
                   padding: const EdgeInsets.all(18.0),
-                  child: FutureBuilder<List<TeamModel>>(
+                  child: !connectionController.isConnected.value ? Center(
+                    child: SizedBox(
+                      width: Get.width,
+                      height: Get.height * 0.7,
+                      child: const Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.signal_wifi_off,
+                            size: 48,
+                            color: Colors.black54,
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            'No internet connection',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ):FutureBuilder<List<TeamModel>>(
                       future: controller.getTeams(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==

@@ -45,18 +45,21 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
               return entry.value.reduce((latest, match) =>
               match.matchDate.isAfter(latest.matchDate) ? match : latest);
             }).toList();
-            return ListView.builder(
-                // itemCount: controller.matches.length,
-                itemCount: latestMatch.length,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.only(bottom: 10, top: 10),
-                itemBuilder: (context, snapshot) {
-                  return _Card(
-                    // tournament: controller.matches[snapshot],
-                    tournament: latestMatch[snapshot],
-                  );
-                });
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: ListView.builder(
+                  // itemCount: controller.matches.length,
+                  itemCount: latestMatch.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
+                  itemBuilder: (context, snapshot) {
+                    return _Card(
+                      // tournament: controller.matches[snapshot],
+                      tournament: latestMatch[snapshot],
+                    );
+                  }),
+            );
           }
         }));
   }

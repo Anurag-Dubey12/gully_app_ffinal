@@ -11,6 +11,7 @@ import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../data/controller/misc_controller.dart';
 import '../../utils/FallbackImageProvider.dart';
 import '../../utils/app_logger.dart';
 import '../theme/theme.dart';
@@ -20,6 +21,7 @@ class ScheduleScreen extends GetView<TournamentController> {
   const ScheduleScreen({super.key, this.id});
   @override
   Widget build(BuildContext context) {
+    final MiscController connectionController=Get.find<MiscController>();
     return GradientBuilder(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -47,7 +49,31 @@ class ScheduleScreen extends GetView<TournamentController> {
                   )),
               SizedBox(height: Get.height * 0.01),
               Expanded(
-                child: FutureBuilder(
+                child: !connectionController.isConnected.value ? Center(
+                  child: SizedBox(
+                    width: Get.width,
+                    height: Get.height * 0.7,
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.signal_wifi_off,
+                          size: 48,
+                          color: Colors.black54,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'No internet connection',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ):FutureBuilder(
                   future: id != null
                       ? controller.getMatchup(id!)
                       : controller.getMatchup(controller.state!.id),

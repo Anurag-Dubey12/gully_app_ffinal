@@ -48,7 +48,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
         bottomNavigationBar: Builder(
           builder: (context) => Obx(() {
             return Container(
-              height: 90,
+              height: 70,
               decoration: BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
@@ -63,8 +63,9 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 35.0, vertical: 19),
+                    padding:const EdgeInsets.symmetric(
+                        horizontal: 25.0,
+                        vertical:10),
                     child: PrimaryButton(
                       isDisabled: controller.players.value.length == 15,
                       disabledText: 'Maximum 15 players added',
@@ -309,7 +310,6 @@ class PlayerCard extends StatefulWidget {
 }
 
 class _PlayerCardState extends State<PlayerCard> {
-
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TeamController>();
@@ -317,11 +317,11 @@ class _PlayerCardState extends State<PlayerCard> {
         (player) => player.role == 'Captain',
         orElse: () => widget.player);
     final previousCaptain = controller.players.firstWhere(
-          (player) => player.role == 'Captain',
+      (player) => player.role == 'Captain',
     );
     final previousCaptainName = previousCaptain.name;
-    final previousCaptainid =previousCaptain.id;
-    final previousCaptainRole =previousCaptain.role;
+    final previousCaptainid = previousCaptain.id;
+    final previousCaptainRole = previousCaptain.role;
 
     return Container(
       decoration: BoxDecoration(
@@ -362,658 +362,284 @@ class _PlayerCardState extends State<PlayerCard> {
             ),
             const Spacer(),
             if (widget.player.role == 'Captain')
-              InkWell(
-                onTap: () {
-                  Get.bottomSheet(
-                    Container(
-                      height: Get.height * 0.65,
-                      padding: const EdgeInsets.all(8),
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(10)),
-                      ),
-                      child: Column(
-                        children: [
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                height: 5,
-                                width: 120,
-                                decoration: BoxDecoration(
-                                    color: Colors.grey[400],
-                                    borderRadius: BorderRadius.circular(10)),
+              Container(
+                width: 85,
+                margin: const EdgeInsets.only(left: 30),
+                child: OutlinedButton(
+                  onPressed: () {
+                    Get.bottomSheet(
+                      Container(
+                        height: Get.height * 0.65,
+                        padding: const EdgeInsets.all(8),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(10)),
+                        ),
+                        child: Column(
+                          children: [
+                            Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  height: 5,
+                                  width: 120,
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[400],
+                                      borderRadius: BorderRadius.circular(10)),
+                                ),
                               ),
                             ),
-                          ),
-                          const Text(
-                            "Tap on a player to assign a new captain",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16.0,
-                              fontWeight: FontWeight.w500,
+                            const Text(
+                              "Tap on a player to assign a new captain",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 5),
-                          Expanded(
-                            child: ListView.separated(
-                              itemCount: controller.players.length - 1,
-                              itemBuilder: (context, index) {
-                                final player = controller.players
-                                    .where((p) => p.role != currentCaptain.role)
-                                    .toList()[index];
+                            const SizedBox(height: 5),
+                            Expanded(
+                              child: ListView.separated(
+                                itemCount: controller.players.length - 1,
+                                itemBuilder: (context, index) {
+                                  final player = controller.players
+                                      .where((p) => p.role != currentCaptain.role)
+                                      .toList()[index];
 
-                                return AnimatedContainer(
-                                  duration: const Duration(milliseconds: 300),
-                                  curve: Curves.easeInOut,
-                                  margin:
-                                  const EdgeInsets.symmetric(vertical: 4),
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10),
-                                      border: Border.all(
-                                          color: Colors.grey, width: 0.5)),
-                                  child: ListTile(
-                                    leading: Hero(
-                                      tag: 'player-avatar-${player.name}',
-                                      child: CircleAvatar(
-                                        radius: 24,
-                                        backgroundColor: Colors.transparent,
-                                        child: Image.asset(
-                                          getAssetFromRole(player.role),
-                                          width: 20,
-                                          fit: BoxFit.cover,
+                                  return AnimatedContainer(
+                                    duration: const Duration(milliseconds: 300),
+                                    curve: Curves.easeInOut,
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 4),
+                                    decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                            color: Colors.grey, width: 0.5)),
+                                    child: ListTile(
+                                      leading: Hero(
+                                        tag: 'player-avatar-${player.name}',
+                                        child: CircleAvatar(
+                                          radius: 24,
+                                          backgroundColor: Colors.transparent,
+                                          child: Image.asset(
+                                            getAssetFromRole(player.role),
+                                            width: 20,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    title: Text(
-                                      player.name,
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
+                                      title: Text(
+                                        player.name,
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                        ),
                                       ),
-                                    ),
-                                    subtitle: Text(
-                                      player.role,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey[700],
+                                      subtitle: Text(
+                                        player.role,
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey[700],
+                                        ),
                                       ),
-                                    ),
-                                    onTap: () async {
-                                      logger.d(
-                                          "The Previous Captain Details : \n Id:$previousCaptainid \n Name :$previousCaptainName \n Role:$previousCaptainRole");
-                                      logger.d(
-                                          "The New Captain Details: \n Id:${player.id} \n Name:${player.name} \n Role:${player.role}");
-                                      final List<String> availableRoles = [
-                                        'Wicket Keeper',
-                                        'Batsman',
-                                        'Bowler',
-                                        'All Rounder'
-                                      ];
-                                      String selectedRole = availableRoles[3];
-                                      showDialog(
-                                        context: context,
-                                        builder: (BuildContext dialogContext) {
-                                          return StatefulBuilder(
-                                            builder: (context, setState) {
-                                              return AlertDialog.adaptive(
-                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                                                title: Row(
-                                                  children: [
-                                                    const Icon(Icons.sports_cricket, color: AppTheme.primaryColor, size: 24),
-                                                    const SizedBox(width: 10),
-                                                    Expanded(
-                                                      child: Text(
-                                                        "Select New Role for $previousCaptainName",
-                                                        style: const TextStyle(
-                                                          fontSize: 18,
-                                                          fontWeight: FontWeight.bold,
+                                      onTap: () async {
+                                        logger.d(
+                                            "The Previous Captain Details : \n Id:$previousCaptainid \n Name :$previousCaptainName \n Role:$previousCaptainRole");
+                                        logger.d(
+                                            "The New Captain Details: \n Id:${player.id} \n Name:${player.name} \n Role:${player.role}");
+                                        final List<String> availableRoles = [
+                                          'Wicket Keeper',
+                                          'Batsman',
+                                          'Bowler',
+                                          'All Rounder'
+                                        ];
+                                        String selectedRole = availableRoles[3];
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext dialogContext) {
+                                            return StatefulBuilder(
+                                              builder: (context, setState) {
+                                                return AlertDialog.adaptive(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              15)),
+                                                  title: Row(
+                                                    children: [
+                                                      const Icon(
+                                                          Icons.sports_cricket,
+                                                          color: AppTheme
+                                                              .primaryColor,
+                                                          size: 24),
+                                                      const SizedBox(width: 10),
+                                                      Expanded(
+                                                        child: Text(
+                                                          "Select New Role for $previousCaptainName",
+                                                          style: const TextStyle(
+                                                            fontSize: 18,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                titlePadding: const EdgeInsets.all(16),
-                                                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                                content: Column(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    Divider(color: Colors.grey[300]),
-                                                    ...availableRoles.map(
-                                                          (role) => RadioListTile<String>(
-                                                        title: Text(
-                                                          role,
-                                                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                                    ],
+                                                  ),
+                                                  titlePadding:
+                                                      const EdgeInsets.all(16),
+                                                  contentPadding:
+                                                      const EdgeInsets.symmetric(
+                                                          horizontal: 16,
+                                                          vertical: 8),
+                                                  content: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Divider(
+                                                          color:
+                                                              Colors.grey[300]),
+                                                      ...availableRoles.map(
+                                                        (role) =>
+                                                            RadioListTile<String>(
+                                                          title: Text(
+                                                            role,
+                                                            style: const TextStyle(
+                                                                fontSize: 16,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500),
+                                                          ),
+                                                          value: role,
+                                                          groupValue:
+                                                              selectedRole,
+                                                          onChanged:
+                                                              (String? value) {
+                                                            if (value != null) {
+                                                              setState(() {
+                                                                selectedRole =
+                                                                    value;
+                                                              });
+                                                            }
+                                                          },
+                                                          activeColor: AppTheme
+                                                              .primaryColor,
+                                                          controlAffinity:
+                                                              ListTileControlAffinity
+                                                                  .trailing,
                                                         ),
-                                                        value: role,
-                                                        groupValue: selectedRole,
-                                                        onChanged: (String? value) {
-                                                          if (value != null) {
-                                                            setState(() {
-                                                              selectedRole = value;
-                                                            });
-                                                          }
-                                                        },
-                                                        activeColor: AppTheme.primaryColor,
-                                                        controlAffinity: ListTileControlAffinity.trailing,
                                                       ),
+                                                    ],
+                                                  ),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.of(
+                                                                  dialogContext)
+                                                              .pop(),
+                                                      child: const Text(
+                                                        'Cancel',
+                                                        style: TextStyle(
+                                                            color: Colors.grey),
+                                                      ),
+                                                    ),
+                                                    ElevatedButton(
+                                                      onPressed: () async {
+                                                        Navigator.of(
+                                                                dialogContext)
+                                                            .pop();
+                                                        bool isChanged =
+                                                            await controller
+                                                                .changeCaptain(
+                                                          teamId: widget.teamId,
+                                                          newCaptainId: player.id,
+                                                          newRole: 'Captain',
+                                                          previousCaptainRole:
+                                                              selectedRole,
+                                                          previousCaptainId:
+                                                              previousCaptainid,
+                                                        );
+                                                        if (isChanged) {
+                                                          logger.d(
+                                                              "Captain changed successfully");
+                                                          successSnackBar(
+                                                              "Captain role updated successfully");
+                                                          // Get.snackbar(
+                                                          //   'Success',
+                                                          //   'Captain role updated successfully',
+                                                          //   snackPosition: SnackPosition.bottom,
+                                                          //   backgroundColor: Colors.green,
+                                                          //   colorText: Colors.white,
+                                                          // );
+                                                        } else {
+                                                          logger.d(
+                                                              "Failed to change captain");
+                                                          errorSnackBar(
+                                                              "Failed to update captain role");
+                                                          // Get.snackbar(
+                                                          //   'Error',
+                                                          //   'Failed to update captain role',
+                                                          //   snackPosition: SnackPosition.bottom,
+                                                          //   backgroundColor: Colors.red,
+                                                          //   colorText: Colors.white,
+                                                          // );
+                                                        }
+                                                      },
+                                                      style: ElevatedButton
+                                                          .styleFrom(
+                                                        backgroundColor:
+                                                            AppTheme.primaryColor,
+                                                        foregroundColor:
+                                                            Colors.white,
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(8),
+                                                        ),
+                                                      ),
+                                                      child:
+                                                          const Text('Confirm'),
                                                     ),
                                                   ],
-                                                ),
-                                                actions: [
-                                                  TextButton(
-                                                    onPressed: () => Navigator.of(dialogContext).pop(),
-                                                    child: const Text(
-                                                      'Cancel',
-                                                      style: TextStyle(color: Colors.grey),
-                                                    ),
-                                                  ),
-                                                  ElevatedButton(
-                                                    onPressed: () async {
-                                                      Navigator.of(dialogContext).pop();
-                                                      bool isChanged = await controller.changeCaptain(
-                                                        teamId: widget.teamId,
-                                                        newCaptainId: player.id,
-                                                        newRole: 'Captain',
-                                                        previousCaptainRole: selectedRole,
-                                                        previousCaptainId: previousCaptainid,
-                                                      );
-                                                      if (isChanged) {
-                                                        logger.d("Captain changed successfully");
-                                                        successSnackBar("Captain role updated successfully");
-                                                        // Get.snackbar(
-                                                        //   'Success',
-                                                        //   'Captain role updated successfully',
-                                                        //   snackPosition: SnackPosition.bottom,
-                                                        //   backgroundColor: Colors.green,
-                                                        //   colorText: Colors.white,
-                                                        // );
-                                                      } else {
-                                                        logger.d("Failed to change captain");
-                                                        errorSnackBar("Failed to update captain role");
-                                                        // Get.snackbar(
-                                                        //   'Error',
-                                                        //   'Failed to update captain role',
-                                                        //   snackPosition: SnackPosition.bottom,
-                                                        //   backgroundColor: Colors.red,
-                                                        //   colorText: Colors.white,
-                                                        // );
-                                                      }
-                                                    },
-                                                    style: ElevatedButton.styleFrom(
-                                                      backgroundColor: AppTheme.primaryColor,
-                                                      foregroundColor: Colors.white,
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.circular(8),
-                                                      ),
-                                                    ),
-                                                    child: const Text('Confirm'),
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        },
-                                      );
-                                    },
-                                  ),
-                                );
-                              },
-                              separatorBuilder: (context, index) =>
-                              const SizedBox(height: 2),
+                                                );
+                                              },
+                                            );
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(height: 2),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
+                      isScrollControlled: true,
+                    );
+                  },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: AppTheme.primaryColor,
+                    side: const BorderSide(color: AppTheme.primaryColor),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal:18,
+                      vertical: 8,
                     ),
-                    isScrollControlled: true,
-                  );
-                },
-                child: const CircleAvatar(
-                  backgroundColor: Color.fromARGB(255, 71, 224, 79),
-                  child: Icon(Icons.change_circle_rounded,)
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text(
+                    'Change Captain',
+                    style: TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
               ),
-              // SizedBox(
-              //   width: 90,
-              //   height: 30,
-              //   // margin: const EdgeInsets.only(left: 11),
-              //   child: OutlinedButton(onPressed: () {
-              //     Get.bottomSheet(
-              //       Container(
-              //         height: Get.height * 0.65,
-              //         padding: const EdgeInsets.all(8),
-              //         decoration: const BoxDecoration(
-              //           color: Colors.white,
-              //           borderRadius:
-              //           BorderRadius.vertical(top: Radius.circular(10)),
-              //         ),
-              //         child: Column(
-              //           children: [
-              //             Center(
-              //               child: Padding(
-              //                 padding: const EdgeInsets.all(8.0),
-              //                 child: Container(
-              //                   height: 5,
-              //                   width: 120,
-              //                   decoration: BoxDecoration(
-              //                       color: Colors.grey[400],
-              //                       borderRadius: BorderRadius.circular(10)),
-              //                 ),
-              //               ),
-              //             ),
-              //             const Text(
-              //               "Tap on a player to assign a new captain",
-              //               textAlign: TextAlign.center,
-              //               style: TextStyle(
-              //                 fontSize: 16.0,
-              //                 fontWeight: FontWeight.w500,
-              //               ),
-              //             ),
-              //             const SizedBox(height: 5),
-              //             Expanded(
-              //               child: ListView.separated(
-              //                 itemCount: controller.players.length - 1,
-              //                 itemBuilder: (context, index) {
-              //                   final player = controller.players
-              //                       .where((p) => p.role != currentCaptain.role)
-              //                       .toList()[index];
-              //
-              //                   return AnimatedContainer(
-              //                     duration: const Duration(milliseconds: 300),
-              //                     curve: Curves.easeInOut,
-              //                     margin:
-              //                     const EdgeInsets.symmetric(vertical: 4),
-              //                     decoration: BoxDecoration(
-              //                         color: Colors.white,
-              //                         borderRadius: BorderRadius.circular(10),
-              //                         border: Border.all(
-              //                             color: Colors.grey, width: 0.5)),
-              //                     child: ListTile(
-              //                       leading: Hero(
-              //                         tag: 'player-avatar-${player.name}',
-              //                         child: CircleAvatar(
-              //                           radius: 24,
-              //                           backgroundColor: Colors.transparent,
-              //                           child: Image.asset(
-              //                             getAssetFromRole(player.role),
-              //                             width: 20,
-              //                             fit: BoxFit.cover,
-              //                           ),
-              //                         ),
-              //                       ),
-              //                       title: Text(
-              //                         player.name,
-              //                         style: const TextStyle(
-              //                           fontSize: 16,
-              //                           fontWeight: FontWeight.w500,
-              //                         ),
-              //                       ),
-              //                       subtitle: Text(
-              //                         player.role,
-              //                         style: TextStyle(
-              //                           fontSize: 12,
-              //                           color: Colors.grey[700],
-              //                         ),
-              //                       ),
-              //                       onTap: () async {
-              //                         logger.d(
-              //                             "The Previous Captain Details : \n Id:$previousCaptainid \n Name :$previousCaptainName \n Role:$previousCaptainRole");
-              //                         logger.d(
-              //                             "The New Captain Details: \n Id:${player.id} \n Name:${player.name} \n Role:${player.role}");
-              //                         final List<String> availableRoles = [
-              //                           'Wicket Keeper',
-              //                           'Batsman',
-              //                           'Bowler',
-              //                           'All Rounder'
-              //                         ];
-              //                         String selectedRole = availableRoles[3];
-              //                         showDialog(
-              //                           context: context,
-              //                           builder: (BuildContext dialogContext) {
-              //                             return StatefulBuilder(
-              //                               builder: (context, setState) {
-              //                                 return AlertDialog.adaptive(
-              //                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-              //                                   title: Row(
-              //                                     children: [
-              //                                       const Icon(Icons.sports_cricket, color: AppTheme.primaryColor, size: 24),
-              //                                       const SizedBox(width: 10),
-              //                                       Expanded(
-              //                                         child: Text(
-              //                                           "Select New Role for $previousCaptainName",
-              //                                           style: const TextStyle(
-              //                                             fontSize: 18,
-              //                                             fontWeight: FontWeight.bold,
-              //                                           ),
-              //                                         ),
-              //                                       ),
-              //                                     ],
-              //                                   ),
-              //                                   titlePadding: const EdgeInsets.all(16),
-              //                                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              //                                   content: Column(
-              //                                     mainAxisSize: MainAxisSize.min,
-              //                                     children: [
-              //                                       Divider(color: Colors.grey[300]),
-              //                                       ...availableRoles.map(
-              //                                             (role) => RadioListTile<String>(
-              //                                           title: Text(
-              //                                             role,
-              //                                             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              //                                           ),
-              //                                           value: role,
-              //                                           groupValue: selectedRole,
-              //                                           onChanged: (String? value) {
-              //                                             if (value != null) {
-              //                                               setState(() {
-              //                                                 selectedRole = value;
-              //                                               });
-              //                                             }
-              //                                           },
-              //                                           activeColor: AppTheme.primaryColor,
-              //                                           controlAffinity: ListTileControlAffinity.trailing,
-              //                                         ),
-              //                                       ),
-              //                                     ],
-              //                                   ),
-              //                                   actions: [
-              //                                     TextButton(
-              //                                       onPressed: () => Navigator.of(dialogContext).pop(),
-              //                                       child: const Text(
-              //                                         'Cancel',
-              //                                         style: TextStyle(color: Colors.grey),
-              //                                       ),
-              //                                     ),
-              //                                     ElevatedButton(
-              //                                       onPressed: () async {
-              //                                         Navigator.of(dialogContext).pop();
-              //                                         bool isChanged = await controller.changeCaptain(
-              //                                           teamId: widget.teamId,
-              //                                           newCaptainId: player.id,
-              //                                           newRole: 'Captain',
-              //                                           previousCaptainRole: selectedRole,
-              //                                           previousCaptainId: previousCaptainid,
-              //                                         );
-              //                                         if (isChanged) {
-              //                                           logger.d("Captain changed successfully");
-              //                                           successSnackBar("Captain role updated successfully");
-              //                                           // Get.snackbar(
-              //                                           //   'Success',
-              //                                           //   'Captain role updated successfully',
-              //                                           //   snackPosition: SnackPosition.bottom,
-              //                                           //   backgroundColor: Colors.green,
-              //                                           //   colorText: Colors.white,
-              //                                           // );
-              //                                         } else {
-              //                                           logger.d("Failed to change captain");
-              //                                           errorSnackBar("Failed to update captain role");
-              //                                           // Get.snackbar(
-              //                                           //   'Error',
-              //                                           //   'Failed to update captain role',
-              //                                           //   snackPosition: SnackPosition.bottom,
-              //                                           //   backgroundColor: Colors.red,
-              //                                           //   colorText: Colors.white,
-              //                                           // );
-              //                                         }
-              //                                       },
-              //                                       style: ElevatedButton.styleFrom(
-              //                                         backgroundColor: AppTheme.primaryColor,
-              //                                         foregroundColor: Colors.white,
-              //                                         shape: RoundedRectangleBorder(
-              //                                           borderRadius: BorderRadius.circular(8),
-              //                                         ),
-              //                                       ),
-              //                                       child: const Text('Confirm'),
-              //                                     ),
-              //                                   ],
-              //                                 );
-              //                               },
-              //                             );
-              //                           },
-              //                         );
-              //                       },
-              //                     ),
-              //                   );
-              //                 },
-              //                 separatorBuilder: (context, index) =>
-              //                 const SizedBox(height: 2),
-              //               ),
-              //             ),
-              //           ],
-              //         ),
-              //       ),
-              //       isScrollControlled: true,
-              //     );
-              //   },
-              //     style: OutlinedButton.styleFrom(
-              //       side: const BorderSide(color: AppTheme.primaryColor),
-              //       shape: RoundedRectangleBorder(
-              //         borderRadius: BorderRadius.circular(12),
-              //       ),
-              //     ),
-              //     child: const Expanded(child: Text("Change",style: TextStyle(fontSize: 12),)),),
-              // ),
-
-              // InkWell(
-              //   onTap: () {
-              //     Get.bottomSheet(
-              //       Container(
-              //         height: Get.height * 0.65,
-              //         padding: const EdgeInsets.all(8),
-              //         decoration: const BoxDecoration(
-              //           color: Colors.white,
-              //           borderRadius:
-              //               BorderRadius.vertical(top: Radius.circular(10)),
-              //         ),
-              //         child: Column(
-              //           children: [
-              //             Center(
-              //               child: Padding(
-              //                 padding: const EdgeInsets.all(8.0),
-              //                 child: Container(
-              //                   height: 5,
-              //                   width: 120,
-              //                   decoration: BoxDecoration(
-              //                       color: Colors.grey[400],
-              //                       borderRadius: BorderRadius.circular(10)),
-              //                 ),
-              //               ),
-              //             ),
-              //             const Text(
-              //               "Tap on a player to assign a new captain",
-              //               textAlign: TextAlign.center,
-              //               style: TextStyle(
-              //                 fontSize: 16.0,
-              //                 fontWeight: FontWeight.w500,
-              //               ),
-              //             ),
-              //             const SizedBox(height: 5),
-              //             Expanded(
-              //               child: ListView.separated(
-              //                 itemCount: controller.players.length - 1,
-              //                 itemBuilder: (context, index) {
-              //                   final player = controller.players
-              //                       .where((p) => p.role != currentCaptain.role)
-              //                       .toList()[index];
-              //
-              //                   return AnimatedContainer(
-              //                     duration: const Duration(milliseconds: 300),
-              //                     curve: Curves.easeInOut,
-              //                     margin:
-              //                         const EdgeInsets.symmetric(vertical: 4),
-              //                     decoration: BoxDecoration(
-              //                         color: Colors.white,
-              //                         borderRadius: BorderRadius.circular(10),
-              //                         border: Border.all(
-              //                             color: Colors.grey, width: 0.5)),
-              //                     child: ListTile(
-              //                       leading: Hero(
-              //                         tag: 'player-avatar-${player.name}',
-              //                         child: CircleAvatar(
-              //                           radius: 24,
-              //                           backgroundColor: Colors.transparent,
-              //                           child: Image.asset(
-              //                             getAssetFromRole(player.role),
-              //                             width: 20,
-              //                             fit: BoxFit.cover,
-              //                           ),
-              //                         ),
-              //                       ),
-              //                       title: Text(
-              //                         player.name,
-              //                         style: const TextStyle(
-              //                           fontSize: 16,
-              //                           fontWeight: FontWeight.w500,
-              //                         ),
-              //                       ),
-              //                       subtitle: Text(
-              //                         player.role,
-              //                         style: TextStyle(
-              //                           fontSize: 12,
-              //                           color: Colors.grey[700],
-              //                         ),
-              //                       ),
-              //                       onTap: () async {
-              //                         logger.d(
-              //                             "The Previous Captain Details : \n Id:$previousCaptainid \n Name :$previousCaptainName \n Role:$previousCaptainRole");
-              //                         logger.d(
-              //                             "The New Captain Details: \n Id:${player.id} \n Name:${player.name} \n Role:${player.role}");
-              //                         final List<String> availableRoles = [
-              //                           'Wicket Keeper',
-              //                           'Batsman',
-              //                           'Bowler',
-              //                           'All Rounder'
-              //                         ];
-              //                         String selectedRole = availableRoles[3];
-              //                         showDialog(
-              //                           context: context,
-              //                           builder: (BuildContext dialogContext) {
-              //                             return StatefulBuilder(
-              //                               builder: (context, setState) {
-              //                                 return AlertDialog.adaptive(
-              //                                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-              //                                   title: Row(
-              //                                     children: [
-              //                                       const Icon(Icons.sports_cricket, color: AppTheme.primaryColor, size: 24),
-              //                                       const SizedBox(width: 10),
-              //                                       Expanded(
-              //                                         child: Text(
-              //                                           "Select New Role for $previousCaptainName",
-              //                                           style: const TextStyle(
-              //                                             fontSize: 18,
-              //                                             fontWeight: FontWeight.bold,
-              //                                           ),
-              //                                         ),
-              //                                       ),
-              //                                     ],
-              //                                   ),
-              //                                   titlePadding: const EdgeInsets.all(16),
-              //                                   contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              //                                   content: Column(
-              //                                     mainAxisSize: MainAxisSize.min,
-              //                                     children: [
-              //                                       Divider(color: Colors.grey[300]),
-              //                                       ...availableRoles.map(
-              //                                             (role) => RadioListTile<String>(
-              //                                           title: Text(
-              //                                             role,
-              //                                             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              //                                           ),
-              //                                           value: role,
-              //                                           groupValue: selectedRole,
-              //                                           onChanged: (String? value) {
-              //                                             if (value != null) {
-              //                                               setState(() {
-              //                                                 selectedRole = value;
-              //                                               });
-              //                                             }
-              //                                           },
-              //                                           activeColor: AppTheme.primaryColor,
-              //                                           controlAffinity: ListTileControlAffinity.trailing,
-              //                                         ),
-              //                                       ),
-              //                                     ],
-              //                                   ),
-              //                                   actions: [
-              //                                     TextButton(
-              //                                       onPressed: () => Navigator.of(dialogContext).pop(),
-              //                                       child: const Text(
-              //                                         'Cancel',
-              //                                         style: TextStyle(color: Colors.grey),
-              //                                       ),
-              //                                     ),
-              //                                     ElevatedButton(
-              //                                       onPressed: () async {
-              //                                         Navigator.of(dialogContext).pop();
-              //                                         bool isChanged = await controller.changeCaptain(
-              //                                           teamId: widget.teamId,
-              //                                           newCaptainId: player.id,
-              //                                           newRole: 'Captain',
-              //                                           previousCaptainRole: selectedRole,
-              //                                           previousCaptainId: previousCaptainid,
-              //                                         );
-              //                                         if (isChanged) {
-              //                                           logger.d("Captain changed successfully");
-              //                                           successSnackBar("Captain role updated successfully");
-              //                                           // Get.snackbar(
-              //                                           //   'Success',
-              //                                           //   'Captain role updated successfully',
-              //                                           //   snackPosition: SnackPosition.bottom,
-              //                                           //   backgroundColor: Colors.green,
-              //                                           //   colorText: Colors.white,
-              //                                           // );
-              //                                         } else {
-              //                                           logger.d("Failed to change captain");
-              //                                           errorSnackBar("Failed to update captain role");
-              //                                           // Get.snackbar(
-              //                                           //   'Error',
-              //                                           //   'Failed to update captain role',
-              //                                           //   snackPosition: SnackPosition.bottom,
-              //                                           //   backgroundColor: Colors.red,
-              //                                           //   colorText: Colors.white,
-              //                                           // );
-              //                                         }
-              //                                       },
-              //                                       style: ElevatedButton.styleFrom(
-              //                                         backgroundColor: AppTheme.primaryColor,
-              //                                         foregroundColor: Colors.white,
-              //                                         shape: RoundedRectangleBorder(
-              //                                           borderRadius: BorderRadius.circular(8),
-              //                                         ),
-              //                                       ),
-              //                                       child: const Text('Confirm'),
-              //                                     ),
-              //                                   ],
-              //                                 );
-              //                               },
-              //                             );
-              //                           },
-              //                         );
-              //                       },
-              //                     ),
-              //                   );
-              //                 },
-              //                 separatorBuilder: (context, index) =>
-              //                     const SizedBox(height: 2),
-              //               ),
-              //             ),
-              //           ],
-              //         ),
-              //       ),
-              //       isScrollControlled: true,
-              //     );
-              //   },
-              //   child: const CircleAvatar(
-              //     backgroundColor: Color.fromARGB(255, 71, 224, 79),
-              //     child: Padding(
-              //       padding: EdgeInsets.all(8.0),
-              //       child: Icon(Icons.change_circle_sharp),
-              //     ),
-              //   ),
-              // ),
             const Spacer(),
             widget.isEditable ?? true
                 ? InkWell(

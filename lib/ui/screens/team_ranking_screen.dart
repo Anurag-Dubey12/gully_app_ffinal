@@ -90,7 +90,6 @@ class _TeamRankingScreenState extends State<TeamRankingScreen> {
                                 tab: 0,
                                 selectedTab: _selectedTab,
                                 text: 'Leather ball',
-                                isConnected: connectionController.isConnected.value,
                                 onTap: (st) {
                                   setState(() {
                                     // ignore: unnecessary_statements
@@ -103,7 +102,6 @@ class _TeamRankingScreenState extends State<TeamRankingScreen> {
                                 tab: 1,
                                 selectedTab: _selectedTab,
                                 text: 'Tennis ball',
-                                isConnected: connectionController.isConnected.value,
                                 onTap: (st) {
                                   setState(() {
                                     // ignore: unnecessary_statements
@@ -256,21 +254,19 @@ class _SelectBallTypeCard extends StatelessWidget {
   final int selectedTab;
   final String text;
   final Function(int tab) onTap;
-  final bool isConnected;
 
   const _SelectBallTypeCard({
     required this.onTap,
     required this.tab,
     required this.selectedTab,
     required this.text,
-    this.isConnected=false
   });
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
-          onTap: () => isConnected ?onTap(tab):errorSnackBar("Connect to the network"),
+          onTap: () => onTap(tab),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40),

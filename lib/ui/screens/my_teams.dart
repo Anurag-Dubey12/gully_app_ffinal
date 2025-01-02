@@ -132,7 +132,7 @@ class _TeamCard extends GetView<TeamController> {
         color: Colors.white,
       ),
       child: Padding(
-        padding: const EdgeInsets.all(18.0),
+        padding: const EdgeInsets.all(15.0),
         child: Row(
           children: [
             CircleAvatar(

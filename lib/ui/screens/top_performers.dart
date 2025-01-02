@@ -95,7 +95,6 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                                 tab: 0,
                                 selectedTab: _selectedTab,
                                 text: 'Leather ball',
-                                isConnected: connectionController.isConnected.value,
                                 onTap: (st) {
                                   setState(() {
                                     _selectedTab = 0;
@@ -107,7 +106,6 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                                 tab: 1,
                                 selectedTab: _selectedTab,
                                 text: 'Tennis ball',
-                                isConnected: connectionController.isConnected.value,
                                 onTap: (st) {
                                   setState(() {
                                     _selectedTab = st;
@@ -306,20 +304,18 @@ class BallType extends StatelessWidget {
   final int selectedTab;
   final String text;
   final Function(int tab) onTap;
-  final bool isConnected;
   const BallType({
     required this.onTap,
     required this.tab,
     required this.selectedTab,
     required this.text,
-    required this.isConnected,
   });
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
-          onTap: () => isConnected ?onTap(tab):errorSnackBar("Please Connect to the network"),
+          onTap: () => onTap(tab),
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(40),
@@ -340,7 +336,8 @@ class BallType extends StatelessWidget {
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(18.0),
-                child: Text(text,
+                child: Text(
+                    text,
                     style: Get.textTheme.bodyLarge?.copyWith(
                         color: selectedTab == tab ? Colors.white : Colors.black,
                         fontWeight: FontWeight.bold)),

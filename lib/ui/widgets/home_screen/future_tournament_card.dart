@@ -28,18 +28,18 @@ class FutureTournamentCard extends GetView<TournamentController> {
         if (controller.tournamentList.isEmpty) {
           return const NoTournamentCard();
         } else {
-          final sortedTournaments = List<TournamentModel>.from(controller.tournamentList)
-            ..sort((a, b) => a.tournamentStartDateTime.compareTo(b.tournamentStartDateTime));
+          // final sortedTournaments = List<TournamentModel>.from(controller.tournamentList)
+          //   ..sort((a, b) => a.tournamentStartDateTime.compareTo(b.tournamentStartDateTime));
           return Padding(
             padding: const EdgeInsets.only(bottom: 20),
             child: ListView.separated(
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: sortedTournaments.length,
+              itemCount: controller.tournamentList.length,
               padding: const EdgeInsets.only(bottom: 10, top: 10),
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return TournamentCard(
-                  tournament: sortedTournaments[index],
+                  tournament: controller.tournamentList[index],
                 );
               },
               separatorBuilder: (context, index) => const SizedBox(height: 10),

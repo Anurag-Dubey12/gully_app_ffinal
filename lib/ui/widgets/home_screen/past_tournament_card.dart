@@ -31,7 +31,7 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
             final matchMap = controller.matches.fold<Map<String, List<MatchupModel>>>({}, (map, match) {
               if (match.tournamentName != null) {
                 if (match.scoreBoard == null) {
-                  logger.d("Found match with null scoreboard where tournament name is ${match.tournamentName}");
+                  logger.d("Found match with null scoreboard where tournament name is ${match.tournamentName} ${match.tournamentId}");
                 }
                 map.putIfAbsent(match.tournamentName!, () => []).add(match);
               }

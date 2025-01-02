@@ -40,71 +40,93 @@ class CurrentTournamentCard extends GetView<TournamentController> {
             return const NoTournamentCard();
           }
           else {
-
             //For sorting the match if ended it will forward towards the end of the list
+            // final sortedMatches = List<MatchupModel>.from(controller.matches)
+            //   ..sort((a, b) {
+            //     int getPriority(String? status) {
+            //       switch (status?.toLowerCase()) {
+            //         case 'current': return 0;
+            //         case 'upcoming': return 1;
+            //         case 'played': return 2;
+            //         default: return 3;
+            //       }
+            //     }
+            //
+            //     int priorityA = getPriority(a.status);
+            //     int priorityB = getPriority(b.status);
+            //
+            //     if (priorityA != priorityB) {
+            //       return priorityA.compareTo(priorityB);
+            //     }
+            //
+            //     return (a.tournamentId ?? '').compareTo(b.tournamentId ?? '');
+            //   });
+
             final sortedMatches = List<MatchupModel>.from(controller.matches)
               ..sort((a, b) {
                 int getPriority(String? status) {
                   switch (status?.toLowerCase()) {
-                    case 'current': return 0;
-                    case 'upcoming': return 1;
-                    case 'played': return 2;
-                    default: return 3;
+                    case 'current':
+                      return 0;
+                    case 'upcoming':
+                      return 1;
+                    case 'played':
+                      return 2;
+                    default:
+                      return 3;
                   }
                 }
-
                 int priorityA = getPriority(a.status);
                 int priorityB = getPriority(b.status);
-
                 if (priorityA != priorityB) {
                   return priorityA.compareTo(priorityB);
                 }
-
                 return (a.tournamentId ?? '').compareTo(b.tournamentId ?? '');
               });
-            // final sortedMatches = List.from(controller.matches)
-            //   ..sort((a, b) {
-            //     int getPriority(String? status) {
-            //       switch (status?.toLowerCase()) {
-            //         case 'current':
-            //           return 0;
-            //         case 'upcoming':
-            //           return 1;
-            //         case 'played':
-            //           return 2;
-            //         default:
-            //           return 3;
-            //       }
-            //     }
-            //     int priorityA = getPriority(a.status);
-            //     int priorityB = getPriority(b.status);
-            //     if (priorityA != priorityB) {
-            //       return priorityA.compareTo(priorityB);
-            //     }
-            //     return (a.tournamentId ?? '').compareTo(b.tournamentId ?? '');
-            //   });
-            //
-            // // Group matches by tournament ID and get the latest match for each tournament
-            // final Map<String, dynamic> latestMatchesByTournament = {};
-            // for (var match in sortedMatches) {
-            //   final tournamentId = match.tournamentId ?? '';
-            //   if (!latestMatchesByTournament.containsKey(tournamentId)) {
-            //     latestMatchesByTournament[tournamentId] = match;
-            //   }
-            // }
-            // // Convert the map values back to a list
-            // final latestMatches = latestMatchesByTournament.values.toList();
+            final matchMap = sortedMatches.fold<Map<String, List<MatchupModel>>>(
+              {},
+                  (map, match) {
+                if (match.tournamentName != null) {
+                  map.putIfAbsent(match.tournamentName!, () => []).add(match);
+                }
+                return map;
+              },
+            );
+            final latestMatches = matchMap.entries.map((entry) {
+              return entry.value.reduce((latest, match) {
+                int getPriority(String? status) {
+                  switch (status?.toLowerCase()) {
+                    case 'current':
+                      return 0;
+                    case 'upcoming':
+                      return 1;
+                    case 'played':
+                      return 2;
+                    default:
+                      return 3;
+                  }
+                }
+                int latestPriority = getPriority(latest.status);
+                int matchPriority = getPriority(match.status);
+                if (latestPriority != matchPriority) {
+                  return latestPriority < matchPriority ? latest : match;
+                }
+                return match.matchDate.isAfter(latest.matchDate) ? match : latest;
+              });
+            }).toList();
 
             return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 // itemCount: controller.matches.length,
-                itemCount: sortedMatches.length,
+                // itemCount: sortedMatches.length,
+                itemCount: latestMatches.length,
                 shrinkWrap: true,
                 padding: const EdgeInsets.only(bottom: 10, top: 10),
                 itemBuilder: (context, snapshot) {
                   return _Card(
                     // tournament: controller.matches[snapshot],
-                    tournament: sortedMatches[snapshot],
+                    // tournament: sortedMatches[snapshot],
+                    tournament: latestMatches[snapshot],
                   );
                 });
           }
@@ -113,6 +135,8 @@ class CurrentTournamentCard extends GetView<TournamentController> {
     );
   }
 }
+
+
 class _Card extends StatefulWidget {
   final MatchupModel tournament;
 

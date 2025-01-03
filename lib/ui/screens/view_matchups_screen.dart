@@ -20,10 +20,13 @@ import 'organize_match.dart';
 class ViewMatchupsScreen extends GetView<TournamentController> {
   final String? id;
   final bool isSchedule;
-  const ViewMatchupsScreen({super.key,this.id,required this.isSchedule});
+
+  const ViewMatchupsScreen({super.key, this.id, required this.isSchedule});
+
   @override
   Widget build(BuildContext context) {
-    final MiscController connectionController=Get.find<MiscController>();
+    final MiscController connectionController = Get.find<MiscController>();
+
     return GradientBuilder(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -33,19 +36,20 @@ class ViewMatchupsScreen extends GetView<TournamentController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               AppBar(
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
-                  title: const Text(
-                    'Matchups',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  leading: const BackButton(
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                title: const Text(
+                  'Matchups',
+                  style: TextStyle(
                     color: Colors.white,
-                  )),
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                leading: const BackButton(
+                  color: Colors.white,
+                ),
+              ),
               SizedBox(height: Get.height * 0.01),
               Expanded(
                 child: FutureBuilder(
@@ -53,60 +57,69 @@ class ViewMatchupsScreen extends GetView<TournamentController> {
                       ? controller.getMatchup(id!)
                       : controller.getMatchup(controller.state!.id),
                   builder: (context, snapshot) {
-                    if (snapshot.hasError) {
+                    // Error handling
+                    if (snapshot.hasError && connectionController.isConnected.value) {
                       return const Center(child: Text('Something went wrong'));
                     }
+
+                    // No matchups found state
                     if (controller.matchups.isEmpty) {
                       return const Center(
-                          child: EmptyTournamentWidget(
-                              message: 'No Matchups Found'
-                          )
-                      );
-                    }
-                    if(!connectionController.isConnected.value){
-                     return Center(
-                        child: SizedBox(
-                          width: Get.width,
-                          height: Get.height,
-                          child: const Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.signal_wifi_off,
-                                size: 48,
-                                color: Colors.black54,
-                              ),
-                              SizedBox(height: 16),
-                              Text(
-                                'No internet connection',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: 18,
-                                ),
-                              ),
-                            ],
-                          ),
+                        child: EmptyTournamentWidget(
+                          message: 'No Matchups Found',
                         ),
                       );
                     }
-                    return ListView.separated(
-                      itemCount: controller.matchups.length,
-                      shrinkWrap: true,
-                      separatorBuilder: (context, index) =>
-                          SizedBox(height: Get.height * 0.01),
-                      itemBuilder: (context, index) {
-                        final matchup = controller.matchups[index];
-                        return MatchupCard(
-                          matchup: matchup,
-                          isSchedule: isSchedule,
-                          tourid: id ?? controller.state!.id,
+
+                    // Handling when connection is lost
+                    return Obx(() {
+                      if (!connectionController.isConnected.value) {
+                        return Center(
+                          child: SizedBox(
+                            width: Get.width,
+                            height: Get.height,
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.signal_wifi_off,
+                                  size: 48,
+                                  color: Colors.black54,
+                                ),
+                                SizedBox(height: 16),
+                                Text(
+                                  'No internet connection',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         );
-                      },
-                    );
+                      }
+
+                      // Display the list of matchups when data is fetched
+                      return ListView.separated(
+                        itemCount: controller.matchups.length,
+                        shrinkWrap: true,
+                        separatorBuilder: (context, index) =>
+                            SizedBox(height: Get.height * 0.01),
+                        itemBuilder: (context, index) {
+                          final matchup = controller.matchups[index];
+                          return MatchupCard(
+                            matchup: matchup,
+                            isSchedule: isSchedule,
+                            tourid: id ?? controller.state!.id,
+                          );
+                        },
+                      );
+                    });
                   },
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -114,6 +127,7 @@ class ViewMatchupsScreen extends GetView<TournamentController> {
     );
   }
 }
+
 
 class MatchupCard extends StatelessWidget {
   final MatchupModel matchup;
@@ -124,7 +138,7 @@ class MatchupCard extends StatelessWidget {
     required this.matchup,
     this.isSchedule=false,
     this.isinfo=false,
-    this.tourid
+    this.tourid,
   });
 
   @override
@@ -169,7 +183,7 @@ class MatchupCard extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.edit, size: 20, color: Colors.blue),
                         onPressed: () {
-                          Get.off(() => SelectOrganizeTeam(
+                         Get.off(() => SelectOrganizeTeam(
                             match: matchup,
                             round:matchup.round ??'',
                             tourId: matchup.tournament,

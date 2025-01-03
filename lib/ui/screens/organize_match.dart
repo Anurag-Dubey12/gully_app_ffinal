@@ -694,7 +694,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                       .then((value) => Get.back());
                                 }
                                 }else{
-                                  errorSnackBar('Please Connect to the internet to create matchup between the two teams');
+                                  errorSnackBar('Please Connect to the internet to ${widget.tourId!=null?"Edit" :"Create"} matchup between the two teams');
                                 }
                                 // Get.to(() => const ViewMatchupsScreen());
                               },

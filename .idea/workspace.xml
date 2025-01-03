@@ -9,17 +9,10 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="resolve internet issue">
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify current tournament bundle and also modify add player to team ui for all device responsive and added change captain button">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/my_teams.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/my_teams.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/team_ranking_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/team_ranking_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/top_performers.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,14 +173,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00058" summary="modify package screen ,shop screen and service screen">
-      <option name="closed" value="true" />
-      <created>1728475174722</created>
-      <option name="number" value="00058" />
-      <option name="presentableId" value="LOCAL-00058" />
-      <option name="project" value="LOCAL" />
-      <updated>1728475174722</updated>
     </task>
     <task id="LOCAL-00059" summary="modify package screen ,shop screen and service screen">
       <option name="closed" value="true" />
@@ -573,7 +558,15 @@
       <option name="project" value="LOCAL" />
       <updated>1735642904027</updated>
     </task>
-    <option name="localTasksCounter" value="107" />
+    <task id="LOCAL-00107" summary="modify current tournament bundle and also modify add player to team ui for all device responsive and added change captain button">
+      <option name="closed" value="true" />
+      <created>1735818710738</created>
+      <option name="number" value="00107" />
+      <option name="presentableId" value="LOCAL-00107" />
+      <option name="project" value="LOCAL" />
+      <updated>1735818710739</updated>
+    </task>
+    <option name="localTasksCounter" value="108" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -594,7 +587,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="nothing" />
     <MESSAGE value="modify firebase and promote banner" />
     <MESSAGE value="need attention on firebase" />
     <MESSAGE value="service api modify" />
@@ -619,7 +611,8 @@
     <MESSAGE value="final changes for testing" />
     <MESSAGE value="modifying connection issue" />
     <MESSAGE value="resolve internet issue" />
-    <option name="LAST_COMMIT_MESSAGE" value="resolve internet issue" />
+    <MESSAGE value="modify current tournament bundle and also modify add player to team ui for all device responsive and added change captain button" />
+    <option name="LAST_COMMIT_MESSAGE" value="modify current tournament bundle and also modify add player to team ui for all device responsive and added change captain button" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -1236,6 +1229,12 @@
           <option name="totalLines" value="108667" />
           <option name="info" value="resolve internet issue" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1735818716059" />
+          <option name="linesCode" value="40659" />
+          <option name="totalLines" value="2108438" />
+          <option name="info" value="modify current tournament bundle and also modify a" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1845,6 +1844,12 @@
           <option name="linesCode" value="40146" />
           <option name="totalLines" value="108667" />
           <option name="info" value="Dec 31, 2024" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1735818716059" />
+          <option name="linesCode" value="40659" />
+          <option name="totalLines" value="2108438" />
+          <option name="info" value="Jan 2, 2025" />
         </TimePoint>
       </list>
     </option>

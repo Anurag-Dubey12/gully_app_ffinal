@@ -305,7 +305,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
-    final MiscController connectionController=Get.find<MiscController>();
+    final MiscController connectionController = Get.find<MiscController>();
     return GradientBuilder(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -643,58 +643,61 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                             SizedBox(height: Get.height * 0.02),
                             PrimaryButton(
                               onTap: () async {
-                                if(connectionController.isConnected.value){
-                                if (selectedDate == null) {
-                                  errorSnackBar('Please select a date');
-                                  return;
-                                }
-                                if (selectedTeam1 == null ||
-                                    selectedTeam2 == null) {
-                                  errorSnackBar('Please select teams');
-                                  return;
-                                }
-                                if (selectedTeam1 == selectedTeam2) {
-                                  errorSnackBar(
-                                      'Please select different teams on Both the side');
-                                  return;
-                                }
-                                if(selectedRound==null){
-                                  errorSnackBar('Please select a round ');
-                                  return;
-                                }
-                                if (widget.tourId != null) {
-                                  final Map<String, dynamic> obj = {
-                                    'tournamentId': widget.tourId,
-                                    'team1ID': selectedTeam1!.id,
-                                    'team2ID': selectedTeam2!.id,
-                                    'round': selectedRound,
-                                    'matchNo': 1,
-                                    'dateTime': selectedDate!.toIso8601String(),
-                                  };
-                                  logger.d("Selected Date is:$selectedDate");
-                                  bool response = await controller.editMatch(
-                                      obj, widget.match!.id);
+                                if (connectionController.isConnected.value) {
+                                  if (selectedDate == null) {
+                                    errorSnackBar('Please select a date');
+                                    return;
+                                  }
+                                  if (selectedTeam1 == null ||
+                                      selectedTeam2 == null) {
+                                    errorSnackBar('Please select teams');
+                                    return;
+                                  }
+                                  if (selectedTeam1 == selectedTeam2) {
+                                    errorSnackBar(
+                                        'Please select different teams on Both the side');
+                                    return;
+                                  }
+                                  if (selectedRound == null) {
+                                    errorSnackBar('Please select a round ');
+                                    return;
+                                  }
+                                  if (widget.tourId != null) {
+                                    final Map<String, dynamic> obj = {
+                                      'tournamentId': widget.tourId,
+                                      'team1ID': selectedTeam1!.id,
+                                      'team2ID': selectedTeam2!.id,
+                                      'round': selectedRound,
+                                      'matchNo': 1,
+                                      'dateTime':
+                                          selectedDate!.toIso8601String(),
+                                    };
+                                    logger.d("Selected Date is:$selectedDate");
+                                    bool response = await controller.editMatch(
+                                        obj, widget.match!.id);
+                                    logger.d(response);
+                                    if (response) {
+                                      successSnackBar('Matchup Edited')
+                                          .then((value) => Get.back());
+                                    }
+                                  }
+
+                                  final response =
+                                      await controller.createMatchup(
+                                          widget.tournament!.id,
+                                          selectedTeam1!.id,
+                                          selectedTeam2!.id,
+                                          selectedDate!,
+                                          1,
+                                          selectedRound ?? '');
                                   logger.d(response);
                                   if (response) {
-                                    successSnackBar('Matchup Edited')
+                                    successSnackBar('Matchup created')
                                         .then((value) => Get.back());
                                   }
-                                }
-
-                                final response = await controller.createMatchup(
-                                    widget.tournament!.id,
-                                    selectedTeam1!.id,
-                                    selectedTeam2!.id,
-                                    selectedDate!,
-                                    1,
-                                    selectedRound ?? '');
-                                logger.d(response);
-                                if (response) {
-                                  successSnackBar('Matchup created')
-                                      .then((value) => Get.back());
-                                }
-                                }else{
-                                  errorSnackBar('Please Connect to the internet to ${widget.tourId!=null?"Edit" :"Create"} matchup between the two teams');
+                                } else {
+                                  errorSnackBar(
+                                      'Please Connect to the internet to ${widget.tourId != null ? "Edit" : "Create"} matchup between the two teams');
                                 }
                                 // Get.to(() => const ViewMatchupsScreen());
                               },
@@ -735,7 +738,8 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
 class PointsTable extends StatelessWidget {
   final String tournamentId;
   final String tournamentName;
-  const PointsTable({super.key, required this.tournamentId, required this.tournamentName});
+  const PointsTable(
+      {super.key, required this.tournamentId, required this.tournamentName});
 
   @override
   Widget build(BuildContext context) {
@@ -761,9 +765,7 @@ class PointsTable extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasError) {
-            return const Center(
-              child:Text("Something went wrong")
-            );
+            return const Center(child: Text("Something went wrong"));
           }
           return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -798,19 +800,25 @@ class PointsTable extends StatelessWidget {
                               padding: const EdgeInsets.symmetric(
                                   vertical: 12, horizontal: 5),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   teamTableData(team.rank.toString(), flex: 2),
-                                  const SizedBox(width: 2,),
+                                  const SizedBox(
+                                    width: 2,
+                                  ),
                                   teamData(team, flex: 4),
                                   teamTableData(team.matchesPlayed.toString(),
                                       flex: 2),
                                   teamTableData(team.wins.toString(), flex: 2),
-                                  teamTableData(team.losses.toString(), flex: 2),
+                                  teamTableData(team.losses.toString(),
+                                      flex: 2),
                                   teamTableData(team.ties.toString(), flex: 2),
-                                  teamTableData(team.points.toString(), flex: 2),
+                                  teamTableData(team.points.toString(),
+                                      flex: 2),
                                   teamTableData(
-                                      team.netRunRate?.toStringAsFixed(3) ??'0',
+                                      team.netRunRate?.toStringAsFixed(3) ??
+                                          '0',
                                       flex: 2),
                                 ],
                               ),

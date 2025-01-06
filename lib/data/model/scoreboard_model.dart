@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
@@ -11,6 +13,7 @@ import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/widgets/scorecard/change_batter.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:path_provider/path_provider.dart';
 
 part 'scoreboard_model.g.dart';
 
@@ -339,6 +342,9 @@ class ScoreboardModel {
   }
   Future<void> addRuns(int runs,
       {List<EventType>? events, List<EventType>? extraEvents}) async {
+    logger.d("Starting addRuns with $runs runs");
+    logger.d("Current events: ${events?.map((e) => e.toString()).join(', ')}");
+
     bool shouldAddRuns = true;
     events ??= [];
     int extraRuns = 0;
@@ -348,42 +354,53 @@ class ScoreboardModel {
     int over = currentOver + 1;
 
     final ScoreBoardController controller = Get.find<ScoreBoardController>();
+
     if (!events.contains(EventType.legByes) &&
         !events.contains(EventType.bye) &&
         !events.contains(EventType.wide) &&
         !events.contains(EventType.wicket)) {
-      logger.d("Adding runs to striker");
+      logger.d("Adding $runs runs to striker ${striker.name}");
+      logger.d("Striker previous runs: ${striker.batting!.runs}");
       striker.batting!.runs = striker.batting!.runs + runs;
-      _partnershipStriker.batting!.runs =
-          _partnershipStriker.batting!.runs + runs;
+      logger.d("Striker new runs: ${striker.batting!.runs}");
+
+      logger.d("Partnership striker previous runs: ${_partnershipStriker.batting!.runs}");
+      _partnershipStriker.batting!.runs = _partnershipStriker.batting!.runs + runs;
+      logger.d("Partnership striker new runs: ${_partnershipStriker.batting!.runs}");
     }
 
     if (!events.contains(EventType.wide) &&
         !events.contains(EventType.noBall)) {
+      logger.d("Incrementing ball count");
       _incrementBall();
       ball = currentBall;
       over = currentOver;
+      logger.d("New ball: $ball, New over: $over");
     }
 
     if (!events.contains(EventType.bye) &&
         !events.contains(EventType.noBall) &&
         !events.contains(EventType.wide) &&
         !events.contains(EventType.legByes)) {
+      logger.d("Incrementing balls faced for striker ${striker.name}");
       striker.batting!.balls = striker.batting!.balls + 1;
-      _partnershipStriker.batting!.balls =
-          _partnershipStriker.batting!.balls + 1;
+      _partnershipStriker.batting!.balls = _partnershipStriker.batting!.balls + 1;
     }
+
     if (events.contains(EventType.four)) {
+      logger.d("Recording four for ${striker.name}");
       striker.batting!.fours = striker.batting!.fours + 1;
-      _partnershipStriker.batting!.fours =
-          _partnershipStriker.batting!.fours + 1;
+      _partnershipStriker.batting!.fours = _partnershipStriker.batting!.fours + 1;
     }
+
     if (events.contains(EventType.six)) {
+      logger.d("Recording six for ${striker.name}");
       striker.batting!.sixes = striker.batting!.sixes + 1;
-      _partnershipStriker.batting!.sixes =
-          _partnershipStriker.batting!.sixes + 1;
+      _partnershipStriker.batting!.sixes = _partnershipStriker.batting!.sixes + 1;
     }
+
     if (events.contains(EventType.wicket)) {
+      logger.d("Processing wicket");
       final res = await Get.bottomSheet(
           BottomSheet(
               backgroundColor: Colors.white,
@@ -391,33 +408,40 @@ class ScoreboardModel {
               builder: (c) => const ChangeBatterWidget()),
           isDismissible: false,
           enableDrag: false);
-      logger.i(res);
+      logger.d("Wicket result: $res");
       wickets += 1;
       _updateSR();
+
       if (res['outType'] == "RO") {
-        logger.i('Adding runs to striker on run out');
+        logger.d('Run out: Adding $runs runs to striker ${striker.name}');
         striker.batting!.runs = striker.batting!.runs + runs;
-        _partnershipStriker.batting!.runs =
-            _partnershipStriker.batting!.runs + runs;
+        _partnershipStriker.batting!.runs = _partnershipStriker.batting!.runs + runs;
       } else {
+        logger.d('Not adding runs due to dismissal type: ${res['outType']}');
         shouldAddRuns = false;
       }
+
       if (res['playerToOut'] != null) {
+        logger.d('Processing playerToOut: ${res['playerToOut']}');
         if (res['playerToOut'] == strikerId) {
+          logger.d('Striker ${striker.name} is out');
           striker.batting!.bowledBy = controller.getBowlerName(bowlerId);
           striker.batting!.outType = res['outType'];
           setStriker = res['batsmanId'];
         } else {
+          logger.d('Non-striker ${nonstriker.name} is out');
           nonstriker.batting!.bowledBy = controller.getBowlerName(bowlerId);
           nonstriker.batting!.outType = res['outType'];
           setNonStriker = res['batsmanId'];
         }
       } else {
+        logger.d('Default out processing for striker ${striker.name}');
         striker.batting!.outType = res['outType'];
-        striker.batting!.bowledBy=controller.getBowlerName(bowlerId);
+        striker.batting!.bowledBy = controller.getBowlerName(bowlerId);
         setStriker = res['batsmanId'];
       }
-      logger.i('Striker: $strikerId');
+
+      logger.d('Updating partnership players');
       _partnershipStriker = PlayerModel(
         name: striker.name,
         id: strikerId,
@@ -431,29 +455,37 @@ class ScoreboardModel {
         role: nonstriker.role,
       );
     }
+
     if (events.contains(EventType.bye)) {
+      logger.d("Adding $runs byes to extras");
       extras.byes += runs;
     }
     if (events.contains(EventType.legByes)) {
+      logger.d("Adding $runs leg byes to extras");
       extras.legByes += runs;
     }
+
     if (events.contains(EventType.noBall) || events.contains(EventType.wide)) {
       if (events.contains(EventType.noBall)) {
+        logger.d("Recording no ball");
         extras.noBalls += 1;
       } else {
+        logger.d("Recording wide");
         extras.wides += 1;
       }
 
-      if (events.contains(EventType.noBall) &&
-          events.contains(EventType.wide)) {
+      if (events.contains(EventType.noBall) && events.contains(EventType.wide)) {
+        logger.d("Removing wide from no ball delivery");
         events.remove(EventType.wide);
       }
 
       extraRuns += 1;
+      logger.d("Adding extra run, new total extras: $extraRuns");
 
       currentInningsScore += runs + extraRuns;
+      logger.d("New innings score after extras: $currentInningsScore");
       ballsToBowl += 1;
-      logger.d(key);
+
       getCurrentInnings.addAll({
         key: OverModel(
           over: over,
@@ -465,9 +497,11 @@ class ScoreboardModel {
           events: events,
         ),
       });
+      logger.d("Updated over model for $key");
       bowler.bowling!.addRuns(runs, events: events);
     } else {
       if (shouldAddRuns) {
+        logger.d("Adding $runs to innings score");
         currentInningsScore += runs;
       }
 
@@ -483,30 +517,34 @@ class ScoreboardModel {
           events: events,
         ),
       });
+      logger.d("Updated over model for $key");
       bowler.bowling!.addRuns(shouldAddRuns ? runs : 0, events: events);
     }
 
     if (currentBall == 6) {
+      logger.d("Over completed");
       overCompleted = true;
       if (runs % 2 == 0) {
-        logger.i('Last ball of the over and even runs, change strike');
+        logger.d('Last ball of the over and even runs, changing strike');
         changeStrike();
-      } else if (runs % 2 != 0) {
-        logger.i('Last ball of the over and odd runs, no strike change');
+      } else {
+        logger.d('Last ball of the over and odd runs, no strike change needed');
       }
       currentBall = 0;
       currentOver += 1;
       ballsToBowl = 6;
     } else {
       if (runs % 2 != 0) {
-        logger.i('Odd runs, change strike');
+        logger.d('Odd runs in middle of over, changing strike');
         changeStrike();
       } else {
-        logger.i('Even runs, no strike change');
+        logger.d('Even runs in middle of over, no strike change needed');
       }
     }
+
     _updateSR();
     _updatePartnership();
+    logger.d("=== Completed addRuns processing ===");
   }
   void _updateSR() {
 
@@ -659,5 +697,30 @@ class ScoreboardModel {
 
   static String extractIdFromMap(Map<String, dynamic> value) {
     return value['\$oid'];
+  }
+}
+class FileLogger {
+  static File? _logFile;
+  static const String fileName = 'cricket_score_logs.txt';
+
+  static Future<void> initialize() async {
+    final Directory appDocDir = await getApplicationDocumentsDirectory();
+    final String logFilePath = '${appDocDir.path}/$fileName';
+    _logFile = File(logFilePath);
+
+    // Add timestamp when starting new session
+    final timestamp = DateTime.now().toString();
+    await _logFile?.writeAsString('\n=== New Session: $timestamp ===\n', mode: FileMode.append);
+  }
+
+  static Future<void> log(String message) async {
+    if (_logFile == null) {
+      await initialize();
+    }
+
+    final timestamp = DateTime.now().toString();
+    final logMessage = '[$timestamp] $message\n';
+
+    await _logFile?.writeAsString(logMessage, mode: FileMode.append);
   }
 }

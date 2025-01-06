@@ -183,12 +183,22 @@ class MatchupCard extends StatelessWidget {
                       IconButton(
                         icon: const Icon(Icons.edit, size: 20, color: Colors.blue),
                         onPressed: () {
-                         Get.off(() => SelectOrganizeTeam(
-                            match: matchup,
-                            round:matchup.round ??'',
-                            tourId: matchup.tournament,
-                          ));
-                          logger.d("The Passing Data Is ${matchup.tournament} and team 1 is ${matchup.team1.name}");
+                          switch(matchup.status){
+                            case 'upcoming':{
+                              Get.off(() => SelectOrganizeTeam(
+                                match: matchup,
+                                round:matchup.round ??'',
+                                tourId: matchup.tournament,
+                              ));
+                              logger.d("The Passing Data Is ${matchup.tournament} and team 1 is ${matchup.team1.name}");
+                            }
+                            case 'current':{
+                              errorSnackBar("Cannot Edit Match After Match has been Started");
+                            }
+                            case 'played':{
+                              errorSnackBar("Cannot Edit Match After Match has been Completed");
+                            }
+                          }
                         },
                       ),
                       IconButton(

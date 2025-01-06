@@ -10,6 +10,8 @@ import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/ui/widgets/scorecard/current_over_card.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 
+import '../../../utils/app_logger.dart';
+
 
 class ScoreBottomDialog extends StatefulWidget {
   final MatchupModel match;
@@ -62,6 +64,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
           height: Get.height * 0.4,
           child: const Center(child: CircularProgressIndicator()));
     } else if (controller.scoreboard.value == null) {
+      logger.d("Found a scorecard null");
       return SizedBox(
         width: Get.width,
         child: Padding(

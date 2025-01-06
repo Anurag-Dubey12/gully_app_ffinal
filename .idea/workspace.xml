@@ -9,10 +9,15 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify current tournament bundle and also modify add player to team ui for all device responsive and added change captain button">
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="nothing">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/current_over_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/current_over_card.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -173,14 +178,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00059" summary="modify package screen ,shop screen and service screen">
-      <option name="closed" value="true" />
-      <created>1728561468983</created>
-      <option name="number" value="00059" />
-      <option name="presentableId" value="LOCAL-00059" />
-      <option name="project" value="LOCAL" />
-      <updated>1728561468984</updated>
     </task>
     <task id="LOCAL-00060" summary="modify tournament form screen">
       <option name="closed" value="true" />
@@ -566,7 +563,15 @@
       <option name="project" value="LOCAL" />
       <updated>1735818710739</updated>
     </task>
-    <option name="localTasksCounter" value="108" />
+    <task id="LOCAL-00108" summary="nothing">
+      <option name="closed" value="true" />
+      <created>1735905326949</created>
+      <option name="number" value="00108" />
+      <option name="presentableId" value="LOCAL-00108" />
+      <option name="project" value="LOCAL" />
+      <updated>1735905326949</updated>
+    </task>
+    <option name="localTasksCounter" value="109" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -587,7 +592,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="modify firebase and promote banner" />
     <MESSAGE value="need attention on firebase" />
     <MESSAGE value="service api modify" />
     <MESSAGE value="keystore ,firebase problem solved" />
@@ -612,7 +616,8 @@
     <MESSAGE value="modifying connection issue" />
     <MESSAGE value="resolve internet issue" />
     <MESSAGE value="modify current tournament bundle and also modify add player to team ui for all device responsive and added change captain button" />
-    <option name="LAST_COMMIT_MESSAGE" value="modify current tournament bundle and also modify add player to team ui for all device responsive and added change captain button" />
+    <MESSAGE value="nothing" />
+    <option name="LAST_COMMIT_MESSAGE" value="nothing" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -1235,6 +1240,12 @@
           <option name="totalLines" value="2108438" />
           <option name="info" value="modify current tournament bundle and also modify a" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1735905331839" />
+          <option name="linesCode" value="40667" />
+          <option name="totalLines" value="6812086" />
+          <option name="info" value="nothing" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1850,6 +1861,12 @@
           <option name="linesCode" value="40659" />
           <option name="totalLines" value="2108438" />
           <option name="info" value="Jan 2, 2025" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1735905331839" />
+          <option name="linesCode" value="40667" />
+          <option name="totalLines" value="6812086" />
+          <option name="info" value="Jan 3, 2025" />
         </TimePoint>
       </list>
     </option>

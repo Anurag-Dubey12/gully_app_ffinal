@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 
 import '../../../data/controller/scoreboard_controller.dart';
+import '../../../utils/app_logger.dart';
 
 class CurrentOverStats extends GetView<ScoreBoardController> {
   const CurrentOverStats({
@@ -14,6 +15,7 @@ class CurrentOverStats extends GetView<ScoreBoardController> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Obx(() {
+
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -26,8 +28,8 @@ class CurrentOverStats extends GetView<ScoreBoardController> {
                 children: [
                   Expanded(
                       flex: 1,
-                      child: Text('This Over:',
-                          style: Get.textTheme.labelMedium)),
+                      child:
+                          Text('This Over:', style: Get.textTheme.labelMedium)),
                   Expanded(
                       flex: 3,
                       child: SizedBox(
@@ -35,11 +37,13 @@ class CurrentOverStats extends GetView<ScoreBoardController> {
                         child: ListView.separated(
                             shrinkWrap: true,
                             separatorBuilder: (context, index) =>
-                            const SizedBox(width: 14),
-                            itemCount: controller
-                                .scoreboard.value?.currentOverHistory.length ??0,
+                                const SizedBox(width: 14),
+                            itemCount: controller.scoreboard.value
+                                    ?.currentOverHistory.length ??
+                                3,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
+
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -49,72 +53,69 @@ class CurrentOverStats extends GetView<ScoreBoardController> {
                                     height: 24,
                                     decoration: BoxDecoration(
                                       border: controller
-                                          .scoreboard
-                                          .value!
-                                          .currentOverHistory[index]
-                                          ?.run ==
-                                          null
+                                                  .scoreboard
+                                                  .value!
+                                                  .currentOverHistory[index]
+                                                  ?.run ==
+                                              null
                                           ? null
                                           : Border.all(
-                                          color: AppTheme
-                                              .secondaryYellowColor,
-                                          width: 1),
-                                      borderRadius:
-                                      BorderRadius.circular(1000),
+                                              color:
+                                                  AppTheme.secondaryYellowColor,
+                                              width: 1),
+                                      borderRadius: BorderRadius.circular(1000),
                                     ),
                                     child: Center(
                                       child: Obx(
-                                            () => Text(
+                                        () => Text(
                                             controller
-                                                .scoreboard
-                                                .value!
-                                                .currentOverHistory[index]
-                                                ?.run
-                                                .toString() ??
+                                                    .scoreboard
+                                                    .value!
+                                                    .currentOverHistory[index]
+                                                    ?.run
+                                                    .toString() ??
                                                 '',
                                             style: Get.textTheme.labelMedium
                                                 ?.copyWith(
-                                                color: controller
-                                                    .scoreboard
-                                                    .value!
-                                                    .currentOverHistory[
-                                                index]
-                                                    ?.run ==
-                                                    0
-                                                    ? Colors.red
-                                                    : Colors.black)),
+                                                    color: controller
+                                                                .scoreboard
+                                                                .value!
+                                                                .currentOverHistory[
+                                                                    index]
+                                                                ?.run ==
+                                                            0
+                                                        ? Colors.red
+                                                        : Colors.black)),
                                       ),
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   Obx(() => Row(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.center,
-                                    children: [
-                                      ...(controller
-                                          .scoreboard
-                                          .value!
-                                          .currentOverHistory[
-                                      index]
-                                          ?.events ??
-                                          [])
-                                          .map((e) => Padding(
-                                        padding:
-                                        const EdgeInsets.all(
-                                            2.0),
-                                        child: CircleAvatar(
-                                          radius: 9,
-                                          child: Text(
-                                            convertEventTypeToText(
-                                                e),
-                                            style:
-                                            const TextStyle(
-                                                fontSize: 8),
-                                          ),
-                                        ),
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          ...(controller
+                                                      .scoreboard
+                                                      .value!
+                                                      .currentOverHistory[index]
+                                                      ?.events ??
+                                                  [])
+                                              .map((e) => Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            2.0),
+                                                    child: CircleAvatar(
+                                                      radius: 9,
+                                                      child: Text(
+                                                        convertEventTypeToText(
+                                                            e),
+                                                        style: const TextStyle(
+                                                            fontSize: 8),
+                                                      ),
+                                                    ),
+                                                  )),
+                                        ],
                                       )),
-                                    ],
-                                  )),
                                 ],
                               );
                             }),

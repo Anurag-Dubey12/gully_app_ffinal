@@ -118,15 +118,15 @@ class CurrentTournamentCard extends GetView<TournamentController> {
             return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 // itemCount: controller.matches.length,
-                // itemCount: sortedMatches.length,
-                itemCount: latestMatches.length,
+                itemCount: sortedMatches.length,
+                // itemCount: latestMatches.length,
                 shrinkWrap: true,
                 padding: const EdgeInsets.only(bottom: 10, top: 10),
                 itemBuilder: (context, snapshot) {
                   return _Card(
                     // tournament: controller.matches[snapshot],
-                    // tournament: sortedMatches[snapshot],
-                    tournament: latestMatches[snapshot],
+                    tournament: sortedMatches[snapshot],
+                    // tournament: latestMatches[snapshot],
                   );
                 });
           }
@@ -265,6 +265,7 @@ class _CardState extends State<_Card> {
                             width: 100,
                             child: ElevatedButton(
                                 onPressed: () {
+                                  logger.d("The current match id:${widget.tournament.id}");
                                   Get.bottomSheet(
                                     BottomSheet(
                                       enableDrag: false,

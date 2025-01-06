@@ -49,6 +49,7 @@ class ScoreBoardController extends GetxController with StateMixin {
             scoreboard.value = ScoreboardModel.fromJson(data['scoreBoard']);
           }
           logger.f('Innings ${scoreboard.value?.lastBall.run}');
+          logger.f('Last Ball Run : ${scoreboard.value?.lastBall.run} and ball count is : ${scoreboard.value?.lastBall.ball} ${scoreboard.value!.lastBall.wickets} ');
           scoreboard.refresh();
         }
       });
@@ -353,7 +354,6 @@ class ScoreBoardController extends GetxController with StateMixin {
           4,
           events: [...events.value, EventType.four],
         );
-
         break;
       case EventType.six:
         await scoreboard.value!

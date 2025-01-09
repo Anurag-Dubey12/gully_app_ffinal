@@ -326,6 +326,8 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                 ),
               PrimaryButton(
                 onTap: () {
+                  if(selectedBatsman?.id!=null){
+                    controller.isBatsmenSelected=true.obs;
                   String? batsmanId;
                   if (controller.scoreboard.value!.lastBall.wickets < 9) {
                     if (selectedBatsman == null) {
@@ -338,11 +340,15 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                         ? playerToOut
                         : controller.scoreboard.value!.striker.id;
                   }
+                  logger.d("Selected Batsman Id:${selectedBatsman!.name}");
                   Navigator.pop(context, {
                     'batsmanId': batsmanId,
                     'outType': outType,
                     'playerToOut': outType == 'RO' ? playerToOut : null,
                   });
+                  }else{
+                    controller.isBatsmenSelected=false.obs;
+                  }
                 },
                 title: 'Submit',
               )

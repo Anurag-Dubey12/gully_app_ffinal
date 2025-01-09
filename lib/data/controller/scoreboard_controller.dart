@@ -215,16 +215,24 @@ class ScoreBoardController extends GetxController with StateMixin {
 
     socket.refresh();
   }
+  RxBool isScoreboardNull = false.obs;
 
   Future<ScoreboardModel?> getMatchScoreboard(String matchId) async {
     final response = await _scoreboardApi.getSingleMatchup(matchId);
     try {
-      return ScoreboardModel.fromJson(response.data!['match']['scoreBoard']);
+      if (response.data!['match']['scoreBoard'] == null) {
+        isScoreboardNull.value = true;
+        return null;
+      } else {
+        isScoreboardNull.value = false;
+        return ScoreboardModel.fromJson(response.data!['match']['scoreBoard']);
+      }
     } catch (e) {
       logger.e('ScoreboardController::getMatchScoreboard $e');
       return null;
     }
   }
+
 
 
   void createScoreBoard({
@@ -310,6 +318,8 @@ class ScoreBoardController extends GetxController with StateMixin {
     return bowler!.name;
   }
 
+  RxBool isWicketSelected=false.obs;
+  RxBool isBatsmenSelected=false.obs;
 
   Future<bool> addEvent(EventType type,
       {String? bowlerId,
@@ -383,8 +393,6 @@ class ScoreBoardController extends GetxController with StateMixin {
 
       case EventType.wicket:
       // scoreboard.value!.addWicket();
-
-
         break;
       case EventType.dotBall:
         await scoreboard.value!.addRuns(0, events: events.value);
@@ -417,26 +425,26 @@ class ScoreBoardController extends GetxController with StateMixin {
       default:
     }
 
-
     if (scoreboard.value!.isSecondInningsOver &&
         !scoreboard.value!.isChallenge!) {
       if (scoreboard.value!.firstInnings!.totalScore == scoreboard.value!.secondInnings!.totalScore) {
-        showModalBottomSheet(
-          context: Get.context!,
-          isScrollControlled: true,
-          builder: (context) => TieBreakerSheet(
-            scoreboard: scoreboard.value!,
-            onSubmit: (String winningTeamId) {
-              final winningTeam = winningTeamId == scoreboard.value!.team1.id
-                  ? scoreboard.value!.team1.name
-                  : scoreboard.value!.team2.name;
-              logger.d("The winner is $winningTeam");
-              successSnackBar('$winningTeam wins the match!');
-              Navigator.of(context).pop();
-              updateFinalScoreBoard(winningTeamId);
-            },
-          ),
-        );
+        // showModalBottomSheet(
+        //   context: Get.context!,
+        //   isScrollControlled: true,
+        //   builder: (context) => TieBreakerSheet(
+        //     scoreboard: scoreboard.value!,
+        //     onSubmit: (String winningTeamId) {
+        //       final winningTeam = winningTeamId == scoreboard.value!.team1.id
+        //           ? scoreboard.value!.team1.name
+        //           : scoreboard.value!.team2.name;
+        //       logger.d("The winner is $winningTeam");
+        //       successSnackBar('$winningTeam wins the match!');
+        //       Navigator.of(context).pop();
+        //       updateFinalScoreBoard(winningTeamId);
+        //     },
+        //   ),
+        // );
+        errorSnackBar("Match Tied");
       }else{
         updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
       }

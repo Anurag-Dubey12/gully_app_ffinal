@@ -340,6 +340,73 @@ class ScoreboardModel {
           .name;
     }
   }
+
+  // void addWicket(int wickets,int runs,ScoreBoardController controller,{bool shouldAddRuns = true}) async{
+  //   logger.d("Processing wicket");
+  //   try {
+  //     final res = await Get.bottomSheet(
+  //         BottomSheet(
+  //             backgroundColor: Colors.white,
+  //             onClosing: () {},
+  //             builder: (c) => const ChangeBatterWidget()),
+  //         isDismissible: false,
+  //         enableDrag: false);
+  //     if (res != null) {
+  //       logger.d("Wicket result: $res");
+  //       wickets += 1;
+  //       _updateSR();
+  //
+  //       if (res['outType'] == "RO") {
+  //         logger.d('Run out: Adding $runs runs to striker ${striker.name}');
+  //         striker.batting!.runs = striker.batting!.runs + runs;
+  //         _partnershipStriker.batting!.runs = _partnershipStriker.batting!.runs + runs;
+  //       } else {
+  //         logger.d('Not adding runs due to dismissal type: ${res['outType']}');
+  //         shouldAddRuns = false;
+  //       }
+  //
+  //       if (res['playerToOut'] != null) {
+  //         logger.d('Processing playerToOut: ${res['playerToOut']}');
+  //         if (res['playerToOut'] == strikerId) {
+  //           logger.d('Striker ${striker.name} is out');
+  //           striker.batting!.bowledBy = controller.getBowlerName(bowlerId);
+  //           striker.batting!.outType = res['outType'];
+  //           setStriker = res['batsmanId'];
+  //         } else {
+  //           logger.d('Non-striker ${nonstriker.name} is out');
+  //           nonstriker.batting!.bowledBy = controller.getBowlerName(bowlerId);
+  //           nonstriker.batting!.outType = res['outType'];
+  //           setNonStriker = res['batsmanId'];
+  //         }
+  //       } else {
+  //         logger.d('Default out processing for striker ${striker.name}');
+  //         striker.batting!.outType = res['outType'];
+  //         striker.batting!.bowledBy = controller.getBowlerName(bowlerId);
+  //         setStriker = res['batsmanId'];
+  //       }
+  //
+  //       logger.d('Updating partnership players');
+  //       _partnershipStriker = PlayerModel(
+  //         name: striker.name,
+  //         id: strikerId,
+  //         phoneNumber: striker.phoneNumber,
+  //         role: striker.role,
+  //       );
+  //       _partnershipNonStriker = PlayerModel(
+  //         name: nonstriker.name,
+  //         id: nonStrikerId,
+  //         phoneNumber: nonstriker.phoneNumber,
+  //         role: nonstriker.role,
+  //       );
+  //     } else {
+  //       logger.d("Wicket processing cancelled");
+  //       return;
+  //     }
+  //   } catch (e) {
+  //     logger.e("Error processing wicket: $e");
+  //     return;
+  //   }
+  // }
   Future<void> addRuns(int runs,
       {List<EventType>? events, List<EventType>? extraEvents}) async {
     logger.d("Starting addRuns with $runs runs");
@@ -401,59 +468,73 @@ class ScoreboardModel {
 
     if (events.contains(EventType.wicket)) {
       logger.d("Processing wicket");
-      final res = await Get.bottomSheet(
-          BottomSheet(
-              backgroundColor: Colors.white,
-              onClosing: () {},
-              builder: (c) => const ChangeBatterWidget()),
-          isDismissible: false,
-          enableDrag: false);
-      logger.d("Wicket result: $res");
-      wickets += 1;
-      _updateSR();
+      try {
+        final res = await Get.bottomSheet(
+            BottomSheet(
+                backgroundColor: Colors.white,
+                onClosing: () {
+                },
+                builder: (c) => const ChangeBatterWidget()),
+            isDismissible: false,
+            enableDrag: false);
+        if (res != null) {
+          logger.d("Wicket result: $res");
+          wickets += 1;
+          _updateSR();
 
-      if (res['outType'] == "RO") {
-        logger.d('Run out: Adding $runs runs to striker ${striker.name}');
-        striker.batting!.runs = striker.batting!.runs + runs;
-        _partnershipStriker.batting!.runs = _partnershipStriker.batting!.runs + runs;
-      } else {
-        logger.d('Not adding runs due to dismissal type: ${res['outType']}');
-        shouldAddRuns = false;
-      }
+          if (res['outType'] == "RO") {
+            logger.d('Run out: Adding $runs runs to striker ${striker.name}');
+            striker.batting!.runs = striker.batting!.runs + runs;
+            _partnershipStriker.batting!.runs = _partnershipStriker.batting!.runs + runs;
+          } else {
+            logger.d('Not adding runs due to dismissal type: ${res['outType']}');
+            shouldAddRuns = false;
+          }
 
-      if (res['playerToOut'] != null) {
-        logger.d('Processing playerToOut: ${res['playerToOut']}');
-        if (res['playerToOut'] == strikerId) {
-          logger.d('Striker ${striker.name} is out');
-          striker.batting!.bowledBy = controller.getBowlerName(bowlerId);
-          striker.batting!.outType = res['outType'];
-          setStriker = res['batsmanId'];
+          if (res['playerToOut'] != null) {
+            logger.d('Processing playerToOut: ${res['playerToOut']}');
+            if (res['playerToOut'] == strikerId) {
+              logger.d('Striker ${striker.name} is out');
+              striker.batting!.bowledBy = controller.getBowlerName(bowlerId);
+              striker.batting!.outType = res['outType'];
+              setStriker = res['batsmanId'];
+            } else {
+              logger.d('Non-striker ${nonstriker.name} is out');
+              nonstriker.batting!.bowledBy = controller.getBowlerName(bowlerId);
+              nonstriker.batting!.outType = res['outType'];
+              setNonStriker = res['batsmanId'];
+            }
+          } else {
+            logger.d('Default out processing for striker ${striker.name}');
+            striker.batting!.outType = res['outType'];
+            striker.batting!.bowledBy = controller.getBowlerName(bowlerId);
+            setStriker = res['batsmanId'];
+          }
+
+          logger.d('Updating partnership players');
+          _partnershipStriker = PlayerModel(
+            name: striker.name,
+            id: strikerId,
+            phoneNumber: striker.phoneNumber,
+            role: striker.role,
+          );
+          _partnershipNonStriker = PlayerModel(
+            name: nonstriker.name,
+            id: nonStrikerId,
+            phoneNumber: nonstriker.phoneNumber,
+            role: nonstriker.role,
+          );
         } else {
-          logger.d('Non-striker ${nonstriker.name} is out');
-          nonstriker.batting!.bowledBy = controller.getBowlerName(bowlerId);
-          nonstriker.batting!.outType = res['outType'];
-          setNonStriker = res['batsmanId'];
+          logger.d("Wicket processing cancelled");
+          // logger.d("The current ball is ${currentBall} and ball is ${ball} and reduce ball is :${currentBall-1}");
+          currentBall=currentBall-1;
+          striker.batting!.balls = striker.batting!.balls -1;
+          return;
         }
-      } else {
-        logger.d('Default out processing for striker ${striker.name}');
-        striker.batting!.outType = res['outType'];
-        striker.batting!.bowledBy = controller.getBowlerName(bowlerId);
-        setStriker = res['batsmanId'];
+      } catch (e) {
+        logger.e("Error processing wicket: $e");
+        return;
       }
-
-      logger.d('Updating partnership players');
-      _partnershipStriker = PlayerModel(
-        name: striker.name,
-        id: strikerId,
-        phoneNumber: striker.phoneNumber,
-        role: striker.role,
-      );
-      _partnershipNonStriker = PlayerModel(
-        name: nonstriker.name,
-        id: nonStrikerId,
-        phoneNumber: nonstriker.phoneNumber,
-        role: nonstriker.role,
-      );
     }
 
     if (events.contains(EventType.bye)) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/ui/screens/full_scorecard.dart';
 import 'package:gully_app/ui/widgets/custom_score_select_sheet.dart';
+import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 import '../../../data/controller/misc_controller.dart';
 import '../../../data/controller/scoreboard_controller.dart';
@@ -116,6 +117,12 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                                         'You can not add a dot ball and a bye or leg bye');
                                     return;
                                   }
+                                  logger.d("The wicket status is:${controller.isWicketSelected.value} \n The batsmen status is:${controller.isBatsmenSelected.value}");
+                                  // if(controller.isWicketSelected.value){
+                                  //   if(controller.isBatsmenSelected.value){
+                                  // controller.addEvent(EventType.dotBall);
+                                  //   }
+                                  // }
                                   controller.addEvent(EventType.dotBall);
                                 }
                               },

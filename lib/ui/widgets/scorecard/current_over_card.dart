@@ -15,7 +15,6 @@ class CurrentOverStats extends GetView<ScoreBoardController> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Obx(() {
-
         return Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -40,10 +39,9 @@ class CurrentOverStats extends GetView<ScoreBoardController> {
                                 const SizedBox(width: 14),
                             itemCount: controller.scoreboard.value
                                     ?.currentOverHistory.length ??
-                                3,
+                                0,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) {
-
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -67,55 +65,157 @@ class CurrentOverStats extends GetView<ScoreBoardController> {
                                     ),
                                     child: Center(
                                       child: Obx(
-                                        () => Text(
-                                            controller
-                                                    .scoreboard
-                                                    .value!
-                                                    .currentOverHistory[index]
-                                                    ?.run
-                                                    .toString() ??
-                                                '',
-                                            style: Get.textTheme.labelMedium
-                                                ?.copyWith(
-                                                    color: controller
-                                                                .scoreboard
-                                                                .value!
-                                                                .currentOverHistory[
-                                                                    index]
-                                                                ?.run ==
-                                                            0
-                                                        ? Colors.red
-                                                        : Colors.black)),
+                                        () {
+                                          final baseRun = controller.scoreboard.value!.currentOverHistory[index]?.run;
+                                          final extraRun = (controller.scoreboard.value!.currentOverHistory[index]?.events ?? [])
+                                              .where((event) => event == EventType.noBall || event == EventType.wide)
+                                              .length;
+                                          final totalScore = (baseRun ?? 0) + extraRun;
+                                          // return Text(
+                                          //     totalScore > 0 ? totalScore.toString() : (baseRun == 0 ? '0' : ''),
+
+                                          // final baseRun = controller
+                                          //         .scoreboard
+                                          //         .value!
+                                          //         .currentOverHistory[index]
+                                          //         ?.run ??
+                                          //     0;
+                                          // final extraRun = (controller
+                                          //             .scoreboard
+                                          //             .value!
+                                          //             .currentOverHistory[index]
+                                          //             ?.events ??
+                                          //         [])
+                                          //     .where((event) =>
+                                          //         event == EventType.noBall ||
+                                          //         event == EventType.wide)
+                                          //     .length;
+                                          // final TotalScore = baseRun + extraRun;
+                                          return Text(
+                                              totalScore > 0 ? totalScore.toString() : (baseRun == 0 ? '0' : ''),
+                                              style: Get.textTheme.labelMedium
+                                                  ?.copyWith(
+                                                      color: controller
+                                                                  .scoreboard
+                                                                  .value!
+                                                                  .currentOverHistory[
+                                                                      index]
+                                                                  ?.run ==
+                                                              0
+                                                          ? Colors.red
+                                                          : Colors.black));
+                                        },
                                       ),
                                     ),
                                   ),
                                   const SizedBox(height: 4),
-                                  Obx(() => Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          ...(controller
-                                                      .scoreboard
-                                                      .value!
-                                                      .currentOverHistory[index]
-                                                      ?.events ??
-                                                  [])
-                                              .map((e) => Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            2.0),
-                                                    child: CircleAvatar(
-                                                      radius: 9,
-                                                      child: Text(
-                                                        convertEventTypeToText(
-                                                            e),
-                                                        style: const TextStyle(
-                                                            fontSize: 8),
-                                                      ),
-                                                    ),
-                                                  )),
-                                        ],
-                                      )),
+                                  Obx(() {
+                                    final extraRun = controller
+                                            .scoreboard
+                                            .value!
+                                            .currentOverHistory[index]
+                                            ?.run ??
+                                        0;
+                                    final events = controller
+                                            .scoreboard
+                                            .value!
+                                            .currentOverHistory[index]
+                                            ?.events ??
+                                        [];
+                                    final hasExtra = events.any((event) =>
+                                        event == EventType.wide ||
+                                        event == EventType.noBall);
+
+                                    return Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ...events.map((e) => Padding(
+                                              padding:
+                                                  const EdgeInsets.all(2.0),
+                                              child: CircleAvatar(
+                                                radius: 9,
+                                                child: Text(
+                                                  switch (e) {
+                                                    EventType.wide => 'Wd',
+                                                    EventType.noBall => 'Nb',
+                                                    EventType.wicket => 'W',
+                                                    EventType.changeBowler =>
+                                                      'B',
+                                                    EventType.changeStriker =>
+                                                      'S',
+                                                    EventType.legByes => 'Lb',
+                                                    EventType.four => '4',
+                                                    EventType.six => '6',
+                                                    EventType.bye => 'B',
+                                                    EventType.retire => 'RE',
+                                                    _ => ''
+                                                  },
+                                                  style: const TextStyle(
+                                                      fontSize: 8),
+                                                ),
+                                              ),
+                                            )),
+                                        if (hasExtra &&
+                                            extraRun != 4 &&
+                                            extraRun != 6)
+                                          Padding(
+                                            padding: const EdgeInsets.all(2.0),
+                                            child: CircleAvatar(
+                                              radius: 9,
+                                              child: Text(
+                                                '$extraRun',
+                                                style: const TextStyle(
+                                                    fontSize: 8),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    );
+                                  })
+                                  // Obx(() {
+                                  //   final extraRunScored=controller.scoreboard.value!.currentOverHistory[index]?.run;
+                                  //   logger.d("The extraRunScored is:$extraRunScored");
+                                  //
+                                  //   final hasExtraEvent = (controller.scoreboard.value!.currentOverHistory[index]?.events ?? [])
+                                  //       .any((event) => event == EventType.wide || event == EventType.noBall);
+                                  //   return Row(
+                                  //     mainAxisAlignment:
+                                  //     MainAxisAlignment.center,
+                                  //     children: [
+                                  //       ...(controller
+                                  //           .scoreboard
+                                  //           .value!
+                                  //           .currentOverHistory[index]
+                                  //           ?.events ??
+                                  //           [])
+                                  //           .map((e) => Padding(
+                                  //         padding:
+                                  //         const EdgeInsets.all(
+                                  //             2.0),
+                                  //         child: CircleAvatar(
+                                  //           radius: 9,
+                                  //           child: Text(
+                                  //             convertEventTypeToText(e),
+                                  //             style: const TextStyle(
+                                  //                 fontSize: 8),
+                                  //           ),
+                                  //         ),
+                                  //       )),
+                                  //       // if(hasExtraEvent)
+                                  //       //   Padding(
+                                  //       //     padding: const EdgeInsets.all(2.0),
+                                  //       //     child: CircleAvatar(
+                                  //       //       radius: 9,
+                                  //       //       child: Text(
+                                  //       //         '+$extraRunScored',
+                                  //       //         style: const TextStyle(fontSize: 8),
+                                  //       //       ),
+                                  //       //     ),
+                                  //       //   ),
+                                  //     ],
+                                  //   );
+                                  // }),
                                 ],
                               );
                             }),

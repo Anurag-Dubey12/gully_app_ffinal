@@ -12,7 +12,6 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import '../../../utils/app_logger.dart';
 
-
 class ScoreBottomDialog extends StatefulWidget {
   final MatchupModel match;
   const ScoreBottomDialog({
@@ -41,9 +40,10 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
     }
   }
 
-
   @override
   void initState() {
+    logger.d("The match is is:${widget.match.id}");
+    logger.d("The scoreboard is:${widget.match.scoreBoard}");
     getMatchScoreboard();
     super.initState();
   }
@@ -63,7 +63,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
       return SizedBox(
           height: Get.height * 0.4,
           child: const Center(child: CircularProgressIndicator()));
-    } else if (controller.scoreboard.value == null) {
+    } else if (controller.isScoreboardNull.value) {
       logger.d("Found a scorecard null");
       return SizedBox(
         width: Get.width,
@@ -138,7 +138,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
             Padding(
               padding: const EdgeInsets.all(18.0),
               child: Obx(
-                    () => Column(
+                () => Column(
                   children: [
                     Text(
                       widget.match.tournamentName ?? '',
@@ -167,52 +167,73 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             ClipRRect(
                                               borderRadius:
-                                              BorderRadius.circular(100),
-                                              child: widget.match.team1.logo != null && widget.match.team1.logo!.isNotEmpty
+                                                  BorderRadius.circular(100),
+                                              child: widget.match.scoreBoard![
+                                                                  'team1']
+                                                              ['teamLogo'] !=
+                                                          null &&
+                                                      widget
+                                                          .match
+                                                          .scoreBoard!['team1']
+                                                              ['teamLogo']
+                                                          .isNotEmpty
                                                   ? Image.network(
-                                                widget.match.team1.toImageUrl(),
-                                                height: 50,
-                                                fit: BoxFit.cover,
-                                                width: 50,
-                                              )
+                                                      widget.match.scoreBoard![
+                                                                      'team1'][
+                                                                  'teamLogo'] ==
+                                                              widget.match.team1
+                                                                  .toImageUrl()
+                                                          ? widget.match.team1
+                                                              .toImageUrl()
+                                                          : widget.match.team2
+                                                              .toImageUrl(),
+                                                      height: 50,
+                                                      fit: BoxFit.cover,
+                                                      width: 50,
+                                                    )
                                                   : Image.asset(
-                                                "assets/images/logo.png",
-                                                height: 50,
-                                                fit: BoxFit.cover,
-                                                width: 50,
-                                              ),
+                                                      "assets/images/logo.png",
+                                                      height: 50,
+                                                      fit: BoxFit.cover,
+                                                      width: 50,
+                                                    ),
                                             ),
                                             const SizedBox(width: 10),
-                                            Obx((){
+                                            Obx(() {
                                               return Container(
                                                 decoration: BoxDecoration(
                                                   color: AppTheme
                                                       .secondaryYellowColor,
                                                   borderRadius:
-                                                  BorderRadius.circular(10),
+                                                      BorderRadius.circular(10),
                                                 ),
                                                 child: Padding(
-                                                  padding: const EdgeInsets.all(8.0),
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
                                                   child: Text(
                                                     '${controller.scoreboard.value?.firstInningHistory.entries.lastOrNull?.value.total ?? 0}/${controller.scoreboard.value?.firstInningHistory.entries.lastOrNull?.value.wickets ?? 0}',
-                                                    style: Get.textTheme.headlineMedium?.copyWith(
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Colors.white,
-                                                        fontSize: 12
-                                                    ),
+                                                    style: Get.textTheme
+                                                        .headlineMedium
+                                                        ?.copyWith(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: Colors.white,
+                                                            fontSize: 12),
                                                   ),
                                                 ),
                                               );
@@ -229,7 +250,11 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                           ],
                                         ),
                                         Text(
-                                          widget.match.team1.name,
+                                          widget.match.scoreBoard!['team1']
+                                                      ['teamName'] ==
+                                                  widget.match.team1.name
+                                              ? widget.match.team1.name
+                                              : widget.match.team2.name,
                                           overflow: TextOverflow.ellipsis,
                                           style: Get.textTheme.headlineMedium
                                               ?.copyWith(
@@ -246,65 +271,104 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                   const SizedBox(width: 30),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
                                       children: [
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
-                                            controller.scoreboard.value?.secondInnings==null ? const Text("DNB",style: TextStyle(
-                                                color: Colors.grey
-                                            ),) :
-                                            Obx((){
-                                              return Container(
-                                                decoration: BoxDecoration(
-                                                  color: AppTheme
-                                                      .secondaryYellowColor,
-                                                  borderRadius:
-                                                  BorderRadius.circular(10),
-                                                ),
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(8.0),
-                                                  child: Text(
-                                                    '${controller.scoreboard.value?.secondInningHistory.entries.lastOrNull?.value.total ?? 0}/${controller.scoreboard.value?.secondInningHistory.entries.lastOrNull?.value.wickets ?? 0}',
-                                                    style: Get.textTheme.headlineMedium?.copyWith(
-                                                        fontWeight: FontWeight.bold,
-                                                        color: Colors.white,
-                                                        fontSize: 12
-                                                    ),
-                                                  ),
-                                                ),
-                                              );
-                                            }),
+                                            controller.scoreboard.value
+                                                        ?.secondInnings ==
+                                                    null
+                                                ? const Text(
+                                                    "DNB",
+                                                    style: TextStyle(
+                                                        color: Colors.grey),
+                                                  )
+                                                : Obx(() {
+                                                    return Container(
+                                                      decoration: BoxDecoration(
+                                                        color: AppTheme
+                                                            .secondaryYellowColor,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Text(
+                                                          '${controller.scoreboard.value?.secondInningHistory.entries.lastOrNull?.value.total ?? 0}/${controller.scoreboard.value?.secondInningHistory.entries.lastOrNull?.value.wickets ?? 0}',
+                                                          style: Get.textTheme
+                                                              .headlineMedium
+                                                              ?.copyWith(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize: 12),
+                                                        ),
+                                                      ),
+                                                    );
+                                                  }),
                                             const SizedBox(width: 10),
                                             ClipRRect(
                                               borderRadius:
-                                              BorderRadius.circular(100),
+                                                  BorderRadius.circular(100),
                                               child: SizedBox(
                                                 height: 50,
                                                 width: 50,
-                                                child:widget.match.team2.logo != null && widget.match.team2.logo!.isNotEmpty
+                                                child: widget.match.scoreBoard![
+                                                                    'team2']
+                                                                ['teamLogo'] !=
+                                                            null &&
+                                                        widget
+                                                            .match
+                                                            .scoreBoard![
+                                                                'team2']
+                                                                ['teamLogo']
+                                                            .isNotEmpty
                                                     ? Image.network(
-                                                  widget.match.team2.toImageUrl(),
-                                                  height: 50,
-                                                  fit: BoxFit.cover,
-                                                  width: 50,
-                                                )
+                                                        widget.match.scoreBoard![
+                                                                        'team2']
+                                                                    [
+                                                                    'teamLogo'] ==
+                                                                widget
+                                                                    .match.team2
+                                                                    .toImageUrl()
+                                                            ? widget.match.team2
+                                                                .toImageUrl()
+                                                            : widget.match.team1
+                                                                .toImageUrl(),
+                                                        height: 50,
+                                                        fit: BoxFit.cover,
+                                                        width: 50,
+                                                      )
                                                     : Image.asset(
-                                                  "assets/images/logo.png",
-                                                  height: 50,
-                                                  fit: BoxFit.cover,
-                                                  width: 50,
-                                                ),
+                                                        "assets/images/logo.png",
+                                                        height: 50,
+                                                        fit: BoxFit.cover,
+                                                        width: 50,
+                                                      ),
                                               ),
                                             ),
                                           ],
                                         ),
                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
                                           children: [
                                             Text(
-                                              widget.match.team2.name,
-                                              style: Get.textTheme.headlineMedium
+                                              widget.match.scoreBoard!['team2']
+                                                          ['teamName'] ==
+                                                      widget.match.team2.name
+                                                  ? widget.match.team2.name
+                                                  : widget.match.team1.name,
+                                              style: Get
+                                                  .textTheme.headlineMedium
                                                   ?.copyWith(
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.black,
@@ -357,11 +421,14 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                               ]),
                             ),
                             Obx(() {
-                              final secondInningsText = controller.scoreboard.value?.secondInningsText;
+                              final secondInningsText = controller
+                                  .scoreboard.value?.secondInningsText;
                               if (secondInningsText == 'Match Tied') {
                                 return Text(
-                                    widget.match.getWinningTeamName()==null ?
-                                    "Match Tied":"${widget.match.getWinningTeamName()} Won The Match" ?? "Match Tied",
+                                  widget.match.getWinningTeamName() == null
+                                      ? "Match Tied"
+                                      : "${widget.match.getWinningTeamName()} Won The Match" ??
+                                          "Match Tied",
                                 );
                               } else {
                                 return Text(
@@ -374,18 +441,24 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                               children: [
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
-                                          Image.asset('assets/images/bat.png', height: 12),
+                                          Image.asset('assets/images/bat.png',
+                                              height: 12),
                                           const SizedBox(width: 3),
-                                          const Text('Striker: ', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
+                                          const Text('Striker: ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 13)),
                                           Expanded(
                                             child: Text(
                                               '${controller.scoreboard.value?.striker.name}',
                                               overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(fontSize: 13),
+                                              style:
+                                                  const TextStyle(fontSize: 13),
                                             ),
                                           )
                                         ],
@@ -393,15 +466,27 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                       Row(
                                         children: [
                                           const SizedBox(width: 15),
-                                          const Text('Runs: ', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
-                                          Text('${controller.scoreboard.value?.striker.batting?.runs}', style: const TextStyle(fontSize: 13))
+                                          const Text('Runs: ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 13)),
+                                          Text(
+                                              '${controller.scoreboard.value?.striker.batting?.runs}',
+                                              style:
+                                                  const TextStyle(fontSize: 13))
                                         ],
                                       ),
                                       Row(
                                         children: [
                                           const SizedBox(width: 15),
-                                          const Text('SR: ', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12)),
-                                          Text('${controller.scoreboard.value?.striker.batting?.strikeRate.toStringAsFixed(2)}', style: const TextStyle(fontSize: 13))
+                                          const Text('SR: ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 12)),
+                                          Text(
+                                              '${controller.scoreboard.value?.striker.batting?.strikeRate.toStringAsFixed(2)}',
+                                              style:
+                                                  const TextStyle(fontSize: 13))
                                         ],
                                       ),
                                     ],
@@ -410,18 +495,24 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                 const SizedBox(width: 1),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
-                                          Image.asset('assets/images/bat.png', height: 12),
+                                          Image.asset('assets/images/bat.png',
+                                              height: 12),
                                           const SizedBox(width: 3),
-                                          const Text('Non Striker: ', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
+                                          const Text('Non Striker: ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 13)),
                                           Expanded(
                                             child: Text(
                                               '${controller.scoreboard.value?.nonstriker.name}',
                                               overflow: TextOverflow.ellipsis,
-                                              style: const TextStyle(fontSize: 13),
+                                              style:
+                                                  const TextStyle(fontSize: 13),
                                             ),
                                           )
                                         ],
@@ -429,15 +520,27 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                       Row(
                                         children: [
                                           const SizedBox(width: 15),
-                                          const Text('Runs: ', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
-                                          Text('${controller.scoreboard.value?.nonstriker.batting?.runs}', style: const TextStyle(fontSize: 13))
+                                          const Text('Runs: ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 13)),
+                                          Text(
+                                              '${controller.scoreboard.value?.nonstriker.batting?.runs}',
+                                              style:
+                                                  const TextStyle(fontSize: 13))
                                         ],
                                       ),
                                       Row(
                                         children: [
                                           const SizedBox(width: 15),
-                                          const Text('SR: ', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 13)),
-                                          Text('${controller.scoreboard.value?.nonstriker.batting?.strikeRate.toStringAsFixed(2)}', style: const TextStyle(fontSize: 13))
+                                          const Text('SR: ',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 13)),
+                                          Text(
+                                              '${controller.scoreboard.value?.nonstriker.batting?.strikeRate.toStringAsFixed(2)}',
+                                              style:
+                                                  const TextStyle(fontSize: 13))
                                         ],
                                       ),
                                     ],
@@ -453,7 +556,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                 const SizedBox(width: 5),
                                 const Text('Bowler :  ',
                                     style:
-                                    TextStyle(fontWeight: FontWeight.w500)),
+                                        TextStyle(fontWeight: FontWeight.w500)),
                                 Text(
                                     '${controller.scoreboard.value?.bowler?.name}'),
                               ],

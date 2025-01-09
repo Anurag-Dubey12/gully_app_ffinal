@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/extras_model.dart';
@@ -9,6 +11,7 @@ import 'package:gully_app/utils/utils.dart';
 
 import '../../../data/controller/scoreboard_controller.dart';
 import 'TieBreakerSheet.dart';
+import 'change_batter.dart';
 import 'scorecard_dialogs.dart';
 
 class PartnershipDialog extends GetView<ScoreBoardController> {
@@ -310,22 +313,38 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                     eventType: EventType.wicket,
                   ),
                   // SizedBox(
-                  //     // width: 100,
-                  //     height: 30,
-                  //     child: TextButton(
-                  //         style: ButtonStyle(
-                  //             backgroundColor: MaterialStateProperty.all(
-                  //                 AppTheme.primaryColor),
-                  //             padding: MaterialStateProperty.all(
-                  //                 const EdgeInsets.all(3))),
-                  //         onPressed: () {
-                  //           controller.addEvent(EventType.changeStriker);
-                  //         },
-                  //         child: const Text('Wicket',
-                  //             style: TextStyle(
-                  //                 color: Colors.white,
-                  //                 fontSize: 10,
-                  //                 fontWeight: FontWeight.w500)))),
+                  //   height: 30,
+                  //   child: TextButton(
+                  //     style: ButtonStyle(
+                  //       backgroundColor: MaterialStateProperty.all(
+                  //         AppTheme.primaryColor,
+                  //       ),
+                  //       padding: MaterialStateProperty.all(
+                  //         const EdgeInsets.all(3),
+                  //       ),
+                  //     ),
+                  //     onPressed: () {
+                  //       if ((controller.scoreboard.value?.isSecondInningsOver ?? false)) {
+                  //         errorSnackBar('Match Over');
+                  //         return;
+                  //       }
+                  //       if ((controller.scoreboard.value?.inningsCompleted ?? false)) {
+                  //         errorSnackBar('Innings Completed');
+                  //         return;
+                  //       }
+                  //       logger.d("Wicket is Clicked");
+                  //       controller.scoreboard.value!.addRuns(0,events: [EventType.wicket]);
+                  //     },
+                  //     child: const Text(
+                  //       'Wicket',
+                  //       style: TextStyle(
+                  //         color: Colors.white,
+                  //         fontSize: 10,
+                  //         fontWeight: FontWeight.w500,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   SizedBox(
                       // width: 100,
                       height: 30,
@@ -439,8 +458,15 @@ class _EventWidget extends GetView<ScoreBoardController> {
                   onChanged: (e) {
                     if (e == null) return;
                     if (e) {
+                      logger.d("found event $eventType");
+                      if(eventType==EventType.wicket){
+                        controller.isWicketSelected.value=true;
+                      }
                       controller.addEventType(eventType);
                     } else {
+                      if(eventType==EventType.wicket){
+                        controller.isWicketSelected.value=false;
+                      }
                       controller.removeEventType(eventType);
                     }
                   },

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,9 @@ import '../../utils/app_logger.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 import '../widgets/primary_button.dart';
+import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
+import 'legal_screen.dart';
 class TeamEntryForm extends StatefulWidget {
   final TeamModel team;
   const TeamEntryForm({super.key, required this.team});
@@ -343,56 +346,50 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                           style: Get.textTheme.titleSmall),
                                     ],
                                   ),
-                                  const SizedBox(
-                                    height: 18,
-                                  ),
-                                  Text('Disclaimer',
-                                      style: Get.textTheme.headlineMedium
-                                          ?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                              fontSize: 16)),
-                                  const SizedBox(
-                                    height: 8,
-                                  ),
-                                  FutureBuilder<String>(
-                                      future: Get.find<MiscController>()
-                                          .getContent('teamDisclaimer'),
-                                      builder: (context, snapshot) {
-                                        return Container(
-                                          decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              border: Border.all(
-                                                  color: Colors.black12
-                                                      .withOpacity(0.7)),
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    color: Colors.black
-                                                        .withOpacity(0.1),
-                                                    blurRadius: 5,
-                                                    spreadRadius: 2,
-                                                    offset: const Offset(0, 2))
-                                              ]),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: HtmlWidget(
-                                              snapshot.data ?? '',
-                                              textStyle: const TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 14),
-                                            ),
-                                          ),
-                                        );
-                                        // return FormInput(
-                                        //   controller: TextEditingController(
-                                        //       text: snapshot.data ?? ''),
-                                        //   enabled: false,
-                                        //   maxLines: 4,
-                                        //   label: "Disclaimer",
-                                        // );
-                                      }),
+                                  // Text('Disclaimer',
+                                  //     style: Get.textTheme.headlineMedium
+                                  //         ?.copyWith(
+                                  //             fontWeight: FontWeight.bold,
+                                  //             color: Colors.black,
+                                  //             fontSize: 16)),
+                                  // FutureBuilder<String>(
+                                  //     future: Get.find<MiscController>()
+                                  //         .getContent('teamDisclaimer'),
+                                  //     builder: (context, snapshot) {
+                                  //       return Container(
+                                  //         decoration: BoxDecoration(
+                                  //             color: Colors.white,
+                                  //             border: Border.all(
+                                  //                 color: Colors.black12
+                                  //                     .withOpacity(0.7)),
+                                  //             borderRadius:
+                                  //                 BorderRadius.circular(10),
+                                  //             boxShadow: [
+                                  //               BoxShadow(
+                                  //                   color: Colors.black
+                                  //                       .withOpacity(0.1),
+                                  //                   blurRadius: 5,
+                                  //                   spreadRadius: 2,
+                                  //                   offset: const Offset(0, 2))
+                                  //             ]),
+                                  //         child: Padding(
+                                  //           padding: const EdgeInsets.all(8.0),
+                                  //           child: HtmlWidget(
+                                  //             snapshot.data ?? '',
+                                  //             textStyle: const TextStyle(
+                                  //                 color: Colors.black,
+                                  //                 fontSize: 14),
+                                  //           ),
+                                  //         ),
+                                  //       );
+                                  //       // return FormInput(
+                                  //       //   controller: TextEditingController(
+                                  //       //       text: snapshot.data ?? ''),
+                                  //       //   enabled: false,
+                                  //       //   maxLines: 4,
+                                  //       //   label: "Disclaimer",
+                                  //       // );
+                                  //     }),
                                   Row(
                                     children: [
                                       SizedBox(
@@ -405,9 +402,33 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                                 });
                                               })),
                                       const SizedBox(width: 8),
-                                      Text(
-                                          'I\'ve hereby read and agree to your disclaimer',
-                                          style: Get.textTheme.titleSmall),
+                                      RichText(
+                                        text: TextSpan(
+                                          text: AppLocalizations.of(context)!.iHerebyAgreeToThe,
+                                          children: [
+                                            TextSpan(
+                                              text: AppLocalizations.of(context)!.disclaimer,
+                                              recognizer: TapGestureRecognizer()
+                                                ..onTap = () {
+                                                  Get.bottomSheet(BottomSheet(
+                                                    onClosing: () {},
+                                                    builder: (builder) => const LegalViewScreen(
+                                                        title: 'Disclaimer',
+                                                        slug: 'disclaimer',
+                                                        hideDeleteButton: true),
+                                                  ));
+                                                },
+                                              style: const TextStyle(
+                                                color: Colors.black,
+                                                decoration: TextDecoration.underline,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const TextSpan(text: " of the app ", style: TextStyle()),
+                                          ],
+                                          style: Get.textTheme.titleSmall,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                   const SizedBox(

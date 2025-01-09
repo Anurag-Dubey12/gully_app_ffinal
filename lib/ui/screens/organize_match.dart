@@ -705,23 +705,23 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                             ),
 
                             SizedBox(height: Get.height * 0.02),
-                            // PrimaryButton(
-                            //   onTap: showEliminationBottomSheet,
-                            //   title: 'Eliminate Teams',
-                            // ),
-                            // SizedBox(height: Get.height * 0.02),
-                            // PrimaryButton(
-                            //   // onTap: showEliminationBottomSheet,
-                            //   onTap: () {
-                            //     logger.d("The Tournament id is:${widget.tournament!.id}");
-                            //     Get.to(() => PointsTable(
-                            //       tournamentId: widget.tournament!.id,
-                            //       tournamentName:
-                            //       widget.tournament!.tournamentName,
-                            //     ));
-                            //   },
-                            //   title: 'Points Table',
-                            // ),
+                            PrimaryButton(
+                              onTap: showEliminationBottomSheet,
+                              title: 'Eliminate Teams',
+                            ),
+                            SizedBox(height: Get.height * 0.02),
+                            PrimaryButton(
+                              // onTap: showEliminationBottomSheet,
+                              onTap: () {
+                                logger.d("The Tournament id is:${widget.tournament!.id}");
+                                Get.to(() => PointsTable(
+                                  tournamentId: widget.tournament!.id,
+                                  tournamentName:
+                                  widget.tournament!.tournamentName,
+                                ));
+                              },
+                              title: 'Points Table',
+                            ),
                           ],
                         ))
                   ],
@@ -808,18 +808,12 @@ class PointsTable extends StatelessWidget {
                                     width: 2,
                                   ),
                                   teamData(team, flex: 4),
-                                  teamTableData(team.matchesPlayed.toString(),
-                                      flex: 2),
+                                  teamTableData(team.matchesPlayed.toString(), flex: 2),
                                   teamTableData(team.wins.toString(), flex: 2),
-                                  teamTableData(team.losses.toString(),
-                                      flex: 2),
+                                  teamTableData(team.losses.toString(), flex: 2),
                                   teamTableData(team.ties.toString(), flex: 2),
-                                  teamTableData(team.points.toString(),
-                                      flex: 2),
-                                  teamTableData(
-                                      team.netRunRate?.toStringAsFixed(3) ??
-                                          '0',
-                                      flex: 2),
+                                  teamTableData(team.points.toString(), flex: 2),
+                                  teamTableData(team.netRunRate.toString(),flex: 2),
                                 ],
                               ),
                             );

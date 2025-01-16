@@ -407,6 +407,7 @@ class ScoreboardModel {
   //     return;
   //   }
   // }
+
   Future<void> addRuns(int runs,
       {List<EventType>? events, List<EventType>? extraEvents}) async {
     logger.d("Starting addRuns with $runs runs");
@@ -475,7 +476,7 @@ class ScoreboardModel {
                 onClosing: () {
                 },
                 builder: (c) => const ChangeBatterWidget()),
-            isDismissible: false,
+            isDismissible: true,
             enableDrag: false);
         if (res != null) {
           logger.d("Wicket result: $res");
@@ -778,30 +779,5 @@ class ScoreboardModel {
 
   static String extractIdFromMap(Map<String, dynamic> value) {
     return value['\$oid'];
-  }
-}
-class FileLogger {
-  static File? _logFile;
-  static const String fileName = 'cricket_score_logs.txt';
-
-  static Future<void> initialize() async {
-    final Directory appDocDir = await getApplicationDocumentsDirectory();
-    final String logFilePath = '${appDocDir.path}/$fileName';
-    _logFile = File(logFilePath);
-
-    // Add timestamp when starting new session
-    final timestamp = DateTime.now().toString();
-    await _logFile?.writeAsString('\n=== New Session: $timestamp ===\n', mode: FileMode.append);
-  }
-
-  static Future<void> log(String message) async {
-    if (_logFile == null) {
-      await initialize();
-    }
-
-    final timestamp = DateTime.now().toString();
-    final logMessage = '[$timestamp] $message\n';
-
-    await _logFile?.writeAsString(logMessage, mode: FileMode.append);
   }
 }

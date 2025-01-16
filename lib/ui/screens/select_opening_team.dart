@@ -59,50 +59,49 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
       body: ListView(
         padding: const EdgeInsets.all(18),
         children: [
-          const Text('Host Team',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: DropdownButton<TeamModel?>(
-              value: hostTeam,
-
-              icon: const Icon(Icons.arrow_drop_down),
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              iconSize: 24,
-              // menuMaxHeight: 8,
-              borderRadius: BorderRadius.circular(10),
-              alignment: Alignment.bottomCenter,
-              // elevation: 16,
-              iconEnabledColor: Colors.black,
-              isExpanded: true,
-              style: const TextStyle(color: Colors.black),
-              underline: const SizedBox(),
-              onChanged: (TeamModel? newValue) {
-                setState(() {
-                  hostTeam = newValue;
-                  if (visitorTeam == hostTeam) {
-                    visitorTeam = null;
-                  }
-                  if (hostTeam!.id == match.team1.id) {
-                    visitorTeam = match.team2;
-                  } else {
-                    visitorTeam = match.team1;
-                  }
-                });
-              },
-              items: [match.team1, match.team2]
-                  .map<DropdownMenuItem<TeamModel?>>((TeamModel value) {
-                return DropdownMenuItem<TeamModel?>(
-                  value: value,
-                  child: Text(value.name, style: Get.textTheme.labelMedium),
-                );
-              }).toList(),
-            ),
-          ),
+          // const Text('Host Team',
+          //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+          // const SizedBox(height: 10),
+          // Container(
+          //   decoration: BoxDecoration(
+          //     color: Colors.white,
+          //     borderRadius: BorderRadius.circular(10),
+          //   ),
+          //   child: DropdownButton<TeamModel?>(
+          //     value: hostTeam,
+          //     icon: const Icon(Icons.arrow_drop_down),
+          //     padding: const EdgeInsets.symmetric(horizontal: 20),
+          //     iconSize: 24,
+          //     // menuMaxHeight: 8,
+          //     borderRadius: BorderRadius.circular(10),
+          //     alignment: Alignment.bottomCenter,
+          //     // elevation: 16,
+          //     iconEnabledColor: Colors.black,
+          //     isExpanded: true,
+          //     style: const TextStyle(color: Colors.black),
+          //     underline: const SizedBox(),
+          //     onChanged: (TeamModel? newValue) {
+          //       setState(() {
+          //         hostTeam = newValue;
+          //         if (visitorTeam == hostTeam) {
+          //           visitorTeam = null;
+          //         }
+          //         if (hostTeam!.id == match.team1.id) {
+          //           visitorTeam = match.team2;
+          //         } else {
+          //           visitorTeam = match.team1;
+          //         }
+          //       });
+          //     },
+          //     items: [match.team1, match.team2]
+          //         .map<DropdownMenuItem<TeamModel?>>((TeamModel value) {
+          //       return DropdownMenuItem<TeamModel?>(
+          //         value: value,
+          //         child: Text(value.name, style: Get.textTheme.labelMedium),
+          //       );
+          //     }).toList(),
+          //   ),
+          // ),
           const SizedBox(height: 20),
           Container(
             decoration: BoxDecoration(
@@ -245,10 +244,10 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
           ),
           const SizedBox(height: 20),
           PrimaryButton(onTap: () {
-            if (hostTeam == null || visitorTeam == null) {
-              errorSnackBar('Please select Host team');
-              return;
-            }
+            // if (hostTeam == null || visitorTeam == null) {
+            //   errorSnackBar('Please select Host team');
+            //   return;
+            // }
             if (tossWonBy == null) {
               errorSnackBar('Please select toss won by');
               return;

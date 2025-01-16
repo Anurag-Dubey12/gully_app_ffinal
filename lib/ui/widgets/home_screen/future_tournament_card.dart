@@ -103,7 +103,7 @@ class _TournamentCardState extends State<TournamentCard> {
       onTap: widget.isSearch ? (){
         logger.d("The TournamentId is:${tournamentdata!.id} }");
         controller.setScheduleStatus(true);
-        Get.to(() => ScheduleScreen(id:tournamentdata.id));
+        Get.to(() => ScheduleScreen(tournament: tournamentdata));
       }:(){},
       child: Container(
           margin: const EdgeInsets.only(left: 10,right: 10),

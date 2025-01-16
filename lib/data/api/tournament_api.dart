@@ -128,12 +128,11 @@ class TournamentApi {
   }
 
   Future<ApiResponse> teamElimination({
-    required String tourId,
-    required List<String> teamId,
-    required String action}) async {
+    required String tournamentId,
+    required List<String> teamId}) async {
     final response = await repo
-        .post('tournament/eliminate-team', {
-
+        .post('/tournament/eliminate-team/$tournamentId', {
+          "eliminatedTeamIds": teamId,
     });
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');

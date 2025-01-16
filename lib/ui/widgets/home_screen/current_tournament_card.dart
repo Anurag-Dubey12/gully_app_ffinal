@@ -161,7 +161,6 @@ class _CardState extends State<_Card> {
         ? null
         : ScoreboardModel.fromJson(widget.tournament.scoreBoard!);
     // logger.d("The second inning is over:${widget.tournament.getWinningTeamName()}");
-    logger.d("Match Logo:${tournamentdata.coverPhoto}");
     logger.d("The match Id of Tournament are :${widget.tournament.tournamentId}");
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
@@ -294,7 +293,8 @@ class _CardState extends State<_Card> {
                               logger.d("The TournamentId is:${tournamentdata.id} }");
                               controller.setScheduleStatus(true);
                               controller.tournamentname.value=tournamentdata.tournamentName;
-                              Get.to(() => ScheduleScreen(id:tournamentdata.id));
+
+                              Get.to(() => ScheduleScreen(tournament: tournamentdata));
                             },
                             child: const Text("View Schedule",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),),
                           )

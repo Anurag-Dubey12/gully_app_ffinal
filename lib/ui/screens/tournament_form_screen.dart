@@ -227,15 +227,6 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             base64 =
                 await convertImageToBase64(_image!);
           }
-        // if (_image != null) {
-        //   base64 = await convertImageToBase64(_image!);
-        // } else {
-        //   logger.d("Default condtion is called");
-        //   final defaultImage = XFile(defaultImagePath);
-        //   base64 = await convertImageToBase64(defaultImage);
-        // }
-        logger.d("Start date is :${ from?.toIso8601String()} and End Date is :${ to?.toIso8601String()}");
-        logger.d("My Location Latitude is :${location.latitude} and longitude is :${location.longitude}");
 
           Map<String, dynamic> tournament = {
             "tournamentStartDateTime":
@@ -290,11 +281,10 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
               }
               // }
             } else {
-              logger.d("Called before tourmodel called:${from?.toIso8601String()} ");
+
               final tournamentModel =
               await tournamentController
                   .createTournament(tournament);
-              logger.d("After torumodel Function called:${tournamentModel.tournamentStartDateTime} ");
               authController.getUser();
               logger.d("The Tournament id is:${tournamentModel.id}");
               // if (tournament != null) {
@@ -304,6 +294,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
               //     Get.snackbar("Tournament", "Your tournament Deleted Successfully");
               //   }
               // }
+
               successSnackBar('Tournament Create Successfully',istournamentScreen: true);
               // Get.offAll(() => const HomeScreen(),
               //     predicate: (route) => route.name == '/HomeScreen');

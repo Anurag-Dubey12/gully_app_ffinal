@@ -167,6 +167,7 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
         errorSnackBar(response.message!);
         return [];
       }
+      logger.i("The response of team:${response.data}");
       final teams = response.data!['teams'] as List;
       final teamList = teams.map((e) => TeamModel.fromJson(e)).toList();
 
@@ -324,12 +325,12 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
         userId: userId,
         category: category,
       );
-      logger.d("The My Performance Data: ${response.data}");
+      print("The My Performance Data: ${response.data}");
       if (response.status == false) {
         errorSnackBar(response.message!);
         return {};
       }
-      return response.data![category] ?? {};
+      return response.data!['aggregatedData'][category] ?? {};
     } catch (e) {
       logger.e("Error in getMyPerformance: $e");
       return {};

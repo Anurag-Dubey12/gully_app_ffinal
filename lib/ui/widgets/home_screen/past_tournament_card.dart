@@ -242,7 +242,7 @@ class _Card extends StatelessWidget {
                       logger.d("The TournamentId is:${tournamentdata.id} }");
                       controller.setScheduleStatus(true);
                       controller.tournamentname.value=tournamentdata.tournamentName;
-                      Get.to(() => ScheduleScreen(id:tournamentdata.id));
+                      Get.to(() => ScheduleScreen(tournament: tournamentdata));
                     },
                     child: const Text("View Matches",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),),
                   )

@@ -234,7 +234,6 @@ class ScoreBoardController extends GetxController with StateMixin {
   }
 
 
-
   void createScoreBoard({
     required TeamModel team1,
     required TeamModel team2,

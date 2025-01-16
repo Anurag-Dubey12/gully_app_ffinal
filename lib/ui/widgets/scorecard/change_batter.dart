@@ -331,7 +331,6 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                   String? batsmanId;
                   if (controller.scoreboard.value!.lastBall.wickets < 9) {
                     if (selectedBatsman == null) {
-                      errorSnackBar('Please select a batsman');
                       return;
                     }
                     batsmanId = selectedBatsman!.id;
@@ -346,8 +345,9 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                     'outType': outType,
                     'playerToOut': outType == 'RO' ? playerToOut : null,
                   });
-                  }else{
+                  } else {
                     controller.isBatsmenSelected=false.obs;
+                    errorSnackBar('Please select a batsman');
                   }
                 },
                 title: 'Submit',

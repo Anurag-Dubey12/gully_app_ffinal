@@ -51,6 +51,9 @@ class TournamentController extends GetxController
   }
 
   Rx<LatLng> coordinates = const LatLng(0, 0).obs;
+
+  Rx<TournamentModel?> tournamentModel = Rx<TournamentModel?>(null);
+
   Future<TournamentModel> createTournament(
       Map<String, dynamic> tournament) async {
     try {
@@ -111,6 +114,8 @@ class TournamentController extends GetxController
   RxList<MatchupModel> matches = <MatchupModel>[].obs;
   RxList<MatchupModel> Current_matches = <MatchupModel>[].obs;
   RxBool isLoading = false.obs;
+
+
 
   Future<void> getTournamentList({String? filterD,bool isLive=false}) async {
     try {
@@ -259,19 +264,31 @@ class TournamentController extends GetxController
     }
   }
 
+  RxList<TeamModel> eliminatedTeam=<TeamModel>[].obs;
+  RxList<TeamModel> AllTeam=<TeamModel>[].obs;
+
   Future<List<TeamModel>> getRegisteredTeams(String tournamentId) async {
     try {
       final response = await tournamentApi.getRegisteredTeams(tournamentId);
-      return response.data!['registeredTeams']
+      var teams = (response.data!['registeredTeams'] as List)
+          .where((team) => team['isEliminated'] == false)
           .map<TeamModel>((e) => TeamModel.fromJson(e['team']))
           .toList();
+      AllTeam.value = (response.data!['registeredTeams'] as List)
+          .map<TeamModel>((e) => TeamModel.fromJson(e['team']))
+          .toList();
+      eliminatedTeam.value = (response.data!['registeredTeams'] as List)
+          .where((team) => team['isEliminated'] == true)
+          .map<TeamModel>((e) => TeamModel.fromJson(e['team']))
+          .toList();
+
+      logger.d("Filtered Teams:${AllTeam.value},${eliminatedTeam.value}");
+      return teams;
     } catch (e) {
-      // errorSnackBar(e.toString());
-      logger.e("Request Team Error:${e.toString()}");
+      logger.e("Get Register Team Error: ${e.toString()}");
       rethrow;
     }
   }
-
   Future<bool> registerTeam(
       {required String teamId,
         required String viceCaptainContact,
@@ -351,6 +368,23 @@ class TournamentController extends GetxController
     }
   }
 
+  Future<bool> teamElimination(String tourId,List<String>teamId) async {
+    try {
+      final response = await tournamentApi.teamElimination(tournamentId: tourId, teamId: teamId);
+      if (response.status == false) {
+        logger.i('Error: ${response.message}');
+        errorSnackBar(response.message ?? 'Unable to Eliminate Team');
+        return false;
+      }
+      // await Future.wait([
+      //   getMatchup(tournamentId.toString())
+      // ]);
+      return true;
+    } catch (e) {
+      errorSnackBar(e.toString());
+      return false;
+    }
+  }
 
   Future<bool> deleteMatch(String matchid) async {
     try {
@@ -450,7 +484,6 @@ class TournamentController extends GetxController
       points_table.value = (response.data!['TeamPoints'] as List)
           .map<PointTableModel>((e) => PointTableModel.fromJson(e))
           .toList();
-
       return points_table;
     } catch (e) {
       errorSnackBar("Points Table Not Found");

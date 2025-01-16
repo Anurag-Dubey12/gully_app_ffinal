@@ -14,7 +14,7 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../utils/app_logger.dart';
 
 class PaymentPage extends StatefulWidget {
-  final TournamentModel tournament;
+  final TournamentModel? tournament;
   const PaymentPage({super.key, required this.tournament});
 
   @override
@@ -39,7 +39,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
   getFee() async {
     final controller = Get.find<TournamentController>();
-    fees = await controller.getTournamentFee(widget.tournament.id);
+    fees = await controller.getTournamentFee(widget.tournament?.id??'');
     setState(() {
       logger.d(fees.toString());
     });
@@ -48,7 +48,7 @@ class _PaymentPageState extends State<PaymentPage> {
   _handlePaymentSuccess(PaymentSuccessResponse response) async {
     logger.f('Payment Success');
     successSnackBar(
-            'Congratulations !!!\nyour transaction is been made successful.  Your Tournament ${widget.tournament.tournamentName} is Live  !',
+            'Congratulations !!!\nyour transaction is been made successful.  Your Tournament ${widget.tournament?.tournamentName} is Live  !',
             title: "Payment Successfull")
         .then(
       (value) => Get.offAll(() => const HomeScreen(),
@@ -72,7 +72,7 @@ class _PaymentPageState extends State<PaymentPage> {
     final authController = Get.find<AuthController>();
     final id = await controller.createOrder(
         discountAmount: fees,
-        tournamentId: widget.tournament.id,
+        tournamentId: widget.tournament!.id,
         totalAmount: fees,
         coupon: couponCode);
     logger.f("ID $id");
@@ -162,21 +162,21 @@ class _PaymentPageState extends State<PaymentPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                      child: Text('${widget.tournament.tournamentName} ',
+                      child: Text('${widget.tournament?.tournamentName} ',
                           style: const TextStyle(
                               color: AppTheme.secondaryYellowColor,
                               fontSize: 18,
                               fontWeight: FontWeight.bold)),
                     ),
-                    Center(
-                      child: Text(
-                          'Tournament ID: ${widget.tournament.id.substring(7, 15).toUpperCase()}',
-                          style: const TextStyle(
-                            // color: AppTheme.secondaryYellowColor,
-                            fontSize: 13,
-                            color: Colors.grey,
-                          )),
-                    ),
+                    // Center(
+                    //   child: Text(
+                    //       'Tournament ID: ${widget.tournament.id.substring(7, 15).toUpperCase()}',
+                    //       style: const TextStyle(
+                    //         // color: AppTheme.secondaryYellowColor,
+                    //         fontSize: 13,
+                    //         color: Colors.grey,
+                    //       )),
+                    // ),
                     const SizedBox(height: 12),
                     Row(
                       children: [
@@ -191,7 +191,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                 )),
                             Text(
                                 DateFormat("dd-MMM-yyyy").format(
-                                    widget.tournament.tournamentStartDateTime),
+                                    widget.tournament!.tournamentStartDateTime),
                                 style: TextStyle(
                                   // color: AppTheme.secondaryYellowColor,
                                   fontSize: 14,
@@ -212,7 +212,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                 )),
                             Text(
                                 DateFormat("dd-MMM-yyyy").format(
-                                    widget.tournament.tournamentEndDateTime),
+                                    widget.tournament!.tournamentEndDateTime),
                                 style: TextStyle(
                                   // color: AppTheme.secondaryYellowColor,
                                   fontSize: 14,
@@ -234,7 +234,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text(widget.tournament.tournamentPrize ?? "N/A",
+                        Text(widget.tournament!.tournamentPrize ?? "N/A",
                             style: TextStyle(
                               // color: AppTheme.secondaryYellowColor,
                               fontSize: 16,
@@ -254,7 +254,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text("₹${widget.tournament.fees}",
+                        Text("₹${widget.tournament!.fees}",
                             style: TextStyle(
                               // color: AppTheme.secondaryYellowColor,
                               fontSize: 16,
@@ -274,7 +274,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text(widget.tournament.tournamentLimit.toString(),
+                        Text(widget.tournament!.tournamentLimit.toString(),
                             style: TextStyle(
                               // color: AppTheme.secondaryYellowColor,
                               fontSize: 16,
@@ -288,7 +288,7 @@ class _PaymentPageState extends State<PaymentPage> {
                       onTap: () async {
                         final res = await Get.to(
                             () => CouponView(
-                                  tournamentId: widget.tournament.id,
+                                  tournamentId: widget.tournament!.id,
                                   amount: fees,
                                 ),
                             fullscreenDialog: true);
@@ -421,6 +421,25 @@ class _PaymentPageState extends State<PaymentPage> {
                       ],
                     ),
                     const SizedBox(height: 22),
+                    // Container(
+                    //   width: double.infinity,
+                    //   decoration: BoxDecoration(
+                    //     color: AppTheme.primaryColor,
+                    //     borderRadius: BorderRadius.circular(12),
+                    //   ),
+                    //   child: TextButton(
+                    //     onPressed: () {
+                    //       startPayment();
+                    //     },
+                    //     child: const Text('Proceed to Payment',
+                    //         style: TextStyle(
+                    //           color: Colors.white,
+                    //           fontSize: 16,
+                    //           fontWeight: FontWeight.w600,
+                    //         )),
+                    //   ),
+                    // ),
+
                     Container(
                       width: double.infinity,
                       decoration: BoxDecoration(

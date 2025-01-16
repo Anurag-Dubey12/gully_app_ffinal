@@ -69,7 +69,8 @@ class TeamApi {
   }
 
   Future<ApiResponse> getTeams() async {
-    final response = await repo.get('/team/getUsersAllTeam');
+    // final response = await repo.get('/team/getUsersAllTeam');
+    final response = await repo.get('/team/player-teams');
     if (response.statusCode! >= 500) {
       errorSnackBar(generateErrorMessage(response.body));
       throw Exception('Server Error');

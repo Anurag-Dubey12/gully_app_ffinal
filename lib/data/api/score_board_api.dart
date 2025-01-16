@@ -1,6 +1,8 @@
 import 'package:gully_app/config/api_client.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../utils/app_logger.dart';
+
 class ScoreboardApi {
   final GetConnectClient repo;
 
@@ -12,6 +14,7 @@ class ScoreboardApi {
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }
+    logger.d("Update Scoreboard is called");
     return ApiResponse.fromJson(response.body);
   }
 

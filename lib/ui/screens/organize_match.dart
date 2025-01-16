@@ -16,6 +16,8 @@ import '../../data/controller/misc_controller.dart';
 import '../../data/controller/tournament_controller.dart';
 import '../../data/model/points_table_model.dart';
 import '../../utils/CustomItemCheckbox.dart';
+import '../widgets/dialogs/TeamEliminationBottomSheet.dart';
+import 'PointsTable.dart';
 import 'current_tournament_list.dart';
 
 class SelectOrganizeTeam extends StatefulWidget {
@@ -42,6 +44,9 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
   // List<TeamModel> leftSideteams = [];
   // List<TeamModel> rightSideteams = [];
   List<TeamModel> totalteams = [];
+  List<TeamModel> eliminatedTeams = [];
+  List<String> eliminatedTeamIds = [];
+  String selectedFilter = 'all';
   DateTime? selectedDate;
   String? selectedRound;
   @override
@@ -49,7 +54,6 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
     super.initState();
     getPlayers();
   }
-
   Future<void> getPlayers() async {
     final controller = Get.find<TournamentController>();
     final teams = await (widget.tourId != null
@@ -57,7 +61,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
         : controller.getRegisteredTeams(widget.tournament!.id));
 
     if (teams.isEmpty) {
-      errorSnackBar('Please register a team first').then((_) => Get.back());
+      errorSnackBar('Please register a team first').then((_) => Get.close());
       return;
     }
     setState(() {
@@ -113,195 +117,47 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
       },
     );
   }
+  
+  List<String> selectedTeamsForElimination = [];
 
-  List<TeamModel> selectedTeamsForElimination = [];
-
-  Widget _buildCustomCheckbox({
-    required bool isSelected,
-    required TeamModel team,
-    required Function(bool?) onChanged,
-  }) {
-    return InkWell(
-      onTap: () => onChanged(!isSelected),
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color:
-                isSelected ? AppTheme.secondaryYellowColor : Colors.grey[300]!,
-            width: 1,
-          ),
-          borderRadius: BorderRadius.circular(8),
-          color: isSelected ? Colors.white : Colors.grey[50],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 20,
-              height: 20,
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: isSelected
-                      ? AppTheme.secondaryYellowColor
-                      : Colors.grey[400]!,
-                  width: 1,
-                ),
-                borderRadius: BorderRadius.circular(4),
-                color:
-                    isSelected ? AppTheme.secondaryYellowColor : Colors.white,
-              ),
-              child: isSelected
-                  ? const Icon(
-                      Icons.check,
-                      size: 14,
-                      color: Colors.white,
-                    )
-                  : null,
-            ),
-            const SizedBox(width: 12),
-            CircleAvatar(
-              radius: 20,
-              backgroundImage: NetworkImage(team.toImageUrl()),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                team.name,
-                style: Get.textTheme.titleMedium?.copyWith(
-                  color: Colors.black87,
-                  fontWeight: isSelected ? FontWeight.w500 : FontWeight.normal,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void showEliminationBottomSheet() {
-    showModalBottomSheet(
+  void showEliminationBottomSheet() async {
+    final controller = Get.find<TournamentController>();
+    final result = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => Container(
-          height: Get.height * 0.95,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(
-              Radius.circular(10),
-            ),
-          ),
-          child: SafeArea(
-            child: Column(
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-                  child: Row(
-                    children: [
-                      InkWell(
-                        onTap: () => Navigator.pop(context),
-                        child: Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppTheme.primaryColor),
-                          child: const Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
-                            size: 22,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            'Eliminate Teams',
-                            style: Get.textTheme.titleLarge
-                                ?.copyWith(color: Colors.black, fontSize: 20),
-                          ),
-                        ),
-                      ),
-                      if (selectedTeamsForElimination.isNotEmpty)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 5,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Text(
-                            '${selectedTeamsForElimination.length} selected',
-                            style: Get.textTheme.bodyMedium?.copyWith(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: ListView.builder(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    itemCount: totalteams.length,
-                    itemBuilder: (context, index) {
-                      final team = totalteams[index];
-                      return CustomItemCheckbox(
-                        isSelected: selectedTeamsForElimination.contains(team),
-                        title: team.name,
-                        imageUrl: team.toImageUrl(),
-                        selectedColor: AppTheme.primaryColor,
-                        titleStyle: Get.textTheme.titleMedium,
-                        onTap: () {
-                          setState(() {
-                            if (selectedTeamsForElimination.contains(team)) {
-                              selectedTeamsForElimination.remove(team);
-                            } else {
-                              selectedTeamsForElimination.add(team);
-                            }
-                          });
-                        },
-                      );
-                    },
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, -5),
-                      ),
-                    ],
-                  ),
-                  child: PrimaryButton(
-                    onTap: () async {
-                      if (selectedTeamsForElimination.isEmpty) {
-                        errorSnackBar('Please select teams to eliminate');
-                        return;
-                      }
-                    },
-                    title: 'Eliminate Teams',
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
+      transitionAnimationController: AnimationController(
+        duration: const Duration(milliseconds: 400),
+        vsync: Navigator.of(context),
+      ),
+      builder: (context) => TeamEliminationBottomSheet(
+        tournamentId: widget.tourId ?? widget.tournament!.id,
+        onTeamsUpdated: getPlayers,
+        allTeams: controller.AllTeam,
+        eliminatedTeams: controller.eliminatedTeam,
+        activeTeams: totalteams,
       ),
     );
-  }
 
+    // Reset selected teams if elimination data was updated
+    if (result['selectedTeam']!=null) {
+      setState(() {
+        selectedTeam1=null;
+        selectedTeam2=null;
+        // if (selectedTeam1 != null &&
+        //     controller.eliminatedTeam.any((team) => team.id == selectedTeam1!.id)) {
+        //   selectedTeam1 = null;
+        // }
+        //
+        // if (selectedTeam2 != null &&
+        //     controller.eliminatedTeam.any((team) => team.id == selectedTeam2!.id)) {
+        //   selectedTeam2 = null;
+        // }
+      });
+      logger.d("Selected Team 1 after elimination update: ${selectedTeam1?.name}");
+      logger.d("Selected Team 2 after elimination update: ${selectedTeam2?.name}");
+    }
+  }
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
@@ -711,13 +567,10 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                             ),
                             SizedBox(height: Get.height * 0.02),
                             PrimaryButton(
-                              // onTap: showEliminationBottomSheet,
                               onTap: () {
                                 logger.d("The Tournament id is:${widget.tournament!.id}");
                                 Get.to(() => PointsTable(
-                                  tournamentId: widget.tournament!.id,
-                                  tournamentName:
-                                  widget.tournament!.tournamentName,
+                                  tournament: widget.tournament,
                                 ));
                               },
                               title: 'Points Table',
@@ -735,145 +588,3 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
   }
 }
 
-class PointsTable extends StatelessWidget {
-  final String tournamentId;
-  final String tournamentName;
-  const PointsTable(
-      {super.key, required this.tournamentId, required this.tournamentName});
-
-  @override
-  Widget build(BuildContext context) {
-    final TournamentController controller = Get.find<TournamentController>();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("${tournamentName.capitalize} Points Table",
-            style: const TextStyle(fontSize: 18, color: Colors.black),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis),
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: Colors.black),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-      ),
-      body: FutureBuilder<List<PointTableModel>>(
-        future: controller.tournamentPointsTable(tournamentId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError) {
-            return const Center(child: Text("Something went wrong"));
-          }
-          return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: SizedBox(
-              width: Get.width,
-              child: Column(
-                children: [
-                  Container(
-                    color: Colors.black,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 12, horizontal: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        tableHeader('POS', flex: 2),
-                        tableHeader('Team', flex: 4),
-                        tableHeader('Played', flex: 2),
-                        tableHeader('Win', flex: 2),
-                        tableHeader('Loss', flex: 2),
-                        tableHeader('Ties', flex: 2),
-                        tableHeader('Points', flex: 2),
-                        tableHeader('NRR', flex: 2),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Obx(() => ListView.builder(
-                          itemCount: controller.points_table.length,
-                          itemBuilder: (context, index) {
-                            final team = controller.points_table[index];
-                            return Container(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 12, horizontal: 5),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  teamTableData(team.rank.toString(), flex: 2),
-                                  const SizedBox(
-                                    width: 2,
-                                  ),
-                                  teamData(team, flex: 4),
-                                  teamTableData(team.matchesPlayed.toString(), flex: 2),
-                                  teamTableData(team.wins.toString(), flex: 2),
-                                  teamTableData(team.losses.toString(), flex: 2),
-                                  teamTableData(team.ties.toString(), flex: 2),
-                                  teamTableData(team.points.toString(), flex: 2),
-                                  teamTableData(team.netRunRate.toString(),flex: 2),
-                                ],
-                              ),
-                            );
-                          },
-                        )),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget tableHeader(String text, {required int flex}) {
-    return Expanded(
-      flex: flex,
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-          fontSize: 10,
-        ),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  Widget teamTableData(String text, {required int flex}) {
-    return Expanded(
-      flex: flex,
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 14,
-          color: Colors.black87,
-        ),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  Widget teamData(PointTableModel team, {required int flex}) {
-    return Expanded(
-      flex: flex,
-      child: Flexible(
-        child: Text(
-          team.teamName.capitalize,
-          style: const TextStyle(
-            fontSize: 12,
-            color: Colors.black87,
-            fontWeight: FontWeight.bold,
-          ),
-          overflow: TextOverflow.ellipsis,
-          maxLines: 2,
-          textAlign: TextAlign.start,
-        ),
-      ),
-    );
-  }
-}

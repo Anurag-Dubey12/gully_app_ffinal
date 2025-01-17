@@ -9,30 +9,18 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify current over zero issue and added manual tie option">
-      <change afterPath="$PROJECT_DIR$/lib/ui/screens/PointsTable.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/TeamEliminationBottomSheet.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify pointstable screen and added to card,also added some animation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/api/score_board_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/score_board_api.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/api/team_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/team_api.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/team_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/team_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/payment_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/payment_page.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/performance_stat_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/performance_stat_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/schedule_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/schedule_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/current_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/future_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/change_batter.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/change_batter.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/utils/utils.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils/utils.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/TeamEliminationBottomSheet.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/TeamEliminationBottomSheet.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -194,14 +182,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00062" summary="modify services screen">
-      <option name="closed" value="true" />
-      <created>1728993456113</created>
-      <option name="number" value="00062" />
-      <option name="presentableId" value="LOCAL-00062" />
-      <option name="project" value="LOCAL" />
-      <updated>1728993456114</updated>
     </task>
     <task id="LOCAL-00063" summary="modify google map screen">
       <option name="closed" value="true" />
@@ -587,7 +567,15 @@
       <option name="project" value="LOCAL" />
       <updated>1736423786367</updated>
     </task>
-    <option name="localTasksCounter" value="111" />
+    <task id="LOCAL-00111" summary="modify pointstable screen and added to card,also added some animation">
+      <option name="closed" value="true" />
+      <created>1737028569364</created>
+      <option name="number" value="00111" />
+      <option name="presentableId" value="LOCAL-00111" />
+      <option name="project" value="LOCAL" />
+      <updated>1737028569365</updated>
+    </task>
+    <option name="localTasksCounter" value="112" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -608,7 +596,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="keystore ,firebase problem solved" />
     <MESSAGE value="modify service screen and transaction data" />
     <MESSAGE value="modify don't know" />
     <MESSAGE value="modify service screen and multi image view is added" />
@@ -633,7 +620,8 @@
     <MESSAGE value="nothing" />
     <MESSAGE value="modify new things" />
     <MESSAGE value="modify current over zero issue and added manual tie option" />
-    <option name="LAST_COMMIT_MESSAGE" value="modify current over zero issue and added manual tie option" />
+    <MESSAGE value="modify pointstable screen and added to card,also added some animation" />
+    <option name="LAST_COMMIT_MESSAGE" value="modify pointstable screen and added to card,also added some animation" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -1274,6 +1262,12 @@
           <option name="totalLines" value="108752" />
           <option name="info" value="modify current over zero issue and added manual ti" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1737028618747" />
+          <option name="linesCode" value="41346" />
+          <option name="totalLines" value="5668302" />
+          <option name="info" value="modify pointstable screen and added to card,also a" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1907,6 +1901,12 @@
           <option name="linesCode" value="40476" />
           <option name="totalLines" value="108752" />
           <option name="info" value="Jan 9, 2025" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1737028618747" />
+          <option name="linesCode" value="41346" />
+          <option name="totalLines" value="5668302" />
+          <option name="info" value="Jan 16, 2025" />
         </TimePoint>
       </list>
     </option>

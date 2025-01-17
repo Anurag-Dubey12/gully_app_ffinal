@@ -244,7 +244,7 @@ class _CardState extends State<_Card> {
             } else {
               logger.e("Start date or end date is null for this tournament.");
             }
-            Get.to(() => ViewMatchupsScreen(isSchedule:controller.isSchedule.value ));
+            Get.to(() => ViewMatchupsScreen(tournament: widget.tournament));
             controller.tournamentId.value=widget.tournament.id;
             logger.d("The Contoller Tournament Id is ${controller.tournamentId.value}");
             break;

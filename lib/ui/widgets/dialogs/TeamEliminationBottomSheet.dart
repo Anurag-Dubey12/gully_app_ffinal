@@ -6,6 +6,7 @@ import 'package:gully_app/utils/FallbackImageProvider.dart';
 import '../../../data/controller/tournament_controller.dart';
 import '../../../data/model/team_model.dart';
 import '../../../utils/CustomItemCheckbox.dart';
+import '../../../utils/app_logger.dart';
 import '../../../utils/utils.dart';
 import '../../theme/theme.dart';
 import '../primary_button.dart';
@@ -113,16 +114,38 @@ class _TeamEliminationBottomSheetState extends State<TeamEliminationBottomSheet>
     ).then((confirmed) async {
       if (confirmed == true) {
         final controller = Get.find<TournamentController>();
-        final response = await controller.teamElimination(
-          widget.tournamentId,
-          selectedTeamsForElimination,
-        );
-        if (response) {
-          await widget.onTeamsUpdated();
-          Navigator.pop(context, {
-            'selectedTeam':selectedTeamsForElimination
-          }); //return the selected eliminated teams
-          successSnackBar('Teams updated successfully');
+        controller.getMatchup(widget.tournamentId);
+        List<String> teamsWithoutMatches = [];
+        for (String teamId in selectedTeamsForElimination) {
+          logger.d("Selected Team id :${teamId}");
+          bool teamHasMatch = controller.matchups.value.any((match) =>
+          match.team1.id == teamId || match.team2.id == teamId
+          );
+          if (!teamHasMatch) {
+            String teamName = controller.AllTeam
+                .firstWhere((team) => team.id == teamId)
+                .name;
+            logger.d("Team Name: " + teamName);
+            teamsWithoutMatches.add(teamName);
+          }
+        }
+        if (teamsWithoutMatches.isNotEmpty) {
+          String teamNames = teamsWithoutMatches.join(", ");
+          logger.e("Match not found for teams: $teamNames");
+          errorSnackBar("Match not found for teams: $teamNames");
+      }else{
+          final response = await controller.teamElimination(
+            widget.tournamentId,
+            selectedTeamsForElimination,
+          );
+          if (response) {
+            await widget.onTeamsUpdated();
+            Navigator.pop(context, {
+              'selectedTeam':selectedTeamsForElimination
+            }); //return the selected eliminated teams
+            successSnackBar('Teams updated successfully');
+
+          }
         }
       }
     });

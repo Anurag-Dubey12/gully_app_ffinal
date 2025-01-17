@@ -60,6 +60,14 @@ class TournamentApi {
 
     return ApiResponse.fromJson(response.body);
   }
+  Future<ApiResponse> getUserAllTournament() async {
+    var response = await repo.get('/main/getAllTournament');
+    if (!response.isOk) {
+      throw response.body['error'] ?? 'Unable to Process Request';
+    }
+
+    return ApiResponse.fromJson(response.body);
+  }
 
   Future<ApiResponse> updateTeamRequest(
       String tournamentId, String teamId, String action) async {

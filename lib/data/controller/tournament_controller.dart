@@ -235,7 +235,22 @@ class TournamentController extends GetxController
       rethrow;
     }
   }
+  Future<void> getAllTournament() async {
+    try {
+      final response = await tournamentApi.getUserAllTournament();
 
+      organizerTournamentList.value = response.data!['tournamentList']
+          .map<TournamentModel>((e) => TournamentModel.fromJson(e))
+          .toList();
+
+      organizerTournamentList.refresh();
+      // change(GetStatus.success(null));
+    } catch (e) {
+      // errorSnackBar(e.toString());
+      logger.e(e.toString());
+      rethrow;
+    }
+  }
   Future<bool> updateTeamRequest(
       String tournamentId,
       String teamId,

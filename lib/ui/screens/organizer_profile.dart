@@ -366,7 +366,7 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                               text: 'View your tournament',
                               onTap: () {
                                 Get.find<TournamentController>()
-                                    .getOrganizerTournamentList();
+                                    .getAllTournament();
                                 Get.to(() => const ViewTournamentScreen());
                               },
                             ),

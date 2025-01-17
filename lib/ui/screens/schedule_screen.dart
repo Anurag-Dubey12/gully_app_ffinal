@@ -90,7 +90,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: Get.height * 0.01),
+              // SizedBox(height: Get.height * 0.01),
               Expanded(
                 child: !connectionController.isConnected.value
                     ? Center(
@@ -120,8 +120,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                       )
                     : TabBarView(
                         controller: _tabController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
+                        physics: const NeverScrollableScrollPhysics(),
+                        children: [
                           FutureBuilder(
                             future: widget.tournament?.id != null
                                 ? controller.getMatchup(widget.tournament!.id)
@@ -150,13 +150,109 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                                   final matchup = controller.matchups[index];
                                   return MatchupCard(
                                     matchup: matchup,
-                                    tourid: widget.tournament?.id ?? controller.state!.id,
+                                    tourid: widget.tournament?.id ??
+                                        controller.state!.id,
                                   );
                                 },
                               );
                             },
                           ),
-                    buildPointsTableTab(widget.tournament!.id)
+                          FutureBuilder<List<PointTableModel>>(
+                            future: controller
+                                .tournamentPointsTable(widget.tournament!.id),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              }
+                              if (snapshot.hasError) {
+                                return const Center(
+                                    child: Text("Something went wrong"));
+                              }
+                              return SingleChildScrollView(
+                                scrollDirection: Axis.horizontal,
+                                child: SizedBox(
+                                  width: Get.width,
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        color: Colors.black,
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 12, horizontal: 5),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            tableHeader('POS', flex: 2),
+                                            tableHeader('Team', flex: 4),
+                                            tableHeader('Played', flex: 2),
+                                            tableHeader('Win', flex: 2),
+                                            tableHeader('Loss', flex: 2),
+                                            tableHeader('Ties', flex: 2),
+                                            tableHeader('Points', flex: 2),
+                                            tableHeader('NRR', flex: 2),
+                                          ],
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Obx(() => ListView.builder(
+                                              itemCount: controller
+                                                  .points_table.length,
+                                              itemBuilder: (context, index) {
+                                                final team = controller
+                                                    .points_table[index];
+                                                return Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 12,
+                                                      horizontal: 5),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      teamTableData(
+                                                          team.rank.toString(),
+                                                          flex: 2),
+                                                      const SizedBox(
+                                                        width: 2,
+                                                      ),
+                                                      teamData(team, flex: 4),
+                                                      teamTableData(
+                                                          team.matchesPlayed
+                                                              .toString(),
+                                                          flex: 2),
+                                                      teamTableData(
+                                                          team.wins.toString(),
+                                                          flex: 2),
+                                                      teamTableData(
+                                                          team.losses
+                                                              .toString(),
+                                                          flex: 2),
+                                                      teamTableData(
+                                                          team.ties.toString(),
+                                                          flex: 2),
+                                                      teamTableData(
+                                                          team.points
+                                                              .toString(),
+                                                          flex: 2),
+                                                      teamTableData(
+                                                          team.netRunRate
+                                                              .toString(),
+                                                          flex: 2),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            )),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          )
                         ],
                       ),
               ),
@@ -166,71 +262,6 @@ class _ScheduleScreenState extends State<ScheduleScreen>
       ),
     );
   }
-  Widget buildPointsTableTab(String tournamentId) {
-    final controller = Get.find<TournamentController>();
-    return Obx(() {
-      if (controller.points_table.isEmpty) {
-        return _buildPointsTable(controller.points_table);
-      }
-      return _buildPointsTable(controller.points_table);
-    });
-  }
-
-  Widget _buildPointsTable(RxList<PointTableModel> data) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: SizedBox(
-        width: Get.width,
-        child: Column(
-          children: [
-            Container(
-              color: Colors.black,
-              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  tableHeader('POS', flex: 2),
-                  tableHeader('Team', flex: 4),
-                  tableHeader('Played', flex: 2),
-                  tableHeader('Win', flex: 2),
-                  tableHeader('Loss', flex: 2),
-                  tableHeader('Ties', flex: 2),
-                  tableHeader('Points', flex: 2),
-                  tableHeader('NRR', flex: 2),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView.builder(
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  final team = data[index];
-                  return Container(
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        teamTableData(team.rank.toString(), flex: 2),
-                        const SizedBox(width: 2),
-                        teamData(team, flex: 4),
-                        teamTableData(team.matchesPlayed.toString(), flex: 2),
-                        teamTableData(team.wins.toString(), flex: 2),
-                        teamTableData(team.losses.toString(), flex: 2),
-                        teamTableData(team.ties.toString(), flex: 2),
-                        teamTableData(team.points.toString(), flex: 2),
-                        teamTableData(team.netRunRate.toString(), flex: 2),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
 }
 
 class MatchupCard extends StatelessWidget {

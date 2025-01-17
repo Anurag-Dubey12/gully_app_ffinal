@@ -211,7 +211,6 @@ class TournamentTeams extends GetView<TournamentController> {
                     SizedBox(height: Get.height * 0.01),
                 itemBuilder: (context, index) => MatchupCard(
                   matchup: snapshot.data![index],
-                  isSchedule: true,
                   isinfo: true,
                 ),
               );

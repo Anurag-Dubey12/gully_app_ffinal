@@ -561,20 +561,21 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                             ),
 
                             SizedBox(height: Get.height * 0.02),
-                            PrimaryButton(
-                              onTap: showEliminationBottomSheet,
-                              title: 'Eliminate Teams',
-                            ),
+                            if(widget.match==null)
+                              PrimaryButton(
+                                onTap: showEliminationBottomSheet,
+                                title: 'Eliminate Teams',
+                              ),
                             SizedBox(height: Get.height * 0.02),
-                            PrimaryButton(
-                              onTap: () {
-                                logger.d("The Tournament id is:${widget.tournament!.id}");
-                                Get.to(() => PointsTable(
-                                  tournament: widget.tournament,
-                                ));
-                              },
-                              title: 'Points Table',
-                            ),
+                            // PrimaryButton(
+                            //   onTap: () {
+                            //     logger.d("The Tournament id is:${widget.tournament!.id}");
+                            //     Get.to(() => PointsTable(
+                            //       tournament: widget.tournament,
+                            //     ));
+                            //   },
+                            //   title: 'Points Table',
+                            // ),
                           ],
                         ))
                   ],

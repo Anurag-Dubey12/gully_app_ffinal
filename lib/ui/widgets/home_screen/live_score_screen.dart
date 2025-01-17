@@ -2,6 +2,7 @@ import 'dart:async';  // Import for Timer class
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/ui/screens/schedule_screen.dart';
 import 'package:gully_app/ui/widgets/home_screen/current_tournament_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 
@@ -285,7 +286,7 @@ class CardState extends State<Card> {
                         GestureDetector(
                           onTap: (){
                             logger.d("The TournamentId is:${tournamentdata.id}");
-                            Get.to(() => ViewMatchupsScreen(id:tournamentdata.id,isSchedule: true,));
+                            Get.to(() => ScheduleScreen(tournament: tournamentdata,));
                           },
                           child: const Text("View Schedule",style: TextStyle(fontSize: 12,decoration: TextDecoration.underline),),
                         )

@@ -5,6 +5,7 @@
 	<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+	<uses-permission android:name="android.permission.VIBRATE" />
 	<application android:label="Gully Team"
 		android:usesCleartextTraffic="true"
 		android:icon="@mipmap/ic_launcher">
@@ -15,7 +16,12 @@
 			android:enableOnBackInvokedCallback="true"
 			android:theme="@style/LaunchTheme"
 			android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode" android:hardwareAccelerated="true" android:windowSoftInputMode="adjustResize">
-			<meta-data android:name="io.flutter.embedding.android.NormalTheme" android:resource="@style/NormalTheme" />
+			<meta-data android:name="io.flutter.embedding.android.NormalTheme"
+				android:resource="@style/NormalTheme" />
+
+			<meta-data
+				android:name="com.google.firebase.messaging.default_notification_icon"
+				android:resource="@drawable/logo" />
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
@@ -25,6 +31,23 @@
 		Don't delete the meta-data below.
 		This is used by the Flutter tool to generate GeneratedPluginRegistrant.java
 		-->
+		<receiver android:exported="false"
+			android:name="com.dexterous.flutterlocalnotifications.receivers.ScheduledNotificationReceiver" />
+		<receiver android:exported="false"
+			android:name="com.dexterous.flutterlocalnotifications.receivers.ScheduledNotificationBootReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+				<action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+				<action android:name="android.intent.action.QUICKBOOT_POWERON" />
+				<action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
+			</intent-filter>
+		</receiver>
+
+		<!-- Required for background notifications -->
+		<receiver android:exported="true"
+			android:name="com.dexterous.flutterlocalnotifications.receivers.ActionBroadcastReceiver" />
+		<receiver android:exported="true"
+			android:name="com.dexterous.flutterlocalnotifications.receivers.DismissedReceiver" />
 		<meta-data android:name="flutterEmbedding" android:value="2" />
 		<meta-data android:name="com.google.android.geo.API_KEY" android:value="AIzaSyCUv3LmufUU86Lp_Wk34-3AZ3bnCQ3XmJg" />
 		<provider

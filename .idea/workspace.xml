@@ -9,18 +9,27 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify pointstable screen and added to card,also added some animation">
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="added elimination screen condition">
+      <change afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable-v21/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable/app_logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/main/res/drawable/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-hdpi/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-mdpi/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xhdpi/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxhdpi/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/main/res/mipmap-xxxhdpi/logo.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/android/app/src/main/res/values/color.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/utils/Notification.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/notification_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/notification_controller.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organize_match.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/schedule_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/schedule_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/TeamEliminationBottomSheet.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/TeamEliminationBottomSheet.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/live_score_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/add_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/add_team.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/notification_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/notification_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -44,6 +53,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Dart File" />
+        <option value="valueResourceFile" />
       </list>
     </option>
   </component>
@@ -95,41 +105,42 @@
     <option name="showMembers" value="true" />
     <option name="showVisibilityIcons" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DEBUGGABLE_DEVICE&quot;: &quot;lava_lxx507-192.168.29.122:37709&quot;,
-    &quot;DEBUGGABLE_PROCESS&quot;: &quot;com.nileegames.gullyteam&quot;,
-    &quot;DEBUGGER_ID&quot;: &quot;Java&quot;,
-    &quot;Flutter.main.dart.executor&quot;: &quot;Run&quot;,
-    &quot;Gradle.C:/Users/abcom/Documents/Software/gully_app [signingReport].executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
-    &quot;SHOW_ALL_PROCESSES&quot;: &quot;true&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;com.android.tools.idea.devicemanager.tab&quot;: &quot;Physical&quot;,
-    &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
-    &quot;dart.analysis.tool.window.visible&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;office&quot;,
-    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
-    &quot;io.flutter.reload.alreadyRun&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/abcom/Documents/Software/gully_app/assets/images&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;show.migrate.to.gradle.popup&quot;: &quot;false&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DEBUGGABLE_DEVICE": "lava_lxx507-192.168.29.122:37709",
+    "DEBUGGABLE_PROCESS": "com.nileegames.gullyteam",
+    "DEBUGGER_ID": "Java",
+    "Flutter.main.dart.executor": "Run",
+    "Gradle.C:/Users/abcom/Documents/Software/gully_app [signingReport].executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "SHOW_ALL_PROCESSES": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "com.android.tools.idea.devicemanager.tab": "Physical",
+    "com.google.services.firebase.aqiPopupShown": "true",
+    "dart.analysis.tool.window.visible": "false",
+    "git-widget-placeholder": "office",
+    "ignore.virus.scanning.warn.message": "true",
+    "io.flutter.reload.alreadyRun": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/abcom/Documents/Software/gully_app/android/app/src/main/res/drawable-v21",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "show.migrate.to.gradle.popup": "false"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\abcom\Documents\Software\gully_app\assets\images" />
-      <recent name="C:\Users\abcom\Documents\Software\gully_app\lib\ui\widgets\service" />
-      <recent name="C:\Users\abcom\Documents\Software\gully_app\lib\ui\screens\service" />
-      <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app" />
-      <recent name="C:\Users\abcom\Documents\Software\gully_app\lib" />
+      <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app\src\main\res\drawable-v21" />
+      <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app\src\main\res\mipmap-xxxhdpi" />
+      <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app\src\main\res\mipmap-xxhdpi" />
+      <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app\src\main\res\mipmap-xhdpi" />
+      <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app\src\main\res\mipmap-mdpi" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app\src\main\res\drawable" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app\lib\ui\screens" />
     </key>
@@ -182,14 +193,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00063" summary="modify google map screen">
-      <option name="closed" value="true" />
-      <created>1729079913942</created>
-      <option name="number" value="00063" />
-      <option name="presentableId" value="LOCAL-00063" />
-      <option name="project" value="LOCAL" />
-      <updated>1729079913943</updated>
     </task>
     <task id="LOCAL-00064" summary="modify scorebord">
       <option name="closed" value="true" />
@@ -575,7 +578,15 @@
       <option name="project" value="LOCAL" />
       <updated>1737028569365</updated>
     </task>
-    <option name="localTasksCounter" value="112" />
+    <task id="LOCAL-00112" summary="added elimination screen condition">
+      <option name="closed" value="true" />
+      <created>1737115207819</created>
+      <option name="number" value="00112" />
+      <option name="presentableId" value="LOCAL-00112" />
+      <option name="project" value="LOCAL" />
+      <updated>1737115207822</updated>
+    </task>
+    <option name="localTasksCounter" value="113" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -596,7 +607,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="modify service screen and transaction data" />
     <MESSAGE value="modify don't know" />
     <MESSAGE value="modify service screen and multi image view is added" />
     <MESSAGE value="added Schedule screen" />
@@ -621,7 +631,8 @@
     <MESSAGE value="modify new things" />
     <MESSAGE value="modify current over zero issue and added manual tie option" />
     <MESSAGE value="modify pointstable screen and added to card,also added some animation" />
-    <option name="LAST_COMMIT_MESSAGE" value="modify pointstable screen and added to card,also added some animation" />
+    <MESSAGE value="added elimination screen condition" />
+    <option name="LAST_COMMIT_MESSAGE" value="added elimination screen condition" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">
@@ -1268,6 +1279,12 @@
           <option name="totalLines" value="5668302" />
           <option name="info" value="modify pointstable screen and added to card,also a" />
         </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1737115234761" />
+          <option name="linesCode" value="44" />
+          <option name="totalLines" value="426699" />
+          <option name="info" value="added elimination screen condition" />
+        </TimePoint>
       </list>
     </option>
     <option name="genericTimePoints">
@@ -1907,6 +1924,12 @@
           <option name="linesCode" value="41346" />
           <option name="totalLines" value="5668302" />
           <option name="info" value="Jan 16, 2025" />
+        </TimePoint>
+        <TimePoint>
+          <option name="timestamp" value="1737115234761" />
+          <option name="linesCode" value="44" />
+          <option name="totalLines" value="426699" />
+          <option name="info" value="Jan 17, 2025" />
         </TimePoint>
       </list>
     </option>

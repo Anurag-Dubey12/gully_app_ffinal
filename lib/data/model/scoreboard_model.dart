@@ -135,19 +135,47 @@ class ScoreboardModel {
       _$ScoreboardModelFromJson(json);
   Map<String, dynamic> toJson() => _$ScoreboardModelToJson(this);
 
+  // List<OverModel?> get currentOverHistory {
+  //   final List<OverModel?> temp = [];
+  //   for (var i = 0; i < getCurrentInnings.length; i++) {
+  //     final String key = '$currentOver.$i';
+  //     if (getCurrentInnings.containsKey(key)) {
+  //       temp.add(getCurrentInnings[key]!);
+  //     } else {
+  //       temp.add(null);
+  //     }
+  //   }
+  //   return temp;
+  // }
   List<OverModel?> get currentOverHistory {
     final List<OverModel?> temp = [];
-    for (var i = 0; i < getCurrentInnings.length; i++) {
-      final String key = '$currentOver.$i';
-      if (getCurrentInnings.containsKey(key)) {
-        temp.add(getCurrentInnings[key]!);
-      } else {
-        temp.add(null);
+
+    // If over is completed but bowler hasn't changed, show the completed over
+    if (overCompleted && currentBall == 0) {
+      for (var i = 0; i < getCurrentInnings.length; i++) {
+        final String key = '${currentOver-1}.$i';
+        if (getCurrentInnings.containsKey(key)) {
+          temp.add(getCurrentInnings[key]!);
+        } else {
+          temp.add(null);
+        }
+      }
+    } else {
+      // Show current over in progress
+      for (var i = 0; i < getCurrentInnings.length; i++) {
+        final String key = '$currentOver.$i';
+        if (getCurrentInnings.containsKey(key)) {
+          temp.add(getCurrentInnings[key]!);
+        } else {
+          temp.add(null);
+        }
       }
     }
+
+    logger.d("current Inning Data:${(getCurrentInnings.length/6).toStringAsFixed(1)}");
+    logger.d("Current Over Data:$currentOver");
     return temp;
   }
-
   bool get isAllOut => lastBall.wickets == 10;
 
   PlayerModel get striker {

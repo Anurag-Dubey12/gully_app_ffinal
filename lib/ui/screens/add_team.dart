@@ -84,7 +84,7 @@ class _AddTeamState extends State<AddTeam> {
                   ),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 GestureDetector(
                   onTap: () {
@@ -125,7 +125,7 @@ class _AddTeamState extends State<AddTeam> {
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 9,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(18.0),

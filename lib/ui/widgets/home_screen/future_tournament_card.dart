@@ -53,11 +53,11 @@ class FutureTournamentCard extends GetView<TournamentController> {
 
 class TournamentCard extends StatefulWidget {
   final TournamentModel tournament;
-  final bool isSearch;
+  final VoidCallback? onTap;
   const TournamentCard({
     super.key,
     required this.tournament,
-    this.isSearch = false,
+    this.onTap
   });
 
   @override
@@ -99,12 +99,9 @@ class _TournamentCardState extends State<TournamentCard> {
     final controller = Get.find<TournamentController>();
     final tournamentdata = controller.tournamentList
         .firstWhereOrNull((t) => t.id == widget.tournament.id);
+    logger.d("Tournament Data:${tournamentdata}");
     return GestureDetector(
-      onTap: widget.isSearch ? (){
-        logger.d("The TournamentId is:${tournamentdata!.id} }");
-        controller.setScheduleStatus(true);
-        Get.to(() => ScheduleScreen(tournament: tournamentdata));
-      }:(){},
+      onTap: widget.onTap ,
       child: Container(
           margin: const EdgeInsets.only(left: 10,right: 10),
           decoration: BoxDecoration(
@@ -288,14 +285,17 @@ class _TournamentCardState extends State<TournamentCard> {
                         ],
                       ),
                       // const SizedBox(height: 2),
-                      Row(
+                        Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           ElevatedButton(
                             onPressed: () {
                               if (widget.tournament.registeredTeamsCount ==
-                                  widget.tournament.tournamentLimit) {
+                                  widget.tournament.tournamentLimit || widget.tournament.tournamentEndDateTime.isBefore(DateTime.now())) {
                                 return;
+                              }
+                              if(widget.tournament.tournamentEndDateTime.isAfter(DateTime.now())){
+                                return ;
                               }
                               controller.setSelectedTournament(widget.tournament);
                               Get.to(() => const RegisterTeam());
@@ -307,7 +307,7 @@ class _TournamentCardState extends State<TournamentCard> {
                               backgroundColor:
                               WidgetStateProperty.resolveWith((states) {
                                 if (widget.tournament.registeredTeamsCount ==
-                                    widget.tournament.tournamentLimit) {
+                                    widget.tournament.tournamentLimit ||widget.tournament.tournamentEndDateTime.isBefore(DateTime.now())) {
                                   return Colors.grey;
                                 }
                                 if (states.contains(WidgetState.pressed)) {

@@ -358,7 +358,9 @@ class ScreenContent extends State<HomePageContent> {
                                     onSelected: (String value) {
                                       setState(() {
                                         selected = value;
-                                        controller.getTournamentList(filterD: value);
+                                        controller.setSelectedFilter(value);
+                                        logger.d("Selected Filter Value:${controller.filterData.value}"  );
+                                        controller.getTournamentList(filterD:  controller.filterData.value);
                                       });
                                     },
                                     itemBuilder: (BuildContext context) =>

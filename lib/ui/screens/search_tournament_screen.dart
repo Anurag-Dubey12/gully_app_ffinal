@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
+import 'package:gully_app/ui/screens/schedule_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/home_screen/future_tournament_card.dart';
+
+import '../../utils/app_logger.dart';
 
 class Debouncer {
   final Duration delay;
@@ -88,7 +91,7 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final TournamentController Controller =
+    final TournamentController controller =
     Get.find<TournamentController>();
     return GestureDetector(
       onTap: () {
@@ -206,13 +209,16 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                 itemCount: tournaments.length,
                 itemBuilder: (context, index) {
                   final tournament = tournaments[index];
-
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16.0),
                     child: tournament != null
                         ? TournamentCard(
                       tournament: tournament,
-                      isSearch: Controller.isSearch.value,
+                      onTap: (){
+                        logger.d("The TournamentId is:${tournament }");
+                        controller.setScheduleStatus(true);
+                        Get.to(() => ScheduleScreen(tournament: tournament));
+                      },
                     )
                         : const SizedBox.shrink(),
                   );

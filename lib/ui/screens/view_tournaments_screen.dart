@@ -76,8 +76,9 @@ class _ViewTournamentScreenState extends State<ViewTournamentScreen> {
                         shrinkWrap: true,
                         itemCount: controller.organizerTournamentList.length,
                         itemBuilder: (context, index) {
+                          final torunament_reverse_order = controller.organizerTournamentList.reversed.toList();
                           return _TourCard(
-                              controller.organizerTournamentList[index], () {
+                              torunament_reverse_order[index], () {
                             setState(() {});
                           }
                             // tournament: snapshot.data![index],
@@ -128,6 +129,7 @@ class _TourCard extends GetView<TournamentController> {
     return ListTile(
       style: ListTileStyle.drawer,
       onTap: () {
+        controller.isTourOver.value=true;
         Get.to(() => TournamentTeams(tournament: tournament));
       },
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -166,7 +168,13 @@ class _TourCard extends GetView<TournamentController> {
           ),
         ],
       ),
-      trailing: GestureDetector(
+      trailing: tournament.tournamentEndDateTime.isBefore(DateTime.now()) ? const Chip(
+          iconTheme: IconThemeData(color: Colors.white),
+          padding: EdgeInsets.zero,
+          label: Text('Ended',
+              style: TextStyle(color: Colors.white, fontSize: 12)),
+          backgroundColor: Colors.red,
+          side: BorderSide.none):GestureDetector(
         onTap: () async {
           Get.dialog(AlertDialog.adaptive(
             title: const Text('Cancel Tournament'),
@@ -199,7 +207,7 @@ class _TourCard extends GetView<TournamentController> {
                 style: TextStyle(color: Colors.white, fontSize: 12)),
             backgroundColor: Colors.red,
             side: BorderSide.none),
-      ),
+      )
     );
   }
 }

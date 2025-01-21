@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../data/controller/tournament_controller.dart';
+import '../../../utils/app_logger.dart';
 import '../../../utils/date_time_helpers.dart';
 import 'time_card.dart';
 
@@ -81,6 +82,7 @@ class _DateTimesCardState extends State<DateTimesCard> {
                 onTap: () {
                   controller.setSelectedDate(dateTimes[index]);
                   controller.getTournamentList();
+                  logger.d("Selected date: ${dateTimes[index]}" );
                 },
                 child: Obx(
                   () => TimeCard(

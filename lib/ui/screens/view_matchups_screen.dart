@@ -223,7 +223,7 @@ class _MatchupsScreen extends State<ViewMatchupsScreen> with SingleTickerProvide
                                       tableHeader('Loss', flex: 2),
                                       tableHeader('Ties', flex: 2),
                                       tableHeader('Points', flex: 2),
-                                      tableHeader('NRR', flex: 2),
+                                      tableHeader('NRR', flex: 3),
                                     ],
                                   ),
                                 ),
@@ -272,7 +272,7 @@ class _MatchupsScreen extends State<ViewMatchupsScreen> with SingleTickerProvide
                                             teamTableData(
                                                 team.netRunRate
                                                     .toString(),
-                                                flex: 2),
+                                                flex: 3),
                                           ],
                                         ),
                                       );

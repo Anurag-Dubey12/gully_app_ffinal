@@ -30,9 +30,9 @@ class TournamentController extends GetxController
   RxString location = ''.obs;
   RxString tournamentId=''.obs;
   RxBool isSchedule=false.obs;
+  RxBool isTourOver=false.obs;
   RxBool isSearch=false.obs;
   RxString tournamentname=''.obs;
-
   void setScheduleStatus(bool status) {
     isSchedule.value = status;
   }
@@ -105,6 +105,18 @@ class TournamentController extends GetxController
 
   final Rx<DateTime> selectedDate = DateTime.now().obs;
   final RxString filter = ''.obs;
+
+  RxString filterData=''.obs;
+
+  void setSelectedFilter(String filter){
+    filterData.value = filter;
+    logger.d("Selected Filter:$filter");
+    if(filter=='past'||filter=='current'||filter=='upcoming'){
+      logger.d("Found Selected Filter with popup ");
+      setSelectedDate(DateTime.now());
+    }
+  }
+
   void setSelectedDate(DateTime dateTime) {
     selectedDate.value = dateTime;
   }

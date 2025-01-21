@@ -234,19 +234,9 @@ class _CardState extends State<_Card> {
           case RedirectType.matchup:
             controller.setSelectedTournament(widget.tournament);
             controller.setScheduleStatus(false);
-            if (widget.tournament.tournamentStartDateTime != null &&
-                widget.tournament.tournamentEndDateTime != null) {
-              controller.saveDates(
-                widget.tournament.tournamentStartDateTime,
-                widget.tournament.tournamentEndDateTime,
-                widget.tournament.authority ??''
-              );
-            } else {
-              logger.e("Start date or end date is null for this tournament.");
-            }
             Get.to(() => ViewMatchupsScreen(tournament: widget.tournament));
             controller.tournamentId.value=widget.tournament.id;
-            logger.d("The Contoller Tournament Id is ${controller.tournamentId.value}");
+            controller.isTourOver.value=false;
             break;
           case RedirectType.editForm:
             Get.to(() => TournamentFormScreen(
@@ -254,6 +244,7 @@ class _CardState extends State<_Card> {
             ));
             break;
           case RedirectType.currentTournament:
+            logger.d("Current tournament is");
             Get.to(() => TournamentTeams(
               tournament: widget.tournament,
               isTeamListOnly: true,

@@ -3,8 +3,9 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
+import 'package:gully_app/ui/screens/schedule_screen.dart';
 import 'package:gully_app/ui/screens/team_players_list.dart';
-import 'package:gully_app/ui/screens/view_matchups_screen.dart';
+
 import '../../data/controller/misc_controller.dart';
 import '../../utils/FallbackImageProvider.dart';
 import '../../utils/utils.dart';
@@ -155,7 +156,6 @@ class TournamentTeams extends GetView<TournamentController> {
               ),
             );
           }
-
           return ListView.separated(
             separatorBuilder: (context, index) => const SizedBox(height: 18),
             itemCount: snapshot.data?.length ?? 0,
@@ -171,7 +171,7 @@ class TournamentTeams extends GetView<TournamentController> {
   Widget matchups() {
     final MiscController connectionController=Get.find<MiscController>();
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07),
+      padding: EdgeInsets.symmetric(horizontal: Get.width * 0.02),
       child: !connectionController.isConnected.value ? Center(
         child: SizedBox(
           width: Get.width,
@@ -211,7 +211,6 @@ class TournamentTeams extends GetView<TournamentController> {
                     SizedBox(height: Get.height * 0.01),
                 itemBuilder: (context, index) => MatchupCard(
                   matchup: snapshot.data![index],
-                  isinfo: true,
                 ),
               );
             }
@@ -220,6 +219,7 @@ class TournamentTeams extends GetView<TournamentController> {
   }
 }
 
+//Register team Card View
 class _Card extends StatelessWidget {
   final TeamModel team;
 

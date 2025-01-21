@@ -102,6 +102,7 @@ class _RequestsBottomSheetState extends State<RequestsBottomSheet> {
                                       setState(() {
                                         widget.tournament.pendingTeamsCount--;
                                       });
+                                      successSnackBar("You Have Accepted Team Request:${snapshot.data![index].name}");
                                     },
                                     child: const CircleAvatar(
                                       radius: 13,
@@ -120,6 +121,7 @@ class _RequestsBottomSheetState extends State<RequestsBottomSheet> {
                                       setState(() {
                                         widget.tournament.pendingTeamsCount--;
                                       });
+                                      errorSnackBar("You Have Denied Team Request:${snapshot.data![index].name}");
                                     },
                                     child: const CircleAvatar(
                                       radius: 13,

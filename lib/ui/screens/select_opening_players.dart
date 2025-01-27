@@ -195,7 +195,8 @@ class PlayerDropDownWidget extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(title,
+                            Text(
+                                title,
                                 style: Get.textTheme.headlineMedium?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.black)),

@@ -118,15 +118,15 @@ class CurrentTournamentCard extends GetView<TournamentController> {
             return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 // itemCount: controller.matches.length,
-                itemCount: sortedMatches.length,
-                // itemCount: latestMatches.length,
+                // itemCount: sortedMatches.length,
+                itemCount: latestMatches.length,
                 shrinkWrap: true,
                 padding: const EdgeInsets.only(bottom: 10, top: 10),
                 itemBuilder: (context, snapshot) {
                   return _Card(
                     // tournament: controller.matches[snapshot],
-                    tournament: sortedMatches[snapshot],
-                    // tournament: latestMatches[snapshot],
+                    // tournament: sortedMatches[snapshot],
+                    tournament: latestMatches[snapshot],
                   );
                 });
           }
@@ -230,8 +230,10 @@ class _CardState extends State<_Card> {
                                   tournamentName: tournamentdata.tournamentName,
                                   tournamentPrice: tournamentdata.fees.toString(),
                                   coverPhoto: tournamentdata.coverPhoto,
+                                  Rules: tournamentdata.rules,
                                 ),
                                 backgroundColor: Colors.white,
+                                isScrollControlled: true
                               );
                             },
                             icon: const Icon(Icons.info_outline_rounded, size: 18),
@@ -322,7 +324,6 @@ class _CardState extends State<_Card> {
                     : Colors.grey,
               ),
             ),
-
             Positioned(
               top: 1,
               right: 10,

@@ -126,22 +126,22 @@ class AppDrawer extends GetView<AuthController> {
                           color: Colors.white.withOpacity(0.3),
                         ),
                       ),
-                      // InkWell(
-                      //   onTap: () {
-                      //     Get.to(() => const OthersLookingForScreen());
-                      //   },
-                      //   child: Container(
-                      //     // width: 200,
-                      //     height: 30,
-                      //     decoration: transBg(),
-                      //     child: Center(
-                      //         child: Text(
-                      //       AppLocalizations.of(context)!
-                      //           .what_others_looking_for,
-                      //       style: const TextStyle(color: Colors.white),
-                      //     )),
-                      //   ),
-                      // )
+                      InkWell(
+                        onTap: () {
+                          Get.to(() => const OthersLookingForScreen());
+                        },
+                        child: Container(
+                          // width: 200,
+                          height: 30,
+                          decoration: transBg(),
+                          child: Center(
+                              child: Text(
+                            AppLocalizations.of(context)!
+                                .what_others_looking_for,
+                            style: const TextStyle(color: Colors.white),
+                          )),
+                        ),
+                      )
                     ],
                   ),
                 ),

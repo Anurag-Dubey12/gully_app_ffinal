@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../data/controller/scoreboard_controller.dart';
 import '../../../data/model/player_model.dart';
+import '../../../utils/utils.dart';
 
 class ChangeBowlerWidget extends GetView<ScoreBoardController> {
   const ChangeBowlerWidget({
@@ -33,11 +34,20 @@ class ChangeBowlerWidget extends GetView<ScoreBoardController> {
                   itemCount: players.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) => ListTile(
-                    title: Text(
-                      players[index].name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    title: Row(
+                      children: [
+                        Image.asset(
+                          getAssetFromRole(players[index].role),
+                          width: 15,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          players[index].name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
                     ),
                     onTap: () async {
                       controller.addEvent(EventType.changeBowler,

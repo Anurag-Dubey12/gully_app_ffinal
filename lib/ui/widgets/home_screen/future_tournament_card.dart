@@ -99,7 +99,7 @@ class _TournamentCardState extends State<TournamentCard> {
     final controller = Get.find<TournamentController>();
     final tournamentdata = controller.tournamentList
         .firstWhereOrNull((t) => t.id == widget.tournament.id);
-    logger.d("Tournament Data:${tournamentdata}");
+    logger.d("Tournament Data:${tournamentdata?.coverPhoto} and name:${tournamentdata?.tournamentName}");
     return GestureDetector(
       onTap: widget.onTap ,
       child: Container(
@@ -142,23 +142,19 @@ class _TournamentCardState extends State<TournamentCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SizedBox(
-                            width:150,
-                            child: Center(
-                              child: Text(
-                                widget.tournament.tournamentName,
-                                style: Get.textTheme.headlineMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: AppTheme.darkYellowColor,
-                                ),
-                                softWrap: true,
-                                maxLines: 1,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
+                          Expanded(
+                            child: Text(
+                              widget.tournament.tournamentName.capitalize,
+                              style: Get.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: AppTheme.darkYellowColor,
                               ),
+                              softWrap: true,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                           IconButton(
@@ -170,8 +166,10 @@ class _TournamentCardState extends State<TournamentCard> {
                                   tournamentName: widget.tournament.tournamentName,
                                   tournamentPrice: widget.tournament.fees.toString(),
                                   coverPhoto: widget.tournament.coverPhoto,
+                                  Rules: widget.tournament.rules,
                                 ),
                                 backgroundColor: Colors.white,
+                                isScrollControlled: true,
                               );
                             },
                             icon: const Icon(Icons.info_outline_rounded, size: 18),
@@ -293,9 +291,6 @@ class _TournamentCardState extends State<TournamentCard> {
                               if (widget.tournament.registeredTeamsCount ==
                                   widget.tournament.tournamentLimit || widget.tournament.tournamentEndDateTime.isBefore(DateTime.now())) {
                                 return;
-                              }
-                              if(widget.tournament.tournamentEndDateTime.isAfter(DateTime.now())){
-                                return ;
                               }
                               controller.setSelectedTournament(widget.tournament);
                               Get.to(() => const RegisterTeam());

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
@@ -129,12 +130,9 @@ class _MatchupsScreen extends State<ViewMatchupsScreen> with SingleTickerProvide
                         if(snapshot.connectionState==ConnectionState.waiting){
                           return const Center(child: CircularProgressIndicator());
                         }
-                        // Error handling
                         if (snapshot.hasError && connectionController.isConnected.value) {
                           return const Center(child: Text('Something went wrong'));
                         }
-
-                        // No matchups found state
                         if (controller.matchups.isEmpty) {
                           return const Center(
                             child: EmptyTournamentWidget(
@@ -142,8 +140,6 @@ class _MatchupsScreen extends State<ViewMatchupsScreen> with SingleTickerProvide
                             ),
                           );
                         }
-
-                        // Handling when connection is lost
                         return Obx(() {
                           if (!connectionController.isConnected.value) {
                             return Center(
@@ -172,8 +168,6 @@ class _MatchupsScreen extends State<ViewMatchupsScreen> with SingleTickerProvide
                               ),
                             );
                           }
-
-                          // Display the list of matchups when data is fetched
                           return ListView.separated(
                             itemCount: controller.matchups.length,
                             shrinkWrap: true,
@@ -181,6 +175,7 @@ class _MatchupsScreen extends State<ViewMatchupsScreen> with SingleTickerProvide
                                 SizedBox(height: Get.height * 0.01),
                             itemBuilder: (context, index) {
                               final matchup = controller.matchups[index];
+                              // final matchup = controller.matchups.reversed.toList()[index];
                               return MatchupCard(
                                 matchup: matchup,
                                 tourid: widget.tournament?.id ?? controller.state!.id,
@@ -314,7 +309,6 @@ class MatchupCard extends StatelessWidget {
         : ScoreboardModel.fromJson(matchup.scoreBoard!);
     final controller=Get.find<TournamentController>();
 
-    logger.d("The Winner id is:${matchup.getWinningTeamName()}");
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -339,6 +333,7 @@ class MatchupCard extends StatelessWidget {
                   onPressed: () {
                     switch(matchup.status){
                       case 'upcoming':{
+                        controller.isEditable.value = true;
                         Get.off(() => SelectOrganizeTeam(
                           match: matchup,
                           round:matchup.round ??'',
@@ -347,10 +342,22 @@ class MatchupCard extends StatelessWidget {
                         logger.d("The Passing Data Is ${matchup.tournament} and team 1 is ${matchup.team1.name}");
                       }
                       case 'current':{
-                        errorSnackBar("Cannot Edit Match After Match has been Started");
+                        controller.isEditable.value = false;
+                        Get.off(() => SelectOrganizeTeam(
+                          match: matchup,
+                          round:matchup.round ??'',
+                          tourId: matchup.tournament,
+                        ));
+                        // errorSnackBar("Cannot Edit Match After Match has been Started");
                       }
                       case 'played':{
-                        errorSnackBar("Cannot Edit Match After Match has been Completed");
+                        controller.isEditable.value = false;
+                        Get.off(() => SelectOrganizeTeam(
+                          match: matchup,
+                          round:matchup.round ??'',
+                          tourId: matchup.tournament,
+                        ));
+                        // errorSnackBar("Cannot Edit Match After Match has been Completed");
                       }
                     }
                   },

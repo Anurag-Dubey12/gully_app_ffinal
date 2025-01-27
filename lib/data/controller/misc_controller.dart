@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/api/misc_api.dart';
 import 'package:gully_app/data/model/promote_banner_model.dart';
@@ -15,6 +16,12 @@ class MiscController extends GetxController with StateMixin {
   }
 
   RxBool isConnected = true.obs;
+  RxInt indexvalue=0.obs;
+  PageController pageController = PageController();
+  void updateIndex(int index){
+    indexvalue.value=index;
+
+  }
   RxList<BannerModel> banners = <BannerModel>[].obs;
   Future<String> getContent(String slug) async {
     var response = await repo.getContent(slug);

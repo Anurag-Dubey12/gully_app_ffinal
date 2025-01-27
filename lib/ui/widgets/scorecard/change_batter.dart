@@ -347,7 +347,16 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                   });
                   } else {
                     controller.isBatsmenSelected=false.obs;
-                    errorSnackBar('Please select a batsman');
+                    Get.snackbar(
+                      'Oops',
+                      'Please select a batsman',
+                      snackPosition: SnackPosition.top,
+                      backgroundColor: Colors.red,
+                      colorText: Colors.white,
+                      margin: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(12),
+                      borderRadius: 8,
+                    );
                   }
                 },
                 title: 'Submit',

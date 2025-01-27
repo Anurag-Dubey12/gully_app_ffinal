@@ -35,6 +35,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Get.offAll(() => const HomeScreen());
       } else {
         Get.offAll(() => const WelcomeCarouselScreen());
+        logger.d("Again Launched SplashScreen");
       }
     });
   }

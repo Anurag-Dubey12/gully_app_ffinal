@@ -159,7 +159,7 @@ class _TeamRankingScreenState extends State<TeamRankingScreen> {
                                   separatorBuilder: (c, i) =>
                                   const SizedBox(height: 10),
                                   itemBuilder: (c, i) =>
-                                      _TeamCard(team: snapshot.data![i]),
+                                      _TeamCard(team: snapshot.data![i],rank:i+1),
                                 );
                               },
                             ),
@@ -178,7 +178,9 @@ class _TeamRankingScreenState extends State<TeamRankingScreen> {
 
 class _TeamCard extends StatelessWidget {
   final TeamRankingModel team;
+  final int? rank;
   const _TeamCard({
+    this.rank,
     required this.team,
   });
 
@@ -196,6 +198,26 @@ class _TeamCard extends StatelessWidget {
           children: [
             Row(
               children: [
+                if (rank != null)
+                  Container(
+                    width: 30,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '$rank',
+                        style:  const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ),
+                const SizedBox(width: 5),
                 CircleAvatar(
                     radius: 18,
                     backgroundImage:FallbackImageProvider(

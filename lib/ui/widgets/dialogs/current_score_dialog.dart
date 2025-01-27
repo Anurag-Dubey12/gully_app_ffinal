@@ -183,25 +183,11 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                             ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(100),
-                                              child: widget.match.scoreBoard![
-                                                                  'team1']
-                                                              ['teamLogo'] !=
-                                                          null &&
-                                                      widget
-                                                          .match
-                                                          .scoreBoard!['team1']
-                                                              ['teamLogo']
-                                                          .isNotEmpty
-                                                  ? Image.network(
-                                                      widget.match.scoreBoard![
-                                                                      'team1'][
-                                                                  'teamLogo'] ==
-                                                              widget.match.team1
-                                                                  .toImageUrl()
-                                                          ? widget.match.team1
-                                                              .toImageUrl()
-                                                          : widget.match.team2
-                                                              .toImageUrl(),
+                                              child: widget.match.scoreBoard!['team1']['teamLogo'] != null &&
+                                                      widget.match.scoreBoard!['team1']['teamLogo'].isNotEmpty ?
+                                              Image.network(widget.match.scoreBoard!['team1']['teamLogo'] == widget.match.team1.toImageUrl()
+                                                          ? widget.match.team1.toImageUrl()
+                                                          : widget.match.team2.toImageUrl(),
                                                       height: 50,
                                                       fit: BoxFit.cover,
                                                       width: 50,

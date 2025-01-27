@@ -235,7 +235,7 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                                         itemCount: snapshot.data!.length,
                                         shrinkWrap: true,
                                         separatorBuilder: (c, i) => const SizedBox(height: 10),
-                                        itemBuilder: (c, i) => _PlayerCard(player: snapshot.data![i])
+                                        itemBuilder: (c, i) => _PlayerCard(player: snapshot.data![i],rank: i+1)
                                     );
                                   }
                                 }
@@ -252,8 +252,10 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
 }
 
 class _PlayerCard extends StatelessWidget {
+  final int? rank;
   final PlayerRankingModel player;
   const _PlayerCard({
+    this.rank,
     required this.player,
   });
 
@@ -268,6 +270,26 @@ class _PlayerCard extends StatelessWidget {
         padding: const EdgeInsets.all(13.0),
         child: Row(
           children: [
+            if (rank != null)
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey),
+                ),
+                child: Center(
+                  child: Text(
+                    '$rank',
+                    style:  const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+            const SizedBox(width: 5),
             CircleAvatar(
               radius: 29,
               backgroundImage:FallbackImageProvider(
@@ -276,21 +298,23 @@ class _PlayerCard extends StatelessWidget {
               ) as ImageProvider,
             ),
             const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  width: 200,
-                  child: Text(player.playerName,
-                      style: Get.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold, color: Colors.black),maxLines: 2,overflow: TextOverflow.ellipsis,),
-                ),
-                // Text(
-                //   'Since ${formatDateTime('dd.MM.yyyy', player.registeredAt)}',
-                //   style:
-                //       Get.textTheme.bodyMedium?.copyWith(color: Colors.black54),
-                // ),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: 200,
+                    child: Text(player.playerName,
+                        style: Get.textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold, color: Colors.black),maxLines: 2,overflow: TextOverflow.ellipsis,),
+                  ),
+                  // Text(
+                  //   'Since ${formatDateTime('dd.MM.yyyy', player.registeredAt)}',
+                  //   style:
+                  //       Get.textTheme.bodyMedium?.copyWith(color: Colors.black54),
+                  // ),
+                ],
+              ),
             )
           ],
         ),

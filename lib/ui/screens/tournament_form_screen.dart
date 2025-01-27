@@ -197,8 +197,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
     if (_formKeys[currentStep].currentState!.validate()) {
       // _formKeys.forEach((key) => key.currentState!.save());
       try {
-        final TournamentController tournamentController =
-        Get.find<TournamentController>();
+        final TournamentController tournamentController = Get.find<TournamentController>();
         final AuthController authController = Get.find<AuthController>();
         final MiscController connectionController=Get.find<MiscController>();
         // if (_key.currentState!.validate()) {
@@ -209,30 +208,22 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
         //     return;
         //   }
           if (isCoHost()) {
-            errorSnackBar(
-                'Co-hosts are not allowed to edit tournament details');
+            errorSnackBar('Co-hosts are not allowed to edit tournament details');
             return;
           }
           // tournmanent name should not contain emojis or special characters except for alphabets and numbers
-
-          setState(() {
-            isLoading = true;
-          });
+          setState(() {isLoading = true;});
           if(tncAccepted==false){
             errorSnackBar('Please accept the Terms and Conditions');
             return;
           }
           String? base64;
           if (_image != null) {
-            base64 =
-                await convertImageToBase64(_image!);
+            base64 = await convertImageToBase64(_image!);
           }
-
           Map<String, dynamic> tournament = {
-            "tournamentStartDateTime":
-            from?.toIso8601String(),
-            "tournamentEndDateTime":
-            to?.toIso8601String(),
+            "tournamentStartDateTime": from?.toIso8601String(),
+            "tournamentEndDateTime": to?.toIso8601String(),
             "tournamentName": _nameController.text,
             "tournamentCategory": tournamentType,
             "ballType": ballType.toLowerCase(),
@@ -240,33 +231,20 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             "matchType": "Tennis ball cricket match",
             "tournamentPrize": _prizesController.text,
             "fees": _entryFeeController.text,
-            "ballCharges":
-            _ballChargesController.text,
-            "breakfastCharges":
-            _breakfastChargesController.text,
+            "ballCharges": _ballChargesController.text,
+            "breakfastCharges": _breakfastChargesController.text,
             "stadiumAddress": _addressController.text,
-            "tournamentLimit":
-            _teamLimitController.text,
+            "tournamentLimit": _teamLimitController.text,
             "gameType": "CRICKET",
             "selectLocation": _addressController.text,
             "latitude": location.latitude,
             "longitude": location.longitude,
             "rules": _rulesController.text,
             'coverPhoto': base64,
-            'coHost1Name':
-            _cohost1Name.text.trim().isEmpty
-                ? null
-                : _cohost1Name.text,
-            'coHost1Phone':
-            _cohost1Phone.text.trim().isEmpty
-                ? null
-                : _cohost1Phone.text,
-            'coHost2Name': _cohost2Name.text.isEmpty
-                ? null
-                : _cohost2Name.text,
-            'coHost2Phone': _cohost2Phone.text.isEmpty
-                ? null
-                : _cohost2Phone.text,
+            'coHost1Name': _cohost1Name.text.trim().isEmpty ? null : _cohost1Name.text,
+            'coHost1Phone': _cohost1Phone.text.trim().isEmpty ? null : _cohost1Phone.text,
+            'coHost2Name': _cohost2Name.text.isEmpty ? null : _cohost2Name.text,
+            'coHost2Phone': _cohost2Phone.text.isEmpty ? null : _cohost2Phone.text,
             // 'disclaimer': _disclaimerComntroller.text,
           };
           if(connectionController.isConnected.value){
@@ -281,12 +259,11 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
               }
               // }
             } else {
-
-              final tournamentModel =
-              await tournamentController
-                  .createTournament(tournament);
-              authController.getUser();
-              logger.d("The Tournament id is:${tournamentModel.id}");
+              // final tournamentModel =
+              // await tournamentController
+              //     .createTournament(tournament);
+              // authController.getUser();
+              // logger.d("The Tournament id is:${tournamentModel.id}");
               // if (tournament != null) {
               //   final result = await Get.to(() => PaymentPage(tournament: tournamentModel));
               //   if (result == null || result == false) {
@@ -294,12 +271,11 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
               //     Get.snackbar("Tournament", "Your tournament Deleted Successfully");
               //   }
               // }
-
-              successSnackBar('Tournament Create Successfully',istournamentScreen: true);
+              tournamentController.tournamentModel.value=tournament;
+              // successSnackBar('Tournament Create Successfully',istournamentScreen: true);
               // Get.offAll(() => const HomeScreen(),
               //     predicate: (route) => route.name == '/HomeScreen');
-              // Get.to(() => PaymentPage(
-              //     tournament: tournamentModel));
+              Get.to(() => PaymentPage(tournament: tournamentController.tournamentModel.value));
             }
           }else{
             errorSnackBar('No Internet Connection. Please try again later.');

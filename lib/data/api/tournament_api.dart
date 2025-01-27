@@ -282,10 +282,8 @@ class TournamentApi {
   }
 
 // payment/tournamentFees
-  Future<ApiResponse> getTournamentFees({required String tournamentId}) async {
-    final response = await repo.post('/payment/tournamentFees', {
-      'tournamentId': tournamentId,
-    });
+  Future<ApiResponse> getTournamentFees({required String tournamentLimit}) async {
+    final response = await repo.post('/payment/tournamentFees/$tournamentLimit',{});
     logger.d("Response Status Code: ${response.statusCode}");
     logger.d("Response Body: ${response.body}");
     if (response.statusCode! >= 500) {
@@ -297,6 +295,22 @@ class TournamentApi {
     }
     return ApiResponse.fromJson(response.body);
   }
+
+  // Future<ApiResponse> getTournamentFees({required String tournamentId}) async {
+  //   final response = await repo.post('/payment/tournamentFees', {
+  //     'tournamentId': tournamentId,
+  //   });
+  //   logger.d("Response Status Code: ${response.statusCode}");
+  //   logger.d("Response Body: ${response.body}");
+  //   if (response.statusCode! >= 500) {
+  //     errorSnackBar('Server Error');
+  //     throw Exception('Server Error');
+  //   } else if (response.statusCode! != 200) {
+  //     errorSnackBar(response.body['message']);
+  //     throw Exception('Bad Request');
+  //   }
+  //   return ApiResponse.fromJson(response.body);
+  // }
 
   Future<ApiResponse> createOrder(
       {required double discountAmount,

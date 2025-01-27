@@ -221,6 +221,7 @@ class _CardState extends State<_Card> {
                 widget.tournament.tournamentEndDateTime,
                 widget.tournament.authority ??''
             );
+            controller.isEditable.value = true;
             Get.to(
                   () => SelectOrganizeTeam(
                 tournament: widget.tournament,
@@ -235,7 +236,7 @@ class _CardState extends State<_Card> {
             controller.setSelectedTournament(widget.tournament);
             controller.setScheduleStatus(false);
             Get.to(() => ViewMatchupsScreen(tournament: widget.tournament));
-            controller.tournamentId.value=widget.tournament.id;
+            controller.tournamentId.value=widget.tournament.id ??'';
             controller.isTourOver.value=false;
             break;
           case RedirectType.editForm:

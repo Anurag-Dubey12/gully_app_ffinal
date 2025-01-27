@@ -6,14 +6,16 @@ class IButtonDialog extends StatelessWidget {
   final String tournamentName;
   final String tournamentPrice;
   final String? coverPhoto;
-  const IButtonDialog(
-      {super.key,
-      required this.organizerName,
-      required this.location,
-      required this.tournamentName,
-      required this.tournamentPrice,
-      this.coverPhoto,
-      });
+  final String? Rules;
+  const IButtonDialog({
+    super.key,
+    required this.organizerName,
+    required this.location,
+    required this.tournamentName,
+    required this.tournamentPrice,
+    required this.Rules,
+    this.coverPhoto,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -83,58 +85,89 @@ class IButtonDialog extends StatelessWidget {
                       ]),
                   child: Padding(
                     padding: const EdgeInsets.all(12.0),
-                    child: Column(children: [
-                      Row(
-                        children: [
-                          const SizedBox(width: 10),
-                          const Text('Tournament Name:',
-                              style: TextStyle(fontSize: 14)),
-                          const Spacer(),
-                          Text(tournamentName,softWrap: true,maxLines:3),
-                          const SizedBox(width: 10),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          const SizedBox(width: 10),
-                          const Text('Organizer Name:',
-                              style: TextStyle(fontSize: 14)),
-                          const Spacer(),
-                          Text(organizerName),
-                          const SizedBox(width: 10),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const SizedBox(width: 10),
-                          const Text('Location:',
-                              maxLines: 4, style: TextStyle(fontSize: 14)),
-                          const Spacer(),
-                          SizedBox(
-                              width: 180,
-                              // height: 70,
-                              child: Text(location,
-                                  maxLines: 3,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            const SizedBox(width: 10),
+                            const Text('Tournament Name:',
+                                style: TextStyle(fontSize: 14)),
+                            const Spacer(),
+                            SizedBox(
+                                width: 170,
+                                child: Text(
+                                  tournamentName,
+                                  softWrap: true,
+                                  maxLines: 2,
                                   textAlign: TextAlign.end,
-                                  style: const TextStyle(fontSize: 13))),
-                          const SizedBox(width: 10),
+                                )),
+                            const SizedBox(width: 10),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            const SizedBox(width: 10),
+                            const Text('Organizer Name:',
+                                style: TextStyle(fontSize: 14)),
+                            const Spacer(),
+                            Text(organizerName),
+                            const SizedBox(width: 10),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const SizedBox(width: 10),
+                            const Text('Location:',
+                                maxLines: 4, style: TextStyle(fontSize: 14)),
+                            const Spacer(),
+                            SizedBox(
+                                width: 180,
+                                // height: 70,
+                                child: Text(location,
+                                    maxLines: 3,
+                                    textAlign: TextAlign.end,
+                                    style: const TextStyle(fontSize: 13))),
+                            const SizedBox(width: 10),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          children: [
+                            const SizedBox(width: 10),
+                            const Text('Entry Fees:',
+                                style: TextStyle(fontSize: 14)),
+                            const Spacer(),
+                            Text(tournamentPrice),
+                            const SizedBox(width: 10),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        if (Rules != null && Rules!.isNotEmpty) ...[
+                          const SizedBox(height: 10),
+                          const Row(
+                            children: [
+                              SizedBox(width: 10),
+                              Text('Tournament Rules:',
+                                  style: TextStyle(fontSize: 14)),
+                              Spacer(),
+                            ],
+                          ),
+                          const SizedBox(height: 5),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              Rules!,
+                              style: const TextStyle(
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
                         ],
-                      ),
-                      const SizedBox(height: 10),
-                      Row(
-                        children: [
-                          const SizedBox(width: 10),
-                          const Text('Entry Fees:',
-                              style: TextStyle(fontSize: 14)),
-                          const Spacer(),
-                          Text(tournamentPrice),
-                          const SizedBox(width: 10),
-                        ],
-                      ),
-                    ]),
+                      ],
+                    ),
                   ),
                 ),
                 const SizedBox(height: 40),
@@ -146,3 +179,17 @@ class IButtonDialog extends StatelessWidget {
     );
   }
 }
+
+// Usage example
+String dummyRules = '''
+1. All teams must arrive 30 minutes before the scheduled match time.
+2. Players must wear the official tournament jersey and shoes.
+3. No abusive language or behavior will be tolerated on or off the field.
+4. Each match will consist of 3 innings per team, with each inning lasting 12 minutes.
+5. The decision of the umpire is final, and no appeals will be entertained.
+6. Any team found guilty of cheating will be disqualified from the tournament.
+7. The team with the most points at the end of the tournament will be declared the winner.
+8. Substitutions can be made only during breaks between innings.
+9. All teams must respect the scheduled time slots; any delay will result in a penalty.
+10. In case of a tie, a super over will be used to determine the winner.
+''';

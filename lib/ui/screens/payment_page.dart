@@ -14,7 +14,7 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../utils/app_logger.dart';
 
 class PaymentPage extends StatefulWidget {
-  final TournamentModel? tournament;
+  final Map<String,dynamic> tournament;
   const PaymentPage({super.key, required this.tournament});
 
   @override
@@ -25,7 +25,11 @@ class _PaymentPageState extends State<PaymentPage> {
   double fees = 0;
   final _razorpay = Razorpay();
   String? couponCode;
-  double discount = 0;
+  bool _isCouponVisible = false;
+  // double discount = 0;
+  double discount = 100;
+  DateTime? start_date;
+  DateTime? end_date;
   @override
   void initState() {
     super.initState();
@@ -34,12 +38,17 @@ class _PaymentPageState extends State<PaymentPage> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     // fees = widget.tournament.fees;
+    start_date = DateTime.parse(widget.tournament['tournamentStartDateTime']);
+    end_date = DateTime.parse(widget.tournament['tournamentEndDateTime']);
+    logger.d("The Start Date is:$start_date and end Date is:$end_date");
     getFee();
+
   }
 
   getFee() async {
     final controller = Get.find<TournamentController>();
-    fees = await controller.getTournamentFee(widget.tournament?.id??'');
+    logger.d("The Fess Data:${widget.tournament['tournamentLimit']} ");
+    fees = await controller.getTournamentFee(widget.tournament['tournamentLimit']);
     setState(() {
       logger.d(fees.toString());
     });
@@ -48,7 +57,7 @@ class _PaymentPageState extends State<PaymentPage> {
   _handlePaymentSuccess(PaymentSuccessResponse response) async {
     logger.f('Payment Success');
     successSnackBar(
-            'Congratulations !!!\nyour transaction is been made successful.  Your Tournament ${widget.tournament?.tournamentName} is Live  !',
+            'Congratulations !!!\nyour transaction is been made successful.  Your Tournament ${widget.tournament['tournamentName']} is Live  !',
             title: "Payment Successfull")
         .then(
       (value) => Get.offAll(() => const HomeScreen(),
@@ -72,7 +81,7 @@ class _PaymentPageState extends State<PaymentPage> {
     final authController = Get.find<AuthController>();
     final id = await controller.createOrder(
         discountAmount: fees,
-        tournamentId: widget.tournament!.id,
+        tournamentId: widget.tournament['id'],
         totalAmount: fees,
         coupon: couponCode);
     logger.f("ID $id");
@@ -93,6 +102,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
   @override
   Widget build(BuildContext context) {
+    final TournamentController controller = Get.find<TournamentController>();
     // getFee();
     return GradientBuilder(
       child: Scaffold(
@@ -162,7 +172,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                      child: Text('${widget.tournament?.tournamentName} ',
+                      child: Text('${widget.tournament['tournamentName']} ',
                           style: const TextStyle(
                               color: AppTheme.secondaryYellowColor,
                               fontSize: 18,
@@ -191,7 +201,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                 )),
                             Text(
                                 DateFormat("dd-MMM-yyyy").format(
-                                    widget.tournament!.tournamentStartDateTime),
+                                    start_date!),
                                 style: TextStyle(
                                   // color: AppTheme.secondaryYellowColor,
                                   fontSize: 14,
@@ -212,7 +222,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                 )),
                             Text(
                                 DateFormat("dd-MMM-yyyy").format(
-                                    widget.tournament!.tournamentEndDateTime),
+                                    end_date!),
                                 style: TextStyle(
                                   // color: AppTheme.secondaryYellowColor,
                                   fontSize: 14,
@@ -234,7 +244,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text(widget.tournament!.tournamentPrize ?? "N/A",
+                        Text(widget.tournament['tournamentPrize'] ?? "N/A",
                             style: TextStyle(
                               // color: AppTheme.secondaryYellowColor,
                               fontSize: 16,
@@ -254,7 +264,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text("₹${widget.tournament!.fees}",
+                        Text("₹${widget.tournament['fees']}",
                             style: TextStyle(
                               // color: AppTheme.secondaryYellowColor,
                               fontSize: 16,
@@ -274,7 +284,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text(widget.tournament!.tournamentLimit.toString(),
+                        Text(widget.tournament['tournamentLimit'].toString(),
                             style: TextStyle(
                               // color: AppTheme.secondaryYellowColor,
                               fontSize: 16,
@@ -284,54 +294,86 @@ class _PaymentPageState extends State<PaymentPage> {
                       ],
                     ),
                     const SizedBox(height: 22),
-                    GestureDetector(
-                      onTap: () async {
-                        final res = await Get.to(
-                            () => CouponView(
-                                  tournamentId: widget.tournament!.id,
-                                  amount: fees,
-                                ),
-                            fullscreenDialog: true);
-                        if (res != null) {
-                          setState(() {
-                            // couponCode = res['code'];
-                            // discount = res['discount'];
-                          });
-                        }
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color:
-                                AppTheme.secondaryYellowColor.withOpacity(0.8),
-                            width: 2,
-                          ),
-                          borderRadius: BorderRadius.circular(12),
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color:
+                          AppTheme.secondaryYellowColor.withOpacity(0.8),
+                          width: 2,
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Row(
-                            children: [
-                              Image.asset(
-                                "assets/images/dicsount.png",
-                                height: 30,
-                                width: 30,
-                              ),
-                              const SizedBox(width: 12),
-                              Text('Apply for Promo code',
-                                  style: TextStyle(
-                                    // color: AppTheme.secondaryYellowColor,
-                                    fontSize: 14,
-                                    color: Colors.grey.shade600,
-                                    fontWeight: FontWeight.w500,
-                                  )),
-                              const Spacer(),
-                              const Icon(Icons.arrow_forward_ios)
-                            ],
-                          ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Row(
+                          children: [
+                            Image.asset(
+                              "assets/images/dicsount.png",
+                              height: 30,
+                              width: 30,
+                            ),
+                            const SizedBox(width: 10),
+                            Text('Coupon Special 100% Discount Applied',
+                                style: TextStyle(
+                                  // color: AppTheme.secondaryYellowColor,
+                                  fontSize: 12,
+                                  color: Colors.grey.shade600,
+                                  fontWeight: FontWeight.w500,
+                                )),
+                            const Spacer(),
+                            // const Icon(Icons.arrow_forward_ios)
+                          ],
                         ),
                       ),
                     ),
+                    // GestureDetector(
+                    //   onTap: () async {
+                    //     final res = await Get.to(
+                    //             () => CouponView(
+                    //           tournamentId: widget.tournament['tournamentName'],
+                    //           amount: fees,
+                    //         ),
+                    //         fullscreenDialog: true);
+                    //     if (res != null) {
+                    //       setState(() {
+                    //         // couponCode = res['code'];
+                    //         // discount = res['discount'];
+                    //       });
+                    //     }
+                    //   },
+                    //   child: Container(
+                    //     decoration: BoxDecoration(
+                    //       border: Border.all(
+                    //         color:
+                    //         AppTheme.secondaryYellowColor.withOpacity(0.8),
+                    //         width: 2,
+                    //       ),
+                    //       borderRadius: BorderRadius.circular(12),
+                    //     ),
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.all(12.0),
+                    //       child: Row(
+                    //         children: [
+                    //           Image.asset(
+                    //             "assets/images/dicsount.png",
+                    //             height: 30,
+                    //             width: 30,
+                    //           ),
+                    //           const SizedBox(width: 12),
+                    //           Text('Apply for Promo code',
+                    //               style: TextStyle(
+                    //                 // color: AppTheme.secondaryYellowColor,
+                    //                 fontSize: 14,
+                    //                 color: Colors.grey.shade600,
+                    //                 fontWeight: FontWeight.w500,
+                    //               )),
+                    //           const Spacer(),
+                    //           const Icon(Icons.arrow_forward_ios)
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 22),
                     Text('Tournament Summary',
                         style: TextStyle(
@@ -360,42 +402,106 @@ class _PaymentPageState extends State<PaymentPage> {
                             )),
                       ],
                     ),
-                    const SizedBox(height: 15),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    // Row(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     Column(
+                    //       crossAxisAlignment: CrossAxisAlignment.start,
+                    //       mainAxisAlignment: MainAxisAlignment.start,
+                    //       children: [
+                    //         Text('Discount:',
+                    //             style: TextStyle(
+                    //               // color: AppTheme.secondaryYellowColor,
+                    //               fontSize: 14,
+                    //               color: Colors.grey.shade800,
+                    //               fontWeight: FontWeight.w400,
+                    //             )),
+                    //         const SizedBox(height: 5),
+                    //         if (couponCode != null)
+                    //           Chip(
+                    //             label: Text(
+                    //               'Promocode: $couponCode',
+                    //               style: const TextStyle(fontSize: 12),
+                    //             ),
+                    //             side: BorderSide(
+                    //                 style: BorderStyle.solid,
+                    //                 color: Colors.red.shade400),
+                    //           )
+                    //       ],
+                    //     ),
+                    //     const Spacer(),
+                    //     Text('- ₹$discount',
+                    //         style: TextStyle(
+                    //           // color: AppTheme.secondaryYellowColor,
+                    //           fontSize: 16,
+                    //           color: Colors.grey.shade800,
+                    //           fontWeight: FontWeight.w600,
+                    //         )),
+                    //   ],
+                    // ),
+                    Column(
                       children: [
-                        Column(
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            Text('Discount:',
-                                style: TextStyle(
-                                  // color: AppTheme.secondaryYellowColor,
-                                  fontSize: 14,
-                                  color: Colors.grey.shade800,
-                                  fontWeight: FontWeight.w400,
-                                )),
-                            const SizedBox(height: 5),
-                            if (couponCode != null)
-                              Chip(
-                                label: Text(
-                                  'Promocode: $couponCode',
-                                  style: const TextStyle(fontSize: 12),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _isCouponVisible = !_isCouponVisible;
+                                    });
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        'Discount:',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey.shade800,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                      Icon(
+                                        _isCouponVisible ? Icons.arrow_drop_up_outlined : Icons.arrow_drop_down,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                side: BorderSide(
-                                    style: BorderStyle.solid,
-                                    color: Colors.red.shade400),
-                              )
+                              ],
+                            ),
+                            const Spacer(),
+                            Text(
+                              '- ₹$discount',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey.shade800,
+                                  fontWeight: FontWeight.w600,
+                                )),
                           ],
                         ),
-                        const Spacer(),
-                        Text('- ₹$discount',
-                            style: TextStyle(
-                              // color: AppTheme.secondaryYellowColor,
-                              fontSize: 16,
-                              color: Colors.grey.shade800,
-                              fontWeight: FontWeight.w600,
-                            )),
+                        if (_isCouponVisible)
+                          Chip(
+                            label: const Text(
+                              'Code: Special 100% Discount',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                            backgroundColor: Colors.red.shade50,
+                            side: BorderSide(
+                              style: BorderStyle.solid,
+                              color: Colors.red.shade400,
+                              width: 1.5,
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            avatar: Icon(
+                              Icons.local_offer,
+                              color: Colors.red.shade600,
+                              size: 16,
+                            ),
+                          ),
                       ],
                     ),
                     const Divider(
@@ -439,7 +545,6 @@ class _PaymentPageState extends State<PaymentPage> {
                     //         )),
                     //   ),
                     // ),
-
                     Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -448,9 +553,14 @@ class _PaymentPageState extends State<PaymentPage> {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          startPayment();
+                          final response =controller.createTournament(widget.tournament);
+                          if(response!=null){
+                            successSnackBar('Tournament Create Successfully').then(
+                                  (value) => Get.offAll(() => const HomeScreen(), predicate: (route) => route.name == '/HomeScreen'),
+                            );
+                          }
                         },
-                        child: const Text('Proceed to Payment',
+                        child: const Text('Submit',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16,
@@ -458,6 +568,26 @@ class _PaymentPageState extends State<PaymentPage> {
                             )),
                       ),
                     ),
+                    // Container(
+                    //   width: double.infinity,
+                    //   decoration: BoxDecoration(
+                    //     color: AppTheme.primaryColor,
+                    //     borderRadius: BorderRadius.circular(12),
+                    //   ),
+                    //   child: TextButton(
+                    //     onPressed: () {
+                    //
+                    //
+                    //       startPayment();
+                    //     },
+                    //     child: const Text('Proceed to Payment',
+                    //         style: TextStyle(
+                    //           color: Colors.white,
+                    //           fontSize: 16,
+                    //           fontWeight: FontWeight.w600,
+                    //         )),
+                    //   ),
+                    // ),
                     const SizedBox(height: 22),
                     const CancellationPolicyWidget()
                   ],

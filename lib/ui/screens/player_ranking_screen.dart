@@ -48,11 +48,13 @@ class _PlayerRankingScreenState extends State<PlayerRankingScreen> {
       }
     });
   }
+
   @override
   void dispose() {
     _connectivityService.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.putOrFind(() => RankingController(Get.find()));
@@ -188,50 +190,63 @@ class _PlayerRankingScreenState extends State<PlayerRankingScreen> {
                         ),
                         Expanded(
                           child: Container(
-                            color: Colors.black26,
-                            // height: Get.height * 0.6,
-                            child: _isConnected ? FutureBuilder<List<PlayerRankingModel>>(
-                                future: controller.getPlayerRankingList(
-                                    _selectedTab == 0 ? 'leather' : 'tennis',
-                                    selectedChildTab),
-                                builder: (context, snapshot) {
-                                  if (snapshot.error != null) {
-                                    logger.e("Player Ranking Screen Error: ${snapshot.error}" );
-                                    return Center(
-                                      child: Text('Something went Wrong '),
-                                    );
-                                  }
-                                  if(!_isConnected){
-                                    return Center(
+                              color: Colors.black26,
+                              // height: Get.height * 0.6,
+                              child: _isConnected
+                                  ? FutureBuilder<List<PlayerRankingModel>>(
+                                      future: controller.getPlayerRankingList(
+                                          _selectedTab == 0
+                                              ? 'leather'
+                                              : 'tennis',
+                                          selectedChildTab),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.error != null) {
+                                          logger.e(
+                                              "Player Ranking Screen Error: ${snapshot.error}");
+                                          return const Center(
+                                            child:
+                                                Text('Something went Wrong '),
+                                          );
+                                        }
+                                        if (!_isConnected) {
+                                          return const Center(
+                                            child: Text(
+                                              'No Internet Connection',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 18),
+                                            ),
+                                          );
+                                        }
+                                        return ListView.separated(
+                                            padding: const EdgeInsets.all(20),
+                                            itemCount:
+                                                snapshot.data?.length ?? 0,
+                                            shrinkWrap: true,
+                                            separatorBuilder: (c, i) =>
+                                                const SizedBox(height: 10),
+                                            itemBuilder: (c, i) {
+                                              final player = snapshot.data![i];
+                                              final rank =
+                                                  (i < 3) ? (i + 1) : null;
+                                              return _TeamCard(
+                                                player: player,
+                                                rank: i+1,
+                                                selectedChildTab:
+                                                    selectedChildTab,
+                                              );
+                                            });
+                                      })
+                                  : const Center(
                                       child: Text(
-                                        'No Internet Connection',
+                                        'No internet connection',
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontWeight: FontWeight.w700,
                                             fontSize: 18),
                                       ),
-                                    );
-                                  }
-                                  return ListView.separated(
-                                      padding: const EdgeInsets.all(20),
-                                      itemCount: snapshot.data?.length ?? 0,
-                                      shrinkWrap: true,
-                                      separatorBuilder: (c, i) =>
-                                          const SizedBox(height: 10),
-                                      itemBuilder: (c, i) => _TeamCard(
-                                            player: snapshot.data![i],
-                                            selectedChildTab: selectedChildTab,
-                                          ));
-                                }):const Center(
-                              child:Text(
-                                'No internet connection',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 18),
-                              ),
-                            )
-                          ),
+                                    )),
                         )
                       ],
                     ),
@@ -243,9 +258,11 @@ class _PlayerRankingScreenState extends State<PlayerRankingScreen> {
 }
 
 class _TeamCard extends StatelessWidget {
+  final int? rank;
   final String selectedChildTab;
   final PlayerRankingModel player;
   const _TeamCard({
+    required this.rank,
     required this.player,
     required this.selectedChildTab,
   });
@@ -261,10 +278,32 @@ class _TeamCard extends StatelessWidget {
         padding: const EdgeInsets.all(13.0),
         child: Row(
           children: [
+            if (rank != null)
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.grey),
+                ),
+                child: Center(
+                  child: Text(
+                    '$rank',
+                    style:  const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ),
+            const SizedBox(width: 5),
             CircleAvatar(
               radius: 23,
               backgroundColor: Colors.grey.shade300,
-              backgroundImage: FallbackImageProvider(toImageUrl(player.profilePhoto),'assets/images/logo.png') as ImageProvider,
+              backgroundImage: FallbackImageProvider(
+                      toImageUrl(player.profilePhoto), 'assets/images/logo.png')
+                  as ImageProvider,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -326,54 +365,54 @@ class _SelectBallTypeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child:  GestureDetector(
-        onTap: () => onTap(tab),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            // border: Border.all(
-            //     color: Colors.black
-            // ),
-            gradient: tab == selectedTab
-                ? const LinearGradient(
-              colors: [AppTheme.secondaryYellowColor, Colors.orangeAccent],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            )
-                : LinearGradient(
-              colors: [Colors.white, Colors.grey.shade300],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
+        child: GestureDetector(
+      onTap: () => onTap(tab),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          // border: Border.all(
+          //     color: Colors.black
+          // ),
+          gradient: tab == selectedTab
+              ? const LinearGradient(
+                  colors: [AppTheme.secondaryYellowColor, Colors.orangeAccent],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : LinearGradient(
+                  colors: [Colors.white, Colors.grey.shade300],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+          boxShadow: [
+            BoxShadow(
+              color: const Color.fromARGB(57, 0, 0, 0).withOpacity(0.15),
+              blurRadius: 30,
+              spreadRadius: 2,
+              offset: const Offset(0, 10),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: const Color.fromARGB(57, 0, 0, 0).withOpacity(0.15),
-                blurRadius: 30,
-                spreadRadius: 2,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(20),
-            onTap: () => onTap(tab),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 14.0, horizontal: 20.0),
-                child: Text(
-                  text,
-                  style: Get.textTheme.bodyLarge?.copyWith(
-                    fontSize: isChild ?? false ? 14 : 18,
-                    color: selectedTab == tab ? Colors.white : Colors.black,
-                    fontWeight: isChild ?? false ? FontWeight.normal : FontWeight.bold,
-                  ),
+          ],
+        ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () => onTap(tab),
+          child: Center(
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(vertical: 14.0, horizontal: 20.0),
+              child: Text(
+                text,
+                style: Get.textTheme.bodyLarge?.copyWith(
+                  fontSize: isChild ?? false ? 14 : 18,
+                  color: selectedTab == tab ? Colors.white : Colors.black,
+                  fontWeight:
+                      isChild ?? false ? FontWeight.normal : FontWeight.bold,
                 ),
               ),
             ),
           ),
         ),
-      )
-    );
+      ),
+    ));
   }
 }
-

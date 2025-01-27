@@ -51,8 +51,14 @@ class TournamentController extends GetxController
   }
 
   Rx<LatLng> coordinates = const LatLng(0, 0).obs;
+  RxBool isEditable = true.obs;
 
-  Rx<TournamentModel?> tournamentModel = Rx<TournamentModel?>(null);
+  void setEditable(bool isedit){
+    isEditable.value = isedit;
+  }
+  // Rx<TournamentModel?> tournamentModel = Rx<TournamentModel?>(null);
+  // final tournamentModel = RxMap<String, dynamic>();
+  final RxMap<String, dynamic> tournamentModel = <String, dynamic>{}.obs;
 
   Future<TournamentModel> createTournament(
       Map<String, dynamic> tournament) async {
@@ -148,6 +154,9 @@ class TournamentController extends GetxController
         endDate: selectedDate.value.add(const Duration(days: 7)),
       );
       logger.d("The entire Response: ${response.data}");
+
+
+
       if (response.data != null) {
         if(isLive){
           Current_tournamentList.value = (response.data!['tournamentList'] as List<dynamic>?)
@@ -223,8 +232,6 @@ class TournamentController extends GetxController
       tournamentList.refresh();
     }
   }
-
-
 
   void setSelectedTournament(TournamentModel tournament) {
     change(GetStatus.success(tournament));
@@ -364,6 +371,7 @@ class TournamentController extends GetxController
   }
 
   RxList<MatchupModel> matchups=<MatchupModel>[].obs;
+
   Future<List<MatchupModel>> getMatchup(String tourId) async {
     try {
       final response = await tournamentApi.getMatchup(tourId);
@@ -520,9 +528,9 @@ class TournamentController extends GetxController
   }
 
 
-  Future<double> getTournamentFee(String tournamentId) async {
+  Future<double> getTournamentFee(String tournamentLimit) async {
     final res =
-    await tournamentApi.getTournamentFees(tournamentId: tournamentId);
+    await tournamentApi.getTournamentFees(tournamentLimit: tournamentLimit);
     return double.parse(res.data!['fee'].toString());
   }
 
@@ -544,9 +552,11 @@ class TournamentController extends GetxController
     }
   }
 
+  RxInt couponsDisount=0.obs;
   Future<List<Coupon>>? getCoupons() async {
     try {
       final response = await tournamentApi.getCoupons();
+      logger.d("API Response: ${response.data}");
       return response.data!['coupons']
           .map<Coupon>((e) => Coupon.fromJson(e))
           .toList();

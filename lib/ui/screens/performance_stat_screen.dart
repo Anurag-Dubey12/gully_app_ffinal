@@ -325,7 +325,6 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen>
       ),
     ));
   }
-
   TextStyle _valueStyle() {
     return const TextStyle(fontSize: 16, fontWeight: FontWeight.bold);
   }

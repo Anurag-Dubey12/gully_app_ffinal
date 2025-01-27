@@ -177,8 +177,7 @@ class _MatchupCard extends GetView<ScoreBoardController> {
 
         if (matchup.scoreBoard != null) {
           Get.off(() => const ScoreCardScreen());
-          controller
-              .setScoreBoard(ScoreboardModel.fromJson(matchup.scoreBoard!));
+          controller.setScoreBoard(ScoreboardModel.fromJson(matchup.scoreBoard!));
         } else {
           logger.i("Tournament Match: true");
           if (matchup.team1.players!.length < 11) {

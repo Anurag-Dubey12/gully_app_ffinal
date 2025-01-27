@@ -247,6 +247,7 @@ class HomePageContent extends StatefulWidget {
 
 class ScreenContent extends State<HomePageContent> {
   String selected = 'Current';
+  int _current = 0;
   Future<void> refreshData() async {
     try {
       final tournamentController = Get.find<TournamentController>();
@@ -260,6 +261,7 @@ class ScreenContent extends State<HomePageContent> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
+    final misccontroller = Get.find<MiscController>();
     return Stack(
       children: [
         Positioned(
@@ -302,6 +304,45 @@ class ScreenContent extends State<HomePageContent> {
                         ),
                         const SizedBox(height: 10),
                         const FullBannerSlider(isAds: false),
+                        const SizedBox(height: 10),
+                        Obx(() {
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Icon(
+                                Icons.arrow_back_ios_new,
+                                size: 12,
+                                color: AppTheme.darkYellowColor,
+                              ),
+                              const SizedBox(width: 8),
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: List.generate(
+                                  misccontroller.banners.length,
+                                      (index) => AnimatedContainer(
+                                    duration: const Duration(milliseconds: 300),
+                                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                                    height: 10,
+                                    width: misccontroller.indexvalue.value == index ? 15 : 8,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: misccontroller.indexvalue.value == index
+                                          ? AppTheme.darkYellowColor
+                                          : Colors.grey.withOpacity(0.5),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              const Icon(
+                                Icons.arrow_forward_ios,
+                                size: 12,
+                                color: AppTheme.darkYellowColor,
+                              ),
+                            ],
+                          );
+                        }),
                         const SizedBox(height: 20),
                       ],
                     ),
@@ -517,59 +558,59 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
                             imageUrl: toImageUrl(e.imageUrl),
                             fit: BoxFit.fill,
                             width: double.infinity),
-                        if (widget.isAds)
-                          Positioned(
-                            top: 2,
-                            right: 10,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.6),
-                                borderRadius: BorderRadius.circular(20),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.2),
-                                    blurRadius: 4,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: const Text(
-                                "Ad",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          )
-                        else
-                          Positioned(
-                            bottom: 10,
-                            left: 0,
-                            right: 0,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: List.generate(
-                                controller.banners.length,
-                                (index) => AnimatedContainer(
-                                  duration: const Duration(milliseconds: 300),
-                                  margin:
-                                      const EdgeInsets.symmetric(horizontal: 3),
-                                  height: 8,
-                                  width: _current == index ? 15 : 8,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(4),
-                                    color: _current == index
-                                        ? AppTheme.darkYellowColor
-                                        : Colors.grey.withOpacity(0.5),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                        // if (widget.isAds)
+                        //   Positioned(
+                        //     top: 2,
+                        //     right: 10,
+                        //     child: Container(
+                        //       padding: const EdgeInsets.symmetric(
+                        //           horizontal: 8, vertical: 4),
+                        //       decoration: BoxDecoration(
+                        //         color: Colors.black.withOpacity(0.6),
+                        //         borderRadius: BorderRadius.circular(20),
+                        //         boxShadow: [
+                        //           BoxShadow(
+                        //             color: Colors.black.withOpacity(0.2),
+                        //             blurRadius: 4,
+                        //             offset: const Offset(0, 2),
+                        //           ),
+                        //         ],
+                        //       ),
+                        //       child: const Text(
+                        //         "Ad",
+                        //         style: TextStyle(
+                        //           color: Colors.white,
+                        //           fontSize: 12,
+                        //           fontWeight: FontWeight.bold,
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   )
+                        // else
+                        //   Positioned(
+                        //     bottom: 10,
+                        //     left: 0,
+                        //     right: 0,
+                        //     child: Row(
+                        //       mainAxisAlignment: MainAxisAlignment.center,
+                        //       children: List.generate(
+                        //         controller.banners.length,
+                        //         (index) => AnimatedContainer(
+                        //           duration: const Duration(milliseconds: 300),
+                        //           margin:
+                        //               const EdgeInsets.symmetric(horizontal: 3),
+                        //           height: 8,
+                        //           width: _current == index ? 15 : 8,
+                        //           decoration: BoxDecoration(
+                        //             borderRadius: BorderRadius.circular(4),
+                        //             color: _current == index
+                        //                 ? AppTheme.darkYellowColor
+                        //                 : Colors.grey.withOpacity(0.5),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ),
+                        //   ),
                       ],
                     ),
                   ))
@@ -580,6 +621,7 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
             autoPlay: true,
             onPageChanged: (index, reason) {
               setState(() {
+                controller.updateIndex(index);
                 _current = index;
               });
             },

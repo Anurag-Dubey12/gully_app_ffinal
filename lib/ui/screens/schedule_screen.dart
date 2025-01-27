@@ -124,8 +124,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                         children: [
                           FutureBuilder(
                             future: widget.tournament?.id != null
-                                ? controller.getMatchup(widget.tournament!.id)
-                                : controller.getMatchup(controller.state!.id),
+                                ? controller.getMatchup(widget.tournament!.id??'')
+                                : controller.getMatchup(controller.state!.id??''),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
@@ -159,7 +159,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                           ),
                           FutureBuilder<List<PointTableModel>>(
                             future: controller
-                                .tournamentPointsTable(widget.tournament!.id),
+                                .tournamentPointsTable(widget.tournament!.id??''),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {

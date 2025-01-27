@@ -33,7 +33,8 @@ class LiveScoreState extends State<LiveScore> {
     try {
       final tournamentController = Get.find<TournamentController>();
       tournamentController.filter.value = 'current';
-      await tournamentController.getTournamentList(filterD: 'current');
+      await tournamentController.getCurrentTournamentList(filterD: 'current');
+      logger.d("Got live score");
     } catch (e) {
       logger.e('Error refreshing data: $e');
     }
@@ -64,7 +65,6 @@ class LiveScoreState extends State<LiveScore> {
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           }
-
           return Obx(() {
             if (controller.Current_tournamentList.isEmpty ||
                 controller.Current_matches.isEmpty) {
@@ -206,8 +206,10 @@ class CardState extends State<Card> {
                                   tournamentName: tournamentdata.tournamentName,
                                   tournamentPrice: tournamentdata.fees.toString(),
                                   coverPhoto: tournamentdata.coverPhoto,
+                                  Rules: tournamentdata.rules,
                                 ),
                                 backgroundColor: Colors.white,
+                                isScrollControlled: true
                               );
                             },
                             icon: const Icon(Icons.info_outline_rounded, size: 18),
@@ -260,7 +262,7 @@ class CardState extends State<Card> {
                           width: 100,
                           child: ElevatedButton(
                               onPressed: () {
-                                Get.bottomSheet(
+                                final res=Get.bottomSheet(
                                   BottomSheet(
                                     enableDrag: false,
                                     builder: (context) => ScoreBottomDialog(
@@ -270,6 +272,8 @@ class CardState extends State<Card> {
                                   ),
                                   isScrollControlled: true,
                                 );
+                                controller.getCurrentTournamentList();
+                                logger.d("Called getCurrentTournamentList");
                               },
                               style: ButtonStyle(
                                 padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 8)),

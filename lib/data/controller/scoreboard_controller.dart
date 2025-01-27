@@ -148,7 +148,7 @@ class ScoreBoardController extends GetxController with StateMixin {
       } else if (firstInning == secondInning) {
         try {
           final winnerName = await getWinnerNameForMatch(scoreboard.value!.matchId);
-          if(winnerName==null){
+          if(winnerName!=null){
             showModalBottomSheet(
               context: Get.context!,
               isScrollControlled: true,
@@ -426,27 +426,28 @@ class ScoreBoardController extends GetxController with StateMixin {
 
     if (scoreboard.value!.isSecondInningsOver &&
         !scoreboard.value!.isChallenge!) {
-      if (scoreboard.value!.firstInnings!.totalScore == scoreboard.value!.secondInnings!.totalScore) {
-        // showModalBottomSheet(
-        //   context: Get.context!,
-        //   isScrollControlled: true,
-        //   builder: (context) => TieBreakerSheet(
-        //     scoreboard: scoreboard.value!,
-        //     onSubmit: (String winningTeamId) {
-        //       final winningTeam = winningTeamId == scoreboard.value!.team1.id
-        //           ? scoreboard.value!.team1.name
-        //           : scoreboard.value!.team2.name;
-        //       logger.d("The winner is $winningTeam");
-        //       successSnackBar('$winningTeam wins the match!');
-        //       Navigator.of(context).pop();
-        //       updateFinalScoreBoard(winningTeamId);
-        //     },
-        //   ),
-        // );
-        errorSnackBar("Match Tied");
-      }else{
-        updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
-      }
+      updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
+      // if (scoreboard.value!.firstInnings!.totalScore == scoreboard.value!.secondInnings!.totalScore) {
+      //   // showModalBottomSheet(
+      //   //   context: Get.context!,
+      //   //   isScrollControlled: true,
+      //   //   builder: (context) => TieBreakerSheet(
+      //   //     scoreboard: scoreboard.value!,
+      //   //     onSubmit: (String winningTeamId) {
+      //   //       final winningTeam = winningTeamId == scoreboard.value!.team1.id
+      //   //           ? scoreboard.value!.team1.name
+      //   //           : scoreboard.value!.team2.name;
+      //   //       logger.d("The winner is $winningTeam");
+      //   //       successSnackBar('$winningTeam wins the match!');
+      //   //       Navigator.of(context).pop();
+      //   //       updateFinalScoreBoard(winningTeamId);
+      //   //     },
+      //   //   ),
+      //   // );
+      //   errorSnackBar("Match Tied");
+      // }else{
+      //   updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
+      // }
     } else if (scoreboard.value!.isSecondInningsOver &&
         scoreboard.value!.isChallenge!) {
       updateFinalChallengeScoreBoard(scoreboard.value!.getWinningTeam);

@@ -58,7 +58,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
     final controller = Get.find<TournamentController>();
     final teams = await (widget.tourId != null
         ? controller.getRegisteredTeams(widget.tourId!)
-        : controller.getRegisteredTeams(widget.tournament!.id));
+        : controller.getRegisteredTeams(widget.tournament!.id??''));
 
     if (teams.isEmpty) {
       errorSnackBar('Please register a team first').then((_) => Get.close());
@@ -131,7 +131,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
         vsync: Navigator.of(context),
       ),
       builder: (context) => TeamEliminationBottomSheet(
-        tournamentId: widget.tourId ?? widget.tournament!.id,
+        tournamentId: widget.tourId ?? widget.tournament!.id ??'',
         onTeamsUpdated: getPlayers,
         allTeams: controller.AllTeam,
         eliminatedTeams: controller.eliminatedTeam,
@@ -199,6 +199,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold)),
                             ),
+
                             SizedBox(height: Get.height * 0.04),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,55 +220,45 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                       DecoratedBox(
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(10),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 6),
-                                          child: DropdownButton<TeamModel?>(
-                                            value: selectedTeam1,
-                                            icon: const Icon(
-                                                Icons.arrow_drop_down),
-                                            padding: EdgeInsets.zero,
-                                            iconSize: 24,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            alignment: Alignment.bottomCenter,
-                                            iconEnabledColor: Colors.black,
-                                            style: const TextStyle(
-                                                color: Colors.black),
-                                            underline: const SizedBox(),
-                                            onChanged: (TeamModel? newValue) {
-                                              setState(() {
-                                                selectedTeam1 = newValue!;
-                                              });
-                                            },
-                                            items: totalteams.map<
-                                                DropdownMenuItem<TeamModel?>>(
-                                              (TeamModel value) {
-                                                return DropdownMenuItem<
-                                                    TeamModel?>(
+                                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                                          child: Obx(() {
+                                            return DropdownButton<TeamModel?>(
+                                              value: selectedTeam1,
+                                              icon: const Icon(Icons.arrow_drop_down),
+                                              padding: EdgeInsets.zero,
+                                              iconSize: 24,
+                                              borderRadius: BorderRadius.circular(10),
+                                              alignment: Alignment.bottomCenter,
+                                              iconEnabledColor: Colors.black,
+                                              style: const TextStyle(color: Colors.black),
+                                              underline: const SizedBox(),
+                                              onChanged: controller.isEditable.value ? (TeamModel? newValue) {
+                                                setState(() {
+                                                  selectedTeam1 = newValue!;
+                                                });
+                                              } : null,
+                                              items: totalteams.map<DropdownMenuItem<TeamModel?>>((TeamModel value) {
+                                                return DropdownMenuItem<TeamModel?>(
                                                   value: value,
                                                   child: SizedBox(
                                                     width: 80,
                                                     child: Text(
                                                       value.name,
-                                                      style: Get
-                                                          .textTheme.labelMedium
-                                                          ?.copyWith(
-                                                              fontSize: 12),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
+                                                      style: Get.textTheme.labelMedium?.copyWith(fontSize: 12),
+                                                      overflow: TextOverflow.ellipsis,
                                                       maxLines: 2,
                                                     ),
                                                   ),
                                                 );
-                                              },
-                                            ).toList(),
-                                          ),
+                                              }).toList(),
+                                            );
+                                          }),
                                         ),
                                       ),
+
                                     ],
                                   ),
                                 ),
@@ -300,53 +291,42 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                       DecoratedBox(
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10),
+                                          borderRadius: BorderRadius.circular(10),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 6),
-                                          child: DropdownButton<TeamModel?>(
-                                            value: selectedTeam2,
-                                            icon: const Icon(
-                                                Icons.arrow_drop_down),
-                                            padding: EdgeInsets.zero,
-                                            iconSize: 24,
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            alignment: Alignment.bottomCenter,
-                                            iconEnabledColor: Colors.black,
-                                            style: const TextStyle(
-                                                color: Colors.black),
-                                            underline: const SizedBox(),
-                                            onChanged: (TeamModel? newValue) {
-                                              setState(() {
-                                                selectedTeam2 = newValue!;
-                                              });
-                                            },
-                                            items: totalteams.map<
-                                                DropdownMenuItem<TeamModel?>>(
-                                              (TeamModel? value) {
-                                                return DropdownMenuItem<
-                                                    TeamModel?>(
+                                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                                          child: Obx(() {
+                                            return DropdownButton<TeamModel?>(
+                                              value: selectedTeam2,
+                                              icon: const Icon(Icons.arrow_drop_down),
+                                              padding: EdgeInsets.zero,
+                                              iconSize: 24,
+                                              borderRadius: BorderRadius.circular(10),
+                                              alignment: Alignment.bottomCenter,
+                                              iconEnabledColor: Colors.black,
+                                              style: const TextStyle(color: Colors.black),
+                                              underline: const SizedBox(),
+                                              onChanged: controller.isEditable.value ? (TeamModel? newValue) {
+                                                setState(() {
+                                                  selectedTeam2 = newValue!;
+                                                });
+                                              } : null,
+                                              items: totalteams.map<DropdownMenuItem<TeamModel?>>((TeamModel value) {
+                                                return DropdownMenuItem<TeamModel?>(
                                                   value: value,
                                                   child: SizedBox(
                                                     width: 80,
                                                     child: Text(
-                                                      value!.name,
-                                                      style: Get
-                                                          .textTheme.labelMedium
-                                                          ?.copyWith(
-                                                              fontSize: 12),
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
+                                                      value.name,
+                                                      style: Get.textTheme.labelMedium?.copyWith(fontSize: 12),
+                                                      overflow: TextOverflow.ellipsis,
                                                       maxLines: 2,
                                                     ),
                                                   ),
                                                 );
-                                              },
-                                            ).toList(),
-                                          ),
+                                              }).toList(),
+                                            );
+                                          }),
                                         ),
                                       ),
                                     ],
@@ -360,36 +340,40 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                 const Spacer(),
                                 InkWell(
                                   onTap: () async {
-                                    final date = await showDatePicker(
-                                        context: context,
-                                        initialDate: widget.tourId != null
-                                            ? controller.startDateForPicker
-                                            : widget.tournament!
-                                                .tournamentStartDateTime,
-                                        firstDate: widget.tourId != null
-                                            ? controller.startDateForPicker ??
-                                                DateTime.now()
-                                            : widget.tournament!
-                                                .tournamentStartDateTime,
-                                        lastDate: widget.tourId != null
-                                            ? controller.endDateForPicker ??
-                                                DateTime.now()
-                                            : widget.tournament!
-                                                .tournamentEndDateTime);
-                                    setState(() {
-                                      if (date != null) {
-                                        if (selectedDate != null) {
-                                          selectedDate = DateTime(
-                                              date.year,
-                                              date.month,
-                                              date.day,
-                                              selectedDate!.hour,
-                                              selectedDate!.minute);
-                                        } else {
-                                          selectedDate = date;
-                                        }
-                                      }
-                                    });
+                                   if(controller.isEditable.value){
+                                     final date = await showDatePicker(
+                                         context: context,
+                                         initialDate: widget.tourId != null
+                                             ? controller.startDateForPicker
+                                             : widget.tournament!
+                                             .tournamentStartDateTime,
+                                         firstDate: widget.tourId != null
+                                             ? controller.startDateForPicker ??
+                                             DateTime.now()
+                                             : widget.tournament!
+                                             .tournamentStartDateTime,
+                                         lastDate: widget.tourId != null
+                                             ? controller.endDateForPicker ??
+                                             DateTime.now()
+                                             : widget.tournament!
+                                             .tournamentEndDateTime);
+                                     setState(() {
+                                       if (date != null) {
+                                         if (selectedDate != null) {
+                                           selectedDate = DateTime(
+                                               date.year,
+                                               date.month,
+                                               date.day,
+                                               selectedDate!.hour,
+                                               selectedDate!.minute);
+                                         } else {
+                                           selectedDate = date;
+                                         }
+                                       }
+                                     });
+                                   }else{
+                                     errorSnackBar("You Cannot Edit Match Date");
+                                   }
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -423,21 +407,25 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                 const SizedBox(width: 60),
                                 InkWell(
                                   onTap: () async {
-                                    final time = await showTimePicker(
-                                        context: context,
-                                        initialEntryMode:
-                                            TimePickerEntryMode.dialOnly,
-                                        initialTime: TimeOfDay.now());
-                                    if (time != null) {
-                                      setState(() {
-                                        selectedDate = DateTime(
-                                            selectedDate!.year,
-                                            selectedDate!.month,
-                                            selectedDate!.day,
-                                            time.hour,
-                                            time.minute);
-                                      });
-                                    }
+                                   if(controller.isEditable.value){
+                                     final time = await showTimePicker(
+                                         context: context,
+                                         initialEntryMode:
+                                         TimePickerEntryMode.dialOnly,
+                                         initialTime: TimeOfDay.now());
+                                     if (time != null) {
+                                       setState(() {
+                                         selectedDate = DateTime(
+                                             selectedDate!.year,
+                                             selectedDate!.month,
+                                             selectedDate!.day,
+                                             time.hour,
+                                             time.minute);
+                                       });
+                                     }
+                                   }else{
+                                     errorSnackBar("You Cannot Edit Match Time");
+                                   }
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -540,7 +528,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
 
                                   final response =
                                       await controller.createMatchup(
-                                          widget.tournament!.id,
+                                          widget.tournament!.id??'',
                                           selectedTeam1!.id,
                                           selectedTeam2!.id,
                                           selectedDate!,
@@ -567,6 +555,23 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                 title: 'Eliminate Teams',
                               ),
                             SizedBox(height: Get.height * 0.02),
+                            ! controller.isEditable.value
+                                ? const Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.warning, color: Colors.red,),
+                                  SizedBox(width: 8),
+                                  Text("Only the round can be edited \n for ongoing or ended matches.",
+                                    textAlign: TextAlign.center,
+                                    maxLines: 3,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold,),
+                                  ),
+                                ],
+                              ),
+                            )
+                                : SizedBox.shrink(),
                             // PrimaryButton(
                             //   onTap: () {
                             //     logger.d("The Tournament id is:${widget.tournament!.id}");

@@ -161,7 +161,6 @@ class ScoreboardModel {
         }
       }
     } else {
-      // Show current over in progress
       for (var i = 0; i < getCurrentInnings.length; i++) {
         final String key = '$currentOver.$i';
         if (getCurrentInnings.containsKey(key)) {
@@ -505,6 +504,7 @@ class ScoreboardModel {
                 },
                 builder: (c) => const ChangeBatterWidget()),
             isDismissible: true,
+            isScrollControlled: true,
             enableDrag: false);
         if (res != null) {
           logger.d("Wicket result: $res");
@@ -555,9 +555,12 @@ class ScoreboardModel {
           );
         } else {
           logger.d("Wicket processing cancelled");
-          // logger.d("The current ball is ${currentBall} and ball is ${ball} and reduce ball is :${currentBall-1}");
-          currentBall=currentBall-1;
-          striker.batting!.balls = striker.batting!.balls -1;
+          if(events.contains(EventType.noBall)){
+            logger.d("No Ball with wicket found");
+          } else{
+            currentBall=currentBall-1;
+            striker.batting!.balls = striker.batting!.balls -1;
+          }
           return;
         }
       } catch (e) {

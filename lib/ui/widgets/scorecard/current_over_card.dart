@@ -50,12 +50,7 @@ class CurrentOverStats extends GetView<ScoreBoardController> {
                                     width: 24,
                                     height: 24,
                                     decoration: BoxDecoration(
-                                      border: controller
-                                                  .scoreboard
-                                                  .value!
-                                                  .currentOverHistory[index]
-                                                  ?.run ==
-                                              null
+                                      border: controller.scoreboard.value!.currentOverHistory[index]?.run == null
                                           ? null
                                           : Border.all(
                                               color:
@@ -71,26 +66,6 @@ class CurrentOverStats extends GetView<ScoreBoardController> {
                                               .where((event) => event == EventType.noBall || event == EventType.wide)
                                               .length;
                                           final totalScore = (baseRun ?? 0) + extraRun;
-                                          // return Text(
-                                          //     totalScore > 0 ? totalScore.toString() : (baseRun == 0 ? '0' : ''),
-
-                                          // final baseRun = controller
-                                          //         .scoreboard
-                                          //         .value!
-                                          //         .currentOverHistory[index]
-                                          //         ?.run ??
-                                          //     0;
-                                          // final extraRun = (controller
-                                          //             .scoreboard
-                                          //             .value!
-                                          //             .currentOverHistory[index]
-                                          //             ?.events ??
-                                          //         [])
-                                          //     .where((event) =>
-                                          //         event == EventType.noBall ||
-                                          //         event == EventType.wide)
-                                          //     .length;
-                                          // final TotalScore = baseRun + extraRun;
                                           return Text(
                                               totalScore > 0 ? totalScore.toString() : (baseRun == 0 ? '0' : ''),
                                               style: Get.textTheme.labelMedium

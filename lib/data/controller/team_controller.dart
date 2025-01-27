@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:gully_app/data/api/team_api.dart';
 import 'package:gully_app/data/model/challenge_match.dart';
+import 'package:gully_app/data/model/cricket_stats.dart';
 import 'package:gully_app/data/model/opponent_model.dart';
 import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
@@ -316,6 +317,7 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
     }
   }
 
+  Rx<CricketStats?> performance=Rx<CricketStats?>(null);
   Future<Map<String, dynamic>> getMyPerformance({
     required String userId,
     required String category,
@@ -325,7 +327,8 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
         userId: userId,
         category: category,
       );
-      print("The My Performance Data: ${response.data}");
+      performance.value = CricketStats.fromJson(response.data!);
+      print("The My Performance Data: ${performance.value!.latestMatchesData}");
       if (response.status == false) {
         errorSnackBar(response.message!);
         return {};

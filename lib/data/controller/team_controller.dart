@@ -255,7 +255,7 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
   Future<List<ChallengeMatchModel>> getChallengeMatch() async {
     try {
       final response = await repo.getChallengeMatch();
-
+      logger.i("The Challenge Match is :${response.data}");
       if (response.status == false) {
         logger.i('error is in getChallengeMatch');
         errorSnackBar(response.message!);
@@ -327,8 +327,8 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
         userId: userId,
         category: category,
       );
-      performance.value = CricketStats.fromJson(response.data!);
-      print("The My Performance Data: ${performance.value!.latestMatchesData}");
+      // performance.value = CricketStats.fromJson(response.data!);
+      // print("The My Performance Data: ${performance.value!.latestMatchesData}");
       if (response.status == false) {
         errorSnackBar(response.message!);
         return {};
@@ -342,6 +342,7 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
 
   Future<Map<String, dynamic>> getChallengePerformance({
     required String matchId,
+    required String type,
   }) async {
     try {
       final response = await repo.getChallengePerformance(
@@ -353,7 +354,7 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
         errorSnackBar(response.message!);
         return {};
       }
-      return response.data ?? {};
+      return response.data![type] ?? {};
     } catch (e) {
       logger.e("Error in getChallengePerformance: $e");
       return {};

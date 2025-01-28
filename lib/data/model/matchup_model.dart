@@ -24,7 +24,8 @@ class MatchupModel {
   final String? status;
   @JsonKey(name: 'winningTeamId')
   final String? winningTeam;
-
+  @JsonKey(name: 'matchAuthority')
+  final String? matchAuthority;
   final String? tournament;
   MatchupModel({
     required this.matchDate,
@@ -37,7 +38,8 @@ class MatchupModel {
     required this.tournament,
     required this.round,
     required this.status,
-    required this.winningTeam
+    required this.winningTeam,
+    this.matchAuthority
   });
 
   String? get displayName =>

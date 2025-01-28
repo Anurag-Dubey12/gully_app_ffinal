@@ -353,7 +353,7 @@ class TournamentController extends GetxController
   }
 
   Future<bool> createMatchup(String tourId, String team1, String team2,
-      DateTime date, int matchNo, String round) async {
+      DateTime date, int matchNo, String round,String matchAuthority) async {
     try {
       final response = await tournamentApi.createMatchup(
           tourId: tourId,
@@ -361,7 +361,8 @@ class TournamentController extends GetxController
           team2: team2,
           round: round,
           matchNo: matchNo,
-          date: date);
+          date: date,
+          matchAuthority: matchAuthority);
       return response.status!;
     } catch (e) {
       errorSnackBar(e.toString());

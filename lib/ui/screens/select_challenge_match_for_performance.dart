@@ -42,15 +42,16 @@ class _SelectChallengeMatchForPerformanceState extends State<SelectChallengeMatc
                   // final acceptedChallenges = snapshot.data
                   //     ?.where((e) => e.status == 'played')
                   //     .toList();
+                  logger.d("Launched challenge");
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
-                  if (snapshot.hasError) {
-                    logger.e(snapshot.error);
-                    return const Center(
-                      child: Text('Error fetching data'),
-                    );
-                  }
+                  // if (snapshot.hasError) {
+                  //   logger.e(snapshot.error);
+                  //   return const Center(
+                  //     child: Text('Something went wrong'),
+                  //   );
+                  // }
                   final challenges=snapshot.data ??[];
                   if (challenges.isEmpty) {
                     return const Center(

@@ -166,10 +166,17 @@ class _MatchupCard extends GetView<ScoreBoardController> {
 
     return GestureDetector(
       onTap: () {
-        if (tournamentController.state?.authority != authController.state?.id) {
+        // if (tournamentController.state?.authority != authController.state?.id) {
+        //   errorSnackBar('You are not authorized to update the score board');
+        //   return;
+        // }
+        logger.d("Match Authority id:${matchup.matchAuthority}");
+        logger.d("auth  id:${authController.state?.id}");
+        if(matchup.matchAuthority!=authController.state?.id) {
           errorSnackBar('You are not authorized to update the score board');
           return;
         }
+
         // if (DateTime.now().isBefore(matchup.matchDate)) {
         //   errorSnackBar('The match has not started yet. Please wait until the scheduled date and time.');
         //   return;

@@ -34,7 +34,7 @@ class _ChallengePerformanceStatScreenState
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         iconTheme: const IconThemeData(color: Colors.white),
-        title: const Text('My Perfomance',
+        title: const Text('My Performance',
             style: TextStyle(
               color: Colors.white,
               fontSize: 24,
@@ -189,7 +189,7 @@ class _ChallengePerformanceStatScreenState
                     ),
                     FutureBuilder<Map<String, dynamic>>(
                         future: controller.getChallengePerformance(
-                            matchId: widget.match.id),
+                            matchId: widget.match.id,type: innings),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -216,11 +216,17 @@ class _ChallengePerformanceStatScreenState
                               child: Center(child: Text('No data available')),
                             );
                           }
+                          final performanceData = snapshot.data!;
+                          logger.d("Performance data: $performanceData" );
                           return ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: snapshot.data?.length ?? 0,
                               itemBuilder: (builder, index) {
+                                final statKey =
+                                performanceData.keys.elementAt(index);
+                                final statValues = performanceData[statKey];
+                                logger.d("StatKet: $statValues" );
                                 return Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -229,10 +235,7 @@ class _ChallengePerformanceStatScreenState
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          snapshot.data!.entries
-                                              .elementAt(index)
-                                              .key
-                                              .capitalize,
+                                          statKey.capitalize ?? '',
                                           textAlign: TextAlign.center,
                                           style: _valueStyle(),
                                         ),
@@ -251,10 +254,7 @@ class _ChallengePerformanceStatScreenState
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          (snapshot.data!.entries
-                                                  .elementAt(index)
-                                                  .value['tennis'])
-                                              .toString(),
+                                statValues['tennis'].toString(),
                                           textAlign: TextAlign.center,
                                           style: _valueStyle(),
                                         ),

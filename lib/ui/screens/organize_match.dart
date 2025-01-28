@@ -49,11 +49,118 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
   String selectedFilter = 'all';
   DateTime? selectedDate;
   String? selectedRound;
+  String? selectedAuthority;
+  List<DropdownMenuItem<String>> authorityItems = [];
+
   @override
   void initState() {
     super.initState();
     getPlayers();
+    if (widget.tournament != null) {
+      authorityItems.add(
+        DropdownMenuItem<String>(
+          value: widget.tournament!.user.id,
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: Text(
+              widget.tournament!.user.fullName,
+              style: const TextStyle(color: Colors.black, fontSize: 14),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+      );
+      if (widget.tournament?.coHost1 != null) {
+        authorityItems.add(
+          DropdownMenuItem<String>(
+            value: widget.tournament!.coHost1!.id,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Text(
+                widget.tournament!.coHost1!.fullName,
+                style: const TextStyle(color: Colors.black, fontSize: 14),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+        );
+      }
+      if (widget.tournament?.coHost2 != null) {
+        authorityItems.add(
+          DropdownMenuItem<String>(
+            value: widget.tournament!.coHost2!.id,
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Text(
+                widget.tournament!.coHost2!.fullName,
+                style: const TextStyle(color: Colors.black, fontSize: 14),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+        );
+      }
+    }
   }
+
+  Widget buildAuthorityDropdown() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Select Authority',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: DropdownButtonFormField<String>(
+            value: selectedAuthority,
+            items: authorityItems.isNotEmpty
+                ? authorityItems
+                : [
+              const DropdownMenuItem<String>(
+                value: null,
+                child: Text("No authorities available"),
+              ),
+            ],
+            onChanged: (value) {
+              setState(() {
+                selectedAuthority = value;
+                logger.d("value: $selectedAuthority");
+              });
+            },
+            decoration: const InputDecoration(
+              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+            ),
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 14,
+            ),
+            dropdownColor: Colors.white,
+            isExpanded: true,
+            icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+          ),
+        ),
+      ],
+    );
+  }
+
   Future<void> getPlayers() async {
     final controller = Get.find<TournamentController>();
     final teams = await (widget.tourId != null
@@ -96,9 +203,6 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
       selectedDate =
           widget.tournament?.tournamentStartDateTime ?? DateTime.now();
     }
-    // logger.d("Selected Round: $selectedRound");
-    // logger.d("The Total Teams Are:${totalteams.length}");
-    // logger.d('TEAMS: $teams');
   }
 
   void RoundSelectionDialog() {
@@ -158,6 +262,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
       logger.d("Selected Team 2 after elimination update: ${selectedTeam2?.name}");
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
@@ -485,6 +590,8 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                               ),
                             ),
                             SizedBox(height: Get.height * 0.02),
+                            buildAuthorityDropdown(),
+                            SizedBox(height: Get.height * 0.03),
                             PrimaryButton(
                               onTap: () async {
                                 if (connectionController.isConnected.value) {
@@ -525,6 +632,9 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                           .then((value) => Get.back());
                                     }
                                   }
+                                  if(selectedAuthority==null){
+                                    errorSnackBar("Please Select an Match Authority");
+                                  }
 
                                   final response =
                                       await controller.createMatchup(
@@ -533,7 +643,9 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                           selectedTeam2!.id,
                                           selectedDate!,
                                           1,
-                                          selectedRound ?? '');
+                                          selectedRound ?? '',
+                                        selectedAuthority!
+                                      );
                                   logger.d(response);
                                   if (response) {
                                     successSnackBar('Matchup created')

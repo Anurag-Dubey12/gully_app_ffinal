@@ -191,7 +191,8 @@ class TournamentApi {
         required String team2,
         required DateTime date,
         required String round,
-        required int matchNo}) async {
+        required int matchNo,
+      required String matchAuthority}) async {
 
     final obj = {
       'dateTime': date.toIso8601String(),
@@ -200,6 +201,7 @@ class TournamentApi {
       'matchNo': matchNo,
       'team1ID': team1,
       'team2ID': team2,
+      'matchAuthority':matchAuthority
     };
     logger.i(obj);
     final response = await repo.post('/match/createMatch', obj);

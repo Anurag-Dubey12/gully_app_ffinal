@@ -11,7 +11,6 @@ import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 
-import '../../ui/screens/choose_lang_screen.dart';
 import '../../ui/screens/splash_screen.dart';
 import '../../ui/widgets/custom_snackbar.dart';
 import '../api/auth_api.dart';

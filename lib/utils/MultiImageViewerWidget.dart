@@ -13,7 +13,7 @@ class MultiImageViewerWidget extends StatefulWidget {
   final int initialIndex;
   final bool isNetworkImage;
 
-  MultiImageViewerWidget({
+  const MultiImageViewerWidget({super.key, 
     required this.imageUrls,
     required this.initialIndex,
     required this.isNetworkImage,

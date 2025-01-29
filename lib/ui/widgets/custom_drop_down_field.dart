@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/widgets/create_tournament/form_input.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 
 import '../theme/theme.dart';

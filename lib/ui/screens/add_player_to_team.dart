@@ -710,7 +710,7 @@ class _PlayerCardState extends State<PlayerCard> {
 
 class AddPlayerDialog extends GetView<TeamController> {
   final String teamId;
-  const AddPlayerDialog({required this.teamId});
+  const AddPlayerDialog({super.key, required this.teamId});
 
   @override
   Widget build(BuildContext context) {

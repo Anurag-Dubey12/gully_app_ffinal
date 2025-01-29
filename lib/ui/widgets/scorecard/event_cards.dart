@@ -350,9 +350,9 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                       height: 30,
                       child: TextButton(
                           style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
+                              backgroundColor: WidgetStateProperty.all(
                                   AppTheme.primaryColor),
-                              padding: MaterialStateProperty.all(
+                              padding: WidgetStateProperty.all(
                                   const EdgeInsets.all(4))),
                           onPressed: () {
                             if ((controller

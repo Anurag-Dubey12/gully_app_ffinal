@@ -339,7 +339,7 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
 class _TeamCard extends StatelessWidget {
   final Function onTap;
   final TeamModel team;
-  const _TeamCard({super.key, required this.team, required this.onTap});
+  const _TeamCard({required this.team, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

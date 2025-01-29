@@ -77,8 +77,7 @@ class _TournamentCardState extends State<TournamentCard> {
     });
   }
   void _updateTime() {
-    if (widget.tournament.tournamentStartDateTime != null &&
-        widget.tournament.tournamentEndDateTime != null) {
+    if (widget.tournament.tournamentEndDateTime != null) {
       DateTime now = DateTime.now();
       if (now.isBefore(widget.tournament.tournamentStartDateTime)) {
         Duration remainingTime = widget.tournament.tournamentStartDateTime.difference(now);

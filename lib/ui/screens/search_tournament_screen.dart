@@ -215,7 +215,7 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                         ? TournamentCard(
                       tournament: tournament,
                       onTap: (){
-                        logger.d("The TournamentId is:${tournament }");
+                        logger.d("The TournamentId is:$tournament ");
                         controller.setScheduleStatus(true);
                         Get.to(() => ScheduleScreen(tournament: tournament));
                       },

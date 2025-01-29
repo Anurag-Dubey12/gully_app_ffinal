@@ -14,7 +14,7 @@ class TeamScore extends StatelessWidget {
   final bool isSchedule;
 
   const TeamScore(
-      {required this.color,
+      {super.key, required this.color,
       required this.teamName,
       required this.score,
       this.teamLogo,

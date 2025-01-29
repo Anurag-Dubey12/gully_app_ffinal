@@ -197,7 +197,7 @@ class TournamentTeams extends GetView<TournamentController> {
           ),
         ),
       ):FutureBuilder(
-          future: tournament.id !=null ? controller.getMatchup(tournament.id!): controller.getMatchup(controller.state!.id),
+          future: tournament.id !=null ? controller.getMatchup(tournament.id): controller.getMatchup(controller.state!.id),
           builder: (context, snapshot) {
             if (snapshot.data?.isEmpty ?? true) {
               return const Center(
@@ -223,7 +223,7 @@ class TournamentTeams extends GetView<TournamentController> {
 class _Card extends StatelessWidget {
   final TeamModel team;
 
-  const _Card({super.key, required this.team});
+  const _Card({required this.team});
 
   @override
   Widget build(BuildContext context) {

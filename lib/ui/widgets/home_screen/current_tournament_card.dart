@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,14 +7,11 @@ import 'package:gully_app/ui/screens/schedule_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/home_screen/no_tournament_card.dart';
 import 'package:gully_app/utils/app_logger.dart';
-import 'package:socket_io_client/socket_io_client.dart' as io;
-import '../../../data/controller/scoreboard_controller.dart';
 import '../../../data/model/scoreboard_model.dart';
 import '../../../utils/BlinkingLiveText.dart';
 import '../../../utils/FallbackImageProvider.dart';
 import '../../../utils/image_picker_helper.dart';
 import '../../../utils/utils.dart';
-import '../../screens/view_matchups_screen.dart';
 import '../dialogs/current_score_dialog.dart';
 import 'i_button_dialog.dart';
 

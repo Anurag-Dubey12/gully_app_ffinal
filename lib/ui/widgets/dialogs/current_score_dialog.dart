@@ -544,7 +544,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                     style:
                                         TextStyle(fontWeight: FontWeight.w500)),
                                 Text(
-                                    '${controller.scoreboard.value?.bowler?.name}'),
+                                    '${controller.scoreboard.value?.bowler.name}'),
                               ],
                             ),
                             const SizedBox(

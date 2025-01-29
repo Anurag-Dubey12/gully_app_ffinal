@@ -15,7 +15,6 @@ import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../data/controller/misc_controller.dart';
-import '../../utils/internetConnectivty.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/primary_button.dart';
 

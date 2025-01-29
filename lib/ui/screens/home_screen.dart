@@ -247,7 +247,7 @@ class HomePageContent extends StatefulWidget {
 
 class ScreenContent extends State<HomePageContent> {
   String selected = 'Current';
-  int _current = 0;
+  final int _current = 0;
   Future<void> refreshData() async {
     try {
       final tournamentController = Get.find<TournamentController>();

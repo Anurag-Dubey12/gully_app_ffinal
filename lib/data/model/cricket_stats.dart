@@ -7,10 +7,10 @@ part 'cricket_stats.g.dart';
 class CricketStats {
   final AggregatedData aggregatedData;
   final List<MatchupModel> matches;
-  final BestPerformance? bestBattingPerformance;
-  final BestPerformance? bestBowlingPerformance;
-  final List<MatchSummary> matchsummary;
-  final List<LatestMatch> latestMatchesData;
+  final Map<String, dynamic>? bestBattingPerformance;
+  final Map<String, dynamic>? bestBowlingPerformance;
+  final List<MatchSummary>? matchsummary;
+  final List<LatestMatch>? latestMatchesData;
 
   CricketStats({
     required this.aggregatedData,
@@ -97,12 +97,12 @@ class LatestMatch {
   @JsonKey(name: '_id')
   final String id;
   final DateTime dateTime;
-  final PlayerData? playerData; // nullable
+  final PlayerData? playerData;
 
   LatestMatch({
     required this.id,
     required this.dateTime,
-    this.playerData, // nullable
+    this.playerData,
   });
 
   factory LatestMatch.fromJson(Map<String, dynamic> json) => _$LatestMatchFromJson(json);

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import '../ui/theme/theme.dart';
 import 'app_logger.dart';
 void backgroundNotificationResponseHandler(
     NotificationResponse notification) async {

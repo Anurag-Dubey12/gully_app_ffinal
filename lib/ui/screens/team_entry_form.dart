@@ -230,9 +230,10 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                               if (e == null || e.trim().isEmpty) {
                                 return 'Please enter the address';
                               }
-                              if (e!.contains(RegExp(r'[^\x00-\x7F]+'))) {
+                              if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
                                 return 'Address cannot contain emojis';
-                              }}
+                              }
+                              return null;}
                         ),
                         FormInput(
                           controller: TextEditingController(

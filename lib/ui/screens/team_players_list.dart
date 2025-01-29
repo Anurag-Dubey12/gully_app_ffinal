@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 

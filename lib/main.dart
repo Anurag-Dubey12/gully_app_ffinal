@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:connectivity_widget/connectivity_widget.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -27,8 +26,6 @@ import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/controller/service_controller.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
-import 'package:gully_app/data/model/player_model.dart';
-import 'package:gully_app/ui/screens/no_internet_screen.dart';
 import 'package:gully_app/ui/widgets/location_permission_builder.dart';
 import 'package:gully_app/utils/app_logger.dart';
 

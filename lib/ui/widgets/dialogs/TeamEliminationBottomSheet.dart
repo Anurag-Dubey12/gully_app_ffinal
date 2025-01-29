@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/utils/FallbackImageProvider.dart';
 
 import '../../../data/controller/tournament_controller.dart';
 import '../../../data/model/team_model.dart';
 import '../../../utils/CustomItemCheckbox.dart';
-import '../../../utils/app_logger.dart';
 import '../../../utils/utils.dart';
 import '../../theme/theme.dart';
 import '../primary_button.dart';

@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../theme/theme.dart';
-import '../widgets/arc_clipper.dart';
 
 class OthersLookingForScreen extends StatelessWidget {
   const OthersLookingForScreen({super.key});

@@ -313,7 +313,7 @@ class ProfileScreenState extends State<ServiceProfileScreen> {
             ),
              Text(
                widget.service.description,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 15,
                 color: Colors.black,
               ),

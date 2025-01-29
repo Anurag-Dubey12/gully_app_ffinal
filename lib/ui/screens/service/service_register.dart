@@ -73,8 +73,8 @@ class RegisterService extends State<ServiceRegister> {
     }
   }
   pickDocumentImages() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? images = await _picker.pickImage(source: ImageSource.gallery);
+    final ImagePicker picker = ImagePicker();
+    final XFile? images = await picker.pickImage(source: ImageSource.gallery);
 
     if (images != null) {
       setState(() {
@@ -123,12 +123,8 @@ class RegisterService extends State<ServiceRegister> {
         }
       }
 
-      if (widget.service!.identityProof != null) {
-        _documentImages = XFile(widget.service!.identityProof!);
-      } else {
-        _nameController.text = authController.state!.fullName;
-      }
-    }
+      _documentImages = XFile(widget.service!.identityProof!);
+        }
 
   }
   List<String> cricketServices = [
@@ -207,10 +203,8 @@ class RegisterService extends State<ServiceRegister> {
                           List<String> serviceImagesBase64 = [];
                           for (var image in _images) {
                             String? base64Image = await convertImageToBase64(image);
-                            if (base64Image != null) {
-                              serviceImagesBase64.add(base64Image);
-                            }
-                          }
+                            serviceImagesBase64.add(base64Image);
+                                                    }
 
                           String? identityProofBase64;
                           if (_documentImages != null) {

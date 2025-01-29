@@ -328,7 +328,7 @@ class BallType extends StatelessWidget {
   final int selectedTab;
   final String text;
   final Function(int tab) onTap;
-  const BallType({
+  const BallType({super.key, 
     required this.onTap,
     required this.tab,
     required this.selectedTab,

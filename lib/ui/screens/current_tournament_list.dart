@@ -307,7 +307,7 @@ class InputRoundNumber extends StatefulWidget {
   final String? existingRound;
   final Function(String) onItemSelected;
 
-  const InputRoundNumber({
+  const InputRoundNumber({super.key, 
     this.tournament,
     this.existingRound,
     required this.onItemSelected,

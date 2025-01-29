@@ -34,7 +34,7 @@ class RankingController extends GetxController {
           .toList();
     } catch (e) {
       // errorSnackBar(e.toString());
-      logger.d("GetPlayerRanking Error: " + e.toString());
+      logger.d("GetPlayerRanking Error: $e");
       rethrow;
     }
   }
@@ -77,7 +77,7 @@ class RankingController extends GetxController {
         });
       }).toList();
     } catch (e) {
-      logger.d("GetPlayerRanking Error: " + e.toString());
+      logger.d("GetPlayerRanking Error: $e");
       // errorSnackBar(e.toString());
       rethrow;
     }

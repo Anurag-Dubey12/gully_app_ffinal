@@ -1,12 +1,8 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
-import 'package:gully_app/ui/screens/full_scorecard.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
@@ -18,10 +14,7 @@ import '../../data/model/points_table_model.dart';
 import '../../data/model/tournament_model.dart';
 import '../../utils/app_logger.dart';
 import 'PointsTable.dart';
-import 'current_tournament_list.dart';
 import 'organize_match.dart';
-
-
 class ViewMatchupsScreen extends StatefulWidget{
   final TournamentModel? tournament;
   const ViewMatchupsScreen({super.key, this.tournament});
@@ -38,7 +31,6 @@ class _MatchupsScreen extends State<ViewMatchupsScreen> with SingleTickerProvide
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
   }
-
   @override
   void dispose() {
     _tabController.dispose();
@@ -116,8 +108,7 @@ class _MatchupsScreen extends State<ViewMatchupsScreen> with SingleTickerProvide
                       ],
                     ),
                   ),
-                )
-                    : TabBarView(
+                ): TabBarView(
                   controller: _tabController,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
@@ -178,7 +169,7 @@ class _MatchupsScreen extends State<ViewMatchupsScreen> with SingleTickerProvide
                               // final matchup = controller.matchups.reversed.toList()[index];
                               return MatchupCard(
                                 matchup: matchup,
-                                tourid: widget.tournament?.id ?? controller.state!.id,
+                                tourId: widget.tournament,
                               );
                             },
                           );
@@ -295,11 +286,11 @@ class _MatchupsScreen extends State<ViewMatchupsScreen> with SingleTickerProvide
 class MatchupCard extends StatelessWidget {
   final MatchupModel matchup;
   final bool isinfo;
-  final String? tourid;
+  final TournamentModel? tourId;
   const MatchupCard({super.key,
     required this.matchup,
     this.isinfo=false,
-    this.tourid,
+    this.tourId,
   });
 
   @override
@@ -337,7 +328,7 @@ class MatchupCard extends StatelessWidget {
                         Get.off(() => SelectOrganizeTeam(
                           match: matchup,
                           round:matchup.round ??'',
-                          tourId: matchup.tournament,
+                          tourId: tourId,
                         ));
                         logger.d("The Passing Data Is ${matchup.tournament} and team 1 is ${matchup.team1.name}");
                       }
@@ -346,7 +337,7 @@ class MatchupCard extends StatelessWidget {
                         Get.off(() => SelectOrganizeTeam(
                           match: matchup,
                           round:matchup.round ??'',
-                          tourId: matchup.tournament,
+                          tourId:tourId,
                         ));
                         // errorSnackBar("Cannot Edit Match After Match has been Started");
                       }
@@ -355,7 +346,7 @@ class MatchupCard extends StatelessWidget {
                         Get.off(() => SelectOrganizeTeam(
                           match: matchup,
                           round:matchup.round ??'',
-                          tourId: matchup.tournament,
+                          tourId:tourId,
                         ));
                         // errorSnackBar("Cannot Edit Match After Match has been Completed");
                       }
@@ -426,7 +417,7 @@ class MatchupCard extends StatelessWidget {
                               final isDeleted = await controller.deleteMatch(matchup.id);
                               if (isDeleted) {
                                 successSnackBar("Your match has been deleted");
-                                controller.tournamentPointsTable(tourid??'');
+                                controller.tournamentPointsTable(tourId?.id??'');
                               } else {
                                 errorSnackBar("Something went wrong");
                               }

@@ -292,9 +292,9 @@ class MatchupCard extends StatelessWidget {
                             teamView(
                               matchup.team1.logo ?? '',
                               matchup.team1.name,
-                              scoreboard?.firstInningHistory == null
+                              scoreboard.firstInningHistory == null
                                   ? "Did Not Bat"
-                                  : '${scoreboard?.firstInnings?.totalScore ?? 0}/${scoreboard?.firstInnings?.totalWickets ?? 0}',
+                                  : '${scoreboard.firstInnings?.totalScore ?? 0}/${scoreboard.firstInnings?.totalWickets ?? 0}',
                             ),
                             Padding(
                               padding: const EdgeInsets.symmetric(
@@ -313,9 +313,9 @@ class MatchupCard extends StatelessWidget {
                             teamView(
                               matchup.team2.logo ?? '',
                               matchup.team2.name,
-                              scoreboard?.currentInnings == 1
+                              scoreboard.currentInnings == 1
                                   ? "Did Not Bat"
-                                  : '${scoreboard?.secondInnings?.totalScore}/${scoreboard?.secondInnings?.totalWickets ?? 0}',
+                                  : '${scoreboard.secondInnings?.totalScore}/${scoreboard.secondInnings?.totalWickets ?? 0}',
                             ),
                           ],
                         ),
@@ -330,9 +330,9 @@ class MatchupCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                             child: Text(
-                              scoreboard?.secondInningsText == 'Match Tied'
+                              scoreboard.secondInningsText == 'Match Tied'
                                   ? "${matchup.getWinningTeamName()} Won The Match"
-                                  : scoreboard?.secondInningsText ?? "",
+                                  : scoreboard.secondInningsText ?? "",
                               style: Get.textTheme.bodyMedium?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -340,7 +340,7 @@ class MatchupCard extends StatelessWidget {
                             ),
                           ),
                         )
-                            : (scoreboard?.secondInningsText?.isNotEmpty ?? false)
+                            : (scoreboard.secondInningsText?.isNotEmpty ?? false)
                             ? Align(
                           alignment: Alignment.center,
                           child: Container(
@@ -351,7 +351,7 @@ class MatchupCard extends StatelessWidget {
                               borderRadius: BorderRadius.circular(5.0),
                             ),
                             child: Text(
-                              scoreboard?.secondInningsText ?? "",
+                              scoreboard.secondInningsText ?? "",
                               style: Get.textTheme.bodyMedium?.copyWith(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,

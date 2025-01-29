@@ -6,18 +6,12 @@ import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
-import 'package:gully_app/utils/FallbackImageProvider.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:intl/intl.dart';
-
-import '../../data/controller/auth_controller.dart';
 import '../../data/controller/misc_controller.dart';
 import '../../data/controller/tournament_controller.dart';
-import '../../data/model/points_table_model.dart';
-import '../../utils/CustomItemCheckbox.dart';
 import '../widgets/dialogs/TeamEliminationBottomSheet.dart';
-import 'PointsTable.dart';
 import 'current_tournament_list.dart';
 
 class SelectOrganizeTeam extends StatefulWidget {
@@ -25,7 +19,7 @@ class SelectOrganizeTeam extends StatefulWidget {
   final String? round;
   final String? title;
   final MatchupModel? match;
-  final String? tourId;
+  final TournamentModel? tourId;
   const SelectOrganizeTeam(
       {super.key,
       this.title,
@@ -41,8 +35,6 @@ class SelectOrganizeTeam extends StatefulWidget {
 class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
   TeamModel? selectedTeam1;
   TeamModel? selectedTeam2;
-  // List<TeamModel> leftSideteams = [];
-  // List<TeamModel> rightSideteams = [];
   List<TeamModel> totalteams = [];
   List<TeamModel> eliminatedTeams = [];
   List<String> eliminatedTeamIds = [];
@@ -51,110 +43,173 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
   String? selectedRound;
   String? selectedAuthority;
   List<DropdownMenuItem<String>> authorityItems = [];
-
+  List<String> selectedTeamsForElimination = [];
+  final bool iscompleted = false;
   @override
   void initState() {
     super.initState();
     getPlayers();
     if (widget.tournament != null) {
-      authorityItems.add(
-        DropdownMenuItem<String>(
-          value: widget.tournament!.user.id,
-          child: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Text(
-              widget.tournament!.user.fullName,
-              style: const TextStyle(color: Colors.black, fontSize: 14),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ),
-      );
-      if (widget.tournament?.coHost1 != null) {
-        authorityItems.add(
-          DropdownMenuItem<String>(
-            value: widget.tournament!.coHost1!.id,
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                widget.tournament!.coHost1!.fullName,
-                style: const TextStyle(color: Colors.black, fontSize: 14),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ),
-        );
+      selectedAuthority = widget.tournament?.user.id;
+      addAuthorityItem(
+          widget.tournament!.user.id, widget.tournament!.user.fullName);
+      if (widget.tournament?.coHost1 != null || widget.tourId != null) {
+        addAuthorityItem(widget.tournament!.coHost1!.id,
+            widget.tournament!.coHost1!.fullName);
       }
-      if (widget.tournament?.coHost2 != null) {
-        authorityItems.add(
-          DropdownMenuItem<String>(
-            value: widget.tournament!.coHost2!.id,
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text(
-                widget.tournament!.coHost2!.fullName,
-                style: const TextStyle(color: Colors.black, fontSize: 14),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ),
-        );
+      if (widget.tournament?.coHost2 != null || widget.tourId != null) {
+        addAuthorityItem(widget.tournament!.coHost2!.id,
+            widget.tournament!.coHost2!.fullName);
       }
     }
+    if (widget.tourId != null) {
+      selectedAuthority = widget.match?.matchAuthority;
+      addAuthorityItem(widget.tourId!.user.id, widget.tourId!.user.fullName);
+      if (widget.tourId != null) {
+        addAuthorityItem(
+            widget.tourId!.coHost1!.id, widget.tourId!.coHost1!.fullName);
+      }
+      if (widget.tourId != null) {
+        addAuthorityItem(
+            widget.tourId!.coHost2!.id, widget.tourId!.coHost2!.fullName);
+      }
+    }
+  }
+
+  void addAuthorityItem(String id, String name) {
+    authorityItems.add(
+      DropdownMenuItem<String>(
+        value: id,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Text(
+            name,
+            style: const TextStyle(color: Colors.black, fontSize: 14),
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+    );
   }
 
   Widget buildAuthorityDropdown() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Select Authority',
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
+        Row(
+          children: [
+            const Text(
+              'Select Match Scoreboard Authority',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                // fontWeight: FontWeight.bold,
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(15.0),
+                      topRight: Radius.circular(15.0),
+                    ),
+                  ),
+                  builder: (BuildContext context) {
+                    return Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Center(
+                            child: Text(
+                              'Scoreboard Authority Info',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                          const Divider(color: Colors.black,),
+                          const SizedBox(height: 15),
+                          const Text(
+                            'This Option allows you to select the authority responsible for the match scoreboard. You can assign the appropriate individual to manage the scoreboard for each match.',
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.black,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Align(
+                            alignment: Alignment.center,
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text(
+                                'Got it!',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blueAccent,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                );
+              },
+              icon: const Icon(Icons.info_outline,size: 16),
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
+        // const SizedBox(height: 8),
         Container(
           width: double.infinity,
+          height: 48,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(10),
             border: Border.all(color: Colors.grey.shade300),
           ),
-          child: DropdownButtonFormField<String>(
-            value: selectedAuthority,
-            items: authorityItems.isNotEmpty
-                ? authorityItems
-                : [
-              const DropdownMenuItem<String>(
-                value: null,
-                child: Text("No authorities available"),
+          child: ButtonTheme(
+            alignedDropdown: true,
+            child: DropdownButton<String>(
+              value: selectedAuthority,
+              items: authorityItems.isNotEmpty
+                  ? authorityItems
+                  : [
+                      const DropdownMenuItem<String>(
+                        value: null,
+                        child: Text(
+                          "No authorities available",
+                          style: TextStyle(color: Colors.black, fontSize: 14),
+                        ),
+                      ),
+                    ],
+              onChanged: (value) {
+                setState(() {
+                  selectedAuthority = value;
+                  logger.d("value: $selectedAuthority");
+                });
+              },
+              isExpanded: true,
+              icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+              dropdownColor: Colors.white,
+              underline: Container(),
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
               ),
-            ],
-            onChanged: (value) {
-              setState(() {
-                selectedAuthority = value;
-                logger.d("value: $selectedAuthority");
-              });
-            },
-            decoration: const InputDecoration(
-              contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              border: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              focusedBorder: InputBorder.none,
+              padding: const EdgeInsets.symmetric(horizontal: 5),
             ),
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-            ),
-            dropdownColor: Colors.white,
-            isExpanded: true,
-            icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
           ),
         ),
       ],
@@ -164,8 +219,8 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
   Future<void> getPlayers() async {
     final controller = Get.find<TournamentController>();
     final teams = await (widget.tourId != null
-        ? controller.getRegisteredTeams(widget.tourId!)
-        : controller.getRegisteredTeams(widget.tournament!.id??''));
+        ? controller.getRegisteredTeams(widget.tourId!.id)
+        : controller.getRegisteredTeams(widget.tournament!.id ?? ''));
 
     if (teams.isEmpty) {
       errorSnackBar('Please register a team first').then((_) => Get.close());
@@ -185,12 +240,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
         selectedTeam2 = totalteams.firstWhereOrNull(
           (team) => team.id == widget.match!.team2.id,
         );
-        if (widget.match!.matchDate != null) {
-          selectedDate = widget.match!.matchDate;
-        } else {
-          selectedDate =
-              widget.tournament?.tournamentStartDateTime ?? DateTime.now();
-        }
+        selectedDate = widget.match!.matchDate;
         if (widget.match != null) {
           selectedRound = widget.match!.round;
         }
@@ -221,8 +271,6 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
       },
     );
   }
-  
-  List<String> selectedTeamsForElimination = [];
 
   void showEliminationBottomSheet() async {
     final controller = Get.find<TournamentController>();
@@ -235,7 +283,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
         vsync: Navigator.of(context),
       ),
       builder: (context) => TeamEliminationBottomSheet(
-        tournamentId: widget.tourId ?? widget.tournament!.id ??'',
+        tournamentId: widget.tourId?.id ?? widget.tournament!.id ?? '',
         onTeamsUpdated: getPlayers,
         allTeams: controller.AllTeam,
         eliminatedTeams: controller.eliminatedTeam,
@@ -244,10 +292,10 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
     );
 
     // Reset selected teams if elimination data was updated
-    if (result['selectedTeam']!=null) {
+    if (result['selectedTeam'] != null) {
       setState(() {
-        selectedTeam1=null;
-        selectedTeam2=null;
+        selectedTeam1 = null;
+        selectedTeam2 = null;
         // if (selectedTeam1 != null &&
         //     controller.eliminatedTeam.any((team) => team.id == selectedTeam1!.id)) {
         //   selectedTeam1 = null;
@@ -258,8 +306,10 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
         //   selectedTeam2 = null;
         // }
       });
-      logger.d("Selected Team 1 after elimination update: ${selectedTeam1?.name}");
-      logger.d("Selected Team 2 after elimination update: ${selectedTeam2?.name}");
+      logger.d(
+          "Selected Team 1 after elimination update: ${selectedTeam1?.name}");
+      logger.d(
+          "Selected Team 2 after elimination update: ${selectedTeam2?.name}");
     }
   }
 
@@ -325,35 +375,48 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                       DecoratedBox(
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 6),
                                           child: Obx(() {
                                             return DropdownButton<TeamModel?>(
                                               value: selectedTeam1,
-                                              icon: const Icon(Icons.arrow_drop_down),
+                                              icon: const Icon(
+                                                  Icons.arrow_drop_down),
                                               padding: EdgeInsets.zero,
                                               iconSize: 24,
-                                              borderRadius: BorderRadius.circular(10),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                               alignment: Alignment.bottomCenter,
                                               iconEnabledColor: Colors.black,
-                                              style: const TextStyle(color: Colors.black),
+                                              style: const TextStyle(
+                                                  color: Colors.black),
                                               underline: const SizedBox(),
-                                              onChanged: controller.isEditable.value ? (TeamModel? newValue) {
-                                                setState(() {
-                                                  selectedTeam1 = newValue!;
-                                                });
-                                              } : null,
-                                              items: totalteams.map<DropdownMenuItem<TeamModel?>>((TeamModel value) {
+                                              onChanged:
+                                                  controller.isEditable.value
+                                                      ? (TeamModel? newValue) {
+                                                          setState(() {
+                                                            selectedTeam1 = newValue!;
+                                                          });
+                                                        }
+                                                      : null,
+                                              items: totalteams.map<DropdownMenuItem<TeamModel?>>(
+                                                  (TeamModel value) {
                                                 return DropdownMenuItem<TeamModel?>(
                                                   value: value,
                                                   child: SizedBox(
                                                     width: 80,
                                                     child: Text(
                                                       value.name,
-                                                      style: Get.textTheme.labelMedium?.copyWith(fontSize: 12),
-                                                      overflow: TextOverflow.ellipsis,
+                                                      style: Get
+                                                          .textTheme.labelMedium
+                                                          ?.copyWith(
+                                                              fontSize: 12),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 2,
                                                     ),
                                                   ),
@@ -363,7 +426,6 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                           }),
                                         ),
                                       ),
-
                                     ],
                                   ),
                                 ),
@@ -396,35 +458,52 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                       DecoratedBox(
                                         decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 6),
                                           child: Obx(() {
                                             return DropdownButton<TeamModel?>(
                                               value: selectedTeam2,
-                                              icon: const Icon(Icons.arrow_drop_down),
+                                              icon: const Icon(
+                                                  Icons.arrow_drop_down),
                                               padding: EdgeInsets.zero,
                                               iconSize: 24,
-                                              borderRadius: BorderRadius.circular(10),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                               alignment: Alignment.bottomCenter,
                                               iconEnabledColor: Colors.black,
-                                              style: const TextStyle(color: Colors.black),
+                                              style: const TextStyle(
+                                                  color: Colors.black),
                                               underline: const SizedBox(),
-                                              onChanged: controller.isEditable.value ? (TeamModel? newValue) {
-                                                setState(() {
-                                                  selectedTeam2 = newValue!;
-                                                });
-                                              } : null,
-                                              items: totalteams.map<DropdownMenuItem<TeamModel?>>((TeamModel value) {
-                                                return DropdownMenuItem<TeamModel?>(
+                                              onChanged:
+                                                  controller.isEditable.value
+                                                      ? (TeamModel? newValue) {
+                                                          setState(() {
+                                                            selectedTeam2 =
+                                                                newValue!;
+                                                          });
+                                                        }
+                                                      : null,
+                                              items: totalteams.map<
+                                                      DropdownMenuItem<
+                                                          TeamModel?>>(
+                                                  (TeamModel value) {
+                                                return DropdownMenuItem<
+                                                    TeamModel?>(
                                                   value: value,
                                                   child: SizedBox(
                                                     width: 80,
                                                     child: Text(
                                                       value.name,
-                                                      style: Get.textTheme.labelMedium?.copyWith(fontSize: 12),
-                                                      overflow: TextOverflow.ellipsis,
+                                                      style: Get
+                                                          .textTheme.labelMedium
+                                                          ?.copyWith(
+                                                              fontSize: 12),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       maxLines: 2,
                                                     ),
                                                   ),
@@ -445,40 +524,41 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                 const Spacer(),
                                 InkWell(
                                   onTap: () async {
-                                   if(controller.isEditable.value){
-                                     final date = await showDatePicker(
-                                         context: context,
-                                         initialDate: widget.tourId != null
-                                             ? controller.startDateForPicker
-                                             : widget.tournament!
-                                             .tournamentStartDateTime,
-                                         firstDate: widget.tourId != null
-                                             ? controller.startDateForPicker ??
-                                             DateTime.now()
-                                             : widget.tournament!
-                                             .tournamentStartDateTime,
-                                         lastDate: widget.tourId != null
-                                             ? controller.endDateForPicker ??
-                                             DateTime.now()
-                                             : widget.tournament!
-                                             .tournamentEndDateTime);
-                                     setState(() {
-                                       if (date != null) {
-                                         if (selectedDate != null) {
-                                           selectedDate = DateTime(
-                                               date.year,
-                                               date.month,
-                                               date.day,
-                                               selectedDate!.hour,
-                                               selectedDate!.minute);
-                                         } else {
-                                           selectedDate = date;
-                                         }
-                                       }
-                                     });
-                                   }else{
-                                     errorSnackBar("You Cannot Edit Match Date");
-                                   }
+                                    if (controller.isEditable.value) {
+                                      final date = await showDatePicker(
+                                          context: context,
+                                          initialDate: widget.tourId != null
+                                              ? controller.startDateForPicker
+                                              : widget.tournament!
+                                                  .tournamentStartDateTime,
+                                          firstDate: widget.tourId != null
+                                              ? controller.startDateForPicker ??
+                                                  DateTime.now()
+                                              : widget.tournament!
+                                                  .tournamentStartDateTime,
+                                          lastDate: widget.tourId != null
+                                              ? controller.endDateForPicker ??
+                                                  DateTime.now()
+                                              : widget.tournament!
+                                                  .tournamentEndDateTime);
+                                      setState(() {
+                                        if (date != null) {
+                                          if (selectedDate != null) {
+                                            selectedDate = DateTime(
+                                                date.year,
+                                                date.month,
+                                                date.day,
+                                                selectedDate!.hour,
+                                                selectedDate!.minute);
+                                          } else {
+                                            selectedDate = date;
+                                          }
+                                        }
+                                      });
+                                    } else {
+                                      errorSnackBar(
+                                          "You Cannot Edit Match Date");
+                                    }
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -510,27 +590,29 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                   ),
                                 ),
                                 const SizedBox(width: 60),
+                                const Spacer(),
                                 InkWell(
                                   onTap: () async {
-                                   if(controller.isEditable.value){
-                                     final time = await showTimePicker(
-                                         context: context,
-                                         initialEntryMode:
-                                         TimePickerEntryMode.dialOnly,
-                                         initialTime: TimeOfDay.now());
-                                     if (time != null) {
-                                       setState(() {
-                                         selectedDate = DateTime(
-                                             selectedDate!.year,
-                                             selectedDate!.month,
-                                             selectedDate!.day,
-                                             time.hour,
-                                             time.minute);
-                                       });
-                                     }
-                                   }else{
-                                     errorSnackBar("You Cannot Edit Match Time");
-                                   }
+                                    if (controller.isEditable.value) {
+                                      final time = await showTimePicker(
+                                          context: context,
+                                          initialEntryMode:
+                                              TimePickerEntryMode.dialOnly,
+                                          initialTime: TimeOfDay.now());
+                                      if (time != null) {
+                                        setState(() {
+                                          selectedDate = DateTime(
+                                              selectedDate!.year,
+                                              selectedDate!.month,
+                                              selectedDate!.day,
+                                              time.hour,
+                                              time.minute);
+                                        });
+                                      }
+                                    } else {
+                                      errorSnackBar(
+                                          "You Cannot Edit Match Time");
+                                    }
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -589,7 +671,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                 ),
                               ),
                             ),
-                            SizedBox(height: Get.height * 0.02),
+                            // SizedBox(height: Get.height * 0.02),
                             buildAuthorityDropdown(),
                             SizedBox(height: Get.height * 0.03),
                             PrimaryButton(
@@ -615,7 +697,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                   }
                                   if (widget.tourId != null) {
                                     final Map<String, dynamic> obj = {
-                                      'tournamentId': widget.tourId,
+                                      'tournamentId': widget.tourId?.id,
                                       'team1ID': selectedTeam1!.id,
                                       'team2ID': selectedTeam2!.id,
                                       'round': selectedRound,
@@ -632,20 +714,18 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                           .then((value) => Get.back());
                                     }
                                   }
-                                  if(selectedAuthority==null){
-                                    errorSnackBar("Please Select an Match Authority");
+                                  if (selectedAuthority == null) {
+                                    errorSnackBar("Please Select an Match Scoreboard Authority");
                                   }
-
                                   final response =
                                       await controller.createMatchup(
-                                          widget.tournament!.id??'',
+                                          widget.tournament!.id ?? '',
                                           selectedTeam1!.id,
                                           selectedTeam2!.id,
                                           selectedDate!,
                                           1,
                                           selectedRound ?? '',
-                                        selectedAuthority!
-                                      );
+                                          selectedAuthority!);
                                   logger.d(response);
                                   if (response) {
                                     successSnackBar('Matchup created')
@@ -661,38 +741,36 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                             ),
 
                             SizedBox(height: Get.height * 0.02),
-                            if(widget.match==null)
-                              PrimaryButton(
+                            if (widget.match == null) PrimaryButton(
                                 onTap: showEliminationBottomSheet,
                                 title: 'Eliminate Teams',
                               ),
                             SizedBox(height: Get.height * 0.02),
-                            ! controller.isEditable.value
+                            !controller.isEditable.value
                                 ? const Center(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.warning, color: Colors.red,),
-                                  SizedBox(width: 8),
-                                  Text("Only the round can be edited \n for ongoing or ended matches.",
-                                    textAlign: TextAlign.center,
-                                    maxLines: 3,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold,),
-                                  ),
-                                ],
-                              ),
-                            )
-                                : SizedBox.shrink(),
-                            // PrimaryButton(
-                            //   onTap: () {
-                            //     logger.d("The Tournament id is:${widget.tournament!.id}");
-                            //     Get.to(() => PointsTable(
-                            //       tournament: widget.tournament,
-                            //     ));
-                            //   },
-                            //   title: 'Points Table',
-                            // ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.warning,
+                                          color: Colors.red,
+                                        ),
+                                        SizedBox(width: 8),
+                                        Text(
+                                          "Only the round can be edited \n for ongoing or ended matches.",
+                                          textAlign: TextAlign.center,
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                : const SizedBox.shrink(),
                           ],
                         ))
                   ],
@@ -705,4 +783,3 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
     );
   }
 }
-

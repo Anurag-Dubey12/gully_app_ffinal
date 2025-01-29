@@ -158,7 +158,7 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                     children: [
                       const SizedBox(
                         width: 200,
-                        child: const Text('Transaction Date & Time',
+                        child: Text('Transaction Date & Time',
                             style: TextStyle(
                               // color: AppTheme.secondaryYellowColor,
                               fontSize: 14,

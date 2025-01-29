@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:gully_app/config/api_client.dart';
 import 'package:gully_app/data/model/scoreboard_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/utils/app_logger.dart';

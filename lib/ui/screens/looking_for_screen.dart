@@ -37,7 +37,7 @@ class _LookingForScreenState extends State<LookingForScreen> {
   @override
   initState() {
     super.initState();
-    logger.d("Connectivity Status:${_isConnected}");
+    logger.d("Connectivity Status:$_isConnected");
     _connectivityService.listenToConnectionChanges((isConnected) {
       setState(() {
         _isConnected = isConnected;
@@ -298,7 +298,7 @@ class _LookingForScreenState extends State<LookingForScreen> {
                                 },
                               );
                             });
-                      }):Center(
+                      }):const Center(
                     child: Text("No Data Found"),
                   )
                 )

@@ -22,9 +22,9 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(secondaryYellowColor),
-          shadowColor: MaterialStateProperty.all(Colors.grey),
-          textStyle: MaterialStateProperty.all(
+          backgroundColor: WidgetStateProperty.all(secondaryYellowColor),
+          shadowColor: WidgetStateProperty.all(Colors.grey),
+          textStyle: WidgetStateProperty.all(
             const TextStyle(
                 fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
           ),

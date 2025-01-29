@@ -3,14 +3,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:gully_app/ui/widgets/custom_drop_down_field.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../utils/app_logger.dart';
 import '../../../utils/image_picker_helper.dart';
-import '../../theme/theme.dart';
 import '../../widgets/create_tournament/form_input.dart';
 import '../../widgets/primary_button.dart';
 

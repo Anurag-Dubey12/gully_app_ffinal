@@ -1,16 +1,13 @@
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/model/team_ranking_model.dart';
-import 'package:gully_app/ui/screens/no_internet_screen.dart';
 import 'package:gully_app/utils/FallbackImageProvider.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/ranking_controller.dart';
 import '../../utils/app_logger.dart';
-import '../../utils/internetConnectivty.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 

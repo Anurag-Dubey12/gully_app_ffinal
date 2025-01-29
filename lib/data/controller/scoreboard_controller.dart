@@ -13,7 +13,6 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import '../../ui/widgets/scorecard/TieBreakerSheet.dart';
 import '../model/matchup_model.dart';
-import 'misc_controller.dart';
 
 class ScoreBoardController extends GetxController with StateMixin {
   final ScoreboardApi _scoreboardApi;

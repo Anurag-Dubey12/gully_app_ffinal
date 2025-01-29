@@ -1,11 +1,9 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/model/extras_model.dart';
 import 'package:gully_app/data/model/innings_model.dart';
-import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/data/model/overs_model.dart';
 import 'package:gully_app/data/model/partnership_model.dart';
 import 'package:gully_app/data/model/player_model.dart';
@@ -13,7 +11,6 @@ import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/widgets/scorecard/change_batter.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:path_provider/path_provider.dart';
 
 part 'scoreboard_model.g.dart';
 

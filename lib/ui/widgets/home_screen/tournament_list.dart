@@ -1,13 +1,10 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
-import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/date_time_helpers.dart';
 
-import '../../screens/search_tournament_screen.dart';
 import 'current_tournament_card.dart';
 import 'future_tournament_card.dart';
 import 'past_tournament_card.dart';

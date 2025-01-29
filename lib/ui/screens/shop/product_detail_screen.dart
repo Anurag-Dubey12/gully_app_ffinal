@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:gully_app/config/api_client.dart';
 import 'package:gully_app/ui/screens/shop/add_product.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';

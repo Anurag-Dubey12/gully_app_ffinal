@@ -1,8 +1,6 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:gully_app/utils/app_logger.dart';
 
 import '../../../data/model/service_model.dart';

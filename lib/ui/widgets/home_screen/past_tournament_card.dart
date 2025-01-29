@@ -11,7 +11,6 @@ import '../../../utils/app_logger.dart';
 import '../../../utils/image_picker_helper.dart';
 import '../../../utils/utils.dart';
 import '../../screens/full_scorecard.dart';
-import '../../screens/view_matchups_screen.dart';
 import 'TeamScore.dart';
 import 'no_tournament_card.dart';
 

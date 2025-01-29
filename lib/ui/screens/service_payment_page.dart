@@ -178,7 +178,7 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                       ),
                     ),
                     const SizedBox(height: 5),
-                    Text("${widget.service.category}"),
+                    Text(widget.service.category),
                     Text(
                       'Payment Summary',
                       style: TextStyle(
@@ -244,7 +244,7 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                         ),
                         const Spacer(),
                         Text(
-                          '- ₹${discount}',
+                          '- ₹$discount',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey.shade800,

@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 
 import '../../../data/controller/scoreboard_controller.dart';
-import '../../../utils/app_logger.dart';
 
 class CurrentOverStats extends GetView<ScoreBoardController> {
   const CurrentOverStats({

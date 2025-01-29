@@ -7,7 +7,6 @@ import 'package:gully_app/ui/screens/banner_payment_page.dart';
 import 'package:gully_app/ui/screens/select_location.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../data/controller/auth_controller.dart';
 import '../../data/controller/banner_promotion_controller.dart';
 import '../../data/controller/tournament_controller.dart';
 import '../../data/model/promote_banner_model.dart';

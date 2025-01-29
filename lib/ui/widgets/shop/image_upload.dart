@@ -1,10 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../utils/image_picker_helper.dart';
-import '../../../utils/utils.dart';
 
 class ImageUploadWidget extends StatelessWidget {
   final XFile? image;

@@ -124,7 +124,7 @@ class LiveScoreState extends State<LiveScore> {
 
 class Card extends StatefulWidget{
   final MatchupModel tournament;
-  const Card({
+  const Card({super.key, 
     required this.tournament,
   });
   @override

@@ -30,9 +30,11 @@ class TournamentController extends GetxController
   RxString location = ''.obs;
   RxString tournamentId=''.obs;
   RxBool isSchedule=false.obs;
+  RxBool iscompleted=false.obs;
   RxBool isTourOver=false.obs;
   RxBool isSearch=false.obs;
   RxString tournamentname=''.obs;
+
   void setScheduleStatus(bool status) {
     isSchedule.value = status;
   }
@@ -460,7 +462,7 @@ class TournamentController extends GetxController
   }){
     this.battingTeam.value=battingTeam;
     this.bowlingTeam.value=bowlingTeam;
-    this.currentMatch.value=match;
+    currentMatch.value=match;
     this.tossWonBy.value=tossWonBy;
     this.electedTo.value=electedTo;
     this.overs.value=overs;

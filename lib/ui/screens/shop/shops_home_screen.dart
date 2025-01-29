@@ -163,7 +163,7 @@ class ShopHomeState extends State<ShopHome>{
     },
   ];
 
-  int _selectedIndex = 0;
+  final int _selectedIndex = 0;
   final PageController _pageController = PageController(initialPage: 0);
 
   @override

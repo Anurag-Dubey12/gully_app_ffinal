@@ -50,7 +50,7 @@ class _SelectChallengeForScoreboardState
               //     child: Container(color: Colors.transparent,),
               //   ),
               // ),
-              backgroundColor: Color(0xff3F5BBF),
+              backgroundColor: const Color(0xff3F5BBF),
               elevation: 0,
               iconTheme: const IconThemeData(color: Colors.white),
               title: const Text('Challenged Teams',

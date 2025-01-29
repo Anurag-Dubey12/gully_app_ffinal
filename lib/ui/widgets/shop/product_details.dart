@@ -24,12 +24,12 @@ class Product extends State<ProductDetails>{
      child: Column(
        children: [
          ElevatedButton(onPressed: ()async {
-           final result = await Get.to(() => AddProduct());
+           final result = await Get.to(() => const AddProduct());
            if (result != null && result is List<Map<String, dynamic>>) {
 
            }
 
-         }, child: Text("Add Product"))
+         }, child: const Text("Add Product"))
        ],
      ),
    );

@@ -554,12 +554,10 @@ class _PaymentPageState extends State<PaymentPage> {
                       child: TextButton(
                         onPressed: () {
                           final response =controller.createTournament(widget.tournament);
-                          if(response!=null){
-                            successSnackBar('Tournament Create Successfully').then(
-                                  (value) => Get.offAll(() => const HomeScreen(), predicate: (route) => route.name == '/HomeScreen'),
-                            );
-                          }
-                        },
+                          successSnackBar('Tournament Create Successfully').then(
+                                (value) => Get.offAll(() => const HomeScreen(), predicate: (route) => route.name == '/HomeScreen'),
+                          );
+                                                },
                         child: const Text('Submit',
                             style: TextStyle(
                               color: Colors.white,

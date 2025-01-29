@@ -76,9 +76,9 @@ class _ViewTournamentScreenState extends State<ViewTournamentScreen> {
                         shrinkWrap: true,
                         itemCount: controller.organizerTournamentList.length,
                         itemBuilder: (context, index) {
-                          final torunament_reverse_order = controller.organizerTournamentList.reversed.toList();
+                          final torunamentReverseOrder = controller.organizerTournamentList.reversed.toList();
                           return _TourCard(
-                              torunament_reverse_order[index], () {
+                              torunamentReverseOrder[index], () {
                             setState(() {});
                           }
                             // tournament: snapshot.data![index],

@@ -53,7 +53,7 @@ class _ShopState extends State<RegisterShop>
   XFile? _tax_certificate;
   XFile? _Rstcertificate;
   XFile? _shopLogo;
-  bool _allImagesSelected = false;
+  final bool _allImagesSelected = false;
   bool isLoading = false;
 
   int currentStep = 0;
@@ -581,11 +581,12 @@ class _ShopState extends State<RegisterShop>
               if (value!.isNotEmpty) {
                 if (!RegExp(
                         r"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$")
-                    .hasMatch(value!)) {
+                    .hasMatch(value)) {
                   return "Invalid GST Number";
                 }
                 return null;
               }
+              return null;
             },
           ),
           const SizedBox(height: 10),
@@ -685,7 +686,7 @@ class _ShopState extends State<RegisterShop>
   }
 
   Widget FourthStep() {
-    return Form(key: _formKeys[3], child: SocialMedia());
+    return Form(key: _formKeys[3], child: const SocialMedia());
   }
 
   Widget _previousNavigationButton(VoidCallback onTap) {

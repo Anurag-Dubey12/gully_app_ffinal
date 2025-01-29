@@ -12,7 +12,7 @@ class ShopDashboard extends StatefulWidget {
   final String shopName;
   final String shopId;
 
-  ShopDashboard({Key? key, required this.shopName, required this.shopId})
+  const ShopDashboard({Key? key, required this.shopName, required this.shopId})
       : super(key: key);
 
   @override

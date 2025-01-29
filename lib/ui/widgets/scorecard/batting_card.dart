@@ -3,11 +3,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/model/batting_model.dart';
 
-import '../../../data/model/extras_model.dart';
 import '../../../data/model/player_model.dart';
-import '../../../data/model/team_model.dart';
-import '../../../utils/app_logger.dart';
-import 'extras_and_total.dart';
 
 class BattingStats extends GetView<ScoreBoardController> {
   const BattingStats({

@@ -102,9 +102,7 @@ class TopHeader extends GetView<AuthController> {
 }
 
 class _NotificationIcon extends GetView<NotificationController> {
-  const _NotificationIcon({
-    super.key,
-  });
+  const _NotificationIcon();
 
   @override
   Widget build(BuildContext context) {

@@ -2,11 +2,15 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/api/team_api.dart';
 import 'package:gully_app/data/model/challenge_match.dart';
 import 'package:gully_app/data/model/cricket_stats.dart';
+import 'package:gully_app/data/model/cricket_stats.dart';
 import 'package:gully_app/data/model/opponent_model.dart';
 import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
+
+import '../model/cricket_stats.dart';
+import '../model/matchup_model.dart';
 
 class TeamController extends GetxController with StateMixin<TeamModel> {
   final TeamApi repo;
@@ -318,6 +322,11 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
   }
 
   Rx<CricketStats?> performance=Rx<CricketStats?>(null);
+  RxList<MatchupModel> matches = <MatchupModel>[].obs;
+  final RxMap<String, dynamic> matchsummary = <String, dynamic>{}.obs;
+  final RxMap<String, dynamic> latestMatchesData = <String, dynamic>{}.obs;
+  final RxMap<String, dynamic> bestBattingPerformance = <String, dynamic>{}.obs;
+  final RxMap<String, dynamic> bestBowlingPerformance = <String, dynamic>{}.obs;
   Future<Map<String, dynamic>> getMyPerformance({
     required String userId,
     required String category,
@@ -327,13 +336,28 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
         userId: userId,
         category: category,
       );
-      // performance.value = CricketStats.fromJson(response.data!);
-      // print("The My Performance Data: ${performance.value!.latestMatchesData}");
+      matches.value = (response.data!['performance']['matches'] as List<dynamic>?)
+          ?.map((e) => MatchupModel.fromJson(e as Map<String, dynamic>))
+          .toList() ?? [];
+      matchsummary.value = {
+        'matches': response.data!['performance']['matchsummary'] as List<dynamic>
+      };
+      latestMatchesData.value = {
+        'LatestMatch': response.data!['performance']['latestMatchesData'] as List<dynamic>
+      };
+      bestBattingPerformance.value = response.data!['performance']['bestBattingPerformance']?? {};
+      bestBowlingPerformance.value = response.data!['performance']['bestBowlingPerformance']?? {};
+
+      performance.value = CricketStats.fromJson(response.data!['performance'] as Map<String, dynamic>);
+      logger.d("Performance Data:${performance.value}");
+      logger.d("Matches Data: ${matches.value}");
+      logger.d("Match Summary: ${matchsummary.value}");
+      logger.d("Latest Matches Data: ${latestMatchesData.value}");
       if (response.status == false) {
         errorSnackBar(response.message!);
         return {};
       }
-      return response.data!['aggregatedData'][category] ?? {};
+      return response.data!['performance']['aggregatedData'][category] ?? {};
     } catch (e) {
       logger.e("Error in getMyPerformance: $e");
       return {};

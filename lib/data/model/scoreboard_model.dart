@@ -492,7 +492,6 @@ class ScoreboardModel {
     }
 
     if (events.contains(EventType.wicket)) {
-      logger.d("Processing wicket");
       try {
         final res = await Get.bottomSheet(
             BottomSheet(
@@ -553,8 +552,9 @@ class ScoreboardModel {
         } else {
           logger.d("Wicket processing cancelled");
           if(events.contains(EventType.noBall)){
-            logger.d("No Ball with wicket found");
+            logger.d("No Ball with wicket found ");
           } else{
+
             currentBall=currentBall-1;
             striker.batting!.balls = striker.batting!.balls -1;
           }

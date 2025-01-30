@@ -280,24 +280,37 @@ class _DropDownWidgetState extends State<DropDownWidget> {
                                       )
                                           : Column(
                                         children: [
-                                          RadioListTile<String>(
-                                            title: Text(item),
-                                            contentPadding: EdgeInsets.zero,
-                                            value: item,
-                                            groupValue: getCurrentSelectedValue(),
-                                            onChanged: (String? value) {
-                                              if (value != null) {
-                                                setStateSheet(() {
-                                                  selectedDuration = value;
-                                                });
-                                                if (!widget.isDuration) {
-                                                  widget.onSelect(value);
-                                                  Navigator.of(context).pop();
-                                                } else {
-                                                  updateDurationValue(value);
-                                                }
+                                          GestureDetector(
+                                            onTap: () {
+                                              setStateSheet(() {
+                                                selectedDuration = item;
+                                              });
+                                              if (!widget.isDuration) {
+                                                widget.onSelect(item);
+                                                Navigator.of(context).pop();
+                                              } else {
+                                                updateDurationValue(item);
                                               }
                                             },
+                                            child: RadioListTile<String>(
+                                              title: Text(item),
+                                              contentPadding: EdgeInsets.zero,
+                                              value: item,
+                                              groupValue: getCurrentSelectedValue(),
+                                              onChanged: (String? value) {
+                                                if (value != null) {
+                                                  setStateSheet(() {
+                                                    selectedDuration = value;
+                                                  });
+                                                  if (!widget.isDuration) {
+                                                    widget.onSelect(value);
+                                                    Navigator.of(context).pop();
+                                                  } else {
+                                                    updateDurationValue(value);
+                                                  }
+                                                }
+                                              },
+                                            ),
                                           ),
                                           if (widget.isDuration &&
                                               selectedDuration == item)

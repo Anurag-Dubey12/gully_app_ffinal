@@ -367,7 +367,9 @@ class _PlayerCardState extends State<PlayerCard> {
                 margin: const EdgeInsets.only(left: 30),
                 child: OutlinedButton(
                   onPressed: () {
-                    Get.bottomSheet(
+                    (controller.players.length==1) ?
+                        errorSnackBar("You need at least two players to change a captain")
+                        :Get.bottomSheet(
                       Container(
                         height: Get.height * 0.65,
                         padding: const EdgeInsets.all(8),
@@ -406,7 +408,6 @@ class _PlayerCardState extends State<PlayerCard> {
                                   final player = controller.players
                                       .where((p) => p.role != currentCaptain.role)
                                       .toList()[index];
-
                                   return AnimatedContainer(
                                     duration: const Duration(milliseconds: 300),
                                     curve: Curves.easeInOut,
@@ -564,25 +565,11 @@ class _PlayerCardState extends State<PlayerCard> {
                                                               "Captain changed successfully");
                                                           successSnackBar(
                                                               "Captain role updated successfully");
-                                                          // Get.snackbar(
-                                                          //   'Success',
-                                                          //   'Captain role updated successfully',
-                                                          //   snackPosition: SnackPosition.bottom,
-                                                          //   backgroundColor: Colors.green,
-                                                          //   colorText: Colors.white,
-                                                          // );
                                                         } else {
                                                           logger.d(
                                                               "Failed to change captain");
                                                           errorSnackBar(
                                                               "Failed to update captain role");
-                                                          // Get.snackbar(
-                                                          //   'Error',
-                                                          //   'Failed to update captain role',
-                                                          //   snackPosition: SnackPosition.bottom,
-                                                          //   backgroundColor: Colors.red,
-                                                          //   colorText: Colors.white,
-                                                          // );
                                                         }
                                                       },
                                                       style: ElevatedButton
@@ -789,7 +776,6 @@ class AddPlayerDialog extends GetView<TeamController> {
                     final FlutterNativeContactPicker contactPicker =
                         FlutterNativeContactPicker();
                     Contact? contact = await contactPicker.selectContact();
-
                     if (contact == null) return;
                     if (contact.fullName == null) {
                       errorSnackBar(

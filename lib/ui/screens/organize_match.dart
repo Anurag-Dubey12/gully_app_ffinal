@@ -65,11 +65,11 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
     if (widget.tourId != null) {
       selectedAuthority = widget.match?.matchAuthority;
       addAuthorityItem(widget.tourId!.user.id, widget.tourId!.user.fullName);
-      if (widget.tourId != null) {
+      if (widget.tourId?.coHost1 != null) {
         addAuthorityItem(
             widget.tourId!.coHost1!.id, widget.tourId!.coHost1!.fullName);
       }
-      if (widget.tourId != null) {
+      if (widget.tourId?.coHost1 != null) {
         addAuthorityItem(
             widget.tourId!.coHost2!.id, widget.tourId!.coHost2!.fullName);
       }
@@ -758,7 +758,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                         ),
                                         SizedBox(width: 8),
                                         Text(
-                                          "Only the round can be edited \n for ongoing or ended matches.",
+                                          "Only the round and Authority can be \n edited for ongoing or ended matches.",
                                           textAlign: TextAlign.center,
                                           maxLines: 3,
                                           overflow: TextOverflow.ellipsis,

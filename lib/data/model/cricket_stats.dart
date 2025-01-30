@@ -1,4 +1,5 @@
 import 'package:gully_app/data/model/matchup_model.dart';
+import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'cricket_stats.g.dart';
@@ -9,16 +10,16 @@ class CricketStats {
   final List<MatchupModel> matches;
   final Map<String, dynamic>? bestBattingPerformance;
   final Map<String, dynamic>? bestBowlingPerformance;
-  final List<MatchSummary>? matchsummary;
   final List<LatestMatch>? latestMatchesData;
+  final List<Map<String, dynamic>>? userPlayedTournament;
 
   CricketStats({
     required this.aggregatedData,
     required this.matches,
     this.bestBattingPerformance,
     this.bestBowlingPerformance,
-    required this.matchsummary,
     required this.latestMatchesData,
+    this.userPlayedTournament
   });
 
   factory CricketStats.fromJson(Map<String, dynamic> json) => _$CricketStatsFromJson(json);

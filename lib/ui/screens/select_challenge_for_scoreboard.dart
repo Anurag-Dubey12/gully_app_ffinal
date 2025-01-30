@@ -8,6 +8,7 @@ import 'package:gully_app/data/model/challenge_match.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
+import 'package:gully_app/ui/widgets/home_screen/no_tournament_card.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:intl/intl.dart';
 

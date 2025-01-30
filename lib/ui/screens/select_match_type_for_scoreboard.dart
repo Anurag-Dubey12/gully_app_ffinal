@@ -5,6 +5,7 @@ import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 
 import '../../data/controller/scoreboard_controller.dart';
+import '../../utils/app_logger.dart';
 import 'current_tournament_list.dart';
 import 'select_challenge_for_scoreboard.dart';
 
@@ -65,6 +66,7 @@ class _SelectMatchCategoryState extends State<SelectMatchCategory> {
                   _Card(
                     title: 'Challenge',
                     onTap: () {
+                      logger.d("click on Launcged challenge scoreboard");
                       Get.to(() => const SelectChallengeForScoreboard());
                       scorerboardController.isChallenge = true;
                     },

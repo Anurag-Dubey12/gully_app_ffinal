@@ -205,18 +205,23 @@ class PlayerDropDownWidget extends StatelessWidget {
                                   shrinkWrap: true,
                                   itemCount: items.length,
                                   itemBuilder: (context, index) {
-                                    return ListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      leading: Radio(
-                                          value: items[index].id,
-                                          groupValue: selectedPlayerId,
-                                          onChanged: (e) {
-                                            onSelect(items[index]);
-                                          }),
-                                      title: Text(items[index].name),
-                                      trailing: Image.asset(
-                                        getAssetFromRole(items[index].role),
-                                        width: 20,
+                                    return GestureDetector(
+                                      onTap: (){
+                                        onSelect(items[index]);
+                                      },
+                                      child: ListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        leading: Radio(
+                                            value: items[index].id,
+                                            groupValue: selectedPlayerId,
+                                            onChanged: (e) {
+                                              onSelect(items[index]);
+                                            }),
+                                        title: Text(items[index].name),
+                                        trailing: Image.asset(
+                                          getAssetFromRole(items[index].role),
+                                          width: 20,
+                                        ),
                                       ),
                                     );
                                   }),

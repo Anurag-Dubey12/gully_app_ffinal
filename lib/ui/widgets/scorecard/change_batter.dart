@@ -50,13 +50,22 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Select Wicket Type',
-                style: Get.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 18 * Get.textScaleFactor,
-                  color: Colors.black,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    'Select Wicket Type',
+                    style: Get.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 18 * Get.textScaleFactor,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const Spacer(),
+                  IconButton(onPressed: (){
+                    Get.close();
+                  }, icon: const Icon(Icons.cancel))
+                ],
               ),
               Row(
                 children: [
@@ -322,7 +331,6 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                   items: players,
                   selectedValue: selectedBatsman?.name ?? 'Select Batsman',
                   title: 'Select Batsman',
-
                 ),
               PrimaryButton(
                 onTap: () {

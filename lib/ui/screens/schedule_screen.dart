@@ -22,8 +22,8 @@ import 'PointsTable.dart';
 
 class ScheduleScreen extends StatefulWidget {
   final TournamentModel? tournament;
-
-  const ScheduleScreen({super.key, this.tournament});
+  final Map<String, dynamic>? performance;
+  const ScheduleScreen({super.key, this.tournament, this.performance});
 
   @override
   _ScheduleScreenState createState() => _ScheduleScreenState();
@@ -49,6 +49,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
     final connectionController = Get.find<MiscController>();
+
     return GradientBuilder(
       child: Scaffold(
         appBar: AppBar(
@@ -57,7 +58,9 @@ class _ScheduleScreenState extends State<ScheduleScreen>
           title: SizedBox(
             width: 250,
             child: Text(
-              "${controller.tournamentname.value.capitalize} Tournament",
+              widget.performance != null
+                  ? widget.performance!['tournamentName']
+                  : "${controller.tournamentname.value.capitalize} Tournament",
               style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -123,9 +126,13 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                         physics: const NeverScrollableScrollPhysics(),
                         children: [
                           FutureBuilder(
-                            future: widget.tournament?.id != null
-                                ? controller.getMatchup(widget.tournament!.id??'')
-                                : controller.getMatchup(controller.state!.id??''),
+                            future: widget.performance != null
+                                ? controller.getMatchup(widget.performance!['_id'])
+                                : widget.tournament?.id != null
+                                    ? controller
+                                        .getMatchup(widget.tournament!.id ?? '')
+                                    : controller
+                                        .getMatchup(controller.state!.id ?? ''),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
@@ -150,7 +157,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                                   final matchup = controller.matchups[index];
                                   return MatchupCard(
                                     matchup: matchup,
-                                    tourid: widget.tournament?.id ??
+                                    tourid: widget.performance!=null ? widget.performance!['_id']:widget.tournament?.id ??
                                         controller.state!.id,
                                   );
                                 },
@@ -158,8 +165,10 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                             },
                           ),
                           FutureBuilder<List<PointTableModel>>(
-                            future: controller
-                                .tournamentPointsTable(widget.tournament!.id??''),
+                            future: widget.performance != null
+                                ? controller.tournamentPointsTable(widget.performance!['_id'])
+                                : controller.tournamentPointsTable(
+                                    widget.tournament!.id ?? ''),
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
@@ -197,23 +206,50 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                                       ),
                                       Expanded(
                                         child: Obx(() => ListView.builder(
-                                              itemCount: controller.points_table.length,
+                                              itemCount: controller
+                                                  .points_table.length,
                                               itemBuilder: (context, index) {
-                                                final team = controller.points_table[index];
+                                                final team = controller
+                                                    .points_table[index];
                                                 return Container(
-                                                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      vertical: 8,
+                                                      horizontal: 5),
                                                   child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
                                                     children: [
-                                                      teamTableData(team.rank.toString(), flex: 2),
-                                                      const SizedBox(width: 2,),
+                                                      teamTableData(
+                                                          team.rank.toString(),
+                                                          flex: 2),
+                                                      const SizedBox(
+                                                        width: 2,
+                                                      ),
                                                       teamData(team, flex: 4),
-                                                      teamTableData(team.matchesPlayed.toString(), flex: 2),
-                                                      teamTableData(team.wins.toString(), flex: 2),
-                                                      teamTableData(team.losses.toString(), flex: 2),
-                                                      teamTableData(team.ties.toString(), flex: 2),
-                                                      teamTableData(team.points.toString(), flex: 2),
-                                                      teamTableData(team.netRunRate.toString(), flex: 3),
+                                                      teamTableData(
+                                                          team.matchesPlayed
+                                                              .toString(),
+                                                          flex: 2),
+                                                      teamTableData(
+                                                          team.wins.toString(),
+                                                          flex: 2),
+                                                      teamTableData(
+                                                          team.losses
+                                                              .toString(),
+                                                          flex: 2),
+                                                      teamTableData(
+                                                          team.ties.toString(),
+                                                          flex: 2),
+                                                      teamTableData(
+                                                          team.points
+                                                              .toString(),
+                                                          flex: 2),
+                                                      teamTableData(
+                                                          team.netRunRate
+                                                              .toString(),
+                                                          flex: 3),
                                                     ],
                                                   ),
                                                 );
@@ -321,46 +357,50 @@ class MatchupCard extends StatelessWidget {
                         ),
                         matchup.winningTeam != null
                             ? Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 8.0),
-                            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
-                            decoration: BoxDecoration(
-                              color: Colors.green.shade600,
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            child: Text(
-                              scoreboard.secondInningsText == 'Match Tied'
-                                  ? "${matchup.getWinningTeamName()} Won The Match"
-                                  : scoreboard.secondInningsText ?? "",
-                              style: Get.textTheme.bodyMedium?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        )
-                            : (scoreboard.secondInningsText?.isNotEmpty ?? false)
-                            ? Align(
-                          alignment: Alignment.center,
-                          child: Container(
-                            margin: const EdgeInsets.only(top: 8.0),
-                            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
-                            decoration: BoxDecoration(
-                              color: Colors.green.shade600,
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            child: Text(
-                              scoreboard.secondInningsText ?? "",
-                              style: Get.textTheme.bodyMedium?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        )
-                            : const SizedBox.shrink(),
-
+                                alignment: Alignment.center,
+                                child: Container(
+                                  margin: const EdgeInsets.only(top: 8.0),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 4.0, horizontal: 12.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.green.shade600,
+                                    borderRadius: BorderRadius.circular(5.0),
+                                  ),
+                                  child: Text(
+                                    scoreboard.secondInningsText == 'Match Tied'
+                                        ? "${matchup.getWinningTeamName()} Won The Match"
+                                        : scoreboard.secondInningsText ?? "",
+                                    style: Get.textTheme.bodyMedium?.copyWith(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : (scoreboard.secondInningsText?.isNotEmpty ??
+                                    false)
+                                ? Align(
+                                    alignment: Alignment.center,
+                                    child: Container(
+                                      margin: const EdgeInsets.only(top: 8.0),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0, horizontal: 12.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.green.shade600,
+                                        borderRadius:
+                                            BorderRadius.circular(5.0),
+                                      ),
+                                      child: Text(
+                                        scoreboard.secondInningsText ?? "",
+                                        style:
+                                            Get.textTheme.bodyMedium?.copyWith(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox.shrink(),
                       ],
                     ),
                   ),

@@ -413,7 +413,6 @@ class MatchupCard extends StatelessWidget {
                             ),
                             onPressed: () async {
                               Get.close();
-                              logger.d("The matchup id is ${matchup.id}");
                               final isDeleted = await controller.deleteMatch(matchup.id);
                               if (isDeleted) {
                                 successSnackBar("Your match has been deleted");
@@ -509,14 +508,28 @@ class MatchupCard extends StatelessWidget {
               ],
             ),
             SizedBox(height: Get.height * 0.02),
+            // This section determines and displays the winning team or the match result (e.g., "Match Tied").
+            // It prioritizes displaying the winning team if available, otherwise, it shows the second innings text (if present).
+            matchup.winningTeam != null
+                ? Center(
+              child: Text(
+                  scoreboard?.secondInningsText == 'Match Tied'
+                      ? "${matchup.getWinningTeamName()} Won The Match"
+                      : scoreboard?.secondInningsText ?? "",
+                  style: Get.textTheme.labelMedium?.copyWith()),
+            )
+                : (scoreboard?.secondInningsText?.isNotEmpty ??
+                false)
+                ? Center(
+              child: Text(
+                  scoreboard?.secondInningsText ?? "",
+                  style: Get.textTheme.labelMedium?.copyWith()),
+            )
+                : const SizedBox.shrink(),
             // Center(
-            //   child: Text("${matchup.getWinningTeamName()} Won the Match" ?? "",
+            //   child: Text(scoreboard?.secondInningsText ?? "",
             //       style: Get.textTheme.labelMedium?.copyWith()),
             // ),
-            Center(
-              child: Text(scoreboard?.secondInningsText ?? "",
-                  style: Get.textTheme.labelMedium?.copyWith()),
-            ),
           ],
         ),
       ),

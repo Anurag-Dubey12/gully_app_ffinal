@@ -159,12 +159,12 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                                 radius: 49,
                                 backgroundColor: Colors.white,
                                 backgroundImage: controller.state.logo !=
-                                            null &&
-                                        controller.state.logo!.isNotEmpty
+                                    null &&
+                                    controller.state.logo!.isNotEmpty
                                     ? NetworkImage(
-                                        controller.state.toImageUrl())
+                                    controller.state.toImageUrl())
                                     : const AssetImage('assets/images/logo.png')
-                                        as ImageProvider,
+                                as ImageProvider,
                               ),
                               Positioned(
                                 bottom: 0,
@@ -172,13 +172,13 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                                 child: InkWell(
                                   onTap: () {
                                     Get.off(() => AddTeam(
-                                          team: controller.state,
-                                        ));
+                                      team: controller.state,
+                                    ));
                                   },
                                   child: const CircleAvatar(
                                     radius: 15,
                                     backgroundColor:
-                                        AppTheme.secondaryYellowColor,
+                                    AppTheme.secondaryYellowColor,
                                     child: Icon(
                                       Icons.edit,
                                       color: Colors.white,
@@ -223,7 +223,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                                   return Text(
                                     "(${controller.players.length}/15)",
                                     style:
-                                        Get.textTheme.headlineMedium?.copyWith(
+                                    Get.textTheme.headlineMedium?.copyWith(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -314,10 +314,10 @@ class _PlayerCardState extends State<PlayerCard> {
   Widget build(BuildContext context) {
     final controller = Get.find<TeamController>();
     final currentCaptain = controller.players.firstWhere(
-        (player) => player.role == 'Captain',
+            (player) => player.role == 'Captain',
         orElse: () => widget.player);
     final previousCaptain = controller.players.firstWhere(
-      (player) => player.role == 'Captain',
+          (player) => player.role == 'Captain',
     );
     final previousCaptainName = previousCaptain.name;
     final previousCaptainid = previousCaptain.id;
@@ -368,7 +368,7 @@ class _PlayerCardState extends State<PlayerCard> {
                 child: OutlinedButton(
                   onPressed: () {
                     (controller.players.length==1) ?
-                        errorSnackBar("You need at least two players to change a captain")
+                    errorSnackBar("You need at least two players to change a captain")
                         :Get.bottomSheet(
                       Container(
                         height: Get.height * 0.65,
@@ -376,7 +376,7 @@ class _PlayerCardState extends State<PlayerCard> {
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(10)),
+                          BorderRadius.vertical(top: Radius.circular(10)),
                         ),
                         child: Column(
                           children: [
@@ -412,7 +412,7 @@ class _PlayerCardState extends State<PlayerCard> {
                                     duration: const Duration(milliseconds: 300),
                                     curve: Curves.easeInOut,
                                     margin:
-                                        const EdgeInsets.symmetric(vertical: 4),
+                                    const EdgeInsets.symmetric(vertical: 4),
                                     decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(10),
@@ -465,8 +465,8 @@ class _PlayerCardState extends State<PlayerCard> {
                                                 return AlertDialog.adaptive(
                                                   shape: RoundedRectangleBorder(
                                                       borderRadius:
-                                                          BorderRadius.circular(
-                                                              15)),
+                                                      BorderRadius.circular(
+                                                          15)),
                                                   title: Row(
                                                     children: [
                                                       const Icon(
@@ -481,54 +481,54 @@ class _PlayerCardState extends State<PlayerCard> {
                                                           style: const TextStyle(
                                                             fontSize: 18,
                                                             fontWeight:
-                                                                FontWeight.bold,
+                                                            FontWeight.bold,
                                                           ),
                                                         ),
                                                       ),
                                                     ],
                                                   ),
                                                   titlePadding:
-                                                      const EdgeInsets.all(16),
+                                                  const EdgeInsets.all(16),
                                                   contentPadding:
-                                                      const EdgeInsets.symmetric(
-                                                          horizontal: 16,
-                                                          vertical: 8),
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 8),
                                                   content: Column(
                                                     mainAxisSize:
-                                                        MainAxisSize.min,
+                                                    MainAxisSize.min,
                                                     children: [
                                                       Divider(
                                                           color:
-                                                              Colors.grey[300]),
+                                                          Colors.grey[300]),
                                                       ...availableRoles.map(
-                                                        (role) =>
+                                                            (role) =>
                                                             RadioListTile<String>(
-                                                          title: Text(
-                                                            role,
-                                                            style: const TextStyle(
-                                                                fontSize: 16,
-                                                                fontWeight:
+                                                              title: Text(
+                                                                role,
+                                                                style: const TextStyle(
+                                                                    fontSize: 16,
+                                                                    fontWeight:
                                                                     FontWeight
                                                                         .w500),
-                                                          ),
-                                                          value: role,
-                                                          groupValue:
+                                                              ),
+                                                              value: role,
+                                                              groupValue:
                                                               selectedRole,
-                                                          onChanged:
-                                                              (String? value) {
-                                                            if (value != null) {
-                                                              setState(() {
-                                                                selectedRole =
-                                                                    value;
-                                                              });
-                                                            }
-                                                          },
-                                                          activeColor: AppTheme
-                                                              .primaryColor,
-                                                          controlAffinity:
+                                                              onChanged:
+                                                                  (String? value) {
+                                                                if (value != null) {
+                                                                  setState(() {
+                                                                    selectedRole =
+                                                                        value;
+                                                                  });
+                                                                }
+                                                              },
+                                                              activeColor: AppTheme
+                                                                  .primaryColor,
+                                                              controlAffinity:
                                                               ListTileControlAffinity
                                                                   .trailing,
-                                                        ),
+                                                            ),
                                                       ),
                                                     ],
                                                   ),
@@ -536,7 +536,7 @@ class _PlayerCardState extends State<PlayerCard> {
                                                     TextButton(
                                                       onPressed: () =>
                                                           Navigator.of(
-                                                                  dialogContext)
+                                                              dialogContext)
                                                               .pop(),
                                                       child: const Text(
                                                         'Cancel',
@@ -547,18 +547,18 @@ class _PlayerCardState extends State<PlayerCard> {
                                                     ElevatedButton(
                                                       onPressed: () async {
                                                         Navigator.of(
-                                                                dialogContext)
+                                                            dialogContext)
                                                             .pop();
                                                         bool isChanged =
-                                                            await controller
-                                                                .changeCaptain(
+                                                        await controller
+                                                            .changeCaptain(
                                                           teamId: widget.teamId,
                                                           newCaptainId: player.id,
                                                           newRole: 'Captain',
                                                           previousCaptainRole:
-                                                              selectedRole,
+                                                          selectedRole,
                                                           previousCaptainId:
-                                                              previousCaptainid,
+                                                          previousCaptainid,
                                                         );
                                                         if (isChanged) {
                                                           logger.d(
@@ -575,18 +575,18 @@ class _PlayerCardState extends State<PlayerCard> {
                                                       style: ElevatedButton
                                                           .styleFrom(
                                                         backgroundColor:
-                                                            AppTheme.primaryColor,
+                                                        AppTheme.primaryColor,
                                                         foregroundColor:
-                                                            Colors.white,
+                                                        Colors.white,
                                                         shape:
-                                                            RoundedRectangleBorder(
+                                                        RoundedRectangleBorder(
                                                           borderRadius:
-                                                              BorderRadius
-                                                                  .circular(8),
+                                                          BorderRadius
+                                                              .circular(8),
                                                         ),
                                                       ),
                                                       child:
-                                                          const Text('Confirm'),
+                                                      const Text('Confirm'),
                                                     ),
                                                   ],
                                                 );
@@ -599,7 +599,7 @@ class _PlayerCardState extends State<PlayerCard> {
                                   );
                                 },
                                 separatorBuilder: (context, index) =>
-                                    const SizedBox(height: 2),
+                                const SizedBox(height: 2),
                               ),
                             ),
                           ],
@@ -630,63 +630,63 @@ class _PlayerCardState extends State<PlayerCard> {
             const Spacer(),
             widget.isEditable ?? true
                 ? InkWell(
-                    onTap: () {
-                      Share.share(
-                          'Join my team on Gully App. Click on the link to join: '
-                          'https://tummle.robinj.dev/refer/${widget.player.phoneNumber}');
-                    },
-                    child: const CircleAvatar(
-                      backgroundColor: Color.fromARGB(255, 71, 224, 79),
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(Icons.share),
-                      ),
-                    ),
-                  )
+              onTap: () {
+                Share.share(
+                    'Join my team on Gully App. Click on the link to join: '
+                        'https://tummle.robinj.dev/refer/${widget.player.phoneNumber}');
+              },
+              child: const CircleAvatar(
+                backgroundColor: Color.fromARGB(255, 71, 224, 79),
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Icon(Icons.share),
+                ),
+              ),
+            )
                 : const SizedBox(),
             const SizedBox(width: 10),
             widget.isEditable ?? true
                 ? CircleAvatar(
-                    backgroundColor: const Color.fromARGB(255, 235, 17, 24),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: GestureDetector(
-                        onTap: () {
-                          Get.dialog(
-                            AlertDialog.adaptive(
-                              title: Text(
-                                  AppLocalizations.of(context)!.deletePlayer),
-                              content: Text(AppLocalizations.of(context)!
-                                  .deletePlayerConfirmation),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    // Get.back();
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text(AppLocalizations.of(context)!.no),
-                                ),
-                                TextButton(
-                                  onPressed: () async {
-                                    controller.removePlayerFromTeam(
-                                      teamId: widget.teamId,
-                                      playerId: widget.player.id,
-                                    );
-                                    setState(() {});
-                                    // Get.back();
-                                    Navigator.of(context).pop();
-                                  },
-                                  child:
-                                      Text(AppLocalizations.of(context)!.yes),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                        child: const Icon(Icons.cancel),
+              backgroundColor: const Color.fromARGB(255, 235, 17, 24),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: () {
+                    Get.dialog(
+                      AlertDialog.adaptive(
+                        title: Text(
+                            AppLocalizations.of(context)!.deletePlayer),
+                        content: Text(AppLocalizations.of(context)!
+                            .deletePlayerConfirmation),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              // Get.back();
+                              Navigator.of(context).pop();
+                            },
+                            child: Text(AppLocalizations.of(context)!.no),
+                          ),
+                          TextButton(
+                            onPressed: () async {
+                              controller.removePlayerFromTeam(
+                                teamId: widget.teamId,
+                                playerId: widget.player.id,
+                              );
+                              setState(() {});
+                              // Get.back();
+                              Navigator.of(context).pop();
+                            },
+                            child:
+                            Text(AppLocalizations.of(context)!.yes),
+                          ),
+                        ],
                       ),
-                    ),
-                  )
+                    );
+                  },
+                  child: const Icon(Icons.cancel),
+                ),
+              ),
+            )
                 : const SizedBox(),
           ],
         ),
@@ -774,7 +774,7 @@ class AddPlayerDialog extends GetView<TeamController> {
                 GestureDetector(
                   onTap: () async {
                     final FlutterNativeContactPicker contactPicker =
-                        FlutterNativeContactPicker();
+                    FlutterNativeContactPicker();
                     Contact? contact = await contactPicker.selectContact();
                     if (contact == null) return;
                     if (contact.fullName == null) {
@@ -1053,3 +1053,150 @@ class RoleTile extends StatelessWidget {
     );
   }
 }
+
+
+// class ContactSelectionBottomSheet extends StatefulWidget {
+//   final List<Contact> contactList;
+//   final Function(Contact?) onSelectContact;
+//
+//   const ContactSelectionBottomSheet({
+//     Key? key,
+//     required this.contactList,
+//     required this.onSelectContact,
+//   }) : super(key: key);
+//
+//   @override
+//   _ContactSelectionBottomSheetState createState() =>
+//       _ContactSelectionBottomSheetState();
+// }
+//
+// class _ContactSelectionBottomSheetState
+//     extends State<ContactSelectionBottomSheet> {
+//   final TextEditingController _searchController = TextEditingController();
+//   final ScrollController _scrollController = ScrollController();
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       decoration: const BoxDecoration(
+//         color: Colors.white,
+//         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+//       ),
+//       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+//       child: Column(
+//         crossAxisAlignment: CrossAxisAlignment.start,
+//         children: [
+//           const Text(
+//             "Select a Contact",
+//             style: TextStyle(
+//               fontSize: 22,
+//               fontWeight: FontWeight.bold,
+//               color: Colors.black87,
+//             ),
+//           ),
+//           const SizedBox(height: 20),
+//           TextField(
+//             controller: _searchController,
+//             decoration: InputDecoration(
+//               hintText: "Search Contacts",
+//               filled: true,
+//               fillColor: Colors.grey[200],
+//               border: OutlineInputBorder(
+//                 borderRadius: BorderRadius.circular(12),
+//                 borderSide: BorderSide.none,
+//               ),
+//               prefixIcon: Icon(
+//                 Icons.search,
+//                 color: Colors.grey[600],
+//               ),
+//               contentPadding: const EdgeInsets.symmetric(vertical: 10),
+//             ),
+//           ),
+//           const SizedBox(height: 20),
+//           Expanded(
+//             child: ListView.builder(
+//               controller: _scrollController,
+//               itemCount: widget.contactList.length,
+//               itemBuilder: (context, index) {
+//                 Contact contact = widget.contactList[index];
+//                 // Get the phone number, if available
+//                 String phoneNumber = contact.phones?.isNotEmpty ?? false
+//                     ? contact.phones!.first.number ?? "No phone number"
+//                     : "No phone number";
+//
+//                 return GestureDetector(
+//                   onTap: () {
+//                     widget.onSelectContact(contact);
+//                     Get.back();
+//                     Get.bottomSheet(
+//                       _AddPlayerDetails(
+//                         teamId: 'teamId',
+//                         name: contact.displayName,
+//                         phone: phoneNumber,
+//                       ),
+//                       backgroundColor: Colors.white,
+//                     );
+//                   },
+//                   child: Container(
+//                     margin: const EdgeInsets.only(bottom: 12),
+//                     decoration: BoxDecoration(
+//                       color: Colors.white,
+//                       borderRadius: BorderRadius.circular(12),
+//                       boxShadow: [
+//                         BoxShadow(
+//                           color: Colors.black.withOpacity(0.1),
+//                           blurRadius: 8,
+//                           spreadRadius: 2,
+//                           offset: const Offset(0, 2),
+//                         ),
+//                       ],
+//                     ),
+//                     child: ListTile(
+//                       contentPadding: const EdgeInsets.all(12),
+//                       leading: CircleAvatar(
+//                         backgroundColor: Colors.grey[300],
+//                         child: const Icon(Icons.person),
+//                       ),
+//                       title: Text(
+//                         contact.displayName ?? "No name",
+//                         style: const TextStyle(
+//                           fontWeight: FontWeight.bold,
+//                           fontSize: 16,
+//                         ),
+//                       ),
+//                       subtitle: Text(phoneNumber),  // Display the phone number here
+//                       trailing: const Icon(Icons.arrow_forward_ios, color: Colors.blue),
+//                     ),
+//                   ),
+//                 );
+//               },
+//             ),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
+// Future<void> initailizeData()async{
+//
+//   PermissionStatus permission = await Permission.contacts.request();
+//   if (permission.isGranted) {
+//     try {
+//       Iterable<Contact> contacts = await FlutterContacts.getContacts();
+//       logger.d("Contact Details:${contacts.map((name)=>name.displayName)}");
+//       setState(() {
+//         contactList = contacts.toList()
+//           ..sort((a, b) => a.displayName?.compareTo(b.displayName ?? '') ?? 0);
+//       });
+//     } catch (e) {
+//       print("Error fetching contacts: $e");
+//     }
+//   } else {
+//     errorSnackBar("Permission Denied");
+//   }
+// }

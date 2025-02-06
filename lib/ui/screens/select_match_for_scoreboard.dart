@@ -301,10 +301,26 @@ class _MatchupCard extends GetView<ScoreBoardController> {
                 ],
               ),
               SizedBox(height: Get.height * 0.01),
-              Center(
-                child: Text(scoreboard?.secondInningsText ?? "",
-                    style: Get.textTheme.labelMedium?.copyWith()),
-              ),
+              matchup.winningTeam != null
+                  ? Center(
+                    child: Text(
+                      scoreboard?.secondInningsText == 'Match Tied'
+                          ? "${matchup.getWinningTeamName()} Won The Match"
+                          : scoreboard?.secondInningsText ?? "",
+                        style: Get.textTheme.labelMedium?.copyWith()),
+                  )
+                  : (scoreboard?.secondInningsText?.isNotEmpty ??
+                  false)
+                  ? Center(
+                    child: Text(
+                      scoreboard?.secondInningsText ?? "",
+                        style: Get.textTheme.labelMedium?.copyWith()),
+                  )
+                  : const SizedBox.shrink(),
+              // Center(
+              //   child: Text(scoreboard?.secondInningsText ?? "",
+              //       style: Get.textTheme.labelMedium?.copyWith()),
+              // ),
             ],
           ),
         ),

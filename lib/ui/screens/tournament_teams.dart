@@ -219,7 +219,6 @@ class TournamentTeams extends GetView<TournamentController> {
   }
 }
 
-//Register team Card View
 class _Card extends StatelessWidget {
   final TeamModel team;
 

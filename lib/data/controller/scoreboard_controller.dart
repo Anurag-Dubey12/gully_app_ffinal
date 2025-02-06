@@ -40,9 +40,10 @@ class ScoreBoardController extends GetxController with StateMixin {
       socket.value!.on('scoreboard', (data) {
         logger.i('Scoreboard updated to channel ');
         // showDrawPopup();
-        if (hideDialog == false) {
-          showPopups();
-        }
+        // if (hideDialog == false) {
+        //   logger.d("Called showPopups");
+        //   showPopups();
+        // }
         if (data != null) {
           if (data['scoreBoard'] != null) {
             scoreboard.value = ScoreboardModel.fromJson(data['scoreBoard']);
@@ -57,6 +58,7 @@ class ScoreBoardController extends GetxController with StateMixin {
         // check if match is drawn
         // showDrawPopup();
         if (hideDialog == false) {
+          logger.d("Called showPopups on connect");
           showPopups();
         }
         socket.value?.emit('joinRoom', {

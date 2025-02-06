@@ -45,55 +45,55 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
         ),
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          bottomNavigationBar: Builder(
-            builder: (context) => Obx(() {
-              return Container(
-                height: 70,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 5,
-                      spreadRadius: 2,
-                      offset: const Offset(0, -1),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 10),
-                      child: PrimaryButton(
-                        isDisabled: controller.players.value.length == 15 ||!connectionController.isConnected.value,
-                        disabledText: !connectionController.isConnected.value
-                            ? 'Connect to the Internet to add Players'
-                            : 'Maximum 15 players added',
-                        onTap: () async {
-                          await Get.bottomSheet(
-                            BottomSheet(
-                              backgroundColor: const Color(0xffEBEBEB),
-                              enableDrag: false,
-                              builder: (context) => AddPlayerDialog(
-                                teamId: controller.state.id,
-                              ),
-                              onClosing: () {
-                                setState(() {});
-                              },
-                            ),
-                          );
-
-                          setState(() {});
-                        },
-                        title: "Add Player",
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }),
-          ),
+          // bottomNavigationBar: Builder(
+          //   builder: (context) => Obx(() {
+          //     return Container(
+          //       height: 70,
+          //       decoration: BoxDecoration(
+          //         color: Colors.white,
+          //         boxShadow: [
+          //           BoxShadow(
+          //             color: Colors.black.withOpacity(0.1),
+          //             blurRadius: 5,
+          //             spreadRadius: 2,
+          //             offset: const Offset(0, -1),
+          //           ),
+          //         ],
+          //       ),
+          //       child: Column(
+          //         children: [
+          //           Padding(
+          //             padding: const EdgeInsets.symmetric(
+          //                 horizontal: 20.0, vertical: 10),
+          //             child: PrimaryButton(
+          //               isDisabled: controller.players.value.length == 15 ||!connectionController.isConnected.value,
+          //               disabledText: !connectionController.isConnected.value
+          //                   ? 'Connect to the Internet to add Players'
+          //                   : 'Maximum 15 players added',
+          //               onTap: () async {
+          //                 await Get.bottomSheet(
+          //                   BottomSheet(
+          //                     backgroundColor: const Color(0xffEBEBEB),
+          //                     enableDrag: false,
+          //                     builder: (context) => AddPlayerDialog(
+          //                       teamId: controller.state.id,
+          //                     ),
+          //                     onClosing: () {
+          //                       setState(() {});
+          //                     },
+          //                   ),
+          //                 );
+          //
+          //                 setState(() {});
+          //               },
+          //               title: "Add Player",
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     );
+          //   }),
+          // ),
           body: Stack(
             children: [
               ClipPath(
@@ -179,9 +179,10 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
                                       ),
                                     )),
                               ),
-                              SizedBox(height: Get.height * 0.02),
+                              SizedBox(height: Get.height * 0.001),
                               SizedBox(
-                                height: Get.height * 0.58,
+                                // height: Get.height * 0.58,
+                                height: Get.height ,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Obx(() {
@@ -219,19 +220,11 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
                                             const SizedBox(height: 10),
                                         itemBuilder: (context, index) {
                                           return Container(
+                                            padding: const EdgeInsets.symmetric(vertical:5,horizontal: 5),
                                             decoration: BoxDecoration(
                                               color: const Color.fromARGB(255, 255, 255, 255),
                                               borderRadius: BorderRadius.circular(19),
                                               border: Border.all(color: Colors.black87),
-                                              // boxShadow: [
-                                              //   BoxShadow(
-                                              //       color: Colors.grey
-                                              //           .withOpacity(0.3),
-                                              //       blurRadius: 20,
-                                              //       spreadRadius: 2,
-                                              //       offset:
-                                              //           const Offset(0, 10))
-                                              // ]
                                             ),
                                             child: Padding(
                                               padding: const EdgeInsets.all(16.0),
@@ -256,41 +249,41 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
                                                               fontWeight:
                                                                   FontWeight.w500, fontSize: 14),
                                                     ),
-                                                    IconButton(
-                                                      onPressed: () async {
-                                                        bool? confirm =await Get.dialog(
-                                                                AlertDialog.adaptive(
-                                                          title: const Text('Confirm Delete'),
-                                                          content: Text('Are you sure you want to remove ${playersList[index].name}?'),
-                                                          actions: [
-                                                            TextButton(
-                                                              onPressed: () {Navigator.of(context).pop(false); },
-                                                              child: const Text('Cancel'),
-                                                            ),
-                                                            TextButton(
-                                                              onPressed: () {Navigator.of(context).pop(true);},
-                                                              child: const Text('Delete', style: TextStyle(color: Colors.red)),
-                                                            ),
-                                                          ],
-                                                        ));
-                                                        if (confirm == true) {
-                                                          logger.d(
-                                                              "Player delete Data is:\n Team id ${widget.teamModel.id}\n"
-                                                              "player id ${playersList[index].id}");
-                                                          bool isRemoved = await controller.removePlayerFromTeam(
-                                                            teamId: widget.teamModel.id,
-                                                            playerId: playersList[index].id,
-                                                          );
-                                                          if (isRemoved) {
-                                                            logger.d("Player removed successfully");
-                                                          }
-                                                        }
-                                                      },
-                                                      icon: const Icon(
-                                                          Icons.delete,
-                                                          color: Colors.red,
-                                                          size: 20),
-                                                    )
+                                                    // IconButton(
+                                                    //   onPressed: () async {
+                                                    //     bool? confirm =await Get.dialog(
+                                                    //             AlertDialog.adaptive(
+                                                    //       title: const Text('Confirm Delete'),
+                                                    //       content: Text('Are you sure you want to remove ${playersList[index].name}?'),
+                                                    //       actions: [
+                                                    //         TextButton(
+                                                    //           onPressed: () {Navigator.of(context).pop(false); },
+                                                    //           child: const Text('Cancel'),
+                                                    //         ),
+                                                    //         TextButton(
+                                                    //           onPressed: () {Navigator.of(context).pop(true);},
+                                                    //           child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                                    //         ),
+                                                    //       ],
+                                                    //     ));
+                                                    //     if (confirm == true) {
+                                                    //       logger.d(
+                                                    //           "Player delete Data is:\n Team id ${widget.teamModel.id}\n"
+                                                    //           "player id ${playersList[index].id}");
+                                                    //       bool isRemoved = await controller.removePlayerFromTeam(
+                                                    //         teamId: widget.teamModel.id,
+                                                    //         playerId: playersList[index].id,
+                                                    //       );
+                                                    //       if (isRemoved) {
+                                                    //         logger.d("Player removed successfully");
+                                                    //       }
+                                                    //     }
+                                                    //   },
+                                                    //   icon: const Icon(
+                                                    //       Icons.delete,
+                                                    //       color: Colors.red,
+                                                    //       size: 20),
+                                                    // )
                                                   ]),
                                             ),
                                           );

@@ -47,7 +47,6 @@ class Performance_matchup extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-
                   children: [
                     Text(
                       matchup.round?.capitalize ?? '',
@@ -61,7 +60,6 @@ class Performance_matchup extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: Get.height * 0.01),
-                // Team Info
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -82,26 +80,52 @@ class Performance_matchup extends StatelessWidget {
                     ),
                   ],
                 ),
-                // Match Result
-                Align(
+                matchup.winningTeam != null
+                    ? Align(
                   alignment: Alignment.center,
                   child: Container(
                     margin: const EdgeInsets.only(top: 8.0),
-                    padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 4.0, horizontal: 12.0),
                     decoration: BoxDecoration(
                       color: Colors.green.shade600,
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                     child: Text(
-                      scoreboard.secondInningsText ?? "",
+                      scoreboard.secondInningsText == 'Match Tied'
+                          ? "${matchup.getWinningTeamName()} Won The Match"
+                          : scoreboard.secondInningsText ?? "",
                       style: Get.textTheme.bodyMedium?.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 12
                       ),
                     ),
                   ),
-                ),
+                )
+                    : (scoreboard.secondInningsText?.isNotEmpty ??
+                    false)
+                    ? Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 8.0),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 4.0, horizontal: 12.0),
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade600,
+                      borderRadius:
+                      BorderRadius.circular(5.0),
+                    ),
+                    child: Text(
+                      scoreboard.secondInningsText ?? "",
+                      style:
+                      Get.textTheme.bodyMedium?.copyWith(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                )
+                    : const SizedBox.shrink(),
                 // "View Match Statistics" Button
                 // GestureDetector(
                 //   onTap: () {

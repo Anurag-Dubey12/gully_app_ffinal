@@ -192,58 +192,6 @@ class _MyAppState extends State<MyApp> {
         return LocationStreamHandler(
           child: child!,
         );
-        // else {
-        //   // return ConnectivityWidget(
-        //   //   offlineBanner: const SizedBox(),
-        //   //   builder: (BuildContext context, bool isOnline) {
-        //   //       MiscController controller =Get.find<MiscController>();
-        //   //     if (!isOnline) {
-        //   //       WidgetsBinding.instance.addPostFrameCallback((_) {
-        //   //         controller.isConnected.value=false;
-        //   //         logger.d("Connection Status:${controller.isConnected.value}");
-        //   //         ScaffoldMessenger.of(context).showSnackBar(
-        //   //           const SnackBar(
-        //   //             content: Row(
-        //   //               children: [
-        //   //                 Icon(Icons.wifi_off, color: Colors.white),
-        //   //                 SizedBox(width: 8),
-        //   //                 Text('No internet connection'),
-        //   //               ],
-        //   //             ),
-        //   //             backgroundColor: Colors.red,
-        //   //             duration: Duration(days: 365),
-        //   //             behavior: SnackBarBehavior.floating,
-        //   //           ),
-        //   //         );
-        //   //       });
-        //   //     } else {
-        //   //       WidgetsBinding.instance.addPostFrameCallback((_) {
-        //   //         controller.isConnected.value=true;
-        //   //         logger.d("Connection Status:${controller.isConnected.value}");
-        //   //         ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        //   //         ScaffoldMessenger.of(context).showSnackBar(
-        //   //           const SnackBar(
-        //   //             content: Row(
-        //   //               children: [
-        //   //                 Icon(Icons.wifi, color: Colors.white),
-        //   //                 SizedBox(width: 8),
-        //   //                 Text('Internet connection Successfully'),
-        //   //               ],
-        //   //             ),
-        //   //             backgroundColor: Colors.green,
-        //   //             duration: Duration(seconds: 3),
-        //   //             behavior: SnackBarBehavior.floating,
-        //   //           ),
-        //   //         );
-        //   //       });
-        //   //     }
-        //   //     return LocationStreamHandler(
-        //   //       child: child!,
-        //   //     );
-        //   //   },
-        //   // );
-        //
-        // }
       },
       locale: const Locale('en'),
       binds: [

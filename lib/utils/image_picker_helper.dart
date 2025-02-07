@@ -35,7 +35,7 @@ Future<String> convertImageToBase64(XFile image) async {
   return mimeType != null ? 'data:$mimeType;base64,$base64Image' : base64Image;
 }
 
-void imageViewer(BuildContext context, String? photoUrl,bool isnetworkimage) {
+void imageViewer(BuildContext context, String? photoUrl,bool isnetworkimage,{VoidCallback? onTap}) {
   if (photoUrl == null || photoUrl.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('No image available')),
@@ -59,33 +59,36 @@ void imageViewer(BuildContext context, String? photoUrl,bool isnetworkimage) {
             Center(
               child: Hero(
                 tag: 'tournamentLogo',
-                child: InteractiveViewer(
-                  minScale: 0.5,
-                  maxScale: 4.0,
-                  child: isnetworkimage ?
-                  Container(
-                    width: Get.width,
-                    height: Get.height,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: FallbackImageProvider(
-                          toImageUrl(photoUrl),
-                          'assets/images/logo.png',
+                child: GestureDetector(
+                  onTap:onTap ??(){},
+                  child: InteractiveViewer(
+                    minScale: 0.5,
+                    maxScale: 4.0,
+                    child: isnetworkimage ?
+                    Container(
+                      width: Get.width,
+                      height: Get.height,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: FallbackImageProvider(
+                            toImageUrl(photoUrl),
+                            'assets/images/logo.png',
+                          ),
+                          fit: BoxFit.contain,
                         ),
-                        fit: BoxFit.contain,
                       ),
-                    ),
-                  ):
-                  Container(
-                    width: Get.width,
-                    height: Get.height,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: FileImage(File(photoUrl)),
-                        fit: BoxFit.contain,
+                    ):
+                    Container(
+                      width: Get.width,
+                      height: Get.height,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: FileImage(File(photoUrl)),
+                          fit: BoxFit.contain,
+                        ),
                       ),
-                    ),
-                  )
+                    )
+                  ),
                 ),
               ),
             ),

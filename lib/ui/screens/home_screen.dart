@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/ui/screens/promote_banner_screen.dart';
 import 'package:gully_app/ui/screens/search_tournament_screen.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
@@ -16,6 +17,7 @@ import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import '../../utils/image_picker_helper.dart';
 import '../../utils/internetConnectivty.dart';
 import '../widgets/home_screen/SliverAppBarDelegate.dart';
 import '../widgets/home_screen/live_score_screen.dart';
@@ -547,86 +549,98 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
       height: 150,
       width: 400,
       child: Obx(
-        () => CarouselSlider(
-          items: controller.banners.value
-              .map((e) => ClipRRect(
-                    borderRadius: BorderRadius.circular(15),
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        CachedNetworkImage(
-                            imageUrl: toImageUrl(e.imageUrl),
-                            fit: BoxFit.fill,
-                            width: double.infinity),
-                        // if (widget.isAds)
-                        //   Positioned(
-                        //     top: 2,
-                        //     right: 10,
-                        //     child: Container(
-                        //       padding: const EdgeInsets.symmetric(
-                        //           horizontal: 8, vertical: 4),
-                        //       decoration: BoxDecoration(
-                        //         color: Colors.black.withOpacity(0.6),
-                        //         borderRadius: BorderRadius.circular(20),
-                        //         boxShadow: [
-                        //           BoxShadow(
-                        //             color: Colors.black.withOpacity(0.2),
-                        //             blurRadius: 4,
-                        //             offset: const Offset(0, 2),
-                        //           ),
-                        //         ],
-                        //       ),
-                        //       child: const Text(
-                        //         "Ad",
-                        //         style: TextStyle(
-                        //           color: Colors.white,
-                        //           fontSize: 12,
-                        //           fontWeight: FontWeight.bold,
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   )
-                        // else
-                        //   Positioned(
-                        //     bottom: 10,
-                        //     left: 0,
-                        //     right: 0,
-                        //     child: Row(
-                        //       mainAxisAlignment: MainAxisAlignment.center,
-                        //       children: List.generate(
-                        //         controller.banners.length,
-                        //         (index) => AnimatedContainer(
-                        //           duration: const Duration(milliseconds: 300),
-                        //           margin:
-                        //               const EdgeInsets.symmetric(horizontal: 3),
-                        //           height: 8,
-                        //           width: _current == index ? 15 : 8,
-                        //           decoration: BoxDecoration(
-                        //             borderRadius: BorderRadius.circular(4),
-                        //             color: _current == index
-                        //                 ? AppTheme.darkYellowColor
-                        //                 : Colors.grey.withOpacity(0.5),
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ),
-                        //   ),
-                      ],
-                    ),
-                  ))
-              .toList(),
-          options: CarouselOptions(
-            viewportFraction: 0.91,
-            enableInfiniteScroll: true,
-            autoPlay: true,
-            onPageChanged: (index, reason) {
-              setState(() {
-                controller.updateIndex(index);
-                _current = index;
-              });
-            },
-            enlargeCenterPage: true,
-            aspectRatio: 16 / 9,
+        () => GestureDetector(
+          onTap: (){
+            if(controller.banners.value[_current].link == "inAppBannerPromotion"){
+            imageViewer(context,controller.banners.value[_current].imageUrl,
+                true,
+              onTap: (){
+                Get.to(()=>const PromoteBannerScreen());
+              }
+            );
+            }
+          },
+          child: CarouselSlider(
+            items: controller.banners.value
+                .map((e) => ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          CachedNetworkImage(
+                              imageUrl: toImageUrl(e.imageUrl),
+                              fit: BoxFit.fill,
+                              width: double.infinity),
+                          // if (widget.isAds)
+                          //   Positioned(
+                          //     top: 2,
+                          //     right: 10,
+                          //     child: Container(
+                          //       padding: const EdgeInsets.symmetric(
+                          //           horizontal: 8, vertical: 4),
+                          //       decoration: BoxDecoration(
+                          //         color: Colors.black.withOpacity(0.6),
+                          //         borderRadius: BorderRadius.circular(20),
+                          //         boxShadow: [
+                          //           BoxShadow(
+                          //             color: Colors.black.withOpacity(0.2),
+                          //             blurRadius: 4,
+                          //             offset: const Offset(0, 2),
+                          //           ),
+                          //         ],
+                          //       ),
+                          //       child: const Text(
+                          //         "Ad",
+                          //         style: TextStyle(
+                          //           color: Colors.white,
+                          //           fontSize: 12,
+                          //           fontWeight: FontWeight.bold,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   )
+                          // else
+                          //   Positioned(
+                          //     bottom: 10,
+                          //     left: 0,
+                          //     right: 0,
+                          //     child: Row(
+                          //       mainAxisAlignment: MainAxisAlignment.center,
+                          //       children: List.generate(
+                          //         controller.banners.length,
+                          //         (index) => AnimatedContainer(
+                          //           duration: const Duration(milliseconds: 300),
+                          //           margin:
+                          //               const EdgeInsets.symmetric(horizontal: 3),
+                          //           height: 8,
+                          //           width: _current == index ? 15 : 8,
+                          //           decoration: BoxDecoration(
+                          //             borderRadius: BorderRadius.circular(4),
+                          //             color: _current == index
+                          //                 ? AppTheme.darkYellowColor
+                          //                 : Colors.grey.withOpacity(0.5),
+                          //           ),
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                        ],
+                      ),
+                    ))
+                .toList(),
+            options: CarouselOptions(
+              viewportFraction: 0.91,
+              enableInfiniteScroll: true,
+              autoPlay: true,
+              onPageChanged: (index, reason) {
+                setState(() {
+                  controller.updateIndex(index);
+                  _current = index;
+                });
+              },
+              enlargeCenterPage: true,
+              aspectRatio: 16 / 9,
+            ),
           ),
         ),
       ),

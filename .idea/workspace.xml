@@ -9,51 +9,15 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify performance screen">
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="new modification">
       <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/app/google-services.json" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/google-services.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/android/gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/android/gradle.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/scoreboard_controller.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/authority_user_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/authority_user_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/banner_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/banner_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/batting_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/batting_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/bowling_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/bowling_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/challenge_match.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/challenge_match.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/co_host_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/co_host_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/coupon_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/coupon_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/extras_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/extras_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/innings_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/innings_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/looking_for_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/looking_for_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/matchup_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/matchup_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/notification_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/notification_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/opponent_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/opponent_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/overs_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/overs_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/partnership_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/partnership_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/player_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/player_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/player_ranking_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/player_ranking_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/scoreboard_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/scoreboard_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/team_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/team_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/team_ranking_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/team_ranking_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/tournament_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/tournament_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/data/model/user_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/user_model.g.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/add_player_to_team.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/legal_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/legal_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/team_entry_form.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/team_entry_form.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/team_players_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/team_players_list.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_teams.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/view_matchups_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/performance/performance_matches.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/performance/performance_matches.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/src/main/res/values/styles.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/image_picker_helper.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils/image_picker_helper.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/untranslated.json" beforeDir="false" afterPath="$PROJECT_DIR$/untranslated.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,18 +114,18 @@
     "ignore.virus.scanning.warn.message": "true",
     "io.flutter.reload.alreadyRun": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/abcom/Documents/Software/gully_app/android/app/src/main/res/drawable-v21",
-    "settings.editor.selected.configurable": "preferences.editor",
+    "last_opened_file_path": "C:/Users/Nilee/Documents/GitHub/gully_app_ffinal/android/app/src/main/res/values-v35",
+    "settings.editor.selected.configurable": "live.edit.configurable",
     "show.migrate.to.gradle.popup": "false"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Nilee\Documents\GitHub\gully_app_ffinal\android\app\src\main\res\values-v35" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app\src\main\res\drawable-v21" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app\src\main\res\mipmap-xxxhdpi" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app\src\main\res\mipmap-xxhdpi" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app\src\main\res\mipmap-xhdpi" />
-      <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app\src\main\res\mipmap-mdpi" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\abcom\Documents\Software\gully_app\lib\ui\widgets\performance" />
@@ -218,14 +182,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00069" summary="modify firebase and promote banner">
-      <option name="closed" value="true" />
-      <created>1730116612710</created>
-      <option name="number" value="00069" />
-      <option name="presentableId" value="LOCAL-00069" />
-      <option name="project" value="LOCAL" />
-      <updated>1730116612711</updated>
     </task>
     <task id="LOCAL-00070" summary="need attention on firebase">
       <option name="closed" value="true" />
@@ -611,7 +567,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738153532985</updated>
     </task>
-    <option name="localTasksCounter" value="118" />
+    <task id="LOCAL-00118" summary="new modification">
+      <option name="closed" value="true" />
+      <created>1738843191474</created>
+      <option name="number" value="00118" />
+      <option name="presentableId" value="LOCAL-00118" />
+      <option name="project" value="LOCAL" />
+      <updated>1738843191474</updated>
+    </task>
+    <option name="localTasksCounter" value="119" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -632,7 +596,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="modify  tournament form screen" />
     <MESSAGE value="modify viewmatchup screen" />
     <MESSAGE value="modify viewmatchup edit match,performance,and delete match screen" />
     <MESSAGE value="all things done" />
@@ -657,7 +620,8 @@
     <MESSAGE value="added performance model" />
     <MESSAGE value="modify challenge performance screen" />
     <MESSAGE value="modify performance screen" />
-    <option name="LAST_COMMIT_MESSAGE" value="modify performance screen" />
+    <MESSAGE value="new modification" />
+    <option name="LAST_COMMIT_MESSAGE" value="new modification" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">

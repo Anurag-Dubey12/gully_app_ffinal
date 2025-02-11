@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:intl/intl.dart';
 
+import '../../../data/model/package_model.dart';
 import '../../../utils/app_logger.dart';
 import '../../theme/theme.dart';
 import '../primary_button.dart';
 
 class PackageScreen extends StatefulWidget {
-  final Map<String, dynamic>? selectedPackages;
-  const PackageScreen({this.selectedPackages, super.key});
+  final Package? package;
+  const PackageScreen({this.package, super.key});
 
   @override
   State<StatefulWidget> createState() => PackageScreenState();
@@ -17,64 +19,26 @@ class PackageScreen extends StatefulWidget {
 class PackageScreenState extends State<PackageScreen> {
   String? selectedPackage;
   String? endDate;
-
-  final List<Map<String, dynamic>> packages = [
-    {
-      'package': 'Basic',
-      'price': 1000,
-      'Duration': '3 Months',
-      'Border_color': Colors.orange,
-    },
-    {
-      'package': 'Standard',
-      'price': 2000,
-      'Duration': '6 Months',
-      'Border_color': Colors.blue
-    },
-    {
-      'package': 'Gold',
-      'price': 3000,
-      'Duration': '1 Year',
-      'Border_color': Colors.red
-    },
-  ];
+  int? selectedIndex;
 
   @override
   void initState() {
     super.initState();
-    selectedPackage = widget.selectedPackages?['package'];
-  }
+    if(widget.package!=null){
 
-  void update_EndDate(String packagename) {
-    final package = packages.firstWhere((p) => p['package'] == packagename);
-    final duration = package['Duration'];
-    late DateTime endDateTime;
-
-    switch (duration) {
-      case '3 Months':
-        endDateTime = DateTime.now().add(const Duration(days: 90));
-        break;
-      case '6 Months':
-        endDateTime = DateTime.now().add(const Duration(days: 180));
-        break;
-      case '1 Year':
-        endDateTime = DateTime.now().add(const Duration(days: 365));
-        break;
     }
-    setState(() {
-      endDate = DateFormat('dd/MM/yyyy').format(endDateTime);
-    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<MiscController>();
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: AppTheme.primaryColor,
         elevation: 0,
         title: const Text(
-          'Subscription',
+          'Choose Your Subscription',
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -82,53 +46,47 @@ class PackageScreenState extends State<PackageScreen> {
           ),
         ),
       ),
-      body: Column(
+      body:Column(
         children: [
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    color: AppTheme.primaryColor,
-                    height: 210,
-                    width: double.infinity,
-                    child: Center(
-                      child: Image.asset(
-                        'assets/images/logo.png',
-                        fit: BoxFit.contain,
-                        height: 200,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Choose Your Subscription",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                    ),
-                  ),
-                  Column(
-                    children: packages.map((package) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      child: PackageCard(
-                        package: package,
-                        isSelected: package['package'] == selectedPackage,
-                        onSelect: () {
-                          setState(() {
-                            selectedPackage = package['package'];
-                            update_EndDate(selectedPackage!);
-                            logger.d("Package Selected: ${package['package']}");
-                          });
-                        },
-                      ),
-                    )).toList(),
-                  ),
-                ],
+          Container(
+            color: AppTheme.primaryColor,
+            height: Get.height * 0.21,
+            width: double.infinity,
+            child: Center(
+              child: Image.asset(
+                'assets/images/logo.png',
+                fit: BoxFit.contain,
+                height: 150,
               ),
             ),
+          ),
+          const SizedBox(height: 10),
+          FutureBuilder<List<Package>>(
+            future: controller.getPackage('Banner'),
+            builder: (context, snapshot) {
+              return Expanded(
+                child: ListView.separated(
+                  padding: const EdgeInsets.all(16),
+                  separatorBuilder: (context, index) =>
+                  const SizedBox(height: 1),
+                  itemCount: snapshot.data?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    final package = snapshot.data![index];
+                    final isSelected = selectedIndex == index;
+                    return PackageCard(
+                      package: package,
+                      isSelected: isSelected,
+                      onSelect: () {
+                        setState(() {
+                          selectedIndex = index;
+                          selectedPackage = package.name;
+                        });
+                      },
+                    );
+                  },
+                ),
+              );
+            },
           ),
           Container(
             padding: const EdgeInsets.all(16),
@@ -137,17 +95,18 @@ class PackageScreenState extends State<PackageScreen> {
                 PrimaryButton(
                   onTap: () {
                     if (selectedPackage != null) {
-                      final selectedPackageDetails = packages.firstWhere(
-                            (package) => package['package'] == selectedPackage,
-                        orElse: () => {},
-                      );
-                      selectedPackageDetails['EndDate'] = endDate;
-                      Get.back(result: selectedPackageDetails);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Please select a package')),
-                      );
+                      Get.back(result: {'package': selectedPackage});
                     }
+                    // if (selectedPackage != null) {
+                    //   final selectedPackageDetails = packages.firstWhere(
+                    //         (package) => package['package'] == selectedPackage,
+                    //     orElse: () => {},
+                    //   );
+                    //   selectedPackageDetails['EndDate'] = endDate;
+                    //   Get.back(result: selectedPackageDetails);
+                    // } else {
+                    //
+                    // }
                   },
                   title: 'Continue',
                 ),
@@ -170,9 +129,7 @@ class PackageScreenState extends State<PackageScreen> {
 
   Widget _buildTextLink(String text) {
     return GestureDetector(
-      onTap: () {
-
-      },
+      onTap: () {},
       child: Text(
         text,
         style: const TextStyle(
@@ -185,7 +142,7 @@ class PackageScreenState extends State<PackageScreen> {
 }
 
 class PackageCard extends StatelessWidget {
-  final Map<String, dynamic> package;
+  final Package package;
   final bool isSelected;
   final VoidCallback onSelect;
 
@@ -201,46 +158,62 @@ class PackageCard extends StatelessWidget {
     return GestureDetector(
       onTap: onSelect,
       child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: const Color(0xFFE6F0FF),
-          borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: isSelected ? package['Border_color'] : Colors.transparent,
-            width: 2,
+            color: isSelected ? Colors.black : Colors.grey.shade300,
+            width: isSelected ? 2 : 1,
           ),
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
         ),
-        padding: const EdgeInsets.all(10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // if (isPopular)
+                //   Container(
+                //     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                //     decoration: BoxDecoration(
+                //       color: Colors.amber.shade100,
+                //       borderRadius: BorderRadius.circular(6),
+                //     ),
+                //     child: const Text(
+                //       'Popular',
+                //       style: TextStyle(
+                //         fontSize: 12,
+                //         fontWeight: FontWeight.bold,
+                //         color: Colors.black87,
+                //       ),
+                //     ),
+                //   ),
                 Text(
-                  package['package'],
-                  style: TextStyle(
-                    fontSize: 18,
+                  package.name,
+                  style: const TextStyle(
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: package['Border_color'],
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Price: ${package['price']}',
-                  style: const TextStyle(fontSize: 14),
-                ),
-                Text(
-                  'Duration: ${package['Duration']}',
-                  style: const TextStyle(fontSize: 14),
-                ),
+                  '₹${package.price} for ${package.duration}',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                )
               ],
             ),
-            if (isSelected)
-              Icon(
-                Icons.check_circle,
-                color: package['Border_color'],
-                size: 24,
-              ),
+            Radio<String>(
+              value: package.id,
+              groupValue: isSelected ? package.id : null,
+              onChanged: (value) => onSelect(),
+              activeColor: Colors.black,
+            ),
           ],
         ),
       ),

@@ -99,4 +99,12 @@ class MiscApi {
       return ApiResponse.fromJson(response.body);
     });
   }
+
+  Future<ApiResponse> getPackages(String packagefor) async {
+    var response = await repo.get('/other/packages/type/$packagefor');
+    if (!response.isOk) {
+      throw response.body['message'] ?? 'Unable to Process Request';
+    }
+    return ApiResponse.fromJson(response.body);
+  }
 }

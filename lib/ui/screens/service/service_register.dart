@@ -613,12 +613,12 @@ class RegisterService extends State<ServiceRegister> {
                   const SizedBox(height: 10),
                   GestureDetector(
                     onTap: ()async {
-                      final result = await Get.to(() =>  PackageScreen(selectedPackages:selectedPackage));
-                      if (result != null && result is Map<String, dynamic>) {
-                        setState(() {
-                          selectedPackage = result;
-                        });
-                      }
+                      // final result = await Get.to(() =>  PackageScreen(selectedPackages:selectedPackage));
+                      // if (result != null && result is Map<String, dynamic>) {
+                      //   setState(() {
+                      //     selectedPackage = result;
+                      //   });
+                      // }
                     },
                     child: Container(
                       padding: const EdgeInsets.all(12),

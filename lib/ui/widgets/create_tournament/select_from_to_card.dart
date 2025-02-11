@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/utils/app_logger.dart';
+import 'package:gully_app/utils/utils.dart';
 import 'package:intl/intl.dart';
 
 import '../../theme/theme.dart';
@@ -14,13 +15,12 @@ class SelectFromToCard extends StatelessWidget {
   final bool iswhite;
   const SelectFromToCard(
       {super.key,
-        required this.from,
-        required this.to,
-        required this.onFromChanged,
-        required this.onToChanged,
-        required this.isAds,
-        this.iswhite=false
-      });
+      required this.from,
+      required this.to,
+      required this.onFromChanged,
+      required this.onToChanged,
+      this.isAds = false,
+      this.iswhite = false});
 
   @override
   Widget build(BuildContext context) {
@@ -38,20 +38,22 @@ class SelectFromToCard extends StatelessWidget {
                   child: Text('From',
                       style: Get.textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: iswhite?Colors.white :Colors.black,
+                          color: iswhite ? Colors.white : Colors.black,
                           fontSize: 16)),
                 ),
                 GestureDetector(
                   onTap: () async {
                     final date = await showDatePicker(
                         context: context,
-                        initialDate:
-                        isAds ? DateTime.now():
-                        // DateTime.now().add(const Duration(days: 4)),
-                        DateTime.now(),
+                        initialDate: isAds
+                            ? DateTime.now()
+                            :
+                            // DateTime.now().add(const Duration(days: 4)),
+                            DateTime.now(),
                         // firstDate: isAds ? DateTime.now():DateTime.now().add(const Duration(days: 4)),
-                        firstDate: isAds ? DateTime.now():DateTime.now(),
-                        lastDate: DateTime.now().add(const Duration(days: 365)));
+                        firstDate: isAds ? DateTime.now() : DateTime.now(),
+                        lastDate:
+                            DateTime.now().add(const Duration(days: 365)));
                     if (date != null) {
                       logger.d('Date: $date');
                       onFromChanged(date);
@@ -72,11 +74,11 @@ class SelectFromToCard extends StatelessWidget {
                               color: Colors.grey[100]),
                           child: Center(
                               child: Text(
-                                from != null
-                                    ? DateFormat('dd/MM/yyyy').format(from!)
-                                    : "",
-                                style: Get.textTheme.labelMedium,
-                              )),
+                            from != null
+                                ? DateFormat('dd/MM/yyyy').format(from!)
+                                : "",
+                            style: Get.textTheme.labelMedium,
+                          )),
                         ),
                         const Spacer(),
                         const Icon(
@@ -95,18 +97,24 @@ class SelectFromToCard extends StatelessWidget {
           const SizedBox(width: 20),
           Expanded(
             child: GestureDetector(
-              onTap: () async {
-                final date0 = await showDatePicker(
-                    context: context,
-                    // initialDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
-                    initialDate: isAds ? DateTime.now() : DateTime.now(),
-                    // firstDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
-                    firstDate: isAds ? DateTime.now() : DateTime.now(),
-                    lastDate: DateTime.now().add(const Duration(days: 365)));
-                if (date0 != null) {
-                  onToChanged(date0);
-                }
-              },
+              onTap: isAds
+                  ? () {
+                      errorSnackBar(
+                          "The end date is automatically calculated based on the selected package and its start date.");
+                    }
+                  : () async {
+                      final date0 = await showDatePicker(
+                          context: context,
+                          // initialDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
+                          initialDate: isAds ? DateTime.now() : DateTime.now(),
+                          // firstDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
+                          firstDate: isAds ? DateTime.now() : DateTime.now(),
+                          lastDate:
+                              DateTime.now().add(const Duration(days: 365)));
+                      if (date0 != null) {
+                        onToChanged(date0);
+                      }
+                    },
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -115,7 +123,7 @@ class SelectFromToCard extends StatelessWidget {
                     child: Text('To',
                         style: Get.textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.bold,
-                            color: iswhite ?Colors.white:Colors.black,
+                            color: iswhite ? Colors.white : Colors.black,
                             fontSize: 16)),
                   ),
                   Container(
@@ -133,11 +141,11 @@ class SelectFromToCard extends StatelessWidget {
                               color: Colors.grey[100]),
                           child: Center(
                               child: Text(
-                                to != null
-                                    ? DateFormat('dd/MM/yyyy').format(to!)
-                                    : "",
-                                style: Get.textTheme.labelMedium,
-                              )),
+                            to != null
+                                ? DateFormat('dd/MM/yyyy').format(to!)
+                                : "",
+                            style: Get.textTheme.labelMedium,
+                          )),
                         ),
                         const Spacer(),
                         const Icon(

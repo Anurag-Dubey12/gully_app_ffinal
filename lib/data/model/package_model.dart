@@ -3,38 +3,39 @@ import 'package:json_annotation/json_annotation.dart';
 part 'package_model.g.dart';
 
 @JsonSerializable()
-class PackageModel {
+class Package {
+  @JsonKey(name: "_id")
+  final String id;
+  @JsonKey(name: "name")
   final String name;
-  final String duration;
-  final double price;
-  final String endDate;
+  @JsonKey(name: "price")
+  final int price;
+  @JsonKey(name: "duration")
+  final String? duration;
+  @JsonKey(name: "packageFor")
+  final String packageFor;
+  @JsonKey(name: "features")
+  final List<String>? features;
+  @JsonKey(name: "description")
+  final String? description;
+  @JsonKey(name: "isActive")
+  final bool isActive;
+  @JsonKey(name: "startDate")
+  final DateTime startDate;
 
-  PackageModel({
+  Package({
+    required this.id,
     required this.name,
-    required this.duration,
     required this.price,
-    required this.endDate,
+    this.duration,
+    required this.packageFor,
+    this.features,
+    this.description,
+    required this.isActive,
+    required this.startDate,
   });
 
-  factory PackageModel.fromJson(Map<String, dynamic> json) => _$PackageModelFromJson(json);
+  factory Package.fromJson(Map<String, dynamic> json) => _$PackageFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PackageModelToJson(this);
-
-  @override
-  String toString() {
-    return '$name - $duration - ₹$price';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is PackageModel &&
-        other.name == name &&
-        other.duration == duration &&
-        other.price == price &&
-        other.endDate == endDate;
-  }
-
-  @override
-  int get hashCode => name.hashCode ^ duration.hashCode ^ price.hashCode;
+  Map<String, dynamic> toJson() => _$PackageToJson(this);
 }

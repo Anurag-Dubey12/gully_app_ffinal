@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/api/misc_api.dart';
+import 'package:gully_app/data/model/package_model.dart';
 import 'package:gully_app/data/model/promote_banner_model.dart';
 import 'package:gully_app/data/model/banner_model.dart';
 import 'package:gully_app/data/model/looking_for_model.dart';
@@ -103,6 +104,20 @@ class MiscController extends GetxController with StateMixin {
       throw Exception(e.toString());
     }
   }
+
+  Rx<Package?> selectedpackage = Rx<Package?>(null);
+  RxList<Package> packages = <Package>[].obs;
+  Future<List<Package>> getPackage(String packagefor) async {
+    try {
+      var response = await repo.getPackages(packagefor);
+      logger.d("The Package Response:${packagefor}");
+     return  packages.value=(response.data!['packages'] as List<dynamic>?)?.map((e) => Package.fromJson(e as Map<String, dynamic>)).toList() ?? [];
+    } catch (e) {
+      errorSnackBar(e.toString());
+      throw Exception(e.toString());
+  }
+  }
+
 }
 
 class UpdateAppModel {

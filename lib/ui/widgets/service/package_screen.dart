@@ -9,7 +9,7 @@ import '../../theme/theme.dart';
 import '../primary_button.dart';
 
 class PackageScreen extends StatefulWidget {
-  final Package? package;
+  final Map<String, dynamic>? package;
   const PackageScreen({this.package, super.key});
 
   @override
@@ -17,15 +17,24 @@ class PackageScreen extends StatefulWidget {
 }
 
 class PackageScreenState extends State<PackageScreen> {
-  String? selectedPackage;
   String? endDate;
   int? selectedIndex;
+  Map<String, dynamic>? selectedPackage;
 
   @override
   void initState() {
     super.initState();
-    if(widget.package!=null){
-
+    if (widget.package != null) {
+      final controller = Get.find<MiscController>();
+      controller.getPackage('Banner').then((packages) {
+        final index = packages.indexWhere((p) => p.id == widget.package!['package']['_id']);
+        if (index != -1) {
+          setState(() {
+            selectedIndex = index;
+            selectedPackage = widget.package;
+          });
+        }
+      });
     }
   }
 
@@ -79,7 +88,7 @@ class PackageScreenState extends State<PackageScreen> {
                       onSelect: () {
                         setState(() {
                           selectedIndex = index;
-                          selectedPackage = package.name;
+                          selectedPackage=package.toJson();
                         });
                       },
                     );
@@ -95,18 +104,11 @@ class PackageScreenState extends State<PackageScreen> {
                 PrimaryButton(
                   onTap: () {
                     if (selectedPackage != null) {
-                      Get.back(result: {'package': selectedPackage});
+                      final result = selectedPackage!.containsKey('package')
+                          ? selectedPackage
+                          : {'package': selectedPackage};
+                      Get.back(result: result);
                     }
-                    // if (selectedPackage != null) {
-                    //   final selectedPackageDetails = packages.firstWhere(
-                    //         (package) => package['package'] == selectedPackage,
-                    //     orElse: () => {},
-                    //   );
-                    //   selectedPackageDetails['EndDate'] = endDate;
-                    //   Get.back(result: selectedPackageDetails);
-                    // } else {
-                    //
-                    // }
                   },
                   title: 'Continue',
                 ),

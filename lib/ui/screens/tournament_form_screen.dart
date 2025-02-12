@@ -1043,7 +1043,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
                     if (l != null) {
                       setState(() {
                         location = l;
-                        logger.d("The Location is $l");
+                        logger.d("The selected Location is $l and address is:${_addressController.text}");
                       });
                     }
                     FocusScope.of(context).unfocus();

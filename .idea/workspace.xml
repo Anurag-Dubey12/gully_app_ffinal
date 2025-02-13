@@ -9,11 +9,17 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="subscription screen and banner promotion modify">
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="modify banner screen and other needed details">
+      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/promotional/banner_adding.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/api/banner_promotion_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/banner_promotion_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/banner_promotion_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/banner_promotion_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/promote_banner_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/PromotionalBannerModel.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/banner_payment_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/banner_payment_page.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/service/package_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/service/package_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/create_tournament/select_from_to_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/create_tournament/select_from_to_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/create_tournament/top_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/create_tournament/top_card.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,14 +184,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00072" summary="service api modify">
-      <option name="closed" value="true" />
-      <created>1730721559491</created>
-      <option name="number" value="00072" />
-      <option name="presentableId" value="LOCAL-00072" />
-      <option name="project" value="LOCAL" />
-      <updated>1730721559491</updated>
     </task>
     <task id="LOCAL-00073" summary="service api modify">
       <option name="closed" value="true" />
@@ -571,7 +569,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739275120629</updated>
     </task>
-    <option name="localTasksCounter" value="121" />
+    <task id="LOCAL-00121" summary="modify banner screen and other needed details">
+      <option name="closed" value="true" />
+      <created>1739361564815</created>
+      <option name="number" value="00121" />
+      <option name="presentableId" value="LOCAL-00121" />
+      <option name="project" value="LOCAL" />
+      <updated>1739361564815</updated>
+    </task>
+    <option name="localTasksCounter" value="122" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -592,7 +598,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="all things done" />
     <MESSAGE value="updateteamdata" />
     <MESSAGE value="updated matchup model,live score screen and add player screen" />
     <MESSAGE value="need to modify current team list" />
@@ -617,7 +622,8 @@
     <MESSAGE value="new modification" />
     <MESSAGE value="image picker" />
     <MESSAGE value="subscription screen and banner promotion modify" />
-    <option name="LAST_COMMIT_MESSAGE" value="subscription screen and banner promotion modify" />
+    <MESSAGE value="modify banner screen and other needed details" />
+    <option name="LAST_COMMIT_MESSAGE" value="modify banner screen and other needed details" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">

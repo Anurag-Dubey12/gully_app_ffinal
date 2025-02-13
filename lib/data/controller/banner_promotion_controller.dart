@@ -4,11 +4,13 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../utils/app_logger.dart';
 import '../../utils/geo_locator_helper.dart';
 import '../api/banner_promotion_api.dart';
-import '../model/promote_banner_model.dart';
+import '../model/PromotionalBannerModel.dart';
 
-class PromotionController extends GetxController with StateMixin<PromoteBannerModel>{
+class PromotionController extends GetxController
+    with StateMixin<PromotionalBanner> {
   final BannerApi bannerApi;
   Rx<LatLng> coordinates = const LatLng(0, 0).obs;
   PromotionController({required this.bannerApi}) {
@@ -20,20 +22,33 @@ class PromotionController extends GetxController with StateMixin<PromoteBannerMo
   }
   Future<void> getCurrentLocation() async {
     final position = await determinePosition();
-
     coordinates.value = LatLng(position.latitude, position.longitude);
     coordinates.refresh();
   }
 
-  Future<PromoteBannerModel> createBanner(
-    Map<String,dynamic> banner) async{
-      try{
-        final body=await bannerApi.createBanner(banner);
-        return PromoteBannerModel.fromJson(body.data!);
-      }catch(e){
-        errorSnackBar(e.toString());
-        rethrow;
-      }
+  Future<bool> createBanner(Map<String, dynamic> banner) async {
+    try {
+      final body = await bannerApi.createBanner(banner);
+
+      return true;
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
   }
 
+  RxList<PromotionalBanner> bannerList = <PromotionalBanner>[].obs;
+  Future<List<PromotionalBanner>> getPromotionalBanner() async {
+    try{
+      final response = await bannerApi.getbanner();
+      logger.d("My Banner Data:${response.data}");
+      return bannerList.value = (response.data!['Banners'] as List<dynamic>?)
+          ?.map((e) => PromotionalBanner.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+          [];
+    }catch(err){
+      errorSnackBar(err.toString());
+      throw Exception(err.toString());
+    }
+  }
 }

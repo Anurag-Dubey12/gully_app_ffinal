@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/api/misc_api.dart';
 import 'package:gully_app/data/model/package_model.dart';
-import 'package:gully_app/data/model/promote_banner_model.dart';
+import 'package:gully_app/data/model/PromotionalBannerModel.dart';
 import 'package:gully_app/data/model/banner_model.dart';
 import 'package:gully_app/data/model/looking_for_model.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -17,12 +17,12 @@ class MiscController extends GetxController with StateMixin {
   }
 
   RxBool isConnected = true.obs;
-  RxInt indexvalue=0.obs;
+  RxInt indexvalue = 0.obs;
   PageController pageController = PageController();
-  void updateIndex(int index){
-    indexvalue.value=index;
-
+  void updateIndex(int index) {
+    indexvalue.value = index;
   }
+
   RxList<BannerModel> banners = <BannerModel>[].obs;
   Future<String> getContent(String slug) async {
     var response = await repo.getContent(slug);
@@ -30,7 +30,7 @@ class MiscController extends GetxController with StateMixin {
     return response.data!['content'];
   }
 
-  Rx<PromoteBannerModel?> ads=Rx<PromoteBannerModel?>(null);
+  // Rx<PromotionalBanner?> ads=Rx<PromoteBannerModel?>(null);
 
   Future<void> getBanners() async {
     var response = await repo.getBanners();
@@ -72,7 +72,6 @@ class MiscController extends GetxController with StateMixin {
     }
   }
 
-
   Future<List<LookingForPlayerModel>> getLookingFor() async {
     try {
       var response = await repo.getLookingFor();
@@ -111,13 +110,15 @@ class MiscController extends GetxController with StateMixin {
     try {
       var response = await repo.getPackages(packagefor);
       logger.d("The Package Response:${packagefor}");
-     return  packages.value=(response.data!['packages'] as List<dynamic>?)?.map((e) => Package.fromJson(e as Map<String, dynamic>)).toList() ?? [];
+      return packages.value = (response.data!['packages'] as List<dynamic>?)
+              ?.map((e) => Package.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [];
     } catch (e) {
       errorSnackBar(e.toString());
       throw Exception(e.toString());
+    }
   }
-  }
-
 }
 
 class UpdateAppModel {

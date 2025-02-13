@@ -16,4 +16,12 @@ class BannerApi {
     }
     return ApiResponse.fromJson(response.body);
   }
+  Future<ApiResponse> getbanner() async{
+    final response= await repo.get("/banner/getbanner");
+    logger.d(response.body);
+    if(!response.isOk){
+      throw response.body['message'] ?? 'Unable to Process Request';
+    }
+    return ApiResponse.fromJson(response.body);
+  }
 }

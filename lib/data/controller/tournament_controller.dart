@@ -15,7 +15,7 @@ import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../model/points_table_model.dart';
-
+import '../model/sponsor_model.dart';
 
 class TournamentController extends GetxController
     with StateMixin<TournamentModel?> {
@@ -28,17 +28,16 @@ class TournamentController extends GetxController
     });
   }
   RxString location = ''.obs;
-  RxString tournamentId=''.obs;
-  RxBool isSchedule=false.obs;
-  RxBool iscompleted=false.obs;
-  RxBool isTourOver=false.obs;
-  RxBool isSearch=false.obs;
-  RxString tournamentname=''.obs;
+  RxString tournamentId = ''.obs;
+  RxBool isSchedule = false.obs;
+  RxBool iscompleted = false.obs;
+  RxBool isTourOver = false.obs;
+  RxBool isSearch = false.obs;
+  RxString tournamentname = ''.obs;
 
   void setScheduleStatus(bool status) {
     isSchedule.value = status;
   }
-
 
   Future<void> getCurrentLocation() async {
     final position = await determinePosition();
@@ -46,6 +45,7 @@ class TournamentController extends GetxController
     coordinates.value = LatLng(position.latitude, position.longitude);
     coordinates.refresh();
   }
+
   set setCoordinates(LatLng value) {
     coordinates.value = value;
     coordinates.refresh();
@@ -55,9 +55,10 @@ class TournamentController extends GetxController
   Rx<LatLng> coordinates = const LatLng(0, 0).obs;
   RxBool isEditable = true.obs;
 
-  void setEditable(bool isedit){
+  void setEditable(bool isedit) {
     isEditable.value = isedit;
   }
+
   // Rx<TournamentModel?> tournamentModel = Rx<TournamentModel?>(null);
   // final tournamentModel = RxMap<String, dynamic>();
   final RxMap<String, dynamic> tournamentModel = <String, dynamic>{}.obs;
@@ -65,16 +66,109 @@ class TournamentController extends GetxController
   Future<TournamentModel> createTournament(
       Map<String, dynamic> tournament) async {
     try {
-      final body = await tournamentApi.createTournament(tournament);
-      logger.d("The response for tournament Creation:${body.data}");
-      return TournamentModel.fromJson(body.data!);
+      final response = await tournamentApi.createTournament(tournament);
+      logger.d("The response for tournament Creation:${response.data}");
+      return TournamentModel.fromJson(response.data!);
     } catch (e) {
       errorSnackBar(e.toString());
       rethrow;
     }
   }
 
+  Future<bool> setSponsor(Map<String, dynamic> tournament) async {
+    try {
+      final response = await tournamentApi.setSponsor(tournament);
+      logger.d("The response for tournament Sponsor:${response.data}");
+      return true;
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
 
+  Future<TournamentSponsor> addSponsor(Map<String, dynamic> sponsor) async {
+    try {
+      final response = await tournamentApi.addSponsor(sponsor);
+      logger.d("The response for tournament Sponsor:${response.data}");
+      return TournamentSponsor.fromJson(response.data!);
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<bool> editSponsor(
+      String sponsorId, Map<String, dynamic> sponsor) async {
+    try {
+      final response = await tournamentApi.editSponsor(sponsorId, sponsor);
+      logger.d("The response for tournament Sponsor:${response.data}");
+      if (response.status == false) {
+        logger.d("Failed to update Sponsor Data");
+      }
+      return true;
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
+
+  RxList<TournamentSponsor> MyTournamentSponsor = <TournamentSponsor>[].obs;
+
+  Future<List<TournamentSponsor>> getMyTournamentSponsor(
+      String tournamentId) async {
+    try {
+      final response = await tournamentApi.getmyTournamentSponsor(tournamentId);
+      logger.d("The response for tournament Sponsor:${response.data}");
+      if (response.status == false) {
+        logger.d("Failed to update Sponsor Data");
+      }
+      return MyTournamentSponsor.value = (response.data!['mySponsor'] as List<dynamic>?)
+              ?.map(
+                  (e) => TournamentSponsor.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [];
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
+  RxInt indexvalue = 0.obs;
+  void updateIndex(int index) {
+    indexvalue.value = index;
+  }
+  RxList<TournamentSponsor> tournamentSponsor = <TournamentSponsor>[].obs;
+
+  Future<List<TournamentSponsor>> getTournamentSponsor(String tournamentId) async {
+    try {
+      final response = await tournamentApi.getTournamentSponsor(tournamentId);
+      logger.d("The response for tournament Sponsor:${response.data}");
+      if (response.status == false) {
+        logger.d("Failed to update Sponsor Data");
+      }
+      return tournamentSponsor.value = (response.data!['Sponsor'] as List<dynamic>?)
+          ?.map(
+              (e) => TournamentSponsor.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+          [];
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<bool> deleteSponsor(String sponsorId)async{
+    try {
+      final response = await tournamentApi.deleteSponsor(sponsorId);
+      logger.d("The response for tournament Sponsor:${response.data}");
+      if (response.status == false) {
+        logger.d("Failed to Delete Sponsor Data");
+      }
+      return true;
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
   Future<bool> updateTournament(
       Map<String, dynamic> tournament, String tournamentId) async {
     try {
@@ -90,15 +184,17 @@ class TournamentController extends GetxController
   RxString tournamentStartDate = ''.obs;
   RxString tournamentEndDate = ''.obs;
   RxString tournamentauthority = ''.obs;
-  void saveDates(DateTime? startDate, DateTime? endDate,String tournamentauth) {
+  void saveDates(
+      DateTime? startDate, DateTime? endDate, String tournamentauth) {
     if (startDate != null) {
       tournamentStartDate.value = startDate.toIso8601String();
     }
     if (endDate != null) {
       tournamentEndDate.value = endDate.toIso8601String();
     }
-    tournamentauthority.value=tournamentauth;
+    tournamentauthority.value = tournamentauth;
   }
+
   DateTime? get startDateForPicker {
     return tournamentStartDate.value.isNotEmpty
         ? DateTime.parse(tournamentStartDate.value)
@@ -114,12 +210,12 @@ class TournamentController extends GetxController
   final Rx<DateTime> selectedDate = DateTime.now().obs;
   final RxString filter = ''.obs;
 
-  RxString filterData=''.obs;
+  RxString filterData = ''.obs;
 
-  void setSelectedFilter(String filter){
+  void setSelectedFilter(String filter) {
     filterData.value = filter;
     logger.d("Selected Filter:$filter");
-    if(filter=='past'||filter=='current'||filter=='upcoming'){
+    if (filter == 'past' || filter == 'current' || filter == 'upcoming') {
       logger.d("Found Selected Filter with popup ");
       setSelectedDate(DateTime.now());
     }
@@ -135,9 +231,7 @@ class TournamentController extends GetxController
   RxList<MatchupModel> Current_matches = <MatchupModel>[].obs;
   RxBool isLoading = false.obs;
 
-
-
-  Future<void> getTournamentList({String? filterD,bool isLive=false}) async {
+  Future<void> getTournamentList({String? filterD, bool isLive = false}) async {
     try {
       filter.value = filterD ?? '';
       isLoading.value = true;
@@ -152,38 +246,43 @@ class TournamentController extends GetxController
         latitude: coordinates.value.latitude,
         longitude: coordinates.value.longitude,
         startDate: selectedDate.value,
-        filter: isLive ? 'current' :filterD,
+        filter: isLive ? 'current' : filterD,
         endDate: selectedDate.value.add(const Duration(days: 7)),
       );
       logger.d("The entire Response: ${response.data}");
 
-
-
       if (response.data != null) {
-        if(isLive){
-          Current_tournamentList.value = (response.data!['tournamentList'] as List<dynamic>?)
-              ?.map((e) => TournamentModel.fromJson(e as Map<String, dynamic>))
-              .toList() ?? [];
+        if (isLive) {
+          Current_tournamentList.value =
+              (response.data!['tournamentList'] as List<dynamic>?)
+                      ?.map((e) =>
+                          TournamentModel.fromJson(e as Map<String, dynamic>))
+                      .toList() ??
+                  [];
           Current_matches.value = (response.data!['matches'] as List<dynamic>?)
-              ?.map((e) => MatchupModel.fromJson(e as Map<String, dynamic>))
-              .toList() ?? [];
-        }else{
-          tournamentList.value = (response.data!['tournamentList'] as List<dynamic>?)
-              ?.map((e) => TournamentModel.fromJson(e as Map<String, dynamic>))
-              .toList() ?? [];
+                  ?.map((e) => MatchupModel.fromJson(e as Map<String, dynamic>))
+                  .toList() ??
+              [];
+        } else {
+          tournamentList.value =
+              (response.data!['tournamentList'] as List<dynamic>?)
+                      ?.map((e) =>
+                          TournamentModel.fromJson(e as Map<String, dynamic>))
+                      .toList() ??
+                  [];
           matches.value = (response.data!['matches'] as List<dynamic>?)
-              ?.map((e) => MatchupModel.fromJson(e as Map<String, dynamic>))
-              .toList() ?? [];
+                  ?.map((e) => MatchupModel.fromJson(e as Map<String, dynamic>))
+                  .toList() ??
+              [];
         }
       } else {
-        if(isLive){
+        if (isLive) {
           Current_tournamentList.value = [];
           Current_matches.value = [];
-        }else{
+        } else {
           tournamentList.value = [];
           matches.value = [];
         }
-
       }
     } catch (e) {
       logger.d('Error in getTournamentList: $e');
@@ -194,7 +293,10 @@ class TournamentController extends GetxController
       tournamentList.refresh();
     }
   }
-  Future<void> getCurrentTournamentList({String? filterD,}) async {
+
+  Future<void> getCurrentTournamentList({
+    String? filterD,
+  }) async {
     try {
       filter.value = filterD ?? '';
       isLoading.value = true;
@@ -214,16 +316,19 @@ class TournamentController extends GetxController
       );
       logger.d("The entire Response: ${response.data}");
       if (response.data != null) {
-        Current_tournamentList.value = (response.data!['tournamentList'] as List<dynamic>?)
-            ?.map((e) => TournamentModel.fromJson(e as Map<String, dynamic>))
-            .toList() ?? [];
+        Current_tournamentList.value = (response.data!['tournamentList']
+                    as List<dynamic>?)
+                ?.map(
+                    (e) => TournamentModel.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [];
         Current_matches.value = (response.data!['matches'] as List<dynamic>?)
-            ?.map((e) => MatchupModel.fromJson(e as Map<String, dynamic>))
-            .toList() ?? [];
+                ?.map((e) => MatchupModel.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [];
       } else {
         Current_tournamentList.value = [];
         Current_matches.value = [];
-
       }
     } catch (e) {
       logger.d('Error in getTournamentList: $e');
@@ -256,6 +361,7 @@ class TournamentController extends GetxController
       rethrow;
     }
   }
+
   Future<void> getAllTournament() async {
     try {
       final response = await tournamentApi.getUserAllTournament();
@@ -272,11 +378,12 @@ class TournamentController extends GetxController
       rethrow;
     }
   }
+
   Future<bool> updateTeamRequest(
-      String tournamentId,
-      String teamId,
-      String action,
-      ) async {
+    String tournamentId,
+    String teamId,
+    String action,
+  ) async {
     try {
       await tournamentApi.updateTeamRequest(tournamentId, teamId, action);
       getOrganizerTournamentList();
@@ -300,8 +407,8 @@ class TournamentController extends GetxController
     }
   }
 
-  RxList<TeamModel> eliminatedTeam=<TeamModel>[].obs;
-  RxList<TeamModel> AllTeam=<TeamModel>[].obs;
+  RxList<TeamModel> eliminatedTeam = <TeamModel>[].obs;
+  RxList<TeamModel> AllTeam = <TeamModel>[].obs;
 
   Future<List<TeamModel>> getRegisteredTeams(String tournamentId) async {
     try {
@@ -325,11 +432,12 @@ class TournamentController extends GetxController
       rethrow;
     }
   }
+
   Future<bool> registerTeam(
       {required String teamId,
-        required String viceCaptainContact,
-        required String address,
-        required String tournamentId}) async {
+      required String viceCaptainContact,
+      required String address,
+      required String tournamentId}) async {
     try {
       final response = await tournamentApi.registerTeam(
           teamId: teamId,
@@ -355,7 +463,7 @@ class TournamentController extends GetxController
   }
 
   Future<bool> createMatchup(String tourId, String team1, String team2,
-      DateTime date, int matchNo, String round,String matchAuthority) async {
+      DateTime date, int matchNo, String round, String matchAuthority) async {
     try {
       final response = await tournamentApi.createMatchup(
           tourId: tourId,
@@ -373,14 +481,14 @@ class TournamentController extends GetxController
     }
   }
 
-  RxList<MatchupModel> matchups=<MatchupModel>[].obs;
+  RxList<MatchupModel> matchups = <MatchupModel>[].obs;
 
   Future<List<MatchupModel>> getMatchup(String tourId) async {
     try {
       final response = await tournamentApi.getMatchup(tourId);
       logger.d("Raw Matchup API response: ${response.data}");
       // await Clipboard.setData(ClipboardData(text: response.data.toString()));
-      matchups.value= response.data!['matches']
+      matchups.value = response.data!['matches']
           .map<MatchupModel>((e) => MatchupModel.fromJson(e))
           .toList();
       return matchups;
@@ -391,24 +499,25 @@ class TournamentController extends GetxController
     }
   }
 
-  Future<bool> editMatch(Map<String,dynamic> match,String matchId)async{
-    try{
-      var response=await tournamentApi.editMatch(match,matchId);
+  Future<bool> editMatch(Map<String, dynamic> match, String matchId) async {
+    try {
+      var response = await tournamentApi.editMatch(match, matchId);
       if (response.status == false) {
         logger.i('Error: ${response.message}');
         errorSnackBar(response.message ?? 'Unable to update service');
         return false;
       }
       return true;
-    }catch(e){
+    } catch (e) {
       logger.e('Error updating service: $e');
       rethrow;
     }
   }
 
-  Future<bool> teamElimination(String tourId,List<String>teamId) async {
+  Future<bool> teamElimination(String tourId, List<String> teamId) async {
     try {
-      final response = await tournamentApi.teamElimination(tournamentId: tourId, teamId: teamId);
+      final response = await tournamentApi.teamElimination(
+          tournamentId: tourId, teamId: teamId);
       if (response.status == false) {
         logger.i('Error: ${response.message}');
         errorSnackBar(response.message ?? 'Unable to Eliminate Team');
@@ -433,9 +542,7 @@ class TournamentController extends GetxController
         return false;
       }
       matchups.remove((element) => element.id == matchid);
-      await Future.wait([
-        getMatchup(tournamentId.toString())
-      ]);
+      await Future.wait([getMatchup(tournamentId.toString())]);
       return true;
     } catch (e) {
       errorSnackBar(e.toString());
@@ -443,13 +550,13 @@ class TournamentController extends GetxController
     }
   }
 
-  Rx<TeamModel?> battingTeam=Rx<TeamModel?>(null);
-  Rx<TeamModel?> bowlingTeam=Rx<TeamModel?>(null);
-  Rx<MatchupModel?> currentMatch=Rx<MatchupModel?>(null);
-  RxString tossWonBy=''.obs;
-  RxString electedTo=''.obs;
-  RxInt overs=0.obs;
-  RxBool isTournament=false.obs;
+  Rx<TeamModel?> battingTeam = Rx<TeamModel?>(null);
+  Rx<TeamModel?> bowlingTeam = Rx<TeamModel?>(null);
+  Rx<MatchupModel?> currentMatch = Rx<MatchupModel?>(null);
+  RxString tossWonBy = ''.obs;
+  RxString electedTo = ''.obs;
+  RxInt overs = 0.obs;
+  RxBool isTournament = false.obs;
 
   void updateState({
     required TeamModel battingTeam,
@@ -459,17 +566,15 @@ class TournamentController extends GetxController
     required String electedTo,
     required int overs,
     required bool isTournament,
-  }){
-    this.battingTeam.value=battingTeam;
-    this.bowlingTeam.value=bowlingTeam;
-    currentMatch.value=match;
-    this.tossWonBy.value=tossWonBy;
-    this.electedTo.value=electedTo;
-    this.overs.value=overs;
-    this.isTournament.value=isTournament;
+  }) {
+    this.battingTeam.value = battingTeam;
+    this.bowlingTeam.value = bowlingTeam;
+    currentMatch.value = match;
+    this.tossWonBy.value = tossWonBy;
+    this.electedTo.value = electedTo;
+    this.overs.value = overs;
+    this.isTournament.value = isTournament;
   }
-
-
 
   Future<bool> cancelTournament(String tourId) async {
     try {
@@ -486,7 +591,7 @@ class TournamentController extends GetxController
       String tourId, String authority) async {
     try {
       final response =
-      await tournamentApi.updateTournamentAuthority(tourId, authority);
+          await tournamentApi.updateTournamentAuthority(tourId, authority);
       if (response.status!) {
         return response.status!;
       } else {
@@ -512,11 +617,13 @@ class TournamentController extends GetxController
       rethrow;
     }
   }
+
   final RxList<PointTableModel> points_table = <PointTableModel>[].obs;
 
   Future<List<PointTableModel>> tournamentPointsTable(String tourId) async {
     try {
-      final response = await tournamentApi.tournamentPointsTable(tourId: tourId);
+      final response =
+          await tournamentApi.tournamentPointsTable(tourId: tourId);
       logger.d("Raw Points Table API response: ${response.data}");
 
       points_table.value = (response.data!['TeamPoints'] as List)
@@ -530,18 +637,17 @@ class TournamentController extends GetxController
     }
   }
 
-
   Future<double> getTournamentFee(String tournamentLimit) async {
     final res =
-    await tournamentApi.getTournamentFees(tournamentLimit: tournamentLimit);
+        await tournamentApi.getTournamentFees(tournamentLimit: tournamentLimit);
     return double.parse(res.data!['fee'].toString());
   }
 
   Future<String> createOrder(
       {required double discountAmount,
-        required String tournamentId,
-        required double totalAmount,
-        required String? coupon}) async {
+      required String tournamentId,
+      required double totalAmount,
+      required String? coupon}) async {
     try {
       final response = await tournamentApi.createOrder(
           discountAmount: discountAmount,
@@ -555,7 +661,25 @@ class TournamentController extends GetxController
     }
   }
 
-  RxInt couponsDisount=0.obs;
+  Future<String> createbannerOrder(
+      {required double discountAmount,
+      required String bannerId,
+      required double totalAmount,
+      required String? coupon}) async {
+    try {
+      final response = await tournamentApi.createBannerOrder(
+          discountAmount: discountAmount,
+          bannerId: bannerId,
+          totalAmount: totalAmount,
+          coupon: coupon);
+      return response.data!['order']['id'];
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
+
+  RxInt couponsDisount = 0.obs;
   Future<List<Coupon>>? getCoupons() async {
     try {
       final response = await tournamentApi.getCoupons();
@@ -573,7 +697,7 @@ class TournamentController extends GetxController
       String tournamentId, String couponId, double amount) async {
     try {
       final response =
-      await tournamentApi.applyCoupon(tournamentId, couponId, amount);
+          await tournamentApi.applyCoupon(tournamentId, couponId, amount);
       return response.data;
     } catch (e) {
       errorSnackBar(e.toString());
@@ -619,8 +743,8 @@ class TournamentController extends GetxController
   //   }
   // }
 
-  final authController=Get.find<AuthController>();
-  RxList<Transaction>transactions=<Transaction>[].obs;
+  final authController = Get.find<AuthController>();
+  RxList<Transaction> transactions = <Transaction>[].obs;
   Future<List<Transaction>> getTransactions() async {
     try {
       final userid = authController.state!.id;
@@ -666,6 +790,7 @@ class TournamentController extends GetxController
       return [];
     }
   }
+
   Future<List<MatchupModel>> getTournamentMatches(String tournamentId) async {
     try {
       final response = await tournamentApi.getMatchup(tournamentId);
@@ -677,5 +802,4 @@ class TournamentController extends GetxController
       rethrow;
     }
   }
-
 }

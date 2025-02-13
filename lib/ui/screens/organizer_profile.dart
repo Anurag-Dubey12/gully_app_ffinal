@@ -11,6 +11,7 @@ import 'package:gully_app/ui/screens/promote_banner_screen.dart';
 import 'package:gully_app/ui/screens/select_match_type_for_scoreboard.dart';
 import 'package:gully_app/ui/screens/select_performance_type.dart';
 import 'package:gully_app/ui/screens/tournament_requests_screen.dart';
+import 'package:gully_app/ui/screens/txn_history_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/home_screen/top_header.dart';
@@ -352,12 +353,22 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                                 Get.to(() => const PromoteBannerScreen());
                               },
                             ),
-                            // ProfileTileCard(
-                            //   text: 'Transaction History',
-                            //   onTap: () {
-                            //     Get.to(() => const TxnHistoryScreen());
-                            //   },
-                            // ),
+                            ProfileTileCard(
+                              text: 'Add Tournament Sponsor',
+                              onTap: () {
+                                Get.find<TournamentController>()
+                                    .getOrganizerTournamentList();
+                                Get.to(() => const CurrentTournamentListScreen(
+                                  redirectType: RedirectType.sponsor,
+                                ));
+                              },
+                            ),
+                            ProfileTileCard(
+                              text: 'Transaction History',
+                              onTap: () {
+                                Get.to(() => const TxnHistoryScreen());
+                              },
+                            ),
                             ProfileTileCard(
                               text: 'View your tournament',
                               onTap: () {

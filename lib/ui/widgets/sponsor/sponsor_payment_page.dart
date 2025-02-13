@@ -6,86 +6,67 @@ import 'package:gully_app/data/controller/banner_promotion_controller.dart';
 import 'package:gully_app/ui/screens/payment_page.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import '../../data/controller/auth_controller.dart';
-import '../../data/controller/tournament_controller.dart';
-import '../../utils/app_logger.dart';
-import '../../utils/utils.dart';
-import '../theme/theme.dart';
-import '../widgets/gradient_builder.dart';
-import 'home_screen.dart';
 
-class BannerPaymentPage extends StatefulWidget {
-  final Map<String, dynamic> banner;
-  final Map<String, dynamic> SelectedPakcage;
-  final String base64;
-  const BannerPaymentPage(
-      {Key? key,
-      required this.banner,
-      required this.SelectedPakcage,
-      required this.base64})
+import '../../../data/controller/auth_controller.dart';
+import '../../../data/controller/tournament_controller.dart';
+import '../../../data/model/package_model.dart';
+import '../../../data/model/tournament_model.dart';
+import '../../../utils/FallbackImageProvider.dart';
+import '../../../utils/app_logger.dart';
+import '../../../utils/image_picker_helper.dart';
+import '../../../utils/utils.dart';
+import '../../screens/home_screen.dart';
+import '../../theme/theme.dart';
+import '../gradient_builder.dart';
+
+class SponsorPaymentPage extends StatefulWidget {
+  final TournamentModel tournament;
+  final Package? package;
+
+  const SponsorPaymentPage(
+      {Key? key, required this.tournament, required this.package})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => BannerPaymentPageState();
+  State<StatefulWidget> createState() => SponsorPaymentPageState();
 }
 
-class BannerPaymentPageState extends State<BannerPaymentPage> {
-  double fees = 0;
+class SponsorPaymentPageState extends State<SponsorPaymentPage> {
   final _razorpay = Razorpay();
-  String? couponCode;
   double discount = 0;
-  DateTime? start_date;
-  DateTime? end_date;
+  String? couponCode;
+
   @override
   void initState() {
     super.initState();
     _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-    start_date = DateTime.parse(widget.banner['startDate']);
-    end_date = DateTime.parse(widget.banner['endDate']);
-    fees = double.tryParse(widget.SelectedPakcage['package']['price'].toString().split('.')[0]) ?? 0.0;
   }
 
   _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    final controller=Get.find<PromotionController>();
-    final ordercontroller = Get.find<TournamentController>();
-    Map<String, dynamic> bannerdata = {
-      "banner_title": widget.banner['banner_title'],
-      "banner_image": widget.base64,
-      "startDate": widget.banner['startDate'],
-      "endDate": widget.banner['endDate'],
-      "bannerlocationaddress": widget.banner['bannerlocationaddress'],
-      "longitude": widget.banner['longitude'],
-      "latitude":widget.banner['latitude'],
-      "packageId": widget.banner['packageId'],
+    final controller = Get.find<TournamentController>();
+    Map<String, dynamic> sponsor = {
+      "tournamentId":widget.tournament.id,
+      "SponsorshipPackageId":widget.package?.id
     };
-    final res=await controller.createBanner(bannerdata);
-    logger.d("The Banner Id:${res.id}");
+    final res=await controller.setSponsor(sponsor);
     if(res!=null){
-      await ordercontroller.createbannerOrder(
-          discountAmount: fees,
-          bannerId: res.id,
-          totalAmount: fees,
-          coupon: couponCode);
       successSnackBar(
-        'Congratulations !!!\nYour transaction has been successful. Your banner is Live!',
+        'Congratulations !!!\nYour transaction has been successful. Your Can Now Add Your Sponsor Details',
         title: "Payment Successful",
       ).then(
             (value) => Get.offAll(() => const HomeScreen(),
             predicate: (route) => route.name == '/HomeScreen'),
       );
     }
-
     logger.f('Payment Success');
   }
 
-  _handlePaymentError(PaymentFailureResponse response) async{
+  _handlePaymentError(PaymentFailureResponse response) async {
     logger.f('Payment Error ${response.message.toString()}');
     errorSnackBar('Your transaction has failed. Please try again!',
         title: "Payment Failed!");
-
-
   }
 
   _handleExternalWallet(ExternalWalletResponse response) {
@@ -96,9 +77,9 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
   void startPayment() async {
     final authController = Get.find<AuthController>();
     var options = {
-      // 'key': 'rzp_test_QMUxKSQyzcywjc',//my test key
-      'key': 'rzp_live_6sW7limWXGaS3k',
-      'amount': fees * 100,
+      // 'key': 'rzp_live_6sW7limWXGaS3k',
+      'key': 'rzp_test_QMUxKSQyzcywjc',//my test key
+      'amount': widget.package!.price * 100,
       'name': 'Gully Team',
       'description': 'Advertisement Fee',
       'prefill': {
@@ -111,6 +92,7 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
 
   @override
   Widget build(BuildContext context) {
+    double gstAmount = (widget.package?.price ?? 0) * 0.18;
     return GradientBuilder(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -134,58 +116,70 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      height: 150,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        image: DecorationImage(
-                          image: FileImage(File(widget.banner['banner_image'])),
-                          fit: BoxFit.cover,
-                        ),
+                    const Text(
+                      'Tournament Details',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Start Date:',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                )),
-                            Text(DateFormat("dd-MMM-yyyy").format(start_date!),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey.shade800,
-                                  fontWeight: FontWeight.w500,
-                                )),
-                          ],
-                        ),
-                        const Spacer(),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            const Text('End Date:',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey,
-                                )),
-                            Text(DateFormat("dd-MMM-yyyy").format(end_date!),
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey.shade800,
-                                  fontWeight: FontWeight.w500,
-                                )),
-                          ],
-                        ),
-                      ],
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10)
+                      ),
+                      child: widget.tournament.coverPhoto != null
+                          ? Image.network(
+                        toImageUrl(widget.tournament.coverPhoto!),
+                        fit: BoxFit.contain,
+                        // errorBuilder:  (BuildContext context, Object exception, StackTrace? stackTrace){
+                        //   return Stack(
+                        //     children: [
+                        //     Image.asset(
+                        //     'assets/images/logo.png',
+                        //     fit: BoxFit.cover,
+                        //   ),
+                        //       Positioned(
+                        //
+                        //         child: Container(
+                        //           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                        //           decoration: BoxDecoration(
+                        //             color: Colors.black.withOpacity(0.5),
+                        //             borderRadius: BorderRadius.circular(8),
+                        //           ),
+                        //           child: const Text(
+                        //             "Unable To Get Tournament Cover Image",
+                        //             style: TextStyle(
+                        //               color: Colors.white,
+                        //               fontSize: 16,
+                        //               fontWeight: FontWeight.bold,
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       )
+                        //     ],
+                        //   );
+                        // },
+                      )
+                          : Image.asset(
+                        'assets/images/logo.png',
+                        fit: BoxFit.cover,
+                      ),
                     ),
+                    packageDetails(
+                        "Tournament Name", widget.tournament.tournamentName),
+                    packageDetails(
+                        "Tournament Start Date",
+                        DateFormat("dd-MMM-yyyy")
+                            .format(widget.tournament.tournamentStartDateTime)),
+                    packageDetails(
+                        "Tournament End Date",
+                        DateFormat("dd-MMM-yyyy")
+                            .format(widget.tournament.tournamentEndDateTime)),
                     const SizedBox(height: 22),
                     const Text(
-                      'Package Details:',
+                      'Sponsor Package  Details:',
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.black,
@@ -194,11 +188,13 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
                     ),
                     const SizedBox(height: 10),
                     packageDetails(
-                      'Package Name:',
-                      widget.SelectedPakcage['package']['name'],
-                    ),
-                    packageDetails('Package Price:',
-                        '₹${widget.SelectedPakcage['package']['price']}/-'),
+                        "Package Name", widget.package?.name),
+                    packageDetails(
+                        "Total Media Allowed", "${widget.package?.maxMedia}"),
+                    packageDetails(
+                        "Video Allowed", "${widget.package?.maxVideos}"),
+                    packageDetails(
+                        "Package Price", "${widget.package?.price}"),
                     const SizedBox(height: 15),
                     Text('Payment Summary',
                         style: TextStyle(
@@ -217,7 +213,7 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
                             )),
                         const Spacer(),
                         Text(
-                          '₹${(fees / 1.18).toStringAsFixed(0)}',
+                          '₹${(widget.package?.price ?? 0 / 1.18) - gstAmount}',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey.shade800,
@@ -228,14 +224,15 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
                     ),
                     Row(
                       children: [
-                        Text('GST(18%):',
+                        Text('GST (18%):',
                             style: TextStyle(
                               fontSize: 14,
                               color: Colors.grey.shade800,
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text('₹${(fees - (fees / 1.18)).toStringAsFixed(0)}',
+                        Text(
+                            '₹$gstAmount',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey.shade800,
@@ -244,41 +241,6 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
                       ],
                     ),
                     const SizedBox(height: 5),
-                    // Row(
-                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                    //   children: [
-                    //     Column(
-                    //       crossAxisAlignment: CrossAxisAlignment.start,
-                    //       mainAxisAlignment: MainAxisAlignment.start,
-                    //       children: [
-                    //         Text('Discount:',
-                    //             style: TextStyle(
-                    //               fontSize: 14,
-                    //               color: Colors.grey.shade800,
-                    //               fontWeight: FontWeight.w400,
-                    //             )),
-                    //         const SizedBox(height: 5),
-                    //         if (couponCode != null)
-                    //           Chip(
-                    //             label: Text(
-                    //               'Promocode: $couponCode',
-                    //               style: const TextStyle(fontSize: 12),
-                    //             ),
-                    //             side: BorderSide(
-                    //                 style: BorderStyle.solid,
-                    //                 color: Colors.red.shade400),
-                    //           )
-                    //       ],
-                    //     ),
-                    //     const Spacer(),
-                    //     Text('- ₹$discount',
-                    //         style: TextStyle(
-                    //           fontSize: 16,
-                    //           color: Colors.grey.shade800,
-                    //           fontWeight: FontWeight.w600,
-                    //         )),
-                    //   ],
-                    // ),
                     const Divider(
                       color: Colors.grey,
                     ),
@@ -291,7 +253,7 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text('₹${fees - discount}',
+                        Text('₹${widget.package?.price ?? 0 - discount}',
                             style: TextStyle(
                               fontSize: 20,
                               color: Colors.grey.shade800,
@@ -319,7 +281,10 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
                       ),
                     ),
                     const SizedBox(height: 22),
-                    const CancellationPolicyWidget(content: 'The Banner fee is non-refundable. In case of any issue, kindly contact Gully Support.',)
+                    const CancellationPolicyWidget(
+                      content:
+                          'The Banner fee is non-refundable. In case of any issue, kindly contact Gully Support.',
+                    )
                   ],
                 ),
               ),

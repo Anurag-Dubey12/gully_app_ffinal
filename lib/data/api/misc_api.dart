@@ -26,9 +26,15 @@ class MiscApi {
     return ApiResponse.fromJson(response.body);
   }
 
-  Future<ApiResponse> getBanners() {
-    return repo.get('/other/getBanner').then((response) {
-      logger.d("Called Banner");
+  Future<ApiResponse> getBanners({
+    required double latitude,
+    required double longitude
+}) {
+    return repo.post('/banner/getBannersNearby',{
+      'longitude': longitude,
+      'latitude': latitude
+    }).then((response) {
+      logger.d("Called Banner:${response.body}");
       if (!response.isOk) {
         throw response.body['message'] ?? 'Unable to Process Request';
       }
@@ -102,6 +108,13 @@ class MiscApi {
 
   Future<ApiResponse> getPackages(String packagefor) async {
     var response = await repo.get('/other/packages/type/$packagefor');
+    if (!response.isOk) {
+      throw response.body['message'] ?? 'Unable to Process Request';
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+  Future<ApiResponse> getPackagebyId(String packageId) async {
+    var response = await repo.get('/other/packages/$packageId');
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }

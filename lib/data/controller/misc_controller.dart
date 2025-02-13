@@ -1,28 +1,47 @@
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/api/misc_api.dart';
 import 'package:gully_app/data/model/package_model.dart';
-import 'package:gully_app/data/model/promote_banner_model.dart';
+import 'package:gully_app/data/model/PromotionalBannerModel.dart';
 import 'package:gully_app/data/model/banner_model.dart';
 import 'package:gully_app/data/model/looking_for_model.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../utils/app_logger.dart';
+import '../../utils/geo_locator_helper.dart';
 
 class MiscController extends GetxController with StateMixin {
   final MiscApi repo;
 
   MiscController({required this.repo}) {
     change(GetStatus.empty());
+    getCurrentLocation();
+    Geolocator.getServiceStatusStream().listen((event) {
+      getCurrentLocation();
+    });
+  }
+  RxBool isaspectRatioequal=false.obs;
+  Future<void> getCurrentLocation() async {
+    final position = await determinePosition();
+
+    coordinates.value = LatLng(position.latitude, position.longitude);
+    coordinates.refresh();
+  }
+  set setCoordinates(LatLng value) {
+    coordinates.value = value;
+    coordinates.refresh();
   }
 
+  Rx<LatLng> coordinates = const LatLng(0, 0).obs;
   RxBool isConnected = true.obs;
-  RxInt indexvalue=0.obs;
+  RxInt indexvalue = 0.obs;
   PageController pageController = PageController();
-  void updateIndex(int index){
-    indexvalue.value=index;
-
+  void updateIndex(int index) {
+    indexvalue.value = index;
   }
+
   RxList<BannerModel> banners = <BannerModel>[].obs;
   Future<String> getContent(String slug) async {
     var response = await repo.getContent(slug);
@@ -30,10 +49,14 @@ class MiscController extends GetxController with StateMixin {
     return response.data!['content'];
   }
 
-  Rx<PromoteBannerModel?> ads=Rx<PromoteBannerModel?>(null);
 
-  Future<void> getBanners() async {
-    var response = await repo.getBanners();
+  Future<void> getBanners({
+    double? longitude, double? latitude
+}) async {
+    var response = await repo.getBanners(
+      longitude: longitude ?? coordinates.value.longitude,
+      latitude: latitude ?? coordinates.value.latitude
+    );
     logger.d("The Banners Data is:${response.data}");
     banners.value = response.data!['banners']
         .map<BannerModel>((e) => BannerModel.fromJson(e))
@@ -71,7 +94,6 @@ class MiscController extends GetxController with StateMixin {
       throw Exception(e.toString());
     }
   }
-
 
   Future<List<LookingForPlayerModel>> getLookingFor() async {
     try {
@@ -111,13 +133,29 @@ class MiscController extends GetxController with StateMixin {
     try {
       var response = await repo.getPackages(packagefor);
       logger.d("The Package Response:${packagefor}");
-     return  packages.value=(response.data!['packages'] as List<dynamic>?)?.map((e) => Package.fromJson(e as Map<String, dynamic>)).toList() ?? [];
+      return packages.value = (response.data!['packages'] as List<dynamic>?)
+              ?.map((e) => Package.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [];
     } catch (e) {
       errorSnackBar(e.toString());
       throw Exception(e.toString());
-  }
+    }
   }
 
+  Future<Package> getPackagebyId(String packageId) async {
+    try {
+      var response = await repo.getPackagebyId(packageId);
+      return Package.fromJson(response.data!);
+      // return packages.value = (response.data!['packages'] as List<dynamic>?)
+      //     ?.map((e) => Package.fromJson(e as Map<String, dynamic>))
+      //     .toList() ??
+      //     [];
+    } catch (e) {
+      errorSnackBar(e.toString());
+      throw Exception(e.toString());
+    }
+  }
 }
 
 class UpdateAppModel {

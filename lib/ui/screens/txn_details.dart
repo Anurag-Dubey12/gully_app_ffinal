@@ -322,7 +322,7 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                   const SizedBox(
                     height: 50,
                   ),
-                  const CancellationPolicyWidget()
+                  // const CancellationPolicyWidget()
                 ],
               ),
             ),

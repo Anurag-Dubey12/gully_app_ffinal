@@ -376,7 +376,7 @@ class PaymentPage extends State<ShopPaymentPage> {
                       ),
                     ),
                     const SizedBox(height: 22),
-                    const CancellationPolicyWidget()
+                    // const CancellationPolicyWidget()
                   ]),
             ),
           ),

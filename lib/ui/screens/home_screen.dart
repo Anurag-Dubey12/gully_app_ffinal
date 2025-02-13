@@ -44,16 +44,15 @@ class _HomeScreenState extends State<HomeScreen> {
         errorSnackBar("Please connect to the network");
       }
     });
-    if(_isConnected){
+    if (_isConnected) {
       Get.find<AuthController>().getUser();
       Get.find<MiscController>().getBanners();
       FirebaseMessaging.instance.getToken().then((value) {
         Get.find<AuthController>().updateProfile(fcmToken: value);
       });
-    }else{
+    } else {
       errorSnackBar("Please connect to the network");
     }
-
   }
 
   @override
@@ -84,12 +83,13 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   bool isLoading = false;
   late PersistentTabController _controller;
   late AnimationController _animationController;
   late Animation<double> _animation;
-  bool isOrganizer=false;
+  bool isOrganizer = false;
 
   @override
   void initState() {
@@ -126,6 +126,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       logger.e('Error refreshing data: $e');
     }
   }
+
   List<Widget> _buildScreens() {
     final tournamentController = Get.find<TournamentController>();
     tournamentController.filter.value = 'current';
@@ -157,8 +158,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
         title: "",
         activeColorPrimary: Colors.transparent,
         inactiveColorPrimary: Colors.transparent,
-        onPressed: (context) {
-        },
+        onPressed: (context) {},
       ),
       // PersistentBottomNavBarItem(
       //   icon: const Icon(Icons.home_filled),
@@ -298,7 +298,10 @@ class ScreenContent extends State<HomePageContent> {
                           margin: const EdgeInsets.only(left: 5),
                           decoration: const BoxDecoration(
                             gradient: RadialGradient(
-                              colors: [Color(0xff368EBF), AppTheme.primaryColor],
+                              colors: [
+                                Color(0xff368EBF),
+                                AppTheme.primaryColor
+                              ],
                             ),
                           ),
                           width: double.infinity,
@@ -322,14 +325,19 @@ class ScreenContent extends State<HomePageContent> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: List.generate(
                                   misccontroller.banners.length,
-                                      (index) => AnimatedContainer(
+                                  (index) => AnimatedContainer(
                                     duration: const Duration(milliseconds: 300),
-                                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 3),
                                     height: 10,
-                                    width: misccontroller.indexvalue.value == index ? 15 : 8,
+                                    width:
+                                        misccontroller.indexvalue.value == index
+                                            ? 15
+                                            : 8,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(10),
-                                      color: misccontroller.indexvalue.value == index
+                                      color: misccontroller.indexvalue.value ==
+                                              index
                                           ? AppTheme.darkYellowColor
                                           : Colors.grey.withOpacity(0.5),
                                     ),
@@ -366,7 +374,8 @@ class ScreenContent extends State<HomePageContent> {
                           children: [
                             const DateTimesCard(),
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 5),
                               child: Row(
                                 children: [
                                   Expanded(
@@ -375,21 +384,28 @@ class ScreenContent extends State<HomePageContent> {
                                       child: InkWell(
                                         borderRadius: BorderRadius.circular(28),
                                         onTap: () {
-                                          Get.to(() => const SearchTournamentScreen());
+                                          Get.to(() =>
+                                              const SearchTournamentScreen());
                                         },
                                         child: Ink(
                                           height: 35,
                                           decoration: BoxDecoration(
                                             color: Colors.white,
-                                            border: Border.all(color: Colors.black, width: 0.5),
-                                            borderRadius: BorderRadius.circular(20),
+                                            border: Border.all(
+                                                color: Colors.black,
+                                                width: 0.5),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                           ),
                                           child: const Row(
                                             children: [
                                               SizedBox(width: 18),
-                                              Icon(Icons.search, color: Colors.black),
+                                              Icon(Icons.search,
+                                                  color: Colors.black),
                                               SizedBox(width: 20),
-                                              Text('Search...', style: TextStyle(color: Colors.black)),
+                                              Text('Search...',
+                                                  style: TextStyle(
+                                                      color: Colors.black)),
                                             ],
                                           ),
                                         ),
@@ -402,12 +418,15 @@ class ScreenContent extends State<HomePageContent> {
                                       setState(() {
                                         selected = value;
                                         controller.setSelectedFilter(value);
-                                        logger.d("Selected Filter Value:${controller.filterData.value}"  );
-                                        controller.getTournamentList(filterD:  controller.filterData.value);
+                                        logger.d(
+                                            "Selected Filter Value:${controller.filterData.value}");
+                                        controller.getTournamentList(
+                                            filterD:
+                                                controller.filterData.value);
                                       });
                                     },
                                     itemBuilder: (BuildContext context) =>
-                                    <PopupMenuEntry<String>>[
+                                        <PopupMenuEntry<String>>[
                                       const PopupMenuItem<String>(
                                         value: 'past',
                                         enabled: false,
@@ -427,7 +446,8 @@ class ScreenContent extends State<HomePageContent> {
                                         value: 'past',
                                         child: Row(
                                           children: [
-                                            Icon(Icons.history, color: Colors.blue),
+                                            Icon(Icons.history,
+                                                color: Colors.blue),
                                             SizedBox(width: 10),
                                             Text('Past'),
                                           ],
@@ -437,7 +457,8 @@ class ScreenContent extends State<HomePageContent> {
                                         value: 'current',
                                         child: Row(
                                           children: [
-                                            Icon(Icons.event, color: Colors.green),
+                                            Icon(Icons.event,
+                                                color: Colors.green),
                                             SizedBox(width: 10),
                                             Text('Current'),
                                           ],
@@ -447,7 +468,8 @@ class ScreenContent extends State<HomePageContent> {
                                         value: 'upcoming',
                                         child: Row(
                                           children: [
-                                            Icon(Icons.schedule, color: Colors.orange),
+                                            Icon(Icons.schedule,
+                                                color: Colors.orange),
                                             SizedBox(width: 10),
                                             Text('Upcoming'),
                                           ],
@@ -467,7 +489,8 @@ class ScreenContent extends State<HomePageContent> {
                                         border: Border.all(color: Colors.black),
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      child: const Icon(Icons.filter_list, color: Colors.black),
+                                      child: const Icon(Icons.filter_list,
+                                          color: Colors.black),
                                     ),
                                   )
                                 ],
@@ -550,15 +573,23 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
       width: 400,
       child: Obx(
         () => GestureDetector(
-          onTap: (){
-            if(controller.banners.value[_current].link == "inAppBannerPromotion"){
-            imageViewer(context,controller.banners.value[_current].imageUrl,
-                true,
-              onTap: (){
-                Get.to(()=>const PromoteBannerScreen());
-              }
-            );
+          onTap: () {
+            if (controller.banners.value[_current].link ==
+                "inAppBannerPromotion") {
+              imageViewer(
+                  context, controller.banners.value[_current].imageUrl, true,
+                  onTap: () {
+                Get.to(() => const PromoteBannerScreen());
+              });
             }
+            // if (banner.type == "promotional") {
+            //   imageViewer(context,controller.banners.value[_current].promotionalImage,
+            //       true,
+            //       onTap: (){
+            //         Get.to(()=>const PromoteBannerScreen());
+            //       }
+            //   );
+            // }
           },
           child: CarouselSlider(
             items: controller.banners.value
@@ -571,6 +602,34 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
                               imageUrl: toImageUrl(e.imageUrl),
                               fit: BoxFit.fill,
                               width: double.infinity),
+                          if (e.type == "promotional")
+                            Positioned(
+                              top: 2,
+                              right: 10,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withOpacity(0.6),
+                                  borderRadius: BorderRadius.circular(20),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: const Text(
+                                  "Ad",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
                           // if (widget.isAds)
                           //   Positioned(
                           //     top: 2,

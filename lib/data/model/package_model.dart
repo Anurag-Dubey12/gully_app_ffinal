@@ -22,6 +22,12 @@ class Package {
   final bool isActive;
   @JsonKey(name: "startDate")
   final DateTime startDate;
+  @JsonKey(name: "maxMedia")
+  final int? maxMedia;
+  @JsonKey(name: "maxVideos")
+  final int? maxVideos;
+  @JsonKey(name: "sponsorshipDetails")
+  final String? sponsorshipDetails;
 
   Package({
     required this.id,
@@ -33,6 +39,9 @@ class Package {
     this.description,
     required this.isActive,
     required this.startDate,
+    this.maxMedia,
+    this.maxVideos,
+    this.sponsorshipDetails,
   });
 
   factory Package.fromJson(Map<String, dynamic> json) => _$PackageFromJson(json);

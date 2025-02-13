@@ -101,7 +101,7 @@ class SearchPlacesScreenState extends State<SearchPlacesScreen> {
           widget.onSelected?.call(prediction);
           controller.selection = TextSelection.fromPosition(
               TextPosition(offset: prediction.description?.length ?? 0));
-          if (widget.showSelectCurrentLocation ?? false) Get.back();
+          if (widget.showSelectCurrentLocation ?? false) Get.back(result: true);
         },
         seperatedBuilder: const Divider(),
         // OPTIONAL// If you want to customize list view item builder

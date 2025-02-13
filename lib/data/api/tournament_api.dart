@@ -17,6 +17,59 @@ class TournamentApi {
     return ApiResponse.fromJson(response.body);
   }
 
+  Future<ApiResponse> setSponsor(Map<String, dynamic> tournament) async {
+    var response = await repo.post('/main/setSponsor', tournament);
+    logger.d(response.body);
+    if (!response.isOk) {
+      throw response.body['message'] ?? 'Unable to Process Request';
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+                                  //Sponsor Api
+  Future<ApiResponse> addSponsor(Map<String, dynamic> sponsor) async {
+    var response = await repo.post('/main/sponsor/addSponsor', sponsor);
+    logger.d(response.body);
+    if (!response.isOk) {
+      throw response.body['message'] ?? 'Unable to Process Request';
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> editSponsor(String sponsorId,Map<String, dynamic> sponsor) async {
+    var response = await repo.post('/main/sponsor/editSponsor/$sponsorId', sponsor);
+    logger.d(response.body);
+    if (!response.isOk) {
+      throw response.body['message'] ?? 'Unable to Process Request';
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+  Future<ApiResponse> getmyTournamentSponsor(String tournamentId) async {
+    var response = await repo.get('/main/sponsor/getSponsor/$tournamentId');
+    logger.d(response.body);
+    if (!response.isOk) {
+      throw response.body['message'] ?? 'Unable to Process Request';
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+  Future<ApiResponse> getTournamentSponsor(String tournamentId) async {
+    var response = await repo.get('/main/sponsor/getSponsorsForTournament/$tournamentId');
+    logger.d(response.body);
+    if (!response.isOk) {
+      throw response.body['message'] ?? 'Unable to Process Request';
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+  Future<ApiResponse> deleteSponsor(String sponsorId) async {
+    var response = await repo.delete('/main/sponsor/deleteSponsor/$sponsorId');
+    logger.d(response.body);
+    if (!response.isOk) {
+      throw response.body['message'] ?? 'Unable to Process Request';
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+
   Future<ApiResponse> editTournament(
       Map<String, dynamic> tournament, String tournamentId) async {
     var response =
@@ -334,7 +387,26 @@ class TournamentApi {
     }
     return ApiResponse.fromJson(response.body);
   }
-
+  Future<ApiResponse> createBannerOrder(
+      {required double discountAmount,
+        required String bannerId,
+        required double totalAmount,
+        required String? coupon}) async {
+    final response = await repo.post('/payment/createBannerOrder', {
+      'amountWithoutCoupon': discountAmount,
+      'bannerId': bannerId,
+      'amount': totalAmount,
+      'coupon': coupon,
+    });
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
   Future<ApiResponse> getCoupons() async {
     final response = await repo.get('/payment/getCoupon');
     if (response.statusCode! >= 500) {

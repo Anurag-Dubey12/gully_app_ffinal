@@ -1,13 +1,34 @@
+import 'package:gully_app/data/model/package_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'banner_model.g.dart';
 
 @JsonSerializable(createToJson: false)
 class BannerModel {
-  final String imageUrl;
-  final String link;
+  @JsonKey(name: "banner_image")
+  final String? promotionalImage;
+  @JsonKey(name: "imageUrl")
+  final String? regularImage;
+  final String? link;
+  @JsonKey(name: "banner_title")
+  final String? bannerTitle;
+  final String? title;
+  final Package? packageId;
+  @JsonKey(name: "bannerType")
+  final String type;
 
-  BannerModel({required this.imageUrl, required this.link});
+  BannerModel({
+    this.promotionalImage,
+    this.regularImage,
+    this.link,
+    this.bannerTitle,
+    this.title,
+    this.packageId,
+    required this.type,
+  });
+
+  String get imageUrl => promotionalImage ?? regularImage ?? '';
+  String get displayTitle => bannerTitle ?? title ?? '';
 
   factory BannerModel.fromJson(Map<String, dynamic> json) =>
       _$BannerModelFromJson(json);

@@ -23,7 +23,6 @@ import '../../theme/theme.dart';
 import '../../widgets/create_tournament/form_input.dart';
 import '../../widgets/custom_drop_down_field.dart';
 import '../../widgets/primary_button.dart';
-import '../../widgets/service/package_screen.dart';
 import '../legal_screen.dart';
 import '../select_location.dart';
 import '../service_payment_page.dart';

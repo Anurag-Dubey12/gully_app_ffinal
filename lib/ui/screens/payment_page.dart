@@ -587,7 +587,7 @@ class _PaymentPageState extends State<PaymentPage> {
                     //   ),
                     // ),
                     const SizedBox(height: 22),
-                    const CancellationPolicyWidget()
+                     const CancellationPolicyWidget(content: 'The tournament fee is non-refundable. In case of any issue, kindly contact Gully Support.')
                   ],
                 ),
               ),
@@ -600,8 +600,10 @@ class _PaymentPageState extends State<PaymentPage> {
 }
 
 class CancellationPolicyWidget extends StatelessWidget {
+  final String content;
   const CancellationPolicyWidget({
     super.key,
+    required this.content
   });
 
   @override
@@ -627,7 +629,7 @@ class CancellationPolicyWidget extends StatelessWidget {
                 )),
             const SizedBox(height: 12),
             Text(
-                'The tournament fee is non-refundable. In case of any issue, kindly contact Gully Support.',
+                content,
                 style: TextStyle(
                   // color: AppTheme.secondaryYellowColor,
                   fontSize: 14,

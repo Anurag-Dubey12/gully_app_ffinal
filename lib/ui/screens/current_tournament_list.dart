@@ -14,12 +14,15 @@ import 'package:gully_app/ui/screens/update_authority_screen.dart';
 import 'package:gully_app/ui/screens/view_matchups_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/ui/widgets/sponsor/addSponsorDetails.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/misc_controller.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
+import '../widgets/sponsor/sponsor_package.dart';
+import 'SponsorScreen.dart';
 
 enum RedirectType {
   organizeMatch,
@@ -28,6 +31,7 @@ enum RedirectType {
   editForm,
   currentTournament,
   manageAuthority,
+  sponsor
 }
 
 class CurrentTournamentListScreen extends GetView<TournamentController> {
@@ -256,6 +260,100 @@ class _CardState extends State<_Card> {
               tournament: widget.tournament,
             ));
             break;
+
+
+          case RedirectType.sponsor:
+            bool isSubscribed = widget.tournament.isSponsershippurchase ?? false;
+            if (!isSubscribed) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return Dialog(
+                    backgroundColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.warning_amber_rounded,
+                            color: Colors.orange,
+                            size: 50,
+                          ),
+                          const SizedBox(height: 15),
+                          const Text(
+                            'Subscription Required',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blueGrey,
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Text(
+                            'You need a sponsorship package to add a sponsor for these tournaments ${widget.tournament.tournamentName}. Please subscribe to continue.',
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Get.to(() => SponsorPackageScreen(tournament: widget.tournament));
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppTheme.primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+                                ),
+                                child: const Text(
+                                  'Subscribe Now',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              );
+            }else{
+              Get.to(() => SponsorScreen(tournament: widget.tournament));
+            }
+            break;
+
         }
       },
       child: Container(

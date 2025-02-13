@@ -13,6 +13,7 @@ class SelectFromToCard extends StatelessWidget {
   final Function onToChanged;
   final bool isAds;
   final bool iswhite;
+  final bool isenable;
   const SelectFromToCard(
       {super.key,
       required this.from,
@@ -20,6 +21,7 @@ class SelectFromToCard extends StatelessWidget {
       required this.onFromChanged,
       required this.onToChanged,
       this.isAds = false,
+      this.isenable = true,
       this.iswhite = false});
 
   @override
@@ -43,21 +45,23 @@ class SelectFromToCard extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () async {
-                    final date = await showDatePicker(
-                        context: context,
-                        initialDate: isAds
-                            ? DateTime.now()
-                            :
-                            // DateTime.now().add(const Duration(days: 4)),
-                            DateTime.now(),
-                        // firstDate: isAds ? DateTime.now():DateTime.now().add(const Duration(days: 4)),
-                        firstDate: isAds ? DateTime.now() : DateTime.now(),
-                        lastDate:
-                            DateTime.now().add(const Duration(days: 365)));
-                    if (date != null) {
-                      logger.d('Date: $date');
-                      onFromChanged(date);
-                    }
+                   if(isenable){
+                     final date = await showDatePicker(
+                         context: context,
+                         initialDate: isAds
+                             ? DateTime.now()
+                             :
+                         // DateTime.now().add(const Duration(days: 4)),
+                         DateTime.now(),
+                         // firstDate: isAds ? DateTime.now():DateTime.now().add(const Duration(days: 4)),
+                         firstDate: isAds ? DateTime.now() : DateTime.now(),
+                         lastDate:
+                         DateTime.now().add(const Duration(days: 365)));
+                     if (date != null) {
+                       logger.d('Date: $date');
+                       onFromChanged(date);
+                     }
+                   }
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -97,22 +101,24 @@ class SelectFromToCard extends StatelessWidget {
           const SizedBox(width: 20),
           Expanded(
             child: GestureDetector(
-              onTap: isAds
+              onTap: (isAds && isenable)
                   ? () {
                       errorSnackBar(
                           "The end date is automatically calculated based on the selected package and its start date.");
                     }
                   : () async {
-                      final date0 = await showDatePicker(
-                          context: context,
-                          // initialDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
-                          initialDate: isAds ? DateTime.now() : DateTime.now(),
-                          // firstDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
-                          firstDate: isAds ? DateTime.now() : DateTime.now(),
-                          lastDate:
-                              DateTime.now().add(const Duration(days: 365)));
-                      if (date0 != null) {
-                        onToChanged(date0);
+                      if(isenable){
+                        final date0 = await showDatePicker(
+                            context: context,
+                            // initialDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
+                            initialDate: isAds ? DateTime.now() : DateTime.now(),
+                            // firstDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
+                            firstDate: isAds ? DateTime.now() : DateTime.now(),
+                            lastDate:
+                            DateTime.now().add(const Duration(days: 365)));
+                        if (date0 != null) {
+                          onToChanged(date0);
+                        }
                       }
                     },
               child: Column(

@@ -42,7 +42,8 @@ class TournamentModel {
   final CoHostModel user;
   @JsonKey(disallowNullValue: false)
   final String? authority;
-
+  final bool? isSponsershippurchase;
+  final String? sponsershipPackageId;
   TournamentModel({
     required this.tournamentName,
     required this.id,
@@ -68,6 +69,8 @@ class TournamentModel {
     required this.coHost1,
     required this.coHost2,
     required this.authority,
+    this.isSponsershippurchase,
+    this.sponsershipPackageId
   });
   factory TournamentModel.fromJson(Map<String, dynamic> json) =>
       _$TournamentModelFromJson(json);

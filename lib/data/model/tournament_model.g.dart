@@ -41,4 +41,6 @@ TournamentModel _$TournamentModelFromJson(Map<String, dynamic> json) =>
           ? null
           : CoHostModel.fromJson(json['coHost2'] as Map<String, dynamic>),
       authority: json['authority'] as String?,
+      isSponsershippurchase: json['isSponsershippurchase'] as bool?,
+      sponsershipPackageId: json['sponsershipPackageId'] as String?,
     );

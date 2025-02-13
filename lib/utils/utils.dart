@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/app_logger.dart';
+import 'package:video_player/video_player.dart';
 
 import '../ui/screens/home_screen.dart';
 
@@ -151,4 +154,11 @@ String getAssetFromRole(String role) {
     default:
       return 'assets/images/captain.png';
   }
+}
+Future<Duration> getVideoDuration(File videoFile) async {
+  final videoPlayerController = VideoPlayerController.file(videoFile);
+  await videoPlayerController.initialize();
+  final duration = videoPlayerController.value.duration;
+  await videoPlayerController.dispose();
+  return duration;
 }

@@ -4,6 +4,7 @@ import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
+import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/notification_controller.dart';
 import 'package:gully_app/ui/screens/search_places_screen.dart';
 import 'package:gully_app/utils/app_logger.dart';
@@ -160,12 +161,14 @@ class LocationBuilder extends GetView<AuthController> {
               title: AppLocalizations.of(context)!.selectLocation,
               onSelected: (e) async {
                 logger.f('Location Description: ${e.description}');
+                logger.f('Location Description: ${e.lat}${e.lng}');
                 controller.setLocation = e.description ?? 'Fetching Location';
                 final tournamentController = Get.find<TournamentController>();
 
                 tournamentController.setCoordinates =
                     LatLng(double.parse(e.lat!), double.parse(e.lng!));
                 logger.f('Location: ${tournamentController.coordinates.value}');
+                // return {'lat': e.lat, 'lng': e.lng};
               },
             ));
       },

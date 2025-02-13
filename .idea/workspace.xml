@@ -9,11 +9,47 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="subscription screen and banner promotion modify">
+    <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="added banner view and create banner screen and change model based on the json">
+      <change afterPath="$PROJECT_DIR$/lib/data/model/sponsor_model.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/screens/SponsorScreen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/sponsor/FullScreenVideoPlayer.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/sponsor/VideoPlayerWidget.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/sponsor/addSponsorDetails.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/sponsor/buildMediaOption.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/sponsor/sponsor_package.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/lib/ui/widgets/sponsor/sponsor_payment_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/api/banner_promotion_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/banner_promotion_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/api/misc_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/misc_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/api/tournament_api.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/banner_promotion_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/banner_promotion_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/misc_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/controller/tournament_controller.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/PromotionalBannerModel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/PromotionalBannerModel.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/banner_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/banner_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/banner_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/banner_model.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/package_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/package_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/tournament_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/tournament_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/data/model/tournament_model.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/tournament_model.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/banner_payment_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/banner_payment_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/current_tournament_list.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/home_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/organizer_profile.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/payment_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/payment_page.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/promote_banner_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/search_places_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/search_places_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/service/service_register.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/shop_payment_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/shop_payment_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/tournament_form_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/service/package_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/service/package_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/txn_details.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/txn_details.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/top_header.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/top_header.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/promotional/banner_adding.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/banner/banner_adding.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/service/PackageInfo.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/banner/PackageInfo.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/service/package_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/banner/package_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils/utils.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils/utils.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pubspec.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,6 +160,7 @@
       <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app\src\main\res\mipmap-xhdpi" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Nilee\Documents\GitHub\gully_app_ffinal\lib\ui\widgets\promotional" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app\lib\ui\widgets\performance" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app\src\main\res\drawable" />
       <recent name="C:\Users\abcom\Documents\Software\gully_app\android\app" />
@@ -178,22 +215,6 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1715852752954</updated>
-    </task>
-    <task id="LOCAL-00072" summary="service api modify">
-      <option name="closed" value="true" />
-      <created>1730721559491</created>
-      <option name="number" value="00072" />
-      <option name="presentableId" value="LOCAL-00072" />
-      <option name="project" value="LOCAL" />
-      <updated>1730721559491</updated>
-    </task>
-    <task id="LOCAL-00073" summary="service api modify">
-      <option name="closed" value="true" />
-      <created>1730807976552</created>
-      <option name="number" value="00073" />
-      <option name="presentableId" value="LOCAL-00073" />
-      <option name="project" value="LOCAL" />
-      <updated>1730807976558</updated>
     </task>
     <task id="LOCAL-00074" summary="service api modify">
       <option name="closed" value="true" />
@@ -571,7 +592,23 @@
       <option name="project" value="LOCAL" />
       <updated>1739275120629</updated>
     </task>
-    <option name="localTasksCounter" value="121" />
+    <task id="LOCAL-00121" summary="modify banner screen and other needed details">
+      <option name="closed" value="true" />
+      <created>1739361564815</created>
+      <option name="number" value="00121" />
+      <option name="presentableId" value="LOCAL-00121" />
+      <option name="project" value="LOCAL" />
+      <updated>1739361564815</updated>
+    </task>
+    <task id="LOCAL-00122" summary="added banner view and create banner screen and change model based on the json">
+      <option name="closed" value="true" />
+      <created>1739447799544</created>
+      <option name="number" value="00122" />
+      <option name="presentableId" value="LOCAL-00122" />
+      <option name="project" value="LOCAL" />
+      <updated>1739447799545</updated>
+    </task>
+    <option name="localTasksCounter" value="123" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -592,8 +629,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="all things done" />
-    <MESSAGE value="updateteamdata" />
     <MESSAGE value="updated matchup model,live score screen and add player screen" />
     <MESSAGE value="need to modify current team list" />
     <MESSAGE value="modify" />
@@ -617,7 +652,9 @@
     <MESSAGE value="new modification" />
     <MESSAGE value="image picker" />
     <MESSAGE value="subscription screen and banner promotion modify" />
-    <option name="LAST_COMMIT_MESSAGE" value="subscription screen and banner promotion modify" />
+    <MESSAGE value="modify banner screen and other needed details" />
+    <MESSAGE value="added banner view and create banner screen and change model based on the json" />
+    <option name="LAST_COMMIT_MESSAGE" value="added banner view and create banner screen and change model based on the json" />
   </component>
   <component name="com.gk646.codestats.settings.Save">
     <option name="commitTimePoints">

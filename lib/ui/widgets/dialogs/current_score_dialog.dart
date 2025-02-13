@@ -1,16 +1,26 @@
 import 'dart:async';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
+import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/ui/screens/full_scorecard.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/ui/widgets/scorecard/current_over_card.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:video_player/video_player.dart';
 
 import '../../../utils/app_logger.dart';
+import '../../../utils/utils.dart';
+import '../../screens/home_screen.dart';
+import '../sponsor/FullScreenVideoPlayer.dart';
+import '../sponsor/VideoPlayerWidget.dart';
 
 class ScoreBottomDialog extends StatefulWidget {
   final MatchupModel match;
@@ -58,7 +68,11 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ScoreBoardController>();
-
+    final tournamentcontroller = Get.find<TournamentController>();
+    tournamentcontroller.getTournamentSponsor(widget.match.tournamentId ?? '');
+    if (tournamentcontroller.tournamentSponsor.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
     if (isLoading) {
       return SizedBox(
           height: Get.height * 0.4,
@@ -72,6 +86,48 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              const FullBannerSlider(),
+              Obx(() {
+                return Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.arrow_back_ios_new,
+                      size: 12,
+                      color: AppTheme.darkYellowColor,
+                    ),
+                    const SizedBox(width: 8),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: List.generate(
+                        tournamentcontroller.MyTournamentSponsor.length,
+                        (index) => AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          margin: const EdgeInsets.symmetric(horizontal: 3),
+                          height: 10,
+                          width: tournamentcontroller.indexvalue.value == index
+                              ? 15
+                              : 8,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color:
+                                tournamentcontroller.indexvalue.value == index
+                                    ? AppTheme.darkYellowColor
+                                    : Colors.grey.withOpacity(0.5),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    const Icon(
+                      Icons.arrow_forward_ios,
+                      size: 12,
+                      color: AppTheme.darkYellowColor,
+                    ),
+                  ],
+                );
+              }),
               Text(
                 widget.match.tournamentName ?? '',
                 style: Get.textTheme.headlineMedium?.copyWith(
@@ -116,11 +172,10 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
     } else {
       return Container(
         width: Get.width,
-        // height: Get.height * 0.8,
         padding: const EdgeInsets.only(bottom: 10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Center(
               child: Padding(
@@ -134,7 +189,48 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const FullBannerSlider(),
+            const SizedBox(height: 5),
+            Obx(() {
+              return Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(
+                    Icons.arrow_back_ios_new,
+                    size: 12,
+                    color: AppTheme.darkYellowColor,
+                  ),
+                  const SizedBox(width: 8),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: List.generate(
+                      tournamentcontroller.tournamentSponsor.length,
+                      (index) => AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        height: 10,
+                        width: tournamentcontroller.indexvalue.value == index
+                            ? 15
+                            : 8,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: tournamentcontroller.indexvalue.value == index
+                              ? AppTheme.darkYellowColor
+                              : Colors.grey.withOpacity(0.5),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 12,
+                    color: AppTheme.darkYellowColor,
+                  ),
+                ],
+              );
+            }),
             Padding(
               padding: const EdgeInsets.all(18.0),
               child: Obx(
@@ -183,11 +279,25 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                             ClipRRect(
                                               borderRadius:
                                                   BorderRadius.circular(100),
-                                              child: widget.match.scoreBoard!['team1']['teamLogo'] != null &&
-                                                      widget.match.scoreBoard!['team1']['teamLogo'].isNotEmpty ?
-                                              Image.network(widget.match.scoreBoard!['team1']['teamLogo'] == widget.match.team1.toImageUrl()
-                                                          ? widget.match.team1.toImageUrl()
-                                                          : widget.match.team2.toImageUrl(),
+                                              child: widget.match.scoreBoard![
+                                                                  'team1']
+                                                              ['teamLogo'] !=
+                                                          null &&
+                                                      widget
+                                                          .match
+                                                          .scoreBoard!['team1']
+                                                              ['teamLogo']
+                                                          .isNotEmpty
+                                                  ? Image.network(
+                                                      widget.match.scoreBoard![
+                                                                      'team1'][
+                                                                  'teamLogo'] ==
+                                                              widget.match.team1
+                                                                  .toImageUrl()
+                                                          ? widget.match.team1
+                                                              .toImageUrl()
+                                                          : widget.match.team2
+                                                              .toImageUrl(),
                                                       height: 50,
                                                       fit: BoxFit.cover,
                                                       width: 50,
@@ -571,6 +681,346 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
           ],
         ),
       );
+    }
+  }
+}
+
+class FullBannerSlider extends StatefulWidget {
+  const FullBannerSlider({super.key});
+
+  @override
+  State<FullBannerSlider> createState() => _FullBannerSliderState();
+}
+
+class _FullBannerSliderState extends State<FullBannerSlider> {
+  final Map<String, VideoPlayerController> _videoControllers = {};
+  bool _isFullScreen = false;
+  final double _volume = 1.0;
+  int _current = 0;
+
+  @override
+  void dispose() {
+    for (var controller in _videoControllers.values) {
+      controller.dispose();
+    }
+    _videoControllers.clear();
+    logger.d("Cleard DOne");
+    super.dispose();
+  }
+
+  Future<void> _initializeVideoPlayer(String mediaUrl) async {
+    if (_videoControllers.containsKey(mediaUrl) &&
+        _videoControllers[mediaUrl]!.value.isInitialized) {
+      return;
+    }
+
+    try {
+      final controller = VideoPlayerController.network(mediaUrl);
+      _videoControllers[mediaUrl] = controller;
+
+      await controller.initialize();
+      await controller.setVolume(_volume);
+      await controller.setLooping(true);
+
+      if (_current == _getCurrentVideoIndex() && mounted) {
+        await controller.play();
+        setState(() {});
+      }
+    } catch (e) {
+      logger.e("Error initializing video player for $mediaUrl: $e");
+    }
+  }
+
+  int _getCurrentVideoIndex() {
+    final controller = Get.find<TournamentController>();
+    return controller.indexvalue.value;
+  }
+
+  void _handleFullScreenToggle() {
+    setState(() {
+      _isFullScreen = !_isFullScreen;
+    });
+  }
+
+  // void _toggleFullScreen() {
+  //   setState(() => _isFullScreen = !_isFullScreen);
+  //   if (_isFullScreen) {
+  //     SystemChrome.setPreferredOrientations([
+  //       DeviceOrientation.landscapeLeft,
+  //       DeviceOrientation.landscapeRight,
+  //     ]);
+  //     Navigator.of(context).push(
+  //       MaterialPageRoute(
+  //         builder: (context) => FullScreenVideoPlayer(
+  //           controller: controller,
+  //           onExitFullScreen: () {
+  //             setState(() => _isFullScreen = false);
+  //             SystemChrome.setPreferredOrientations(
+  //                 [DeviceOrientation.portraitUp]);
+  //             Navigator.of(context).pop();
+  //           },
+  //         ),
+  //       ),
+  //     );
+  //   } else {
+  //     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  //   }
+  // }
+
+  void _handlePageChange(int index) {
+    final controller = Get.find<TournamentController>();
+    final sponsors = controller.tournamentSponsor.value;
+
+    for (var videoController in _videoControllers.values) {
+      videoController.pause();
+    }
+    if (index < sponsors.length && sponsors[index].isVideo) {
+      final mediaUrl = toImageUrl(sponsors[index].brandMedia);
+      final videoController = _videoControllers[mediaUrl];
+      if (videoController?.value.isInitialized ?? false) {
+        videoController?.play();
+      }
+    }
+
+    setState(() {
+      _current = index;
+      controller.updateIndex(index);
+    });
+  }
+
+  void _preInitializeNextVideo(int currentIndex) {
+    final controller = Get.find<TournamentController>();
+    final sponsors = controller.tournamentSponsor.value;
+
+    if (currentIndex + 1 < sponsors.length &&
+        sponsors[currentIndex + 1].isVideo) {
+      _initializeVideoPlayer(toImageUrl(sponsors[currentIndex + 1].brandMedia));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<TournamentController>();
+    return SizedBox(
+      height: 150,
+      width: Get.width,
+      child: Obx(
+        () => CarouselSlider(
+          items: controller.tournamentSponsor.value.map((e) {
+            final mediaUrl = toImageUrl(e.brandMedia);
+
+            if (e.isVideo &&
+                _current == controller.tournamentSponsor.value.indexOf(e)) {
+              _initializeVideoPlayer(mediaUrl);
+              _preInitializeNextVideo(
+                  controller.tournamentSponsor.value.indexOf(e));
+            }
+
+            return ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  if (e.isVideo)
+                    _videoControllers[mediaUrl]?.value.isInitialized == true
+                        ? VideoPlayerWidget(
+                            videoController: _videoControllers[mediaUrl]!,
+                            initialVolume: _volume,
+                            onFullScreenToggle: _handleFullScreenToggle,
+                            sponsorlink: e.brandUrl != "Not Defined"
+                                ? e.brandUrl ?? ''
+                                : '',
+                          )
+                        : const Center(child: CircularProgressIndicator())
+                  else
+                    CachedNetworkImage(
+                      imageUrl: mediaUrl,
+                      fit: BoxFit.fill,
+                      width: double.infinity,
+                      placeholder: (context, url) => const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
+                  !e.isVideo && e.brandUrl!="Not Defined" ? Positioned(
+                    bottom: 10,
+                    right: 10,
+                    child: Container(
+                      height: 35,
+                      width: 35,
+                      decoration: BoxDecoration(
+                          color: Colors.black54,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(
+                            color: Colors.black45,
+                          )
+                      ),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.link_rounded,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        onPressed: (){
+                          if (e.brandUrl != null &&
+                              e.brandUrl !.isNotEmpty &&
+                              e.brandUrl != "Not Defined") {
+                            _launchURL(e.brandUrl??'');
+                          }
+                        },
+                      ),
+                    ),
+                  ):const SizedBox.shrink(),
+                  Positioned(
+                    top: 2,
+                    right: 10,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.6),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          _showDescription(context, e.brandName ?? '',
+                              e.brandDescription ?? '', e.brandUrl ?? '');
+                        },
+                        child: const Text(
+                          "Sponsored",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // Positioned(
+                  //   bottom: 2,
+                  //   right: 10,
+                  //   child: SizedBox(
+                  //     width: 100,
+                  //     child:PrimaryButton(
+                  //       title: "View Details",
+                  //       onTap: (){
+                  //
+                  //       },
+                  //     )
+                  //   ),
+                  // ),
+                ],
+              ),
+            );
+          }).toList(),
+          options: CarouselOptions(
+            viewportFraction: 0.91,
+            enableInfiniteScroll: false,
+            autoPlay: false,
+            onPageChanged: (index, reason) {
+              _handlePageChange(index);
+            },
+            enlargeCenterPage: true,
+            aspectRatio: 16 / 9,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showDescription(BuildContext context, String brandName,
+      String description, String BrandUrl) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          width: Get.width,
+          padding: const EdgeInsets.all(20.0),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+          ),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "About $brandName",
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    if (BrandUrl != null &&
+                        BrandUrl.isNotEmpty &&
+                        BrandUrl != 'Not Defined')
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          backgroundColor: AppTheme.primaryColor,
+                        ),
+                        onPressed: () {
+                          _launchURL(BrandUrl);
+                        },
+                        child: const Text(
+                          "Visit Site",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                      )
+                  ],
+                ),
+                const Divider(
+                  height: 20,
+                  color: Colors.grey,
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  description,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: Colors.black54,
+                    height: 1.6,
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+  Future<void> _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
     }
   }
 }

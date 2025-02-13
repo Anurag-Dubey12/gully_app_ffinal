@@ -268,10 +268,11 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
               //     Get.snackbar("Tournament", "Your tournament Deleted Successfully");
               //   }
               // }
-              tournamentController.tournamentModel.value=tournament;
               // successSnackBar('Tournament Create Successfully',istournamentScreen: true);
               // Get.offAll(() => const HomeScreen(),
               //     predicate: (route) => route.name == '/HomeScreen');
+
+              tournamentController.tournamentModel.value=tournament;
               Get.to(() => PaymentPage(tournament: tournamentController.tournamentModel.value));
             }
           }else{

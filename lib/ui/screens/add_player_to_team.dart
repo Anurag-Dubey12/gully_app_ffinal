@@ -1,15 +1,15 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
-import 'package:flutter_native_contact_picker/model/contact.dart';
 import 'package:get/get.dart'; //
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/ui/screens/add_team.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
@@ -771,72 +771,7 @@ class AddPlayerDialog extends GetView<TeamController> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () async {
-                    final FlutterNativeContactPicker contactPicker =
-                    FlutterNativeContactPicker();
-                    Contact? contact = await contactPicker.selectContact();
-                    if (contact == null) return;
-                    if (contact.fullName == null) {
-                      errorSnackBar(
-                          AppLocalizations.of(context)!.selectContactWithName);
-                      return;
-                    }
-                    if (contact.phoneNumbers == null ||
-                        contact.phoneNumbers!.isEmpty) {
-                      errorSnackBar(AppLocalizations.of(context)!
-                          .selectContactWithPhoneNumber);
-                      return;
-                    }
-
-                    var phoneNumber = contact.phoneNumbers![0]
-                        .replaceAll(' ', '')
-                        .replaceAll('-', '')
-                        .replaceAll('(', '')
-                        .replaceAll(')', '')
-                        .replaceAll('+', '');
-
-                    phoneNumber = phoneNumber.substring(
-                        phoneNumber.length - 10, phoneNumber.length);
-
-                    await Get.bottomSheet(
-                      _AddPlayerDetails(
-                        teamId: teamId,
-                        name: contact.fullName,
-                        phone: phoneNumber,
-                      ),
-                      backgroundColor: Colors.white,
-                    );
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 5,
-                          spreadRadius: 2,
-                          offset: const Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          const CircleAvatar(
-                            backgroundColor: AppTheme.secondaryYellowColor,
-                            child: Icon(Icons.contact_phone),
-                          ),
-                          const SizedBox(width: 15),
-                          Text(AppLocalizations.of(context)!.addFromContacts),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
+                ContactPickerWidget(teamId: teamId,),
               ],
             ),
           ),
@@ -845,6 +780,257 @@ class AddPlayerDialog extends GetView<TeamController> {
     );
   }
 }
+
+class ContactPickerWidget extends StatelessWidget {
+  final String teamId;
+
+  ContactPickerWidget({required this.teamId});
+
+  Future<void> _showContactPicker(BuildContext context) async {
+    PermissionStatus permissionStatus = await Permission.contacts.request();
+    if (permissionStatus.isGranted) {
+      try {
+        List<Contact> contacts = await ContactsService.getContacts(withThumbnails: false);
+
+        final contactsWithPhone = contacts.where((element) => element.phones!.isNotEmpty).toList();
+        await Get.bottomSheet(
+          _ContactListBottomSheet(
+            teamId: teamId,
+            contacts: contactsWithPhone,
+          ),
+          backgroundColor: Colors.white,
+          enableDrag: true,
+        );
+      } catch (e) {
+        errorSnackBar('Failed to load contacts');
+      }
+    } else if (permissionStatus.isDenied) {
+      errorSnackBar('Permission to access contacts denied');
+    } else if (permissionStatus.isPermanentlyDenied) {
+      errorSnackBar('Permission permanently denied. Please enable it in the app settings');
+      openAppSettings();
+    }
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _showContactPicker(context),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 5,
+              spreadRadius: 2,
+              offset: const Offset(0, 1),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              const CircleAvatar(
+                backgroundColor: AppTheme.secondaryYellowColor,
+                child: Icon(Icons.contact_phone),
+              ),
+              const SizedBox(width: 15),
+              Text(AppLocalizations.of(context)!.addFromContacts),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ContactListBottomSheet extends StatefulWidget {
+  final String teamId;
+  final List<Contact> contacts;
+
+  const _ContactListBottomSheet({required this.teamId, required this.contacts});
+
+  @override
+  _ContactListBottomSheetState createState() => _ContactListBottomSheetState();
+}
+
+class _ContactListBottomSheetState extends State<_ContactListBottomSheet> {
+  List<Contact> _filteredContacts = [];
+  String _searchQuery = '';
+  FocusNode _searchFocusNode = FocusNode();
+  bool _isSearchFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _filteredContacts = widget.contacts;
+    _searchFocusNode.addListener(() {
+      setState(() {
+        _isSearchFocused = _searchFocusNode.hasFocus;
+      });
+    });
+  }
+
+  void _filterContacts(String query) {
+    setState(() {
+      _searchQuery = query;
+      _filteredContacts = widget.contacts
+          .where((contact) {
+        String phoneNumber = '';
+        if (contact.phones != null && contact.phones!.isNotEmpty) {
+          phoneNumber = contact.phones![0].value ?? '';
+          phoneNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
+        }
+        return phoneNumber.isNotEmpty &&
+            (contact.displayName?.toLowerCase().contains(query.toLowerCase()) ?? false ||
+                phoneNumber.contains(query));
+      })
+          .toList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              height: 6,
+              width: 120,
+              decoration: BoxDecoration(
+                  color: Colors.grey[400],
+                  borderRadius: BorderRadius.circular(10)),
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'My Contacts',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(
+                  Icons.close_rounded,
+                  color: Colors.black,
+                  size: 26,
+                ),
+              ),
+            ],
+          ),
+        ),
+        AnimatedContainer(
+          width: Get.width * 0.95,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+          height: 50,
+          child: TextField(
+            focusNode: _searchFocusNode,
+            onChanged: _filterContacts,
+            decoration: InputDecoration(
+              hintText: 'Search by name or phone number',
+              prefixIcon: const Icon(Icons.search),
+              hintStyle: TextStyle(color: Colors.grey[600], fontSize: 16),
+              suffixIcon: _searchQuery.isNotEmpty
+                  ? IconButton(
+                icon: const Icon(Icons.clear),
+                onPressed: () {
+                  setState(() {
+                    _searchQuery = '';
+                    _filteredContacts.clear();
+                  });
+                  _filterContacts('');
+                },
+              )
+                  : null,
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              filled: true,
+              fillColor: Colors.white,
+              contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+            ),
+          ),
+        ),
+        Expanded(
+          child: _filteredContacts.isEmpty
+              ? Center(child: Text('No contacts found', style: TextStyle(color: Colors.grey[600], fontSize: 16)))
+              : ListView.builder(
+            itemCount: _filteredContacts.length,
+            itemBuilder: (context, index) {
+              final contact = _filteredContacts[index];
+              String phoneNumber = '';
+              if (contact.phones != null && contact.phones!.isNotEmpty) {
+                phoneNumber = contact.phones![0].value ?? '';
+                phoneNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
+              }
+              if (phoneNumber.length == 12) {
+                phoneNumber = phoneNumber.substring(2);
+              }
+
+              return ListTile(
+                contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                leading: CircleAvatar(
+                  backgroundColor: AppTheme.primaryColor,
+                  foregroundColor: Colors.white,
+                  child: Text(contact.displayName?.substring(0, 1) ?? 'N'),
+                ),
+                title: Text(
+                  contact.displayName ?? 'Unknown',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(
+                  phoneNumber.isEmpty ? 'No phone number available' : phoneNumber,
+                ),
+                trailing: ElevatedButton(
+                  onPressed: () {
+                    if (contact.displayName != null && phoneNumber.isNotEmpty) {
+                      Get.bottomSheet(
+                        _AddPlayerDetails(
+                          teamId: widget.teamId,
+                          name: contact.displayName,
+                          phone: phoneNumber,
+                        ),
+                        backgroundColor: Colors.white,
+                      );
+                    } else {
+                      errorSnackBar('Contact missing name or phone number');
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: AppTheme.primaryColor,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text('Select'),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 
 class _AddPlayerDetails extends StatefulWidget {
   final String teamId;

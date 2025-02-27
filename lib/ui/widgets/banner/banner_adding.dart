@@ -13,6 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../data/controller/banner_promotion_controller.dart';
+import '../../../data/controller/misc_controller.dart';
 import '../../../data/controller/tournament_controller.dart';
 import '../../../data/model/PromotionalBannerModel.dart';
 import '../../../data/model/tournament_model.dart';
@@ -138,8 +139,6 @@ class BannerAddingState extends State<BannerAdding> {
                 'Please select an image with dimensions where \nWidth=1000 \nHeight=560.',
                 title: "Invalid image dimensions!");
           }
-        } else {
-          errorSnackBar('Image cropping was canceled.', title: "Canceled");
         }
       }
     } catch (e) {
@@ -224,6 +223,7 @@ class BannerAddingState extends State<BannerAdding> {
 
   @override
   Widget build(BuildContext context) {
+    final MiscController connectionController=Get.find<MiscController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -252,7 +252,27 @@ class BannerAddingState extends State<BannerAdding> {
           ),
           body: Padding(
             padding: const EdgeInsets.all(18.0),
-            child: SingleChildScrollView(
+            child: !connectionController.isConnected.value ? const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.signal_wifi_off,
+                    size: 48,
+                    color: Colors.black54,
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'No internet connection',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+            ): SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -485,6 +505,7 @@ class BannerAddingState extends State<BannerAdding> {
                   const SizedBox(height: 16),
                   PrimaryButton(
                       title: widget.banner != null ? 'Update ' : 'Pay Now',
+                      isDisabled: !connectionController.isConnected.value,
                       onTap: () async {
                         try {
                           final controller = Get.find<PromotionController>();

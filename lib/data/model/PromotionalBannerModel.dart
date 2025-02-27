@@ -1,5 +1,4 @@
 import 'package:gully_app/data/model/package_model.dart';
-import 'package:gully_app/data/model/user_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'PromotionalBannerModel.g.dart';

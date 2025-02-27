@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -8,7 +10,10 @@ import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:video_compress/video_compress.dart';
 import 'package:video_player/video_player.dart';
+import '../../../config/api_client.dart';
+import '../../../data/api/tournament_api.dart';
 import '../../../data/controller/misc_controller.dart';
 import '../../../data/model/package_model.dart';
 import '../../../data/model/sponsor_model.dart';
@@ -26,8 +31,12 @@ import 'buildMediaOption.dart';
 class SponsorAddingScreen extends StatefulWidget {
   final TournamentModel tournament;
   final TournamentSponsor? sponsor;
+  final bool? isVideoLimitReached;
   const SponsorAddingScreen(
-      {super.key, required this.tournament, this.sponsor});
+      {super.key,
+        required this.tournament,
+        this.sponsor,
+        this.isVideoLimitReached});
 
   @override
   State<StatefulWidget> createState() => _SponsorAddingScreenState();
@@ -44,10 +53,12 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
   final double _volume = 1.0;
   bool _isFullScreen = false;
   final _formkey = GlobalKey<FormState>();
-
+  bool _isVideoCompressed = false;
+  Subscription? _compressSubscription;
   @override
   void initState() {
     super.initState();
+    Get.put<TournamentController>(TournamentController(Get.find()));
     if (widget.sponsor != null) {
       nameController.text = widget.sponsor?.brandName ?? '';
       linkController.text = widget.sponsor?.brandUrl ?? '';
@@ -55,9 +66,9 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
           ? ''
           : (widget.sponsor?.brandUrl ?? '');
       descriptionController.text =
-          (widget.sponsor?.brandDescription == "Not Defined")
-              ? ''
-              : (widget.sponsor?.brandDescription ?? '');
+      (widget.sponsor?.brandDescription == "Not Defined")
+          ? ''
+          : (widget.sponsor?.brandDescription ?? '');
       isVideo = widget.sponsor?.isVideo ?? false;
 
       if (isVideo) {
@@ -71,7 +82,7 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
     _videoController = VideoPlayerController.network(url)
       ..initialize().then((_) {
         setState(() {
-          _videoController?.play();
+          _videoController?.pause();
           _videoController?.setLooping(true);
         });
       });
@@ -86,7 +97,7 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
   Future<void> getDetails() async {
     final controller = Get.find<MiscController>();
     Package package = await controller
-        .getPackagebyId(widget.tournament.sponsershipPackageId ?? '');
+        .getPackagebyId(widget.tournament.SponsorshipPackageId ?? '');
     controller.selectedpackage.value = package;
     controller.selectedpackage.refresh();
     setState(() {
@@ -237,73 +248,169 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
     }
   }
 
+  // Future<void> _pickVideo(ImageSource source) async {
+  //   _isVideoCompressed = false;
+  //   final ImagePicker picker = ImagePicker();
+  //   try {
+  //     _compressSubscription?.unsubscribe();
+  //     _compressSubscription = null;
+  //     final XFile? video = await picker.pickVideo(
+  //       source: source,
+  //       maxDuration: const Duration(seconds: 30),
+  //     );
+  //     if (video != null) {
+  //       final videoFile = File(video.path);
+  //       final videoDuration = await getVideoDuration(videoFile);
+  //
+  //       // Check if video duration exceeds 30 seconds
+  //       if (videoDuration > const Duration(seconds: 30)) {
+  //         errorSnackBar(
+  //             'The video exceeds the maximum allowed duration of 30 seconds.',
+  //             title: "Duration Error");
+  //       } else {
+  //         _videoController = VideoPlayerController.file(videoFile)
+  //           ..initialize().then((_) {
+  //             setState(() {
+  //               _mediaFile = video;
+  //               isVideo = true;
+  //               _videoController!.pause();
+  //               _videoController!.setLooping(true);
+  //             });
+  //           });
+  //       }
+  //     }
+  //   } catch (e) {
+  //     logger.d('Error picking video: $e');
+  //     errorSnackBar('An error occurred while picking the video.',
+  //         title: "Error");
+  //   }
+  // }
   Future<void> _pickVideo(ImageSource source) async {
+    _isVideoCompressed = false;
     final ImagePicker picker = ImagePicker();
+
     try {
+      // Make sure to unsubscribe from any existing subscription first
+      _compressSubscription?.unsubscribe();
+      _compressSubscription = null;
+
       final XFile? video = await picker.pickVideo(
         source: source,
         maxDuration: const Duration(seconds: 30),
       );
+
       if (video != null) {
         final videoFile = File(video.path);
         final videoDuration = await getVideoDuration(videoFile);
 
-        // Check if video duration exceeds 30 seconds
-        if (videoDuration > const Duration(seconds: 40)) {
+        final videoFileSize = await videoFile.length();
+        double videoSizeInMB = videoFileSize / (1024 * 1024); // Convert bytes to MB
+
+        if (videoDuration > const Duration(seconds: 30)) {
           errorSnackBar(
               'The video exceeds the maximum allowed duration of 30 seconds.',
-              title: "Duration Error");
-        } else {
-          _videoController = VideoPlayerController.file(videoFile)
-            ..initialize().then((_) {
-              setState(() {
-                _mediaFile = video;
-                isVideo = true;
-                _videoController!.play();
-                _videoController!.setLooping(true);
-              });
+              title: "Duration Error"
+          );
+          return;
+        }
+        _videoController = VideoPlayerController.file(videoFile)
+          ..initialize().then((_) {
+            setState(() {
+              _mediaFile = video;
+              isVideo = true;
+              _videoController!.pause();
+              _videoController!.setLooping(true);
             });
+          });
+        if (videoSizeInMB > 2.0) {
+          _compressSubscription = VideoCompress.compressProgress$.subscribe((progress) {
+            logger.d('Compression progress: $progress%');
+          });
+
+          try {
+            final MediaInfo? info = await VideoCompress.compressVideo(
+              video.path,
+              quality: VideoQuality.LowQuality,
+              deleteOrigin: true,
+              includeAudio: true,
+              frameRate: 15,
+            );
+            if (info != null && info.path != null) {
+              final compressedFile = File(info.path!);
+              final compressedFileSize = await compressedFile.length();
+              final compressedSizeInMB = compressedFileSize / (1024 * 1024);
+              if (compressedSizeInMB < videoSizeInMB) {
+                final compressionRatio = videoSizeInMB / compressedSizeInMB;
+                final spaceSaved = videoSizeInMB - compressedSizeInMB;
+                _videoController?.dispose();
+                _videoController = VideoPlayerController.file(compressedFile)
+                  ..initialize().then((_) {
+                    setState(() {
+                      _mediaFile = XFile(info.path!);
+                      isVideo = true;
+                      _isVideoCompressed = true;
+                      _videoController!.pause();
+                      _videoController!.setLooping(true);
+                    });
+
+                    logger.d('Video compressed from ${videoSizeInMB.toStringAsFixed(1)} MB to ${compressedSizeInMB.toStringAsFixed(1)} MB (${(spaceSaved).toStringAsFixed(1)} MB saved)'
+                    );
+                  });
+              } else {
+                logger.d('Compression did not reduce size. Using original video.');
+                logger.d('Original: ${videoSizeInMB.toStringAsFixed(2)} MB, Compressed: ${compressedSizeInMB.toStringAsFixed(2)} MB');
+                setState(() {
+                  _isVideoCompressed = false;
+                });
+              }
+            }
+          } catch (e) {
+            setState(() {
+              _isVideoCompressed = false;
+            });
+          } finally {
+            _compressSubscription?.unsubscribe();
+            _compressSubscription = null;
+          }
         }
       }
     } catch (e) {
       logger.d('Error picking video: $e');
-      errorSnackBar('An error occurred while picking the video.',
-          title: "Error");
+      errorSnackBar('An error occurred while picking the video.', title: "Error");
     }
   }
-
   Widget _buildMediaPreview() {
     if (_mediaFile != null) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(5),
         child: isVideo && _videoController != null
             ? VideoPlayerWidget(
-                videoController: _videoController!,
-                initialVolume: _volume,
-                onFullScreenToggle: _toggleFullScreen,
-              )
+          videoController: _videoController!,
+          initialVolume: _volume,
+          onFullScreenToggle: _toggleFullScreen,
+        )
             : Image.file(
-                File(_mediaFile!.path),
-                fit: BoxFit.contain,
-              ),
+          File(_mediaFile!.path),
+          fit: BoxFit.contain,
+        ),
       );
     } else if (widget.sponsor != null) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(5),
         child: widget.sponsor!.isVideo && _videoController != null
             ? VideoPlayerWidget(
-                videoController: _videoController!,
-                initialVolume: _volume,
-                onFullScreenToggle: _toggleFullScreen,
-              )
+          videoController: _videoController!,
+          initialVolume: _volume,
+          onFullScreenToggle: _toggleFullScreen,
+        )
             : Image.network(
-                toImageUrl(widget.sponsor!.brandMedia),
-                fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset('assets/images/logo.png',
-                      fit: BoxFit.cover);
-                },
-              ),
+          toImageUrl(widget.sponsor!.brandMedia),
+          fit: BoxFit.contain,
+          errorBuilder: (context, error, stackTrace) {
+            return Image.asset('assets/images/logo.png',
+                fit: BoxFit.cover);
+          },
+        ),
       );
     } else {
       return Center(
@@ -313,7 +420,9 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
             const Icon(Icons.add_photo_alternate),
             const SizedBox(height: 8),
             Text(
-              package?.maxVideos != null && package!.maxVideos! > 0
+              package?.maxVideos != null &&
+                  package!.maxVideos! > 0 &&
+                  widget.isVideoLimitReached == false
                   ? 'Add Sponsor Image or Video'
                   : 'Add Sponsor Image',
               style: const TextStyle(
@@ -343,19 +452,19 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            title: Text(
-              widget.sponsor != null
-                  ? "Edit Sponsor Details"
-                  : "Add Sponsor Details",
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              title: Text(
+                widget.sponsor != null
+                    ? "Edit Sponsor Details"
+                    : "Add Sponsor Details",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            leading: const BackButton(color: Colors.white),
+              leading: const BackButton(color: Colors.white),
               actions: [
                 widget.sponsor != null
                     ? IconButton(
@@ -394,7 +503,8 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                                 ),
                                 const SizedBox(height: 24),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.spaceEvenly,
                                   children: [
                                     TextButton(
                                       onPressed: () {
@@ -403,28 +513,32 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                                       style: TextButton.styleFrom(
                                         foregroundColor: Colors.red,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                          BorderRadius.circular(10),
                                         ),
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 12, horizontal: 24),
-                                        textStyle: const TextStyle(fontSize: 16),
+                                        padding:
+                                        const EdgeInsets.symmetric(
+                                            vertical: 12,
+                                            horizontal: 24),
+                                        textStyle:
+                                        const TextStyle(fontSize: 16),
                                       ),
                                       child: const Text("No"),
                                     ),
                                     TextButton(
                                       onPressed: () async {
-                                        if (_formkey.currentState!.validate()) {
-                                          final controller =
-                                          Get.find<TournamentController>();
+                                        if (_formkey.currentState!
+                                            .validate()) {
+                                          final controller = Get.find<
+                                              TournamentController>();
                                           try {
                                             if (widget.sponsor != null) {
                                               bool isOk = await controller
-                                                  .deleteSponsor(widget.sponsor!.id);
+                                                  .deleteSponsor(
+                                                  widget.sponsor!.id);
                                               if (isOk) {
-                                                Get.back();
+                                                successSnackBar("Your sponsor has been deleted successfully and will no longer be visible.").then((value)=>Get.back());
                                                 Get.forceAppUpdate();
-                                                successSnackBar(
-                                                    "Your sponsor has been deleted successfully and will no longer be visible.");
                                               } else {
                                                 errorSnackBar(
                                                     "Failed to delete sponsor. Please try again.");
@@ -433,18 +547,23 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                                           } catch (e) {
                                             errorSnackBar(
                                                 "An error occurred. Please try again.");
-                                            logger.e("Error deleting sponsor: $e");
+                                            logger.e(
+                                                "Error deleting sponsor: $e");
                                           }
                                         }
                                       },
                                       style: TextButton.styleFrom(
                                         foregroundColor: Colors.green,
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                          BorderRadius.circular(10),
                                         ),
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 12, horizontal: 24),
-                                        textStyle: const TextStyle(fontSize: 16),
+                                        padding:
+                                        const EdgeInsets.symmetric(
+                                            vertical: 12,
+                                            horizontal: 24),
+                                        textStyle:
+                                        const TextStyle(fontSize: 16),
                                       ),
                                       child: const Text("Yes"),
                                     ),
@@ -463,9 +582,28 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                   ),
                 )
                     : const SizedBox.shrink()
-              ]
-          ),
-          body: Form(
+              ]),
+          body: !controller.isConnected.value ? const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.signal_wifi_off,
+                  size: 48,
+                  color: Colors.black54,
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'No internet connection',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                  ),
+                ),
+              ],
+            ),
+          ): Form(
             key: _formkey,
             child: Padding(
               padding: const EdgeInsets.all(18.0),
@@ -477,7 +615,9 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                     Stack(
                       children: [
                         InkWell(
-                          onTap: () => pickMedia(ImageSource.gallery),
+                          onTap: () => widget.isVideoLimitReached ?? false
+                              ? _pickImage(ImageSource.gallery)
+                              : pickMedia(ImageSource.gallery),
                           borderRadius: BorderRadius.circular(20),
                           child: Container(
                             width: Get.width,
@@ -496,11 +636,8 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                             child: IconButton(
                               icon: Icon(
                                 Icons.edit,
-                                color: Get.find<MiscController>()
-                                        .isaspectRatioequal
-                                        .value
-                                    ? Colors.white
-                                    : Colors.black,
+                                color: Get.find<MiscController>().isaspectRatioequal.value
+                                    ? Colors.white : Colors.black,
                               ),
                               onPressed: () => pickMedia(ImageSource.gallery),
                             ),
@@ -525,7 +662,7 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                           return "";
                         }
                         if (p0.length < 3) {
-                          return "Tournament name should be atleast 3 characters long";
+                          return "Sponsor name should be atleast 3 characters long";
                         }
                         if (p0.isNotEmpty &&
                             !RegExp(r'^[a-zA-Z]+$').hasMatch(p0[0])) {
@@ -556,7 +693,8 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                     const SizedBox(height: 20),
                     PrimaryButton(
                       title: 'Submit',
-                      onTap: () {
+                      isDisabled: !controller.isConnected.value,
+                      onTap: () async {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
@@ -591,7 +729,7 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                                     const SizedBox(height: 24),
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
+                                      MainAxisAlignment.spaceEvenly,
                                       children: [
                                         TextButton(
                                           onPressed: () {
@@ -600,22 +738,17 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                                           style: TextButton.styleFrom(
                                             foregroundColor: Colors.red,
                                             shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
+                                              borderRadius: BorderRadius.circular(10),
                                             ),
-                                            padding: const EdgeInsets.symmetric(
-                                                vertical: 12, horizontal: 24),
-                                            textStyle:
-                                                const TextStyle(fontSize: 16),
+                                            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                                            textStyle: const TextStyle(fontSize: 16),
                                           ),
                                           child: const Text("No"),
                                         ),
                                         TextButton(
                                           onPressed: () async {
-                                            if (_formkey.currentState!
-                                                .validate()) {
-                                              final controller = Get.find<
-                                                  TournamentController>();
+                                            if (_formkey.currentState!.validate()) {
+                                              final controller = Get.find<TournamentController>();
                                               if (_mediaFile == null &&
                                                   widget.sponsor == null) {
                                                 errorSnackBar(
@@ -627,36 +760,30 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                                                     "Please enter name");
                                                 return;
                                               }
+                                              if(isVideo) {
+                                                await _addSponsorInIsolate(context);
+                                              }
                                               String? base64;
                                               if (_mediaFile != null) {
-                                                base64 =
-                                                    await convertImageToBase64(
-                                                        _mediaFile!);
+                                                base64 = await convertImageToBase64(_mediaFile!);
                                               }
                                               Map<String, dynamic> sponsor = {
                                                 "sponsorMedia": base64,
-                                                "sponsorName":
-                                                    nameController.text,
+                                                "sponsorName": nameController.text,
                                                 "sponsorDescription":
-                                                    descriptionController
-                                                            .text.isEmpty
-                                                        ? 'Not Defined'
-                                                        : descriptionController
-                                                            .text,
-                                                "sponsorUrl":
-                                                    linkController.text.isEmpty
-                                                        ? 'Not Defined'
-                                                        : linkController.text,
-                                                "tournamentId":
-                                                    widget.tournament.id,
+                                                descriptionController.text.isEmpty
+                                                    ? 'Not Defined'
+                                                    : descriptionController.text,
+                                                "sponsorUrl": linkController.text.isEmpty ? 'Not Defined' : linkController.text,
+                                                "tournamentId": widget.tournament.id,
                                                 "isVideo": isVideo
                                               };
                                               try {
                                                 if (widget.sponsor != null) {
                                                   bool isOk = await controller
                                                       .editSponsor(
-                                                          widget.sponsor!.id,
-                                                          sponsor);
+                                                      widget.sponsor!.id,
+                                                      sponsor);
                                                   if (isOk) {
                                                     Get.back();
                                                     Get.forceAppUpdate();
@@ -667,15 +794,13 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                                                         "Failed to Edit  sponsor. Please try again.");
                                                   }
                                                 } else {
-                                                  final res = await controller
-                                                      .addSponsor(sponsor);
-                                                  if (res != null) {
-                                                    Navigator.of(context).pop();
-                                                    successSnackBar(
-                                                        "Your sponsor was added successfully.");
-                                                  } else {
-                                                    errorSnackBar(
-                                                        "Failed to add sponsor. Please try again.");
+
+                                                  final res=await controller.addSponsor(sponsor);
+                                                  if(res!=null){
+                                                    successSnackBar('Your Sponsor Added Successfully').then(
+                                                          (value) => Get.back(),
+                                                    );
+                                                    Get.forceAppUpdate();
                                                   }
                                                 }
                                               } catch (e) {
@@ -690,12 +815,12 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                                             foregroundColor: Colors.green,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
-                                                  BorderRadius.circular(10),
+                                              BorderRadius.circular(10),
                                             ),
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 12, horizontal: 24),
                                             textStyle:
-                                                const TextStyle(fontSize: 16),
+                                            const TextStyle(fontSize: 16),
                                           ),
                                           child: const Text("Yes"),
                                         ),
@@ -718,4 +843,30 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
       ),
     );
   }
+
+  Future<void> _addSponsorInIsolate(BuildContext context) async {
+    final receivePort = ReceivePort();
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+    await Isolate.spawn(_addSponsor, [receivePort.sendPort]);
+    final result = await receivePort.first;
+    Navigator.of(context).pop();
+
+    return result;
+  }
 }
+
+Future<void> _addSponsor(List<dynamic> args) async {
+  final SendPort sendPort = args[0];
+  await Future.delayed(const Duration(seconds: 3));
+  sendPort.send("done");
+}
+

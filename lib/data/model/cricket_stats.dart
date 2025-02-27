@@ -1,5 +1,4 @@
 import 'package:gully_app/data/model/matchup_model.dart';
-import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'cricket_stats.g.dart';

@@ -8,11 +8,17 @@ import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:intl/intl.dart';
 
 import '../../data/model/txn_model.dart';
+import '../../utils/app_logger.dart';
+import '../../utils/utils.dart';
+import 'banner_payment_page.dart';
 import 'payment_page.dart';
 
 class TxnDetailsView extends StatefulWidget {
   final Transaction transaction;
-  const TxnDetailsView({super.key, required this.transaction});
+  final String transactiontype;
+
+  const TxnDetailsView(
+      {super.key, required this.transaction, required this.transactiontype});
 
   @override
   State<TxnDetailsView> createState() => _TxnDetailsViewState();
@@ -29,8 +35,8 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
       backgroundColor: Colors.transparent,
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
-        title: const Text('Transaction Details',
-            style: TextStyle(color: Colors.white, fontSize: 23)),
+        title:  Text(widget.transactiontype=='banner'?'Banner Transaction Details':'Sponsor Transaction Details',
+            style: const TextStyle(color: Colors.white, fontSize: 20)),
         centerTitle: true,
         backgroundColor: AppTheme.primaryColor,
         elevation: 0,
@@ -61,58 +67,118 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
 
                   //       child: const Text('Media Download')),
                   // ),
-                  Center(
-                    child: Text(widget.transaction.tournamentName.capitalize,
-                        style: const TextStyle(
-                            color: AppTheme.secondaryYellowColor,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold)),
-                  ),
-                  if (widget.transaction.invoiceUrl != null)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () async {
-                            // _flutterMediaDownloaderPlugin.downloadMedia(
-                            //   context,
-                            //   widget.transaction.invoiceUrl!,
-                            // );
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.grey.shade400),
-                            ),
-                            child: GestureDetector(
-                              onTap: () {
 
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  // mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Image.asset(
-                                      'assets/images/invoice.png',
-                                      height: 20,
-                                      width: 20,
-                                    ),
-                                    const SizedBox(width: 10),
-                                    const Text('Download Invoice',
-                                        style: TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w500)),
-                                  ],
-                                ),
-                              ),
+                  Center(
+                    child: Text(
+                        widget.transaction.orderType == 'banner'
+                            ? widget.transaction.banner?.bannerTitle ?? ''
+                            : widget.transaction.sponsor?.name ?? '',
+                        style: Get.textTheme.bodyMedium?.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 18)),
+                  ),
+
+                  if(widget.transactiontype=='banner')
+                  Column(
+                    children: [
+                      Image.network(
+                        widget.transaction.banner!.bannerImage.isNotEmpty
+                            ? toImageUrl(widget.transaction.banner?.bannerImage??'')
+                            : 'assets/images/logo.png',
+                        width: Get.width,
+                        height: 150,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset('assets/images/logo.png',
+                              fit: BoxFit.cover);
+                        },
+                      ),
+                      TransactionDetails('Banner Title',widget.transaction.banner!.bannerTitle),
+                      TransactionDetails('Banner Start Date',DateFormat("dd-MMM-yyyy").format(widget.transaction.banner!.startDate)),
+                      TransactionDetails('Banner End Date',DateFormat("dd-MMM-yyyy").format(widget.transaction.banner!.endDate)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Banner Location",
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey.shade800,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
-                        ),
+                          SizedBox(
+                            width: 150,
+                            child: Text(
+                              widget.transaction.banner!.bannerlocationaddress?? '',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.grey.shade800,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              maxLines: 3,
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  if(widget.transactiontype=='Sponsor')
+                    Column(
+                      children: [
+                        TransactionDetails('Package Name',widget.transaction.sponsor!.name),
+                        TransactionDetails('Package Media Limit',"${widget.transaction.sponsor!.maxMedia}"),
+                        TransactionDetails('Package Video Limit',"${widget.transaction.sponsor!.maxVideos}"),
+                        TransactionDetails('Package Fees',"${widget.transaction.sponsor!.price}"),
                       ],
                     ),
+                  // if (widget.transaction.invoiceUrl != null)
+                  //   Row(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       GestureDetector(
+                  //         onTap: () async {
+                  //           // _flutterMediaDownloaderPlugin.downloadMedia(
+                  //           //   context,
+                  //           //   widget.transaction.invoiceUrl!,
+                  //           // );
+                  //         },
+                  //         child: Container(
+                  //           decoration: BoxDecoration(
+                  //             borderRadius: BorderRadius.circular(10),
+                  //             border: Border.all(color: Colors.grey.shade400),
+                  //           ),
+                  //           child: GestureDetector(
+                  //             onTap: () {
+                  //
+                  //             },
+                  //             child: Padding(
+                  //               padding: const EdgeInsets.all(8.0),
+                  //               child: Row(
+                  //                 // mainAxisSize: MainAxisSize.min,
+                  //                 mainAxisAlignment: MainAxisAlignment.center,
+                  //                 children: [
+                  //                   Image.asset(
+                  //                     'assets/images/invoice.png',
+                  //                     height: 20,
+                  //                     width: 20,
+                  //                   ),
+                  //                   const SizedBox(width: 10),
+                  //                   const Text('Download Invoice',
+                  //                       style: TextStyle(
+                  //                           color: Colors.black,
+                  //                           fontSize: 14,
+                  //                           fontWeight: FontWeight.w500)),
+                  //                 ],
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
                   Row(
                     children: [
                       const Text('Transaction Status',
@@ -250,54 +316,54 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                   const SizedBox(
                     height: 30,
                   ),
-                  const Text('Tournament Details',
+                  const Text('User Details',
                       style: TextStyle(
                         // color: AppTheme.secondaryYellowColor,
                         fontSize: 19,
                       )),
+                  // Row(
+                  //   children: [
+                  //     const Text('Start Date',
+                  //         style: TextStyle(
+                  //           // color: AppTheme.secondaryYellowColor,
+                  //           fontSize: 14,
+                  //         )),
+                  //     const Spacer(),
+                  //     Text(
+                  //         DateFormat('dd/MM/yyyy').format(
+                  //             DateTime.parse(widget.transaction.createdAt)),
+                  //         style: const TextStyle(
+                  //           // color: AppTheme.secondaryYellowColor,
+                  //           fontSize: 14,
+                  //         )),
+                  //   ],
+                  // ),
+                  // Row(
+                  //   children: [
+                  //     const Text('End Date',
+                  //         style: TextStyle(
+                  //           // color: AppTheme.secondaryYellowColor,
+                  //           fontSize: 14,
+                  //         )),
+                  //     const Spacer(),
+                  //     Text(
+                  //         DateFormat('dd/MM/yyyy').format(
+                  //             DateTime.parse(widget.transaction.endDate)),
+                  //         style: const TextStyle(
+                  //           // color: AppTheme.secondaryYellowColor,
+                  //           fontSize: 14,
+                  //         )),
+                  //   ],
+                  // ),
                   Row(
                     children: [
-                      const Text('Start Date',
+                      const Text('Full Name: ',
                           style: TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 14,
                           )),
                       const Spacer(),
-                      Text(
-                          DateFormat('dd/MM/yyyy').format(
-                              DateTime.parse(widget.transaction.startDate)),
-                          style: const TextStyle(
-                            // color: AppTheme.secondaryYellowColor,
-                            fontSize: 14,
-                          )),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const Text('End Date',
-                          style: TextStyle(
-                            // color: AppTheme.secondaryYellowColor,
-                            fontSize: 14,
-                          )),
-                      const Spacer(),
-                      Text(
-                          DateFormat('dd/MM/yyyy').format(
-                              DateTime.parse(widget.transaction.endDate)),
-                          style: const TextStyle(
-                            // color: AppTheme.secondaryYellowColor,
-                            fontSize: 14,
-                          )),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const Text('Payment: ',
-                          style: TextStyle(
-                            // color: AppTheme.secondaryYellowColor,
-                            fontSize: 14,
-                          )),
-                      const Spacer(),
-                      Text('₹ ${widget.transaction.amount} ',
+                      Text('${controller.state!.fullName} ',
                           style: const TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 14,
@@ -319,6 +385,26 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                           )),
                     ],
                   ),
+                  Row(
+                    children: [
+                      const Text('Email Address: ',
+                          style: TextStyle(
+                            // color: AppTheme.secondaryYellowColor,
+                            fontSize: 14,
+                          )),
+                      const Spacer(),
+                      SizedBox(
+                        width: 130,
+                        child: Text(controller.state?.email ?? "",
+                            style: const TextStyle(
+                              // color: AppTheme.secondaryYellowColor,
+                              fontSize: 14,
+                            ),maxLines: 2,
+                        textAlign: TextAlign.right,),
+                      ),
+                    ],
+                  ),
+
                   const SizedBox(
                     height: 50,
                   ),
@@ -331,4 +417,31 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
       ),
     ));
   }
+}
+
+Widget TransactionDetails(String title, String? value) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 8.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.grey.shade800,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+        Text(
+          value ?? '',
+          style: TextStyle(
+            fontSize: 13,
+            color: Colors.grey.shade800,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      ],
+    ),
+  );
 }

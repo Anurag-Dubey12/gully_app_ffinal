@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
-import 'package:gully_app/ui/widgets/sponsor/sponsor_payment_page.dart';
+import 'package:gully_app/ui/screens/sponsor_payment_page.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
@@ -35,7 +35,7 @@ class SponsorPackageScreenState extends State<SponsorPackageScreen> {
         backgroundColor: AppTheme.primaryColor,
         elevation: 0,
         title: const Text(
-          'Choose Your Subscription',
+          'Choose Your Package',
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -43,7 +43,27 @@ class SponsorPackageScreenState extends State<SponsorPackageScreen> {
           ),
         ),
       ),
-      body:Column(
+      body:!controller.isConnected.value ? const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.signal_wifi_off,
+              size: 48,
+              color: Colors.black54,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'No internet connection',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+              ),
+            ),
+          ],
+        ),
+      ): Column(
         children: [
           Container(
             color: AppTheme.primaryColor,
@@ -86,7 +106,7 @@ class SponsorPackageScreenState extends State<SponsorPackageScreen> {
             },
           ),
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(5),
             child: Column(
               children: [
                 PrimaryButton(
@@ -95,15 +115,15 @@ class SponsorPackageScreenState extends State<SponsorPackageScreen> {
                   },
                   title: 'Continue',
                 ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildTextLink('Terms of use'),
-                    const Text(' | '),
-                    _buildTextLink('Privacy Policy'),
-                  ],
-                ),
+                // const SizedBox(height: 10),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     _buildTextLink('Terms of use'),
+                //     const Text(' | '),
+                //     _buildTextLink('Privacy Policy'),
+                //   ],
+                // ),
               ],
             ),
           ),
@@ -177,19 +197,10 @@ class PackageCard extends StatelessWidget {
                   //     ),
                   //   ),
                   Text(
-                    package.name,
+                    "${package.name} - ₹${package.price}",
                     style: const TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '₹${package.price} for ${package.duration}',
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
                     ),
                   ),
                   const SizedBox(height: 4),

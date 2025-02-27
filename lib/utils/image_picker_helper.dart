@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/utils/FallbackImageProvider.dart';
@@ -34,7 +35,22 @@ Future<String> convertImageToBase64(XFile image) async {
   logger.d("The base64 image is: $base64Image");
   return mimeType != null ? 'data:$mimeType;base64,$base64Image' : base64Image;
 }
+Future<String> convertVideoToBase64(XFile image) async {
+  // Use compute to run encoding in a separate isolate
+  return await compute(_encodeFileToBase64, image);
+}
 
+// This function runs in the isolate
+String _encodeFileToBase64(XFile image) {
+  final bytes = File(image.path).readAsBytesSync();
+  final mimeType = lookupMimeType(image.path);
+
+  final String base64Image = base64Encode(bytes);
+  // Note: Logger may not work in isolate, consider removing this debug line
+  // logger.d("The base64 image is: $base64Image");
+
+  return mimeType != null ? 'data:$mimeType;base64,$base64Image' : base64Image;
+}
 void imageViewer(BuildContext context, String? photoUrl,bool isnetworkimage,{VoidCallback? onTap}) {
   if (photoUrl == null || photoUrl.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(

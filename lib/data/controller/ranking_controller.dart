@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/api/ranking_api.dart';
 import 'package:gully_app/data/model/player_ranking_model.dart';
 import 'package:gully_app/data/model/team_ranking_model.dart';
-import 'package:gully_app/utils/utils.dart';
 
 import '../../utils/app_logger.dart';
 

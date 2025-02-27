@@ -114,10 +114,12 @@ class MiscApi {
     return ApiResponse.fromJson(response.body);
   }
   Future<ApiResponse> getPackagebyId(String packageId) async {
-    var response = await repo.get('/other/packages/$packageId');
+    logger.d("Package ID:${packageId}");
+    var response = await repo.get('/other/packages/getPackageby/$packageId');
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }
     return ApiResponse.fromJson(response.body);
   }
+
 }

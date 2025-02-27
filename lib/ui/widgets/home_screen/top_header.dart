@@ -164,7 +164,8 @@ class LocationBuilder extends GetView<AuthController> {
                 logger.f('Location Description: ${e.lat}${e.lng}');
                 controller.setLocation = e.description ?? 'Fetching Location';
                 final tournamentController = Get.find<TournamentController>();
-
+                final miscController = Get.find<MiscController>();
+                miscController.getBanners();
                 tournamentController.setCoordinates =
                     LatLng(double.parse(e.lat!), double.parse(e.lng!));
                 logger.f('Location: ${tournamentController.coordinates.value}');

@@ -1,4 +1,3 @@
-import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
@@ -86,10 +85,11 @@ class TournamentController extends GetxController
     }
   }
 
+  // Rx<TournamentSponsor?> sponsor = Rx<TournamentSponsor?>(null);
+  final RxMap<String, dynamic> sponsormap = <String, dynamic>{}.obs;
   Future<TournamentSponsor> addSponsor(Map<String, dynamic> sponsor) async {
     try {
       final response = await tournamentApi.addSponsor(sponsor);
-      logger.d("The response for tournament Sponsor:${response.data}");
       return TournamentSponsor.fromJson(response.data!);
     } catch (e) {
       errorSnackBar(e.toString());
@@ -122,7 +122,8 @@ class TournamentController extends GetxController
       if (response.status == false) {
         logger.d("Failed to update Sponsor Data");
       }
-      return MyTournamentSponsor.value = (response.data!['mySponsor'] as List<dynamic>?)
+      return MyTournamentSponsor.value = (response.data!['mySponsor']
+                  as List<dynamic>?)
               ?.map(
                   (e) => TournamentSponsor.fromJson(e as Map<String, dynamic>))
               .toList() ??
@@ -132,23 +133,27 @@ class TournamentController extends GetxController
       rethrow;
     }
   }
+
   RxInt indexvalue = 0.obs;
   void updateIndex(int index) {
     indexvalue.value = index;
   }
+
   RxList<TournamentSponsor> tournamentSponsor = <TournamentSponsor>[].obs;
 
-  Future<List<TournamentSponsor>> getTournamentSponsor(String tournamentId) async {
+  Future<List<TournamentSponsor>> getTournamentSponsor(
+      String tournamentId) async {
     try {
       final response = await tournamentApi.getTournamentSponsor(tournamentId);
       logger.d("The response for tournament Sponsor:${response.data}");
       if (response.status == false) {
         logger.d("Failed to update Sponsor Data");
       }
-      return tournamentSponsor.value = (response.data!['Sponsor'] as List<dynamic>?)
-          ?.map(
-              (e) => TournamentSponsor.fromJson(e as Map<String, dynamic>))
-          .toList() ??
+      return tournamentSponsor.value = (response.data!['Sponsor']
+                  as List<dynamic>?)
+              ?.map(
+                  (e) => TournamentSponsor.fromJson(e as Map<String, dynamic>))
+              .toList() ??
           [];
     } catch (e) {
       errorSnackBar(e.toString());
@@ -156,7 +161,7 @@ class TournamentController extends GetxController
     }
   }
 
-  Future<bool> deleteSponsor(String sponsorId)async{
+  Future<bool> deleteSponsor(String sponsorId) async {
     try {
       final response = await tournamentApi.deleteSponsor(sponsorId);
       logger.d("The response for tournament Sponsor:${response.data}");
@@ -169,6 +174,7 @@ class TournamentController extends GetxController
       rethrow;
     }
   }
+
   Future<bool> updateTournament(
       Map<String, dynamic> tournament, String tournamentId) async {
     try {
@@ -661,17 +667,42 @@ class TournamentController extends GetxController
     }
   }
 
-  Future<String> createbannerOrder(
-      {required double discountAmount,
-      required String bannerId,
-      required double totalAmount,
-      required String? coupon}) async {
+  Future<String> createbannerOrder({
+    required double discountAmount,
+    required String bannerId,
+    required double totalAmount,
+    required String? coupon,
+    required String status,
+  }) async {
     try {
       final response = await tournamentApi.createBannerOrder(
           discountAmount: discountAmount,
           bannerId: bannerId,
           totalAmount: totalAmount,
-          coupon: coupon);
+          coupon: coupon,
+          status: status);
+      return response.data!['order']['id'];
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<String> createSponsorOrder({
+    required double discountAmount,
+    required String sponsorPackageId,
+    required double totalAmount,
+    required String? coupon,
+    required String status,
+  }) async {
+    try {
+      final response = await tournamentApi.createSponsorOrder(
+        discountAmount: discountAmount,
+        sponsorPackageId: sponsorPackageId,
+        totalAmount: totalAmount,
+        coupon: coupon,
+        status: status
+      );
       return response.data!['order']['id'];
     } catch (e) {
       errorSnackBar(e.toString());
@@ -758,31 +789,35 @@ class TournamentController extends GetxController
         return [];
       }
 
-      final transactionData = response.data!['transactions'];
-      if (transactionData == null || transactionData['history'] == null) {
-        logger.d("Transaction history is null");
-        return [];
-      }
+      // final transactionData = response.data!['transactions'];
+      // if (transactionData == null || transactionData['history'] == null) {
+      //   logger.d("Transaction history is null");
+      //   return [];
+      // }
 
-      final transactionsList = transactionData['history'] as List;
-
-      for (var transactionJson in transactionsList) {
-        try {
-          final tournamentData = transactionJson['tournament'];
-          if (tournamentData != null &&
-              (tournamentData['user'] == userid ||
-                  tournamentData['authority'] == userid)) {
-            final transaction = Transaction.fromJson(transactionJson);
-            transactions.add(transaction);
-          }
-        } catch (e) {
-          logger.d("Error parsing transaction: $e");
-          logger.d("Problematic transaction data: $transactionJson");
-        }
-      }
-
-      logger.d("Parsed ${transactions.length} transactions for user $userid");
-      transactions.refresh();
+      transactions.value = (response.data!['transactions'] as List<dynamic>?)
+          ?.map((e) => Transaction.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+          [];
+      // final transactionsList = transactionData['history'] as List;
+      //
+      // for (var transactionJson in transactionsList) {
+      //   try {
+      //     final tournamentData = transactionJson['tournament'];
+      //     if (tournamentData != null &&
+      //         (tournamentData['user'] == userid ||
+      //             tournamentData['authority'] == userid)) {
+      //       final transaction = Transaction.fromJson(transactionJson);
+      //       transactions.add(transaction);
+      //     }
+      //   } catch (e) {
+      //     logger.d("Error parsing transaction: $e");
+      //     logger.d("Problematic transaction data: $transactionJson");
+      //   }
+      // }
+      //
+      // logger.d("Parsed ${transactions.length} transactions for user $userid");
+      // transactions.refresh();
       return transactions;
     } catch (e) {
       logger.d("Error in getTransactions: $e");

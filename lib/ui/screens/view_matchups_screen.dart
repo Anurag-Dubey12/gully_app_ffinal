@@ -179,14 +179,18 @@ class _MatchupsScreen extends State<ViewMatchupsScreen> with SingleTickerProvide
                     FutureBuilder<List<PointTableModel>>(
                       future: controller.tournamentPointsTable(widget.tournament?.id??'' ),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
                           return const Center(
                               child: CircularProgressIndicator());
                         }
                         if (snapshot.hasError) {
                           return const Center(
                               child: Text("Something went wrong"));
+                        }
+                        if (snapshot.data!.isEmpty) {
+                          return const Center(
+                            child: Text("Points table will be available once your team is registered.",textAlign: TextAlign.center),
+                          );
                         }
                         return SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
@@ -230,35 +234,15 @@ class _MatchupsScreen extends State<ViewMatchupsScreen> with SingleTickerProvide
                                           MainAxisAlignment
                                               .spaceBetween,
                                           children: [
-                                            teamTableData(
-                                                team.rank.toString(),
-                                                flex: 2),
-                                            const SizedBox(
-                                              width: 2,
-                                            ),
+                                            teamTableData(team.rank.toString(), flex: 2),
+                                            const SizedBox(width: 2,),
                                             teamData(team, flex: 4),
-                                            teamTableData(
-                                                team.matchesPlayed
-                                                    .toString(),
-                                                flex: 2),
-                                            teamTableData(
-                                                team.wins.toString(),
-                                                flex: 2),
-                                            teamTableData(
-                                                team.losses
-                                                    .toString(),
-                                                flex: 2),
-                                            teamTableData(
-                                                team.ties.toString(),
-                                                flex: 2),
-                                            teamTableData(
-                                                team.points
-                                                    .toString(),
-                                                flex: 2),
-                                            teamTableData(
-                                                team.netRunRate
-                                                    .toString(),
-                                                flex: 3),
+                                            teamTableData(team.matchesPlayed.toString(), flex: 2),
+                                            teamTableData(team.wins.toString(), flex: 2),
+                                            teamTableData(team.losses.toString(), flex: 2),
+                                            teamTableData(team.ties.toString(), flex: 2),
+                                            teamTableData(team.points.toString(), flex: 2),
+                                            teamTableData(team.netRunRate.toString(), flex: 3),
                                           ],
                                         ),
                                       );

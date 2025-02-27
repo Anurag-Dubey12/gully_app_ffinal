@@ -1,15 +1,12 @@
 import 'dart:async';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
-import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
-import '../../../utils/app_logger.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
   final VideoPlayerController videoController;

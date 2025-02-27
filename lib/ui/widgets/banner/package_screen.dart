@@ -55,7 +55,27 @@ class PackageScreenState extends State<PackageScreen> {
           ),
         ),
       ),
-      body:Column(
+      body:!controller.isConnected.value ? const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.signal_wifi_off,
+              size: 48,
+              color: Colors.black54,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'No internet connection',
+              style: TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.w700,
+                fontSize: 18,
+              ),
+            ),
+          ],
+        ),
+      ): Column(
         children: [
           Container(
             color: AppTheme.primaryColor,
@@ -112,15 +132,15 @@ class PackageScreenState extends State<PackageScreen> {
                   },
                   title: 'Continue',
                 ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    _buildTextLink('Terms of use'),
-                    const Text(' | '),
-                    _buildTextLink('Privacy Policy'),
-                  ],
-                ),
+                // const SizedBox(height: 10),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     _buildTextLink('Terms of use'),
+                //     const Text(' | '),
+                //     _buildTextLink('Privacy Policy'),
+                //   ],
+                // ),
               ],
             ),
           ),

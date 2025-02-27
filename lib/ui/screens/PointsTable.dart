@@ -28,7 +28,7 @@ class PointsTable extends StatelessWidget {
         ),
       ),
       body: FutureBuilder<List<PointTableModel>>(
-        future: controller.tournamentPointsTable(tournament!.id ??''),
+        future: controller.tournamentPointsTable(tournament!.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());

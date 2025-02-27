@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/utils.dart';
 import '../../data/controller/banner_promotion_controller.dart';
+import '../../data/controller/misc_controller.dart';
 import '../../data/model/PromotionalBannerModel.dart';
 import '../../utils/date_time_helpers.dart';
 import '../widgets/banner/banner_adding.dart';
@@ -19,6 +20,7 @@ class PromoteBannerScreenState extends State<PromoteBannerScreen> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<PromotionController>();
+    final MiscController connectionController=Get.find<MiscController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -34,7 +36,7 @@ class PromoteBannerScreenState extends State<PromoteBannerScreen> {
             tooltip: 'Add Banner',
             child: const Icon(Icons.add, color: Colors.white),
             onPressed: () {
-              Get.to(() => const BannerAdding());
+              connectionController.isConnected.value ? Get.to(() => const BannerAdding()) : errorSnackBar("Please Connect to the internet ");
             },
           ),
           appBar: AppBar(
@@ -50,11 +52,36 @@ class PromoteBannerScreenState extends State<PromoteBannerScreen> {
             ),
             leading: const BackButton(color: Colors.white),
           ),
-          body: FutureBuilder<List<PromotionalBanner>>(
+          body: !connectionController.isConnected.value ? const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.signal_wifi_off,
+                  size: 48,
+                  color: Colors.black54,
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'No internet connection',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                  ),
+                ),
+              ],
+            ),
+          ): FutureBuilder<List<PromotionalBanner>>(
             future: controller.getPromotionalBanner(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
+              }
+              if(snapshot.data!.isEmpty){
+                return const Center(
+                  child: Text("No Banner Found"),
+                );
               }
               return ListView.builder(
                 padding: const EdgeInsets.all(16),
@@ -142,6 +169,20 @@ class MyBannerState extends State<MyBanner>
                       return Image.asset('assets/images/logo.png',
                           fit: BoxFit.cover);
                     },
+                    // loadingBuilder: (context, child, loadingProgress) {
+                    //   if (loadingProgress == null) {
+                    //     return child;
+                    //   } else {
+                    //     return Center(
+                    //       child: CircularProgressIndicator(
+                    //         value: loadingProgress.expectedTotalBytes != null
+                    //             ? loadingProgress.cumulativeBytesLoaded /
+                    //             (loadingProgress.expectedTotalBytes ?? 1)
+                    //             : null,
+                    //       ),
+                    //     );
+                    //   }
+                    // },
                   ),
                   Positioned(
                     bottom: 0,

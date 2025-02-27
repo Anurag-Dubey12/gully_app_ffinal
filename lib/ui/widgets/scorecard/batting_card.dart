@@ -80,7 +80,6 @@ class BatterPlayerStat extends StatelessWidget {
     bool isCurrentBatsman = player.id == controller.scoreboard.value?.striker.id ||
         player.id == controller.scoreboard.value?.nonstriker.id;
 
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Column(

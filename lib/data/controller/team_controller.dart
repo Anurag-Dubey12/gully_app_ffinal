@@ -2,15 +2,12 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/api/team_api.dart';
 import 'package:gully_app/data/model/challenge_match.dart';
 import 'package:gully_app/data/model/cricket_stats.dart';
-import 'package:gully_app/data/model/cricket_stats.dart';
 import 'package:gully_app/data/model/opponent_model.dart';
 import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
-
-import '../model/cricket_stats.dart';
 import '../model/matchup_model.dart';
 
 class TeamController extends GetxController with StateMixin<TeamModel> {

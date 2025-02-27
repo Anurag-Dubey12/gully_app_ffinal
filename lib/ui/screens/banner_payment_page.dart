@@ -36,6 +36,7 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
   double discount = 0;
   DateTime? start_date;
   DateTime? end_date;
+  String bannerId='';
   @override
   void initState() {
     super.initState();
@@ -44,11 +45,17 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     start_date = DateTime.parse(widget.banner['startDate']);
     end_date = DateTime.parse(widget.banner['endDate']);
-    fees = double.tryParse(widget.SelectedPakcage['package']['price'].toString().split('.')[0]) ?? 0.0;
+    fees = double.tryParse(widget.SelectedPakcage['package']['price']
+            .toString()
+            .split('.')[0]) ??
+        0.0;
+
+    logger.d("Start Date${widget.banner['startDate']}");
+    logger.d("endDate${widget.banner['endDate']}");
   }
 
   _handlePaymentSuccess(PaymentSuccessResponse response) async {
-    final controller=Get.find<PromotionController>();
+    final controller = Get.find<PromotionController>();
     final ordercontroller = Get.find<TournamentController>();
     Map<String, dynamic> bannerdata = {
       "banner_title": widget.banner['banner_title'],
@@ -57,35 +64,45 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
       "endDate": widget.banner['endDate'],
       "bannerlocationaddress": widget.banner['bannerlocationaddress'],
       "longitude": widget.banner['longitude'],
-      "latitude":widget.banner['latitude'],
+      "latitude": widget.banner['latitude'],
       "packageId": widget.banner['packageId'],
     };
-    final res=await controller.createBanner(bannerdata);
+    final res = await controller.createBanner(bannerdata);
     logger.d("The Banner Id:${res.id}");
-    if(res!=null){
+    if (res != null) {
+      bannerId=res.id;
       await ordercontroller.createbannerOrder(
-          discountAmount: fees,
-          bannerId: res.id,
-          totalAmount: fees,
-          coupon: couponCode);
+        discountAmount: fees,
+        bannerId: res.id,
+        totalAmount: fees,
+        coupon: couponCode,
+        status: "Successful",
+      );
       successSnackBar(
-        'Congratulations !!!\nYour transaction has been successful. Your banner is Live!',
+        'Congratulations !!!\nYour transaction has been successful. Your banner Details will be updated sortly!',
         title: "Payment Successful",
       ).then(
-            (value) => Get.offAll(() => const HomeScreen(),
+        (value) => Get.offAll(() => const HomeScreen(),
             predicate: (route) => route.name == '/HomeScreen'),
       );
     }
-
     logger.f('Payment Success');
+
   }
 
-  _handlePaymentError(PaymentFailureResponse response) async{
+  _handlePaymentError(PaymentFailureResponse response) async {
     logger.f('Payment Error ${response.message.toString()}');
+
+    final ordercontroller = Get.find<TournamentController>();
+    await ordercontroller.createbannerOrder(
+      discountAmount: fees,
+      bannerId: bannerId,
+      totalAmount: fees,
+      coupon: couponCode,
+      status: "Failed",
+    );
     errorSnackBar('Your transaction has failed. Please try again!',
         title: "Payment Failed!");
-
-
   }
 
   _handleExternalWallet(ExternalWalletResponse response) {
@@ -96,7 +113,7 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
   void startPayment() async {
     final authController = Get.find<AuthController>();
     var options = {
-      // 'key': 'rzp_test_QMUxKSQyzcywjc',//my test key
+      // 'key': 'rzp_test_QMUxKSQyzcywjc', //my test key
       'key': 'rzp_live_6sW7limWXGaS3k',
       'amount': fees * 100,
       'name': 'Gully Team',
@@ -319,7 +336,10 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
                       ),
                     ),
                     const SizedBox(height: 22),
-                    const CancellationPolicyWidget(content: 'The Banner fee is non-refundable. In case of any issue, kindly contact Gully Support.',)
+                    const CancellationPolicyWidget(
+                      content:
+                          'The Banner fee is non-refundable. In case of any issue, kindly contact Gully Support.',
+                    )
                   ],
                 ),
               ),

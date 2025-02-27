@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/api/misc_api.dart';
 import 'package:gully_app/data/model/package_model.dart';
-import 'package:gully_app/data/model/PromotionalBannerModel.dart';
 import 'package:gully_app/data/model/banner_model.dart';
 import 'package:gully_app/data/model/looking_for_model.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -23,6 +22,8 @@ class MiscController extends GetxController with StateMixin {
     });
   }
   RxBool isaspectRatioequal=false.obs;
+
+
   Future<void> getCurrentLocation() async {
     final position = await determinePosition();
 
@@ -50,12 +51,10 @@ class MiscController extends GetxController with StateMixin {
   }
 
 
-  Future<void> getBanners({
-    double? longitude, double? latitude
-}) async {
+  Future<void> getBanners() async {
     var response = await repo.getBanners(
-      longitude: longitude ?? coordinates.value.longitude,
-      latitude: latitude ?? coordinates.value.latitude
+      longitude: coordinates.value.longitude,
+      latitude: coordinates.value.latitude
     );
     logger.d("The Banners Data is:${response.data}");
     banners.value = response.data!['banners']

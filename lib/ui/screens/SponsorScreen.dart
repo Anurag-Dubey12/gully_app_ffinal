@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/sponsor_model.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../data/model/package_model.dart';
 import '../../data/model/tournament_model.dart';
+import '../../utils/app_logger.dart';
 import '../../utils/date_time_helpers.dart';
 import '../../utils/utils.dart';
 import '../widgets/gradient_builder.dart';
@@ -26,9 +29,32 @@ class SponsorScreen extends StatefulWidget {
 }
 
 class _SponsorScreenState extends State<SponsorScreen> {
+  Package? package;
+  bool isFabEnabled = true;
+  bool isVideoLimitReached = false;
+  late int videocount = 0;
+
+  @override
+  void initState() {
+    logger.d("Found Sponsor Id:${widget.tournament.SponsorshipPackageId}");
+    getDetails();
+  }
+  Future<void> getDetails() async{
+    final miscontroller=Get.find<MiscController>();
+    Package getpackage=await miscontroller.getPackagebyId("${widget.tournament.SponsorshipPackageId}");
+    setState(() {
+      package=getpackage;
+    });
+  }
+  @override
+  void dispose() {
+    videocount=0;
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
+    final MiscController connectionController=Get.find<MiscController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -44,7 +70,18 @@ class _SponsorScreenState extends State<SponsorScreen> {
             tooltip: 'Add sponsor',
             child: const Icon(Icons.add, color: Colors.white),
             onPressed: () {
-              Get.to(() => SponsorAddingScreen(tournament: widget.tournament));
+              if(isFabEnabled){
+                videocount = controller.MyTournamentSponsor
+                    .where((sponsor) => sponsor.isVideo == true)
+                    .length;
+                if (videocount >= (package?.maxVideos ?? 0)) {
+                  isVideoLimitReached=true;
+                }
+                Get.to(() => SponsorAddingScreen(tournament: widget.tournament,isVideoLimitReached: isVideoLimitReached));
+
+              }else{
+                errorSnackBar("Your Have Reached your limit");
+              }
             },
           ),
           appBar: AppBar(
@@ -60,7 +97,27 @@ class _SponsorScreenState extends State<SponsorScreen> {
             ),
             leading: const BackButton(color: Colors.white),
           ),
-          body: FutureBuilder<List<TournamentSponsor>>(
+          body: !connectionController.isConnected.value ? const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.signal_wifi_off,
+                  size: 48,
+                  color: Colors.black54,
+                ),
+                SizedBox(height: 16),
+                Text(
+                  'No internet connection',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 18,
+                  ),
+                ),
+              ],
+            ),
+          ): FutureBuilder<List<TournamentSponsor>>(
             future: controller.getMyTournamentSponsor(widget.tournament.id),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -73,6 +130,19 @@ class _SponsorScreenState extends State<SponsorScreen> {
                 padding: const EdgeInsets.all(16),
                 itemBuilder: (context, index) {
                   final sponsor = controller.MyTournamentSponsor[index];
+                  if(package?.maxMedia==controller.MyTournamentSponsor.length){
+                    isFabEnabled=false;
+                  }
+                  videocount = 0;
+                  for (var sponsor in controller.MyTournamentSponsor) {
+                    if (sponsor.isVideo == true) {
+                      videocount++;
+                    }
+                  }
+                  videocount = controller.MyTournamentSponsor
+                      .where((sponsor) => sponsor.isVideo == true)
+                      .length;
+                  logger.d("Video COunt:${videocount}");
                   return MySponsor(
                     sponsor: sponsor,
                     tournament: widget.tournament,
@@ -125,12 +195,12 @@ class MySponsorState extends State<MySponsor>
 
   Future<void> _initializeVideoPlayer() async {
     _videoController =
-        VideoPlayerController.network(toImageUrl(widget.sponsor.brandMedia))
-          ..initialize().then((_) {
-            setState(() {});
-            _videoController?.play();
-            _videoController?.setLooping(true);
-          });
+    VideoPlayerController.network(toImageUrl(widget.sponsor.brandMedia))
+      ..initialize().then((_) {
+        setState(() {});
+        _videoController?.pause();
+        _videoController?.setLooping(true);
+      });
   }
 
   @override
@@ -143,10 +213,13 @@ class MySponsorState extends State<MySponsor>
   void _toggleFullScreen() {
     setState(() => _isFullScreen = !_isFullScreen);
     if (_isFullScreen) {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight,
-      ]);
+
+      //It is USed to Set the orientation of a device
+      // SystemChrome.setPreferredOrientations([
+      //   DeviceOrientation.landscapeLeft,
+      //   DeviceOrientation.landscapeRight,
+      // ]);
+
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => FullScreenVideoPlayer(
@@ -264,9 +337,9 @@ class MySponsorState extends State<MySponsor>
                     ),
                   ),
                   !widget.sponsor.isActive ? Positioned(
-                      top: 5,
-                      right: 5,
-                      child: Container(
+                    top: 5,
+                    right: 5,
+                    child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(

@@ -102,7 +102,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                       mainAxisSize: MainAxisSize.min,
                       children: List.generate(
                         tournamentcontroller.MyTournamentSponsor.length,
-                        (index) => AnimatedContainer(
+                            (index) => AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           margin: const EdgeInsets.symmetric(horizontal: 3),
                           height: 10,
@@ -112,9 +112,9 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             color:
-                                tournamentcontroller.indexvalue.value == index
-                                    ? AppTheme.darkYellowColor
-                                    : Colors.grey.withOpacity(0.5),
+                            tournamentcontroller.indexvalue.value == index
+                                ? AppTheme.darkYellowColor
+                                : Colors.grey.withOpacity(0.5),
                           ),
                         ),
                       ),
@@ -206,7 +206,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                     mainAxisSize: MainAxisSize.min,
                     children: List.generate(
                       tournamentcontroller.tournamentSponsor.length,
-                      (index) => AnimatedContainer(
+                          (index) => AnimatedContainer(
                         duration: const Duration(milliseconds: 300),
                         margin: const EdgeInsets.symmetric(horizontal: 3),
                         height: 10,
@@ -234,7 +234,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
             Padding(
               padding: const EdgeInsets.all(18.0),
               child: Obx(
-                () => Column(
+                    () => Column(
                   children: [
                     Text(
                       widget.match.tournamentName ?? '',
@@ -263,51 +263,51 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                       children: [
                                         Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: [
                                             ClipRRect(
                                               borderRadius:
-                                                  BorderRadius.circular(100),
+                                              BorderRadius.circular(100),
                                               child: widget.match.scoreBoard![
-                                                                  'team1']
-                                                              ['teamLogo'] !=
-                                                          null &&
-                                                      widget
-                                                          .match
-                                                          .scoreBoard!['team1']
-                                                              ['teamLogo']
-                                                          .isNotEmpty
+                                              'team1']
+                                              ['teamLogo'] !=
+                                                  null &&
+                                                  widget
+                                                      .match
+                                                      .scoreBoard!['team1']
+                                                  ['teamLogo']
+                                                      .isNotEmpty
                                                   ? Image.network(
-                                                      widget.match.scoreBoard![
-                                                                      'team1'][
-                                                                  'teamLogo'] ==
-                                                              widget.match.team1
-                                                                  .toImageUrl()
-                                                          ? widget.match.team1
-                                                              .toImageUrl()
-                                                          : widget.match.team2
-                                                              .toImageUrl(),
-                                                      height: 50,
-                                                      fit: BoxFit.cover,
-                                                      width: 50,
-                                                    )
+                                                widget.match.scoreBoard![
+                                                'team1'][
+                                                'teamLogo'] ==
+                                                    widget.match.team1
+                                                        .toImageUrl()
+                                                    ? widget.match.team1
+                                                    .toImageUrl()
+                                                    : widget.match.team2
+                                                    .toImageUrl(),
+                                                height: 50,
+                                                fit: BoxFit.cover,
+                                                width: 50,
+                                              )
                                                   : Image.asset(
-                                                      "assets/images/logo.png",
-                                                      height: 50,
-                                                      fit: BoxFit.cover,
-                                                      width: 50,
-                                                    ),
+                                                "assets/images/logo.png",
+                                                height: 50,
+                                                fit: BoxFit.cover,
+                                                width: 50,
+                                              ),
                                             ),
                                             const SizedBox(width: 10),
                                             Obx(() {
@@ -316,20 +316,20 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                                   color: AppTheme
                                                       .secondaryYellowColor,
                                                   borderRadius:
-                                                      BorderRadius.circular(10),
+                                                  BorderRadius.circular(10),
                                                 ),
                                                 child: Padding(
                                                   padding:
-                                                      const EdgeInsets.all(8.0),
+                                                  const EdgeInsets.all(8.0),
                                                   child: Text(
                                                     '${controller.scoreboard.value?.firstInningHistory.entries.lastOrNull?.value.total ?? 0}/${controller.scoreboard.value?.firstInningHistory.entries.lastOrNull?.value.wickets ?? 0}',
                                                     style: Get.textTheme
                                                         .headlineMedium
                                                         ?.copyWith(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.white,
-                                                            fontSize: 12),
+                                                        fontWeight:
+                                                        FontWeight.bold,
+                                                        color: Colors.white,
+                                                        fontSize: 12),
                                                   ),
                                                 ),
                                               );
@@ -347,8 +347,8 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                         ),
                                         Text(
                                           widget.match.scoreBoard!['team1']
-                                                      ['teamName'] ==
-                                                  widget.match.team1.name
+                                          ['teamName'] ==
+                                              widget.match.team1.name
                                               ? widget.match.team1.name
                                               : widget.match.team2.name,
                                           overflow: TextOverflow.ellipsis,
@@ -368,99 +368,99 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.end,
+                                      CrossAxisAlignment.end,
                                       children: [
                                         Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: [
                                             controller.scoreboard.value
-                                                        ?.secondInnings ==
-                                                    null
+                                                ?.secondInnings ==
+                                                null
                                                 ? const Text(
-                                                    "DNB",
-                                                    style: TextStyle(
-                                                        color: Colors.grey),
-                                                  )
+                                              "DNB",
+                                              style: TextStyle(
+                                                  color: Colors.grey),
+                                            )
                                                 : Obx(() {
-                                                    return Container(
-                                                      decoration: BoxDecoration(
-                                                        color: AppTheme
-                                                            .secondaryYellowColor,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Text(
-                                                          '${controller.scoreboard.value?.secondInningHistory.entries.lastOrNull?.value.total ?? 0}/${controller.scoreboard.value?.secondInningHistory.entries.lastOrNull?.value.wickets ?? 0}',
-                                                          style: Get.textTheme
-                                                              .headlineMedium
-                                                              ?.copyWith(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 12),
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }),
+                                              return Container(
+                                                decoration: BoxDecoration(
+                                                  color: AppTheme
+                                                      .secondaryYellowColor,
+                                                  borderRadius:
+                                                  BorderRadius
+                                                      .circular(10),
+                                                ),
+                                                child: Padding(
+                                                  padding:
+                                                  const EdgeInsets
+                                                      .all(8.0),
+                                                  child: Text(
+                                                    '${controller.scoreboard.value?.secondInningHistory.entries.lastOrNull?.value.total ?? 0}/${controller.scoreboard.value?.secondInningHistory.entries.lastOrNull?.value.wickets ?? 0}',
+                                                    style: Get.textTheme
+                                                        .headlineMedium
+                                                        ?.copyWith(
+                                                        fontWeight:
+                                                        FontWeight
+                                                            .bold,
+                                                        color: Colors
+                                                            .white,
+                                                        fontSize: 12),
+                                                  ),
+                                                ),
+                                              );
+                                            }),
                                             const SizedBox(width: 10),
                                             ClipRRect(
                                               borderRadius:
-                                                  BorderRadius.circular(100),
+                                              BorderRadius.circular(100),
                                               child: SizedBox(
                                                 height: 50,
                                                 width: 50,
                                                 child: widget.match.scoreBoard![
-                                                                    'team2']
-                                                                ['teamLogo'] !=
-                                                            null &&
-                                                        widget
-                                                            .match
-                                                            .scoreBoard![
-                                                                'team2']
-                                                                ['teamLogo']
-                                                            .isNotEmpty
+                                                'team2']
+                                                ['teamLogo'] !=
+                                                    null &&
+                                                    widget
+                                                        .match
+                                                        .scoreBoard![
+                                                    'team2']
+                                                    ['teamLogo']
+                                                        .isNotEmpty
                                                     ? Image.network(
-                                                        widget.match.scoreBoard![
-                                                                        'team2']
-                                                                    [
-                                                                    'teamLogo'] ==
-                                                                widget
-                                                                    .match.team2
-                                                                    .toImageUrl()
-                                                            ? widget.match.team2
-                                                                .toImageUrl()
-                                                            : widget.match.team1
-                                                                .toImageUrl(),
-                                                        height: 50,
-                                                        fit: BoxFit.cover,
-                                                        width: 50,
-                                                      )
+                                                  widget.match.scoreBoard![
+                                                  'team2']
+                                                  [
+                                                  'teamLogo'] ==
+                                                      widget
+                                                          .match.team2
+                                                          .toImageUrl()
+                                                      ? widget.match.team2
+                                                      .toImageUrl()
+                                                      : widget.match.team1
+                                                      .toImageUrl(),
+                                                  height: 50,
+                                                  fit: BoxFit.cover,
+                                                  width: 50,
+                                                )
                                                     : Image.asset(
-                                                        "assets/images/logo.png",
-                                                        height: 50,
-                                                        fit: BoxFit.cover,
-                                                        width: 50,
-                                                      ),
+                                                  "assets/images/logo.png",
+                                                  height: 50,
+                                                  fit: BoxFit.cover,
+                                                  width: 50,
+                                                ),
                                               ),
                                             ),
                                           ],
                                         ),
                                         Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: [
                                             Text(
                                               widget.match.scoreBoard!['team2']
-                                                          ['teamName'] ==
-                                                      widget.match.team2.name
+                                              ['teamName'] ==
+                                                  widget.match.team2.name
                                                   ? widget.match.team2.name
                                                   : widget.match.team1.name,
                                               style: Get
@@ -524,7 +524,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                   widget.match.getWinningTeamName() == null
                                       ? "Match Tied"
                                       : "${widget.match.getWinningTeamName()} Won The Match" ??
-                                          "Match Tied",
+                                      "Match Tied",
                                 );
                               } else {
                                 return Text(
@@ -538,7 +538,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -554,7 +554,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                               '${controller.scoreboard.value?.striker.name}',
                                               overflow: TextOverflow.ellipsis,
                                               style:
-                                                  const TextStyle(fontSize: 13),
+                                              const TextStyle(fontSize: 13),
                                             ),
                                           )
                                         ],
@@ -569,7 +569,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                           Text(
                                               '${controller.scoreboard.value?.striker.batting?.runs}',
                                               style:
-                                                  const TextStyle(fontSize: 13))
+                                              const TextStyle(fontSize: 13))
                                         ],
                                       ),
                                       Row(
@@ -582,7 +582,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                           Text(
                                               '${controller.scoreboard.value?.striker.batting?.strikeRate.toStringAsFixed(2)}',
                                               style:
-                                                  const TextStyle(fontSize: 13))
+                                              const TextStyle(fontSize: 13))
                                         ],
                                       ),
                                     ],
@@ -592,7 +592,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
@@ -608,7 +608,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                               '${controller.scoreboard.value?.nonstriker.name}',
                                               overflow: TextOverflow.ellipsis,
                                               style:
-                                                  const TextStyle(fontSize: 13),
+                                              const TextStyle(fontSize: 13),
                                             ),
                                           )
                                         ],
@@ -623,7 +623,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                           Text(
                                               '${controller.scoreboard.value?.nonstriker.batting?.runs}',
                                               style:
-                                                  const TextStyle(fontSize: 13))
+                                              const TextStyle(fontSize: 13))
                                         ],
                                       ),
                                       Row(
@@ -636,7 +636,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                           Text(
                                               '${controller.scoreboard.value?.nonstriker.batting?.strikeRate.toStringAsFixed(2)}',
                                               style:
-                                                  const TextStyle(fontSize: 13))
+                                              const TextStyle(fontSize: 13))
                                         ],
                                       ),
                                     ],
@@ -652,7 +652,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                 const SizedBox(width: 5),
                                 const Text('Bowler :  ',
                                     style:
-                                        TextStyle(fontWeight: FontWeight.w500)),
+                                    TextStyle(fontWeight: FontWeight.w500)),
                                 Text(
                                     '${controller.scoreboard.value?.bowler.name}'),
                               ],
@@ -700,11 +700,13 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
 
   @override
   void dispose() {
+    final tournamentcontroller = Get.find<TournamentController>();
     for (var controller in _videoControllers.values) {
       controller.dispose();
     }
     _videoControllers.clear();
-    logger.d("Cleard DOne");
+    logger.d("Cleared Done");
+    tournamentcontroller.indexvalue.value=0;
     super.dispose();
   }
 
@@ -737,35 +739,34 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
   }
 
   void _handleFullScreenToggle() {
-    setState(() {
-      _isFullScreen = !_isFullScreen;
-    });
-  }
+    final controller = Get.find<TournamentController>();
+    final sponsors = controller.tournamentSponsor.value;
+    final currentSponsor = sponsors[_current];
 
-  // void _toggleFullScreen() {
-  //   setState(() => _isFullScreen = !_isFullScreen);
-  //   if (_isFullScreen) {
-  //     SystemChrome.setPreferredOrientations([
-  //       DeviceOrientation.landscapeLeft,
-  //       DeviceOrientation.landscapeRight,
-  //     ]);
-  //     Navigator.of(context).push(
-  //       MaterialPageRoute(
-  //         builder: (context) => FullScreenVideoPlayer(
-  //           controller: controller,
-  //           onExitFullScreen: () {
-  //             setState(() => _isFullScreen = false);
-  //             SystemChrome.setPreferredOrientations(
-  //                 [DeviceOrientation.portraitUp]);
-  //             Navigator.of(context).pop();
-  //           },
-  //         ),
-  //       ),
-  //     );
-  //   } else {
-  //     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-  //   }
-  // }
+    if (currentSponsor.isVideo) {
+      final mediaUrl = toImageUrl(currentSponsor.brandMedia);
+      final videoController = _videoControllers[mediaUrl];
+
+      if (videoController?.value.isInitialized ?? false) {
+        if (!_isFullScreen) {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => FullScreenVideoPlayer(
+                controller: videoController!,
+                onExitFullScreen: () {
+                  Navigator.of(context).pop();
+                  SystemChrome.setPreferredOrientations(
+                      [DeviceOrientation.portraitUp]);
+                  setState(() => _isFullScreen = false);
+                },
+              ),
+            ),
+          );
+        }
+        setState(() => _isFullScreen = !_isFullScreen);
+      }
+    }
+  }
 
   void _handlePageChange(int index) {
     final controller = Get.find<TournamentController>();
@@ -774,6 +775,7 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
     for (var videoController in _videoControllers.values) {
       videoController.pause();
     }
+
     if (index < sponsors.length && sponsors[index].isVideo) {
       final mediaUrl = toImageUrl(sponsors[index].brandMedia);
       final videoController = _videoControllers[mediaUrl];
@@ -805,7 +807,7 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
       height: 150,
       width: Get.width,
       child: Obx(
-        () => CarouselSlider(
+            () => CarouselSlider(
           items: controller.tournamentSponsor.value.map((e) {
             final mediaUrl = toImageUrl(e.brandMedia);
 
@@ -824,13 +826,13 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
                   if (e.isVideo)
                     _videoControllers[mediaUrl]?.value.isInitialized == true
                         ? VideoPlayerWidget(
-                            videoController: _videoControllers[mediaUrl]!,
-                            initialVolume: _volume,
-                            onFullScreenToggle: _handleFullScreenToggle,
-                            sponsorlink: e.brandUrl != "Not Defined"
-                                ? e.brandUrl ?? ''
-                                : '',
-                          )
+                      videoController: _videoControllers[mediaUrl]!,
+                      initialVolume: _volume,
+                      onFullScreenToggle: _handleFullScreenToggle,
+                      sponsorlink: e.brandUrl != "Not Defined"
+                          ? e.brandUrl ?? ''
+                          : '',
+                    )
                         : const Center(child: CircularProgressIndicator())
                   else
                     CachedNetworkImage(
@@ -841,9 +843,10 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
                         child: CircularProgressIndicator(),
                       ),
                       errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                      const Icon(Icons.error),
                     ),
-                  !e.isVideo && e.brandUrl!="Not Defined" ? Positioned(
+                  !e.isVideo && e.brandUrl != "Not Defined"
+                      ? Positioned(
                     bottom: 10,
                     right: 10,
                     child: Container(
@@ -854,24 +857,24 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                             color: Colors.black45,
-                          )
-                      ),
+                          )),
                       child: IconButton(
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.link_rounded,
                           color: Colors.white,
                           size: 20,
                         ),
-                        onPressed: (){
+                        onPressed: () {
                           if (e.brandUrl != null &&
-                              e.brandUrl !.isNotEmpty &&
+                              e.brandUrl!.isNotEmpty &&
                               e.brandUrl != "Not Defined") {
-                            _launchURL(e.brandUrl??'');
+                            _launchURL(e.brandUrl ?? '');
                           }
                         },
                       ),
                     ),
-                  ):const SizedBox.shrink(),
+                  )
+                      : const SizedBox.shrink(),
                   Positioned(
                     top: 2,
                     right: 10,
@@ -907,19 +910,6 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
                       ),
                     ),
                   ),
-                  // Positioned(
-                  //   bottom: 2,
-                  //   right: 10,
-                  //   child: SizedBox(
-                  //     width: 100,
-                  //     child:PrimaryButton(
-                  //       title: "View Details",
-                  //       onTap: (){
-                  //
-                  //       },
-                  //     )
-                  //   ),
-                  // ),
                 ],
               ),
             );
@@ -974,7 +964,8 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
                         BrandUrl != 'Not Defined')
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
@@ -1014,7 +1005,6 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
       },
     );
   }
-
 
   Future<void> _launchURL(String url) async {
     if (await canLaunch(url)) {

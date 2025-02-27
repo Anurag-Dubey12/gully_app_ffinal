@@ -1,6 +1,4 @@
-import 'package:gully_app/data/model/vendor_model.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'business_hours_model.dart';
 
 part 'sponsor_model.g.dart';
 

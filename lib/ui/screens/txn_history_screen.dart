@@ -83,6 +83,7 @@ class _TxnHistoryCard extends StatelessWidget {
       onTap: () {
         Get.to(() => TxnDetailsView(
               transaction: transaction,
+          transactiontype: transaction.orderType,
             ));
       },
       child: Padding(
@@ -125,11 +126,16 @@ class _TxnHistoryCard extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(transaction.tournamentName??"Unknown Tournament",
+                                Text(
+                                    transaction.orderType == 'banner'
+                                        ? transaction.banner?.bannerTitle ?? ''
+                                        : transaction.sponsor?.name ?? '',
                                     style: Get.textTheme.bodyMedium?.copyWith(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 18)),
+                                        fontSize: 18
+                                    )
+                                ),
                                 Text(
                                   DateFormat('MMMM dd, yyyy - hh:mm a').format(
                                       DateTime.parse(transaction.createdAt)),
@@ -170,7 +176,7 @@ class _TxnHistoryCard extends StatelessWidget {
                                 fontSize: 13,
                                 fontWeight: FontWeight.w700)),
                       ),
-                      backgroundColor: transaction.status == "captured"
+                      backgroundColor: transaction.status == "Successful"
                           ? Colors.green
                           : transaction.status == "created"
                               ? Colors.red
@@ -193,11 +199,11 @@ class _TxnHistoryCard extends StatelessWidget {
 
 String generateStatusText(String status) {
   switch (status) {
-    case 'captured':
+    case 'Successful':
       return 'Success';
     case 'created':
       return 'Failed';
-    case 'failed':
+    case 'Failed':
       return 'Failed';
     default:
       return 'Failed';

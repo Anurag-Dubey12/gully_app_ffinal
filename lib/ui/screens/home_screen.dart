@@ -122,6 +122,7 @@ class _HomePageState extends State<HomePage>
     try {
       final tournamentController = Get.find<TournamentController>();
       tournamentController.filter.value = 'current';
+
     } catch (e) {
       logger.e('Error refreshing data: $e');
     }
@@ -255,6 +256,7 @@ class ScreenContent extends State<HomePageContent> {
       final tournamentController = Get.find<TournamentController>();
       tournamentController.filter.value = 'current';
       await tournamentController.getTournamentList(filterD: selected);
+      Get.find<MiscController>().getBanners();
     } catch (e) {
       logger.e('Error refreshing data: $e');
     }

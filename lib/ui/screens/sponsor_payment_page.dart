@@ -7,17 +7,17 @@ import 'package:gully_app/ui/screens/payment_page.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
-import '../../../data/controller/auth_controller.dart';
-import '../../../data/controller/tournament_controller.dart';
-import '../../../data/model/package_model.dart';
-import '../../../data/model/tournament_model.dart';
-import '../../../utils/FallbackImageProvider.dart';
-import '../../../utils/app_logger.dart';
-import '../../../utils/image_picker_helper.dart';
-import '../../../utils/utils.dart';
-import '../../screens/home_screen.dart';
-import '../../theme/theme.dart';
-import '../gradient_builder.dart';
+import '../../data/controller/auth_controller.dart';
+import '../../data/controller/tournament_controller.dart';
+import '../../data/model/package_model.dart';
+import '../../data/model/tournament_model.dart';
+import '../../utils/FallbackImageProvider.dart';
+import '../../utils/app_logger.dart';
+import '../../utils/image_picker_helper.dart';
+import '../../utils/utils.dart';
+import 'home_screen.dart';
+import '../theme/theme.dart';
+import '../widgets/gradient_builder.dart';
 
 class SponsorPaymentPage extends StatefulWidget {
   final TournamentModel tournament;
@@ -35,7 +35,7 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
   final _razorpay = Razorpay();
   double discount = 0;
   String? couponCode;
-
+  String bannerId='';
   @override
   void initState() {
     super.initState();
@@ -50,10 +50,18 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
       "tournamentId":widget.tournament.id,
       "SponsorshipPackageId":widget.package?.id
     };
-    final res=await controller.setSponsor(sponsor);
-    if(res!=null){
+
+    final res = await controller.setSponsor(sponsor);
+    if(res != null){
+      await controller.createSponsorOrder(
+        discountAmount: widget.package!.price.toDouble(),
+        sponsorPackageId: widget.package!.id,
+        totalAmount:widget.package!.price.toDouble() ,
+        coupon: couponCode,
+        status: "Successful",
+      );
       successSnackBar(
-        'Congratulations !!!\nYour transaction has been successful. Your Can Now Add Your Sponsor Details',
+        'Congratulations !!!\nYour transaction has been successful. You can now add Sponsors',
         title: "Payment Successful",
       ).then(
             (value) => Get.offAll(() => const HomeScreen(),
@@ -67,6 +75,14 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
     logger.f('Payment Error ${response.message.toString()}');
     errorSnackBar('Your transaction has failed. Please try again!',
         title: "Payment Failed!");
+    final controller = Get.find<TournamentController>();
+    await controller.createSponsorOrder(
+      discountAmount: widget.package!.price.toDouble(),
+      sponsorPackageId: widget.package!.id,
+      totalAmount:widget.package!.price.toDouble() ,
+      coupon: couponCode,
+      status: "Failed",
+    );
   }
 
   _handleExternalWallet(ExternalWalletResponse response) {
@@ -77,8 +93,8 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
   void startPayment() async {
     final authController = Get.find<AuthController>();
     var options = {
-      // 'key': 'rzp_live_6sW7limWXGaS3k',
-      'key': 'rzp_test_QMUxKSQyzcywjc',//my test key
+      'key': 'rzp_live_6sW7limWXGaS3k',
+      // 'key': 'rzp_test_QMUxKSQyzcywjc',//my test key
       'amount': widget.package!.price * 100,
       'name': 'Gully Team',
       'description': 'Advertisement Fee',
@@ -99,7 +115,7 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
           backgroundColor: AppTheme.primaryColor,
-          title: const Text('Review banner',
+          title: const Text('Review Sponsor Details',
               style: TextStyle(color: Colors.white, fontSize: 18)),
         ),
         body: Padding(
@@ -116,19 +132,20 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Tournament Details',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                    const Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        'Tournament Details',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 12),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10)
-                      ),
+                    SizedBox(
+                      width: Get.width,
                       child: widget.tournament.coverPhoto != null
                           ? Image.network(
                         toImageUrl(widget.tournament.coverPhoto!),
@@ -167,16 +184,10 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    packageDetails(
-                        "Tournament Name", widget.tournament.tournamentName),
-                    packageDetails(
-                        "Tournament Start Date",
-                        DateFormat("dd-MMM-yyyy")
-                            .format(widget.tournament.tournamentStartDateTime)),
-                    packageDetails(
-                        "Tournament End Date",
-                        DateFormat("dd-MMM-yyyy")
-                            .format(widget.tournament.tournamentEndDateTime)),
+                    packageDetails("Tournament Name", widget.tournament.tournamentName),
+                    packageDetails("Tournament Start Date",
+                        DateFormat("dd-MMM-yyyy").format(widget.tournament.tournamentStartDateTime)),
+                    packageDetails("Tournament End Date", DateFormat("dd-MMM-yyyy").format(widget.tournament.tournamentEndDateTime)),
                     const SizedBox(height: 22),
                     const Text(
                       'Sponsor Package  Details:',
@@ -187,14 +198,10 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    packageDetails(
-                        "Package Name", widget.package?.name),
-                    packageDetails(
-                        "Total Media Allowed", "${widget.package?.maxMedia}"),
-                    packageDetails(
-                        "Video Allowed", "${widget.package?.maxVideos}"),
-                    packageDetails(
-                        "Package Price", "${widget.package?.price}"),
+                    packageDetails("Package Name", widget.package?.name),
+                    packageDetails("Total Media Allowed", "${widget.package?.maxMedia}"),
+                    packageDetails("Video Allowed", "${widget.package?.maxVideos}"),
+                    packageDetails("Package Price", "${widget.package?.price}"),
                     const SizedBox(height: 15),
                     Text('Payment Summary',
                         style: TextStyle(

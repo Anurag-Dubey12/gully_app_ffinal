@@ -313,8 +313,7 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                                 playerToOut = e!;
                               });
                             },
-                            title: Text(
-                                controller.scoreboard.value!.nonstriker.name),
+                            title: Text(controller.scoreboard.value!.nonstriker.name),
                           ),
                         ),
                       ],

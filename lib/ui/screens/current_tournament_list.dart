@@ -260,11 +260,8 @@ class _CardState extends State<_Card> {
               tournament: widget.tournament,
             ));
             break;
-
-
           case RedirectType.sponsor:
-            bool isSubscribed = widget.tournament.isSponsershippurchase ?? false;
-            if (!isSubscribed) {
+            if (widget.tournament.isSponsorshippurchase==false) {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
@@ -290,7 +287,7 @@ class _CardState extends State<_Card> {
                           ),
                           const SizedBox(height: 15),
                           const Text(
-                            'Subscription Required',
+                            'Payment Required',
                             style: TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -299,7 +296,7 @@ class _CardState extends State<_Card> {
                           ),
                           const SizedBox(height: 10),
                           Text(
-                            'You need a sponsorship package to add a sponsor for these tournaments ${widget.tournament.tournamentName}. Please subscribe to continue.',
+                            'To add a sponsor for the tournament "${widget.tournament.tournamentName}", you need to make a payment. Please complete the payment to proceed.',
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                               fontSize: 16,
@@ -322,7 +319,7 @@ class _CardState extends State<_Card> {
                                   padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
                                 ),
                                 child: const Text(
-                                  'Subscribe Now',
+                                  'Pay Now',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500,
@@ -350,6 +347,7 @@ class _CardState extends State<_Card> {
                 },
               );
             }else{
+              logger.d("Tournament sponsor Id:${widget.tournament.SponsorshipPackageId}");
               Get.to(() => SponsorScreen(tournament: widget.tournament));
             }
             break;

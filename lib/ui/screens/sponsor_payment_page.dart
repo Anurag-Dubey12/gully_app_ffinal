@@ -59,6 +59,7 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
         totalAmount:widget.package!.price.toDouble() ,
         coupon: couponCode,
         status: "Successful",
+        tournamentId: widget.tournament.id
       );
       successSnackBar(
         'Congratulations !!!\nYour transaction has been successful. You can now add Sponsors',
@@ -82,6 +83,7 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
       totalAmount:widget.package!.price.toDouble() ,
       coupon: couponCode,
       status: "Failed",
+        tournamentId: widget.tournament.id
     );
   }
 
@@ -93,8 +95,8 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
   void startPayment() async {
     final authController = Get.find<AuthController>();
     var options = {
-      'key': 'rzp_live_6sW7limWXGaS3k',
-      // 'key': 'rzp_test_QMUxKSQyzcywjc',//my test key
+      // 'key': 'rzp_live_6sW7limWXGaS3k',
+      'key': 'rzp_test_QMUxKSQyzcywjc',//my test key
       'amount': widget.package!.price * 100,
       'name': 'Gully Team',
       'description': 'Advertisement Fee',

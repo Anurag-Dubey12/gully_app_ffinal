@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
@@ -12,6 +13,7 @@ import 'package:gully_app/ui/screens/search_tournament_screen.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/app_drawer.dart';
+import 'package:gully_app/ui/widgets/banner/banner_adding.dart';
 import 'package:gully_app/ui/widgets/home_screen/date_times_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 import 'package:gully_app/utils/app_logger.dart';
@@ -33,6 +35,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final Internetconnectivty _connectivityService = Internetconnectivty();
   bool _isConnected = true;
+  DateTime? _lastPressedAt;
   @override
   void initState() {
     super.initState();
@@ -55,24 +58,48 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    final now = DateTime.now();
+    if (_lastPressedAt == null ||
+        now.difference(_lastPressedAt!) > const Duration(seconds: 2)) {
+      _lastPressedAt = now;
+      Get.snackbar(
+        "Exit App",
+        "Press back again to exit",
+        snackPosition: SnackPosition.top,
+        duration: const Duration(seconds: 2),
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+      );
+
+      return Future.value(false); // Prevent default back action
+    }
+
+    SystemNavigator.pop(); // Close the app
+    return Future.value(true); // Allow the app to close
+  }
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<AuthController>();
-    return Obx(() {
-      if (controller.state == null) {
-        logger.i('state is null');
-        return const Scaffold(
-            backgroundColor: Colors.white,
-            body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Center(child: CircularProgressIndicator()),
-              ],
-            ));
-      } else {
-        return const HomePage();
-      }
-    });
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Obx(() {
+        if (controller.state == null) {
+          logger.i('state is null');
+          return const Scaffold(
+              backgroundColor: Colors.white,
+              body: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(child: CircularProgressIndicator()),
+                ],
+              ));
+        } else {
+          return const HomePage();
+        }
+      }),
+    );
   }
 }
 
@@ -122,7 +149,6 @@ class _HomePageState extends State<HomePage>
     try {
       final tournamentController = Get.find<TournamentController>();
       tournamentController.filter.value = 'current';
-
     } catch (e) {
       logger.e('Error refreshing data: $e');
     }
@@ -608,26 +634,29 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
                             Positioned(
                               top: 2,
                               right: 10,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.6),
-                                  borderRadius: BorderRadius.circular(20),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 4,
-                                      offset: const Offset(0, 2),
+                              child: GestureDetector(
+                                onTap: () => Get.to(() => const BannerAdding()),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8, vertical: 4),
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.6),
+                                    borderRadius: BorderRadius.circular(20),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.black.withOpacity(0.2),
+                                        blurRadius: 4,
+                                        offset: const Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                  child: const Text(
+                                    "Ad",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  ],
-                                ),
-                                child: const Text(
-                                  "Ad",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),

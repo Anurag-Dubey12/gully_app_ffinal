@@ -262,90 +262,91 @@ class _CardState extends State<_Card> {
             break;
           case RedirectType.sponsor:
             if (widget.tournament.isSponsorshippurchase==false) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return Dialog(
-                    backgroundColor: Colors.transparent,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.warning_amber_rounded,
-                            color: Colors.orange,
-                            size: 50,
-                          ),
-                          const SizedBox(height: 15),
-                          const Text(
-                            'Payment Required',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blueGrey,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            'To add a sponsor for the tournament "${widget.tournament.tournamentName}", you need to make a payment. Please complete the payment to proceed.',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Get.to(() => SponsorPackageScreen(tournament: widget.tournament));
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppTheme.primaryColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
-                                ),
-                                child: const Text(
-                                  'Pay Now',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: const Text(
-                                  'Cancel',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              );
+              // showDialog(
+              //   context: context,
+              //   builder: (BuildContext context) {
+              //     return Dialog(
+              //       backgroundColor: Colors.transparent,
+              //       shape: RoundedRectangleBorder(
+              //         borderRadius: BorderRadius.circular(20),
+              //       ),
+              //       child: Container(
+              //         padding: const EdgeInsets.all(20),
+              //         decoration: BoxDecoration(
+              //           color: Colors.white,
+              //           borderRadius: BorderRadius.circular(20),
+              //         ),
+              //         child: Column(
+              //           mainAxisSize: MainAxisSize.min,
+              //           crossAxisAlignment: CrossAxisAlignment.center,
+              //           children: [
+              //             const Icon(
+              //               Icons.warning_amber_rounded,
+              //               color: Colors.orange,
+              //               size: 50,
+              //             ),
+              //             const SizedBox(height: 15),
+              //             const Text(
+              //               'Payment Required',
+              //               style: TextStyle(
+              //                 fontSize: 22,
+              //                 fontWeight: FontWeight.bold,
+              //                 color: Colors.blueGrey,
+              //               ),
+              //             ),
+              //             const SizedBox(height: 10),
+              //             Text(
+              //               'To add a sponsor for the tournament "${widget.tournament.tournamentName}", you need to make a payment. Please complete the payment to proceed.',
+              //               textAlign: TextAlign.center,
+              //               style: const TextStyle(
+              //                 fontSize: 16,
+              //                 color: Colors.black87,
+              //               ),
+              //             ),
+              //             const SizedBox(height: 20),
+              //             Row(
+              //               mainAxisAlignment: MainAxisAlignment.center,
+              //               children: [
+              //                 ElevatedButton(
+              //                   onPressed: () {
+              //                     Get.to(() => SponsorPackageScreen(tournament: widget.tournament));
+              //                   },
+              //                   style: ElevatedButton.styleFrom(
+              //                     backgroundColor: AppTheme.primaryColor,
+              //                     shape: RoundedRectangleBorder(
+              //                       borderRadius: BorderRadius.circular(12),
+              //                     ),
+              //                     padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+              //                   ),
+              //                   child: const Text(
+              //                     'Pay Now',
+              //                     style: TextStyle(
+              //                       color: Colors.white,
+              //                       fontWeight: FontWeight.w500,
+              //                     ),
+              //                   ),
+              //                 ),
+              //                 TextButton(
+              //                   onPressed: () {
+              //                     Navigator.of(context).pop();
+              //                   },
+              //                   child: const Text(
+              //                     'Cancel',
+              //                     style: TextStyle(
+              //                       fontSize: 16,
+              //                       color: Colors.red,
+              //                     ),
+              //                   ),
+              //                 ),
+              //               ],
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     );
+              //   },
+              // );
+              Get.to(() => SponsorPackageScreen(tournament: widget.tournament));
             }else{
               logger.d("Tournament sponsor Id:${widget.tournament.SponsorshipPackageId}");
               Get.to(() => SponsorScreen(tournament: widget.tournament));

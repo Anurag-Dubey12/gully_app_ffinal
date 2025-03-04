@@ -1,7 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:contacts_service/contacts_service.dart';
+// import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_contacts/contact.dart';
+import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart'; //
 import 'package:gully_app/data/controller/team_controller.dart';
@@ -771,7 +773,7 @@ class AddPlayerDialog extends GetView<TeamController> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                ContactPickerWidget(teamId: teamId,),
+                ContactPickerWidget(teamId: teamId),
               ],
             ),
           ),
@@ -790,8 +792,7 @@ class ContactPickerWidget extends StatelessWidget {
     PermissionStatus permissionStatus = await Permission.contacts.request();
     if (permissionStatus.isGranted) {
       try {
-        List<Contact> contacts = await ContactsService.getContacts(withThumbnails: false);
-
+        List<Contact> contacts = await FlutterContacts.getContacts(withProperties: true);
         final contactsWithPhone = contacts.where((element) => element.phones!.isNotEmpty).toList();
         await Get.bottomSheet(
           _ContactListBottomSheet(
@@ -882,7 +883,7 @@ class _ContactListBottomSheetState extends State<_ContactListBottomSheet> {
           .where((contact) {
         String phoneNumber = '';
         if (contact.phones != null && contact.phones!.isNotEmpty) {
-          phoneNumber = contact.phones![0].value ?? '';
+          phoneNumber = contact.phones![0].number ?? '';
           phoneNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
         }
         return phoneNumber.isNotEmpty &&
@@ -976,7 +977,7 @@ class _ContactListBottomSheetState extends State<_ContactListBottomSheet> {
               final contact = _filteredContacts[index];
               String phoneNumber = '';
               if (contact.phones != null && contact.phones!.isNotEmpty) {
-                phoneNumber = contact.phones![0].value ?? '';
+                phoneNumber = contact.phones![0].number ?? '';
                 phoneNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
               }
               if (phoneNumber.length == 12) {
@@ -1110,9 +1111,9 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                     if (value.trim().isEmpty) {
                       return AppLocalizations.of(context)!.fillAllFields;
                     }
-                    // if (!value.contains(RegExp(r'^[a-zA-Z -]+$'))) {
-                    //   return AppLocalizations.of(context)!.validName;
-                    // }
+                    if (!value.contains(RegExp(r'^[a-zA-Z -]+$'))) {
+                      return AppLocalizations.of(context)!.validName;
+                    }
                     return null;
                   },
                 ),

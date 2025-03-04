@@ -222,8 +222,8 @@ class _MatchupsScreen extends State<ViewMatchupsScreen> with SingleTickerProvide
                                     itemCount: controller
                                         .points_table.length,
                                     itemBuilder: (context, index) {
-                                      final team = controller
-                                          .points_table[index];
+                                      final team = controller.points_table[index];
+
                                       return Container(
                                         padding: const EdgeInsets
                                             .symmetric(

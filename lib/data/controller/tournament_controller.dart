@@ -628,10 +628,9 @@ class TournamentController extends GetxController
 
   Future<List<PointTableModel>> tournamentPointsTable(String tourId) async {
     try {
-      final response =
-          await tournamentApi.tournamentPointsTable(tourId: tourId);
+      final response = await tournamentApi.tournamentPointsTable(tourId: tourId);
       logger.d("Raw Points Table API response: ${response.data}");
-
+      // getRegisteredTeams(tourId);
       points_table.value = (response.data!['TeamPoints'] as List)
           .map<PointTableModel>((e) => PointTableModel.fromJson(e))
           .toList();
@@ -694,6 +693,7 @@ class TournamentController extends GetxController
     required double totalAmount,
     required String? coupon,
     required String status,
+    required String tournamentId,
   }) async {
     try {
       final response = await tournamentApi.createSponsorOrder(
@@ -701,7 +701,8 @@ class TournamentController extends GetxController
         sponsorPackageId: sponsorPackageId,
         totalAmount: totalAmount,
         coupon: coupon,
-        status: status
+        status: status,
+          tournamentId: tournamentId
       );
       return response.data!['order']['id'];
     } catch (e) {

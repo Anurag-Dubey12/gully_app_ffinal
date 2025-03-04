@@ -128,10 +128,11 @@ Widget teamTableData(String text, {required int flex}) {
     ),
   );
 }
-Widget teamData(PointTableModel team, {required int flex}) {
+Widget teamData(PointTableModel team, {required int flex,bool isEliminated=false}) {
   return Expanded(
     flex: flex,
     child: Text(
+      // "${team.teamName.capitalize}${isEliminated?" (E)":""}",
       team.teamName.capitalize,
       style: const TextStyle(
         fontSize: 12,

@@ -30,6 +30,7 @@ class MiscController extends GetxController with StateMixin {
     coordinates.value = LatLng(position.latitude, position.longitude);
     coordinates.refresh();
   }
+
   set setCoordinates(LatLng value) {
     coordinates.value = value;
     coordinates.refresh();

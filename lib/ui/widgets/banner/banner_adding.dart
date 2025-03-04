@@ -530,6 +530,7 @@ class BannerAddingState extends State<BannerAdding> {
                             base64 = await convertImageToBase64(_image!);
                           }
 
+                          logger.d("The lat and log is:${location.latitude} ${location.longitude}");
                           Map<String, dynamic> bannerdata = {
                             "banner_title": bannerTitleController.text,
                             "banner_image": _image?.path,

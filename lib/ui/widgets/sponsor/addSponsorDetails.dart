@@ -330,12 +330,14 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
           try {
             final MediaInfo? info = await VideoCompress.compressVideo(
               video.path,
-              quality: VideoQuality.LowQuality,
+              quality: VideoQuality.MediumQuality,
               deleteOrigin: true,
               includeAudio: true,
               frameRate: 15,
             );
             if (info != null && info.path != null) {
+
+              logger.d("Compression Completed with path: ${info.path}");
               final compressedFile = File(info.path!);
               final compressedFileSize = await compressedFile.length();
               final compressedSizeInMB = compressedFileSize / (1024 * 1024);
@@ -547,8 +549,7 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                                           } catch (e) {
                                             errorSnackBar(
                                                 "An error occurred. Please try again.");
-                                            logger.e(
-                                                "Error deleting sponsor: $e");
+                                            logger.e("Error deleting sponsor: $e");
                                           }
                                         }
                                       },
@@ -749,10 +750,8 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                                           onPressed: () async {
                                             if (_formkey.currentState!.validate()) {
                                               final controller = Get.find<TournamentController>();
-                                              if (_mediaFile == null &&
-                                                  widget.sponsor == null) {
-                                                errorSnackBar(
-                                                    "Please Select an Image file");
+                                              if (_mediaFile == null && widget.sponsor == null) {
+                                                errorSnackBar("Please Select an Image file");
                                                 return;
                                               }
                                               if (nameController.text.isEmpty) {
@@ -764,7 +763,7 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                                                 await _addSponsorInIsolate(context);
                                               }
                                               String? base64;
-                                              if (_mediaFile != null) {
+                                              if (_mediaFile != null ) {
                                                 base64 = await convertImageToBase64(_mediaFile!);
                                               }
                                               Map<String, dynamic> sponsor = {

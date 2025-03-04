@@ -7,6 +7,8 @@ import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:intl/intl.dart';
 
+import '../../utils/app_logger.dart';
+
 class TxnHistoryScreen extends GetView<TournamentController> {
   const TxnHistoryScreen({super.key});
 
@@ -47,20 +49,20 @@ class TxnHistoryScreen extends GetView<TournamentController> {
                     child: const Center(child: CircularProgressIndicator()));
               }
               if (snapshot.hasError) {
-                print("Error in FutureBuilder: ${snapshot.error}");
+                logger.d("Error in FutureBuilder: ${snapshot.error}");
                 return Center(child: Text("Failed To Get Transaction History: ${snapshot.error}"));
               }
               if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                print("No data in snapshot");
+                logger.d("No data in snapshot");
                 return const Center(child: Text('No transactions found'));
               }
-              print("Building list with ${snapshot.data!.length} transactions");
+              logger.d("Building list with ${snapshot.data!.length} transactions");
               return ListView.builder(
                   itemCount: snapshot.data!.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    final transaction = snapshot.data![index];
-                    print("Building card for transaction: $transaction");
+                    final transaction = snapshot.data!.reversed.toList()[index];
+                    logger.d("Building card for transaction: $transaction");
                     return _TxnHistoryCard(transaction);
                   }
               );

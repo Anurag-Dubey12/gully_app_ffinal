@@ -422,7 +422,8 @@ class TournamentApi {
     required String sponsorPackageId,
     required double totalAmount,
     required String? coupon,
-    required String status
+    required String status,
+    required String tournamentId,
   }) async {
     final response = await repo.post('/payment/createSponsorOrder', {
       'amountWithoutCoupon': discountAmount,
@@ -430,6 +431,7 @@ class TournamentApi {
       'amount': totalAmount,
       'coupon': coupon,
       'status': status,
+      'tournamentId': tournamentId
     });
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');

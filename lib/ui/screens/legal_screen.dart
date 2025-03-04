@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
@@ -82,9 +83,10 @@ class _LegalViewScreenState extends State<LegalViewScreen> {
                         }
                         final content=snapshot.data ??' ';
                         final isFAQ=content.contains('type: faq') || content.contains('<strong>');
+                        final isdisclaimer=content.contains('type: disclaimer') || content.contains('<p>');
                         final isPolicy=content.contains('type: privacy-policy') || content.contains('Privacy Policy');
                         if(isPolicy){
-                           return Text(content);
+                          return HtmlWidget(snapshot.data ?? 'Error');
                         }
                         if(isFAQ){
                           final document=htmlparser.parse(content);
@@ -150,8 +152,9 @@ class _LegalViewScreenState extends State<LegalViewScreen> {
                             },
                           );
                         } else {
-                          return Text(content);
+                          return HtmlWidget(snapshot.data ?? 'Error');
                         }
+
                       },
                     ),
                   ),

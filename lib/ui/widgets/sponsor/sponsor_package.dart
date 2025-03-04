@@ -77,6 +77,18 @@ class SponsorPackageScreenState extends State<SponsorPackageScreen> {
               ),
             ),
           ),
+          // Padding(
+          //   padding: const EdgeInsets.all(16.0),
+          //   child: Text(
+          //     'Choose a sponsorship package to start adding your sponsor details. This will help you select the best plan for your sponsorship needs.',
+          //     style: TextStyle(
+          //       fontSize: 16,
+          //       fontWeight: FontWeight.w500,
+          //       color: Colors.black,
+          //     ),
+          //     textAlign: TextAlign.center,
+          //   ),
+          // ),
           const SizedBox(height: 10),
           FutureBuilder<List<Package>>(
             future: controller.getPackage('sponsorship'),

@@ -29,17 +29,16 @@ class MiscApi {
   Future<ApiResponse> getBanners({
     required double latitude,
     required double longitude
-}) {
-    return repo.post('/banner/getBannersNearby',{
+}) async{
+    final response=await repo.post('/banner/getBannersNearby',{
       'longitude': longitude,
       'latitude': latitude
-    }).then((response) {
-      logger.d("Called Banner:${response.body}");
-      if (!response.isOk) {
-        throw response.body['message'] ?? 'Unable to Process Request';
-      }
-      return ApiResponse.fromJson(response.body);
     });
+    logger.d("Called Banner:${response.body}");
+    if (!response.isOk) {
+      throw response.body['message'] ?? 'Unable to Process Request';
+    }
+    return ApiResponse.fromJson(response.body);
   }
 
   Future<ApiResponse> getVersion() {

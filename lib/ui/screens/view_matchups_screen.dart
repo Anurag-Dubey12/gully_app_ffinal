@@ -231,12 +231,28 @@ class _MatchupsScreen extends State<ViewMatchupsScreen> with SingleTickerProvide
                                             horizontal: 5),
                                         child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment
-                                              .spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                           children: [
                                             teamTableData(team.rank.toString(), flex: 2),
                                             const SizedBox(width: 2,),
                                             teamData(team, flex: 4),
+                                            // teamData(
+                                            //   team,
+                                            //   flex: 4,
+                                            //   onTap: () {
+                                            //     final teamMatchups = controller.matchups.where((match) {
+                                            //       return team.teamName == match.team1.name || team.teamName == match.team2.name;
+                                            //     }).toList();
+                                            //
+                                            //     for (var matchup in teamMatchups) {
+                                            //       String opponentTeam = team.teamName == matchup.team1.name
+                                            //           ? matchup.team2.name
+                                            //           : matchup.team1.name;
+                                            //
+                                            //       logger.d("The Team Matchup is ${team.teamName} vs $opponentTeam");
+                                            //     }
+                                            //   },
+                                            // ),
                                             teamTableData(team.matchesPlayed.toString(), flex: 2),
                                             teamTableData(team.wins.toString(), flex: 2),
                                             teamTableData(team.losses.toString(), flex: 2),

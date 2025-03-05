@@ -255,7 +255,6 @@ class TournamentController extends GetxController
         filter: isLive ? 'current' : filterD,
         endDate: selectedDate.value.add(const Duration(days: 7)),
       );
-      logger.d("The entire Response: ${response.data}");
 
       if (response.data != null) {
         if (isLive) {
@@ -320,7 +319,6 @@ class TournamentController extends GetxController
         filter: 'current',
         endDate: selectedDate.value.add(const Duration(days: 7)),
       );
-      logger.d("The entire Response: ${response.data}");
       if (response.data != null) {
         Current_tournamentList.value = (response.data!['tournamentList']
                     as List<dynamic>?)

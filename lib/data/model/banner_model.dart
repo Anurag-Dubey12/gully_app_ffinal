@@ -13,9 +13,8 @@ class BannerModel {
   @JsonKey(name: "banner_title")
   final String? bannerTitle;
   final String? title;
-  final Package? packageId;
   @JsonKey(name: "bannerType")
-  final String type;
+  final String? type;
 
   BannerModel({
     this.promotionalImage,
@@ -23,8 +22,7 @@ class BannerModel {
     this.link,
     this.bannerTitle,
     this.title,
-    this.packageId,
-    required this.type,
+    this.type,
   });
 
   String get imageUrl => promotionalImage ?? regularImage ?? '';

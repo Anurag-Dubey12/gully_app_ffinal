@@ -130,7 +130,7 @@ class _TxnHistoryCard extends StatelessWidget {
                               children: [
                                 Text(
                                     transaction.orderType == 'banner'
-                                        ? transaction.banner?.bannerTitle ?? ''
+                                        ? transaction.banner?.bannerTitle ?? 'Promotional Banner'
                                         : transaction.sponsor?.name ?? '',
                                     style: Get.textTheme.bodyMedium?.copyWith(
                                         color: Colors.black,

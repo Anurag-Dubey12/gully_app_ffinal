@@ -71,15 +71,15 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                   Center(
                     child: Text(
                         widget.transaction.orderType == 'banner'
-                            ? widget.transaction.banner?.bannerTitle ?? ''
-                            : widget.transaction.sponsor?.name ?? '',
+                            ? widget.transaction.banner?.bannerTitle ?? 'Promotional Banner'
+                            : widget.transaction.sponsor?.name ?? 'Tournament Sponsor',
                         style: Get.textTheme.bodyMedium?.copyWith(
                             color: Colors.black,
                             fontWeight: FontWeight.w600,
                             fontSize: 18)),
                   ),
 
-                  if(widget.transactiontype=='banner')
+                  if(widget.transactiontype=='banner'&& widget.transaction.banner!=null)
                   Column(
                     children: [
                       Image.network(

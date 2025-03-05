@@ -12,8 +12,5 @@ BannerModel _$BannerModelFromJson(Map<String, dynamic> json) => BannerModel(
       link: json['link'] as String?,
       bannerTitle: json['banner_title'] as String?,
       title: json['title'] as String?,
-      packageId: json['packageId'] == null
-          ? null
-          : Package.fromJson(json['packageId'] as Map<String, dynamic>),
-      type: json['bannerType'] as String,
+      type: json['bannerType'] as String?,
     );

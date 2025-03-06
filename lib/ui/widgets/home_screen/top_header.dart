@@ -167,6 +167,7 @@ class LocationBuilder extends GetView<AuthController> {
                 final miscController = Get.find<MiscController>();
                 miscController.setCoordinates =
                     LatLng(double.parse(e.lat!), double.parse(e.lng!));
+                miscController.getCurrentLocation();
                 miscController.getBanners();
                 tournamentController.setCoordinates =
                     LatLng(double.parse(e.lat!), double.parse(e.lng!));

@@ -332,7 +332,6 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
         category: category,
       );
       performance.value = CricketStats.fromJson(response.data!['performance'] as Map<String, dynamic>);
-      logger.d("Performance Data:${performance.value}");
       if (response.status == false) {
         errorSnackBar(response.message!);
         return {};

@@ -70,9 +70,9 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
     final controller = Get.find<ScoreBoardController>();
     final tournamentcontroller = Get.find<TournamentController>();
     tournamentcontroller.getTournamentSponsor(widget.match.tournamentId ?? '');
-    if (tournamentcontroller.tournamentSponsor.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    // if (tournamentcontroller.tournamentSponsor.isEmpty) {
+    //   return const Center(child: CircularProgressIndicator());
+    // }
     if (isLoading) {
       return SizedBox(
           height: Get.height * 0.4,
@@ -86,22 +86,22 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const FullBannerSlider(),
+              tournamentcontroller.tournamentSponsor.isNotEmpty ? const FullBannerSlider() : const SizedBox.shrink(),
+              const SizedBox(height: 3,),
               Obx(() {
                 return Row(
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
+                    tournamentcontroller.tournamentSponsor.isNotEmpty ?  const Icon(
                       Icons.arrow_back_ios_new,
                       size: 12,
                       color: AppTheme.darkYellowColor,
-                    ),
+                    ): const SizedBox.shrink(),
                     const SizedBox(width: 8),
                     Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: List.generate(
-                        tournamentcontroller.MyTournamentSponsor.length,
+                      children: List.generate(tournamentcontroller.MyTournamentSponsor.length,
                             (index) => AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           margin: const EdgeInsets.symmetric(horizontal: 3),

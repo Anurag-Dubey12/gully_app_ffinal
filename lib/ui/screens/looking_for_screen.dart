@@ -140,7 +140,7 @@ class _LookingForScreenState extends State<LookingForScreen> {
                           }
                           FocusScope.of(context).unfocus();
                         },
-                        title: null,
+                        title: "Select Location",
                       ),
                     );
                   },

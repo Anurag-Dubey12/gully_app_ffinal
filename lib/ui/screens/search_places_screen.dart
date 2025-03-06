@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
+import 'package:gully_app/config/app_constants.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -26,7 +27,7 @@ class SearchPlacesScreen extends StatefulWidget {
 }
 
 class SearchPlacesScreenState extends State<SearchPlacesScreen> {
-  TextEditingController controller = TextEditingController();
+  final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +77,7 @@ class SearchPlacesScreenState extends State<SearchPlacesScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: GooglePlaceAutoCompleteTextField(
         textEditingController: controller,
-
-        googleAPIKey: "AIzaSyCUv3LmufUU86Lp_Wk34-3AZ3bnCQ3XmJg",
+        googleAPIKey: AppConstants.googleApiKey,
         inputDecoration: const InputDecoration(
           contentPadding: EdgeInsets.all(8),
           hintText: "Search your location",
@@ -124,9 +124,7 @@ class SearchPlacesScreenState extends State<SearchPlacesScreen> {
             ),
           );
         },
-
         isCrossBtnShown: true,
-
         // default 600 ms ,
       ),
     );

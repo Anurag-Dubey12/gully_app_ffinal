@@ -14,4 +14,6 @@ class AppConstants {
   // static const websocketUrl ="http://192.168.159.11:3001";
   static const String s3BucketUrl =
       "https://gully-team-bucket.s3.amazonaws.com/";
+
+  static const String googleApiKey="AIzaSyCUv3LmufUU86Lp_Wk34-3AZ3bnCQ3XmJg";
 }

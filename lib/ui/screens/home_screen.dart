@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
@@ -18,6 +19,7 @@ import 'package:gully_app/ui/widgets/home_screen/date_times_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import '../../utils/image_picker_helper.dart';
 import '../../utils/internetConnectivty.dart';
@@ -36,6 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final Internetconnectivty _connectivityService = Internetconnectivty();
   bool _isConnected = true;
   DateTime? _lastPressedAt;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
   @override
   void initState() {
     super.initState();
@@ -50,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (_isConnected) {
       Get.find<AuthController>().getUser();
       Get.find<MiscController>().getBanners();
+      Get.find<MiscController>().getCurrentLocation();
       FirebaseMessaging.instance.getToken().then((value) {
         Get.find<AuthController>().updateProfile(fcmToken: value);
       });
@@ -118,6 +122,7 @@ class _HomePageState extends State<HomePage>
   late Animation<double> _animation;
   bool isOrganizer = false;
 
+
   @override
   void initState() {
     super.initState();
@@ -148,6 +153,7 @@ class _HomePageState extends State<HomePage>
   Future<void> refreshData() async {
     try {
       final tournamentController = Get.find<TournamentController>();
+      Get.find<MiscController>().getBanners();
       tournamentController.filter.value = 'current';
     } catch (e) {
       logger.e('Error refreshing data: $e');

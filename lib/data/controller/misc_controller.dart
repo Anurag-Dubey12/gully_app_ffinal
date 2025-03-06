@@ -26,13 +26,14 @@ class MiscController extends GetxController with StateMixin {
 
   Future<void> getCurrentLocation() async {
     final position = await determinePosition();
-
+    logger.d("The Banner Coordinates is:${LatLng(position.latitude, position.longitude)}");
     coordinates.value = LatLng(position.latitude, position.longitude);
     coordinates.refresh();
   }
 
   set setCoordinates(LatLng value) {
     coordinates.value = value;
+    logger.d("The Banner Coordinates is:${coordinates.value}");
     coordinates.refresh();
   }
 
@@ -54,8 +55,8 @@ class MiscController extends GetxController with StateMixin {
 
   Future<void> getBanners() async {
     var response = await repo.getBanners(
-      longitude: coordinates.value.longitude,
-      latitude: coordinates.value.latitude
+      latitude: coordinates.value.latitude,
+      longitude: coordinates.value.longitude
     );
     logger.d("The Banners Data is:${response.data}");
     banners.value = response.data!['banners']

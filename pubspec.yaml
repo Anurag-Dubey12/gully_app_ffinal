@@ -23,8 +23,8 @@ dependencies:
   json_annotation: ^4.9.0
   intl: any
   image_picker: ^1.0.5
-  google_maps_flutter: ^2.5.0
-  google_places_flutter: ^2.0.6
+  google_maps_flutter: ^2.10.1
+  google_places_flutter: ^2.1.0
   video_player: ^2.9.2
   mime: ^1.0.4
   http: ^1.2.1

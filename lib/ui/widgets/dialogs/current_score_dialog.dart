@@ -101,7 +101,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                     const SizedBox(width: 8),
                     Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: List.generate(tournamentcontroller.MyTournamentSponsor.length,
+                      children: List.generate(tournamentcontroller.tournamentSponsor.length,
                             (index) => AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
                           margin: const EdgeInsets.symmetric(horizontal: 3),

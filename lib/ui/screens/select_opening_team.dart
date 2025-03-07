@@ -294,12 +294,12 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
               errorSnackBar('Please enter valid overs');
               return;
             }
-            logger.i('is tournament${widget.isTournament}');
-            logger.i('Total overs ${totalOvers.text}');
-            logger.d("Navigating to SelectOpeningPlayer with match id: ${match.id}");
-            logger.d("The Opening Team is: "
-                "Host Team id: ${match.team1.id}, Players: ${match.team1.players?.map((p) => p.name).join(', ')}"
-                "Visitor Team id: ${match.team2.id}, Players: ${match.team2.players?.map((p) => p.name).join(', ')}");
+            // logger.i('is tournament${widget.isTournament}');
+            // logger.i('Total overs ${totalOvers.text}');
+            // logger.d("Navigating to SelectOpeningPlayer with match id: ${match.id}");
+            // logger.d("The Opening Team is: "
+            //     "Host Team id: ${match.team1.id}, Players: ${match.team1.players?.map((p) => p.name).join(', ')}"
+            //     "Visitor Team id: ${match.team2.id}, Players: ${match.team2.players?.map((p) => p.name).join(', ')}");
             tournamentController.updateState(
                 battingTeam: battingTeam,
                 bowlingTeam: bowlingTeam,

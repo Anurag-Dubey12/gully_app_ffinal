@@ -554,7 +554,9 @@ class ScoreboardModel {
           if(events.contains(EventType.noBall)){
             logger.d("No Ball with wicket found ");
           } else{
+            List<EventType> selectedEvent=events;
 
+            controller.addEvent(EventType.dotBall);
             currentBall=currentBall-1;
             striker.batting!.balls = striker.batting!.balls -1;
           }

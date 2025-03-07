@@ -4,6 +4,7 @@ import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/data/model/batting_model.dart';
 
 import '../../../data/model/player_model.dart';
+import '../../../utils/app_logger.dart';
 
 class BattingStats extends GetView<ScoreBoardController> {
   const BattingStats({
@@ -80,6 +81,10 @@ class BatterPlayerStat extends StatelessWidget {
     bool isCurrentBatsman = player.id == controller.scoreboard.value?.striker.id ||
         player.id == controller.scoreboard.value?.nonstriker.id;
 
+    bool areBothStrikerAndNonStrikerNotOut = controller.scoreboard.value?.striker.batting?.outType == null &&
+        controller.scoreboard.value?.nonstriker.batting?.outType == null;
+
+    logger.d("The Both batsmen data:${areBothStrikerAndNonStrikerNotOut}");
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Column(
@@ -98,6 +103,7 @@ class BatterPlayerStat extends StatelessWidget {
                         fontSize: 13,
                         color: hasBatted ? Colors.black : Colors.grey,
                         fontWeight: hasBatted ? FontWeight.bold : null,
+                        decoration: areBothStrikerAndNonStrikerNotOut ? TextDecoration.lineThrough:TextDecoration.none
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),

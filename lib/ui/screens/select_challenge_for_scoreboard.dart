@@ -70,6 +70,11 @@ class _SelectChallengeForScoreboardState
                         ?.where((e) => e.status == 'Accepted')
                         .toList();
                     logger.f('Accepted Challenges: $acceptedChallenges');
+                    if(acceptedChallenges!.isEmpty){
+                      return const Center(
+                        child: Text("No Challenge Match Found"),
+                      );
+                    }
                     return ListView.separated(
                         physics: const BouncingScrollPhysics(),
                         itemBuilder: ((context, index) {

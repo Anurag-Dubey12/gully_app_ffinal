@@ -22,45 +22,56 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      // height: Get.height * 0.54,
-        child: Obx(() {
-          if (controller.tournamentList.isEmpty ||controller.matches.isEmpty) {
-            return const NoTournamentCard();
-          }else {
-            final matchMap = controller.matches.fold<Map<String, List<MatchupModel>>>({}, (map, match) {
-              if (match.tournamentName != null) {
-                if (match.scoreBoard == null) {
-                  logger.d("Found match with null scoreboard where tournament name is ${match.tournamentName} ${match.tournamentId}");
-                }
-                map.putIfAbsent(match.tournamentName!, () => []).add(match);
+      child: Obx(() {
+        if (controller.tournamentList.isEmpty || controller.matches.isEmpty) {
+          return const NoTournamentCard();
+        } else {
+          // Filter matches with non-null scoreboards
+          final matchMap = controller.matches.fold<Map<String, List<MatchupModel>>>({}, (map, match) {
+            if (match.tournamentName != null && match.scoreBoard != null) {
+              map.putIfAbsent(match.tournamentName!, () => []).add(match);
+            } else {
+              if (match.tournamentName != null && match.scoreBoard == null) {
+                logger.d("Skipping match with null scoreboard for tournament: ${match.tournamentName} ${match.tournamentId}");
               }
-              return map;
-            });
-            final filteredMap = Map.fromEntries(
-                matchMap.entries.where((entry) =>
-                    entry.value.any((match) => match.scoreBoard != null))
-            );
-            final latestMatch = filteredMap.entries.map((entry) {
-              return entry.value.reduce((latest, match) =>
-              match.matchDate.isAfter(latest.matchDate) ? match : latest);
-            }).toList();
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: ListView.builder(
-                  // itemCount: controller.matches.length,
-                  itemCount: latestMatch.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.only(bottom: 10, top: 10),
-                  itemBuilder: (context, snapshot) {
-                    return _Card(
-                      // tournament: controller.matches[snapshot],
-                      tournament: latestMatch[snapshot],
-                    );
-                  }),
-            );
+            }
+            return map;
+          });
+
+          // Remove entries with no matches (filtered by non-null scoreboards)
+          final filteredMap = Map.fromEntries(
+              matchMap.entries.where((entry) => entry.value.isNotEmpty)
+          );
+
+          // Get the latest match for each tournament
+          final latestMatch = filteredMap.entries.map((entry) {
+            return entry.value.reduce((latest, match) =>
+            match.matchDate.isAfter(latest.matchDate) ? match : latest);
+          }).toList();
+
+          // If no valid matches, show a NoTournamentCard
+          if (latestMatch.isEmpty) {
+            return const NoTournamentCard();
           }
-        }));
+
+          // Return the list of latest matches
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 20),
+            child: ListView.builder(
+              itemCount: latestMatch.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.only(bottom: 10, top: 10),
+              itemBuilder: (context, snapshot) {
+                return _Card(
+                  tournament: latestMatch[snapshot],
+                );
+              },
+            ),
+          );
+        }
+      }),
+    );
   }
 }
 
@@ -101,7 +112,11 @@ class _Card extends StatelessWidget {
         // winnerText = '${scoreboard.team2.name} won the game';
       }
       else if (scoreboard.isSecondInningsOver && team2total == team1total) {
-        winnerText = "${tournament.getWinningTeamName()!} won the match";
+        if(tournament.getWinningTeamName()==null){
+          winnerText = 'Match Tied';
+        }else{
+        winnerText = "${tournament.getWinningTeamName()} won the match";
+        }
       } else {
         winnerText = 'Match Tied';
       }

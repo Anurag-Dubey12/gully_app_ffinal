@@ -317,3 +317,4 @@ class _RetirePlayerDialogState extends State<RetirePlayerDialog> {
         ));
   }
 }
+

@@ -62,9 +62,11 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                     ),
                   ),
                   const Spacer(),
-                  IconButton(onPressed: (){
-                    Get.close();
-                  }, icon: const Icon(Icons.cancel))
+                  IconButton(
+                      onPressed: () {
+                        Get.close();
+                      },
+                      icon: const Icon(Icons.cancel))
                 ],
               ),
               Row(
@@ -313,7 +315,8 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                                 playerToOut = e!;
                               });
                             },
-                            title: Text(controller.scoreboard.value!.nonstriker.name),
+                            title: Text(
+                                controller.scoreboard.value!.nonstriker.name),
                           ),
                         ),
                       ],
@@ -325,7 +328,7 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                     setState(() {
                       selectedBatsman = e;
                     });
-                      Navigator.of(context).pop();
+                    Navigator.of(context).pop();
                   },
                   items: players,
                   selectedValue: selectedBatsman?.name ?? 'Select Batsman',
@@ -333,27 +336,27 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                 ),
               PrimaryButton(
                 onTap: () {
-                  if(selectedBatsman?.id!=null){
-                    controller.isBatsmenSelected=true.obs;
-                  String? batsmanId;
-                  if (controller.scoreboard.value!.lastBall.wickets < 9) {
-                    if (selectedBatsman == null) {
-                      return;
+                  if (selectedBatsman?.id != null) {
+                    controller.isBatsmenSelected = true.obs;
+                    String? batsmanId;
+                    if (controller.scoreboard.value!.lastBall.wickets < 9) {
+                      if (selectedBatsman == null) {
+                        return;
+                      }
+                      batsmanId = selectedBatsman!.id;
+                    } else {
+                      batsmanId = outType == 'RO'
+                          ? playerToOut
+                          : controller.scoreboard.value!.striker.id;
                     }
-                    batsmanId = selectedBatsman!.id;
+                    logger.d("Selected Batsman Id:${selectedBatsman!.name}");
+                    Navigator.pop(context, {
+                      'batsmanId': batsmanId,
+                      'outType': outType,
+                      'playerToOut': outType == 'RO' ? playerToOut : null,
+                    });
                   } else {
-                    batsmanId = outType == 'RO'
-                        ? playerToOut
-                        : controller.scoreboard.value!.striker.id;
-                  }
-                  logger.d("Selected Batsman Id:${selectedBatsman!.name}");
-                  Navigator.pop(context, {
-                    'batsmanId': batsmanId,
-                    'outType': outType,
-                    'playerToOut': outType == 'RO' ? playerToOut : null,
-                  });
-                  } else {
-                    controller.isBatsmenSelected=false.obs;
+                    controller.isBatsmenSelected = false.obs;
                     Get.snackbar(
                       'Oops',
                       'Please select a batsman',

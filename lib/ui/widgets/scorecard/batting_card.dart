@@ -103,7 +103,7 @@ class BatterPlayerStat extends StatelessWidget {
                         fontSize: 13,
                         color: hasBatted ? Colors.black : Colors.grey,
                         fontWeight: hasBatted ? FontWeight.bold : null,
-                        decoration: areBothStrikerAndNonStrikerNotOut ? TextDecoration.lineThrough:TextDecoration.none
+                        // decoration: areBothStrikerAndNonStrikerNotOut ? TextDecoration.lineThrough:TextDecoration.none
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),

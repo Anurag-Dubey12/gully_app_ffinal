@@ -113,8 +113,8 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
   void startPayment() async {
     final authController = Get.find<AuthController>();
     var options = {
-      'key': 'rzp_test_QMUxKSQyzcywjc', //my test key
-      // 'key': 'rzp_live_6sW7limWXGaS3k',
+      // 'key': 'rzp_test_QMUxKSQyzcywjc', //my test key
+      'key': 'rzp_live_6sW7limWXGaS3k',
       'amount': fees * 100,
       'name': 'Gully Team',
       'description': 'Advertisement Fee',

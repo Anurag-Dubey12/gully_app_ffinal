@@ -10,14 +10,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84b774c7-3ed2-4f08-b043-c3e171d51dbd" name="Changes" comment="quick changes">
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/android/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/config/app_constants.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/config/app_constants.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/data/model/scoreboard_model.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/accepted_challenges.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/accepted_challenges.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_challenge_for_scoreboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_challenge_for_scoreboard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_match_for_scoreboard.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/select_opening_team.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dialogs/current_score_dialog.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/home_screen/past_tournament_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/banner_payment_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/banner_payment_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/others_looking_for.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/others_looking_for.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/screens/sponsor_payment_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/screens/sponsor_payment_page.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/batting_card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/batting_card.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/change_batter.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/change_batter.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/lib/ui/widgets/scorecard/scorecard_dialogs.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/scorecard/scorecard_dialogs.dart" afterDir="false" />

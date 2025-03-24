@@ -3,14 +3,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:gully_app/config/app_constants.dart';
 import 'package:gully_app/data/model/package_model.dart';
 import 'package:gully_app/ui/screens/banner_payment_page.dart';
 import 'package:gully_app/ui/screens/select_location.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../data/controller/banner_promotion_controller.dart';
 import '../../../data/controller/misc_controller.dart';
@@ -167,51 +166,60 @@ class BannerAddingState extends State<BannerAdding> {
             width: Get.width,
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(16.0),
             ),
-            child: Column(
-              spacing: 10,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const Icon(
-                  Icons.warning_amber_outlined,
-                  color: Colors.orange,
-                  size: 60.0,
-                ),
-                const Text(
-                  'Important Notice',
-                  style: TextStyle(
-                    fontSize: 24.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                    letterSpacing: 1.5,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  const Icon(
+                    Icons.warning_amber_outlined,
+                    color: Colors.orange,
+                    size: 60.0,
                   ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Text(
-                    'To avoid display issues, make sure your banner is the recommended size.\n\n'
-                    'Optimal size:\nWidth: 1600px\nHeight: 800px',
-                    textAlign: TextAlign.center,
+                  const SizedBox(height: 12),
+
+                  // Title Text
+                  const Text(
+                    'Important Notice',
                     style: TextStyle(
-                      fontSize: 16.0,
-                      color: Colors.black87,
-                      height: 1.6,
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      letterSpacing: 1.5,
                     ),
                   ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  child: PrimaryButton(
-                    onTap: () {
-                      Navigator.pop(context);
-                      pickImage();
-                    },
-                    title: 'Got it!',
+                  const SizedBox(height: 16),
+
+                  // Message Content
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Text(
+                      AppConstants.bannerwarningtext,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 16.0,
+                        color: Colors.black87,
+                        height: 1.6,
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-              ],
+                  const SizedBox(height: 24),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: PrimaryButton(
+                      onTap: () {
+                        Navigator.pop(context);
+                        pickImage();
+                      },
+                      title: 'Got it, Let’s Go!',
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
             ),
           );
         },

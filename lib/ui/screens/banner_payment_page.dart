@@ -113,8 +113,8 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
   void startPayment() async {
     final authController = Get.find<AuthController>();
     var options = {
-      'key': 'rzp_test_QMUxKSQyzcywjc', //my test key
-      // 'key': 'rzp_live_6sW7limWXGaS3k',
+      // 'key': 'rzp_test_QMUxKSQyzcywjc', //my test key
+      'key': 'rzp_live_6sW7limWXGaS3k',
       'amount': fees * 100,
       'name': 'Gully Team',
       'description': 'Advertisement Fee',
@@ -152,7 +152,7 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: 150,
+                      height: 120,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),

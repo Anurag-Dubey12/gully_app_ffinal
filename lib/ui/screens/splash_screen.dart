@@ -88,7 +88,7 @@ class _SplashScreenState extends State<SplashScreen> {
               TextButton(
                   onPressed: () {
                     launchUrl(Uri.parse(
-                        'https://play.google.com/store/apps/details?id=com.gully_app.gully_app'));
+                        'https://play.google.com/store/apps/details?id=com.nileegames.gullyteam'));
                   },
                   child: const Text('Update'))
             ],

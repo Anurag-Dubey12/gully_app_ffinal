@@ -291,7 +291,6 @@ class _CardState extends State<_Card> {
                               logger.d("The TournamentId is:${tournamentdata.id} }");
                               controller.setScheduleStatus(true);
                               controller.tournamentname.value=tournamentdata.tournamentName;
-
                               Get.to(() => ScheduleScreen(tournament: tournamentdata));
                             },
                             child: const Text("View Schedule",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),),

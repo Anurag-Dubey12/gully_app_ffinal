@@ -15,7 +15,7 @@ class _WelcomeCarouselScreenState extends State<WelcomeCarouselScreen> {
   void initState() {
     super.initState();
     Get.put<AuthController>(AuthController(repo: Get.find()));
-    Future.delayed(const Duration(seconds: 1),
+    Future.delayed(const Duration(seconds:3),
         () => {Get.off(() => const SignUpScreen())});
   }
 

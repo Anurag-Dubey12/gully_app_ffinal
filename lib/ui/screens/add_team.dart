@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
@@ -14,6 +13,7 @@ import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../config/app_constants.dart';
 import '../../data/controller/misc_controller.dart';
 import '../widgets/custom_text_field.dart';
 import '../widgets/primary_button.dart';
@@ -46,7 +46,7 @@ class _AddTeamState extends State<AddTeam> {
   Widget build(BuildContext context) {
     final GlobalKey<FormState> key = GlobalKey<FormState>();
     final TeamController controller = Get.find<TeamController>();
-    final MiscController connectionController=Get.find<MiscController>();
+    final MiscController connectionController = Get.find<MiscController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -97,10 +97,13 @@ class _AddTeamState extends State<AddTeam> {
                         backgroundImage: (_image != null
                             ? FileImage(File(_image!.path))
                             : widget.team != null
-                            ? (widget.team!.logo != null && widget.team!.logo!.isNotEmpty
-                            ? NetworkImage(toImageUrl(widget.team!.logo!))
-                            : const AssetImage('assets/images/logo.png'))
-                            : null) as ImageProvider<Object>?,
+                                ? (widget.team!.logo != null &&
+                                        widget.team!.logo!.isNotEmpty
+                                    ? NetworkImage(
+                                        toImageUrl(widget.team!.logo!))
+                                    : const AssetImage(
+                                        'assets/images/logo.png'))
+                                : null) as ImageProvider<Object>?,
                       ),
                       Positioned(
                         bottom: 0,
@@ -129,24 +132,21 @@ class _AddTeamState extends State<AddTeam> {
                 Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: CustomTextField(
-                    hintText: AppLocalizations.of(context)!.teamNameHintText,
-                    labelText: AppLocalizations.of(context)!.teamNameLabelText,
+                    hintText: AppConstants.teamNameHintText,
+                    labelText: AppConstants.teamNameLabelText,
                     controller: _teamNameController,
                     validator: (value) {
                       if (value!.isEmpty) {
-                        return AppLocalizations.of(context)!
-                            .teamNameLengthError;
+                        return AppConstants.teamNameLengthError;
                       }
                       if (value.length < 3) {
-                        return AppLocalizations.of(context)!
-                            .teamNameLengthError;
+                        return AppConstants.teamNameLengthError;
                       }
                       // check if team name has at least 3 characters
                       if (RegExp(r'^[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$')
                               .hasMatch(value) ==
                           false) {
-                        return AppLocalizations.of(context)!
-                            .teamNameFormatError;
+                        return AppConstants.teamNameFormatError;
                       }
 
                       return null;
@@ -159,7 +159,7 @@ class _AddTeamState extends State<AddTeam> {
                     child: controller.status.isLoading
                         ? const CircularProgressIndicator()
                         : PrimaryButton(
-                            title: AppLocalizations.of(context)!.saveButton,
+                            title: AppConstants.saveButton,
                             onTap: () async {
                               if (key.currentState!.validate() == false) {
                                 return;
@@ -172,12 +172,11 @@ class _AddTeamState extends State<AddTeam> {
                                 if (!base64Image.contains(RegExp(
                                     r'data:image\/(png|jpeg);base64,'))) {
                                   // ignore: use_build_context_synchronously
-                                  errorSnackBar(AppLocalizations.of(context)!
-                                      .please_select_a_valid_image);
+                                  errorSnackBar(AppConstants.please_select_a_valid_image);
                                   return;
                                 }
                               }
-                              if(connectionController.isConnected.value){
+                              if (connectionController.isConnected.value) {
                                 if (widget.team != null) {
                                   final res = await controller.updateTeam(
                                       teamName: _teamNameController.text,
@@ -204,8 +203,9 @@ class _AddTeamState extends State<AddTeam> {
                                         return const _TeamAddedDialog(false);
                                       }));
                                 }
-                              }else{
-                                errorSnackBar("Please connect to the internet to create your team named ${_teamNameController.text}");
+                              } else {
+                                errorSnackBar(
+                                    "Please connect to the internet to create your team named ${_teamNameController.text}");
                               }
                               // Get.to(() => const AddPlayersToTeam());
                             },
@@ -244,7 +244,7 @@ class _TeamAddedDialog extends GetView<TeamController> {
               child: Text(
                 isEdited
                     ? "Team Updated Successfully"
-                    : AppLocalizations.of(context)!.teamCreatedSuccessfully,
+                    : AppConstants.teamCreatedSuccessfully,
                 style:
                     const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
@@ -255,7 +255,7 @@ class _TeamAddedDialog extends GetView<TeamController> {
             isEdited
                 ? const SizedBox()
                 : PrimaryButton(
-                    title: AppLocalizations.of(context)!.addPlayersButton,
+                    title: AppConstants.addPlayersButton,
                     onTap: () async {
                       Get.back();
                       // Get.back();
@@ -266,7 +266,7 @@ class _TeamAddedDialog extends GetView<TeamController> {
               height: 20,
             ),
             PrimaryButton(
-              title: AppLocalizations.of(context)!.doneButton,
+              title: AppConstants.doneButton,
               onTap: () {
                 if (isEdited) {
                   final authController = Get.find<AuthController>();

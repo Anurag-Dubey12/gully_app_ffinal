@@ -55,6 +55,7 @@ class NotificationController extends GetxController {
             createdAt: DateTime.now()));
       }
       notifications.refresh();
+      logger.d("Recevied Notification:$notifications");
       preferences.setNotifications(notifications);
     });
   }

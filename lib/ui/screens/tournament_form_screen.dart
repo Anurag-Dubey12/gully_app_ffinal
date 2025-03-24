@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
+
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
@@ -19,6 +19,7 @@ import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../config/app_constants.dart';
 import '../../data/controller/auth_controller.dart';
 import '../../data/controller/misc_controller.dart';
 import '../../utils/image_picker_helper.dart';
@@ -31,7 +32,8 @@ class TournamentFormScreen extends StatefulWidget {
   State<TournamentFormScreen> createState() => _TournamentFormScreenState();
 }
 
-class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleTickerProviderStateMixin {
+class _TournamentFormScreenState extends State<TournamentFormScreen>
+    with SingleTickerProviderStateMixin {
   String tournamentType = 'turf';
   String ballType = 'tennis';
   String pitchType = 'cement';
@@ -129,7 +131,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _progressAnimation = Tween<double>(begin: 0, end: 0).animate(_progressController);
+    _progressAnimation =
+        Tween<double>(begin: 0, end: 0).animate(_progressController);
     fetchLocation();
   }
 
@@ -139,7 +142,6 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
     location = LatLng(postion.latitude, postion.longitude);
     setState(() {});
   }
-
 
   void _updateProgress() {
     setState(() {
@@ -187,16 +189,17 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
   }
 
   void _submitForm() async {
-    if(tncAccepted==false){
+    if (tncAccepted == false) {
       errorSnackBar('Please accept the Terms and Conditions');
       return;
     }
     if (_formKeys[currentStep].currentState!.validate()) {
       // _formKeys.forEach((key) => key.currentState!.save());
       try {
-        final TournamentController tournamentController = Get.find<TournamentController>();
+        final TournamentController tournamentController =
+            Get.find<TournamentController>();
         final AuthController authController = Get.find<AuthController>();
-        final MiscController connectionController=Get.find<MiscController>();
+        final MiscController connectionController = Get.find<MiscController>();
         // if (_key.currentState!.validate()) {
         //   if (_image == null &&
         //       widget.tournament?.coverPhoto == null) {
@@ -204,80 +207,86 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
         //         'Please select a cover image');
         //     return;
         //   }
-          if (isCoHost()) {
-            errorSnackBar('Co-hosts are not allowed to edit tournament details');
-            return;
-          }
-          // tournmanent name should not contain emojis or special characters except for alphabets and numbers
-          setState(() {isLoading = true;});
-          if(tncAccepted==false){
-            errorSnackBar('Please accept the Terms and Conditions');
-            return;
-          }
-          String? base64;
-          if (_image != null) {
-            base64 = await convertImageToBase64(_image!);
-          }
-          Map<String, dynamic> tournament = {
-            "tournamentStartDateTime": from?.toIso8601String(),
-            "tournamentEndDateTime": to?.toIso8601String(),
-            "tournamentName": _nameController.text,
-            "tournamentCategory": tournamentType,
-            "ballType": ballType.toLowerCase(),
-            "pitchType": pitchType,
-            "matchType": "Tennis ball cricket match",
-            "tournamentPrize": _prizesController.text,
-            "fees": _entryFeeController.text,
-            "ballCharges": _ballChargesController.text,
-            "breakfastCharges": _breakfastChargesController.text,
-            "stadiumAddress": _addressController.text,
-            "tournamentLimit": _teamLimitController.text,
-            "gameType": "CRICKET",
-            "selectLocation": _addressController.text,
-            "latitude": location.latitude,
-            "longitude": location.longitude,
-            "rules": _rulesController.text,
-            'coverPhoto': base64,
-            'coHost1Name': _cohost1Name.text.trim().isEmpty ? null : _cohost1Name.text,
-            'coHost1Phone': _cohost1Phone.text.trim().isEmpty ? null : _cohost1Phone.text,
-            'coHost2Name': _cohost2Name.text.isEmpty ? null : _cohost2Name.text,
-            'coHost2Phone': _cohost2Phone.text.isEmpty ? null : _cohost2Phone.text,
-            // 'disclaimer': _disclaimerComntroller.text,
-          };
-          if(connectionController.isConnected.value){
-            if (widget.tournament != null) {
-              bool isOk = await tournamentController
-                  .updateTournament({
-                ...tournament,
-              }, widget.tournament!.id);
-              if (isOk) {
-                successSnackBar('Tournament Updated Successfully',istournamentScreen: true);
-                Get.forceAppUpdate();
-              }
-              // }
-            } else {
-              // final tournamentModel =
-              // await tournamentController
-              //     .createTournament(tournament);
-              // authController.getUser();
-              // logger.d("The Tournament id is:${tournamentModel.id}");
-              // if (tournament != null) {
-              //   final result = await Get.to(() => PaymentPage(tournament: tournamentModel));
-              //   if (result == null || result == false) {
-              //     await tournamentController.cancelTournament(tournamentModel.id);
-              //     Get.snackbar("Tournament", "Your tournament Deleted Successfully");
-              //   }
-              // }
-              // successSnackBar('Tournament Create Successfully',istournamentScreen: true);
-              // Get.offAll(() => const HomeScreen(),
-              //     predicate: (route) => route.name == '/HomeScreen');
-
-              tournamentController.tournamentModel.value=tournament;
-              Get.to(() => PaymentPage(tournament: tournamentController.tournamentModel.value));
+        if (isCoHost()) {
+          errorSnackBar('Co-hosts are not allowed to edit tournament details');
+          return;
+        }
+        // tournmanent name should not contain emojis or special characters except for alphabets and numbers
+        setState(() {
+          isLoading = true;
+        });
+        if (tncAccepted == false) {
+          errorSnackBar('Please accept the Terms and Conditions');
+          return;
+        }
+        String? base64;
+        if (_image != null) {
+          base64 = await convertImageToBase64(_image!);
+        }
+        Map<String, dynamic> tournament = {
+          "tournamentStartDateTime": from?.toIso8601String(),
+          "tournamentEndDateTime": to?.toIso8601String(),
+          "tournamentName": _nameController.text,
+          "tournamentCategory": tournamentType,
+          "ballType": ballType.toLowerCase(),
+          "pitchType": pitchType,
+          "matchType": "Tennis ball cricket match",
+          "tournamentPrize": _prizesController.text,
+          "fees": _entryFeeController.text,
+          "ballCharges": _ballChargesController.text,
+          "breakfastCharges": _breakfastChargesController.text,
+          "stadiumAddress": _addressController.text,
+          "tournamentLimit": _teamLimitController.text,
+          "gameType": "CRICKET",
+          "selectLocation": _addressController.text,
+          "latitude": location.latitude,
+          "longitude": location.longitude,
+          "rules": _rulesController.text,
+          'coverPhoto': base64,
+          'coHost1Name':
+              _cohost1Name.text.trim().isEmpty ? null : _cohost1Name.text,
+          'coHost1Phone':
+              _cohost1Phone.text.trim().isEmpty ? null : _cohost1Phone.text,
+          'coHost2Name': _cohost2Name.text.isEmpty ? null : _cohost2Name.text,
+          'coHost2Phone':
+              _cohost2Phone.text.isEmpty ? null : _cohost2Phone.text,
+          // 'disclaimer': _disclaimerComntroller.text,
+        };
+        if (connectionController.isConnected.value) {
+          if (widget.tournament != null) {
+            bool isOk = await tournamentController.updateTournament({
+              ...tournament,
+            }, widget.tournament!.id);
+            if (isOk) {
+              successSnackBar('Tournament Updated Successfully',
+                  istournamentScreen: true);
+              Get.forceAppUpdate();
             }
-          }else{
-            errorSnackBar('No Internet Connection. Please try again later.');
+            // }
+          } else {
+            // final tournamentModel =
+            // await tournamentController
+            //     .createTournament(tournament);
+            // authController.getUser();
+            // logger.d("The Tournament id is:${tournamentModel.id}");
+            // if (tournament != null) {
+            //   final result = await Get.to(() => PaymentPage(tournament: tournamentModel));
+            //   if (result == null || result == false) {
+            //     await tournamentController.cancelTournament(tournamentModel.id);
+            //     Get.snackbar("Tournament", "Your tournament Deleted Successfully");
+            //   }
+            // }
+            // successSnackBar('Tournament Create Successfully',istournamentScreen: true);
+            // Get.offAll(() => const HomeScreen(),
+            //     predicate: (route) => route.name == '/HomeScreen');
+
+            tournamentController.tournamentModel.value = tournament;
+            Get.to(() => PaymentPage(
+                tournament: tournamentController.tournamentModel.value));
           }
+        } else {
+          errorSnackBar('No Internet Connection. Please try again later.');
+        }
       } finally {
         setState(() {
           isLoading = false;
@@ -484,21 +493,24 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 10,top: 10),
-                            child: Text(_stepTitles[currentStep],style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
+                            padding: const EdgeInsets.only(left: 10, top: 10),
+                            child: Text(
+                              _stepTitles[currentStep],
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                           Padding(
-                            padding: const EdgeInsets.only(left: 15,top: 10,right: 20),
+                            padding: const EdgeInsets.only(
+                                left: 15, top: 10, right: 20),
                             child: AnimatedBuilder(
                               animation: _progressAnimation,
                               builder: (context, child) {
                                 return Text(
-                                  "${currentStep+1}/${_stepTitles.length}",
+                                  "${currentStep + 1}/${_stepTitles.length}",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
@@ -510,7 +522,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 8.0),
                         child: AnimatedBuilder(
                           animation: _progressAnimation,
                           builder: (context, child) {
@@ -518,7 +531,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
                               value: _progressAnimation.value,
                               borderRadius: BorderRadius.circular(20),
                               backgroundColor: Colors.white,
-                              valueColor: const AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
+                              valueColor: const AlwaysStoppedAnimation<Color>(
+                                  AppTheme.primaryColor),
                               minHeight: 12,
                             );
                           },
@@ -581,9 +595,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: Colors.black
-                  ),
+                  border: Border.all(color: Colors.black),
                   boxShadow: [
                     BoxShadow(
                         color: Colors.black.withOpacity(0.1),
@@ -679,19 +691,19 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
           ),
           FormInput(
             controller: _nameController,
-            label: AppLocalizations.of(context)!.tournamentName,
+            label: AppConstants.tournamentName,
             // readOnly: widget.tournament != null && isCoHost(),
             iswhite: false,
             filled: true,
             validator: (p0) {
               if (p0!.isEmpty) {
-                return AppLocalizations.of(context)!.pleaseEnterTournamentName;
+                return AppConstants.pleaseEnterTournamentName;
               }
               if (p0[0] == " ") {
                 return "First character should not be a space";
               }
               if (p0.trim().isEmpty) {
-                return AppLocalizations.of(context)!.pleaseEnterTournamentName;
+                return AppConstants.pleaseEnterTournamentName;
               }
               if (p0.length < 3) {
                 return "Tournament name should be atleast 3 characters long";
@@ -704,8 +716,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
               }
 
               if (p0.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                return AppLocalizations.of(context)!
-                    .tournamentNameCannotContainEmojis;
+                return AppConstants.tournamentNameCannotContainEmojis;
               }
               return null;
             },
@@ -718,8 +729,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             onFromChanged: (e) {
               setState(() {
                 if (to != null && e.isAfter(to)) {
-                  errorSnackBar(AppLocalizations.of(context)!
-                      .tournamentStartDateShouldBeLessThanEndDate);
+                  errorSnackBar(AppConstants.tournamentStartDateShouldBeLessThanEndDate);
                   return;
                 }
                 from = e;
@@ -728,13 +738,11 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             onToChanged: (e) {
               setState(() {
                 if (from == null) {
-                  errorSnackBar(AppLocalizations.of(context)!
-                      .pleaseSelectTournamentStartDate);
+                  errorSnackBar(AppConstants.pleaseSelectTournamentStartDate);
                   return;
                 }
                 if (e.isBefore(from!)) {
-                  errorSnackBar(AppLocalizations.of(context)!
-                      .tournamentEndDateShouldBeGreaterThanStartDate);
+                  errorSnackBar(AppConstants.tournamentEndDateShouldBeGreaterThanStartDate);
                   return;
                 }
                 to = e;
@@ -742,13 +750,13 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
             },
             isAds: false,
           ),
-          Text(AppLocalizations.of(context)!.tournamentCategory,
+          Text(AppConstants.tournamentCategory,
               style: Get.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                   fontSize: 16)),
           DropDownWidget(
-            title: AppLocalizations.of(context)!.selectTournamentCategory,
+            title: AppConstants.selectTournamentCategory,
             onSelect: (e) {
               setState(() {
                 tournamentType = e;
@@ -761,13 +769,13 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
           const SizedBox(
             height: 10,
           ),
-          Text(AppLocalizations.of(context)!.ballType,
+          Text(AppConstants.ballType,
               style: Get.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                   fontSize: 16)),
           DropDownWidget(
-            title: AppLocalizations.of(context)!.selectBallType,
+            title: AppConstants.selectBallType,
             onSelect: (e) {
               setState(() {
                 ballType = e;
@@ -791,13 +799,13 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
                     const SizedBox(
                       height: 18,
                     ),
-                    Text(AppLocalizations.of(context)!.pitchType,
+                    Text(AppConstants.pitchType,
                         style: Get.textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
                             fontSize: 16)),
                     DropDownWidget(
-                      title: AppLocalizations.of(context)!.selectPitchType,
+                      title: AppConstants.selectPitchType,
                       onSelect: (e) {
                         setState(() {
                           pitchType = e;
@@ -834,7 +842,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
           FormInput(
             controller:
                 TextEditingController(text: authController.state!.fullName),
-            label: AppLocalizations.of(context)!.organizerName,
+            label: AppConstants.organizerName,
             enabled: false,
             iswhite: false,
             filled: true,
@@ -843,7 +851,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
           FormInput(
             controller:
                 TextEditingController(text: authController.state!.phoneNumber),
-            label: AppLocalizations.of(context)!.organizerContactNo,
+            label: AppConstants.organizerContactNo,
             enabled: false,
             readOnly: true,
             textInputType: TextInputType.number,
@@ -852,7 +860,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
           ),
           FormInput(
             controller: _cohost1Name,
-            label: AppLocalizations.of(context)!.cohost1Name,
+            label: AppConstants.cohost1Name,
             textInputType: TextInputType.text,
             iswhite: false,
             filled: true,
@@ -867,8 +875,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
                 return "Please enter co-host 1 name";
               }
               if (_cohost1Phone.text.isEmpty && e.isNotEmpty) {
-                return AppLocalizations.of(context)!
-                    .pleaseEnterCohost1ContactNo;
+                return AppConstants.pleaseEnterCohost1ContactNo;
               }
               // first character should be a alphabet
               if (e.isNotEmpty && !RegExp(r'^[a-zA-Z]+$').hasMatch(e[0])) {
@@ -887,7 +894,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
           ),
           FormInput(
             controller: _cohost1Phone,
-            label: AppLocalizations.of(context)!.cohost1ContactNo,
+            label: AppConstants.cohost1ContactNo,
             textInputType: TextInputType.number,
             iswhite: false,
             filled: true,
@@ -900,8 +907,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
                 return "First character should not be a space";
               }
               if ((_cohost1Name.text.isNotEmpty) && e.isEmpty) {
-                return AppLocalizations.of(context)!
-                    .pleaseEnterCohost1ContactNo;
+                return AppConstants.pleaseEnterCohost1ContactNo;
               }
 
               if ((_cohost1Name.text.isEmpty) && e.isNotEmpty) {
@@ -909,25 +915,23 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
               }
 
               if (!RegExp(r'^\d+$').hasMatch(e)) {
-                return AppLocalizations.of(context)!
-                    .pleaseEnterValidCohost1ContactNo;
+                return AppConstants.pleaseEnterValidCohost1ContactNo;
               }
               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                return AppLocalizations.of(context)!.rulesCannotContainEmojis;
+                return AppConstants.rulesCannotContainEmojis;
               }
               if (_cohost2Phone.text == e) {
-                return AppLocalizations.of(context)!
-                    .cohost1AndCohost2ContactNoCannotBeSame;
+                return AppConstants.cohost1AndCohost2ContactNoCannotBeSame;
               }
               if (e.length != 10) {
-                return AppLocalizations.of(context)!.pleaseEnterValidContactNo;
+                return AppConstants.pleaseEnterValidContactNo;
               }
               return null;
             },
           ),
           FormInput(
             controller: _cohost2Name,
-            label: AppLocalizations.of(context)!.cohost2Name,
+            label: AppConstants.cohost2Name,
             textInputType: TextInputType.text,
             iswhite: false,
             filled: true,
@@ -953,7 +957,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
           ),
           FormInput(
             controller: _cohost2Phone,
-            label: AppLocalizations.of(context)!.cohost2ContactNo,
+            label: AppConstants.cohost2ContactNo,
             textInputType: TextInputType.number,
             iswhite: false,
             filled: true,
@@ -969,14 +973,13 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
                 return 'Please enter co-host 2 contact no';
               }
               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                return AppLocalizations.of(context)!.rulesCannotContainEmojis;
+                return AppConstants.rulesCannotContainEmojis;
               }
               if (_cohost1Phone.text == e) {
-                return AppLocalizations.of(context)!
-                    .cohost1AndCohost2ContactNoCannotBeSame;
+                return AppConstants.cohost1AndCohost2ContactNoCannotBeSame;
               }
               if (e.length != 10) {
-                return AppLocalizations.of(context)!.pleaseEnterValidContactNo;
+                return AppConstants.pleaseEnterValidContactNo;
               }
               return null;
             },
@@ -994,13 +997,13 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
         children: [
           FormInput(
             controller: _rulesController,
-            label: AppLocalizations.of(context)!.rules,
+            label: AppConstants.rules,
             textInputType: TextInputType.multiline,
             iswhite: false,
             filled: true,
             validator: (e) {
               if (e!.trim().isEmpty) {
-                return AppLocalizations.of(context)!.pleaseEnterRules;
+                return AppConstants.pleaseEnterRules;
               }
               // RegExp regex = RegExp(
               //     r'^(?:(?![\u2000-\u3300]|[\uE000-\uF8FF]|[\uD800-\uDBFF]|[\uDC00-\uDFFF]).)*$');
@@ -1013,7 +1016,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
           ),
           FormInput(
             controller: _prizesController,
-            label: AppLocalizations.of(context)!.prizes,
+            label: AppConstants.prizes,
             maxLines: 3,
             iswhite: false,
             filled: true,
@@ -1030,7 +1033,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
           ),
           FormInput(
             controller: _addressController,
-            label: AppLocalizations.of(context)!.selectStadiumAddress,
+            label: AppConstants.selectStadiumAddress,
             readOnly: true,
             iswhite: false,
             filled: true,
@@ -1044,7 +1047,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
                     if (l != null) {
                       setState(() {
                         location = l;
-                        logger.d("The selected Location is $l and address is:${_addressController.text}");
+                        logger.d(
+                            "The selected Location is $l and address is:${_addressController.text}");
                       });
                     }
                     FocusScope.of(context).unfocus();
@@ -1057,21 +1061,21 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
           ),
           FormInput(
             controller: _entryFeeController,
-            label: AppLocalizations.of(context)!.entryFee,
+            label: AppConstants.entryFee,
             iswhite: false,
             filled: true,
             validator: (e) {
               if (e == null || e.trim().isEmpty) {
-                return AppLocalizations.of(context)!.pleaseEnterEntryFee;
+                return AppConstants.pleaseEnterEntryFee;
               }
               if (!RegExp(r'^\d+$').hasMatch(e)) {
-                return AppLocalizations.of(context)!.pleaseEnterValidEntryFee;
+                return AppConstants.pleaseEnterValidEntryFee;
               }
               if (e.startsWith('0')) {
-                return AppLocalizations.of(context)!.entryFeeCannotStartWith0;
+                return AppConstants.entryFeeCannotStartWith0;
               }
               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                return AppLocalizations.of(context)!.rulesCannotContainEmojis;
+                return AppConstants.rulesCannotContainEmojis;
               }
               return null;
             },
@@ -1080,19 +1084,18 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
           ),
           FormInput(
             controller: _ballChargesController,
-            label: AppLocalizations.of(context)!.ballCharges,
+            label: AppConstants.ballCharges,
             iswhite: false,
             filled: true,
             validator: (e) {
               if (e == null || e.trim().isEmpty) {
-                return AppLocalizations.of(context)!.pleaseEnterBallCharges;
+                return AppConstants.pleaseEnterBallCharges;
               }
               if (!RegExp(r'^\d+$').hasMatch(e)) {
-                return AppLocalizations.of(context)!
-                    .pleaseEnterValidBallCharges;
+                return AppConstants.pleaseEnterValidBallCharges;
               }
               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                return AppLocalizations.of(context)!.rulesCannotContainEmojis;
+                return AppConstants.rulesCannotContainEmojis;
               }
               return null;
             },
@@ -1101,22 +1104,19 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
           ),
           FormInput(
             controller: _breakfastChargesController,
-            label: AppLocalizations.of(context)!.breakfastCharges,
+            label: AppConstants.breakfastCharges,
             textInputType: TextInputType.number,
             iswhite: false,
             filled: true,
             validator: (e) {
               if (e == null || e.trim().isEmpty) {
-                return AppLocalizations.of(context)!
-                    .pleaseEnterBreakfastCharges;
+                return AppConstants.pleaseEnterBreakfastCharges;
               }
               if (!RegExp(r'^\d+(?:\.\d+)?$').hasMatch(e)) {
-                return AppLocalizations.of(context)!
-                    .pleaseEnterValidBreakfastCharges;
+                return AppConstants.pleaseEnterValidBreakfastCharges;
               }
               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                return AppLocalizations.of(context)!
-                    .pleaseEnterValidBreakfastCharges;
+                return AppConstants.pleaseEnterValidBreakfastCharges;
               }
               return null;
             },
@@ -1124,17 +1124,16 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
           ),
           FormInput(
             controller: _teamLimitController,
-            label: AppLocalizations.of(context)!.teamLimit,
+            label: AppConstants.teamLimit,
             iswhite: false,
             filled: true,
             validator: (e) {
               if (e == null || e.trim().isEmpty) {
-                return AppLocalizations.of(context)!.pleaseEnterTeamLimit;
+                return AppConstants.pleaseEnterTeamLimit;
               } else if (!RegExp(r'^\d+$').hasMatch(e)) {
-                return AppLocalizations.of(context)!.pleaseEnterValidTeamLimit;
+                return AppConstants.pleaseEnterValidTeamLimit;
               } else if (int.parse(e) < 2) {
-                return AppLocalizations.of(context)!
-                    .teamLimitShouldBeEqualOrGreaterThan2;
+                return AppConstants.teamLimitShouldBeEqualOrGreaterThan2;
               }
               return null;
             },
@@ -1153,10 +1152,10 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
               RichText(
                 text: TextSpan(
                   //i hereby agree to the terms and conditions and disclaimer of the app
-                  text: AppLocalizations.of(context)!.iHerebyAgreeToThe,
+                  text: AppConstants.iHerebyAgreeToThe,
                   children: [
                     TextSpan(
-                      text: AppLocalizations.of(context)!.termsAndConditions,
+                      text: "Terms and Conditions",
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           Get.bottomSheet(BottomSheet(
@@ -1175,7 +1174,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>with SingleT
                     ),
                     const TextSpan(text: " and \n", style: TextStyle()),
                     TextSpan(
-                      text: AppLocalizations.of(context)!.disclaimer,
+                      text: "Disclaimer",
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
                           Get.bottomSheet(BottomSheet(

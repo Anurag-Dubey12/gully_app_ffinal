@@ -219,37 +219,37 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
               ),
             ),
           ),
-          widget.sponsorlink != null
-              ? Positioned(
-            bottom: 10,
-            right: 10,
-            child: Container(
-              height: 35,
-              width: 35,
-              decoration: BoxDecoration(
-                color: _showOverlay ? Colors.black54 : Colors.transparent,
-                borderRadius: BorderRadius.circular(10),
-                border: Border.all(
-                  color: _showOverlay ? Colors.transparent : Colors.black45,
-                ),
-              ),
-              child: IconButton(
-                icon: Icon(
-                  Icons.link_rounded,
-                  color: _showOverlay ? Colors.white : Colors.black45,
-                  size: 20,
-                ),
-                onPressed: () {
-                  if (widget.sponsorlink != null &&
-                      widget.sponsorlink!.isNotEmpty &&
-                      widget.sponsorlink != "Not Defined") {
-                    _launchURL(widget.sponsorlink ?? '');
-                  }
-                },
-              ),
-            ),
-          )
-              : const SizedBox.shrink(),
+          // widget.sponsorlink != null
+          //     ? Positioned(
+          //   bottom: 10,
+          //   right: 10,
+          //   child: Container(
+          //     height: 35,
+          //     width: 35,
+          //     decoration: BoxDecoration(
+          //       color: _showOverlay ? Colors.black54 : Colors.transparent,
+          //       borderRadius: BorderRadius.circular(10),
+          //       border: Border.all(
+          //         color: _showOverlay ? Colors.transparent : Colors.black45,
+          //       ),
+          //     ),
+          //     child: IconButton(
+          //       icon: Icon(
+          //         Icons.link_rounded,
+          //         color: _showOverlay ? Colors.white : Colors.black45,
+          //         size: 20,
+          //       ),
+          //       onPressed: () {
+          //         if (widget.sponsorlink != null &&
+          //             widget.sponsorlink!.isNotEmpty &&
+          //             widget.sponsorlink != "Not Defined") {
+          //           _launchURL(widget.sponsorlink ?? '');
+          //         }
+          //       },
+          //     ),
+          //   ),
+          // )
+          //     : const SizedBox.shrink(),
         ],
       );
     } else {

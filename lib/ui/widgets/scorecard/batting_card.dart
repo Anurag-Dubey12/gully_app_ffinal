@@ -16,60 +16,81 @@ class BattingStats extends GetView<ScoreBoardController> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Obx(() => Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.white,
-        ),
-        child: Column(children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                    flex: 3,
-                    child: GestureDetector(
-                        child: Text('Batsman',
-                            style: Get.textTheme.labelMedium))),
-                const Spacer(
-                  flex: 1,
-                ),
-                Expanded(
-                    child: Center(
-                        child: Text('R', style: Get.textTheme.labelMedium))),
-                Expanded(
-                    child: Center(
-                        child: Text('B', style: Get.textTheme.labelMedium))),
-                Expanded(
-                    child: Center(
-                        child: Text('4s', style: Get.textTheme.labelMedium))),
-                Expanded(
-                    child: Center(
-                        child: Text('6s', style: Get.textTheme.labelMedium))),
-                Expanded(
-                    child: Center(
-                        child: Text('SR', style: Get.textTheme.labelMedium))),
-              ],
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: Colors.white,
             ),
-          ),
-          const Divider(
-            height: 10,
-            color: Colors.grey,
-          ),
-          const SizedBox(height: 4),
-          BatterPlayerStat(controller.scoreboard.value!.striker, true,false),
-          const SizedBox(height: 3),
-          BatterPlayerStat(controller.scoreboard.value!.nonstriker, false,false),
-          const SizedBox(height: 10),
-        ]),
-      )),
+            child: Column(children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    Expanded(
+                        flex: 3,
+                        child: GestureDetector(
+                            child: Text('Batsman',
+                                style: Get.textTheme.labelMedium))),
+                    const Spacer(
+                      flex: 1,
+                    ),
+                    Expanded(
+                        child: Center(
+                            child:
+                                Text('R', style: Get.textTheme.labelMedium))),
+                    Expanded(
+                        child: Center(
+                            child:
+                                Text('B', style: Get.textTheme.labelMedium))),
+                    Expanded(
+                        child: Center(
+                            child:
+                                Text('4s', style: Get.textTheme.labelMedium))),
+                    Expanded(
+                        child: Center(
+                            child:
+                                Text('6s', style: Get.textTheme.labelMedium))),
+                    Expanded(
+                        child: Center(
+                            child:
+                                Text('SR', style: Get.textTheme.labelMedium))),
+                  ],
+                ),
+              ),
+              const Divider(
+                height: 10,
+                color: Colors.grey,
+              ),
+              const SizedBox(height: 4),
+              BatterPlayerStat(
+                  controller.scoreboard.value!.striker,
+                  true,
+                  false,
+                  controller.scoreboard.value!.striker.batting!.outType == ''
+                      ? false
+                      : true),
+              const SizedBox(height: 3),
+              BatterPlayerStat(
+                  controller.scoreboard.value!.nonstriker,
+                  false,
+                  false,
+                  controller.scoreboard.value!.nonstriker.batting!.outType == ''
+                      ? false
+                      : true),
+              const SizedBox(height: 10),
+            ]),
+          )),
     );
   }
 }
+
 class BatterPlayerStat extends StatelessWidget {
   final PlayerModel player;
   final bool? isStriker;
   final bool isFullScreenBoard;
-  const BatterPlayerStat(this.player, this.isStriker, this.isFullScreenBoard, {super.key});
+  final bool isPlayerOut;
+  const BatterPlayerStat(
+      this.player, this.isStriker, this.isFullScreenBoard, this.isPlayerOut,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -78,13 +99,27 @@ class BatterPlayerStat extends StatelessWidget {
     final isCaptain = player.role.toLowerCase() == 'captain';
     final isWicketkeeper = player.role.toLowerCase() == 'wicket keeper';
 
-    bool isCurrentBatsman = player.id == controller.scoreboard.value?.striker.id ||
-        player.id == controller.scoreboard.value?.nonstriker.id;
+    bool isCurrentBatsman =
+        player.id == controller.scoreboard.value?.striker.id ||
+            player.id == controller.scoreboard.value?.nonstriker.id;
 
-    bool areBothStrikerAndNonStrikerNotOut = controller.scoreboard.value?.striker.batting?.outType == null &&
-        controller.scoreboard.value?.nonstriker.batting?.outType == null;
+    bool areBothStrikerAndNonStrikerNotOut =
+        controller.scoreboard.value?.striker.batting?.outType == '' &&
+            controller.scoreboard.value?.nonstriker.batting?.outType == '';
+    controller.isBothBatsmenNotOut.value = areBothStrikerAndNonStrikerNotOut;
 
-    logger.d("The Both batsmen data:${areBothStrikerAndNonStrikerNotOut}");
+    bool isStrikerOut =
+        controller.scoreboard.value?.striker.batting?.outType.isNotEmpty ??
+            false;
+    if (isStrikerOut) {
+      controller.isStrikerOut.value = true;
+    } else {
+      controller.isStrikerOut.value = false;
+    }
+
+    logger.d("Striker Out value:${controller.isStrikerOut.value}");
+    logger.d(
+        "The Both batsmen data:${areBothStrikerAndNonStrikerNotOut} and ${controller.isBothBatsmenNotOut.value}");
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Column(
@@ -97,26 +132,40 @@ class BatterPlayerStat extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '${player.name}${isCaptain && isFullScreenBoard ? ' (C)' : ''}${isWicketkeeper && isFullScreenBoard?'(WK)':''}',
+                      '${player.name}${isCaptain && isFullScreenBoard ? ' (C)' : ''}${isWicketkeeper && isFullScreenBoard ? '(WK)' : ''}',
                       maxLines: 1,
                       style: TextStyle(
                         fontSize: 13,
                         color: hasBatted ? Colors.black : Colors.grey,
                         fontWeight: hasBatted ? FontWeight.bold : null,
-                        decoration: areBothStrikerAndNonStrikerNotOut ? TextDecoration.lineThrough:TextDecoration.none
+                        decoration: (isStriker! &&
+                                controller.scoreboard.value?.striker.batting
+                                        ?.outType.isNotEmpty ==
+                                    true &&
+                                !isFullScreenBoard)
+                            ? TextDecoration.lineThrough
+                            : (isStriker == false &&
+                                    controller.scoreboard.value?.nonstriker
+                                            .batting?.outType.isNotEmpty ==
+                                        true &&
+                                    !isFullScreenBoard)
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
                     if (!isStriker! && player.batting!.outType.isNotEmpty)
                       Text(
                         _getOutInfo(player.batting!),
-                        style: Get.textTheme.labelMedium?.copyWith(fontSize: 11, color: Colors.grey[600]),
-                      maxLines: 2,
+                        style: Get.textTheme.labelMedium
+                            ?.copyWith(fontSize: 11, color: Colors.grey[600]),
+                        maxLines: 2,
                       ),
                     if (isCurrentBatsman && isFullScreenBoard)
                       Text(
-                        'not out',
-                        style: Get.textTheme.labelMedium?.copyWith(fontSize: 12, color: Colors.grey[600]),
+                        player.batting!.outType.isNotEmpty ? '' : 'not out',
+                        style: Get.textTheme.labelMedium
+                            ?.copyWith(fontSize: 12, color: Colors.grey[600]),
                       ),
                   ],
                 ),
@@ -126,42 +175,44 @@ class BatterPlayerStat extends StatelessWidget {
               ),
               Expanded(
                   child: Center(
-                      child: Text(
-                          player.batting!.runs.toString(),
+                      child: Text(player.batting!.runs.toString(),
                           style: hasBatted
-                              ? Get.textTheme.labelMedium?.copyWith(color: Colors.black)
+                              ? Get.textTheme.labelMedium
+                                  ?.copyWith(color: Colors.black)
                               : Get.textTheme.labelMedium))),
               Expanded(
                   child: Center(
-                      child: Text(
-                          player.batting!.balls.toString(),
+                      child: Text(player.batting!.balls.toString(),
                           style: hasBatted
-                              ? Get.textTheme.labelMedium?.copyWith(color: Colors.black)
+                              ? Get.textTheme.labelMedium
+                                  ?.copyWith(color: Colors.black)
                               : Get.textTheme.labelMedium))),
               Expanded(
                   child: Center(
-                      child: Text(
-                          player.batting!.fours.toString(),
+                      child: Text(player.batting!.fours.toString(),
                           style: hasBatted
-                              ? Get.textTheme.labelMedium?.copyWith(color: Colors.black)
+                              ? Get.textTheme.labelMedium
+                                  ?.copyWith(color: Colors.black)
                               : Get.textTheme.labelMedium))),
               Expanded(
                   child: Center(
-                      child: Text(
-                          player.batting!.sixes.toString(),
+                      child: Text(player.batting!.sixes.toString(),
                           style: hasBatted
-                              ? Get.textTheme.labelMedium?.copyWith(color: Colors.black)
+                              ? Get.textTheme.labelMedium
+                                  ?.copyWith(color: Colors.black)
                               : Get.textTheme.labelMedium))),
               Expanded(
                   child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Center(
-                        child: Text(
-                            "${player.batting!.strikeRate.toStringAsFixed(1)}%",
-                            style: hasBatted
-                                ? Get.textTheme.labelMedium?.copyWith(fontSize: 11, color: Colors.black)
-                                : Get.textTheme.labelMedium?.copyWith(fontSize: 11))),
-                  )),
+                fit: BoxFit.scaleDown,
+                child: Center(
+                    child: Text(
+                        "${player.batting!.strikeRate.toStringAsFixed(1)}%",
+                        style: hasBatted
+                            ? Get.textTheme.labelMedium
+                                ?.copyWith(fontSize: 11, color: Colors.black)
+                            : Get.textTheme.labelMedium
+                                ?.copyWith(fontSize: 11))),
+              )),
             ],
           ),
         ],
@@ -184,4 +235,3 @@ class BatterPlayerStat extends StatelessWidget {
     }
   }
 }
-

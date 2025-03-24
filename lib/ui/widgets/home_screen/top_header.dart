@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
+
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
@@ -10,6 +10,7 @@ import 'package:gully_app/ui/screens/search_places_screen.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../../config/app_constants.dart';
 import '../../../data/controller/tournament_controller.dart';
 import '../../screens/notification_screen.dart';
 import '../../screens/organizer_profile.dart';
@@ -18,7 +19,7 @@ import '../../screens/player_profile_screen.dart';
 class TopHeader extends GetView<AuthController> {
   final Color? color;
   final double? fontSize;
-  const TopHeader({super.key,this.color,this.fontSize});
+  const TopHeader({super.key, this.color, this.fontSize});
 
   @override
   Widget build(BuildContext context) {
@@ -64,14 +65,15 @@ class TopHeader extends GetView<AuthController> {
                             controller.state!.captializedName,
                             textAlign: TextAlign.start,
                             style: Get.textTheme.titleLarge?.copyWith(
-                              color: color??Colors.white,
+                              color: color ?? Colors.white,
                               fontSize: fontSize ?? Get.textScaleFactor * 24,
                             ),
                           ),
                         ),
                       )),
                 ),
-                LocationBuilder(textColor: color ?? Colors.white,fontSize: fontSize),
+                LocationBuilder(
+                    textColor: color ?? Colors.white, fontSize: fontSize),
               ],
             ),
           ],
@@ -158,7 +160,7 @@ class LocationBuilder extends GetView<AuthController> {
       onTap: () {
         Get.to(() => SearchPlacesScreen(
               showSelectCurrentLocation: true,
-              title: AppLocalizations.of(context)!.selectLocation,
+              title: AppConstants.selectLocation,
               onSelected: (e) async {
                 logger.f('Location Description: ${e.description}');
                 logger.f('Location Description: ${e.lat}${e.lng}');

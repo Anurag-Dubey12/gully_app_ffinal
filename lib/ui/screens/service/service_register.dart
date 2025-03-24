@@ -9,7 +9,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/controller/service_controller.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:image_picker/image_picker.dart';
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 import '../../../data/controller/auth_controller.dart';
 import '../../../data/controller/service_controller.dart';
 import '../../../data/controller/service_controller.dart';
@@ -29,7 +28,7 @@ import '../service_payment_page.dart';
 
 class ServiceRegister extends StatefulWidget {
   final ServiceModel? service;
-  const ServiceRegister({super.key,this.service});
+  const ServiceRegister({super.key, this.service});
 
   @override
   State<StatefulWidget> createState() => RegisterService();
@@ -39,11 +38,12 @@ class RegisterService extends State<ServiceRegister> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _serviceChargesController = TextEditingController();
+  final TextEditingController _serviceChargesController =
+      TextEditingController();
   final TextEditingController _expController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   // List<String> selectedServices = [];
-  String selectedServices='';
+  String selectedServices = '';
   bool isLoading = false;
   bool tncAccepted = false;
   String selectedOnlineOption = 'no';
@@ -53,15 +53,14 @@ class RegisterService extends State<ServiceRegister> {
   LatLng? location;
   String? charges_durations = '';
   String? package_duration = '';
-  bool isOnline=false;
+  bool isOnline = false;
   Map<String, dynamic>? Duration;
   // String Duration='';
 
-
   Map<String, dynamic>? selectedPackage;
   // List<XFile> _documentImages = [];
-  XFile? _documentImages ;
-  late  ServiceModel serviceModel;
+  XFile? _documentImages;
+  late ServiceModel serviceModel;
 
   void pickImages() async {
     final imgs = await multipleimagePickerHelper();
@@ -71,16 +70,18 @@ class RegisterService extends State<ServiceRegister> {
       });
     }
   }
+
   pickDocumentImages() async {
     final ImagePicker picker = ImagePicker();
     final XFile? images = await picker.pickImage(source: ImageSource.gallery);
 
     if (images != null) {
       setState(() {
-        _documentImages=images;
+        _documentImages = images;
       });
     }
   }
+
   Future<void> fetchLocation() async {
     try {
       final position = await determinePosition();
@@ -123,19 +124,32 @@ class RegisterService extends State<ServiceRegister> {
       }
 
       _documentImages = XFile(widget.service!.identityProof!);
-        }
-
+    }
   }
+
   List<String> cricketServices = [
-    "Football Coaching", "Basketball Coaching", "Cricket Coaching", "Tennis Coaching",
-    "Badminton Coaching", "Volleyball Coaching", "Table Tennis Coaching", "Rugby Coaching",
-    "Hockey Coaching", "Squash Coaching", "Golf Coaching", "Baseball Coaching",
-    "Softball Coaching", "Lacrosse Coaching", "Field Hockey Coaching", "Handball Coaching",
-    "Netball Coaching", "Archery Coaching", "Fencing Coaching", "Wrestling Coaching"
+    "Football Coaching",
+    "Basketball Coaching",
+    "Cricket Coaching",
+    "Tennis Coaching",
+    "Badminton Coaching",
+    "Volleyball Coaching",
+    "Table Tennis Coaching",
+    "Rugby Coaching",
+    "Hockey Coaching",
+    "Squash Coaching",
+    "Golf Coaching",
+    "Baseball Coaching",
+    "Softball Coaching",
+    "Lacrosse Coaching",
+    "Field Hockey Coaching",
+    "Handball Coaching",
+    "Netball Coaching",
+    "Archery Coaching",
+    "Fencing Coaching",
+    "Wrestling Coaching"
   ];
-  List<String> duration = [
-    "Hours","Days","Months"
-  ];
+  List<String> duration = ["Hours", "Days", "Months"];
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.find<AuthController>();
@@ -156,7 +170,7 @@ class RegisterService extends State<ServiceRegister> {
               backgroundColor: Colors.transparent,
               elevation: 0,
               title: Text(
-                widget.service!=null? 'Edit Service':'Register Service',
+                widget.service != null ? 'Edit Service' : 'Register Service',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -176,80 +190,95 @@ class RegisterService extends State<ServiceRegister> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 10),
                     child: isLoading
                         ? const CircularProgressIndicator()
                         : PrimaryButton(
-                      onTap: () async {
-                        try {
-                          if (!tncAccepted) {
-                            throw Exception('Please accept the Terms and Conditions');
-                          }
-                          if (_images.isEmpty) {
-                            throw Exception('Please select at least one image of your service');
-                          }
-                          if (_descriptionController.text.isEmpty) {
-                            throw Exception('Please enter a description');
-                          }
-                          if (_expController.text.isEmpty) {
-                            throw Exception('Please enter experience');
-                          }
-                          if (_documentImages == null) {
-                            throw Exception('Please add document images');
-                          }
+                            onTap: () async {
+                              try {
+                                if (!tncAccepted) {
+                                  throw Exception(
+                                      'Please accept the Terms and Conditions');
+                                }
+                                if (_images.isEmpty) {
+                                  throw Exception(
+                                      'Please select at least one image of your service');
+                                }
+                                if (_descriptionController.text.isEmpty) {
+                                  throw Exception('Please enter a description');
+                                }
+                                if (_expController.text.isEmpty) {
+                                  throw Exception('Please enter experience');
+                                }
+                                if (_documentImages == null) {
+                                  throw Exception('Please add document images');
+                                }
 
-                          // Convert images to Base64
-                          List<String> serviceImagesBase64 = [];
-                          for (var image in _images) {
-                            String? base64Image = await convertImageToBase64(image);
-                            serviceImagesBase64.add(base64Image);
-                                                    }
+                                // Convert images to Base64
+                                List<String> serviceImagesBase64 = [];
+                                for (var image in _images) {
+                                  String? base64Image =
+                                      await convertImageToBase64(image);
+                                  serviceImagesBase64.add(base64Image);
+                                }
 
-                          String? identityProofBase64;
-                          if (_documentImages != null) {
-                            identityProofBase64 = await convertImageToBase64(_documentImages!);
-                          }
+                                String? identityProofBase64;
+                                if (_documentImages != null) {
+                                  identityProofBase64 =
+                                      await convertImageToBase64(
+                                          _documentImages!);
+                                }
 
-                          // Prepare service data
-                          Map<String, dynamic> serviceData = {
-                            "name": authController.state!.fullName,
-                            "address": isOnline ? " " : _addressController.text,
-                            "phoneNumber": authController.state!.phoneNumber,
-                            "email": authController.state!.email,
-                            "identityProof": identityProofBase64,
-                            "category": selectedServices.toString(),
-                            "description": _descriptionController.text,
-                            "experience": int.parse(_expController.text),
-                            "duration": charges_durations,
-                            "fees": int.parse(_serviceChargesController.text),
-                            "serviceType": selectedOnlineOption == 'yes' ? "online" : "offline",
-                            "serviceImages": serviceImagesBase64,
-                          };
+                                // Prepare service data
+                                Map<String, dynamic> serviceData = {
+                                  "name": authController.state!.fullName,
+                                  "address":
+                                      isOnline ? " " : _addressController.text,
+                                  "phoneNumber":
+                                      authController.state!.phoneNumber,
+                                  "email": authController.state!.email,
+                                  "identityProof": identityProofBase64,
+                                  "category": selectedServices.toString(),
+                                  "description": _descriptionController.text,
+                                  "experience": int.parse(_expController.text),
+                                  "duration": charges_durations,
+                                  "fees":
+                                      int.parse(_serviceChargesController.text),
+                                  "serviceType": selectedOnlineOption == 'yes'
+                                      ? "online"
+                                      : "offline",
+                                  "serviceImages": serviceImagesBase64,
+                                };
 
-                          if (widget.service != null) {
-                            bool isOk = await serviceController.updateservice({
-                              ...serviceData
-                            }, widget.service!.id);
-                            if (isOk) {
-                              Get.back();
-                              Get.forceAppUpdate();
-                              successSnackBar('Service Updated Successfully');
-                            }
-                          } else {
-                            final serviceModel = await serviceController.addService(serviceData);
-                            authController.getUser();
-                            logger.d("The Service id is: ${serviceModel.id}");
-                            Get.to(() => ServicePaymentPage(service: serviceModel));
-                          }
-                        } finally {
-                          setState(() {
-                            isLoading = false;
-                          });
-                        }
-                      },
-                      isDisabled: !tncAccepted,
-                      title: 'Submit',
-                    ),
+                                if (widget.service != null) {
+                                  bool isOk = await serviceController
+                                      .updateservice(
+                                          {...serviceData}, widget.service!.id);
+                                  if (isOk) {
+                                    Get.back();
+                                    Get.forceAppUpdate();
+                                    successSnackBar(
+                                        'Service Updated Successfully');
+                                  }
+                                } else {
+                                  final serviceModel = await serviceController
+                                      .addService(serviceData);
+                                  authController.getUser();
+                                  logger.d(
+                                      "The Service id is: ${serviceModel.id}");
+                                  Get.to(() => ServicePaymentPage(
+                                      service: serviceModel));
+                                }
+                              } finally {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                              }
+                            },
+                            isDisabled: !tncAccepted,
+                            title: 'Submit',
+                          ),
                   ),
                 ],
               ),
@@ -293,9 +322,8 @@ class RegisterService extends State<ServiceRegister> {
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.grey)
-                    ),
-                    padding: const EdgeInsets.symmetric( horizontal: 16),
+                        border: Border.all(color: Colors.grey)),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
                       children: [
                         const Text(
@@ -389,17 +417,19 @@ class RegisterService extends State<ServiceRegister> {
                         //   Duration = selectedItem;
                         // }
 
-
                         if (selectedItem is Map<String, dynamic>) {
                           String type = selectedItem['type'] ?? '';
-                          Map<String, dynamic>? value = selectedItem['value'] as Map<String, dynamic>?;
+                          Map<String, dynamic>? value =
+                              selectedItem['value'] as Map<String, dynamic>?;
 
                           if (type == 'Hours' && value != null) {
-                            charges_durations = '${value['hours'] ?? '0'} hours ${value['minutes'] ?? '0'} minutes';
+                            charges_durations =
+                                '${value['hours'] ?? '0'} hours ${value['minutes'] ?? '0'} minutes';
                           } else if (type == 'Days' && value != null) {
                             charges_durations = '${value['days'] ?? '0'} days';
                           } else if (type == 'Months' && value != null) {
-                            charges_durations = '${value['months'] ?? '0'} months';
+                            charges_durations =
+                                '${value['months'] ?? '0'} months';
                           } else {
                             charges_durations = '';
                           }
@@ -425,104 +455,109 @@ class RegisterService extends State<ServiceRegister> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  _images.isEmpty ? Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.black,
-                        width: 1,
-                        style: BorderStyle.solid,
-                      ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: GestureDetector(
-                      onTap: pickImages,
-                      child: const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.add_photo_alternate,
-                              size: 40,
+                  _images.isEmpty
+                      ? Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
                               color: Colors.black,
+                              width: 1,
+                              style: BorderStyle.solid,
                             ),
-                            SizedBox(height: 10),
-                            Text(
-                              "Select Images of the service",
-                              style: TextStyle(color: Colors.black),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: GestureDetector(
+                            onTap: pickImages,
+                            child: const Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.add_photo_alternate,
+                                    size: 40,
+                                    color: Colors.black,
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    "Select Images of the service",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ],
+                          ),
+                        )
+                      : GridView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10,
+                          ),
+                          itemCount: _images.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index == _images.length) {
+                              return GestureDetector(
+                                onTap: pickImages,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[300],
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Icon(
+                                    Icons.add_photo_alternate,
+                                    color: Colors.grey[600],
+                                    size: 40,
+                                  ),
+                                ),
+                              );
+                            }
+                            return Stack(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    imageViewer(
+                                        context, _images[index].path, false);
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      image: DecorationImage(
+                                        image: FileImage(
+                                            File(_images[index].path)),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  right: 5,
+                                  top: 5,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _images.removeAt(index);
+                                      });
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(
+                                        Icons.close,
+                                        color: Colors.red,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
                         ),
-                      ),
-                    ),
-                  ): GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                    ),
-                    itemCount: _images.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index == _images.length) {
-                        return GestureDetector(
-                          onTap: pickImages,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Icon(
-                              Icons.add_photo_alternate,
-                              color: Colors.grey[600],
-                              size: 40,
-                            ),
-                          ),
-                        );
-                      }
-                      return Stack(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              imageViewer(context, _images[index].path, false);
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                image: DecorationImage(
-                                  image: FileImage(File(_images[index].path)),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            right: 5,
-                            top: 5,
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _images.removeAt(index);
-                                });
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(2),
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Icon(
-                                  Icons.close,
-                                  color: Colors.red,
-                                  size: 20,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
                   const Text(
                     "Document Verification",
                     style: TextStyle(
@@ -544,61 +579,62 @@ class RegisterService extends State<ServiceRegister> {
                     ),
                     child: _documentImages == null
                         ? GestureDetector(
-                      onTap: pickDocumentImages,
-                      child: const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.add_photo_alternate,
-                              size: 40,
-                              color: Colors.black,
+                            onTap: pickDocumentImages,
+                            child: const Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.add_photo_alternate,
+                                    size: 40,
+                                    color: Colors.black,
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    "Select Document for Verification",
+                                    style: TextStyle(color: Colors.black),
+                                  ),
+                                ],
+                              ),
                             ),
-                            SizedBox(height: 10),
-                            Text(
-                              "Select Document for Verification",
-                              style: TextStyle(color: Colors.black),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
+                          )
                         : Stack(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: FileImage(File(_documentImages!.path)),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          right: 5,
-                          top: 5,
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _documentImages = null;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                    image:
+                                        FileImage(File(_documentImages!.path)),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
-                              child: const Icon(
-                                Icons.close,
-                                color: Colors.red,
-                                size: 20,
+                              Positioned(
+                                right: 5,
+                                top: 5,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _documentImages = null;
+                                    });
+                                  },
+                                  child: Container(
+                                    padding: const EdgeInsets.all(2),
+                                    decoration: const BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.red,
+                                      size: 20,
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
                   ),
                   const SizedBox(height: 10),
                   const Text(
@@ -611,7 +647,7 @@ class RegisterService extends State<ServiceRegister> {
                   ),
                   const SizedBox(height: 10),
                   GestureDetector(
-                    onTap: ()async {
+                    onTap: () async {
                       // final result = await Get.to(() =>  PackageScreen(selectedPackages:selectedPackage));
                       // if (result != null && result is Map<String, dynamic>) {
                       //   setState(() {
@@ -646,18 +682,16 @@ class RegisterService extends State<ServiceRegister> {
                               }),
                           RichText(
                             text: TextSpan(
-                              text:
-                              AppLocalizations.of(context)!.iHerebyAgreeToThe,
+                              text: "I hereby agree to the",
                               children: [
                                 TextSpan(
-                                  text: AppLocalizations.of(context)!
-                                      .termsAndConditions,
+                                  text: "Terms and Conditions",
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       Get.bottomSheet(BottomSheet(
                                         onClosing: () {},
                                         builder: (builder) =>
-                                        const LegalViewScreen(
+                                            const LegalViewScreen(
                                           title: 'Terms and Conditions',
                                           slug: 'terms',
                                           hideDeleteButton: true,
@@ -672,16 +706,16 @@ class RegisterService extends State<ServiceRegister> {
                                 const TextSpan(
                                     text: " and \n", style: TextStyle()),
                                 TextSpan(
-                                  text: AppLocalizations.of(context)!.disclaimer,
+                                  text: "Disclaimer",
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       Get.bottomSheet(BottomSheet(
                                         onClosing: () {},
                                         builder: (builder) =>
-                                        const LegalViewScreen(
-                                            title: 'Disclaimer',
-                                            slug: 'disclaimer',
-                                            hideDeleteButton: true),
+                                            const LegalViewScreen(
+                                                title: 'Disclaimer',
+                                                slug: 'disclaimer',
+                                                hideDeleteButton: true),
                                       ));
                                     },
                                   style: const TextStyle(

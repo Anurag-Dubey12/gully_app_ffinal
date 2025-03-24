@@ -6,14 +6,12 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/sponsor_model.dart';
-import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
 import '../../data/model/package_model.dart';
 import '../../data/model/tournament_model.dart';
 import '../../utils/app_logger.dart';
-import '../../utils/date_time_helpers.dart';
 import '../../utils/utils.dart';
 import '../widgets/gradient_builder.dart';
 import '../widgets/sponsor/FullScreenVideoPlayer.dart';

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:get/get.dart';
 import 'package:gully_app/ui/screens/player_ranking_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
+
+import '../../config/app_constants.dart';
 
 class LeaderboardScreen extends StatefulWidget {
   const LeaderboardScreen({super.key});
@@ -27,7 +29,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           children: [
             Center(
               child: Text(
-                AppLocalizations.of(context)!.leaderboardTitle,
+                AppConstants.leaderboardTitle,
                 style: Get.textTheme.titleMedium?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -41,17 +43,17 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                   child: Column(
                     children: [
                       _Card(
-                        title: AppLocalizations.of(context)!.playerRankingTitle,
+                        title: AppConstants.playerRankingTitle,
                         onTap: () {
                           Get.to(() => const PlayerRankingScreen());
                         },
                       ),
                       _Card(
-                        title: AppLocalizations.of(context)!.teamRankingTitle,
+                        title: AppConstants.teamRankingTitle,
                         onTap: () {},
                       ),
                       _Card(
-                        title: AppLocalizations.of(context)!.topPerformerTitle,
+                        title: AppConstants.topPerformerTitle,
                         onTap: () {},
                       ),
                     ],

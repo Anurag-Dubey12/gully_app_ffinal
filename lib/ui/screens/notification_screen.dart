@@ -82,22 +82,25 @@ class NotificationScreen extends GetView<NotificationController> {
                         ],
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 10),
                         child: Obx(
-                              () => controller.notifications.value.isEmpty
+                          () => controller.notifications.value.isEmpty
                               ? const Center(
-                            child: Text('No notifications'),
-                          )
+                                  child: Text('No notifications'),
+                                )
                               : ListView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: controller.notifications.value.length,
-                            itemBuilder: (context, index) {
-                              return NotificationCard(
-                                notification:
-                                controller.notifications.value[index],
-                              );
-                            },
-                          ),
+                                  physics: const BouncingScrollPhysics(),
+                                  itemCount:
+                                      controller.notifications.value.length,
+                                  itemBuilder: (context, index) {
+                                    return NotificationCard(
+                                      notification: controller
+                                          .notifications.value.reversed
+                                          .toList()[index],
+                                    );
+                                  },
+                                ),
                         ),
                       ),
                     ),

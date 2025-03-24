@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
+
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/home_screen.dart';
@@ -14,6 +14,8 @@ import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+
+import '../../config/app_constants.dart';
 
 class CreateProfile extends StatefulWidget {
   const CreateProfile({super.key});
@@ -90,8 +92,7 @@ class _CreateProfileState extends State<CreateProfile>
                           height: Get.height * 0.13,
                         ),
                         Text(
-                          AppLocalizations.of(context)!
-                              .create_profile
+                          AppConstants.create_profile
                               .toUpperCase(),
                           style: Get.textTheme.titleLarge?.copyWith(
                               fontStyle: FontStyle.italic,
@@ -152,23 +153,20 @@ class _CreateProfileState extends State<CreateProfile>
                                 height: Get.height * 0.03,
                               ),
                               CustomTextField(
-                                labelText: AppLocalizations.of(context)!.name,
+                                labelText: AppConstants.name,
                                 controller: _nameController,
                                 validator: (e) {
                                   if (e!.contains(
                                       RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-                                    return AppLocalizations.of(context)!
-                                        .name_cannot_contain_special_characters;
+                                    return AppConstants.name_cannot_contain_special_characters;
                                   }
                                   if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                    return AppLocalizations.of(context)!
-                                        .name_cannot_contain_emojis;
+                                    return AppConstants.name_cannot_contain_emojis;
                                   }
 
                                   if (e.contains(RegExp(
                                       r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]'))) {
-                                    return AppLocalizations.of(context)!
-                                        .name_cannot_contain_special_characters_numbers;
+                                    return AppConstants.name_cannot_contain_special_characters_numbers;
                                   }
                                   return null;
                                 },
@@ -184,8 +182,7 @@ class _CreateProfileState extends State<CreateProfile>
                                 maxLen: 10,
                                 validator: (e) {
                                   if (e!.length != 10) {
-                                    return AppLocalizations.of(context)!
-                                        .please_enter_valid_phone_number;
+                                    return AppConstants.please_enter_valid_phone_number;
                                   }
                                   return null;
                                 },
@@ -197,8 +194,7 @@ class _CreateProfileState extends State<CreateProfile>
                                     onTap: () async {
                                       if (_image == null) {
                                         errorSnackBar(
-                                            AppLocalizations.of(context)!
-                                                .please_select_an_image);
+                                            AppConstants.please_select_an_image);
                                         return;
                                       }
                                       if (_formKey.currentState!.validate()) {
@@ -207,10 +203,7 @@ class _CreateProfileState extends State<CreateProfile>
                                         if (!base64Image.contains(RegExp(
                                             r'data:image\/(png|jpeg);base64,'))) {
                                           if (mounted) {
-                                            errorSnackBar(AppLocalizations.of(
-                                                    // ignore: use_build_context_synchronously
-                                                    context)!
-                                                .please_select_a_valid_image);
+                                            errorSnackBar(AppConstants.please_select_a_valid_image);
                                           }
                                           return;
                                         }
@@ -335,8 +328,7 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                   child: Column(
                     children: [
                       Text(
-                          AppLocalizations.of(context)!
-                              .please_enter_5_digit_code,
+                          AppConstants.please_enter_5_digit_code,
                           style: Get.textTheme.labelSmall),
                       const SizedBox(height: 20),
                       PinCodeTextField(
@@ -382,7 +374,7 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                                 startTimer();
                               },
                               child: Text(
-                                AppLocalizations.of(context)!.resend,
+                                AppConstants.resend,
                                 style: const TextStyle(color: Colors.white),
                               ),
                             )
@@ -412,7 +404,7 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                 width: Get.width / 2,
                 child: Obx(
                   () => PrimaryButton(
-                    title: AppLocalizations.of(context)!.verify,
+                    title: AppConstants.verify,
                     isLoading: controller.status.isLoading,
                     onTap: () async {
                       await login(controller);

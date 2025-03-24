@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/ui/screens/select_opening_players.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/ui/widgets/scorecard/event_cards.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
@@ -322,52 +323,75 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                       ],
                     )
                   : const SizedBox(),
-              if (controller.scoreboard.value!.lastBall.wickets < 9)
-                PlayerDropDownWidget(
-                  onSelect: (e) {
-                    setState(() {
-                      selectedBatsman = e;
-                    });
-                    Navigator.of(context).pop();
-                  },
-                  items: players,
-                  selectedValue: selectedBatsman?.name ?? 'Select Batsman',
-                  title: 'Select Batsman',
-                ),
+              // if (controller.scoreboard.value!.lastBall.wickets < 9)
+              //   PlayerDropDownWidget(
+              //     onSelect: (e) {
+              //       setState(() {
+              //         selectedBatsman = e;
+              //       });
+              //       Navigator.of(context).pop();
+              //     },
+              //     items: players,
+              //     selectedValue: selectedBatsman?.name ?? 'Select Batsman',
+              //     title: 'Select Batsman',
+              //   ),
+              const SizedBox(height: 10),
               PrimaryButton(
                 onTap: () {
-                  if (selectedBatsman?.id != null) {
-                    controller.isBatsmenSelected = true.obs;
-                    String? batsmanId;
-                    if (controller.scoreboard.value!.lastBall.wickets < 9) {
-                      if (selectedBatsman == null) {
-                        return;
-                      }
-                      batsmanId = selectedBatsman!.id;
-                    } else {
-                      batsmanId = outType == 'RO'
-                          ? playerToOut
-                          : controller.scoreboard.value!.striker.id;
-                    }
-                    logger.d("Selected Batsman Id:${selectedBatsman!.name}");
-                    Navigator.pop(context, {
-                      'batsmanId': batsmanId,
-                      'outType': outType,
-                      'playerToOut': outType == 'RO' ? playerToOut : null,
-                    });
+                  if (controller.scoreboard.value!.lastBall.wickets < 9) {
+                    // if (selectedBatsman == null) {
+                    //   return;
+                    // }
+                    // batsmanId = selectedBatsman!.id;
                   } else {
-                    controller.isBatsmenSelected = false.obs;
-                    Get.snackbar(
-                      'Oops',
-                      'Please select a batsman',
-                      snackPosition: SnackPosition.top,
-                      backgroundColor: Colors.red,
-                      colorText: Colors.white,
-                      margin: const EdgeInsets.all(10),
-                      padding: const EdgeInsets.all(12),
-                      borderRadius: 8,
-                    );
+                    // batsmanId = outType == 'RO'
+                    //     ? playerToOut
+                    //     : controller.scoreboard.value!.striker.id;
                   }
+                  // logger.d("Selected Batsman Id:${selectedBatsman!.name}");
+                  Navigator.pop(context, {
+                    // 'batsmanId': batsmanId,
+                    'outType': outType,
+                    'playerToOut': outType == 'RO' ? playerToOut : null,
+                  });
+                  showModalBottomSheet(
+                      showDragHandle: true,
+                      context: Get.context!,
+                      builder: (c) => ChangeBatterDialog(),
+                      enableDrag: true,
+                      isDismissible: true);
+                  // if (selectedBatsman?.id != null) {
+                  //   controller.isBatsmenSelected = true.obs;
+                  //   String? batsmanId;
+                  //   if (controller.scoreboard.value!.lastBall.wickets < 9) {
+                  //     if (selectedBatsman == null) {
+                  //       return;
+                  //     }
+                  //     batsmanId = selectedBatsman!.id;
+                  //   } else {
+                  //     batsmanId = outType == 'RO'
+                  //         ? playerToOut
+                  //         : controller.scoreboard.value!.striker.id;
+                  //   }
+                  //   logger.d("Selected Batsman Id:${selectedBatsman!.name}");
+                  //   Navigator.pop(context, {
+                  //     'batsmanId': batsmanId,
+                  //     'outType': outType,
+                  //     'playerToOut': outType == 'RO' ? playerToOut : null,
+                  //   });
+                  // } else {
+                  //   controller.isBatsmenSelected = false.obs;
+                  //   Get.snackbar(
+                  //     'Oops',
+                  //     'Please select a batsman',
+                  //     snackPosition: SnackPosition.top,
+                  //     backgroundColor: Colors.red,
+                  //     colorText: Colors.white,
+                  //     margin: const EdgeInsets.all(10),
+                  //     padding: const EdgeInsets.all(12),
+                  //     borderRadius: 8,
+                  //   );
+                  // }
                 },
                 title: 'Submit',
               )

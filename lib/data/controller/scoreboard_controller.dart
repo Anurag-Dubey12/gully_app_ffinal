@@ -29,6 +29,7 @@ class ScoreBoardController extends GetxController with StateMixin {
   void onInit() {
     super.onInit();
   }
+
   void connectToSocket({bool hideDialog = false}) {
     try {
       logger.d('connectToSocket ${AppConstants.websocketUrl}');
@@ -74,7 +75,8 @@ class ScoreBoardController extends GetxController with StateMixin {
       logger.e(e);
     }
   }
-  RxString tiename=''.obs;
+
+  RxString tiename = ''.obs;
   // String? updateSecondInningsText() {
   //   logger.d("Launched Controller");
   //   match!.getWinningTeamName();
@@ -104,6 +106,7 @@ class ScoreBoardController extends GetxController with StateMixin {
       return null;
     }
   }
+
   void updateTieWinner(String matchId) async {
     final winnerName = await getWinnerNameForMatch(matchId);
     if (winnerName != null) {
@@ -112,6 +115,21 @@ class ScoreBoardController extends GetxController with StateMixin {
     }
   }
 
+  RxString newStrikerId = ''.obs;
+  RxString newNonStrikerId = ''.obs;
+  RxBool isStrikerOut = false.obs;
+
+  String updateStriker(String strikerId) {
+    newStrikerId.value = strikerId;
+    update();
+    return newStrikerId.value;
+  }
+
+  String updateNonStriker(String nonStrikerId) {
+    newNonStrikerId.value = nonStrikerId;
+    update();
+    return newNonStrikerId.value;
+  }
 
   void showPopups() async {
     if (scoreboard.value?.isSecondInningsOver ?? false) {
@@ -122,41 +140,35 @@ class ScoreBoardController extends GetxController with StateMixin {
         successSnackBar('Team ${scoreboard.value?.team1.name} Won the Match');
         if (!isChallenge) {
           await _scoreboardApi.updateFinalScoreBoard(
-              scoreboard.value!.matchId,
-              scoreboard.value!.team1.id
-          );
+              scoreboard.value!.matchId, scoreboard.value!.team1.id);
         } else {
           await _scoreboardApi.updateFinalChallengeScoreBoard(
-              scoreboard.value!.matchId,
-              scoreboard.value!.team1.id
-          );
+              scoreboard.value!.matchId, scoreboard.value!.team1.id);
         }
       } else if (firstInning < secondInning) {
         successSnackBar('Team ${scoreboard.value?.team2.name} Won the Match');
         if (!isChallenge) {
           await _scoreboardApi.updateFinalScoreBoard(
-              scoreboard.value!.matchId,
-              scoreboard.value!.team2.id
-          );
+              scoreboard.value!.matchId, scoreboard.value!.team2.id);
         } else {
           await _scoreboardApi.updateFinalChallengeScoreBoard(
-              scoreboard.value!.matchId,
-              scoreboard.value!.team2.id
-          );
+              scoreboard.value!.matchId, scoreboard.value!.team2.id);
         }
       } else if (firstInning == secondInning) {
         try {
-          final winnerName = await getWinnerNameForMatch(scoreboard.value!.matchId);
-          if(winnerName==null){
+          final winnerName =
+              await getWinnerNameForMatch(scoreboard.value!.matchId);
+          if (winnerName == null) {
             showModalBottomSheet(
               context: Get.context!,
               isScrollControlled: true,
               builder: (context) => TieBreakerSheet(
                 scoreboard: scoreboard.value!,
                 onSubmit: (String winningTeamId) {
-                  final winningTeam = winningTeamId == scoreboard.value!.team1.id
-                      ? scoreboard.value!.team1.name
-                      : scoreboard.value!.team2.name;
+                  final winningTeam =
+                      winningTeamId == scoreboard.value!.team1.id
+                          ? scoreboard.value!.team1.name
+                          : scoreboard.value!.team2.name;
                   logger.d("The winner is $winningTeam");
                   successSnackBar('$winningTeam wins the match!');
                   Navigator.of(context).pop();
@@ -164,8 +176,7 @@ class ScoreBoardController extends GetxController with StateMixin {
                 },
               ),
             );
-          }
-          else if (winnerName != null) {
+          } else if (winnerName != null) {
             successSnackBar('$winnerName wins the match!');
           } else {
             successSnackBar('Match Tied');
@@ -176,7 +187,8 @@ class ScoreBoardController extends GetxController with StateMixin {
         }
       }
     } else if (scoreboard.value?.isFirstInningsOver ?? false) {
-      successSnackBar('First Innings has been completed you can start 2nd inning');
+      successSnackBar(
+          'First Innings has been completed you can start 2nd inning');
     }
   }
 
@@ -214,6 +226,7 @@ class ScoreBoardController extends GetxController with StateMixin {
 
     socket.refresh();
   }
+
   RxBool isScoreboardNull = false.obs;
 
   Future<ScoreboardModel?> getMatchScoreboard(String matchId) async {
@@ -232,6 +245,7 @@ class ScoreBoardController extends GetxController with StateMixin {
     }
   }
 
+  RxBool isBothBatsmenNotOut = true.obs;
 
   void createScoreBoard({
     required TeamModel team1,
@@ -280,16 +294,22 @@ class ScoreBoardController extends GetxController with StateMixin {
     if (playerId == null) return '';
 
     PlayerModel? player = match?.team1.players?.firstWhere(
-            (p) => p.id == playerId,
-        orElse: () => match?.team2.players?.firstWhere(
-                (p) => p.id == playerId,
-            orElse: () => PlayerModel(name: 'Unknown', id: 'unknown', phoneNumber: 'unknown', role: 'unknown')
-        ) ?? PlayerModel(name: 'Unknown', id: 'unknown', phoneNumber: 'unknown', role: 'unknown')
-    );
+        (p) => p.id == playerId,
+        orElse: () =>
+            match?.team2.players?.firstWhere((p) => p.id == playerId,
+                orElse: () => PlayerModel(
+                    name: 'Unknown',
+                    id: 'unknown',
+                    phoneNumber: 'unknown',
+                    role: 'unknown')) ??
+            PlayerModel(
+                name: 'Unknown',
+                id: 'unknown',
+                phoneNumber: 'unknown',
+                role: 'unknown'));
 
     return player?.name ?? 'Unknown';
   }
-
 
   void setScoreBoard(ScoreboardModel scoreBoard) {
     scoreboard.value = scoreBoard;
@@ -305,29 +325,29 @@ class ScoreBoardController extends GetxController with StateMixin {
         : scoreboard.value!.team1;
 
     PlayerModel? bowler = bowlingTeam.players?.firstWhere(
-            (player) => player.id == bowlerId,
+        (player) => player.id == bowlerId,
         orElse: () => PlayerModel(
             name: 'Unknown',
             id: 'unknown_id',
             phoneNumber: 'unknown',
-            role: 'unknown'
-        )
-    );
+            role: 'unknown'));
     return bowler!.name;
   }
 
-  RxBool isWicketSelected=false.obs;
-  RxBool isBatsmenSelected=false.obs;
+  RxBool isWicketSelected = false.obs;
+  RxBool isBatsmenSelected = false.obs;
 
   Future<bool> addEvent(EventType type,
       {String? bowlerId,
-        String? strikerId,
-        String? selectedBatsmanId,
-        String? playerToRetire,
-        PlayerModel? striker,
-        PlayerModel? nonStriker,
-        PlayerModel? bowler,
-        int? runs}) async {
+      String? strikerId,
+      String? selectedBatsmanId,
+      String? playerToRetire,
+      PlayerModel? striker,
+      PlayerModel? nonStriker,
+      PlayerModel? bowler,
+      String? nextBatsmenId,
+      bool? isStrikerOut,
+      int? runs}) async {
     if (scoreboard.value?.isAllOut ?? false) {
       if (scoreboard.value?.currentInnings == 1) {
         // opps all out start 2nd inning
@@ -351,7 +371,6 @@ class ScoreBoardController extends GetxController with StateMixin {
           'First Innings has been completed you can start 2nd Innings');
       return false;
     }
-
 
     _lastScoreboardInstance =
         ScoreboardModel.fromJson(scoreboard.value!.toJson());
@@ -390,7 +409,7 @@ class ScoreBoardController extends GetxController with StateMixin {
         break;
 
       case EventType.wicket:
-      // scoreboard.value!.addWicket();
+        // scoreboard.value!.addWicket();
         break;
       case EventType.dotBall:
         await scoreboard.value!.addRuns(0, events: events.value);
@@ -407,6 +426,10 @@ class ScoreBoardController extends GetxController with StateMixin {
         break;
       case EventType.changeStriker:
         scoreboard.value!.changeStrike();
+        break;
+      case EventType.nextBatsmen:
+        scoreboard.value!.nextBatsmen(nextBatsmenId!, isStrikerOut!);
+        logger.d("Next Bastman $nextBatsmenId");
         break;
       case EventType.retire:
         scoreboard.value!.retirePlayer(selectedBatsmanId!, playerToRetire!);
@@ -426,7 +449,8 @@ class ScoreBoardController extends GetxController with StateMixin {
     if (scoreboard.value!.isSecondInningsOver &&
         !scoreboard.value!.isChallenge!) {
       // updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
-      if (scoreboard.value!.firstInnings!.totalScore == scoreboard.value!.secondInnings!.totalScore) {
+      if (scoreboard.value!.firstInnings!.totalScore ==
+          scoreboard.value!.secondInnings!.totalScore) {
         // showModalBottomSheet(
         //   context: Get.context!,
         //   isScrollControlled: true,
@@ -444,7 +468,7 @@ class ScoreBoardController extends GetxController with StateMixin {
         //   ),
         // );
         errorSnackBar("Match Tied");
-      }else{
+      } else {
         updateFinalScoreBoard(scoreboard.value!.getWinningTeam);
       }
     } else if (scoreboard.value!.isSecondInningsOver &&
@@ -465,8 +489,8 @@ class ScoreBoardController extends GetxController with StateMixin {
 
   void endOfInnings(
       {required PlayerModel striker,
-        required PlayerModel nonStriker,
-        required PlayerModel bowler}) {
+      required PlayerModel nonStriker,
+      required PlayerModel bowler}) {
     scoreboard.value!.endOfInnings(
       strikerT: striker,
       nonstrikerT: nonStriker,
@@ -497,7 +521,8 @@ class ScoreBoardController extends GetxController with StateMixin {
 
   void checkLastBall() {
     if (scoreboard.value!.currentBall == 6 ||
-        (scoreboard.value!.currentBall == 0 && scoreboard.value!.currentOver != 0)) {
+        (scoreboard.value!.currentBall == 0 &&
+            scoreboard.value!.currentOver != 0)) {
       scoreboard.value!.overCompleted = true;
       scoreboard.value!.currentBall = 0;
       if (scoreboard.value!.currentOver == scoreboard.value!.currentOver) {
@@ -507,8 +532,7 @@ class ScoreBoardController extends GetxController with StateMixin {
           context: Get.context!,
           builder: (c) => const ChangeBowlerWidget(),
           enableDrag: true,
-          isDismissible: true
-      );
+          isDismissible: true);
     }
   }
 
@@ -550,7 +574,6 @@ class ScoreBoardController extends GetxController with StateMixin {
     _scoreboardApi.updateFinalChallengeScoreBoard(
         scoreboard.value!.matchId, winningTeamId);
   }
-
 }
 
 enum EventType {
@@ -567,6 +590,7 @@ enum EventType {
   dotBall,
   changeBowler,
   changeStriker,
+  nextBatsmen,
   legByes,
   bye,
   retire,

@@ -136,6 +136,11 @@ class OthersLookingForScreen extends StatelessWidget {
                                 if (s.hasError) {
                                   return Center(child: Text('Error: ${s.error}'));
                                 }
+                                if (s.data!.isEmpty) {
+                                  return const Center(
+                                    child: Text("No players found near your location"),
+                                  );
+                                }
                                 return ListView.separated(
                                   shrinkWrap: true,
                                   physics: const NeverScrollableScrollPhysics(),

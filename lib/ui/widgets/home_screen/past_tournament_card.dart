@@ -63,8 +63,9 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
               physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.only(bottom: 10, top: 10),
               itemBuilder: (context, snapshot) {
+                final matches=latestMatch.reversed.toList();
                 return _Card(
-                  tournament: latestMatch[snapshot],
+                  tournament: matches[snapshot],
                 );
               },
             ),

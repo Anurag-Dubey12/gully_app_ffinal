@@ -87,10 +87,13 @@ class TournamentController extends GetxController
 
   // Rx<TournamentSponsor?> sponsor = Rx<TournamentSponsor?>(null);
   final RxMap<String, dynamic> sponsormap = <String, dynamic>{}.obs;
-  Future<TournamentSponsor> addSponsor(Map<String, dynamic> sponsor) async {
+  Future<bool> addSponsor(Map<String, dynamic> sponsor) async {
     try {
       final response = await tournamentApi.addSponsor(sponsor);
-      return TournamentSponsor.fromJson(response.data!);
+      if(response.status==false){
+        logger.d("Unable to Upload Media");
+      }
+      return true;
     } catch (e) {
       errorSnackBar(e.toString());
       rethrow;

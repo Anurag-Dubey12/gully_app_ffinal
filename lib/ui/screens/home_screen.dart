@@ -3,11 +3,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
+import 'package:gully_app/data/controller/notification_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/ui/screens/promote_banner_screen.dart';
 import 'package:gully_app/ui/screens/search_tournament_screen.dart';
@@ -21,6 +20,8 @@ import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
+import 'package:shimmer/shimmer.dart';
+import '../../config/app_constants.dart';
 import '../../utils/image_picker_helper.dart';
 import '../../utils/internetConnectivty.dart';
 import '../widgets/home_screen/SliverAppBarDelegate.dart';
@@ -52,7 +53,9 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     if (_isConnected) {
       Get.find<AuthController>().getUser();
-      Get.find<MiscController>().getBanners();
+      Future.delayed(const Duration(seconds: 3), () async {
+        Get.find<MiscController>().getBanners();
+      });
       Get.find<MiscController>().getCurrentLocation();
       FirebaseMessaging.instance.getToken().then((value) {
         Get.find<AuthController>().updateProfile(fcmToken: value);
@@ -62,48 +65,46 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<bool> _onWillPop() async {
-    final now = DateTime.now();
-    if (_lastPressedAt == null ||
-        now.difference(_lastPressedAt!) > const Duration(seconds: 2)) {
-      _lastPressedAt = now;
-      Get.snackbar(
-        "Exit App",
-        "Press back again to exit",
-        snackPosition: SnackPosition.top,
-        duration: const Duration(seconds: 2),
-        backgroundColor: Colors.black,
-        colorText: Colors.white,
-      );
+  //For Double press to exit
+  // Future<bool> _onWillPop() async {
+  //   final now = DateTime.now();
+  //   if (_lastPressedAt == null ||
+  //       now.difference(_lastPressedAt!) > const Duration(seconds: 2)) {
+  //     _lastPressedAt = now;
+  //     Get.snackbar(
+  //       "Exit App",
+  //       "Press back again to exit",
+  //       snackPosition: SnackPosition.top,
+  //       duration: const Duration(seconds: 2),
+  //       backgroundColor: Colors.black,
+  //       colorText: Colors.white,
+  //     );
 
-      return Future.value(false); // Prevent default back action
-    }
+  //     return Future.value(false);
+  //   }
 
-    SystemNavigator.pop(); // Close the app
-    return Future.value(true); // Allow the app to close
-  }
+  //   SystemNavigator.pop();
+  //   return Future.value(true);
+  // }
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<AuthController>();
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Obx(() {
-        if (controller.state == null) {
-          logger.i('state is null');
-          return const Scaffold(
-              backgroundColor: Colors.white,
-              body: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(child: CircularProgressIndicator()),
-                ],
-              ));
-        } else {
-          return const HomePage();
-        }
-      }),
-    );
+    return Obx(() {
+      if (controller.state == null) {
+        logger.i('state is null');
+        return const Scaffold(
+            backgroundColor: Colors.white,
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(child: CircularProgressIndicator()),
+              ],
+            ));
+      } else {
+        return const HomePage();
+      }
+    });
   }
 }
 
@@ -122,11 +123,9 @@ class _HomePageState extends State<HomePage>
   late Animation<double> _animation;
   bool isOrganizer = false;
 
-
   @override
   void initState() {
     super.initState();
-    final controller = Get.find<AuthController>();
     _controller = PersistentTabController(initialIndex: 0);
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -136,11 +135,6 @@ class _HomePageState extends State<HomePage>
       parent: _animationController,
       curve: Curves.easeInOut,
     );
-    // if (controller.state!.isOrganizer) {
-    //   isOrganizer = true;
-    // } else {
-    //    isOrganizer= false;
-    // }
   }
 
   @override
@@ -599,6 +593,7 @@ class FullBannerSlider extends StatefulWidget {
 
 class _FullBannerSliderState extends State<FullBannerSlider> {
   int _current = 0;
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MiscController>();
@@ -606,139 +601,112 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
       height: 150,
       width: 400,
       child: Obx(
-        () => GestureDetector(
-          onTap: () {
-            if (controller.banners.value[_current].link ==
-                "inAppBannerPromotion") {
-              imageViewer(
-                  context, controller.banners.value[_current].imageUrl, true,
-                  onTap: () {
-                Get.to(() => const PromoteBannerScreen());
-              });
-            }
-            // if (banner.type == "promotional") {
-            //   imageViewer(context,controller.banners.value[_current].promotionalImage,
-            //       true,
-            //       onTap: (){
-            //         Get.to(()=>const PromoteBannerScreen());
-            //       }
-            //   );
-            // }
-          },
-          child: CarouselSlider(
-            items: controller.banners.value
-                .map((e) => ClipRRect(
-                      borderRadius: BorderRadius.circular(15),
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          CachedNetworkImage(
-                              imageUrl: toImageUrl(e.imageUrl),
-                              fit: BoxFit.fill,
-                              width: double.infinity),
-                          if (e.type == "promotional")
-                            Positioned(
-                              top: 2,
-                              right: 10,
-                              child: GestureDetector(
-                                onTap: () => Get.to(() => const BannerAdding()),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.6),
-                                    borderRadius: BorderRadius.circular(20),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.2),
-                                        blurRadius: 4,
-                                        offset: const Offset(0, 2),
-                                      ),
-                                    ],
-                                  ),
-                                  child: const Text(
-                                    "Ad",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+        () {
+          if (controller.banners.value.isEmpty) {
+            return Shimmer.fromColors(
+              baseColor: Colors.grey[300]!,
+              highlightColor: Colors.grey[100]!,
+              child: ListView.builder(
+                itemCount: 5,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (context, index) => Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Container(
+                    width: 150,
+                    height: 150,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            );
+          } else {
+            return GestureDetector(
+              onTap: () {
+                if (controller.banners.value[_current].link ==
+                    "inAppBannerPromotion") {
+                  imageViewer(
+                      context,
+                      controller.banners.value[_current].imageUrl,
+                      true, onTap: () {
+                    Get.to(() => const BannerAdding());
+                  });
+                }
+              },
+              child: CarouselSlider(
+                items: controller.banners.value
+                    .map((e) => ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              CachedNetworkImage(
+                                imageUrl: toImageUrl(e.imageUrl),
+                                fit: BoxFit.fill,
+                                width: double.infinity,
+                                placeholder: (context, url) =>
+                                    Shimmer.fromColors(
+                                  baseColor: Colors.grey[300]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  child: Container(
+                                    width: double.infinity,
+                                    color: Colors.white,
                                   ),
                                 ),
                               ),
-                            ),
-                          // if (widget.isAds)
-                          //   Positioned(
-                          //     top: 2,
-                          //     right: 10,
-                          //     child: Container(
-                          //       padding: const EdgeInsets.symmetric(
-                          //           horizontal: 8, vertical: 4),
-                          //       decoration: BoxDecoration(
-                          //         color: Colors.black.withOpacity(0.6),
-                          //         borderRadius: BorderRadius.circular(20),
-                          //         boxShadow: [
-                          //           BoxShadow(
-                          //             color: Colors.black.withOpacity(0.2),
-                          //             blurRadius: 4,
-                          //             offset: const Offset(0, 2),
-                          //           ),
-                          //         ],
-                          //       ),
-                          //       child: const Text(
-                          //         "Ad",
-                          //         style: TextStyle(
-                          //           color: Colors.white,
-                          //           fontSize: 12,
-                          //           fontWeight: FontWeight.bold,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   )
-                          // else
-                          //   Positioned(
-                          //     bottom: 10,
-                          //     left: 0,
-                          //     right: 0,
-                          //     child: Row(
-                          //       mainAxisAlignment: MainAxisAlignment.center,
-                          //       children: List.generate(
-                          //         controller.banners.length,
-                          //         (index) => AnimatedContainer(
-                          //           duration: const Duration(milliseconds: 300),
-                          //           margin:
-                          //               const EdgeInsets.symmetric(horizontal: 3),
-                          //           height: 8,
-                          //           width: _current == index ? 15 : 8,
-                          //           decoration: BoxDecoration(
-                          //             borderRadius: BorderRadius.circular(4),
-                          //             color: _current == index
-                          //                 ? AppTheme.darkYellowColor
-                          //                 : Colors.grey.withOpacity(0.5),
-                          //           ),
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ),
-                        ],
-                      ),
-                    ))
-                .toList(),
-            options: CarouselOptions(
-              viewportFraction: 0.91,
-              enableInfiniteScroll: true,
-              autoPlay: true,
-              onPageChanged: (index, reason) {
-                setState(() {
-                  controller.updateIndex(index);
-                  _current = index;
-                });
-              },
-              enlargeCenterPage: true,
-              aspectRatio: 16 / 9,
-            ),
-          ),
-        ),
+                              if (e.type == "promotional")
+                                Positioned(
+                                  top: 2,
+                                  right: 10,
+                                  child: GestureDetector(
+                                    onTap: () =>
+                                        Get.to(() => const BannerAdding()),
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: Colors.black.withOpacity(0.6),
+                                        borderRadius: BorderRadius.circular(20),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.2),
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 2),
+                                          ),
+                                        ],
+                                      ),
+                                      child: const Text(
+                                        "Ad",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ))
+                    .toList(),
+                options: CarouselOptions(
+                  viewportFraction: 0.91,
+                  enableInfiniteScroll: true,
+                  autoPlay: true,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      controller.updateIndex(index);
+                      _current = index;
+                    });
+                  },
+                  enlargeCenterPage: true,
+                  aspectRatio: 16 / 9,
+                ),
+              ),
+            );
+          }
+        },
       ),
     );
   }
@@ -760,14 +728,14 @@ class _TitleWidgetState extends State<TitleWidget> {
       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
       child: Row(
         children: [
-          Text(
-            AppLocalizations.of(context)!.tournaments,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
+          const Text(
+            AppConstants.tournaments,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
           ),
           const Spacer(),
           _TournamentMajorDuration(
             // title: 'Past',
-            title: AppLocalizations.of(context)!.past,
+            title: AppConstants.past,
             isSelected: selected == 'Past',
             onTap: () => setState(() {
               controller.getTournamentList(filterD: 'past');
@@ -776,7 +744,7 @@ class _TitleWidgetState extends State<TitleWidget> {
           ),
           _TournamentMajorDuration(
             // title: 'Current',
-            title: AppLocalizations.of(context)!.current,
+            title: AppConstants.current,
             isSelected: selected == 'Current',
             onTap: () => setState(() {
               controller.getTournamentList(filterD: 'current');
@@ -785,7 +753,7 @@ class _TitleWidgetState extends State<TitleWidget> {
           ),
           _TournamentMajorDuration(
             // title: 'Upcoming',
-            title: AppLocalizations.of(context)!.upcoming,
+            title: AppConstants.upcoming,
             isSelected: selected == 'Upcoming',
             onTap: () => setState(() {
               controller.getTournamentList(filterD: 'upcoming');

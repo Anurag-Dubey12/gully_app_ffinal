@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/challenge_match.dart';
@@ -9,6 +9,7 @@ import 'package:gully_app/ui/screens/view_opponent_team.dart';
 import 'package:gully_app/utils/FallbackImageProvider.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../config/app_constants.dart';
 import '../../data/controller/auth_controller.dart';
 import '../../utils/app_logger.dart';
 import '../theme/theme.dart';
@@ -84,13 +85,13 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
                             color: Colors.white,
                           )),
                     ),
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           // 'Challenge team',
-                          AppLocalizations.of(context)!.challengeTeamTitle,
-                          style: const TextStyle(
+                          AppConstants.challengeTeamTitle,
+                          style: TextStyle(
                             color: Colors.white,
                             fontSize: 28,
                             fontWeight: FontWeight.bold,
@@ -303,10 +304,7 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
                                                                 filteredTeams![
                                                                         index]
                                                                     .id);
-                                                    successSnackBar(
-                                                        AppLocalizations.of(
-                                                                context)!
-                                                            .request_sent_successfully);
+                                                    successSnackBar(AppConstants.request_sent_successfully);
                                                     setState(() {});
                                                   },
                                                 ),
@@ -352,11 +350,8 @@ class _TeamCard extends StatelessWidget {
         padding: const EdgeInsets.all(18.0),
         child: Row(children: [
           CircleAvatar(
-              backgroundImage:FallbackImageProvider(
-                toImageUrl(team.logo ?? ""),"assets/images/logo.png"
-              )
-
-          ),
+              backgroundImage: FallbackImageProvider(
+                  toImageUrl(team.logo ?? ""), "assets/images/logo.png")),
           const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -368,8 +363,8 @@ class _TeamCard extends StatelessWidget {
                   maxLines: 2,
                   softWrap: true,
                   overflow: TextOverflow.ellipsis,
-                  style:
-                      const TextStyle(fontSize: 19, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 19, fontWeight: FontWeight.bold),
                 ),
               ),
               // const Text(

@@ -88,129 +88,23 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                 flex: 2,
                 child: Column(
                   children: [
-                    Container(
-                      // height: double.infinity,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Wrap(
-                          runAlignment: WrapAlignment.spaceEvenly,
-                          children: [
-                            NumberCard(
-                              text: '0',
-                              disabled: controller
-                                  .scoreboard.value!.isSecondInningsOver,
-                              onTap: () {
-                                if (!connectionController.isConnected.value) {
-                                  errorSnackBar(
-                                      'Please connect to the internet to update score');
-                                  return;
-                                } else {
-                                  if (controller.events
-                                          .contains(EventType.bye) ||
-                                      controller.events
-                                          .contains(EventType.legByes)) {
-                                    errorSnackBar(
-                                        'You can not add a dot ball and a bye or leg bye');
-                                    return;
-                                  }
-                                  logger.d("The wicket status is:${controller.isWicketSelected.value} \n The batsmen status is:${controller.isBatsmenSelected.value}");
-                                  // if(controller.isWicketSelected.value){
-                                  //   if(controller.isBatsmenSelected.value){
-                                  // controller.addEvent(EventType.dotBall);
-                                  //   }
-                                  // }
-                                  controller.addEvent(EventType.dotBall);
-                                }
-                              },
-                            ),
-                            NumberCard(
-                                text: '1',
-                                disabled: controller
-                                    .scoreboard.value!.isSecondInningsOver,
-                                onTap: () {
-                                  if (!connectionController.isConnected.value) {
-                                    errorSnackBar(
-                                        'Please connect to the internet to update score');
-                                    return;
-                                  } else {
-                                    if (controller.events
-                                            .contains(EventType.bye) &&
-                                        controller.events
-                                            .contains(EventType.wide) &&
-                                        controller.events
-                                            .contains(EventType.wicket)) {
-                                      errorSnackBar(
-                                          'You can not add a one and a bye or wide or wicket');
-                                      return;
-                                    }
-
-                                    if (controller.events
-                                            .contains(EventType.legByes) &&
-                                        controller.events
-                                            .contains(EventType.wide) &&
-                                        controller.events
-                                            .contains(EventType.wicket)) {
-                                      errorSnackBar(
-                                          'You can not add a one and a leg bye or wide or wicket');
-                                      return;
-                                    }
-                                    if (controller.events
-                                            .contains(EventType.noBall) &&
-                                        controller.events
-                                            .contains(EventType.bye) &&
-                                        controller.events
-                                            .contains(EventType.wicket)) {
-                                      errorSnackBar(
-                                          'You can not add a one and a no ball or bye or wicket');
-                                      return;
-                                    }
-                                    if (controller.events
-                                            .contains(EventType.noBall) &&
-                                        controller.events
-                                            .contains(EventType.legByes) &&
-                                        controller.events
-                                            .contains(EventType.wicket)) {
-                                      errorSnackBar(
-                                          'You can not add a one and a no ball or leg bye or wicket');
-                                      return;
-                                    }
-                                    controller.addEvent(EventType.one);
-                                  }
-                                }),
-                            NumberCard(
-                                text: '2',
-                                disabled: controller
-                                    .scoreboard.value!.isSecondInningsOver,
-                                onTap: () {
-                                  if (!connectionController.isConnected.value) {
-                                    errorSnackBar(
-                                        'Please connect to the internet to update score');
-                                    return;
-                                  } else {
-                                    controller.addEvent(EventType.two);
-                                  }
-                                }),
-                            NumberCard(
-                                text: '3',
-                                disabled: controller
-                                    .scoreboard.value!.isSecondInningsOver,
-                                onTap: () {
-                                  if (!connectionController.isConnected.value) {
-                                    errorSnackBar(
-                                        'Please connect to the internet to update score');
-                                    return;
-                                  } else {
-                                    controller.addEvent(EventType.three);
-                                  }
-                                }),
-                            NumberCard(
-                                text: '4',
-                                disabled: controller
-                                    .scoreboard.value!.isSecondInningsOver,
+                    Obx(() {
+                      return Container(
+                        // height: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Wrap(
+                            runAlignment: WrapAlignment.spaceEvenly,
+                            children: [
+                              NumberCard(
+                                text: '0',
+                                disabled: controller.scoreboard.value!
+                                        .isSecondInningsOver ||
+                                    !controller.isBothBatsmenNotOut.value,
                                 onTap: () {
                                   if (!connectionController.isConnected.value) {
                                     errorSnackBar(
@@ -222,125 +116,258 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                                         controller.events
                                             .contains(EventType.legByes)) {
                                       errorSnackBar(
-                                          'You can not add a four and a bye or leg bye');
+                                          'You can not add a dot ball and a bye or leg bye');
                                       return;
                                     }
-                                    // if (controller.events
-                                    //     .contains(EventType.wide)) {
+                                    // if (!controller.isBothBatsmenNotOut.value) {
                                     //   errorSnackBar(
-                                    //       'You can not add a four and a wide ball');
+                                    //       "Please select New Batsmen to continue");
                                     //   return;
                                     // }
+                                    logger.d(
+                                        "The wicket status is:${controller.isWicketSelected.value} \n The batsmen status is:${controller.isBatsmenSelected.value}");
+                                    // if(controller.isWicketSelected.value){
+                                    //   if(controller.isBatsmenSelected.value){
+                                    // controller.addEvent(EventType.dotBall);
+                                    //   }
+                                    // }
+                                    controller.addEvent(EventType.dotBall);
+                                  }
+                                },
+                              ),
+                              NumberCard(
+                                  text: '1',
+                                  disabled: controller.scoreboard.value!
+                                          .isSecondInningsOver ||
+                                      !controller.isBothBatsmenNotOut.value,
+                                  onTap: () {
+                                    if (!connectionController
+                                        .isConnected.value) {
+                                      errorSnackBar(
+                                          'Please connect to the internet to update score');
+                                      return;
+                                    } else {
+                                      if (controller.events
+                                              .contains(EventType.bye) &&
+                                          controller.events
+                                              .contains(EventType.wide) &&
+                                          controller.events
+                                              .contains(EventType.wicket)) {
+                                        errorSnackBar(
+                                            'You can not add a one and a bye or wide or wicket');
+                                        return;
+                                      }
 
-                                    if (controller.events
-                                        .contains(EventType.wicket)) {
-                                      errorSnackBar(
-                                          'You can not add a four and a wicket');
-                                      return;
+                                      if (controller.events
+                                              .contains(EventType.legByes) &&
+                                          controller.events
+                                              .contains(EventType.wide) &&
+                                          controller.events
+                                              .contains(EventType.wicket)) {
+                                        errorSnackBar(
+                                            'You can not add a one and a leg bye or wide or wicket');
+                                        return;
+                                      }
+                                      if (controller.events
+                                              .contains(EventType.noBall) &&
+                                          controller.events
+                                              .contains(EventType.bye) &&
+                                          controller.events
+                                              .contains(EventType.wicket)) {
+                                        errorSnackBar(
+                                            'You can not add a one and a no ball or bye or wicket');
+                                        return;
+                                      }
+                                      if (controller.events
+                                              .contains(EventType.noBall) &&
+                                          controller.events
+                                              .contains(EventType.legByes) &&
+                                          controller.events
+                                              .contains(EventType.wicket)) {
+                                        errorSnackBar(
+                                            'You can not add a one and a no ball or leg bye or wicket');
+                                        return;
+                                      }
+                                      controller.addEvent(EventType.one);
                                     }
-                                    controller.addEvent(EventType.four);
-                                  }
-                                }),
-                            NumberCard(
-                                text: '5',
-                                disabled: controller
-                                    .scoreboard.value!.isSecondInningsOver,
-                                onTap: () {
-                                  if (!connectionController.isConnected.value) {
-                                    errorSnackBar(
-                                        'Please connect to the internet to update score');
-                                    return;
-                                  } else {
-                                    if (controller.events
-                                            .contains(EventType.wide) &&
-                                        controller.events
-                                            .contains(EventType.wicket)) {
+                                  }),
+                              NumberCard(
+                                  text: '2',
+                                  disabled: controller.scoreboard.value!
+                                          .isSecondInningsOver ||
+                                      !controller.isBothBatsmenNotOut.value,
+                                  onTap: () {
+                                    if (!connectionController
+                                        .isConnected.value) {
                                       errorSnackBar(
-                                          'You can not add a five, wicket and a wide ball');
+                                          'Please connect to the internet to update score');
                                       return;
+                                    } else {
+                                      if (!controller
+                                          .isBothBatsmenNotOut.value) {
+                                        errorSnackBar(
+                                            "Please select New Batsmen to continue");
+                                        return;
+                                      }
+                                      controller.addEvent(EventType.two);
                                     }
-                                    if (controller.events
-                                            .contains(EventType.noBall) &&
-                                        controller.events
-                                            .contains(EventType.wicket)) {
+                                  }),
+                              NumberCard(
+                                  text: '3',
+                                  disabled: controller.scoreboard.value!
+                                          .isSecondInningsOver ||
+                                      !controller.isBothBatsmenNotOut.value,
+                                  onTap: () {
+                                    if (!connectionController
+                                        .isConnected.value) {
                                       errorSnackBar(
-                                          'You can not add a five , no ball and a wicket');
+                                          'Please connect to the internet to update score');
                                       return;
+                                    } else {
+                                      controller.addEvent(EventType.three);
                                     }
-                                    if (controller.events
-                                            .contains(EventType.bye) ||
-                                        controller.events
-                                            .contains(EventType.legByes)) {
+                                  }),
+                              NumberCard(
+                                  text: '4',
+                                  disabled: controller.scoreboard.value!
+                                          .isSecondInningsOver ||
+                                      !controller.isBothBatsmenNotOut.value,
+                                  onTap: () {
+                                    if (!connectionController
+                                        .isConnected.value) {
                                       errorSnackBar(
-                                          'You can not add 5 runs and a bye or leg bye');
+                                          'Please connect to the internet to update score');
                                       return;
-                                    }
-                                    controller.addEvent(EventType.five);
-                                  }
-                                }),
-                            NumberCard(
-                                text: '6',
-                                disabled: controller
-                                    .scoreboard.value!.isSecondInningsOver,
-                                onTap: () {
-                                  if (!connectionController.isConnected.value) {
-                                    errorSnackBar(
-                                        'Please connect to the internet to update score');
-                                    return;
-                                  } else {
-                                    if (controller.events
-                                            .contains(EventType.bye) ||
-                                        controller.events
-                                            .contains(EventType.legByes)) {
-                                      errorSnackBar(
-                                          'You can not add a six and a bye or leg bye');
-                                      return;
-                                    }
-                                    if (controller.events
-                                        .contains(EventType.wide)) {
-                                      errorSnackBar(
-                                          'You can not add a six and a wide ball');
-                                      return;
-                                    }
-                                    if (controller.events
-                                            .contains(EventType.noBall) &&
-                                        controller.events
-                                            .contains(EventType.wicket)) {
-                                      errorSnackBar(
-                                          'You cannot add six runs, a no ball and a wicket');
-                                      return;
-                                    }
-                                    if (controller.events
-                                        .contains(EventType.wicket)) {
-                                      errorSnackBar(
-                                          'You can not add six runs and a wicket');
-                                      return;
-                                    }
+                                    } else {
+                                      if (controller.events
+                                              .contains(EventType.bye) ||
+                                          controller.events
+                                              .contains(EventType.legByes)) {
+                                        errorSnackBar(
+                                            'You can not add a four and a bye or leg bye');
+                                        return;
+                                      }
+                                      // if (controller.events
+                                      //     .contains(EventType.wide)) {
+                                      //   errorSnackBar(
+                                      //       'You can not add a four and a wide ball');
+                                      //   return;
+                                      // }
 
-                                    controller.addEvent(EventType.six);
-                                  }
-                                }),
-                            NumberCard(
-                                text: '+',
-                                disabled: controller
-                                    .scoreboard.value!.isSecondInningsOver,
-                                onTap: () {
-                                  if (!connectionController.isConnected.value) {
-                                    errorSnackBar(
-                                        'Please connect to the internet to update score');
-                                    return;
-                                  } else {
-                                    showCustomScoreSheet(context, controller);
-                                  }
-                                }),
-                          ],
+                                      if (controller.events
+                                          .contains(EventType.wicket)) {
+                                        errorSnackBar(
+                                            'You can not add a four and a wicket');
+                                        return;
+                                      }
+                                      controller.addEvent(EventType.four);
+                                    }
+                                  }),
+                              NumberCard(
+                                  text: '5',
+                                  disabled: controller.scoreboard.value!
+                                          .isSecondInningsOver ||
+                                      !controller.isBothBatsmenNotOut.value,
+                                  onTap: () {
+                                    if (!connectionController
+                                        .isConnected.value) {
+                                      errorSnackBar(
+                                          'Please connect to the internet to update score');
+                                      return;
+                                    } else {
+                                      if (controller.events
+                                              .contains(EventType.wide) &&
+                                          controller.events
+                                              .contains(EventType.wicket)) {
+                                        errorSnackBar(
+                                            'You can not add a five, wicket and a wide ball');
+                                        return;
+                                      }
+                                      if (controller.events
+                                              .contains(EventType.noBall) &&
+                                          controller.events
+                                              .contains(EventType.wicket)) {
+                                        errorSnackBar(
+                                            'You can not add a five , no ball and a wicket');
+                                        return;
+                                      }
+                                      if (controller.events
+                                              .contains(EventType.bye) ||
+                                          controller.events
+                                              .contains(EventType.legByes)) {
+                                        errorSnackBar(
+                                            'You can not add 5 runs and a bye or leg bye');
+                                        return;
+                                      }
+                                      controller.addEvent(EventType.five);
+                                    }
+                                  }),
+                              NumberCard(
+                                  text: '6',
+                                  disabled: controller.scoreboard.value!
+                                          .isSecondInningsOver ||
+                                      !controller.isBothBatsmenNotOut.value,
+                                  onTap: () {
+                                    if (!connectionController
+                                        .isConnected.value) {
+                                      errorSnackBar(
+                                          'Please connect to the internet to update score');
+                                      return;
+                                    } else {
+                                      if (controller.events
+                                              .contains(EventType.bye) ||
+                                          controller.events
+                                              .contains(EventType.legByes)) {
+                                        errorSnackBar(
+                                            'You can not add a six and a bye or leg bye');
+                                        return;
+                                      }
+                                      if (controller.events
+                                          .contains(EventType.wide)) {
+                                        errorSnackBar(
+                                            'You can not add a six and a wide ball');
+                                        return;
+                                      }
+                                      if (controller.events
+                                              .contains(EventType.noBall) &&
+                                          controller.events
+                                              .contains(EventType.wicket)) {
+                                        errorSnackBar(
+                                            'You cannot add six runs, a no ball and a wicket');
+                                        return;
+                                      }
+                                      if (controller.events
+                                          .contains(EventType.wicket)) {
+                                        errorSnackBar(
+                                            'You can not add six runs and a wicket');
+                                        return;
+                                      }
+
+                                      controller.addEvent(EventType.six);
+                                    }
+                                  }),
+                              NumberCard(
+                                  text: '+',
+                                  disabled: controller.scoreboard.value!
+                                          .isSecondInningsOver ||
+                                      !controller.isBothBatsmenNotOut.value,
+                                  onTap: () {
+                                    if (!connectionController
+                                        .isConnected.value) {
+                                      errorSnackBar(
+                                          'Please connect to the internet to update score');
+                                      return;
+                                    } else {
+                                      showCustomScoreSheet(context, controller);
+                                    }
+                                  }),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Obx(() => controller.scoreboard.value?.currentInnings == 1
+                      );
+                    }),
+                    const SizedBox(height: 10),
+                    Obx(() => controller.scoreboard.value?.currentInnings == 2
                         ? Container(
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),

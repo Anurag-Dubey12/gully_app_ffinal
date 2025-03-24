@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
+
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/player_profile_screen.dart';
@@ -8,6 +8,7 @@ import 'package:gully_app/ui/screens/select_team_for_challenge.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../config/app_constants.dart';
 import '../screens/contact_us_screen.dart';
 import '../screens/legal_screen.dart';
 import '../screens/looking_for_screen.dart';
@@ -58,7 +59,7 @@ class AppDrawer extends GetView<AuthController> {
                     }
                   },
                   child: Obx(
-                        () => Column(
+                    () => Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         DecoratedBox(
@@ -67,7 +68,7 @@ class AppDrawer extends GetView<AuthController> {
                               color: Colors.transparent,
                               border: Border.all(
                                   color:
-                                  const Color.fromARGB(255, 142, 133, 133),
+                                      const Color.fromARGB(255, 142, 133, 133),
                                   width: 2)),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -99,7 +100,7 @@ class AppDrawer extends GetView<AuthController> {
                 ),
                 DrawerCard(
                   // title: 'Looking',
-                  title: AppLocalizations.of(context)!.looking,
+                  title: AppConstants.looking,
                   icon: Icons.search,
                   child: Column(
                     children: [
@@ -113,9 +114,9 @@ class AppDrawer extends GetView<AuthController> {
                           decoration: transBg(),
                           child: const Center(
                               child: Text(
-                                'What i am looking for',
-                                style: TextStyle(color: Colors.white),
-                              )),
+                            'What i am looking for',
+                            style: TextStyle(color: Colors.white),
+                          )),
                         ),
                       ),
                       SizedBox(
@@ -133,11 +134,10 @@ class AppDrawer extends GetView<AuthController> {
                           // width: 200,
                           height: 30,
                           decoration: transBg(),
-                          child: Center(
+                          child: const Center(
                               child: Text(
-                            AppLocalizations.of(context)!
-                                .what_others_looking_for,
-                            style: const TextStyle(color: Colors.white),
+                                AppConstants.what_others_looking_for,
+                            style: TextStyle(color: Colors.white),
                           )),
                         ),
                       )
@@ -145,7 +145,7 @@ class AppDrawer extends GetView<AuthController> {
                   ),
                 ),
                 DrawerCard(
-                  title: AppLocalizations.of(context)!.leaderboard,
+                  title: AppConstants.leaderboard,
                   icon: Icons.leaderboard_outlined,
                   child: Column(
                     children: [
@@ -157,11 +157,11 @@ class AppDrawer extends GetView<AuthController> {
                           // width: 200,
                           height: 30,
                           decoration: transBg(),
-                          child: Center(
+                          child: const Center(
                               child: Text(
-                                AppLocalizations.of(context)!.player_ranking,
-                                style: const TextStyle(color: Colors.white),
-                              )),
+                            AppConstants.player_ranking,
+                            style: TextStyle(color: Colors.white),
+                          )),
                         ),
                       ),
                       SizedBox(
@@ -179,12 +179,12 @@ class AppDrawer extends GetView<AuthController> {
                           // width: 200,
                           height: 30,
                           decoration: transBg(),
-                          child: Center(
+                          child: const Center(
                               child: Text(
-                                // 'Top Performers',
-                                AppLocalizations.of(context)!.top_performers,
-                                style: const TextStyle(color: Colors.white),
-                              )),
+                            // 'Top Performers',
+                            AppConstants.top_performers,
+                            style: TextStyle(color: Colors.white),
+                          )),
                         ),
                       ),
                       SizedBox(
@@ -202,12 +202,12 @@ class AppDrawer extends GetView<AuthController> {
                           // width: 200,
                           height: 30,
                           decoration: transBg(),
-                          child: Center(
+                          child: const Center(
                               child: Text(
-                                // 'Team Ranking',
-                                AppLocalizations.of(context)!.team_ranking,
-                                style: const TextStyle(color: Colors.white),
-                              )),
+                            // 'Team Ranking',
+                            AppConstants.team_ranking,
+                            style: TextStyle(color: Colors.white),
+                          )),
                         ),
                       )
                     ],
@@ -215,7 +215,7 @@ class AppDrawer extends GetView<AuthController> {
                 ),
                 DrawerCard(
                   // title: 'Challenge Team',
-                  title: AppLocalizations.of(context)!.challenge_team,
+                  title: AppConstants.challenge_team,
                   onTap: () {
                     Get.to(() => const SelectTeamForChallenge());
                   },
@@ -223,21 +223,21 @@ class AppDrawer extends GetView<AuthController> {
                 ),
                 DrawerCard(
                   // title: 'Challenge Team',
-                  title: AppLocalizations.of(context)!.my_performance,
+                  title: AppConstants.my_performance,
                   onTap: () {
                     Get.to(() => SelectPerformanceCategory(
-                      onChallengeTap: () {
-                        Get.to(
+                          onChallengeTap: () {
+                            Get.to(
                                 () => const SelectChallengeMatchForPerformance(
-                              // category: 'challenge',
-                            ));
-                      },
-                      onTouranmentTap: () {
-                        Get.to(() => const PerformanceStatScreen(
-                          category: 'tournaments',
+                                    // category: 'challenge',
+                                    ));
+                          },
+                          onTouranmentTap: () {
+                            Get.to(() => const PerformanceStatScreen(
+                                  category: 'tournaments',
+                                ));
+                          },
                         ));
-                      },
-                    ));
                   },
                   icon: Icons.auto_graph,
                 ),
@@ -289,20 +289,20 @@ class AppDrawer extends GetView<AuthController> {
 
                 DrawerCard(
                   // title: 'About us',
-                  title: AppLocalizations.of(context)!.about_us,
+                  title: AppConstants.about_us,
 
                   onTap: () {
                     Get.to(() => LegalViewScreen(
-                      title: AppLocalizations.of(context)!.about_us,
-                      slug: 'about-us',
-                      hideDeleteButton: true,
-                    ));
+                          title: AppConstants.about_us,
+                          slug: 'about-us',
+                          hideDeleteButton: true,
+                        ));
                   },
                   icon: Icons.info,
                 ),
                 DrawerCard(
                   // title: 'Contact us',
-                  title: AppLocalizations.of(context)!.contact_us,
+                  title: AppConstants.contact_us,
                   icon: Icons.contact_page,
                   onTap: () {
                     Get.to(() => const ContactUsScreen());
@@ -317,7 +317,7 @@ class AppDrawer extends GetView<AuthController> {
                 // ),
                 DrawerCard(
                   // title: 'Share App',
-                  title: AppLocalizations.of(context)!.share_app,
+                  title: AppConstants.share_app,
                   icon: Icons.share,
                   onTap: () {
                     Share.share(
@@ -326,26 +326,26 @@ class AppDrawer extends GetView<AuthController> {
                 ),
                 DrawerCard(
                   // title: 'Privacy Policy',
-                  title: AppLocalizations.of(context)!.privacy_policy,
+                  title: AppConstants.privacy_policy,
                   onTap: () {
                     Get.to(() => LegalViewScreen(
-                      // title: 'Privacy Policy',
-                      title: AppLocalizations.of(context)!.privacy_policy,
-                      slug: 'privacy-policy',
-                    ));
+                          // title: 'Privacy Policy',
+                          title: AppConstants.privacy_policy,
+                          slug: 'privacy-policy',
+                        ));
                   },
                   icon: Icons.privacy_tip,
                 ),
                 DrawerCard(
                   // title: 'FAQs',
-                  title: AppLocalizations.of(context)!.faqs,
+                  title: AppConstants.faqs,
                   onTap: () {
-                    Get.to(() => LegalViewScreen(
-                      // title: 'FAQs',
-                      hideDeleteButton: true,
-                      title: AppLocalizations.of(context)!.faqs,
-                      slug: 'faq',
-                    ));
+                    Get.to(() => const LegalViewScreen(
+                          // title: 'FAQs',
+                          hideDeleteButton: true,
+                          title: AppConstants.faqs,
+                          slug: 'faq',
+                        ));
                   },
                   icon: Icons.question_answer,
                 ),
@@ -358,21 +358,21 @@ class AppDrawer extends GetView<AuthController> {
                 // ),
                 DrawerCard(
                   // title: 'Disclaimer',
-                  title: AppLocalizations.of(context)!.disclaimer,
+                  title: "Disclaimer",
                   onTap: () {
                     Get.to(() => LegalViewScreen(
-                      // title: 'Disclaimer',
+                          // title: 'Disclaimer',
 
-                      title: AppLocalizations.of(context)!.disclaimer,
-                      slug: 'disclaimer',
-                      hideDeleteButton: true,
-                    ));
+                          title: "Disclaimer",
+                          slug: 'disclaimer',
+                          hideDeleteButton: true,
+                        ));
                   },
                   icon: Icons.disc_full,
                 ),
                 // DrawerCard(
                 //   // title: 'Disclaimer',
-                //   title: AppLocalizations.of(context)!.changeLanguage,
+                //   title: AppConstants.changeLanguage,
                 //   onTap: () {
                 //     Get.to(() => const ChooseLanguageScreen(
                 //         // title: 'Disclaimer',
@@ -383,7 +383,7 @@ class AppDrawer extends GetView<AuthController> {
                 // ),
                 DrawerCard(
                   // title: 'Log out',
-                  title: AppLocalizations.of(context)!.logout,
+                  title: AppConstants.logout,
                   onTap: () async {
                     controller.logout();
                   },
@@ -400,13 +400,13 @@ class AppDrawer extends GetView<AuthController> {
   BoxDecoration transBg() {
     return const BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Color.fromARGB(10, 235, 234, 234),
-            Color.fromARGB(48, 255, 255, 255),
-            Color.fromARGB(42, 255, 255, 255),
-            Color.fromARGB(10, 235, 234, 234),
-          ],
-          // stops: [0, 0.5, 1],
-        ));
+      colors: [
+        Color.fromARGB(10, 235, 234, 234),
+        Color.fromARGB(48, 255, 255, 255),
+        Color.fromARGB(42, 255, 255, 255),
+        Color.fromARGB(10, 235, 234, 234),
+      ],
+      // stops: [0, 0.5, 1],
+    ));
   }
 }

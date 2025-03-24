@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+
+import '../../config/app_constants.dart';
 
 class ChallengeTeam extends StatelessWidget {
   const ChallengeTeam({super.key});
@@ -15,7 +17,7 @@ class ChallengeTeam extends StatelessWidget {
           elevation: 0,
           iconTheme: const IconThemeData(color: Colors.white),
           title: Text(
-            AppLocalizations.of(context)!.challengeTeamTitle,
+            AppConstants.challengeTeamTitle,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.w700,
@@ -35,8 +37,7 @@ class ChallengeTeam extends StatelessWidget {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(28.0),
-                  child:
-                      Text(AppLocalizations.of(context)!.challengeTeamMessage),
+                  child: Text(AppConstants.challengeTeamMessage),
                 ),
               ),
             ),
@@ -49,7 +50,7 @@ class ChallengeTeam extends StatelessWidget {
                   //   team: w,
                   // ));
                 },
-                title: AppLocalizations.of(context)!.payNow,
+                title: AppConstants.payNow,
               ),
             ),
           ],

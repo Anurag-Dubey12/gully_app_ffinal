@@ -69,7 +69,7 @@ class AuthApi {
   }
 
   Future<ApiResponse> deleteAccount() async {
-    var response = await client.get('/user/deleteProfile');
+    var response = await client.delete('/user/deleteProfile');
     if (response.statusCode != 200) {
       throw Exception(response.body['message'] ?? 'Unable to Process Request');
     }

@@ -2,11 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/ui/screens/home_screen.dart';
 
+import '../../config/app_constants.dart';
 import 'legal_screen.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -67,7 +68,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 const Spacer(), const Spacer(),
                 FittedBox(
                   child: Text(
-                    '${AppLocalizations.of(context)!.signup}/ ${AppLocalizations.of(context)!.login}',
+                    '${AppConstants.signup}/ ${AppConstants.login}',
                     style: Get.textTheme.titleLarge,
                   ),
                 ),
@@ -81,7 +82,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     } else {
                       return SocialButton(
                         image: 'google_icon.png',
-                        title: AppLocalizations.of(context)!.signupgoogle,
+                        title: AppConstants.signupgoogle,
                         bgColor: Colors.white,
                         color: const Color.fromRGBO(0, 0, 0, 0.54),
                         onClick: () async {
@@ -99,7 +100,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Platform.isIOS
                     ? SocialButton(
                         image: 'apple_icon.png',
-                        title: AppLocalizations.of(context)!.signupapple,
+                        title: AppConstants.signupapple,
                         bgColor: Colors.black,
                         color: Colors.white,
                         onClick: () {},
@@ -111,18 +112,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 RichText(
                   textAlign: TextAlign.center,
                   text: TextSpan(
-                      text: "${AppLocalizations.of(context)!.by_continuing}\n ",
+                      text: "${AppConstants.by_continuing}\n ",
                       children: [
                         TextSpan(
-                            text:
-                                AppLocalizations.of(context)!.terms_of_service,
+                            text: AppConstants.terms_of_service,
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 Get.bottomSheet(BottomSheet(
                                     onClosing: () {},
-                                    builder: (builder) => LegalViewScreen(
-                                          title: AppLocalizations.of(context)!
-                                              .terms_of_service,
+                                    builder: (builder) => const LegalViewScreen(
+                                          title: AppConstants.terms_of_service,
                                           slug: 'terms',
                                           hideDeleteButton: true,
                                         )));
@@ -131,29 +130,27 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 color: Colors.blue.shade700,
                                 fontWeight: FontWeight.w500)),
                         TextSpan(
-                            text: AppLocalizations.of(context)!.and,
+                            text: AppConstants.and,
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 Get.bottomSheet(BottomSheet(
                                     onClosing: () {},
                                     builder: (builder) => LegalViewScreen(
                                           title:
-                                              '${AppLocalizations.of(context)!.privacy_policy} ',
+                                              '${AppConstants.privacy_policy} ',
                                           slug: 'privacy',
                                           hideDeleteButton: true,
                                         )));
                               },
                             style: const TextStyle()),
                         TextSpan(
-                            text:
-                                " ${AppLocalizations.of(context)!.privacy_policy}",
+                            text: " ${AppConstants.privacy_policy}",
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 Get.bottomSheet(BottomSheet(
                                     onClosing: () {},
-                                    builder: (builder) => LegalViewScreen(
-                                          title: AppLocalizations.of(context)!
-                                              .privacy_policy,
+                                    builder: (builder) => const LegalViewScreen(
+                                          title: AppConstants.privacy_policy,
                                           slug: 'privacy',
                                           hideDeleteButton: true,
                                         )));

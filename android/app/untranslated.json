@@ -1,0 +1,53 @@
+{
+  "bn": [
+    "search_tournament"
+  ],
+
+  "hi": [
+    "search_tournament"
+  ],
+
+  "kn": [
+    "changeLanguage",
+    "search_tournament"
+  ],
+
+  "ml": [
+    "okButton",
+    "emailInfo",
+    "addressInfo",
+    "phoneInfo",
+    "currentTournamentTitle",
+    "enterRoundNumberLabel",
+    "leaderboardTitle",
+    "playerRankingTitle",
+    "teamRankingTitle",
+    "topPerformerTitle",
+    "deleteAccountConfirmation",
+    "request_sent_successfully",
+    "selectLocation",
+    "changeLanguage",
+    "search_tournament"
+  ],
+
+  "mr": [
+    "changeLanguage",
+    "search_tournament"
+  ],
+
+  "pa": [
+    "search_tournament"
+  ],
+
+  "ta": [
+    "search_tournament"
+  ],
+
+  "te": [
+    "search_tournament"
+  ],
+
+  "ur": [
+    "search_tournament"
+  ]
+}

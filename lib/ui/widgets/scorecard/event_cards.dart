@@ -3,9 +3,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/extras_model.dart';
+import 'package:gully_app/data/model/player_model.dart';
+import 'package:gully_app/data/model/scoreboard_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/ui/widgets/scorecard/change_bowler.dart';
+import 'package:gully_app/utils/FallbackImageProvider.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
@@ -302,7 +305,6 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                     title: 'Leg byes',
                     eventType: EventType.legByes,
                   ),
-
                 ],
               ),
               Row(
@@ -375,23 +377,61 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                                   fontSize: 10,
                                   fontWeight: FontWeight.w500)))),
 
-                  SizedBox(
-                      // width: 100,
-                      height: 30,
-                      child: TextButton(
-                          style: ButtonStyle(
-                              backgroundColor: WidgetStateProperty.all(
-                                  AppTheme.primaryColor),
-                              padding: WidgetStateProperty.all(
-                                  const EdgeInsets.all(7))),
-                          onPressed: () {
-                            controller.addEvent(EventType.changeStriker);
-                          },
-                          child: const Text('Swap Batsman',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500)))),
+                  Obx(() {
+                    return !controller.isBothBatsmenNotOut.value
+                        ? SizedBox(
+                            // width: 100,
+                            height: 30,
+                            child: TextButton(
+                                style: ButtonStyle(
+                                    backgroundColor: WidgetStateProperty.all(
+                                        AppTheme.primaryColor),
+                                    padding: WidgetStateProperty.all(
+                                        const EdgeInsets.all(7))),
+                                onPressed: () {
+                                  if ((controller.scoreboard.value
+                                          ?.isSecondInningsOver ??
+                                      false)) {
+                                    errorSnackBar('Match Over');
+                                    return;
+                                  }
+                                  if ((controller
+                                          .scoreboard.value?.inningsCompleted ??
+                                      false)) {
+                                    errorSnackBar('Innings Completed');
+                                    return;
+                                  }
+                                  showModalBottomSheet(
+                                      showDragHandle: true,
+                                      context: Get.context!,
+                                      builder: (c) => ChangeBatterDialog(),
+                                      enableDrag: true,
+                                      isDismissible: true);
+                                  // Get.bottomSheet(ChangeBatterDialog());
+                                },
+                                child: const Text('Change Batsmen',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500))))
+                        : SizedBox(
+                            // width: 100,
+                            height: 30,
+                            child: TextButton(
+                                style: ButtonStyle(
+                                    backgroundColor: WidgetStateProperty.all(
+                                        AppTheme.primaryColor),
+                                    padding: WidgetStateProperty.all(
+                                        const EdgeInsets.all(7))),
+                                onPressed: () {
+                                  controller.addEvent(EventType.changeStriker);
+                                },
+                                child: const Text('Swap Batsman',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500))));
+                  }),
                   SizedBox(
                       // width: 100,
                       height: 30,
@@ -436,6 +476,97 @@ class UpdateEvent extends GetView<ScoreBoardController> {
   }
 }
 
+class ChangeBatterDialog extends StatelessWidget {
+  final ScoreBoardController controller = Get.find<ScoreBoardController>();
+
+  @override
+  Widget build(BuildContext context) {
+    final List<PlayerModel> players = [];
+    if (controller.scoreboard.value!.currentInnings == 1) {
+      players.addAll(controller.scoreboard.value!.team1.players!);
+    } else {
+      players.addAll(controller.scoreboard.value!.team2.players!);
+    }
+    players.removeWhere(
+        (element) => element.id == controller.scoreboard.value!.striker.id);
+    players.removeWhere(
+        (element) => element.id == controller.scoreboard.value!.nonstriker.id);
+    players.removeWhere((element) => element.batting!.outType.isNotEmpty);
+
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Next Batsmen',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.close)),
+              ],
+            ),
+          ),
+          const Divider(
+            height: 1,
+            color: Colors.grey,
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: players.length,
+              itemBuilder: (context, index) {
+                final player = players[index];
+                return ListTile(
+                  contentPadding: const EdgeInsets.all(5),
+                  leading: ClipOval(
+                    child:
+                        Image.asset(getAssetFromRole(player.role), width: 30),
+                  ),
+                  title: Text(
+                    player.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15,
+                    ),
+                  ),
+                  subtitle: Text(
+                    player.role,
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  trailing: SizedBox(
+                    width: 70,
+                    height: 40,
+                    child: PrimaryButton(
+                      onTap: () {
+                        final controller = Get.find<ScoreBoardController>();
+                        controller.addEvent(EventType.nextBatsmen,
+                            nextBatsmenId: player.id,
+                            isStrikerOut: controller.isStrikerOut.value);
+                        Navigator.of(context).pop();
+                      },
+                      title: 'Select',
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _EventWidget extends GetView<ScoreBoardController> {
   final String title;
   final EventType eventType;
@@ -459,13 +590,13 @@ class _EventWidget extends GetView<ScoreBoardController> {
                     if (e == null) return;
                     if (e) {
                       logger.d("found event $eventType");
-                      if(eventType==EventType.wicket){
-                        controller.isWicketSelected.value=true;
+                      if (eventType == EventType.wicket) {
+                        controller.isWicketSelected.value = true;
                       }
                       controller.addEventType(eventType);
                     } else {
-                      if(eventType==EventType.wicket){
-                        controller.isWicketSelected.value=false;
+                      if (eventType == EventType.wicket) {
+                        controller.isWicketSelected.value = false;
                       }
                       controller.removeEventType(eventType);
                     }

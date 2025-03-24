@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
+
 import 'package:get/get.dart';
+
+import '../../../config/app_constants.dart';
 
 class NoTournamentCard extends StatelessWidget {
   const NoTournamentCard({super.key});
@@ -29,7 +31,7 @@ class NoTournamentCard extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Text(
-                AppLocalizations.of(context)!.no_matches,
+                AppConstants.no_matches,
                 style: TextStyle(color: Colors.grey.shade700, fontSize: 16),
               ),
             ],

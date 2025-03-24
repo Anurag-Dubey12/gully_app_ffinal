@@ -12,13 +12,14 @@ import 'package:gully_app/ui/widgets/create_tournament/form_input.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../config/app_constants.dart';
 import '../../utils/app_logger.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 import '../widgets/primary_button.dart';
-import "package:flutter_gen/gen_l10n/app_localizations.dart";
 
 import 'legal_screen.dart';
+
 class TeamEntryForm extends StatefulWidget {
   final TeamModel team;
   const TeamEntryForm({super.key, required this.team});
@@ -28,22 +29,22 @@ class TeamEntryForm extends StatefulWidget {
 }
 
 class _TeamEntryFormState extends State<TeamEntryForm> {
-// final TextEditingController _viceCaptainController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   bool rulesAccepted = false;
   bool termsAccepted = false;
   final _formKey = GlobalKey<FormState>();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
     final TournamentController controller = Get.find<TournamentController>();
     final AuthController authController = Get.find<AuthController>();
-    final MiscController connectionController=Get.find<MiscController>();
+    final MiscController connectionController = Get.find<MiscController>();
     logger.d("Cover Image:${controller.state!.coverPhoto}");
     return GradientBuilder(
       child: Scaffold(
         bottomNavigationBar: Container(
-          height: 90,
+          height: 70,
           decoration: BoxDecoration(color: Colors.white, boxShadow: [
             BoxShadow(
                 color: Colors.black.withOpacity(0.1),
@@ -51,13 +52,15 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                 spreadRadius: 2,
                 offset: const Offset(0, -1))
           ]),
-          child:Column(
+          child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 35.0, vertical: 19),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
                 child: PrimaryButton(
-                  isDisabled: !rulesAccepted || !termsAccepted || !connectionController.isConnected.value,
+                  isDisabled: !rulesAccepted ||
+                      !termsAccepted ||
+                      !connectionController.isConnected.value,
                   onTap: () {
                     if (_formKey.currentState!.validate()) {
                       controller
@@ -117,8 +120,7 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                             height: 20,
                                           ),
                                           Padding(
-                                            padding:
-                                                const EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(8.0),
                                             child: PrimaryButton(
                                               onTap: () {
                                                 Get.offAll(
@@ -141,6 +143,13 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                               enableDrag: false);
                         }
                       });
+                    } else {
+                      // Scroll to the address field if validation fails
+                      _scrollController.animateTo(
+                        _scrollController.position.minScrollExtent,
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeInOut,
+                      );
                     }
                   },
                   title: 'Submit',
@@ -153,9 +162,8 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text('Entry Form',
-              style: Get.textTheme.headlineMedium?.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold)),
+              style: Get.textTheme.headlineMedium
+                  ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold)),
           leading: const BackButton(
             color: Colors.white,
           ),
@@ -163,51 +171,12 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
         backgroundColor: Colors.transparent,
         body: Column(
           children: [
-            // controller.state!.coverPhoto == ''
-            //     ? Padding(
-            //   padding: const EdgeInsets.all(18.0),
-            //   child: SizedBox(
-            //     height: 130,
-            //     child: Stack(
-            //       children: [
-            //         ClipRRect(
-            //           borderRadius: BorderRadius.circular(20),
-            //           child: SizedBox(
-            //             width: Get.width,
-            //             height: 120,
-            //             child: Image.asset('assets/images/logo.png'),
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // ) : Padding(
-            //         padding: const EdgeInsets.all(18.0),
-            //         child: SizedBox(
-            //           height: 130,
-            //           child: Stack(
-            //             children: [
-            //               ClipRRect(
-            //                 borderRadius: BorderRadius.circular(20),
-            //                 child: SizedBox(
-            //                   width: Get.width,
-            //                   height: 120,
-            //                   child: Image.network(
-            //                     toImageUrl(
-            //                         controller.state!.coverPhoto!),
-            //                     fit: BoxFit.cover,
-            //                   ),
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //         ),
-            //       ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(
                     left: 18.0, right: 18.0, top: 0.0, bottom: 0.0),
                 child: SingleChildScrollView(
+                  controller: _scrollController,
                   child: Form(
                     key: _formKey,
                     child: Column(
@@ -216,7 +185,6 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                         FormInput(
                           controller: TextEditingController(
                             text: widget.team.name,
-
                           ),
                           readOnly: true,
                           enabled: false,
@@ -232,8 +200,8 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                               if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
                                 return 'Address cannot contain emojis';
                               }
-                              return null;}
-                        ),
+                              return null;
+                            }),
                         FormInput(
                           controller: TextEditingController(
                               text: authController.state!.email),
@@ -248,48 +216,29 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                           enabled: false,
                           label: 'Captain Contact ',
                         ),
-                        // FormInput(
-                        //   controller: _viceCaptainController,
-                        //   label: 'Vice Captain Contact ',
-                        //   textInputType: TextInputType.number,
-                        //   maxLength: 10,
-                        //   validator: (value) {
-                        //     if (value!.isEmpty) {
-                        //       return 'Please enter a valid phone number';
-                        //     }
-                        //     if (value.length != 10) {
-                        //       return 'Please enter a valid phone number';
-                        //     }
-                        //     return null;
-                        //   },
-                        // ),
                         FormInput(
                           controller: TextEditingController(
-                              text: controller.status.data?.fees
-                                  .toString()),
+                              text: controller.status.data?.fees.toString()),
                           label: "Entry Fees",
                           enabled: false,
                         ),
                         FormInput(
                           controller: TextEditingController(
-                              text: controller
-                                  .status.data?.tournamentPrize
+                              text: controller.status.data?.tournamentPrize
                                   .toString()),
                           label: "Prize",
                           enabled: false,
                         ),
                         FormInput(
                           controller: TextEditingController(
-                              text: controller
-                                  .status.data?.organizerName
+                              text: controller.status.data?.organizerName
                                   .toString()),
                           enabled: false,
                           label: "Organizer Name",
                         ),
                         FormInput(
                           controller: TextEditingController(
-                              text: controller
-                                  .status.data?.phoneNumber
+                              text: controller.status.data?.phoneNumber
                                   .toString()),
                           enabled: false,
                           label: "Organizer Phone",
@@ -321,50 +270,6 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                 style: Get.textTheme.titleSmall),
                           ],
                         ),
-                        // Text('Disclaimer',
-                        //     style: Get.textTheme.headlineMedium
-                        //         ?.copyWith(
-                        //             fontWeight: FontWeight.bold,
-                        //             color: Colors.black,
-                        //             fontSize: 16)),
-                        // FutureBuilder<String>(
-                        //     future: Get.find<MiscController>()
-                        //         .getContent('teamDisclaimer'),
-                        //     builder: (context, snapshot) {
-                        //       return Container(
-                        //         decoration: BoxDecoration(
-                        //             color: Colors.white,
-                        //             border: Border.all(
-                        //                 color: Colors.black12
-                        //                     .withOpacity(0.7)),
-                        //             borderRadius:
-                        //                 BorderRadius.circular(10),
-                        //             boxShadow: [
-                        //               BoxShadow(
-                        //                   color: Colors.black
-                        //                       .withOpacity(0.1),
-                        //                   blurRadius: 5,
-                        //                   spreadRadius: 2,
-                        //                   offset: const Offset(0, 2))
-                        //             ]),
-                        //         child: Padding(
-                        //           padding: const EdgeInsets.all(8.0),
-                        //           child: HtmlWidget(
-                        //             snapshot.data ?? '',
-                        //             textStyle: const TextStyle(
-                        //                 color: Colors.black,
-                        //                 fontSize: 14),
-                        //           ),
-                        //         ),
-                        //       );
-                        //       // return FormInput(
-                        //       //   controller: TextEditingController(
-                        //       //       text: snapshot.data ?? ''),
-                        //       //   enabled: false,
-                        //       //   maxLines: 4,
-                        //       //   label: "Disclaimer",
-                        //       // );
-                        //     }),
                         Row(
                           children: [
                             SizedBox(
@@ -379,18 +284,19 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                             const SizedBox(width: 8),
                             RichText(
                               text: TextSpan(
-                                text: AppLocalizations.of(context)!.iHerebyAgreeToThe,
+                                text: AppConstants.iHerebyAgreeToThe,
                                 children: [
                                   TextSpan(
-                                    text: AppLocalizations.of(context)!.disclaimer,
+                                    text: "Disclaimer",
                                     recognizer: TapGestureRecognizer()
                                       ..onTap = () {
                                         Get.bottomSheet(BottomSheet(
                                           onClosing: () {},
-                                          builder: (builder) => const LegalViewScreen(
-                                              title: 'Disclaimer',
-                                              slug: 'disclaimer',
-                                              hideDeleteButton: true),
+                                          builder: (builder) =>
+                                              const LegalViewScreen(
+                                                  title: 'Disclaimer',
+                                                  slug: 'disclaimer',
+                                                  hideDeleteButton: true),
                                         ));
                                       },
                                     style: const TextStyle(
@@ -399,16 +305,14 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                  const TextSpan(text: " of the app ", style: TextStyle()),
+                                  const TextSpan(
+                                      text: " of the app ", style: TextStyle()),
                                 ],
                                 style: Get.textTheme.titleSmall,
                               ),
                             ),
                           ],
                         ),
-                        // const SizedBox(
-                        //   height: 108,
-                        // ),
                       ],
                     ),
                   ),

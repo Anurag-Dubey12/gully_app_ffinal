@@ -33,7 +33,7 @@ class SearchPlacesScreenState extends State<SearchPlacesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title ?? "Search Stadium",
+        title: Text(widget.title ?? "Search Location",
             style: Get.textTheme.headlineSmall),
       ),
       body: Center(

@@ -4,7 +4,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart'; //
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/data/model/player_model.dart';
@@ -13,6 +12,7 @@ import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
+import '../../config/app_constants.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
 import '../widgets/custom_text_field.dart';
@@ -65,9 +65,8 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
               child: Column(
                 children: [
                   Padding(
-                    padding:const EdgeInsets.symmetric(
-                        horizontal: 25.0,
-                        vertical:10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 25.0, vertical: 10),
                     child: PrimaryButton(
                       isDisabled: controller.players.value.length == 15,
                       disabledText: 'Maximum 15 players added',
@@ -87,7 +86,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
 
                         setState(() {});
                       },
-                      title: AppLocalizations.of(context)!.addPlayer,
+                      title: AppConstants.addPlayer,
                     ),
                   ),
                 ],
@@ -133,7 +132,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                       backgroundColor: Colors.transparent,
                       elevation: 0,
                       title: Text(
-                        AppLocalizations.of(context)!.players,
+                        AppConstants.players,
                         style: Get.textTheme.headlineMedium?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -161,12 +160,12 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                                 radius: 49,
                                 backgroundColor: Colors.white,
                                 backgroundImage: controller.state.logo !=
-                                    null &&
-                                    controller.state.logo!.isNotEmpty
+                                            null &&
+                                        controller.state.logo!.isNotEmpty
                                     ? NetworkImage(
-                                    controller.state.toImageUrl())
+                                        controller.state.toImageUrl())
                                     : const AssetImage('assets/images/logo.png')
-                                as ImageProvider,
+                                        as ImageProvider,
                               ),
                               Positioned(
                                 bottom: 0,
@@ -174,13 +173,13 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                                 child: InkWell(
                                   onTap: () {
                                     Get.off(() => AddTeam(
-                                      team: controller.state,
-                                    ));
+                                          team: controller.state,
+                                        ));
                                   },
                                   child: const CircleAvatar(
                                     radius: 15,
                                     backgroundColor:
-                                    AppTheme.secondaryYellowColor,
+                                        AppTheme.secondaryYellowColor,
                                     child: Icon(
                                       Icons.edit,
                                       color: Colors.white,
@@ -215,7 +214,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  AppLocalizations.of(context)!.players,
+                                  AppConstants.players,
                                   style: Get.textTheme.headlineMedium?.copyWith(
                                     color: Colors.black,
                                     fontWeight: FontWeight.bold,
@@ -225,7 +224,7 @@ class _AddPlayersToTeamState extends State<AddPlayersToTeam> {
                                   return Text(
                                     "(${controller.players.length}/15)",
                                     style:
-                                    Get.textTheme.headlineMedium?.copyWith(
+                                        Get.textTheme.headlineMedium?.copyWith(
                                       color: Colors.black,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -316,10 +315,10 @@ class _PlayerCardState extends State<PlayerCard> {
   Widget build(BuildContext context) {
     final controller = Get.find<TeamController>();
     final currentCaptain = controller.players.firstWhere(
-            (player) => player.role == 'Captain',
+        (player) => player.role == 'Captain',
         orElse: () => widget.player);
     final previousCaptain = controller.players.firstWhere(
-          (player) => player.role == 'Captain',
+      (player) => player.role == 'Captain',
     );
     final previousCaptainName = previousCaptain.name;
     final previousCaptainid = previousCaptain.id;
@@ -369,252 +368,287 @@ class _PlayerCardState extends State<PlayerCard> {
                 margin: const EdgeInsets.only(left: 30),
                 child: OutlinedButton(
                   onPressed: () {
-                    (controller.players.length==1) ?
-                    errorSnackBar("You need at least two players to change a captain")
-                        :Get.bottomSheet(
-                      Container(
-                        height: Get.height * 0.65,
-                        padding: const EdgeInsets.all(8),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(10)),
-                        ),
-                        child: Column(
-                          children: [
-                            Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  height: 5,
-                                  width: 120,
-                                  decoration: BoxDecoration(
-                                      color: Colors.grey[400],
-                                      borderRadius: BorderRadius.circular(10)),
-                                ),
+                    (controller.players.length == 1)
+                        ? errorSnackBar(
+                            "You need at least two players to change a captain")
+                        : Get.bottomSheet(
+                            Container(
+                              height: Get.height * 0.65,
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(10)),
                               ),
-                            ),
-                            const Text(
-                              "Tap on a player to assign a new captain",
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            Expanded(
-                              child: ListView.separated(
-                                itemCount: controller.players.length - 1,
-                                itemBuilder: (context, index) {
-                                  final player = controller.players
-                                      .where((p) => p.role != currentCaptain.role)
-                                      .toList()[index];
-                                  return AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    curve: Curves.easeInOut,
-                                    margin:
-                                    const EdgeInsets.symmetric(vertical: 4),
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                            color: Colors.grey, width: 0.5)),
-                                    child: ListTile(
-                                      leading: Hero(
-                                        tag: 'player-avatar-${player.name}',
-                                        child: CircleAvatar(
-                                          radius: 24,
-                                          backgroundColor: Colors.transparent,
-                                          child: Image.asset(
-                                            getAssetFromRole(player.role),
-                                            width: 20,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
+                              child: Column(
+                                children: [
+                                  Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Container(
+                                        height: 5,
+                                        width: 120,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey[400],
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
                                       ),
-                                      title: Text(
-                                        player.name,
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      subtitle: Text(
-                                        player.role,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey[700],
-                                        ),
-                                      ),
-                                      onTap: () async {
-                                        logger.d(
-                                            "The Previous Captain Details : \n Id:$previousCaptainid \n Name :$previousCaptainName \n Role:$previousCaptainRole");
-                                        logger.d(
-                                            "The New Captain Details: \n Id:${player.id} \n Name:${player.name} \n Role:${player.role}");
-                                        final List<String> availableRoles = [
-                                          'Wicket Keeper',
-                                          'Batsman',
-                                          'Bowler',
-                                          'All Rounder'
-                                        ];
-                                        String selectedRole = availableRoles[3];
-                                        showDialog(
-                                          context: context,
-                                          builder: (BuildContext dialogContext) {
-                                            return StatefulBuilder(
-                                              builder: (context, setState) {
-                                                return AlertDialog.adaptive(
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                      BorderRadius.circular(
-                                                          15)),
-                                                  title: Row(
-                                                    children: [
-                                                      const Icon(
-                                                          Icons.sports_cricket,
-                                                          color: AppTheme
-                                                              .primaryColor,
-                                                          size: 24),
-                                                      const SizedBox(width: 10),
-                                                      Expanded(
-                                                        child: Text(
-                                                          "Select New Role for $previousCaptainName",
-                                                          style: const TextStyle(
-                                                            fontSize: 18,
-                                                            fontWeight:
-                                                            FontWeight.bold,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  titlePadding:
-                                                  const EdgeInsets.all(16),
-                                                  contentPadding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 16,
-                                                      vertical: 8),
-                                                  content: Column(
-                                                    mainAxisSize:
-                                                    MainAxisSize.min,
-                                                    children: [
-                                                      Divider(
-                                                          color:
-                                                          Colors.grey[300]),
-                                                      ...availableRoles.map(
-                                                            (role) =>
-                                                            RadioListTile<String>(
-                                                              title: Text(
-                                                                role,
-                                                                style: const TextStyle(
-                                                                    fontSize: 16,
-                                                                    fontWeight:
-                                                                    FontWeight
-                                                                        .w500),
+                                    ),
+                                  ),
+                                  const Text(
+                                    "Tap on a player to assign a new captain",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  Expanded(
+                                    child: ListView.separated(
+                                      itemCount: controller.players.length - 1,
+                                      itemBuilder: (context, index) {
+                                        final player = controller.players
+                                            .where((p) =>
+                                                p.role != currentCaptain.role)
+                                            .toList()[index];
+                                        return AnimatedContainer(
+                                          duration:
+                                              const Duration(milliseconds: 300),
+                                          curve: Curves.easeInOut,
+                                          margin: const EdgeInsets.symmetric(
+                                              vertical: 4),
+                                          decoration: BoxDecoration(
+                                              color: Colors.white,
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                  color: Colors.grey,
+                                                  width: 0.5)),
+                                          child: ListTile(
+                                            leading: Hero(
+                                              tag:
+                                                  'player-avatar-${player.name}',
+                                              child: CircleAvatar(
+                                                radius: 24,
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                child: Image.asset(
+                                                  getAssetFromRole(player.role),
+                                                  width: 20,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            title: Text(
+                                              player.name,
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            subtitle: Text(
+                                              player.role,
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.grey[700],
+                                              ),
+                                            ),
+                                            onTap: () async {
+                                              logger.d(
+                                                  "The Previous Captain Details : \n Id:$previousCaptainid \n Name :$previousCaptainName \n Role:$previousCaptainRole");
+                                              logger.d(
+                                                  "The New Captain Details: \n Id:${player.id} \n Name:${player.name} \n Role:${player.role}");
+                                              final List<String>
+                                                  availableRoles = [
+                                                'Wicket Keeper',
+                                                'Batsman',
+                                                'Bowler',
+                                                'All Rounder'
+                                              ];
+                                              String selectedRole =
+                                                  availableRoles[3];
+                                              showDialog(
+                                                context: context,
+                                                builder: (BuildContext
+                                                    dialogContext) {
+                                                  return StatefulBuilder(
+                                                    builder:
+                                                        (context, setState) {
+                                                      return AlertDialog
+                                                          .adaptive(
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15)),
+                                                        title: Row(
+                                                          children: [
+                                                            const Icon(
+                                                                Icons
+                                                                    .sports_cricket,
+                                                                color: AppTheme
+                                                                    .primaryColor,
+                                                                size: 24),
+                                                            const SizedBox(
+                                                                width: 10),
+                                                            Expanded(
+                                                              child: Text(
+                                                                "Select New Role for $previousCaptainName",
+                                                                style:
+                                                                    const TextStyle(
+                                                                  fontSize: 18,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                ),
                                                               ),
-                                                              value: role,
-                                                              groupValue:
-                                                              selectedRole,
-                                                              onChanged:
-                                                                  (String? value) {
-                                                                if (value != null) {
-                                                                  setState(() {
-                                                                    selectedRole =
-                                                                        value;
-                                                                  });
-                                                                }
-                                                              },
-                                                              activeColor: AppTheme
-                                                                  .primaryColor,
-                                                              controlAffinity:
-                                                              ListTileControlAffinity
-                                                                  .trailing,
                                                             ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  actions: [
-                                                    TextButton(
-                                                      onPressed: () =>
-                                                          Navigator.of(
-                                                              dialogContext)
-                                                              .pop(),
-                                                      child: const Text(
-                                                        'Cancel',
-                                                        style: TextStyle(
-                                                            color: Colors.grey),
-                                                      ),
-                                                    ),
-                                                    ElevatedButton(
-                                                      onPressed: () async {
-                                                        Navigator.of(
-                                                            dialogContext)
-                                                            .pop();
-                                                        bool isChanged =
-                                                        await controller
-                                                            .changeCaptain(
-                                                          teamId: widget.teamId,
-                                                          newCaptainId: player.id,
-                                                          newRole: 'Captain',
-                                                          previousCaptainRole:
-                                                          selectedRole,
-                                                          previousCaptainId:
-                                                          previousCaptainid,
-                                                        );
-                                                        if (isChanged) {
-                                                          logger.d(
-                                                              "Captain changed successfully");
-                                                          successSnackBar(
-                                                              "Captain role updated successfully");
-                                                        } else {
-                                                          logger.d(
-                                                              "Failed to change captain");
-                                                          errorSnackBar(
-                                                              "Failed to update captain role");
-                                                        }
-                                                      },
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                        backgroundColor:
-                                                        AppTheme.primaryColor,
-                                                        foregroundColor:
-                                                        Colors.white,
-                                                        shape:
-                                                        RoundedRectangleBorder(
-                                                          borderRadius:
-                                                          BorderRadius
-                                                              .circular(8),
+                                                          ],
                                                         ),
-                                                      ),
-                                                      child:
-                                                      const Text('Confirm'),
-                                                    ),
-                                                  ],
-                                                );
-                                              },
-                                            );
-                                          },
+                                                        titlePadding:
+                                                            const EdgeInsets
+                                                                .all(16),
+                                                        contentPadding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 16,
+                                                                vertical: 8),
+                                                        content: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            Divider(
+                                                                color: Colors
+                                                                    .grey[300]),
+                                                            ...availableRoles
+                                                                .map(
+                                                              (role) =>
+                                                                  RadioListTile<
+                                                                      String>(
+                                                                title: Text(
+                                                                  role,
+                                                                  style: const TextStyle(
+                                                                      fontSize:
+                                                                          16,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w500),
+                                                                ),
+                                                                value: role,
+                                                                groupValue:
+                                                                    selectedRole,
+                                                                onChanged:
+                                                                    (String?
+                                                                        value) {
+                                                                  if (value !=
+                                                                      null) {
+                                                                    setState(
+                                                                        () {
+                                                                      selectedRole =
+                                                                          value;
+                                                                    });
+                                                                  }
+                                                                },
+                                                                activeColor:
+                                                                    AppTheme
+                                                                        .primaryColor,
+                                                                controlAffinity:
+                                                                    ListTileControlAffinity
+                                                                        .trailing,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.of(
+                                                                        dialogContext)
+                                                                    .pop(),
+                                                            child: const Text(
+                                                              'Cancel',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .grey),
+                                                            ),
+                                                          ),
+                                                          ElevatedButton(
+                                                            onPressed:
+                                                                () async {
+                                                              Navigator.of(
+                                                                      dialogContext)
+                                                                  .pop();
+                                                              bool isChanged =
+                                                                  await controller
+                                                                      .changeCaptain(
+                                                                teamId: widget
+                                                                    .teamId,
+                                                                newCaptainId:
+                                                                    player.id,
+                                                                newRole:
+                                                                    'Captain',
+                                                                previousCaptainRole:
+                                                                    selectedRole,
+                                                                previousCaptainId:
+                                                                    previousCaptainid,
+                                                              );
+                                                              if (isChanged) {
+                                                                logger.d(
+                                                                    "Captain changed successfully");
+                                                                successSnackBar(
+                                                                    "Captain role updated successfully");
+                                                              } else {
+                                                                logger.d(
+                                                                    "Failed to change captain");
+                                                                errorSnackBar(
+                                                                    "Failed to update captain role");
+                                                              }
+                                                            },
+                                                            style:
+                                                                ElevatedButton
+                                                                    .styleFrom(
+                                                              backgroundColor:
+                                                                  AppTheme
+                                                                      .primaryColor,
+                                                              foregroundColor:
+                                                                  Colors.white,
+                                                              shape:
+                                                                  RoundedRectangleBorder(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            8),
+                                                              ),
+                                                            ),
+                                                            child: const Text(
+                                                                'Confirm'),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    },
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          ),
                                         );
                                       },
+                                      separatorBuilder: (context, index) =>
+                                          const SizedBox(height: 2),
                                     ),
-                                  );
-                                },
-                                separatorBuilder: (context, index) =>
-                                const SizedBox(height: 2),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      isScrollControlled: true,
-                    );
+                            isScrollControlled: true,
+                          );
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppTheme.primaryColor,
                     side: const BorderSide(color: AppTheme.primaryColor),
                     padding: const EdgeInsets.symmetric(
-                      horizontal:18,
+                      horizontal: 18,
                       vertical: 8,
                     ),
                     shape: RoundedRectangleBorder(
@@ -632,63 +666,60 @@ class _PlayerCardState extends State<PlayerCard> {
             const Spacer(),
             widget.isEditable ?? true
                 ? InkWell(
-              onTap: () {
-                Share.share(
-                    'Join my team on Gully App. Click on the link to join: '
-                        'https://tummle.robinj.dev/refer/${widget.player.phoneNumber}');
-              },
-              child: const CircleAvatar(
-                backgroundColor: Color.fromARGB(255, 71, 224, 79),
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Icon(Icons.share),
-                ),
-              ),
-            )
+                    onTap: () {
+                      Share.share(
+                          'Join my team on Gully App. Click on the link to join: '
+                          'https://play.google.com/store/apps/details?id=com.nileegames.gullyteam');
+                    },
+                    child: const CircleAvatar(
+                      backgroundColor: Color.fromARGB(255, 71, 224, 79),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(Icons.share),
+                      ),
+                    ),
+                  )
                 : const SizedBox(),
             const SizedBox(width: 10),
             widget.isEditable ?? true
                 ? CircleAvatar(
-              backgroundColor: const Color.fromARGB(255, 235, 17, 24),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    Get.dialog(
-                      AlertDialog.adaptive(
-                        title: Text(
-                            AppLocalizations.of(context)!.deletePlayer),
-                        content: Text(AppLocalizations.of(context)!
-                            .deletePlayerConfirmation),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              // Get.back();
-                              Navigator.of(context).pop();
-                            },
-                            child: Text(AppLocalizations.of(context)!.no),
-                          ),
-                          TextButton(
-                            onPressed: () async {
-                              controller.removePlayerFromTeam(
-                                teamId: widget.teamId,
-                                playerId: widget.player.id,
-                              );
-                              setState(() {});
-                              // Get.back();
-                              Navigator.of(context).pop();
-                            },
-                            child:
-                            Text(AppLocalizations.of(context)!.yes),
-                          ),
-                        ],
+                    backgroundColor: const Color.fromARGB(255, 235, 17, 24),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: GestureDetector(
+                        onTap: () {
+                          Get.dialog(
+                            AlertDialog.adaptive(
+                              title: const Text(AppConstants.deletePlayer),
+                              content: const Text(AppConstants.deletePlayerConfirmation),
+                              actions: [
+                                TextButton(
+                                  onPressed: () {
+                                    // Get.back();
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text(AppConstants.no),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    controller.removePlayerFromTeam(
+                                      teamId: widget.teamId,
+                                      playerId: widget.player.id,
+                                    );
+                                    setState(() {});
+                                    // Get.back();
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text(AppConstants.yes),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        child: const Icon(Icons.cancel),
                       ),
-                    );
-                  },
-                  child: const Icon(Icons.cancel),
-                ),
-              ),
-            )
+                    ),
+                  )
                 : const SizedBox(),
           ],
         ),
@@ -727,7 +758,7 @@ class AddPlayerDialog extends GetView<TeamController> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Text(AppLocalizations.of(context)!.addPlayer,
+                Text(AppConstants.addPlayer,
                     style: Get.textTheme.headlineMedium?.copyWith(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -766,7 +797,7 @@ class AddPlayerDialog extends GetView<TeamController> {
                             child: Icon(Icons.person_add),
                           ),
                           const SizedBox(width: 15),
-                          Text(AppLocalizations.of(context)!.addViaPhoneNumber),
+                          Text(AppConstants.addViaPhoneNumber),
                         ],
                       ),
                     ),
@@ -792,8 +823,10 @@ class ContactPickerWidget extends StatelessWidget {
     PermissionStatus permissionStatus = await Permission.contacts.request();
     if (permissionStatus.isGranted) {
       try {
-        List<Contact> contacts = await FlutterContacts.getContacts(withProperties: true);
-        final contactsWithPhone = contacts.where((element) => element.phones!.isNotEmpty).toList();
+        List<Contact> contacts =
+            await FlutterContacts.getContacts(withProperties: true);
+        final contactsWithPhone =
+            contacts.where((element) => element.phones!.isNotEmpty).toList();
         await Get.bottomSheet(
           _ContactListBottomSheet(
             teamId: teamId,
@@ -808,11 +841,11 @@ class ContactPickerWidget extends StatelessWidget {
     } else if (permissionStatus.isDenied) {
       errorSnackBar('Permission to access contacts denied');
     } else if (permissionStatus.isPermanentlyDenied) {
-      errorSnackBar('Permission permanently denied. Please enable it in the app settings');
+      errorSnackBar(
+          'Permission permanently denied. Please enable it in the app settings');
       openAppSettings();
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -840,7 +873,7 @@ class ContactPickerWidget extends StatelessWidget {
                 child: Icon(Icons.contact_phone),
               ),
               const SizedBox(width: 15),
-              Text(AppLocalizations.of(context)!.addFromContacts),
+              Text(AppConstants.addFromContacts),
             ],
           ),
         ),
@@ -879,18 +912,16 @@ class _ContactListBottomSheetState extends State<_ContactListBottomSheet> {
   void _filterContacts(String query) {
     setState(() {
       _searchQuery = query;
-      _filteredContacts = widget.contacts
-          .where((contact) {
+      _filteredContacts = widget.contacts.where((contact) {
         String phoneNumber = '';
         if (contact.phones != null && contact.phones!.isNotEmpty) {
           phoneNumber = contact.phones![0].number ?? '';
           phoneNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
         }
         return phoneNumber.isNotEmpty &&
-            (contact.displayName?.toLowerCase().contains(query.toLowerCase()) ?? false ||
-                phoneNumber.contains(query));
-      })
-          .toList();
+            (contact.displayName?.toLowerCase().contains(query.toLowerCase()) ??
+                false || phoneNumber.contains(query));
+      }).toList();
     });
   }
 
@@ -951,87 +982,98 @@ class _ContactListBottomSheetState extends State<_ContactListBottomSheet> {
               hintStyle: TextStyle(color: Colors.grey[600], fontSize: 16),
               suffixIcon: _searchQuery.isNotEmpty
                   ? IconButton(
-                icon: const Icon(Icons.clear),
-                onPressed: () {
-                  setState(() {
-                    _searchQuery = '';
-                    _filteredContacts.clear();
-                  });
-                  _filterContacts('');
-                },
-              )
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        setState(() {
+                          _searchQuery = '';
+                          _filteredContacts.clear();
+                        });
+                        _filterContacts('');
+                      },
+                    )
                   : null,
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               filled: true,
               fillColor: Colors.white,
-              contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+              contentPadding:
+                  const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
             ),
           ),
         ),
         Expanded(
           child: _filteredContacts.isEmpty
-              ? Center(child: Text('No contacts found', style: TextStyle(color: Colors.grey[600], fontSize: 16)))
+              ? Center(
+                  child: Text('No contacts found',
+                      style: TextStyle(color: Colors.grey[600], fontSize: 16)))
               : ListView.builder(
-            itemCount: _filteredContacts.length,
-            itemBuilder: (context, index) {
-              final contact = _filteredContacts[index];
-              String phoneNumber = '';
-              if (contact.phones != null && contact.phones!.isNotEmpty) {
-                phoneNumber = contact.phones![0].number ?? '';
-                phoneNumber = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
-              }
-              if (phoneNumber.length == 12) {
-                phoneNumber = phoneNumber.substring(2);
-              }
-
-              return ListTile(
-                contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                leading: CircleAvatar(
-                  backgroundColor: AppTheme.primaryColor,
-                  foregroundColor: Colors.white,
-                  child: Text(contact.displayName?.substring(0, 1) ?? 'N'),
-                ),
-                title: Text(
-                  contact.displayName ?? 'Unknown',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text(
-                  phoneNumber.isEmpty ? 'No phone number available' : phoneNumber,
-                ),
-                trailing: ElevatedButton(
-                  onPressed: () {
-                    if (contact.displayName != null && phoneNumber.isNotEmpty) {
-                      Get.bottomSheet(
-                        _AddPlayerDetails(
-                          teamId: widget.teamId,
-                          name: contact.displayName,
-                          phone: phoneNumber,
-                        ),
-                        backgroundColor: Colors.white,
-                      );
-                    } else {
-                      errorSnackBar('Contact missing name or phone number');
+                  itemCount: _filteredContacts.length,
+                  itemBuilder: (context, index) {
+                    final contact = _filteredContacts[index];
+                    String phoneNumber = '';
+                    if (contact.phones != null && contact.phones!.isNotEmpty) {
+                      phoneNumber = contact.phones![0].number ?? '';
+                      phoneNumber =
+                          phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
                     }
+                    if (phoneNumber.length == 12) {
+                      phoneNumber = phoneNumber.substring(2);
+                    }
+
+                    return ListTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 12, horizontal: 16),
+                      leading: CircleAvatar(
+                        backgroundColor: AppTheme.primaryColor,
+                        foregroundColor: Colors.white,
+                        child:
+                            Text(contact.displayName?.substring(0, 1) ?? 'N'),
+                      ),
+                      title: Text(
+                        contact.displayName ?? 'Unknown',
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        phoneNumber.isEmpty
+                            ? 'No phone number available'
+                            : phoneNumber,
+                      ),
+                      trailing: ElevatedButton(
+                        onPressed: () {
+                          if (contact.displayName != null &&
+                              phoneNumber.isNotEmpty) {
+                            Get.bottomSheet(
+                              _AddPlayerDetails(
+                                teamId: widget.teamId,
+                                name: contact.displayName,
+                                phone: phoneNumber,
+                              ),
+                              backgroundColor: Colors.white,
+                            );
+                          } else {
+                            errorSnackBar(
+                                'Contact missing name or phone number');
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: AppTheme.primaryColor,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        child: const Text('Select'),
+                      ),
+                    );
                   },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: AppTheme.primaryColor,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text('Select'),
                 ),
-              );
-            },
-          ),
         ),
       ],
     );
   }
 }
-
 
 class _AddPlayerDetails extends StatefulWidget {
   final String teamId;
@@ -1092,12 +1134,12 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                 const SizedBox(height: 20),
                 Text(
                     widget.name != null
-                        ? AppLocalizations.of(context)!.addFromContact
-                        : AppLocalizations.of(context)!.addViaPhoneNumber,
+                        ? AppConstants.addFromContact
+                        : AppConstants.addViaPhoneNumber,
                     style: Get.textTheme.headlineMedium?.copyWith(
                         color: Colors.black, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 20),
-                Text(AppLocalizations.of(context)!.name),
+                Text(AppConstants.name),
                 const SizedBox(height: 10),
                 CustomTextField(
                   controller: nameController,
@@ -1105,20 +1147,20 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                   textInputType: TextInputType.text,
                   validator: (value) {
                     if (value!.isEmpty) {
-                      return AppLocalizations.of(context)!.fillAllFields;
+                      return AppConstants.fillAllFields;
                     }
                     // prevent only spaces
                     if (value.trim().isEmpty) {
-                      return AppLocalizations.of(context)!.fillAllFields;
+                      return AppConstants.fillAllFields;
                     }
                     if (!value.contains(RegExp(r'^[a-zA-Z -]+$'))) {
-                      return AppLocalizations.of(context)!.validName;
+                      return AppConstants.validName;
                     }
                     return null;
                   },
                 ),
                 const SizedBox(height: 20),
-                Text(AppLocalizations.of(context)!.contactNumber),
+                Text(AppConstants.contactNumber),
                 const SizedBox(height: 10),
                 CustomTextField(
                   controller: phoneController,
@@ -1175,7 +1217,7 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                     // if (!nameController.text
                     //     .contains(RegExp(r'^[a-zA-Z ]+$'))) {
                     //   setState(() {
-                    //     errorText = AppLocalizations.of(context)!.validName;
+                    //     errorText = AppConstants.validName;
                     //   });
                     //   return;
                     // }
@@ -1184,8 +1226,7 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                         phoneController.text.length != 10 ||
                         !phoneController.text.isNumericOnly) {
                       setState(() {
-                        errorSnackBar(
-                            AppLocalizations.of(context)!.validPhoneNumber);
+                        errorSnackBar(AppConstants.validPhoneNumber);
                       });
                       return;
                     }
@@ -1205,7 +1246,7 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                       rethrow;
                     }
                   },
-                  title: AppLocalizations.of(context)!.addPlayer,
+                  title: AppConstants.addPlayer,
                 )
               ],
             ),

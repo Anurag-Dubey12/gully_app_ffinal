@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
@@ -18,6 +18,7 @@ import 'package:gully_app/ui/widgets/sponsor/addSponsorDetails.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../config/app_constants.dart';
 import '../../data/controller/misc_controller.dart';
 import '../theme/theme.dart';
 import '../widgets/arc_clipper.dart';
@@ -43,7 +44,7 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
   });
   @override
   Widget build(BuildContext context) {
-    final MiscController connectionController=Get.find<MiscController>();
+    final MiscController connectionController = Get.find<MiscController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -54,7 +55,7 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        body:Stack(
+        body: Stack(
           children: [
             ClipPath(
               clipper: ArcClipper(),
@@ -90,7 +91,7 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                       backgroundColor: Colors.transparent,
                       elevation: 0,
                       title: Text(
-                        AppLocalizations.of(context)!.currentTournamentTitle,
+                        AppConstants.currentTournamentTitle,
                         style: Get.textTheme.headlineMedium?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -121,53 +122,56 @@ class CurrentTournamentListScreen extends GetView<TournamentController> {
                                 ),
                               );
                             }
-                            return !connectionController.isConnected.value ? Center(
-                              child: SizedBox(
-                                width: Get.width,
-                                height: Get.height * 0.7,
-                                child: const Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.signal_wifi_off,
-                                      size: 48,
-                                      color: Colors.black54,
-                                    ),
-                                    SizedBox(height: 16),
-                                    Text(
-                                      'No internet connection',
-                                      style: TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: 18,
+                            return !connectionController.isConnected.value
+                                ? Center(
+                                    child: SizedBox(
+                                      width: Get.width,
+                                      height: Get.height * 0.7,
+                                      child: const Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.signal_wifi_off,
+                                            size: 48,
+                                            color: Colors.black54,
+                                          ),
+                                          SizedBox(height: 16),
+                                          Text(
+                                            'No internet connection',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ),
-                            ):SizedBox(
-                              height: Get.height / 1.2,
-                              child: ListView.separated(
-                                scrollDirection: Axis.vertical,
-                                separatorBuilder: (context, index) =>
-                                const SizedBox(height: 18),
-                                shrinkWrap: true,
-                                padding:
-                                EdgeInsets.only(top: Get.height * 0.08),
-                                physics:
-                                const AlwaysScrollableScrollPhysics(),
-                                itemCount: controller
-                                    .organizerTournamentList.value.length,
-                                itemBuilder: (context, index) {
-                                  return _Card(
-
-                                    tournament: controller
-                                        .organizerTournamentList.value[index],
-                                    redirectType: redirectType,
+                                  )
+                                : SizedBox(
+                                    height: Get.height / 1.2,
+                                    child: ListView.separated(
+                                      scrollDirection: Axis.vertical,
+                                      separatorBuilder: (context, index) =>
+                                          const SizedBox(height: 18),
+                                      shrinkWrap: true,
+                                      padding: EdgeInsets.only(
+                                          top: Get.height * 0.08),
+                                      physics:
+                                          const AlwaysScrollableScrollPhysics(),
+                                      itemCount: controller
+                                          .organizerTournamentList.value.length,
+                                      itemBuilder: (context, index) {
+                                        return _Card(
+                                          tournament: controller
+                                              .organizerTournamentList
+                                              .value[index],
+                                          redirectType: redirectType,
+                                        );
+                                      },
+                                    ),
                                   );
-                                },
-                              ),
-                            );
                           }),
                         ],
                       ),
@@ -207,7 +211,8 @@ class _CardState extends State<_Card> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
-    logger.d("The Total Tournament: ${controller.tournamentList.map((t)=>t.tournamentName)}");
+    logger.d(
+        "The Total Tournament: ${controller.tournamentList.map((t) => t.tournamentName)}");
     logger.d('build');
 
     return GestureDetector(
@@ -223,11 +228,10 @@ class _CardState extends State<_Card> {
             controller.saveDates(
                 widget.tournament.tournamentStartDateTime,
                 widget.tournament.tournamentEndDateTime,
-                widget.tournament.authority ??''
-            );
+                widget.tournament.authority ?? '');
             controller.isEditable.value = true;
             Get.to(
-                  () => SelectOrganizeTeam(
+              () => SelectOrganizeTeam(
                 tournament: widget.tournament,
               ),
             );
@@ -240,28 +244,28 @@ class _CardState extends State<_Card> {
             controller.setSelectedTournament(widget.tournament);
             controller.setScheduleStatus(false);
             Get.to(() => ViewMatchupsScreen(tournament: widget.tournament));
-            controller.tournamentId.value=widget.tournament.id ??'';
-            controller.isTourOver.value=false;
+            controller.tournamentId.value = widget.tournament.id ?? '';
+            controller.isTourOver.value = false;
             break;
           case RedirectType.editForm:
             Get.to(() => TournamentFormScreen(
-              tournament: widget.tournament,
-            ));
+                  tournament: widget.tournament,
+                ));
             break;
           case RedirectType.currentTournament:
             logger.d("Current tournament is");
             Get.to(() => TournamentTeams(
-              tournament: widget.tournament,
-              isTeamListOnly: true,
-            ));
+                  tournament: widget.tournament,
+                  isTeamListOnly: true,
+                ));
             break;
           case RedirectType.manageAuthority:
             Get.to(() => UpdateAuthorityScreen(
-              tournament: widget.tournament,
-            ));
+                  tournament: widget.tournament,
+                ));
             break;
           case RedirectType.sponsor:
-            if (widget.tournament.isSponsorshippurchase==false) {
+            if (widget.tournament.isSponsorshippurchase == false) {
               // showDialog(
               //   context: context,
               //   builder: (BuildContext context) {
@@ -347,12 +351,12 @@ class _CardState extends State<_Card> {
               //   },
               // );
               Get.to(() => SponsorPackageScreen(tournament: widget.tournament));
-            }else{
-              logger.d("Tournament sponsor Id:${widget.tournament.SponsorshipPackageId}");
+            } else {
+              logger.d(
+                  "Tournament sponsor Id:${widget.tournament.SponsorshipPackageId}");
               Get.to(() => SponsorScreen(tournament: widget.tournament));
             }
             break;
-
         }
       },
       child: Container(
@@ -404,7 +408,8 @@ class InputRoundNumber extends StatefulWidget {
   final String? existingRound;
   final Function(String) onItemSelected;
 
-  const InputRoundNumber({super.key, 
+  const InputRoundNumber({
+    super.key,
     this.tournament,
     this.existingRound,
     required this.onItemSelected,
@@ -437,7 +442,8 @@ class _InputRoundNumberState extends State<InputRoundNumber> {
     String? extractedRoundNumber;
 
     if (widget.existingRound != null) {
-      final roundMatch = RegExp(r'Round\s*(\d+)', caseSensitive: false).firstMatch(widget.existingRound!);
+      final roundMatch = RegExp(r'Round\s*(\d+)', caseSensitive: false)
+          .firstMatch(widget.existingRound!);
 
       if (roundMatch != null) {
         extractedRound = 'Round';
@@ -449,7 +455,8 @@ class _InputRoundNumberState extends State<InputRoundNumber> {
     }
 
     roundController = TextEditingController(text: extractedRound ?? '');
-    roundNumberController = TextEditingController(text: extractedRoundNumber ?? '');
+    roundNumberController =
+        TextEditingController(text: extractedRoundNumber ?? '');
   }
 
   @override
@@ -471,7 +478,8 @@ class _InputRoundNumberState extends State<InputRoundNumber> {
   }
 
   OverlayEntry _createOverlayEntry() {
-    RenderBox renderBox = _dropdownKey.currentContext!.findRenderObject() as RenderBox;
+    RenderBox renderBox =
+        _dropdownKey.currentContext!.findRenderObject() as RenderBox;
     var size = renderBox.size;
     var offset = renderBox.localToGlobal(Offset.zero);
 
@@ -487,18 +495,18 @@ class _InputRoundNumberState extends State<InputRoundNumber> {
             shrinkWrap: true,
             children: items
                 .map((e) => ListTile(
-              title: Text(e.capitalize),
-              onTap: () {
-                setState(() {
-                  roundController.text = e;
-                  _isRoundSelected = e == 'Round';
-                  if (!_isRoundSelected) {
-                    roundNumberController.clear();
-                  }
-                });
-                _toggleDropdown();
-              },
-            ))
+                      title: Text(e.capitalize),
+                      onTap: () {
+                        setState(() {
+                          roundController.text = e;
+                          _isRoundSelected = e == 'Round';
+                          if (!_isRoundSelected) {
+                            roundNumberController.clear();
+                          }
+                        });
+                        _toggleDropdown();
+                      },
+                    ))
                 .toList(),
           ),
         ),
@@ -510,7 +518,8 @@ class _InputRoundNumberState extends State<InputRoundNumber> {
   Widget build(BuildContext context) {
     final authController = Get.find<AuthController>();
     final TournamnetController = Get.find<TournamentController>();
-    logger.d("The id is:${authController.state!.id} and authority id is:${TournamnetController.tournamentauthority}");
+    logger.d(
+        "The id is:${authController.state!.id} and authority id is:${TournamnetController.tournamentauthority}");
     return Dialog(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -528,7 +537,8 @@ class _InputRoundNumberState extends State<InputRoundNumber> {
               onTap: _toggleDropdown,
               child: Container(
                 key: _dropdownKey,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(10),
@@ -537,7 +547,9 @@ class _InputRoundNumberState extends State<InputRoundNumber> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      roundController.text.isEmpty ? 'Select Round' : roundController.text.capitalize,
+                      roundController.text.isEmpty
+                          ? 'Select Round'
+                          : roundController.text.capitalize,
                       style: Get.textTheme.headlineMedium?.copyWith(
                         color: Colors.black,
                         fontWeight: FontWeight.w500,
@@ -561,7 +573,8 @@ class _InputRoundNumberState extends State<InputRoundNumber> {
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 16, vertical: 12),
                         hintText: 'Enter Round Number',
-                        hintStyle: const TextStyle(fontSize: 14, color: Colors.grey),
+                        hintStyle:
+                            const TextStyle(fontSize: 14, color: Colors.grey),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -576,9 +589,11 @@ class _InputRoundNumberState extends State<InputRoundNumber> {
                   IconButton(
                     icon: const Icon(Icons.add_circle, color: Colors.blue),
                     onPressed: () {
-                      int currentValue = int.tryParse(roundNumberController.text) ?? 0;
+                      int currentValue =
+                          int.tryParse(roundNumberController.text) ?? 0;
                       setState(() {
-                        roundNumberController.text = (currentValue + 1).toString();
+                        roundNumberController.text =
+                            (currentValue + 1).toString();
                       });
                     },
                   ),
@@ -588,9 +603,10 @@ class _InputRoundNumberState extends State<InputRoundNumber> {
             const SizedBox(height: 20),
             PrimaryButton(
               onTap: () {
-                if (TournamnetController.tournamentauthority.value != authController.state?.id) {
+                if (TournamnetController.tournamentauthority.value !=
+                    authController.state?.id) {
                   errorSnackBar('You are not authorized to organize the match',
-                      forceDialogOpen: true)
+                          forceDialogOpen: true)
                       .then((value) => Get.back());
                   return;
                 }
@@ -599,7 +615,8 @@ class _InputRoundNumberState extends State<InputRoundNumber> {
                   return;
                 }
                 if (_isRoundSelected && roundNumberController.text.isEmpty) {
-                  errorSnackBar('Please enter a round number', forceDialogOpen: true);
+                  errorSnackBar('Please enter a round number',
+                      forceDialogOpen: true);
                   return;
                 }
                 String roundText = _isRoundSelected

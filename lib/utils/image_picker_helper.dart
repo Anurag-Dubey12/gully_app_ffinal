@@ -19,13 +19,12 @@ Future<XFile?> imagePickerHelper() async {
 
   return image;
 }
+
 Future<List<XFile?>?> multipleimagePickerHelper() async {
   final ImagePicker picker = ImagePicker();
   final List<XFile> images = await picker.pickMultiImage();
-  return images ??[];
+  return images ?? [];
 }
-
-
 
 Future<String> convertImageToBase64(XFile image) async {
   final bytes = await image.readAsBytes();
@@ -35,8 +34,8 @@ Future<String> convertImageToBase64(XFile image) async {
   logger.d("The base64 image is: $base64Image");
   return mimeType != null ? 'data:$mimeType;base64,$base64Image' : base64Image;
 }
+
 Future<String> convertVideoToBase64(XFile image) async {
-  // Use compute to run encoding in a separate isolate
   return await compute(_encodeFileToBase64, image);
 }
 
@@ -51,7 +50,9 @@ String _encodeFileToBase64(XFile image) {
 
   return mimeType != null ? 'data:$mimeType;base64,$base64Image' : base64Image;
 }
-void imageViewer(BuildContext context, String? photoUrl,bool isnetworkimage,{VoidCallback? onTap}) {
+
+void imageViewer(BuildContext context, String? photoUrl, bool isnetworkimage,
+    {VoidCallback? onTap}) {
   if (photoUrl == null || photoUrl.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('No image available')),
@@ -76,34 +77,53 @@ void imageViewer(BuildContext context, String? photoUrl,bool isnetworkimage,{Voi
               child: Hero(
                 tag: 'tournamentLogo',
                 child: GestureDetector(
-                  onTap:onTap ??(){},
-                  child: InteractiveViewer(
-                    minScale: 0.5,
-                    maxScale: 4.0,
-                    child: isnetworkimage ?
-                    Container(
-                      width: Get.width,
-                      height: Get.height,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: FallbackImageProvider(
-                            toImageUrl(photoUrl),
-                            'assets/images/logo.png',
+                  onTap: onTap ?? () {},
+                  child: AnimatedBuilder(
+                    animation: const AlwaysStoppedAnimation(1.0),
+                    builder: (context, child) {
+                      return ScaleTransition(
+                        scale: Tween<double>(begin: 0.5, end: 1.0).animate(
+                          CurvedAnimation(
+                            parent: ModalRoute.of(context)!.animation!,
+                            curve: Curves.easeInOut,
                           ),
-                          fit: BoxFit.contain,
                         ),
-                      ),
-                    ):
-                    Container(
-                      width: Get.width,
-                      height: Get.height,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: FileImage(File(photoUrl)),
-                          fit: BoxFit.contain,
+                        child: FadeTransition(
+                          opacity: CurvedAnimation(
+                            parent: ModalRoute.of(context)!.animation!,
+                            curve: Curves.easeInOut,
+                          ),
+                          child: InteractiveViewer(
+                            minScale: 0.5,
+                            maxScale: 4.0,
+                            child: isnetworkimage
+                                ? Container(
+                                    width: Get.width,
+                                    height: Get.height,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: FallbackImageProvider(
+                                          toImageUrl(photoUrl),
+                                          'assets/images/logo.png',
+                                        ),
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  )
+                                : Container(
+                                    width: Get.width,
+                                    height: Get.height,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                        image: FileImage(File(photoUrl)),
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ),
+                                  ),
+                          ),
                         ),
-                      ),
-                    )
+                      );
+                    },
                   ),
                 ),
               ),
@@ -132,10 +152,10 @@ ImageProvider _getImageProvider(String photoUrl) {
   } else {
     return FileImage(File(photoUrl));
   }
-
-
 }
-void multiImageViewer(BuildContext context, List<String?> imageUrls, int initialIndex, bool isNetworkImage) {
+
+void multiImageViewer(BuildContext context, List<String?> imageUrls,
+    int initialIndex, bool isNetworkImage) {
   if (imageUrls.isEmpty) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('No images available')),
@@ -157,5 +177,3 @@ void multiImageViewer(BuildContext context, List<String?> imageUrls, int initial
     ),
   );
 }
-
-

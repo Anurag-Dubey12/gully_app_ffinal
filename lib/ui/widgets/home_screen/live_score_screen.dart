@@ -292,7 +292,7 @@ class CardState extends State<Card> {
                             logger.d("The TournamentId is:${tournamentdata.id}");
                             Get.to(() => ScheduleScreen(tournament: tournamentdata,));
                           },
-                          child: const Text("View Schedule",style: TextStyle(fontSize: 12,decoration: TextDecoration.underline),),
+                          child: const Text("View Schedule",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),),
                         )
                       ],
                     ),

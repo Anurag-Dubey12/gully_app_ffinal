@@ -74,43 +74,43 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
             canPop: false,
             child: Scaffold(
               backgroundColor: Colors.transparent,
-              bottomNavigationBar: Container(
-                height: 65,
-                decoration: BoxDecoration(color: Colors.white, boxShadow: [
-                  BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 5,
-                      spreadRadius: 2,
-                      offset: const Offset(0, -1))
-                ]),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10.0, vertical: 5),
-                      child: PrimaryButton(
-                        onTap: () async {
-                          showModalBottomSheet(
-                              context: context,
-                              backgroundColor: Colors.grey.shade300,
-                              showDragHandle: true,
-                              isScrollControlled: true,
-                              builder: (c) {
-                                return _AddManualPlace(
-                                  onSelected: (e) {
-                                    widget.onSelected.call(e, null);
-                                    Get.back();
-                                  },
-                                );
-                              });
-                          setState(() {});
-                        },
-                        title: 'Add Manually',
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // bottomNavigationBar: Container(
+              //   height: 65,
+              //   decoration: BoxDecoration(color: Colors.white, boxShadow: [
+              //     BoxShadow(
+              //         color: Colors.black.withOpacity(0.1),
+              //         blurRadius: 5,
+              //         spreadRadius: 2,
+              //         offset: const Offset(0, -1))
+              //   ]),
+              //   child: Column(
+              //     children: [
+              //       Padding(
+              //         padding: const EdgeInsets.symmetric(
+              //             horizontal: 10.0, vertical: 5),
+              //         child: PrimaryButton(
+              //           onTap: () async {
+              //             showModalBottomSheet(
+              //                 context: context,
+              //                 backgroundColor: Colors.grey.shade300,
+              //                 showDragHandle: true,
+              //                 isScrollControlled: true,
+              //                 builder: (c) {
+              //                   return _AddManualPlace(
+              //                     onSelected: (e) {
+              //                       widget.onSelected.call(e, null);
+              //                       Get.back();
+              //                     },
+              //                   );
+              //                 });
+              //             setState(() {});
+              //           },
+              //           title: 'Add Manually',
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               body: Stack(children: [
                 Positioned(
                     top: 0,

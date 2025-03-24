@@ -446,11 +446,12 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen>
               ],
             ),
           ),
+
           SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Obx(() {
-                final matches = controller.performance.value?.matches;
+                final matches = controller.performance.value?.matches.reversed;
                 if (matches == null || matches.isEmpty) {
                   return const Center(child: Text('No matches available'));
                 }

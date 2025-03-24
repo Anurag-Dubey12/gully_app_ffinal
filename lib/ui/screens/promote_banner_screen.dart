@@ -163,7 +163,7 @@ class MyBannerState extends State<MyBanner>
                         ? toImageUrl(widget.banner.bannerImage)
                         : 'assets/images/logo.png',
                     width: Get.width,
-                    height: 150,
+                    height: 120,
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Image.asset('assets/images/logo.png',

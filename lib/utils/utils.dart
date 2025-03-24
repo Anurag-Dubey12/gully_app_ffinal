@@ -162,3 +162,4 @@ Future<Duration> getVideoDuration(File videoFile) async {
   await videoPlayerController.dispose();
   return duration;
 }
+

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import 'package:get/get.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/create_tournament/form_input.dart';
@@ -8,6 +8,7 @@ import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 
+import '../../config/app_constants.dart';
 import '../../data/controller/auth_controller.dart';
 import '../../data/controller/misc_controller.dart';
 
@@ -33,7 +34,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text(
-            AppLocalizations.of(context)!.contactUsTitle,
+            AppConstants.contactUsTitle,
             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -55,7 +56,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                         text: controller.state?.fullName,
                       ),
                       readOnly: true,
-                      label: AppLocalizations.of(context)!.nameLabel,
+                      label: AppConstants.nameLabel,
                       enabled: false,
                     ),
                     FormInput(
@@ -63,13 +64,13 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                         text: controller.state?.email,
                       ),
                       readOnly: true,
-                      label: AppLocalizations.of(context)!.emailLabel,
+                      label: AppConstants.emailLabel,
                       enabled: false,
                     ),
                     FormInput(
                       controller: messageController,
                       maxLines: 10,
-                      label: AppLocalizations.of(context)!.messageLabel,
+                      label: AppConstants.messageLabel,
                     ),
                     const SizedBox(
                       height: 20,
@@ -79,13 +80,11 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                         isLoading: miscController.status.isLoading,
                         onTap: () async {
                           if (messageController.text.isEmpty) {
-                            errorSnackBar(AppLocalizations.of(context)!
-                                .emptyMessageError);
+                            errorSnackBar(AppConstants.emptyMessageError);
                             return;
                           }
                           if (messageController.text.length < 20) {
-                            errorSnackBar(AppLocalizations.of(context)!
-                                .shortMessageError);
+                            errorSnackBar(AppConstants.shortMessageError);
                             return;
                           }
                           logger.i('adding help desk');
@@ -115,11 +114,10 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                       const SizedBox(
                                         height: 20,
                                       ),
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .thankYouMessage,
+                                      const Text(
+                                        AppConstants.thankYouMessage,
                                         textAlign: TextAlign.center,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -127,11 +125,10 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                       const SizedBox(
                                         height: 20,
                                       ),
-                                      Text(
-                                        AppLocalizations.of(context)!
-                                            .replySoonMessage,
+                                      const Text(
+                                        AppConstants.replySoonMessage,
                                         textAlign: TextAlign.center,
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                           fontSize: 14,
                                           color: Colors.grey,
                                           fontWeight: FontWeight.w500,
@@ -147,8 +144,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                                             Get.back();
                                             Get.back();
                                           },
-                                          title: AppLocalizations.of(context)!
-                                              .okButton,
+                                          title: AppConstants.okButton,
                                         ),
                                       ),
                                       const SizedBox(
@@ -163,7 +159,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                             enableDrag: false,
                           );
                         },
-                        title: AppLocalizations.of(context)!.submitButton,
+                        title: AppConstants.submitButton,
                       ),
                     ),
                   ],
@@ -181,7 +177,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     const SizedBox(
                       width: 10,
                     ),
-                    Text(AppLocalizations.of(context)!.emailInfo),
+                    Text(AppConstants.emailInfo),
                   ],
                 ),
                 SizedBox(
@@ -199,7 +195,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     ),
                     SizedBox(
                         width: Get.width * 0.7,
-                        child: Text(AppLocalizations.of(context)!.addressInfo)),
+                        child: Text(AppConstants.addressInfo)),
                   ],
                 ),
                 SizedBox(
@@ -215,7 +211,7 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     const SizedBox(
                       width: 10,
                     ),
-                    Text(AppLocalizations.of(context)!.phoneInfo),
+                    Text(AppConstants.phoneInfo),
                   ],
                 ),
               ],

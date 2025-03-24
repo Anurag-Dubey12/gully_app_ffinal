@@ -9,7 +9,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -28,7 +27,6 @@ import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/ui/widgets/location_permission_builder.dart';
 import 'package:gully_app/utils/app_logger.dart';
-import 'package:gully_app/utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '/config/api_client.dart';
@@ -79,7 +77,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
   final Connectivity _connectivity = Connectivity();
-
   @override
   void initState() {
     super.initState();
@@ -154,12 +151,11 @@ class _MyAppState extends State<MyApp> {
     _connectivitySubscription.cancel();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       localizationsDelegates: const [
-        AppLocalizations.delegate,
+        // AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -176,6 +172,7 @@ class _MyAppState extends State<MyApp> {
         Locale('ta'),
         Locale('te'),
       ],
+
       builder: (context, child) {
         // if (!_isConnected) {
         //   return const NoInternetScreen();
@@ -219,10 +216,16 @@ class _MyAppState extends State<MyApp> {
         Bind.put<AuthController>(AuthController(repo: Get.find())),
         Bind.put<ScoreBoardController>(
             ScoreBoardController(scoreboardApi: Get.find())),
+        Bind.put<TournamentController>(
+          TournamentController(Get.find())
+        ),
         Bind.lazyPut<TournamentController>(
                 () => TournamentController(Get.find())),
-        Bind.lazyPut<PromotionController>(
-                () => PromotionController(bannerApi: Get.find())),
+        Bind.put<PromotionController>(
+            PromotionController(bannerApi: Get.find())
+        ),
+        // Bind.lazyPut<PromotionController>(
+        //         () => PromotionController(bannerApi: Get.find())),
         Bind.lazyPut<ServiceController>(
                 () => ServiceController(serviceApi: Get.find())),
         Bind.lazyPut<ShopController>(

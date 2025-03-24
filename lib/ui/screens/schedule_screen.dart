@@ -332,20 +332,21 @@ class MatchupCard extends StatelessWidget {
                                   ? "Did Not Bat"
                                   : '${scoreboard.firstInnings?.totalScore ?? 0}/${scoreboard.firstInnings?.totalWickets ?? 0}',
                             ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 8.0),
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  'VS',
-                                  style: Get.textTheme.bodyMedium?.copyWith(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            const SizedBox(height: 10),
+                            // Padding(
+                            //   padding: const EdgeInsets.symmetric(
+                            //       horizontal: 10, vertical: 8.0),
+                            //   child: Align(
+                            //     alignment: Alignment.centerLeft,
+                            //     child: Text(
+                            //       'VS',
+                            //       style: Get.textTheme.bodyMedium?.copyWith(
+                            //         color: Colors.black,
+                            //         fontWeight: FontWeight.bold,
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                             teamView(
                               matchup.team2.logo ?? '',
                               matchup.team2.name,

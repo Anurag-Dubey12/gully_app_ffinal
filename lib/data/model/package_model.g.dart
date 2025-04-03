@@ -9,7 +9,7 @@ part of 'package_model.dart';
 Package _$PackageFromJson(Map<String, dynamic> json) => Package(
       id: json['_id'] as String,
       name: json['name'] as String,
-      price: (json['price'] as num).toInt(),
+      price: (json['price'] as num).toDouble(),
       duration: json['duration'] as String?,
       packageFor: json['packageFor'] as String,
       features: (json['features'] as List<dynamic>?)

@@ -28,7 +28,8 @@ class _VendorDetailsState extends State<VendorDetails> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _numberController = TextEditingController();
-  final TextEditingController _alternateNumberController = TextEditingController();
+  final TextEditingController _alternateNumberController =
+      TextEditingController();
   final TextEditingController _addressController = TextEditingController();
   XFile? _documentImage;
   late vendor_model _vendorData;
@@ -38,7 +39,8 @@ class _VendorDetailsState extends State<VendorDetails> {
     super.initState();
     final AuthController authController = Get.find<AuthController>();
     final ShopController shopController = Get.find<ShopController>();
-    _vendorData = shopController.getVendorDetails() ?? vendor_model(name: '', email: '', phoneNumber: '', id: '');
+    _vendorData = shopController.getVendorDetails() ??
+        vendor_model(name: '', email: '', phoneNumber: '', id: '');
     if (_vendorData.name.isEmpty) {
       _vendorData = vendor_model(
         name: authController.state?.fullName ?? '',
@@ -50,7 +52,8 @@ class _VendorDetailsState extends State<VendorDetails> {
     _nameController.text = _vendorData.name;
     _emailController.text = _vendorData.email;
     _numberController.text = _vendorData.phoneNumber;
-    _alternateNumberController.text = _vendorData.alternatePhoneNumber?.toString() ?? '';
+    _alternateNumberController.text =
+        _vendorData.alternatePhoneNumber?.toString() ?? '';
     _addressController.text = _vendorData.address ?? '';
     shopController.updateVendorDetails(_vendorData);
   }
@@ -67,7 +70,7 @@ class _VendorDetailsState extends State<VendorDetails> {
     );
     final ShopController shopController = Get.find<ShopController>();
     shopController.updateVendorDetails(_vendorData);
-    logger.d("The vendor Details are:${_vendorData.id_proof}");
+    //logger.d"The vendor Details are:${_vendorData.id_proof}");
   }
 
   Future<void> pickImage() async {
@@ -80,12 +83,14 @@ class _VendorDetailsState extends State<VendorDetails> {
         int fileSizeInBytes = await file.length();
         double fileSizeInMB = fileSizeInBytes / (1024 * 1024);
         if (fileSizeInMB > 2) {
-          errorSnackBar('File size should be less than 2MB.', title: "File too large!");
+          errorSnackBar('File size should be less than 2MB.',
+              title: "File too large!");
           return;
         }
         final String extension = image.path.split('.').last.toLowerCase();
         if (decodedImage.width == decodedImage.height) {
-          errorSnackBar('Image Width And the Height Cannot be the same.', title: "Invalid file!");
+          errorSnackBar('Image Width And the Height Cannot be the same.',
+              title: "Invalid file!");
           return;
         }
         if (extension == 'png' || extension == 'jpg' || extension == 'jpeg') {
@@ -97,14 +102,17 @@ class _VendorDetailsState extends State<VendorDetails> {
         } else {
           _documentImage = null;
           widget.onDocumentImageSelected(false);
-          errorSnackBar('Please select a PNG or JPG image.', title: "Invalid file format!");
+          errorSnackBar('Please select a PNG or JPG image.',
+              title: "Invalid file format!");
         }
       } else {
-        errorSnackBar('Please select an image with valid dimensions.', title: "Invalid image!");
+        errorSnackBar('Please select an image with valid dimensions.',
+            title: "Invalid image!");
       }
     } catch (e) {
-      logger.d('Error picking image: $e');
-      errorSnackBar('An error occurred while picking the image.', title: "Error");
+      //logger.d'Error picking image: $e');
+      errorSnackBar('An error occurred while picking the image.',
+          title: "Error");
     }
   }
 
@@ -166,42 +174,44 @@ class _VendorDetailsState extends State<VendorDetails> {
                   ),
                   child: _documentImage == null
                       ? const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add_photo_alternate, size: 40, color: Colors.black),
-                        SizedBox(height: 10),
-                        Text(
-                          "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ],
-                    ),
-                  )
-                      : Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: SizedBox(
-                          width: Get.width,
-                          height: 200,
-                          child: Image.file(
-                            File(_documentImage!.path),
-                            fit: BoxFit.cover,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add_photo_alternate,
+                                  size: 40, color: Colors.black),
+                              SizedBox(height: 10),
+                              Text(
+                                "Select Documents for Verification\n(JPG, PNG, or PDF, max 2MB)",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: Colors.black),
+                              ),
+                            ],
                           ),
+                        )
+                      : Stack(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: SizedBox(
+                                width: Get.width,
+                                height: 200,
+                                child: Image.file(
+                                  File(_documentImage!.path),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: IconButton(
+                                onPressed: pickImage,
+                                icon:
+                                    const Icon(Icons.edit, color: Colors.white),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      Positioned(
-                        right: 0,
-                        bottom: 0,
-                        child: IconButton(
-                          onPressed: pickImage,
-                          icon: const Icon(Icons.edit, color: Colors.white),
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ],

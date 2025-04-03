@@ -9,7 +9,7 @@ class Package {
   @JsonKey(name: "name")
   final String name;
   @JsonKey(name: "price")
-  final int price;
+  final double price;
   @JsonKey(name: "duration")
   final String? duration;
   @JsonKey(name: "packageFor")
@@ -44,7 +44,8 @@ class Package {
     this.sponsorshipDetails,
   });
 
-  factory Package.fromJson(Map<String, dynamic> json) => _$PackageFromJson(json);
+  factory Package.fromJson(Map<String, dynamic> json) =>
+      _$PackageFromJson(json);
 
   Map<String, dynamic> toJson() => _$PackageToJson(this);
 }

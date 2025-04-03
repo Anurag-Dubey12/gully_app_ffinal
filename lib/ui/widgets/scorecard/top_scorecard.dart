@@ -12,7 +12,7 @@ class ScoreCard extends GetView<ScoreBoardController> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: Obx(() => Column(
             children: [
               Container(
@@ -40,21 +40,22 @@ class ScoreCard extends GetView<ScoreBoardController> {
                                       Expanded(
                                           flex: 3,
                                           child: Text(
-                                              controller.scoreboard.value!
-                                                          .currentInnings ==
-                                                      1
-                                                  ? controller.scoreboard.value!
-                                                      .team1.name.capitalize
-                                                  : controller.scoreboard.value!
-                                                      .team2.name.capitalize,
-                                              style: Get
-                                                  .textTheme.headlineMedium
-                                                  ?.copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      fontSize: 18 *
-                                                          Get.textScaleFactor,
-                                                      color: Colors.black),overflow: TextOverflow.ellipsis,maxLines: 2,)),
+                                            controller.scoreboard.value!
+                                                        .currentInnings ==
+                                                    1
+                                                ? controller.scoreboard.value!
+                                                    .team1.name.capitalize
+                                                : controller.scoreboard.value!
+                                                    .team2.name.capitalize,
+                                            style: Get.textTheme.headlineMedium
+                                                ?.copyWith(
+                                                    fontWeight: FontWeight.w500,
+                                                    fontSize: 18 *
+                                                        Get.textScaleFactor,
+                                                    color: Colors.black),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                          )),
                                       const Spacer(),
                                       Expanded(
                                           flex: 2,

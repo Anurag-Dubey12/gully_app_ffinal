@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/full_scorecard.dart';
-import 'package:gully_app/ui/widgets/custom_score_select_sheet.dart';
-import 'package:gully_app/utils/app_logger.dart';
-import 'package:gully_app/utils/utils.dart';
+import '../../screens/full_scorecard.dart';
+import '../custom_score_select_sheet.dart';
+import '../../../utils/app_logger.dart';
+import '../../../utils/utils.dart';
 import '../../../data/controller/misc_controller.dart';
 import '../../../data/controller/scoreboard_controller.dart';
 import '../../theme/theme.dart';
@@ -77,7 +77,18 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                             title: 'Extras',
                             fontSize: 12 * Get.textScaleFactor,
                           ),
-                        )
+                        ),
+                        // controller.scoreboard.value?.currentInnings == 1
+                        //     ? SizedBox(
+                        //         height: 10,
+                        //         child: PrimaryButton(
+                        //           onTap: () {
+                        //             Get.to(() => const FullScoreboardScreen());
+                        //           },
+                        //           title: 'Scorecard',
+                        //         ),
+                        //       )
+                        //     : const SizedBox.shrink()
                       ],
                     ),
                   ),
@@ -124,8 +135,8 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                                     //       "Please select New Batsmen to continue");
                                     //   return;
                                     // }
-                                    logger.d(
-                                        "The wicket status is:${controller.isWicketSelected.value} \n The batsmen status is:${controller.isBatsmenSelected.value}");
+                                    //logger.d
+                                        // "The wicket status is:${controller.isWicketSelected.value} \n The batsmen status is:${controller.isBatsmenSelected.value}");
                                     // if(controller.isWicketSelected.value){
                                     //   if(controller.isBatsmenSelected.value){
                                     // controller.addEvent(EventType.dotBall);
@@ -367,43 +378,41 @@ class ScoreUpdater extends GetView<ScoreBoardController> {
                       );
                     }),
                     const SizedBox(height: 10),
-                    Obx(() => controller.scoreboard.value?.currentInnings == 2
+                    Obx(() => controller.scoreboard.value?.currentInnings == 1
                         ? Container(
+                            padding: const EdgeInsets.all(5.0),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               color: Colors.white,
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: SizedBox(
-                                  width: Get.width,
-                                  height: 40,
-                                  child: TextButton(
-                                      style: ButtonStyle(
-                                          backgroundColor:
-                                              WidgetStateProperty.all(
-                                                  AppTheme.primaryColor),
-                                          padding: WidgetStateProperty.all(
-                                              const EdgeInsets.all(7))),
-                                      onPressed: () {
-                                        if (!connectionController
-                                            .isConnected.value) {
-                                          errorSnackBar(
-                                              'Please connect to the internet to update score');
-                                          return;
-                                        } else {
-                                          Get.bottomSheet(
-                                              const EndOfIningsDialog(),
-                                              isScrollControlled: true,
-                                              ignoreSafeArea: true);
-                                        }
-                                      },
-                                      child: const Text('Start 2nd Innings',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500)))),
-                            ),
+                            child: SizedBox(
+                                width: Get.width,
+                                height: 40,
+                                child: TextButton(
+                                    style: ButtonStyle(
+                                        backgroundColor:
+                                            WidgetStateProperty.all(
+                                                AppTheme.primaryColor),
+                                        padding: WidgetStateProperty.all(
+                                            const EdgeInsets.all(7))),
+                                    onPressed: () {
+                                      if (!connectionController
+                                          .isConnected.value) {
+                                        errorSnackBar(
+                                            'Please connect to the internet to update score');
+                                        return;
+                                      } else {
+                                        Get.bottomSheet(
+                                            const EndOfIningsDialog(),
+                                            isScrollControlled: true,
+                                            ignoreSafeArea: true);
+                                      }
+                                    },
+                                    child: const Text('Start 2nd Innings',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w500)))),
                           )
                         : PrimaryButton(
                             onTap: () {

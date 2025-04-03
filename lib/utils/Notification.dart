@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'app_logger.dart';
+
 void backgroundNotificationResponseHandler(
     NotificationResponse notification) async {
   debugPrint('Received background notification response: $notification');
@@ -9,14 +10,14 @@ void backgroundNotificationResponseHandler(
 
 class FirebaseNotification {
   final FlutterLocalNotificationsPlugin notificationPlugin =
-  FlutterLocalNotificationsPlugin();
+      FlutterLocalNotificationsPlugin();
 
   Future<void> initNotification() async {
     const AndroidInitializationSettings initializationAndroidSettings =
-    AndroidInitializationSettings('logo');
+        AndroidInitializationSettings('logo');
 
     const DarwinInitializationSettings initializationSettingIOS =
-    DarwinInitializationSettings(
+        DarwinInitializationSettings(
       requestAlertPermission: true,
       defaultPresentSound: true,
       defaultPresentAlert: true,
@@ -25,7 +26,7 @@ class FirebaseNotification {
     );
 
     const InitializationSettings initializationSettings =
-    InitializationSettings(
+        InitializationSettings(
       android: initializationAndroidSettings,
       iOS: initializationSettingIOS,
     );
@@ -34,7 +35,7 @@ class FirebaseNotification {
       initializationSettings,
       onDidReceiveNotificationResponse: onNotificationSelected,
       onDidReceiveBackgroundNotificationResponse:
-      backgroundNotificationResponseHandler,
+          backgroundNotificationResponseHandler,
     );
   }
 
@@ -42,7 +43,7 @@ class FirebaseNotification {
       NotificationResponse notificationResponse) async {
     final String? payload = notificationResponse.payload;
     if (payload != null) {
-      logger.d("Caught the notification");
+      //logger.d"Caught the notification");
     }
   }
 
@@ -65,13 +66,10 @@ class FirebaseNotification {
   Future<NotificationDetails> notificationDetails() async {
     return const NotificationDetails(
       iOS: DarwinNotificationDetails(),
-      android: AndroidNotificationDetails(
-        'Gully Team ',
-        'Important',
-        importance: Importance.max,
-        priority: Priority.high,
-        icon: '@drawable/logo'
-      ),
+      android: AndroidNotificationDetails('Gully Team ', 'Important',
+          importance: Importance.max,
+          priority: Priority.high,
+          icon: '@drawable/logo'),
     );
   }
 }

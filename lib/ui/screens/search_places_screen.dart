@@ -46,7 +46,7 @@ class SearchPlacesScreenState extends State<SearchPlacesScreen> {
                     title: const Text('Use current location',
                         style: TextStyle(color: Colors.blue, fontSize: 16)),
                     onTap: () async {
-                      logger.d('Use current location');
+                      //logger.d'Use current location');
                       final postion = await determinePosition(
                           accuracy: LocationAccuracy.medium,
                           forceAndroidLocationManager: true);
@@ -91,12 +91,12 @@ class SearchPlacesScreenState extends State<SearchPlacesScreen> {
         ],
         isLatLngRequired: true,
         getPlaceDetailWithLatLng: (Prediction prediction) {
-          logger.d("Selected Place: ${prediction.toJson()}");
+          //logger.d"Selected Place: ${prediction.toJson()}");
           widget.onSelected?.call(prediction);
         },
 
         itemClick: (Prediction prediction) {
-          logger.d("Selected Place: ${prediction.toJson()}");
+          //logger.d"Selected Place: ${prediction.toJson()}");
           controller.text = prediction.description ?? "";
           widget.onSelected?.call(prediction);
           controller.selection = TextSelection.fromPosition(

@@ -10,13 +10,17 @@ Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
       tournamentName: json['tournamentName'] as String?,
       startDate: json['startDate'] as String?,
       endDate: json['endDate'] as String?,
-      status: json['status'] as String,
-      amount: (json['amount'] as num).toDouble(),
-      coupon: json['coupon'] as String? ?? '',
-      amountWithoutCoupon: (json['amountWithoutCoupon'] as num).toDouble(),
-      orderId: json['orderId'] as String,
-      createdAt: json['createdAt'] as String,
-      orderType: json['ordertype'] as String,
+      status: json['status'] as String? ?? '',
+      amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
+      gstAmount: (json['gstAmount'] as num?)?.toDouble() ?? 0.0,
+      amountbeforegst: (json['amountbeforegst'] as num?)?.toDouble() ?? 0,
+      totalAmountWithGST:
+          (json['totalAmountWithGST'] as num?)?.toDouble() ?? 0.0,
+      amountWithoutCoupon:
+          (json['amountWithoutCoupon'] as num?)?.toDouble() ?? 0.0,
+      orderId: json['orderId'] as String? ?? '',
+      createdAt: json['createdAt'] as String? ?? '',
+      orderType: json['ordertype'] as String? ?? '',
       banner: json['bannerId'] == null
           ? null
           : PromotionalBanner.fromJson(
@@ -34,7 +38,9 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
       'endDate': instance.endDate,
       'status': instance.status,
       'amount': instance.amount,
-      'coupon': instance.coupon,
+      'gstAmount': instance.gstAmount,
+      'amountbeforegst': instance.amountbeforegst,
+      'totalAmountWithGST': instance.totalAmountWithGST,
       'amountWithoutCoupon': instance.amountWithoutCoupon,
       'orderId': instance.orderId,
       'createdAt': instance.createdAt,

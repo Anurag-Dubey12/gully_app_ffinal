@@ -14,7 +14,7 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../../utils/app_logger.dart';
 
 class PaymentPage extends StatefulWidget {
-  final Map<String,dynamic> tournament;
+  final Map<String, dynamic> tournament;
   const PaymentPage({super.key, required this.tournament});
 
   @override
@@ -40,17 +40,17 @@ class _PaymentPageState extends State<PaymentPage> {
     // fees = widget.tournament.fees;
     start_date = DateTime.parse(widget.tournament['tournamentStartDateTime']);
     end_date = DateTime.parse(widget.tournament['tournamentEndDateTime']);
-    logger.d("The Start Date is:$start_date and end Date is:$end_date");
+    //logger.d"The Start Date is:$start_date and end Date is:$end_date");
     getFee();
-
   }
 
   getFee() async {
     final controller = Get.find<TournamentController>();
-    logger.d("The Fess Data:${widget.tournament['tournamentLimit']} ");
-    fees = await controller.getTournamentFee(widget.tournament['tournamentLimit']);
+    //logger.d"The Fess Data:${widget.tournament['tournamentLimit']} ");
+    fees =
+        await controller.getTournamentFee(widget.tournament['tournamentLimit']);
     setState(() {
-      logger.d(fees.toString());
+      //logger.dfees.toString());
     });
   }
 
@@ -199,9 +199,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                   fontSize: 14,
                                   color: Colors.grey,
                                 )),
-                            Text(
-                                DateFormat("dd-MMM-yyyy").format(
-                                    start_date!),
+                            Text(DateFormat("dd-MMM-yyyy").format(start_date!),
                                 style: TextStyle(
                                   // color: AppTheme.secondaryYellowColor,
                                   fontSize: 14,
@@ -220,9 +218,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                   fontSize: 14,
                                   color: Colors.grey,
                                 )),
-                            Text(
-                                DateFormat("dd-MMM-yyyy").format(
-                                    end_date!),
+                            Text(DateFormat("dd-MMM-yyyy").format(end_date!),
                                 style: TextStyle(
                                   // color: AppTheme.secondaryYellowColor,
                                   fontSize: 14,
@@ -297,8 +293,7 @@ class _PaymentPageState extends State<PaymentPage> {
                     Container(
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color:
-                          AppTheme.secondaryYellowColor.withOpacity(0.8),
+                          color: AppTheme.secondaryYellowColor.withOpacity(0.8),
                           width: 2,
                         ),
                         borderRadius: BorderRadius.circular(12),
@@ -465,7 +460,9 @@ class _PaymentPageState extends State<PaymentPage> {
                                         ),
                                       ),
                                       Icon(
-                                        _isCouponVisible ? Icons.arrow_drop_up_outlined : Icons.arrow_drop_down,
+                                        _isCouponVisible
+                                            ? Icons.arrow_drop_up_outlined
+                                            : Icons.arrow_drop_down,
                                         color: Colors.grey.shade600,
                                       ),
                                     ],
@@ -474,8 +471,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               ],
                             ),
                             const Spacer(),
-                            Text(
-                              '- ₹$discount',
+                            Text('- ₹$discount',
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.grey.shade800,
@@ -495,7 +491,8 @@ class _PaymentPageState extends State<PaymentPage> {
                               color: Colors.red.shade400,
                               width: 1.5,
                             ),
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                             avatar: Icon(
                               Icons.local_offer,
                               color: Colors.red.shade600,
@@ -553,11 +550,15 @@ class _PaymentPageState extends State<PaymentPage> {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          final response =controller.createTournament(widget.tournament);
-                          successSnackBar('Tournament Create Successfully').then(
-                                (value) => Get.offAll(() => const HomeScreen(), predicate: (route) => route.name == '/HomeScreen'),
+                          final response =
+                              controller.createTournament(widget.tournament);
+                          successSnackBar('Tournament Create Successfully')
+                              .then(
+                            (value) => Get.offAll(() => const HomeScreen(),
+                                predicate: (route) =>
+                                    route.name == '/HomeScreen'),
                           );
-                                                },
+                        },
                         child: const Text('Submit',
                             style: TextStyle(
                               color: Colors.white,
@@ -587,7 +588,9 @@ class _PaymentPageState extends State<PaymentPage> {
                     //   ),
                     // ),
                     const SizedBox(height: 22),
-                     const CancellationPolicyWidget(content: 'The tournament fee is non-refundable. In case of any issue, kindly contact Gully Support.')
+                    const CancellationPolicyWidget(
+                        content:
+                            'The tournament fee is non-refundable. In case of any issue, kindly contact Gully Support.')
                   ],
                 ),
               ),
@@ -601,10 +604,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
 class CancellationPolicyWidget extends StatelessWidget {
   final String content;
-  const CancellationPolicyWidget({
-    super.key,
-    required this.content
-  });
+  const CancellationPolicyWidget({super.key, required this.content});
 
   @override
   Widget build(BuildContext context) {
@@ -628,8 +628,7 @@ class CancellationPolicyWidget extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 )),
             const SizedBox(height: 12),
-            Text(
-                content,
+            Text(content,
                 style: TextStyle(
                   // color: AppTheme.secondaryYellowColor,
                   fontSize: 14,

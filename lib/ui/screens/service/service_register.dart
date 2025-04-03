@@ -89,7 +89,7 @@ class RegisterService extends State<ServiceRegister> {
         location = LatLng(position.latitude, position.longitude);
       });
     } catch (e) {
-      logger.e('Error fetching location: $e');
+      //logger.e('Error fetching location: $e');
       errorSnackBar('Failed to fetch location. Please try again.',
           title: "Error");
     }
@@ -265,8 +265,8 @@ class RegisterService extends State<ServiceRegister> {
                                   final serviceModel = await serviceController
                                       .addService(serviceData);
                                   authController.getUser();
-                                  logger.d(
-                                      "The Service id is: ${serviceModel.id}");
+                                  //logger.d
+                                      // "The Service id is: ${serviceModel.id}");
                                   Get.to(() => ServicePaymentPage(
                                       service: serviceModel));
                                 }

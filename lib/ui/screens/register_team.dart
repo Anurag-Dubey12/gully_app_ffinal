@@ -51,7 +51,7 @@ class _RegisterTeamState extends State<RegisterTeam> {
                     onTap: () {
                       Get.to(() => SelectTeamToRegister(
                             onTeamSelected: (team) {
-                              logger.d('team selected---> $team');
+                              //logger.d'team selected---> $team');
                               Get.off(() => TeamEntryForm(
                                     team: team,
                                   ));

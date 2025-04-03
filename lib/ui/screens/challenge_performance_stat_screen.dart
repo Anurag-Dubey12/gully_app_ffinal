@@ -23,8 +23,9 @@ class _ChallengePerformanceStatScreenState
   @override
   void initState() {
     super.initState();
-    logger.d("ChallengePerformanceStatScreen initialized with match ID: ${widget.match.id}");
+    //logger.d"ChallengePerformanceStatScreen initialized with match ID: ${widget.match.id}");
   }
+
   @override
   Widget build(BuildContext context) {
     TeamController controller = Get.find<TeamController>();
@@ -189,7 +190,7 @@ class _ChallengePerformanceStatScreenState
                     ),
                     FutureBuilder<Map<String, dynamic>>(
                         future: controller.getChallengePerformance(
-                            matchId: widget.match.id,type: innings),
+                            matchId: widget.match.id, type: innings),
                         builder: (context, snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
@@ -197,7 +198,8 @@ class _ChallengePerformanceStatScreenState
                                 child: CircularProgressIndicator());
                           }
                           if (snapshot.hasError) {
-                            logger.e("Error in FutureBuilder: ${snapshot.error}");
+                            logger
+                                .e("Error in FutureBuilder: ${snapshot.error}");
                             return const Padding(
                               padding: EdgeInsets.all(18.0),
                               child: Center(child: Text('Error fetching data')),
@@ -217,16 +219,16 @@ class _ChallengePerformanceStatScreenState
                             );
                           }
                           final performanceData = snapshot.data!;
-                          logger.d("Performance data: $performanceData" );
+                          //logger.d"Performance data: $performanceData" );
                           return ListView.builder(
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: snapshot.data?.length ?? 0,
                               itemBuilder: (builder, index) {
                                 final statKey =
-                                performanceData.keys.elementAt(index);
+                                    performanceData.keys.elementAt(index);
                                 final statValues = performanceData[statKey];
-                                logger.d("StatKet: $statValues" );
+                                //logger.d"StatKet: $statValues" );
                                 return Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
@@ -254,7 +256,7 @@ class _ChallengePerformanceStatScreenState
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                statValues['tennis'].toString(),
+                                          statValues['tennis'].toString(),
                                           textAlign: TextAlign.center,
                                           style: _valueStyle(),
                                         ),

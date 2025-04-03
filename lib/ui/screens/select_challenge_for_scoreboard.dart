@@ -70,7 +70,7 @@ class _SelectChallengeForScoreboardState
                         ?.where((e) => e.status == 'Accepted')
                         .toList();
                     logger.f('Accepted Challenges: $acceptedChallenges');
-                    if(acceptedChallenges==null){
+                    if (acceptedChallenges!.isEmpty) {
                       return const Center(
                         child: Text("No Challenge Match Found"),
                       );
@@ -91,8 +91,8 @@ class _SelectChallengeForScoreboardState
                                   )),
                               minVerticalPadding: 4,
                               subtitle: Text(
-                                DateFormat('dd-MMM-yyyy')
-                                    .format(acceptedChallenges[index].createdAt!),
+                                DateFormat('dd-MMM-yyyy').format(
+                                    acceptedChallenges[index].createdAt!),
                                 style: const TextStyle(
                                   color: AppTheme.darkYellowColor,
                                   fontSize: 13,
@@ -125,9 +125,9 @@ class _SelectChallengeForScoreboardState
                                       '_id': acceptedChallenges[index].id,
                                     });
                                     if (acceptedChallenges[index]
-                                        .team1
-                                        .players!
-                                        .length <
+                                            .team1
+                                            .players!
+                                            .length <
                                         11) {
                                       errorSnackBar(
                                           'Team ${acceptedChallenges[index].team1.name} does not have enough players');
@@ -136,18 +136,18 @@ class _SelectChallengeForScoreboardState
                                     }
 
                                     if (acceptedChallenges[index]
-                                        .team2
-                                        .players!
-                                        .length <
+                                            .team2
+                                            .players!
+                                            .length <
                                         11) {
                                       errorSnackBar(
                                           'Team ${acceptedChallenges[index].team2.name} does not have enough players');
                                       return;
                                     }
                                     Get.off(
-                                            () => const SelectOpeningTeam(
-                                          isTournament: false,
-                                        ),
+                                        () => const SelectOpeningTeam(
+                                              isTournament: false,
+                                            ),
                                         preventDuplicates: false);
                                   }
                                 },
@@ -158,13 +158,12 @@ class _SelectChallengeForScoreboardState
                               ));
                         }),
                         separatorBuilder: (context, index) => const SizedBox(
-                          height: 20,
-                        ),
+                              height: 20,
+                            ),
                         itemCount: acceptedChallenges?.length ?? 0);
                   }),
             )),
       ),
     );
   }
-
 }

@@ -27,12 +27,13 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
           return const NoTournamentCard();
         } else {
           // Filter matches with non-null scoreboards
-          final matchMap = controller.matches.fold<Map<String, List<MatchupModel>>>({}, (map, match) {
+          final matchMap = controller.matches
+              .fold<Map<String, List<MatchupModel>>>({}, (map, match) {
             if (match.tournamentName != null && match.scoreBoard != null) {
               map.putIfAbsent(match.tournamentName!, () => []).add(match);
             } else {
               if (match.tournamentName != null && match.scoreBoard == null) {
-                logger.d("Skipping match with null scoreboard for tournament: ${match.tournamentName} ${match.tournamentId}");
+                //logger.d"Skipping match with null scoreboard for tournament: ${match.tournamentName} ${match.tournamentId}");
               }
             }
             return map;
@@ -40,13 +41,12 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
 
           // Remove entries with no matches (filtered by non-null scoreboards)
           final filteredMap = Map.fromEntries(
-              matchMap.entries.where((entry) => entry.value.isNotEmpty)
-          );
+              matchMap.entries.where((entry) => entry.value.isNotEmpty));
 
           // Get the latest match for each tournament
           final latestMatch = filteredMap.entries.map((entry) {
             return entry.value.reduce((latest, match) =>
-            match.matchDate.isAfter(latest.matchDate) ? match : latest);
+                match.matchDate.isAfter(latest.matchDate) ? match : latest);
           }).toList();
 
           // If no valid matches, show a NoTournamentCard
@@ -63,7 +63,7 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
               physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.only(bottom: 10, top: 10),
               itemBuilder: (context, snapshot) {
-                final matches=latestMatch.reversed.toList();
+                final matches = latestMatch.reversed.toList();
                 return _Card(
                   tournament: matches[snapshot],
                 );
@@ -75,7 +75,6 @@ class PastTournamentMatchCard extends GetView<TournamentController> {
     );
   }
 }
-
 
 class _Card extends StatelessWidget {
   final MatchupModel tournament;
@@ -94,29 +93,30 @@ class _Card extends StatelessWidget {
     int team1Score = 0;
     int team2Score = 0;
 
-    int team1total=scoreboard?.firstInnings?.totalScore ?? 0;
-    int team2total=scoreboard?.secondInnings?.totalScore ?? 0;
-    int team2wickets=scoreboard?.secondInnings?.totalWickets?? 0;
+    int team1total = scoreboard?.firstInnings?.totalScore ?? 0;
+    int team2total = scoreboard?.secondInnings?.totalScore ?? 0;
+    int team2wickets = scoreboard?.secondInnings?.totalWickets ?? 0;
 
     if (scoreboard != null) {
       if (scoreboard.firstInningHistory.isNotEmpty) {
         team1Score = scoreboard.firstInningHistory.entries.last.value.total;
       }
       team2Score =
-      scoreboard.currentInnings == 1 ? 0 : scoreboard.currentInningsScore;
+          scoreboard.currentInnings == 1 ? 0 : scoreboard.currentInningsScore;
 
       if (team1Score > team2Score) {
-        winnerText = '${scoreboard.team1.name} won by ${team1total-team2total} runs';
+        winnerText =
+            '${scoreboard.team1.name} won by ${team1total - team2total} runs';
         // winnerText = '${scoreboard.team1.name} won the game';
       } else if (team2Score > team1Score) {
-        winnerText = '${scoreboard.team2.name} won by ${10 - team2wickets} wickets';
+        winnerText =
+            '${scoreboard.team2.name} won by ${10 - team2wickets} wickets';
         // winnerText = '${scoreboard.team2.name} won the game';
-      }
-      else if (scoreboard.isSecondInningsOver && team2total == team1total) {
-        if(tournament.getWinningTeamName()==null){
+      } else if (scoreboard.isSecondInningsOver && team2total == team1total) {
+        if (tournament.getWinningTeamName() == null) {
           winnerText = 'Match Tied';
-        }else{
-        winnerText = "${tournament.getWinningTeamName()} won the match";
+        } else {
+          winnerText = "${tournament.getWinningTeamName()} won the match";
         }
       } else {
         winnerText = 'Match Tied';
@@ -152,17 +152,17 @@ class _Card extends StatelessWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      imageViewer(context,tournamentdata.coverPhoto,true);
+                      imageViewer(context, tournamentdata.coverPhoto, true);
                     },
                     child: CircleAvatar(
                       radius: 30,
                       backgroundImage: tournamentdata.coverPhoto != null &&
-                          tournamentdata.coverPhoto!.isNotEmpty
+                              tournamentdata.coverPhoto!.isNotEmpty
                           ? FallbackImageProvider(
-                          toImageUrl(tournamentdata.coverPhoto!),
-                          'assets/images/logo.png')
+                              toImageUrl(tournamentdata.coverPhoto!),
+                              'assets/images/logo.png')
                           : const AssetImage('assets/images/logo.png')
-                      as ImageProvider,
+                              as ImageProvider,
                       backgroundColor: Colors.transparent,
                     ),
                   ),
@@ -178,9 +178,7 @@ class _Card extends StatelessWidget {
                               child: Center(
                                 child: Text(
                                   tournament.tournamentName!,
-                                  style: const TextStyle(
-                                    fontSize: 15
-                                  ),
+                                  style: const TextStyle(fontSize: 15),
                                   softWrap: true,
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
@@ -189,11 +187,10 @@ class _Card extends StatelessWidget {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              formatDateTime('dd/MM/yyyy', tournament.matchDate),
+                              formatDateTime(
+                                  'dd/MM/yyyy', tournament.matchDate),
                               style: const TextStyle(
-                                  fontSize: 12,
-                                color: Colors.grey
-                              ),
+                                  fontSize: 12, color: Colors.grey),
                             ),
                           ],
                         ),
@@ -218,7 +215,7 @@ class _Card extends StatelessWidget {
                                 teamName: scoreboard.team2.name,
                                 score: scoreboard.currentInnings == 1
                                     ? "Did Not Bat"
-                                    : '${scoreboard.secondInnings?.totalScore??0}/${scoreboard.secondInnings?.totalWickets ?? 0}',
+                                    : '${scoreboard.secondInnings?.totalScore ?? 0}/${scoreboard.secondInnings?.totalWickets ?? 0}',
                               ),
                             ],
                           ),
@@ -253,13 +250,20 @@ class _Card extends StatelessWidget {
                   ),
                   // const Spacer(),
                   GestureDetector(
-                    onTap: (){
-                      logger.d("The TournamentId is:${tournamentdata.id} }");
+                    onTap: () {
+                      //logger.d"The TournamentId is:${tournamentdata.id} }");
                       controller.setScheduleStatus(true);
-                      controller.tournamentname.value=tournamentdata.tournamentName;
+                      controller.tournamentname.value =
+                          tournamentdata.tournamentName;
                       Get.to(() => ScheduleScreen(tournament: tournamentdata));
                     },
-                    child: const Text("View Matches",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),),
+                    child: const Text(
+                      "View Matches",
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -269,9 +273,4 @@ class _Card extends StatelessWidget {
       ),
     );
   }
-
 }
-
-
-
-

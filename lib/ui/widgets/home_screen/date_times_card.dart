@@ -82,7 +82,7 @@ class _DateTimesCardState extends State<DateTimesCard> {
                 onTap: () {
                   controller.setSelectedDate(dateTimes[index]);
                   controller.getTournamentList();
-                  logger.d("Selected date: ${dateTimes[index]}" );
+                  //logger.d"Selected date: ${dateTimes[index]}" );
                 },
                 child: Obx(
                   () => TimeCard(

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/utils/app_logger.dart';
@@ -31,10 +30,7 @@ class ServicesList extends StatelessWidget {
             //     offset: const Offset(0, 1),
             //   ),
             // ],
-            border: Border.all(
-                color: Colors.black
-            )
-        ),
+            border: Border.all(color: Colors.black)),
         child: Column(
           children: [
             Padding(
@@ -80,7 +76,8 @@ class ServicesList extends StatelessWidget {
                             //     overflow: TextOverflow.ellipsis,
                             //   ),
                             // ),
-                            Expanded(child: Text(
+                            Expanded(
+                                child: Text(
                               service.category,
                               style: const TextStyle(
                                 fontSize: 14,
@@ -137,8 +134,7 @@ class ServicesList extends StatelessWidget {
               ),
             ),
             Container(
-              padding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
                 color: Colors.grey[50],
                 borderRadius: const BorderRadius.vertical(
@@ -211,10 +207,10 @@ class ServicesList extends StatelessWidget {
                   TextButton(
                     onPressed: () {
                       Get.to(() => ServiceProfileScreen(service: service));
-                      logger.d("ServiceProfileScreen");
+                      //logger.d"ServiceProfileScreen");
                     },
                     style: TextButton.styleFrom(
-                      // padding: const EdgeInsets.symmetric(horizontal: 10),
+                        // padding: const EdgeInsets.symmetric(horizontal: 10),
                         textStyle: const TextStyle(fontSize: 12),
                         side: const BorderSide(color: AppTheme.primaryColor),
                         shape: RoundedRectangleBorder(

@@ -10,8 +10,6 @@ import 'package:intl/intl.dart';
 import '../../data/model/txn_model.dart';
 import '../../utils/app_logger.dart';
 import '../../utils/utils.dart';
-import 'banner_payment_page.dart';
-import 'payment_page.dart';
 
 class TxnDetailsView extends StatefulWidget {
   final Transaction transaction;
@@ -35,7 +33,10 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
       backgroundColor: Colors.transparent,
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
-        title:  Text(widget.transactiontype=='banner'?'Banner Transaction Details':'Sponsor Transaction Details',
+        title: Text(
+            widget.transactiontype == 'banner'
+                ? 'Banner Transaction Details'
+                : 'Sponsor Transaction Details',
             style: const TextStyle(color: Colors.white, fontSize: 20)),
         centerTitle: true,
         backgroundColor: AppTheme.primaryColor,
@@ -71,67 +72,84 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                   Center(
                     child: Text(
                         widget.transaction.orderType == 'banner'
-                            ? widget.transaction.banner?.bannerTitle ?? 'Promotional Banner'
-                            : widget.transaction.sponsor?.name ?? 'Tournament Sponsor',
+                            ? widget.transaction.banner?.bannerTitle ??
+                                'Promotional Banner'
+                            : widget.transaction.sponsor?.name ??
+                                'Tournament Sponsor',
                         style: Get.textTheme.bodyMedium?.copyWith(
                             color: Colors.black,
                             fontWeight: FontWeight.w600,
                             fontSize: 18)),
                   ),
 
-                  if(widget.transactiontype=='banner'&& widget.transaction.banner!=null)
-                  Column(
-                    children: [
-                      Image.network(
-                        widget.transaction.banner!.bannerImage.isNotEmpty
-                            ? toImageUrl(widget.transaction.banner?.bannerImage??'')
-                            : 'assets/images/logo.png',
-                        width: Get.width,
-                        height: 120,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.asset('assets/images/logo.png',
-                              fit: BoxFit.cover);
-                        },
-                      ),
-                      TransactionDetails('Banner Title',widget.transaction.banner!.bannerTitle),
-                      TransactionDetails('Banner Start Date',DateFormat("dd-MMM-yyyy").format(widget.transaction.banner!.startDate)),
-                      TransactionDetails('Banner End Date',DateFormat("dd-MMM-yyyy").format(widget.transaction.banner!.endDate)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Banner Location",
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.grey.shade800,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          SizedBox(
-                            width: 150,
-                            child: Text(
-                              widget.transaction.banner!.bannerlocationaddress?? '',
+                  if (widget.transactiontype == 'banner' &&
+                      widget.transaction.banner != null)
+                    Column(
+                      children: [
+                        Image.network(
+                          widget.transaction.banner!.bannerImage.isNotEmpty
+                              ? toImageUrl(
+                                  widget.transaction.banner?.bannerImage ?? '')
+                              : 'assets/images/logo.png',
+                          width: Get.width,
+                          height: 120,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset('assets/images/logo.png',
+                                fit: BoxFit.cover);
+                          },
+                        ),
+                        TransactionDetails('Banner Title',
+                            widget.transaction.banner!.bannerTitle),
+                        TransactionDetails(
+                            'Banner Start Date',
+                            DateFormat("dd-MMM-yyyy")
+                                .format(widget.transaction.banner!.startDate)),
+                        TransactionDetails(
+                            'Banner End Date',
+                            DateFormat("dd-MMM-yyyy")
+                                .format(widget.transaction.banner!.endDate)),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "Banner Location",
                               style: TextStyle(
                                 fontSize: 13,
                                 color: Colors.grey.shade800,
                                 fontWeight: FontWeight.w400,
                               ),
-                              maxLines: 3,
-                              textAlign: TextAlign.right,
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  if(widget.transactiontype=='Sponsor')
+                            SizedBox(
+                              width: 150,
+                              child: Text(
+                                widget.transaction.banner!
+                                        .bannerlocationaddress ??
+                                    '',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.grey.shade800,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                                maxLines: 3,
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  if (widget.transactiontype == 'Sponsor')
                     Column(
                       children: [
-                        TransactionDetails('Package Name',widget.transaction.sponsor!.name),
-                        TransactionDetails('Package Media Limit',"${widget.transaction.sponsor!.maxMedia}"),
-                        TransactionDetails('Package Video Limit',"${widget.transaction.sponsor!.maxVideos}"),
-                        TransactionDetails('Package Fees',"${widget.transaction.sponsor!.price}"),
+                        TransactionDetails(
+                            'Package Name', widget.transaction.sponsor!.name),
+                        TransactionDetails('Package Media Limit',
+                            "${widget.transaction.sponsor!.maxMedia}"),
+                        TransactionDetails('Package Video Limit',
+                            "${widget.transaction.sponsor!.maxVideos}"),
+                        TransactionDetails('Package Fees',
+                            "${widget.transaction.sponsor!.price}"),
                       ],
                     ),
                   // if (widget.transaction.invoiceUrl != null)
@@ -224,7 +242,7 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                     children: [
                       const SizedBox(
                         width: 200,
-                        child: Text('Transaction Date & Time',
+                        child: Text('Transaction Date',
                             style: TextStyle(
                               // color: AppTheme.secondaryYellowColor,
                               fontSize: 14,
@@ -236,7 +254,7 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                       SizedBox(
                         width: 100,
                         child: Text(
-                          DateFormat('MMMM dd, yyyy - hh:mm a').format(
+                          DateFormat('MMMM dd, yyyy').format(
                               DateTime.parse(widget.transaction.createdAt)),
                           style: const TextStyle(
                             // color: AppTheme.secondaryYellowColor,
@@ -251,13 +269,28 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                   //fee
                   Row(
                     children: [
-                      const Text('Transaction Fees',
+                      const Text('Amount',
                           style: TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 14,
                           )),
                       const Spacer(),
-                      Text('₹ ${widget.transaction.amountWithoutCoupon}',
+                      Text('₹ ${widget.transaction.amountbeforegst}',
+                          style: const TextStyle(
+                            // color: AppTheme.secondaryYellowColor,
+                            fontSize: 14,
+                          )),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      const Text('GST(18%)',
+                          style: TextStyle(
+                            // color: AppTheme.secondaryYellowColor,
+                            fontSize: 14,
+                          )),
+                      const Spacer(),
+                      Text('₹ ${widget.transaction.gstAmount}',
                           style: const TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 14,
@@ -265,22 +298,22 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                     ],
                   ),
                   //discount
-                  Row(
-                    children: [
-                      const Text('Discount',
-                          style: TextStyle(
-                            // color: AppTheme.secondaryYellowColor,
-                            fontSize: 14,
-                          )),
-                      const Spacer(),
-                      Text(
-                          '- ₹${widget.transaction.amountWithoutCoupon - widget.transaction.amount}',
-                          style: const TextStyle(
-                            // color: AppTheme.secondaryYellowColor,
-                            fontSize: 14,
-                          )),
-                    ],
-                  ),
+                  // Row(
+                  //   children: [
+                  //     const Text('Discount',
+                  //         style: TextStyle(
+                  //           // color: AppTheme.secondaryYellowColor,
+                  //           fontSize: 14,
+                  //         )),
+                  //     const Spacer(),
+                  //     Text(
+                  //         '- ₹${widget.transaction.amountWithoutCoupon - widget.transaction.amount}',
+                  //         style: const TextStyle(
+                  //           // color: AppTheme.secondaryYellowColor,
+                  //           fontSize: 14,
+                  //         )),
+                  //   ],
+                  // ),
                   const Divider(),
                   Row(
                     children: [
@@ -290,7 +323,7 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                             fontSize: 14,
                           )),
                       const Spacer(),
-                      Text('₹ ${widget.transaction.amount}',
+                      Text('₹ ${widget.transaction.totalAmountWithGST}',
                           style: const TextStyle(
                             // color: AppTheme.secondaryYellowColor,
                             fontSize: 22,
@@ -395,12 +428,15 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                       const Spacer(),
                       SizedBox(
                         width: 130,
-                        child: Text(controller.state?.email ?? "",
-                            style: const TextStyle(
-                              // color: AppTheme.secondaryYellowColor,
-                              fontSize: 14,
-                            ),maxLines: 2,
-                        textAlign: TextAlign.right,),
+                        child: Text(
+                          controller.state?.email ?? "",
+                          style: const TextStyle(
+                            // color: AppTheme.secondaryYellowColor,
+                            fontSize: 14,
+                          ),
+                          maxLines: 2,
+                          textAlign: TextAlign.right,
+                        ),
                       ),
                     ],
                   ),

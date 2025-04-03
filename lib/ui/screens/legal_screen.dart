@@ -31,7 +31,7 @@ class _LegalViewScreenState extends State<LegalViewScreen> {
   Widget build(BuildContext context) {
     final controller = Get.find<MiscController>();
     final authController = Get.find<AuthController>();
-    logger.d("The Slug Type is :${widget.slug}");
+    //logger.d"The Slug Type is :${widget.slug}");
     return GradientBuilder(
       child: Scaffold(
         backgroundColor: Colors.transparent,

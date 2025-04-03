@@ -49,7 +49,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   final fcmToken = await FirebaseMessaging.instance.getToken();
-  logger.d("FCMToken $fcmToken");
+  //logger.d("FCMToken $fcmToken");
   await GetStorage.init();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -85,13 +85,15 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _initConnectivity() async {
     try {
-      final List<ConnectivityResult> results = await _connectivity.checkConnectivity();
+      final List<ConnectivityResult> results =
+          await _connectivity.checkConnectivity();
       _updateConnectionStatus(results);
     } catch (e) {
-      logger.e('Could not check connectivity status', error: e);
+      //logger.e('Could not check connectivity status', error: e);
     }
 
-    _connectivitySubscription = _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> results) {
+    _connectivitySubscription = _connectivity.onConnectivityChanged
+        .listen((List<ConnectivityResult> results) {
       _updateConnectionStatus(results);
     });
   }
@@ -99,12 +101,13 @@ class _MyAppState extends State<MyApp> {
   void _updateConnectionStatus(List<ConnectivityResult> results) {
     if (!mounted) return;
 
-    final isConnected = results.any((result) => result != ConnectivityResult.none);
+    final isConnected =
+        results.any((result) => result != ConnectivityResult.none);
 
     try {
       final MiscController controller = Get.find<MiscController>();
       controller.isConnected.value = isConnected;
-      logger.d("Connection Status: ${controller.isConnected.value}");
+      //logger.d"Connection Status: ${controller.isConnected.value}");
 
       if (Get.context != null) {
         if (!isConnected) {
@@ -142,7 +145,7 @@ class _MyAppState extends State<MyApp> {
         // }
       }
     } catch (e) {
-      logger.e('Error updating connection status', error: e);
+      //logger.e('Error updating connection status', error: e);
     }
   }
 
@@ -151,6 +154,7 @@ class _MyAppState extends State<MyApp> {
     _connectivitySubscription.cancel();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -172,7 +176,6 @@ class _MyAppState extends State<MyApp> {
         Locale('ta'),
         Locale('te'),
       ],
-
       builder: (context, child) {
         // if (!_isConnected) {
         //   return const NoInternetScreen();
@@ -183,7 +186,7 @@ class _MyAppState extends State<MyApp> {
           return LocationStreamHandler(
             child: Directionality(
               textDirection:
-              TextDirection.rtl, // Right-to-left for Arabic or Urdu
+                  TextDirection.rtl, // Right-to-left for Arabic or Urdu
               child: child!,
             ),
           );
@@ -202,8 +205,8 @@ class _MyAppState extends State<MyApp> {
           preferences: Get.find<Preferences>(),
         )),
         Bind.lazyPut<RankingApi>(() => RankingApi(
-          client: Get.find(),
-        )),
+              client: Get.find(),
+            )),
         // Bind.lazyPut<AuthApi>(() => AuthApi(client: Get.find())),
         Bind.put<AuthApi>(AuthApi(client: Get.find())),
         Bind.put<MiscApi>(MiscApi(repo: Get.find())),
@@ -216,20 +219,16 @@ class _MyAppState extends State<MyApp> {
         Bind.put<AuthController>(AuthController(repo: Get.find())),
         Bind.put<ScoreBoardController>(
             ScoreBoardController(scoreboardApi: Get.find())),
-        Bind.put<TournamentController>(
-          TournamentController(Get.find())
-        ),
+        Bind.put<TournamentController>(TournamentController(Get.find())),
         Bind.lazyPut<TournamentController>(
-                () => TournamentController(Get.find())),
+            () => TournamentController(Get.find())),
         Bind.put<PromotionController>(
-            PromotionController(bannerApi: Get.find())
-        ),
+            PromotionController(bannerApi: Get.find())),
         // Bind.lazyPut<PromotionController>(
         //         () => PromotionController(bannerApi: Get.find())),
         Bind.lazyPut<ServiceController>(
-                () => ServiceController(serviceApi: Get.find())),
-        Bind.lazyPut<ShopController>(
-                () => ShopController()),
+            () => ServiceController(serviceApi: Get.find())),
+        Bind.lazyPut<ShopController>(() => ShopController()),
         Bind.put<MiscController>(MiscController(repo: Get.find())),
       ],
       defaultTransition: Transition.cupertino,

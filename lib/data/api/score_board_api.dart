@@ -14,7 +14,7 @@ class ScoreboardApi {
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }
-    logger.d("Update Scoreboard is called");
+    //logger.d"Update Scoreboard is called");
     return ApiResponse.fromJson(response.body);
   }
 
@@ -63,5 +63,4 @@ class ScoreboardApi {
 
     return ApiResponse.fromJson(response.body);
   }
-
 }

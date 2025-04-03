@@ -24,7 +24,7 @@ class AuthApi {
     }
     var responseBody = response.body as Map<String, dynamic>;
     var accessToken = responseBody['data']['accessToken'];
-    logger.d('AccessToken: $accessToken');
+    //logger.d'AccessToken: $accessToken');
     return ApiResponse.fromJson(response.body);
   }
 

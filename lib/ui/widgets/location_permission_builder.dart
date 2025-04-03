@@ -25,9 +25,9 @@ class LocationStreamHandlerState extends State<LocationStreamHandler> {
     Geolocator.getServiceStatusStream().listen((event) {
       checkLocationPermission();
     }, onDone: () {
-      logger.i('Done');
+      // logger.i('Done');
     }, onError: (e) {
-      logger.e('Error $e');
+      //logger.e('Error $e');
     });
   }
 
@@ -140,16 +140,16 @@ class _PermissionDeniedPageState extends State<PermissionDeniedPage> {
                       await Geolocator.checkPermission();
                   if (permissionStatus == LocationPermission.deniedForever) {
                     // Location permission denied, handle accordingly
-                    logger.d(' 119 Opening location settings');
+                    //logger.d' 119 Opening location settings');
                     Geolocator.openLocationSettings();
                     return;
                   } else {
                     final serviceEnabled = await Geolocator.requestPermission();
                     if (serviceEnabled == LocationPermission.deniedForever ||
                         serviceEnabled == LocationPermission.denied) {
-                      logger.d('Opening location settings');
+                      //logger.d'Opening location settings');
                       bool res = await Geolocator.openLocationSettings();
-                      logger.d('res $res');
+                      //logger.d'res $res');
 
                       return;
                     }

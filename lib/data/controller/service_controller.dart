@@ -11,16 +11,16 @@ class ServiceController extends GetxController with StateMixin<ServiceModel> {
   ServiceController({required this.serviceApi}) {
     change(GetStatus.empty());
   }
-  final authController=Get.find<AuthController>();
+  final authController = Get.find<AuthController>();
 
   RxBool isLoading = false.obs;
 
-  Future<ServiceModel> addService(Map<String,dynamic> service) async{
-    try{
-      final response=await serviceApi.addService(service);
+  Future<ServiceModel> addService(Map<String, dynamic> service) async {
+    try {
+      final response = await serviceApi.addService(service);
       return ServiceModel.fromJson(response.data!);
-    }catch(e){
-      logger.e('Error registering service: $e');
+    } catch (e) {
+      //logger.e('Error registering service: $e');
       rethrow;
     }
   }
@@ -31,18 +31,19 @@ class ServiceController extends GetxController with StateMixin<ServiceModel> {
   Future<List<ServiceModel>> getService() async {
     try {
       final response = await serviceApi.getService();
-      logger.d('controller API Response: ${response.data}');
+      //logger.d'controller API Response: ${response.data}');
       if (response.status == false) {
         logger.i('Error: ${response.message}');
         errorSnackBar(response.message ?? 'Unable to fetch vendors');
         return [];
       }
-      service.value=(response.data!['vendors'] as List)
-      .map((e)=>ServiceModel.fromJson(e)).toList();
-      logger.d("The Service list is :${service.length}");
+      service.value = (response.data!['vendors'] as List)
+          .map((e) => ServiceModel.fromJson(e))
+          .toList();
+      //logger.d"The Service list is :${service.length}");
       return service;
     } catch (e) {
-      logger.e('Error getting vendors: $e');
+      //logger.e('Error getting vendors: $e');
       errorSnackBar('Unable to fetch vendors. Please try again later.');
       return [];
     }
@@ -62,17 +63,17 @@ class ServiceController extends GetxController with StateMixin<ServiceModel> {
           .where((e) => e['email'] == email)
           .map((e) => ServiceModel.fromJson(e))
           .toList();
-      logger.d("The Service list for user $email is: ${service.length}");
+      //logger.d"The Service list for user $email is: ${service.length}");
       return service;
     } catch (e) {
-      logger.e('Error getting vendors: $e');
+      //logger.e('Error getting vendors: $e');
       errorSnackBar('Unable to fetch vendors. Please try again later.');
       return [];
     }
   }
 
-  Future<bool> updateservice(Map<String,dynamic> service,String serviceId)
-  async{
+  Future<bool> updateservice(
+      Map<String, dynamic> service, String serviceId) async {
     try {
       final response = await serviceApi.updateService(serviceId, service);
       if (response.status == false) {
@@ -81,15 +82,13 @@ class ServiceController extends GetxController with StateMixin<ServiceModel> {
         return false;
       }
       return true;
-    }catch(e){
-      logger.e('Error updating service: $e');
+    } catch (e) {
+      //logger.e('Error updating service: $e');
       rethrow;
     }
   }
 
-
-
-  Future<bool> deleteService(String serviceId) async{
+  Future<bool> deleteService(String serviceId) async {
     try {
       final response = await serviceApi.deleteService(serviceId);
       if (response.status == false) {
@@ -99,25 +98,20 @@ class ServiceController extends GetxController with StateMixin<ServiceModel> {
       }
       userservice.removeWhere((element) => element.id == serviceId);
       successSnackBar('Service deleted successfully');
-      await Future.wait([
-        getService(),
-        getuserService()
-      ]);
+      await Future.wait([getService(), getuserService()]);
       return true;
-    }catch(e){
-      logger.e('Error updating service: $e');
+    } catch (e) {
+      //logger.e('Error updating service: $e');
       rethrow;
     }
   }
+
   Future<void> refreshData() async {
     try {
       isLoading.value = true;
-      await Future.wait([
-        getService(),
-        getuserService()
-      ]);
+      await Future.wait([getService(), getuserService()]);
     } catch (e) {
-      logger.e('Error refreshing data: $e');
+      //logger.e('Error refreshing data: $e');
       errorSnackBar('Error refreshing data. Please try again.');
     } finally {
       isLoading.value = false;

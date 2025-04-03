@@ -20,22 +20,24 @@ import '../theme/theme.dart';
 import '../widgets/gradient_builder.dart';
 
 class SponsorPaymentPage extends StatefulWidget {
-  final TournamentModel tournament;
-  final Package? package;
-
   const SponsorPaymentPage(
       {Key? key, required this.tournament, required this.package})
       : super(key: key);
+
+  final Package? package;
+  final TournamentModel tournament;
 
   @override
   State<StatefulWidget> createState() => SponsorPaymentPageState();
 }
 
 class SponsorPaymentPageState extends State<SponsorPaymentPage> {
-  final _razorpay = Razorpay();
-  double discount = 0;
+  String bannerId = '';
   String? couponCode;
-  String bannerId='';
+  double discount = 0;
+
+  final _razorpay = Razorpay();
+
   @override
   void initState() {
     super.initState();
@@ -44,28 +46,70 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
   }
 
+  void startPayment() async {
+    final authController = Get.find<AuthController>();
+    var options = {
+      'key': 'rzp_live_6sW7limWXGaS3k',
+      // 'key': 'rzp_test_QMUxKSQyzcywjc', //my test key
+      'amount': widget.package!.price * 100,
+      'name': 'Gully Team',
+      'description': 'Advertisement Fee',
+      'prefill': {
+        'contact': authController.state?.phoneNumber,
+        'email': authController.state?.email,
+      }
+    };
+    _razorpay.open(options);
+  }
+
+  Widget packageDetails(String title, String? value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.grey.shade800,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+          Text(
+            value ?? '',
+            style: TextStyle(
+              fontSize: 13,
+              color: Colors.grey.shade800,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   _handlePaymentSuccess(PaymentSuccessResponse response) async {
     final controller = Get.find<TournamentController>();
     Map<String, dynamic> sponsor = {
-      "tournamentId":widget.tournament.id,
-      "SponsorshipPackageId":widget.package?.id
+      "tournamentId": widget.tournament.id,
+      "SponsorshipPackageId": widget.package?.id
     };
 
     final res = await controller.setSponsor(sponsor);
-    if(res != null){
+    if (res != null) {
       await controller.createSponsorOrder(
-        discountAmount: widget.package!.price.toDouble(),
-        sponsorPackageId: widget.package!.id,
-        totalAmount:widget.package!.price.toDouble() ,
-        coupon: couponCode,
-        status: "Successful",
-        tournamentId: widget.tournament.id
-      );
+          discountAmount: widget.package!.price.toDouble(),
+          sponsorPackageId: widget.package!.id,
+          totalAmount: widget.package!.price.toDouble(),
+          coupon: couponCode,
+          status: "Successful",
+          tournamentId: widget.tournament.id);
       successSnackBar(
         'Congratulations !!!\nYour transaction has been successful. You can now add Sponsors',
         title: "Payment Successful",
       ).then(
-            (value) => Get.offAll(() => const HomeScreen(),
+        (value) => Get.offAll(() => const HomeScreen(),
             predicate: (route) => route.name == '/HomeScreen'),
       );
     }
@@ -78,34 +122,17 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
         title: "Payment Failed!");
     final controller = Get.find<TournamentController>();
     await controller.createSponsorOrder(
-      discountAmount: widget.package!.price.toDouble(),
-      sponsorPackageId: widget.package!.id,
-      totalAmount:widget.package!.price.toDouble() ,
-      coupon: couponCode,
-      status: "Failed",
-        tournamentId: widget.tournament.id
-    );
+        discountAmount: widget.package!.price.toDouble(),
+        sponsorPackageId: widget.package!.id,
+        totalAmount: widget.package!.price.toDouble(),
+        coupon: couponCode,
+        status: "Failed",
+        tournamentId: widget.tournament.id);
   }
 
   _handleExternalWallet(ExternalWalletResponse response) {
     logger.f('External Wallet');
     errorSnackBar('External Wallet');
-  }
-
-  void startPayment() async {
-    final authController = Get.find<AuthController>();
-    var options = {
-      'key': 'rzp_live_6sW7limWXGaS3k',
-      // 'key': 'rzp_test_QMUxKSQyzcywjc',//my test key
-      'amount': widget.package!.price * 100,
-      'name': 'Gully Team',
-      'description': 'Advertisement Fee',
-      'prefill': {
-        'contact': authController.state?.phoneNumber,
-        'email': authController.state?.email,
-      }
-    };
-    _razorpay.open(options);
   }
 
   @override
@@ -150,46 +177,54 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
                       width: Get.width,
                       child: widget.tournament.coverPhoto != null
                           ? Image.network(
-                        toImageUrl(widget.tournament.coverPhoto!),
-                        fit: BoxFit.contain,
-                        // errorBuilder:  (BuildContext context, Object exception, StackTrace? stackTrace){
-                        //   return Stack(
-                        //     children: [
-                        //     Image.asset(
-                        //     'assets/images/logo.png',
-                        //     fit: BoxFit.cover,
-                        //   ),
-                        //       Positioned(
-                        //
-                        //         child: Container(
-                        //           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                        //           decoration: BoxDecoration(
-                        //             color: Colors.black.withOpacity(0.5),
-                        //             borderRadius: BorderRadius.circular(8),
-                        //           ),
-                        //           child: const Text(
-                        //             "Unable To Get Tournament Cover Image",
-                        //             style: TextStyle(
-                        //               color: Colors.white,
-                        //               fontSize: 16,
-                        //               fontWeight: FontWeight.bold,
-                        //             ),
-                        //           ),
-                        //         ),
-                        //       )
-                        //     ],
-                        //   );
-                        // },
-                      )
+                              height: 200,
+                              width: Get.width,
+                              toImageUrl(widget.tournament.coverPhoto!),
+                              fit: BoxFit.contain,
+                              // errorBuilder:  (BuildContext context, Object exception, StackTrace? stackTrace){
+                              //   return Stack(
+                              //     children: [
+                              //     Image.asset(
+                              //     'assets/images/logo.png',
+                              //     fit: BoxFit.cover,
+                              //   ),
+                              //       Positioned(
+                              //
+                              //         child: Container(
+                              //           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                              //           decoration: BoxDecoration(
+                              //             color: Colors.black.withOpacity(0.5),
+                              //             borderRadius: BorderRadius.circular(8),
+                              //           ),
+                              //           child: const Text(
+                              //             "Unable To Get Tournament Cover Image",
+                              //             style: TextStyle(
+                              //               color: Colors.white,
+                              //               fontSize: 16,
+                              //               fontWeight: FontWeight.bold,
+                              //             ),
+                              //           ),
+                              //         ),
+                              //       )
+                              //     ],
+                              //   );
+                              // },
+                            )
                           : Image.asset(
-                        'assets/images/logo.png',
-                        fit: BoxFit.cover,
-                      ),
+                              'assets/images/logo.png',
+                              fit: BoxFit.cover,
+                            ),
                     ),
-                    packageDetails("Tournament Name", widget.tournament.tournamentName),
-                    packageDetails("Tournament Start Date",
-                        DateFormat("dd-MMM-yyyy").format(widget.tournament.tournamentStartDateTime)),
-                    packageDetails("Tournament End Date", DateFormat("dd-MMM-yyyy").format(widget.tournament.tournamentEndDateTime)),
+                    packageDetails(
+                        "Tournament Name", widget.tournament.tournamentName),
+                    packageDetails(
+                        "Tournament Start Date",
+                        DateFormat("dd-MMM-yyyy")
+                            .format(widget.tournament.tournamentStartDateTime)),
+                    packageDetails(
+                        "Tournament End Date",
+                        DateFormat("dd-MMM-yyyy")
+                            .format(widget.tournament.tournamentEndDateTime)),
                     const SizedBox(height: 22),
                     const Text(
                       'Sponsor Package  Details:',
@@ -201,8 +236,10 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
                     ),
                     const SizedBox(height: 10),
                     packageDetails("Package Name", widget.package?.name),
-                    packageDetails("Total Media Allowed", "${widget.package?.maxMedia}"),
-                    packageDetails("Video Allowed", "${widget.package?.maxVideos}"),
+                    packageDetails(
+                        "Total Media Allowed", "${widget.package?.maxMedia}"),
+                    packageDetails(
+                        "Video Allowed", "${widget.package?.maxVideos}"),
                     packageDetails("Package Price", "${widget.package?.price}"),
                     const SizedBox(height: 15),
                     Text('Payment Summary',
@@ -240,8 +277,7 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text(
-                            '₹$gstAmount',
+                        Text('₹$gstAmount',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey.shade800,
@@ -300,33 +336,6 @@ class SponsorPaymentPageState extends State<SponsorPaymentPage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  Widget packageDetails(String title, String? value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey.shade800,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-          Text(
-            value ?? '',
-            style: TextStyle(
-              fontSize: 13,
-              color: Colors.grey.shade800,
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ],
       ),
     );
   }

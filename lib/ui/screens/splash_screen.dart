@@ -29,13 +29,13 @@ class _SplashScreenState extends State<SplashScreen> {
   route() {
     Future.delayed(const Duration(seconds: 2), () async {
       final pref = Get.put<Preferences>(Preferences(), permanent: true);
-      logger.i("Token: ${pref.getToken()}");
+      // logger.i("Token: ${pref.getToken()}");
       if (pref.getToken() != null) {
         Get.updateLocale(Locale(pref.getLanguage()));
         Get.offAll(() => const HomeScreen());
       } else {
         Get.offAll(() => const WelcomeCarouselScreen());
-        logger.d("Again Launched SplashScreen");
+        //logger.d"Again Launched SplashScreen");
       }
     });
   }

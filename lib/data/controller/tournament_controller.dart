@@ -18,7 +18,6 @@ import '../model/sponsor_model.dart';
 
 class TournamentController extends GetxController
     with StateMixin<TournamentModel?> {
-  final TournamentApi tournamentApi;
   TournamentController(this.tournamentApi) {
     getTournamentList(filterD: 'current');
     getCurrentLocation();
@@ -26,13 +25,91 @@ class TournamentController extends GetxController
       getCurrentLocation();
     });
   }
-  RxString location = ''.obs;
-  RxString tournamentId = ''.obs;
+
+  RxList<TeamModel> AllTeam = <TeamModel>[].obs;
+  RxList<MatchupModel> Current_matches = <MatchupModel>[].obs;
+  RxList<TournamentModel> Current_tournamentList = <TournamentModel>[].obs;
+  RxList<TournamentSponsor> MyTournamentSponsor = <TournamentSponsor>[].obs;
+  // Future<List<Transaction>> getTransactions() async {
+  //   try {
+  //     final response = await tournamentApi.getTransactions();
+  //     //logger.d"API Response: ${response.data}");
+  //
+  //     if (response.data == null) {
+  //       //logger.d"Response data is null");
+  //       throw Exception("Response data is null");
+  //     }
+  //     if (response.data!['transactions'] == null) {
+  //       //logger.d"Transactions object is null");
+  //       throw Exception("Transactions object is null");
+  //     }
+  //
+  //     if (response.data!['transactions']['history'] == null) {
+  //       //logger.d"Transaction history is null");
+  //       throw Exception("Transaction history is null");
+  //     }
+  //
+  //     List<Transaction> transactions = [];
+  //     for (var transactionJson in response.data!['transactions']['history']) {
+  //       try {
+  //         transactions.add(Transaction.fromJson(transactionJson));
+  //       } catch (e) {
+  //         //logger.d"Error parsing transaction: $e");
+  //         //logger.d"Problematic transaction data: $transactionJson");
+  //       }
+  //     }
+  //     //logger.d"Parsed ${transactions.length} transactions");
+  //     return transactions;
+  //   } catch (e) {
+  //     //logger.d"Error in getTransactions: $e");
+  //     errorSnackBar(e.toString());
+  //     rethrow;
+  //   }
+  // }
+
+  final authController = Get.find<AuthController>();
+
+  Rx<TeamModel?> battingTeam = Rx<TeamModel?>(null);
+  Rx<TeamModel?> bowlingTeam = Rx<TeamModel?>(null);
+  Rx<LatLng> coordinates = const LatLng(0, 0).obs;
+  RxInt couponsDisount = 0.obs;
+  Rx<MatchupModel?> currentMatch = Rx<MatchupModel?>(null);
+  RxString electedTo = ''.obs;
+  RxList<TeamModel> eliminatedTeam = <TeamModel>[].obs;
+  final RxString filter = ''.obs;
+  RxString filterData = ''.obs;
+  RxInt indexvalue = 0.obs;
+  RxBool isEditable = true.obs;
+  RxBool isLoading = false.obs;
   RxBool isSchedule = false.obs;
-  RxBool iscompleted = false.obs;
-  RxBool isTourOver = false.obs;
   RxBool isSearch = false.obs;
+  RxBool isTourOver = false.obs;
+  RxBool isTournament = false.obs;
+  RxBool iscompleted = false.obs;
+  RxString location = ''.obs;
+  RxList<MatchupModel> matches = <MatchupModel>[].obs;
+  RxList<MatchupModel> matchups = <MatchupModel>[].obs;
+  RxList<TournamentModel> organizerTournamentList = <TournamentModel>[].obs;
+  RxInt overs = 0.obs;
+  final RxList<PointTableModel> points_table = <PointTableModel>[].obs;
+  final Rx<DateTime> selectedDate = DateTime.now().obs;
+  // Rx<TournamentSponsor?> sponsor = Rx<TournamentSponsor?>(null);
+  final RxMap<String, dynamic> sponsormap = <String, dynamic>{}.obs;
+
+  RxString tossWonBy = ''.obs;
+  final TournamentApi tournamentApi;
+  RxString tournamentEndDate = ''.obs;
+  RxString tournamentId = ''.obs;
+  RxList<TournamentModel> tournamentList = <TournamentModel>[].obs;
+  // Rx<TournamentModel?> tournamentModel = Rx<TournamentModel?>(null);
+  // final tournamentModel = RxMap<String, dynamic>();
+  final RxMap<String, dynamic> tournamentModel = <String, dynamic>{}.obs;
+
+  RxList<TournamentSponsor> tournamentSponsor = <TournamentSponsor>[].obs;
+  RxString tournamentStartDate = ''.obs;
+  RxString tournamentauthority = ''.obs;
   RxString tournamentname = ''.obs;
+  RxList<Transaction> transactions = <Transaction>[].obs;
 
   void setScheduleStatus(bool status) {
     isSchedule.value = status;
@@ -51,22 +128,15 @@ class TournamentController extends GetxController
     getTournamentList(filterD: 'current');
   }
 
-  Rx<LatLng> coordinates = const LatLng(0, 0).obs;
-  RxBool isEditable = true.obs;
-
   void setEditable(bool isedit) {
     isEditable.value = isedit;
   }
-
-  // Rx<TournamentModel?> tournamentModel = Rx<TournamentModel?>(null);
-  // final tournamentModel = RxMap<String, dynamic>();
-  final RxMap<String, dynamic> tournamentModel = <String, dynamic>{}.obs;
 
   Future<TournamentModel> createTournament(
       Map<String, dynamic> tournament) async {
     try {
       final response = await tournamentApi.createTournament(tournament);
-      logger.d("The response for tournament Creation:${response.data}");
+      //logger.d"The response for tournament Creation:${response.data}");
       return TournamentModel.fromJson(response.data!);
     } catch (e) {
       errorSnackBar(e.toString());
@@ -77,7 +147,7 @@ class TournamentController extends GetxController
   Future<bool> setSponsor(Map<String, dynamic> tournament) async {
     try {
       final response = await tournamentApi.setSponsor(tournament);
-      logger.d("The response for tournament Sponsor:${response.data}");
+      //logger.d"The response for tournament Sponsor:${response.data}");
       return true;
     } catch (e) {
       errorSnackBar(e.toString());
@@ -85,13 +155,11 @@ class TournamentController extends GetxController
     }
   }
 
-  // Rx<TournamentSponsor?> sponsor = Rx<TournamentSponsor?>(null);
-  final RxMap<String, dynamic> sponsormap = <String, dynamic>{}.obs;
   Future<bool> addSponsor(Map<String, dynamic> sponsor) async {
     try {
       final response = await tournamentApi.addSponsor(sponsor);
-      if(response.status==false){
-        logger.d("Unable to Upload Media");
+      if (response.status == false) {
+        //logger.d"Unable to Upload Media");
       }
       return true;
     } catch (e) {
@@ -104,9 +172,9 @@ class TournamentController extends GetxController
       String sponsorId, Map<String, dynamic> sponsor) async {
     try {
       final response = await tournamentApi.editSponsor(sponsorId, sponsor);
-      logger.d("The response for tournament Sponsor:${response.data}");
+      //logger.d"The response for tournament Sponsor:${response.data}");
       if (response.status == false) {
-        logger.d("Failed to update Sponsor Data");
+        //logger.d"Failed to update Sponsor Data");
       }
       return true;
     } catch (e) {
@@ -115,15 +183,13 @@ class TournamentController extends GetxController
     }
   }
 
-  RxList<TournamentSponsor> MyTournamentSponsor = <TournamentSponsor>[].obs;
-
   Future<List<TournamentSponsor>> getMyTournamentSponsor(
       String tournamentId) async {
     try {
       final response = await tournamentApi.getmyTournamentSponsor(tournamentId);
-      logger.d("The response for tournament Sponsor:${response.data}");
+      //logger.d"The response for tournament Sponsor:${response.data}");
       if (response.status == false) {
-        logger.d("Failed to update Sponsor Data");
+        //logger.d"Failed to update Sponsor Data");
       }
       return MyTournamentSponsor.value = (response.data!['mySponsor']
                   as List<dynamic>?)
@@ -137,20 +203,17 @@ class TournamentController extends GetxController
     }
   }
 
-  RxInt indexvalue = 0.obs;
   void updateIndex(int index) {
     indexvalue.value = index;
   }
-
-  RxList<TournamentSponsor> tournamentSponsor = <TournamentSponsor>[].obs;
 
   Future<List<TournamentSponsor>> getTournamentSponsor(
       String tournamentId) async {
     try {
       final response = await tournamentApi.getTournamentSponsor(tournamentId);
-      logger.d("The response for tournament Sponsor:${response.data}");
+      //logger.d"The response for tournament Sponsor:${response.data}");
       if (response.status == false) {
-        logger.d("Failed to update Sponsor Data");
+        //logger.d"Failed to update Sponsor Data");
       }
       return tournamentSponsor.value = (response.data!['Sponsor']
                   as List<dynamic>?)
@@ -167,9 +230,9 @@ class TournamentController extends GetxController
   Future<bool> deleteSponsor(String sponsorId) async {
     try {
       final response = await tournamentApi.deleteSponsor(sponsorId);
-      logger.d("The response for tournament Sponsor:${response.data}");
+      //logger.d"The response for tournament Sponsor:${response.data}");
       if (response.status == false) {
-        logger.d("Failed to Delete Sponsor Data");
+        //logger.d"Failed to Delete Sponsor Data");
       }
       return true;
     } catch (e) {
@@ -190,9 +253,6 @@ class TournamentController extends GetxController
     }
   }
 
-  RxString tournamentStartDate = ''.obs;
-  RxString tournamentEndDate = ''.obs;
-  RxString tournamentauthority = ''.obs;
   void saveDates(
       DateTime? startDate, DateTime? endDate, String tournamentauth) {
     if (startDate != null) {
@@ -216,16 +276,11 @@ class TournamentController extends GetxController
         : null;
   }
 
-  final Rx<DateTime> selectedDate = DateTime.now().obs;
-  final RxString filter = ''.obs;
-
-  RxString filterData = ''.obs;
-
   void setSelectedFilter(String filter) {
     filterData.value = filter;
-    logger.d("Selected Filter:$filter");
+    //logger.d"Selected Filter:$filter");
     if (filter == 'past' || filter == 'current' || filter == 'upcoming') {
-      logger.d("Found Selected Filter with popup ");
+      //logger.d"Found Selected Filter with popup ");
       setSelectedDate(DateTime.now());
     }
   }
@@ -233,12 +288,6 @@ class TournamentController extends GetxController
   void setSelectedDate(DateTime dateTime) {
     selectedDate.value = dateTime;
   }
-
-  RxList<TournamentModel> tournamentList = <TournamentModel>[].obs;
-  RxList<TournamentModel> Current_tournamentList = <TournamentModel>[].obs;
-  RxList<MatchupModel> matches = <MatchupModel>[].obs;
-  RxList<MatchupModel> Current_matches = <MatchupModel>[].obs;
-  RxBool isLoading = false.obs;
 
   Future<void> getTournamentList({String? filterD, bool isLive = false}) async {
     try {
@@ -293,7 +342,7 @@ class TournamentController extends GetxController
         }
       }
     } catch (e) {
-      logger.d('Error in getTournamentList: $e');
+      //logger.d'Error in getTournamentList: $e');
       // errorSnackBar(e.toString());
     } finally {
       isLoading.value = false;
@@ -338,7 +387,7 @@ class TournamentController extends GetxController
         Current_matches.value = [];
       }
     } catch (e) {
-      logger.d('Error in getTournamentList: $e');
+      //logger.d'Error in getTournamentList: $e');
       // errorSnackBar(e.toString());
     } finally {
       isLoading.value = false;
@@ -351,7 +400,6 @@ class TournamentController extends GetxController
     change(GetStatus.success(tournament));
   }
 
-  RxList<TournamentModel> organizerTournamentList = <TournamentModel>[].obs;
   Future<void> getOrganizerTournamentList() async {
     try {
       final response = await tournamentApi.getOrganizerTournamentList();
@@ -364,7 +412,7 @@ class TournamentController extends GetxController
       // change(GetStatus.success(null));
     } catch (e) {
       // errorSnackBar(e.toString());
-      logger.e(e.toString());
+      //logger.e(e.toString());
       rethrow;
     }
   }
@@ -381,7 +429,7 @@ class TournamentController extends GetxController
       // change(GetStatus.success(null));
     } catch (e) {
       // errorSnackBar(e.toString());
-      logger.e(e.toString());
+      //logger.e(e.toString());
       rethrow;
     }
   }
@@ -409,13 +457,10 @@ class TournamentController extends GetxController
           .toList();
     } catch (e) {
       // errorSnackBar(e.toString());
-      logger.e("Request Team Error:${e.toString()}");
+      //logger.e("Request Team Error:${e.toString()}");
       return [];
     }
   }
-
-  RxList<TeamModel> eliminatedTeam = <TeamModel>[].obs;
-  RxList<TeamModel> AllTeam = <TeamModel>[].obs;
 
   Future<List<TeamModel>> getRegisteredTeams(String tournamentId) async {
     try {
@@ -432,10 +477,10 @@ class TournamentController extends GetxController
           .map<TeamModel>((e) => TeamModel.fromJson(e['team']))
           .toList();
 
-      logger.d("Filtered Teams:${AllTeam.value},${eliminatedTeam.value}");
+      //logger.d"Filtered Teams:${AllTeam.value},${eliminatedTeam.value}");
       return teams;
     } catch (e) {
-      logger.e("Get Register Team Error: ${e.toString()}");
+      //logger.e("Get Register Team Error: ${e.toString()}");
       rethrow;
     }
   }
@@ -483,17 +528,15 @@ class TournamentController extends GetxController
       return response.status!;
     } catch (e) {
       errorSnackBar(e.toString());
-      logger.e(e.toString());
+      //logger.e(e.toString());
       return false;
     }
   }
 
-  RxList<MatchupModel> matchups = <MatchupModel>[].obs;
-
   Future<List<MatchupModel>> getMatchup(String tourId) async {
     try {
       final response = await tournamentApi.getMatchup(tourId);
-      logger.d("Raw Matchup API response: ${response.data}");
+      //logger.d"Raw Matchup API response: ${response.data}");
       // await Clipboard.setData(ClipboardData(text: response.data.toString()));
       matchups.value = response.data!['matches']
           .map<MatchupModel>((e) => MatchupModel.fromJson(e))
@@ -501,7 +544,7 @@ class TournamentController extends GetxController
       return matchups;
     } catch (e) {
       // errorSnackBar(e.toString());
-      logger.e("getMatchup error: ${e.toString()}");
+      //logger.e("getMatchup error: ${e.toString()}");
       rethrow;
     }
   }
@@ -516,7 +559,7 @@ class TournamentController extends GetxController
       }
       return true;
     } catch (e) {
-      logger.e('Error updating service: $e');
+      //logger.e('Error updating service: $e');
       rethrow;
     }
   }
@@ -556,14 +599,6 @@ class TournamentController extends GetxController
       return false;
     }
   }
-
-  Rx<TeamModel?> battingTeam = Rx<TeamModel?>(null);
-  Rx<TeamModel?> bowlingTeam = Rx<TeamModel?>(null);
-  Rx<MatchupModel?> currentMatch = Rx<MatchupModel?>(null);
-  RxString tossWonBy = ''.obs;
-  RxString electedTo = ''.obs;
-  RxInt overs = 0.obs;
-  RxBool isTournament = false.obs;
 
   void updateState({
     required TeamModel battingTeam,
@@ -620,17 +655,16 @@ class TournamentController extends GetxController
           .toList();
     } catch (e) {
       errorSnackBar("Tournament Not Found");
-      logger.e(e.toString());
+      //logger.e(e.toString());
       rethrow;
     }
   }
 
-  final RxList<PointTableModel> points_table = <PointTableModel>[].obs;
-
   Future<List<PointTableModel>> tournamentPointsTable(String tourId) async {
     try {
-      final response = await tournamentApi.tournamentPointsTable(tourId: tourId);
-      logger.d("Raw Points Table API response: ${response.data}");
+      final response =
+          await tournamentApi.tournamentPointsTable(tourId: tourId);
+      //logger.d"Raw Points Table API response: ${response.data}");
       // getRegisteredTeams(tourId);
       points_table.value = (response.data!['TeamPoints'] as List)
           .map<PointTableModel>((e) => PointTableModel.fromJson(e))
@@ -638,7 +672,7 @@ class TournamentController extends GetxController
       return points_table;
     } catch (e) {
       errorSnackBar("Points Table Not Found");
-      logger.e(e.toString());
+      //logger.e(e.toString());
       rethrow;
     }
   }
@@ -698,13 +732,12 @@ class TournamentController extends GetxController
   }) async {
     try {
       final response = await tournamentApi.createSponsorOrder(
-        discountAmount: discountAmount,
-        sponsorPackageId: sponsorPackageId,
-        totalAmount: totalAmount,
-        coupon: coupon,
-        status: status,
-          tournamentId: tournamentId
-      );
+          discountAmount: discountAmount,
+          sponsorPackageId: sponsorPackageId,
+          totalAmount: totalAmount,
+          coupon: coupon,
+          status: status,
+          tournamentId: tournamentId);
       return response.data!['order']['id'];
     } catch (e) {
       errorSnackBar(e.toString());
@@ -712,11 +745,10 @@ class TournamentController extends GetxController
     }
   }
 
-  RxInt couponsDisount = 0.obs;
   Future<List<Coupon>>? getCoupons() async {
     try {
       final response = await tournamentApi.getCoupons();
-      logger.d("API Response: ${response.data}");
+      //logger.d"API Response: ${response.data}");
       return response.data!['coupons']
           .map<Coupon>((e) => Coupon.fromJson(e))
           .toList();
@@ -739,68 +771,24 @@ class TournamentController extends GetxController
     }
   }
 
-  // Future<List<Transaction>> getTransactions() async {
-  //   try {
-  //     final response = await tournamentApi.getTransactions();
-  //     logger.d("API Response: ${response.data}");
-  //
-  //     if (response.data == null) {
-  //       logger.d("Response data is null");
-  //       throw Exception("Response data is null");
-  //     }
-  //     if (response.data!['transactions'] == null) {
-  //       logger.d("Transactions object is null");
-  //       throw Exception("Transactions object is null");
-  //     }
-  //
-  //     if (response.data!['transactions']['history'] == null) {
-  //       logger.d("Transaction history is null");
-  //       throw Exception("Transaction history is null");
-  //     }
-  //
-  //     List<Transaction> transactions = [];
-  //     for (var transactionJson in response.data!['transactions']['history']) {
-  //       try {
-  //         transactions.add(Transaction.fromJson(transactionJson));
-  //       } catch (e) {
-  //         logger.d("Error parsing transaction: $e");
-  //         logger.d("Problematic transaction data: $transactionJson");
-  //       }
-  //     }
-  //     logger.d("Parsed ${transactions.length} transactions");
-  //     return transactions;
-  //   } catch (e) {
-  //     logger.d("Error in getTransactions: $e");
-  //     errorSnackBar(e.toString());
-  //     rethrow;
-  //   }
-  // }
-
-  final authController = Get.find<AuthController>();
-  RxList<Transaction> transactions = <Transaction>[].obs;
   Future<List<Transaction>> getTransactions() async {
     try {
       final userid = authController.state!.id;
       transactions.clear();
 
       final response = await tournamentApi.getTransactions();
-      logger.d("API Response: ${response.data}");
+      //logger.d"API Response: ${response.data}");
 
       if (response.data == null) {
-        logger.d("Response data is null");
+        //logger.d"Response data is null");
         return [];
       }
 
-      // final transactionData = response.data!['transactions'];
-      // if (transactionData == null || transactionData['history'] == null) {
-      //   logger.d("Transaction history is null");
-      //   return [];
-      // }
-
       transactions.value = (response.data!['transactions'] as List<dynamic>?)
-          ?.map((e) => Transaction.fromJson(e as Map<String, dynamic>))
-          .toList() ??
+              ?.map((e) => Transaction.fromJson(e as Map<String, dynamic>))
+              .toList() ??
           [];
+      //logger.d"transactions data after fetch: ${transactions.value}");
       // final transactionsList = transactionData['history'] as List;
       //
       // for (var transactionJson in transactionsList) {
@@ -813,16 +801,16 @@ class TournamentController extends GetxController
       //       transactions.add(transaction);
       //     }
       //   } catch (e) {
-      //     logger.d("Error parsing transaction: $e");
-      //     logger.d("Problematic transaction data: $transactionJson");
+      //     //logger.d"Error parsing transaction: $e");
+      //     //logger.d"Problematic transaction data: $transactionJson");
       //   }
       // }
       //
-      // logger.d("Parsed ${transactions.length} transactions for user $userid");
+      // //logger.d"Parsed ${transactions.length} transactions for user $userid");
       // transactions.refresh();
       return transactions;
     } catch (e) {
-      logger.d("Error in getTransactions: $e");
+      //logger.d"Error in getTransactions: $e");
       errorSnackBar(e.toString());
       return [];
     }

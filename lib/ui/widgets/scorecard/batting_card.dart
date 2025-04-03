@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/controller/scoreboard_controller.dart';
-import 'package:gully_app/data/model/batting_model.dart';
+import '../../../data/controller/scoreboard_controller.dart';
+import '../../../data/model/batting_model.dart';
 
 import '../../../data/model/player_model.dart';
 import '../../../utils/app_logger.dart';
@@ -14,7 +14,7 @@ class BattingStats extends GetView<ScoreBoardController> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 2),
       child: Obx(() => Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
@@ -117,9 +117,9 @@ class BatterPlayerStat extends StatelessWidget {
       controller.isStrikerOut.value = false;
     }
 
-    logger.d("Striker Out value:${controller.isStrikerOut.value}");
-    logger.d(
-        "The Both batsmen data:${areBothStrikerAndNonStrikerNotOut} and ${controller.isBothBatsmenNotOut.value}");
+    //logger.d"Striker Out value:${controller.isStrikerOut.value}");
+    //logger.d
+        // "The Both batsmen data:${areBothStrikerAndNonStrikerNotOut} and ${controller.isBothBatsmenNotOut.value}");
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Column(
@@ -136,21 +136,21 @@ class BatterPlayerStat extends StatelessWidget {
                       maxLines: 1,
                       style: TextStyle(
                         fontSize: 13,
-                        color: hasBatted ? Colors.black : Colors.grey,
-                        fontWeight: hasBatted ? FontWeight.bold : null,
-                        decoration: (isStriker! &&
-                                controller.scoreboard.value?.striker.batting
-                                        ?.outType.isNotEmpty ==
-                                    true &&
-                                !isFullScreenBoard)
-                            ? TextDecoration.lineThrough
-                            : (isStriker == false &&
+                        color: (isStriker! &&
+                                    controller.scoreboard.value?.striker.batting
+                                            ?.outType.isNotEmpty ==
+                                        true &&
+                                    !isFullScreenBoard) ||
+                                (isStriker == false &&
                                     controller.scoreboard.value?.nonstriker
                                             .batting?.outType.isNotEmpty ==
                                         true &&
                                     !isFullScreenBoard)
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none,
+                            ? Colors.red
+                            : hasBatted
+                                ? Colors.black
+                                : Colors.grey,
+                        fontWeight: hasBatted ? FontWeight.bold : null,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -205,8 +205,7 @@ class BatterPlayerStat extends StatelessWidget {
                   child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Center(
-                    child: Text(
-                        "${player.batting!.strikeRate.toStringAsFixed(1)}%",
+                    child: Text(player.batting!.strikeRate.toStringAsFixed(1),
                         style: hasBatted
                             ? Get.textTheme.labelMedium
                                 ?.copyWith(fontSize: 11, color: Colors.black)

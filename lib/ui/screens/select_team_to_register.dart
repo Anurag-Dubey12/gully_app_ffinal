@@ -25,7 +25,7 @@ class _SelectTeamToRegisterState extends State<SelectTeamToRegister> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TeamController>();
-    final MiscController connectionController=Get.find<MiscController>();
+    final MiscController connectionController = Get.find<MiscController>();
     controller.getTeams();
     return DecoratedBox(
         decoration: const BoxDecoration(
@@ -59,66 +59,68 @@ class _SelectTeamToRegisterState extends State<SelectTeamToRegister> {
               color: Colors.black26,
               child: Padding(
                   padding: const EdgeInsets.all(18.0),
-                  child: !connectionController.isConnected.value ? Center(
-                    child: SizedBox(
-                      width: Get.width,
-                      height: Get.height * 0.7,
-                      child: const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.signal_wifi_off,
-                            size: 48,
-                            color: Colors.black54,
-                          ),
-                          SizedBox(height: 16),
-                          Text(
-                            'No internet connection',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 18,
+                  child: !connectionController.isConnected.value
+                      ? Center(
+                          child: SizedBox(
+                            width: Get.width,
+                            height: Get.height * 0.7,
+                            child: const Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.signal_wifi_off,
+                                  size: 48,
+                                  color: Colors.black54,
+                                ),
+                                SizedBox(height: 16),
+                                Text(
+                                  'No internet connection',
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ):FutureBuilder<List<TeamModel>>(
-                      future: controller.getTeams(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                        if (snapshot.hasError) {
-                          return Center(
-                            child: Text('Error ${snapshot.error}}'),
-                          );
-                        }
-                        if (snapshot.data?.isEmpty ?? true) {
-                          return const Center(
-                            child: Text('No teams created yet',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold)),
-                          );
-                        }
-                        return ListView.separated(
-                            separatorBuilder: (context, index) =>
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                            itemCount: snapshot.data?.length ?? 0,
-                            itemBuilder: (context, index) {
-                              return _TeamCard(
-                                onTeamSelected: widget.onTeamSelected,
-                                team: snapshot.data![index],
+                        )
+                      : FutureBuilder<List<TeamModel>>(
+                          future: controller.getTeams(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
                               );
-                            });
-                      })),
+                            }
+                            if (snapshot.hasError) {
+                              return Center(
+                                child: Text('Error ${snapshot.error}}'),
+                              );
+                            }
+                            if (snapshot.data?.isEmpty ?? true) {
+                              return const Center(
+                                child: Text('No teams created yet',
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold)),
+                              );
+                            }
+                            return ListView.separated(
+                                separatorBuilder: (context, index) =>
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                itemCount: snapshot.data?.length ?? 0,
+                                itemBuilder: (context, index) {
+                                  return _TeamCard(
+                                    onTeamSelected: widget.onTeamSelected,
+                                    team: snapshot.data![index],
+                                  );
+                                });
+                          })),
             ),
           ),
         ));

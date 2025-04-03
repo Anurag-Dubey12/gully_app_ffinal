@@ -226,7 +226,7 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                             //   },
                             // ),
                             ProfileTileCard(
-                              text: 'View Opponent',
+                              text: 'View Match Schedule',
                               onTap: () {
                                 Get.to(() => const OpponentTournamentsScreen(
                                       opponentView: true,
@@ -237,7 +237,7 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                               text: 'Score Board',
                               onTap: () {
                                 final controller =
-                                Get.find<TournamentController>();
+                                    Get.find<TournamentController>();
                                 controller.getOrganizerTournamentList();
 
                                 // Get.to(() => const CurrentTournamentListScreen(

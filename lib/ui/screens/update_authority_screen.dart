@@ -65,7 +65,7 @@ class _UpdateAuthorityScreenState extends State<UpdateAuthorityScreen> {
   @override
   Widget build(BuildContext context) {
     final TournamentController tournamentController = Get.find();
-    final MiscController connectionController=Get.find<MiscController>();
+    final MiscController connectionController = Get.find<MiscController>();
     return GradientBuilder(
         child: Scaffold(
       backgroundColor: Colors.transparent,
@@ -127,29 +127,28 @@ class _UpdateAuthorityScreenState extends State<UpdateAuthorityScreen> {
             const SizedBox(height: 20),
             PrimaryButton(
               onTap: () async {
-                if(connectionController.isConnected.value){
-
-                if (selectedValue.isEmpty) {
-                  return errorSnackBar('Please Select Authority');
-                }
-                setState(() {
-                  isLoading = true;
-                });
-
-                final res =
-                    await tournamentController.updateTournamentAuthority(
-                        widget.tournament.id, selectedValue);
-                setState(() {
-                  isLoading = false;
-                });
-                if (res) {
-                  successSnackBar('Authority Updated Successfully')
-                      .then((value) {
-                    Get.back();
-                    Get.back();
+                if (connectionController.isConnected.value) {
+                  if (selectedValue.isEmpty) {
+                    return errorSnackBar('Please Select Authority');
+                  }
+                  setState(() {
+                    isLoading = true;
                   });
-                }
-                }else{
+
+                  final res =
+                      await tournamentController.updateTournamentAuthority(
+                          widget.tournament.id, selectedValue);
+                  setState(() {
+                    isLoading = false;
+                  });
+                  if (res) {
+                    successSnackBar('Authority Updated Successfully')
+                        .then((value) {
+                      Get.back();
+                      Get.back();
+                    });
+                  }
+                } else {
                   errorSnackBar("Connect to The Internet to Update Authority");
                 }
               },

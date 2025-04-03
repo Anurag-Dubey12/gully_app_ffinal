@@ -181,8 +181,8 @@ class _CouponViewState extends State<CouponView> {
                                               res['discount'].toString())
                                         }),
                                       );
-                                      logger.d("Coupan Code :${snapshot.data![index].code} and discount :${double.parse(
-                                          res['discount'].toString())}");
+                                      //logger.d"Coupan Code :${snapshot.data![index].code} and discount :${double.parse(
+                                          // res['discount'].toString())}");
                                       // successSnackBar('Coupon Applied').then(
                                       //   (value) => Get.back(result: {
                                       //     "code": snapshot.data![index].code,

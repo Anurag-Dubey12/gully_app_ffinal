@@ -24,7 +24,7 @@ class Performance_matchup extends StatelessWidget {
         ? null
         : ScoreboardModel.fromJson(matchup.scoreBoard!);
     final controller = Get.find<TournamentController>();
-    logger.d("The Winner id is:${matchup.getWinningTeamName()}");
+    //logger.d"The Winner id is:${matchup.getWinningTeamName()}");
 
     return GestureDetector(
       onTap: () {
@@ -37,122 +37,122 @@ class Performance_matchup extends StatelessWidget {
       child: scoreboard == null
           ? EmptyMatchScoreCard()
           : Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(20)),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      matchup.round?.capitalize ?? '',
-                      style: Get.textTheme.labelMedium?.copyWith(),
-                    ),
-                    const Spacer(),
-                    Text(
-                      formatDateTime('dd MMM yyyy hh:mm a', matchup.matchDate),
-                      style: Get.textTheme.labelMedium?.copyWith(),
-                    ),
-                  ],
-                ),
-                SizedBox(height: Get.height * 0.01),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    teamView(
-                      matchup.team1.logo ?? '',
-                      matchup.team1.name,
-                      scoreboard.firstInningHistory == null
-                          ? "Did Not Bat"
-                          : '${scoreboard.firstInnings?.totalScore ?? 0}/${scoreboard.firstInnings?.totalWickets ?? 0}',
-                    ),
-                    const SizedBox(height: 5),
-                    teamView(
-                      matchup.team2.logo ?? '',
-                      matchup.team2.name,
-                      scoreboard.currentInnings == 1
-                          ? "Did Not Bat"
-                          : '${scoreboard.secondInnings?.totalScore}/${scoreboard.secondInnings?.totalWickets ?? 0}',
-                    ),
-                  ],
-                ),
-                matchup.winningTeam != null
-                    ? Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 8.0),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 4.0, horizontal: 12.0),
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade600,
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    child: Text(
-                      scoreboard.secondInningsText == 'Match Tied'
-                          ? "${matchup.getWinningTeamName()} Won The Match"
-                          : scoreboard.secondInningsText ?? "",
-                      style: Get.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(20)),
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 23, vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            matchup.round?.capitalize ?? '',
+                            style: Get.textTheme.labelMedium?.copyWith(),
+                          ),
+                          const Spacer(),
+                          Text(
+                            formatDateTime(
+                                'dd MMM yyyy hh:mm a', matchup.matchDate),
+                            style: Get.textTheme.labelMedium?.copyWith(),
+                          ),
+                        ],
                       ),
-                    ),
-                  ),
-                )
-                    : (scoreboard.secondInningsText?.isNotEmpty ??
-                    false)
-                    ? Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 8.0),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 4.0, horizontal: 12.0),
-                    decoration: BoxDecoration(
-                      color: Colors.green.shade600,
-                      borderRadius:
-                      BorderRadius.circular(5.0),
-                    ),
-                    child: Text(
-                      scoreboard.secondInningsText ?? "",
-                      style:
-                      Get.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                      SizedBox(height: Get.height * 0.01),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          teamView(
+                            matchup.team1.logo ?? '',
+                            matchup.team1.name,
+                            scoreboard.firstInningHistory == null
+                                ? "Did Not Bat"
+                                : '${scoreboard.firstInnings?.totalScore ?? 0}/${scoreboard.firstInnings?.totalWickets ?? 0}',
+                          ),
+                          const SizedBox(height: 5),
+                          teamView(
+                            matchup.team2.logo ?? '',
+                            matchup.team2.name,
+                            scoreboard.currentInnings == 1
+                                ? "Did Not Bat"
+                                : '${scoreboard.secondInnings?.totalScore}/${scoreboard.secondInnings?.totalWickets ?? 0}',
+                          ),
+                        ],
                       ),
-                    ),
+                      matchup.winningTeam != null
+                          ? Align(
+                              alignment: Alignment.center,
+                              child: Container(
+                                margin: const EdgeInsets.only(top: 8.0),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 4.0, horizontal: 12.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.green.shade600,
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Text(
+                                  scoreboard.secondInningsText == 'Match Tied'
+                                      ? "${matchup.getWinningTeamName()} Won The Match"
+                                      : scoreboard.secondInningsText ?? "",
+                                  style: Get.textTheme.bodyMedium?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : (scoreboard.secondInningsText?.isNotEmpty ?? false)
+                              ? Align(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    margin: const EdgeInsets.only(top: 8.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 4.0, horizontal: 12.0),
+                                    decoration: BoxDecoration(
+                                      color: Colors.green.shade600,
+                                      borderRadius: BorderRadius.circular(5.0),
+                                    ),
+                                    child: Text(
+                                      scoreboard.secondInningsText ?? "",
+                                      style: Get.textTheme.bodyMedium?.copyWith(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
+                      // "View Match Statistics" Button
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     // Navigate to the match statistics screen
+                      //     // Get.to(() => MatchStatisticsScreen(matchup: matchup));
+                      //   },
+                      //   child: Container(
+                      //     margin: const EdgeInsets.only(top: 8.0),
+                      //     padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
+                      //     decoration: BoxDecoration(
+                      //       color: Colors.blue.shade600,
+                      //       borderRadius: BorderRadius.circular(5.0),
+                      //     ),
+                      //     child: Text(
+                      //       "View Match Statistics",
+                      //       style: Get.textTheme.bodyMedium?.copyWith(
+                      //         color: Colors.white,
+                      //         fontWeight: FontWeight.bold,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
                   ),
-                )
-                    : const SizedBox.shrink(),
-                // "View Match Statistics" Button
-                // GestureDetector(
-                //   onTap: () {
-                //     // Navigate to the match statistics screen
-                //     // Get.to(() => MatchStatisticsScreen(matchup: matchup));
-                //   },
-                //   child: Container(
-                //     margin: const EdgeInsets.only(top: 8.0),
-                //     padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 12.0),
-                //     decoration: BoxDecoration(
-                //       color: Colors.blue.shade600,
-                //       borderRadius: BorderRadius.circular(5.0),
-                //     ),
-                //     child: Text(
-                //       "View Match Statistics",
-                //       style: Get.textTheme.bodyMedium?.copyWith(
-                //         color: Colors.white,
-                //         fontWeight: FontWeight.bold,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-              ],
+                ),
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 
@@ -183,10 +183,10 @@ class Performance_matchup extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         backgroundImage: matchup.team1.logo != null &&
-                            matchup.team1.logo!.isNotEmpty
+                                matchup.team1.logo!.isNotEmpty
                             ? NetworkImage(matchup.team1.toImageUrl())
                             : const AssetImage('assets/images/logo.png')
-                        as ImageProvider,
+                                as ImageProvider,
                       ),
                       const SizedBox(height: 6),
                       SizedBox(
@@ -211,7 +211,8 @@ class Performance_matchup extends StatelessWidget {
                       Chip(
                         label: Text('VS',
                             style: Get.textTheme.labelLarge?.copyWith(
-                                color: Colors.white, fontWeight: FontWeight.bold)),
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold)),
                         backgroundColor: AppTheme.secondaryYellowColor,
                         side: BorderSide.none,
                       ),
@@ -229,10 +230,10 @@ class Performance_matchup extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         backgroundImage: matchup.team2.logo != null &&
-                            matchup.team2.logo!.isNotEmpty
+                                matchup.team2.logo!.isNotEmpty
                             ? NetworkImage(matchup.team2.toImageUrl())
                             : const AssetImage('assets/images/logo.png')
-                        as ImageProvider,
+                                as ImageProvider,
                       ),
                       const SizedBox(height: 6),
                       SizedBox(
@@ -261,6 +262,7 @@ class Performance_matchup extends StatelessWidget {
       ),
     );
   }
+
   Widget teamView(String teamLogo, String teamName, String score) {
     return Row(
       children: [

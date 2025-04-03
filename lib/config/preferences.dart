@@ -30,7 +30,7 @@ class Preferences {
   }
 
   void setLanguageFalse() {
-    logger.d("Language set to false");
+    ////logger.d("Language set to false");
     _prefs.write('languageSelected', false);
   }
 
@@ -49,7 +49,7 @@ class Preferences {
   //   // final string = jsonEncode(json);
   //   final String jsonString = jsonEncode(notificationsJson);
   //   await _prefs.write('notifications', jsonString);
-  //   logger.d(jsonString);
+  //   //logger.d(jsonString);
   // }
   //
   // Future<List<NotificationModel>> getNotifications() async {
@@ -63,7 +63,6 @@ class Preferences {
 
 //Notification using Shared Preference
 
-
 //Previously, GetStorage was used for storing notifications, but it was not functioning properly.
 //SharedPreferences is used instead now,This can be changed if needed in the future.
   Future<void> setNotifications(List<NotificationModel> notifications) async {
@@ -72,13 +71,13 @@ class Preferences {
         notifications.map((e) => e.toJson()).toList();
     final String jsonString = jsonEncode(notificationsJson);
     await prefs.setString('notifications', jsonString);
-    logger.d(jsonString);
+    ////logger.d(jsonString);
   }
 
   Future<List<NotificationModel>> getNotifications() async {
     final prefs = await SharedPreferences.getInstance();
     final String? jsonString = prefs.getString('notifications');
-    logger.d("Retrieved Notifications: $jsonString");
+    ////logger.d("Retrieved Notifications: $jsonString");
 
     if (jsonString == null || jsonString.isEmpty) {
       return [];

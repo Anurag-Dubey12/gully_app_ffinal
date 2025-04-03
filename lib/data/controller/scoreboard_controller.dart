@@ -32,17 +32,18 @@ class ScoreBoardController extends GetxController with StateMixin {
 
   void connectToSocket({bool hideDialog = false}) {
     try {
-      logger.d('connectToSocket ${AppConstants.websocketUrl}');
+      //logger.d.d('connectToSocket ${AppConstants.websocketUrl}');
       socket.value = io.io(AppConstants.websocketUrl, <String, dynamic>{
         'transports': ['websocket'],
       });
-      logger.d('socket $socket');
-      socket.value?.onConnectError((data) => logger.e(data));
+      //logger.d.d('socket $socket');
+      // socket.value?.onConnectError((data) => //logger.d.e(data));
+         socket.value?.onConnectError((data) => logger.e("Error Found on connection"));
       socket.value!.on('scoreboard', (data) {
-        logger.i('Scoreboard updated to channel ');
+        //logger.d.i('Scoreboard updated to channel ');
         // showDrawPopup();
         // if (hideDialog == false) {
-        //   logger.d("Called showPopups");
+        //   //logger.d.d("Called showPopups");
         //   showPopups();
         // }
         if (data != null) {
@@ -53,11 +54,11 @@ class ScoreBoardController extends GetxController with StateMixin {
         }
       });
       socket.value?.onConnect((_) {
-        logger.d('connect ${scoreboard.value?.matchId}');
+        //logger.d.d('connect ${scoreboard.value?.matchId}');
         // check if match is drawn
         // showDrawPopup();
         if (hideDialog == false) {
-          logger.d("Called showPopups on connect");
+          //logger.d.d("Called showPopups on connect");
           showPopups();
         }
         socket.value?.emit('joinRoom', {
@@ -66,19 +67,19 @@ class ScoreBoardController extends GetxController with StateMixin {
       });
       socket.value!.connect();
       socket.value?.onDisconnect((_) {
-        logger.d('disconnect');
+        //logger.d.d('disconnect');
         // scoreboard.value = null;
-        logger.d('Scoreboard Data is set to null');
+        //logger.d.d('Scoreboard Data is set to null');
         scoreboard.refresh();
       });
     } catch (e) {
-      logger.e(e);
+      //logger.d.e(e);
     }
   }
 
   RxString tiename = ''.obs;
   // String? updateSecondInningsText() {
-  //   logger.d("Launched Controller");
+  //   //logger.d.d("Launched Controller");
   //   match!.getWinningTeamName();
   // }
 
@@ -102,7 +103,7 @@ class ScoreBoardController extends GetxController with StateMixin {
       }
       return null;
     } catch (e) {
-      logger.e('Error fetching winner name: $e');
+      //logger.d.e('Error fetching winner name: $e');
       return null;
     }
   }
@@ -169,7 +170,7 @@ class ScoreBoardController extends GetxController with StateMixin {
                       winningTeamId == scoreboard.value!.team1.id
                           ? scoreboard.value!.team1.name
                           : scoreboard.value!.team2.name;
-                  logger.d("The winner is $winningTeam");
+                  //logger.d.d("The winner is $winningTeam");
                   successSnackBar('$winningTeam wins the match!');
                   Navigator.of(context).pop();
                   updateFinalScoreBoard(winningTeamId);
@@ -182,7 +183,7 @@ class ScoreBoardController extends GetxController with StateMixin {
             successSnackBar('Match Tied');
           }
         } catch (e) {
-          logger.e('Error showing winner for tied match: $e');
+          //logger.d.e('Error showing winner for tied match: $e');
           successSnackBar('Match Tied');
         }
       }
@@ -212,7 +213,7 @@ class ScoreBoardController extends GetxController with StateMixin {
   //   }
   // }
   void emitEvent() {
-    logger.i('Emiting Message');
+    //logger.d.i('Emiting Message');
     socket.value?.emit('scoreboard', {
       'scoreBoard': scoreboard.toJson(),
       'matchId': scoreboard.value!.matchId
@@ -240,7 +241,7 @@ class ScoreBoardController extends GetxController with StateMixin {
         return ScoreboardModel.fromJson(response.data!['match']['scoreBoard']);
       }
     } catch (e) {
-      logger.e('ScoreboardController::getMatchScoreboard $e');
+      //logger.d.e('ScoreboardController::getMatchScoreboard $e');
       return null;
     }
   }
@@ -261,8 +262,8 @@ class ScoreBoardController extends GetxController with StateMixin {
     bool shouldUpdate = true,
   }) {
     // Create sample ScoreboardModel
-    logger.f("isChallenge $isChallenge");
-    logger.f("matchID ${match?.id}");
+    //logger.d.f("isChallenge $isChallenge");
+    //logger.d.f("matchID ${match?.id}");
 
     scoreboard.value = ScoreboardModel(
         team1: team1,
@@ -281,7 +282,7 @@ class ScoreBoardController extends GetxController with StateMixin {
         firstInningHistory: {},
         secondInningHistory: {},
         partnerships: {});
-    // logger.i(scoreboard.value!.toJson());
+    // //logger.d.i(scoreboard.value!.toJson());
     _lastScoreboardInstance = scoreboard.value!;
     if (shouldUpdate && !isChallenge) {
       _scoreboardApi.updateScoreBoard(scoreboard.value!.toJson());
@@ -416,11 +417,11 @@ class ScoreBoardController extends GetxController with StateMixin {
 
         break;
       case EventType.changeBowler:
-        logger.i('changeBowler $bowlerId');
+        //logger.d.i('changeBowler $bowlerId');
         // if (scoreboard.value?.currentOverHistory.last == null) {
         //   undoLastEvent();
         // }
-        logger.i('changeBowler $bowlerId');
+        //logger.d.i('changeBowler $bowlerId');
         scoreboard.value!.changeBowler(bowlerId!);
 
         break;
@@ -429,7 +430,7 @@ class ScoreBoardController extends GetxController with StateMixin {
         break;
       case EventType.nextBatsmen:
         scoreboard.value!.nextBatsmen(nextBatsmenId!, isStrikerOut!);
-        logger.d("Next Bastman $nextBatsmenId");
+        //logger.d.d("Next Bastman $nextBatsmenId");
         break;
       case EventType.retire:
         scoreboard.value!.retirePlayer(selectedBatsmanId!, playerToRetire!);
@@ -460,7 +461,7 @@ class ScoreBoardController extends GetxController with StateMixin {
         //       final winningTeam = winningTeamId == scoreboard.value!.team1.id
         //           ? scoreboard.value!.team1.name
         //           : scoreboard.value!.team2.name;
-        //       logger.d("The winner is $winningTeam");
+        //       //logger.d.d("The winner is $winningTeam");
         //       successSnackBar('$winningTeam wins the match!');
         //       Navigator.of(context).pop();
         //       updateFinalScoreBoard(winningTeamId);
@@ -502,7 +503,7 @@ class ScoreBoardController extends GetxController with StateMixin {
   }
 
   void undoLastEvent() {
-    logger.i('undoLastEvent ${_lastScoreboardInstance.lastBall.toJson()}');
+    //logger.d.i('undoLastEvent ${_lastScoreboardInstance.lastBall.toJson()}');
     scoreboard.value = _lastScoreboardInstance;
     scoreboard.refresh();
   }

@@ -58,18 +58,16 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
         previousCaptainId: previousCaptainId,
         previousCaptainRole: previousCaptainRole,
       );
-      logger.d("The change captain response is: ${response.data}");
+      //logger.d"The change captain response is: ${response.data}");
       if (response.status == false) {
         errorSnackBar(response.message ?? 'Failed to change captain');
         change(GetStatus.error('Failed to change captain'));
         return false;
       }
-      await Future.wait([
-        getPlayers()
-      ]);
+      await Future.wait([getPlayers()]);
       return true;
     } catch (e) {
-      logger.e("Error changing captain: $e");
+      //logger.e("Error changing captain: $e");
       change(GetStatus.error(e.toString()));
       errorSnackBar('An error occurred while changing captain');
       return false;
@@ -202,6 +200,8 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
     }
   }
 
+  RxList<MatchupModel> TeamMatchDetails = <MatchupModel>[].obs;
+
   Future<List<TeamModel>> getOpponentTeamList(
       String teamId, String tournamentId) async {
     try {
@@ -212,11 +212,17 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
         errorSnackBar(response.message!);
         return [];
       }
-      final teams = response.data!['matches'] as List;
-
+      final teams = response.data!['team'] as List;
       final teamList =
           teams.map((e) => TeamModel.fromJson(e['opponent'])).toList();
 
+      TeamMatchDetails.value =
+          (response.data!['matchDetails'] as List<dynamic>?)
+                  ?.map((e) => MatchupModel.fromJson(e as Map<String, dynamic>))
+                  .toList() ??
+              [];
+      //logger.d
+          // "The Team Match Details value is:${TeamMatchDetails.value.map((e) => e.matchDate)}");
       return teamList;
     } catch (e) {
       logger.i(e.toString());
@@ -319,7 +325,7 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
     }
   }
 
-  Rx<CricketStats?> performance=Rx<CricketStats?>(null);
+  Rx<CricketStats?> performance = Rx<CricketStats?>(null);
   RxList<MatchupModel> matches = <MatchupModel>[].obs;
   RxList<TournamentModel> tournaments = <TournamentModel>[].obs;
   Future<Map<String, dynamic>> getMyPerformance({
@@ -331,14 +337,15 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
         userId: userId,
         category: category,
       );
-      performance.value = CricketStats.fromJson(response.data!['performance'] as Map<String, dynamic>);
+      performance.value = CricketStats.fromJson(
+          response.data!['performance'] as Map<String, dynamic>);
       if (response.status == false) {
         errorSnackBar(response.message!);
         return {};
       }
       return response.data!['performance']['aggregatedData'][category] ?? {};
     } catch (e) {
-      logger.e("Error in getMyPerformance: $e");
+      //logger.e("Error in getMyPerformance: $e");
       return {};
     }
   }
@@ -351,17 +358,16 @@ class TeamController extends GetxController with StateMixin<TeamModel> {
       final response = await repo.getChallengePerformance(
         matchId: matchId,
       );
-      logger.d("The Challenge Performance Data: ${response.data}");
+      //logger.d"The Challenge Performance Data: ${response.data}");
       if (response.status == false) {
-        logger.e("Error fetching challenge performance: ${response.message}");
+        //logger.e("Error fetching challenge performance: ${response.message}");
         errorSnackBar(response.message!);
         return {};
       }
       return response.data![type] ?? {};
     } catch (e) {
-      logger.e("Error in getChallengePerformance: $e");
+      //logger.e("Error in getChallengePerformance: $e");
       return {};
     }
   }
-
 }

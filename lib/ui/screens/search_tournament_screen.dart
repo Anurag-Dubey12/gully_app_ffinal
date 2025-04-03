@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/controller/tournament_controller.dart';
+import '../../data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/screens/schedule_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
@@ -52,8 +52,8 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
   void initState() {
     super.initState();
     final TournamentController tournamentController =
-    Get.find<TournamentController>();
-    tournamentController.isSearch.value=true;
+        Get.find<TournamentController>();
+    tournamentController.isSearch.value = true;
     searchController.addListener(() {
       debouncer.debounce(searchController.text);
     });
@@ -70,6 +70,7 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
       // Call your API here with the debounced value
     });
   }
+
   @override
   void dispose() {
     debouncer.dispose();
@@ -91,8 +92,7 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final TournamentController controller =
-    Get.find<TournamentController>();
+    final TournamentController controller = Get.find<TournamentController>();
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -133,19 +133,19 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                         const SizedBox(width: 18),
                         Expanded(
                             child: TextField(
-                              autofocus: true,
-                              controller: searchController,
-                              decoration: const InputDecoration(
-                                prefixIcon: Icon(
-                                  Icons.search,
-                                  color: AppTheme.secondaryYellowColor,
-                                ),
-                                contentPadding: EdgeInsets.only(top: 12),
-                                hintText: 'Search Tournament...',
-                                hintStyle: TextStyle(fontSize: 16),
-                                border: InputBorder.none,
-                              ),
-                            )),
+                          autofocus: true,
+                          controller: searchController,
+                          decoration: const InputDecoration(
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: AppTheme.secondaryYellowColor,
+                            ),
+                            contentPadding: EdgeInsets.only(top: 12),
+                            hintText: 'Search Tournament...',
+                            hintStyle: TextStyle(fontSize: 16),
+                            border: InputBorder.none,
+                          ),
+                        )),
                         IconButton(
                             onPressed: () {
                               Get.bottomSheet(
@@ -204,26 +204,27 @@ class _SearchTournamentScreenState extends State<SearchTournamentScreen> {
                   // : tournaments.isEmpty
                   // ? const Center(child: Text('Search Tournament'))
                   : ListView.builder(
-                shrinkWrap: true,
-                physics: const AlwaysScrollableScrollPhysics(),
-                itemCount: tournaments.length,
-                itemBuilder: (context, index) {
-                  final tournament = tournaments[index];
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: tournament != null
-                        ? TournamentCard(
-                      tournament: tournament,
-                      onTap: (){
-                        logger.d("The TournamentId is:$tournament ");
-                        controller.setScheduleStatus(true);
-                        Get.to(() => ScheduleScreen(tournament: tournament));
+                      shrinkWrap: true,
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      itemCount: tournaments.length,
+                      itemBuilder: (context, index) {
+                        final tournament = tournaments[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 16.0),
+                          child: tournament != null
+                              ? TournamentCard(
+                                  tournament: tournament,
+                                  onTap: () {
+                                    //logger.d"The TournamentId is:$tournament ");
+                                    controller.setScheduleStatus(true);
+                                    Get.to(() =>
+                                        ScheduleScreen(tournament: tournament));
+                                  },
+                                )
+                              : const SizedBox.shrink(),
+                        );
                       },
-                    )
-                        : const SizedBox.shrink(),
-                  );
-                },
-              ),
+                    ),
             ),
           ],
         ),

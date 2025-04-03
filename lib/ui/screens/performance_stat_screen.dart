@@ -330,12 +330,13 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen>
                 ),
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 25),
-                  child: Text("Recent Forms",style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline,
-                    decorationThickness: 2
-                  ),
+                  child: Text(
+                    "Recent Forms",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                        decorationThickness: 2),
                   ),
                 ),
                 Padding(
@@ -344,24 +345,38 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen>
                     if (controller.performance.value == null) {
                       return const Center(child: CircularProgressIndicator());
                     }
-                    final battingData = controller.performance.value?.latestMatchesData
-                        ?.map((match) {
-                      final runs = match.playerData?.batting['runs']?.toString() ?? '0';
-                      final balls = match.playerData?.batting['balls']?.toString() ?? '0';
-                      return (balls == '0') ? '-' : runs;
-                    }).toList() ?? [];
-                    if(battingData.isEmpty){
+                    final battingData = controller
+                            .performance.value?.latestMatchesData
+                            ?.map((match) {
+                          final runs =
+                              match.playerData?.batting['runs']?.toString() ??
+                                  '0';
+                          final balls =
+                              match.playerData?.batting['balls']?.toString() ??
+                                  '0';
+                          return (balls == '0') ? '-' : runs;
+                        }).toList() ??
+                        [];
+                    if (battingData.isEmpty) {
                       battingData.addAll(['-', '-', '-', '-', '-']);
                     }
-                    final bowlingData = controller.performance.value?.latestMatchesData
-                        ?.map((match) {
-                      final wickets = match.playerData?.bowling['wickets']?.toString() ?? '0';
-                      final runs = match.playerData?.bowling['runs']?.toString() ?? '0';
-                      final overs = match.playerData?.bowling['overs']?.toString() ?? '0.0';
-                      return (overs == '0.0') ? '-' : '$wickets-$runs';
-                    }).toList() ?? [];
+                    final bowlingData = controller
+                            .performance.value?.latestMatchesData
+                            ?.map((match) {
+                          final wickets = match.playerData?.bowling['wickets']
+                                  ?.toString() ??
+                              '0';
+                          final runs =
+                              match.playerData?.bowling['runs']?.toString() ??
+                                  '0';
+                          final overs =
+                              match.playerData?.bowling['overs']?.toString() ??
+                                  '0.0';
+                          return (overs == '0.0') ? '-' : '$wickets-$runs';
+                        }).toList() ??
+                        [];
 
-                    if(bowlingData.isEmpty){
+                    if (bowlingData.isEmpty) {
                       bowlingData.addAll(['-', '-', '-', '-', '-']);
                     }
                     return Column(
@@ -372,7 +387,8 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen>
                               backgroundColor: Colors.black,
                               child: Text(
                                 'Bat',
-                                style: TextStyle(color: Colors.white,fontSize: 12),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 12),
                               ),
                             ),
                             const SizedBox(width: 16),
@@ -385,10 +401,17 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen>
                                   itemBuilder: (context, index) {
                                     return CircleAvatar(
                                       backgroundColor: Colors.grey.shade200,
-                                      child: Text(battingData[index].isEmpty ? '-':battingData[index],style: const TextStyle(fontSize: 14,color: Colors.black)),
+                                      child: Text(
+                                          battingData[index].isEmpty
+                                              ? '-'
+                                              : battingData[index],
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black)),
                                     );
                                   },
-                                  separatorBuilder: (context, index) => const SizedBox(width: 8),
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(width: 8),
                                 ),
                               ),
                             ),
@@ -401,7 +424,8 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen>
                               backgroundColor: Colors.black,
                               child: Text(
                                 'Bowl',
-                                style: TextStyle(color: Colors.white,fontSize: 12),
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 12),
                               ),
                             ),
                             const SizedBox(width: 16),
@@ -414,10 +438,17 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen>
                                   itemBuilder: (context, index) {
                                     return CircleAvatar(
                                       backgroundColor: Colors.grey.shade200,
-                                      child: Text(bowlingData[index].isEmpty ? '-':bowlingData[index],style: const TextStyle(fontSize: 14,color: Colors.black)),
+                                      child: Text(
+                                          bowlingData[index].isEmpty
+                                              ? '-'
+                                              : bowlingData[index],
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.black)),
                                     );
                                   },
-                                  separatorBuilder: (context, index) => const SizedBox(width: 8),
+                                  separatorBuilder: (context, index) =>
+                                      const SizedBox(width: 8),
                                 ),
                               ),
                             ),
@@ -438,15 +469,16 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen>
                   ),
                 ),
                 Obx(() {
-                  return  BestPerformanceCard(
-                    battingPerformance: controller.performance.value?.bestBattingPerformance,
-                    bowlingPerformance:controller.performance.value?.bestBowlingPerformance ,
+                  return BestPerformanceCard(
+                    battingPerformance:
+                        controller.performance.value?.bestBattingPerformance,
+                    bowlingPerformance:
+                        controller.performance.value?.bestBowlingPerformance,
                   );
                 }),
               ],
             ),
           ),
-
           SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -469,7 +501,8 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen>
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Obx(() {
-                var tournaments = controller.performance.value?.userPlayedTournament ?? [];
+                var tournaments =
+                    controller.performance.value?.userPlayedTournament ?? [];
                 if (tournaments.isEmpty) {
                   return const Center(child: Text("No tournaments available"));
                 }
@@ -485,13 +518,16 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen>
                       return PerformanceTournament(
                         tournament: tournament,
                         onTap: () {
-                          final tournamentController=Get.find<TournamentController>();
-                          tournamentController.tournamentname.value=tournament['tournamentName'];
-                          Get.to(()=>ScheduleScreen(performance: tournament));
+                          final tournamentController =
+                              Get.find<TournamentController>();
+                          tournamentController.tournamentname.value =
+                              tournament['tournamentName'];
+                          Get.to(() => ScheduleScreen(performance: tournament));
                         },
                       );
                     },
-                    separatorBuilder: (context, index) => const SizedBox(height: 10),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 10),
                   ),
                 );
               }),
@@ -501,6 +537,7 @@ class _PerformanceStatScreenState extends State<PerformanceStatScreen>
       ),
     ));
   }
+
   TextStyle _valueStyle() {
     return const TextStyle(fontSize: 16, fontWeight: FontWeight.bold);
   }

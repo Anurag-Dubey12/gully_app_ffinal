@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
@@ -14,8 +15,10 @@ import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/app_drawer.dart';
 import 'package:gully_app/ui/widgets/banner/banner_adding.dart';
+import 'package:gully_app/ui/widgets/home_screen/bannerIndicators.dart';
 import 'package:gully_app/ui/widgets/home_screen/date_times_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
+import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -53,16 +56,152 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     if (_isConnected) {
       Get.find<AuthController>().getUser();
-      Future.delayed(const Duration(seconds: 3), () async {
+      Future.delayed(const Duration(seconds: 1), () async {
         Get.find<MiscController>().getBanners();
       });
+      // Get.find<MiscController>().getBanners();
       Get.find<MiscController>().getCurrentLocation();
       FirebaseMessaging.instance.getToken().then((value) {
         Get.find<AuthController>().updateProfile(fcmToken: value);
       });
+      _checkLocationPermissionAndServices();
     } else {
       errorSnackBar("Please connect to the network");
     }
+  }
+
+  Future<void> _checkLocationPermissionAndServices() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      errorSnackBar("Location permission is required to proceed.");
+      return;
+    }
+    bool isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!isLocationServiceEnabled) {
+      _showLocationServiceDialog();
+    }
+  }
+
+  void _showLocationServiceDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          backgroundColor: Colors.white,
+          title: const Row(
+            children: [
+              Icon(
+                Icons.location_on,
+                size: 24,
+                color: Colors.blueAccent,
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  'Share Your Current Position',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: const Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'To provide you with relevant tournament matches, rankings, banners, and other local details, we require access to your current location.',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black54,
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Once location access is enabled, please refresh this screen to view the latest data.',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.black45,
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+              child: Column(
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.primaryColor,
+                            padding: const EdgeInsets.symmetric(vertical: 14.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          onPressed: () async {
+                            Geolocator.openLocationSettings();
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            "Allow",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.primaryColor,
+                            padding: const EdgeInsets.symmetric(vertical: 14.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            "Maybe Later",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   //For Double press to exit
@@ -338,49 +477,7 @@ class ScreenContent extends State<HomePageContent> {
                         const SizedBox(height: 10),
                         const FullBannerSlider(isAds: false),
                         const SizedBox(height: 10),
-                        Obx(() {
-                          return Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Icon(
-                                Icons.arrow_back_ios_new,
-                                size: 12,
-                                color: AppTheme.darkYellowColor,
-                              ),
-                              const SizedBox(width: 8),
-                              Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: List.generate(
-                                  misccontroller.banners.length,
-                                  (index) => AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    margin: const EdgeInsets.symmetric(
-                                        horizontal: 3),
-                                    height: 10,
-                                    width:
-                                        misccontroller.indexvalue.value == index
-                                            ? 15
-                                            : 8,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      color: misccontroller.indexvalue.value ==
-                                              index
-                                          ? AppTheme.darkYellowColor
-                                          : Colors.grey.withOpacity(0.5),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              const Icon(
-                                Icons.arrow_forward_ios,
-                                size: 12,
-                                color: AppTheme.darkYellowColor,
-                              ),
-                            ],
-                          );
-                        }),
+                        BannerIndicators(controller: misccontroller),
                         const SizedBox(height: 20),
                       ],
                     ),
@@ -602,111 +699,106 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
       width: 400,
       child: Obx(
         () {
-          if (controller.banners.value.isEmpty) {
-            return Shimmer.fromColors(
-              baseColor: Colors.grey[300]!,
-              highlightColor: Colors.grey[100]!,
-              child: ListView.builder(
-                itemCount: 5,
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Container(
-                    width: 150,
-                    height: 150,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            );
+          if (controller.banners.isEmpty) {
+            return _buildShimmerLoading();
           } else {
-            return GestureDetector(
-              onTap: () {
-                if (controller.banners.value[_current].link ==
-                    "inAppBannerPromotion") {
-                  imageViewer(
-                      context,
-                      controller.banners.value[_current].imageUrl,
-                      true, onTap: () {
-                    Get.to(() => const BannerAdding());
-                  });
-                }
-              },
-              child: CarouselSlider(
-                items: controller.banners.value
-                    .map((e) => ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              CachedNetworkImage(
-                                imageUrl: toImageUrl(e.imageUrl),
-                                fit: BoxFit.fill,
-                                width: double.infinity,
-                                placeholder: (context, url) =>
-                                    Shimmer.fromColors(
-                                  baseColor: Colors.grey[300]!,
-                                  highlightColor: Colors.grey[100]!,
-                                  child: Container(
-                                    width: double.infinity,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              if (e.type == "promotional")
-                                Positioned(
-                                  top: 2,
-                                  right: 10,
-                                  child: GestureDetector(
-                                    onTap: () =>
-                                        Get.to(() => const BannerAdding()),
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: Colors.black.withOpacity(0.6),
-                                        borderRadius: BorderRadius.circular(20),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.2),
-                                            blurRadius: 4,
-                                            offset: const Offset(0, 2),
-                                          ),
-                                        ],
-                                      ),
-                                      child: const Text(
-                                        "Ad",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ))
-                    .toList(),
-                options: CarouselOptions(
-                  viewportFraction: 0.91,
-                  enableInfiniteScroll: true,
-                  autoPlay: true,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      controller.updateIndex(index);
-                      _current = index;
-                    });
-                  },
-                  enlargeCenterPage: true,
-                  aspectRatio: 16 / 9,
-                ),
-              ),
-            );
+            return _buildBannerCarousel(controller);
           }
         },
+      ),
+    );
+  }
+
+  Widget _buildShimmerLoading() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBannerCarousel(MiscController controller) {
+    return GestureDetector(
+      onTap: () {
+        imageViewer(context, controller.banners.value[_current].imageUrl, true,
+            onTap: () {
+          Get.to(() => const BannerAdding());
+        });
+      },
+      child: CarouselSlider(
+        items: controller.banners.value
+            .map((e) => ClipRRect(
+                  borderRadius: BorderRadius.circular(15),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      CachedNetworkImage(
+                        imageUrl: toImageUrl(e.imageUrl),
+                        fit: BoxFit.fill,
+                        width: double.infinity,
+                        placeholder: (context, url) => Shimmer.fromColors(
+                          baseColor: Colors.grey[300]!,
+                          highlightColor: Colors.grey[100]!,
+                          child: Container(
+                            width: double.infinity,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                      if (e.type == "promotional")
+                        Positioned(
+                          top: 2,
+                          right: 10,
+                          child: GestureDetector(
+                            onTap: () => Get.to(() => const BannerAdding()),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.6),
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.2),
+                                    blurRadius: 4,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: const Text(
+                                "Ad",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ))
+            .toList(),
+        options: CarouselOptions(
+          viewportFraction: 0.91,
+          enableInfiniteScroll: true,
+          autoPlay: true,
+          onPageChanged: (index, reason) {
+            setState(() {
+              controller.updateIndex(index);
+              _current = index;
+            });
+          },
+          enlargeCenterPage: true,
+          aspectRatio: 16 / 9,
+        ),
       ),
     );
   }

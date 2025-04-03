@@ -7,16 +7,13 @@ import 'package:gully_app/utils/app_logger.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class ShopController extends GetxController with StateMixin {
-
-  Rx<vendor_model?> vendor=Rx<vendor_model?>(null);
-  Rx<shop_model?> shop=Rx<shop_model?>(null);
-  RxList sociallinks=[].obs;
+  Rx<vendor_model?> vendor = Rx<vendor_model?>(null);
+  Rx<shop_model?> shop = Rx<shop_model?>(null);
+  RxList sociallinks = [].obs;
   RxList<shop_model> shops = <shop_model>[].obs;
   Rx<XFile?> vendorDocumentImage = Rx<XFile?>(null);
   RxList<Map<String, dynamic>> products = <Map<String, dynamic>>[].obs;
-
 
   @override
   void onInit() {
@@ -32,22 +29,23 @@ class ShopController extends GetxController with StateMixin {
     shop.value = shopData;
     saveShopData();
   }
+
   void updateVendorDocumentImage(XFile? image) {
     vendorDocumentImage.value = image;
   }
+
   vendor_model? getVendorDetails() {
     return vendor.value;
   }
 
-
   XFile? getVendorDocumentImage() {
     return vendorDocumentImage.value;
   }
-  void resetAllData() {
-    vendor.value=null;
-    vendorDocumentImage.value=null;
-  }
 
+  void resetAllData() {
+    vendor.value = null;
+    vendorDocumentImage.value = null;
+  }
 
   //Shared Preferences
   void addShop(shop_model shopData) {
@@ -73,7 +71,7 @@ class ShopController extends GetxController with StateMixin {
     final pref = await SharedPreferences.getInstance();
     final shopsJson = shops.map((shop) => shop.toJson()).toList();
     await pref.setString('shops', json.encode(shopsJson));
-    logger.d('The shops data is saved');
+    //logger.d'The shops data is saved');
   }
 
   Future<void> loadShopsData() async {
@@ -81,7 +79,8 @@ class ShopController extends GetxController with StateMixin {
     final jsonData = pref.getString('shops');
     if (jsonData != null) {
       final List<dynamic> shopsJson = json.decode(jsonData);
-      shops.value = shopsJson.map((shopJson) => shop_model.fromJson(shopJson)).toList();
+      shops.value =
+          shopsJson.map((shopJson) => shop_model.fromJson(shopJson)).toList();
     }
   }
 
@@ -94,7 +93,8 @@ class ShopController extends GetxController with StateMixin {
     }
   }
 
-  Future<void> addProductsToShop(String shopId, List<Map<String, dynamic>> newProducts) async {
+  Future<void> addProductsToShop(
+      String shopId, List<Map<String, dynamic>> newProducts) async {
     products.addAll(newProducts);
     await saveProductsForShop(shopId);
   }
@@ -103,16 +103,18 @@ class ShopController extends GetxController with StateMixin {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('products_$shopId', json.encode(products.toList()));
   }
-  Future<void> updateProductForShop(String shopId, String productId, Map<String, dynamic> updatedProduct) async {
+
+  Future<void> updateProductForShop(String shopId, String productId,
+      Map<String, dynamic> updatedProduct) async {
     await loadProductsForShop(shopId);
 
     int index = products.indexWhere((product) => product['id'] == productId);
     if (index != -1) {
       products[index] = updatedProduct;
       await saveProductsForShop(shopId);
-      logger.d('Product updated successfully: $productId');
+      //logger.d'Product updated successfully: $productId');
     } else {
-      logger.d('Product not found: $productId');
+      //logger.d'Product not found: $productId');
     }
   }
 }

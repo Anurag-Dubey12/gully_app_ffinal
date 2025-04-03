@@ -228,8 +228,9 @@ class _RetirePlayerDialogState extends State<RetirePlayerDialog> {
                           child: RadioListTile(
                             value: controller.scoreboard.value!.striker.id,
                             groupValue: playerToRetire,
-                            title:
-                                Text(controller.scoreboard.value!.striker.name),
+                            title: Text(
+                              controller.scoreboard.value!.striker.name,
+                            ),
                             onChanged: (e) {
                               setState(() {
                                 playerToRetire = e.toString();
@@ -317,4 +318,3 @@ class _RetirePlayerDialogState extends State<RetirePlayerDialog> {
         ));
   }
 }
-

@@ -268,7 +268,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
             // await tournamentController
             //     .createTournament(tournament);
             // authController.getUser();
-            // logger.d("The Tournament id is:${tournamentModel.id}");
+            // //logger.d"The Tournament id is:${tournamentModel.id}");
             // if (tournament != null) {
             //   final result = await Get.to(() => PaymentPage(tournament: tournamentModel));
             //   if (result == null || result == false) {
@@ -1047,8 +1047,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
                     if (l != null) {
                       setState(() {
                         location = l;
-                        logger.d(
-                            "The selected Location is $l and address is:${_addressController.text}");
+                        //logger.d
+                            // "The selected Location is $l and address is:${_addressController.text}");
                       });
                     }
                     FocusScope.of(context).unfocus();

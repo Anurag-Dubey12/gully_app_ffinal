@@ -6,11 +6,13 @@ import 'package:gully_app/utils/utils.dart';
 import '../../config/api_client.dart';
 
 class TournamentApi {
-  final GetConnectClient repo;
   const TournamentApi({required this.repo});
+
+  final GetConnectClient repo;
+
   Future<ApiResponse> createTournament(Map<String, dynamic> tournament) async {
     var response = await repo.post('/main/createTournament', tournament);
-    logger.d(response.body);
+    //logger.dresponse.body);
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }
@@ -19,7 +21,7 @@ class TournamentApi {
 
   Future<ApiResponse> setSponsor(Map<String, dynamic> tournament) async {
     var response = await repo.post('/main/setSponsor', tournament);
-    logger.d(response.body);
+    //logger.dresponse.body);
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }
@@ -29,7 +31,7 @@ class TournamentApi {
   //Sponsor Api
   Future<ApiResponse> addSponsor(Map<String, dynamic> sponsor) async {
     var response = await repo.post('/main/sponsor/addSponsor', sponsor);
-    logger.d(response.body);
+    //logger.dresponse.body);
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }
@@ -40,7 +42,7 @@ class TournamentApi {
       String sponsorId, Map<String, dynamic> sponsor) async {
     var response =
         await repo.post('/main/sponsor/editSponsor/$sponsorId', sponsor);
-    logger.d(response.body);
+    //logger.dresponse.body);
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }
@@ -49,7 +51,7 @@ class TournamentApi {
 
   Future<ApiResponse> getmyTournamentSponsor(String tournamentId) async {
     var response = await repo.get('/main/sponsor/getSponsor/$tournamentId');
-    logger.d(response.body);
+    //logger.dresponse.body);
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }
@@ -59,7 +61,7 @@ class TournamentApi {
   Future<ApiResponse> getTournamentSponsor(String tournamentId) async {
     var response =
         await repo.get('/main/sponsor/getSponsorsForTournament/$tournamentId');
-    logger.d(response.body);
+    //logger.dresponse.body);
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }
@@ -68,7 +70,7 @@ class TournamentApi {
 
   Future<ApiResponse> deleteSponsor(String sponsorId) async {
     var response = await repo.delete('/main/sponsor/deleteSponsor/$sponsorId');
-    logger.d(response.body);
+    //logger.dresponse.body);
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }
@@ -274,7 +276,7 @@ class TournamentApi {
       Map<String, dynamic> match, String matchid) async {
     try {
       var response = await repo.put('/match/editMatch/$matchid', match);
-      logger.d("Matchup Edit Data:${response.body}");
+      //logger.d"Matchup Edit Data:${response.body}");
       if (response.statusCode! >= 500) {
         errorSnackBar(generateErrorMessage(response.body));
         throw Exception('Server Error');
@@ -284,7 +286,7 @@ class TournamentApi {
       }
       return ApiResponse.fromJson(response.body);
     } catch (e) {
-      logger.d("Unable to update Match Data:$e");
+      //logger.d"Unable to update Match Data:$e");
       rethrow;
     }
   }
@@ -301,7 +303,7 @@ class TournamentApi {
   Future<ApiResponse> cancelTournament(String tourId) async {
     try {
       final response = await repo.delete('/main/deleteTournament/$tourId');
-      logger.d(response.body);
+      //logger.dresponse.body);
       if (!response.isOk) {
         throw response.body['message'] ?? 'Unable to Process Request';
       }
@@ -345,8 +347,8 @@ class TournamentApi {
       {required String tournamentLimit}) async {
     final response =
         await repo.post('/payment/tournamentFees/$tournamentLimit', {});
-    logger.d("Response Status Code: ${response.statusCode}");
-    logger.d("Response Body: ${response.body}");
+    //logger.d"Response Status Code: ${response.statusCode}");
+    //logger.d"Response Body: ${response.body}");
     if (response.statusCode! >= 500) {
       errorSnackBar('Server Error');
       throw Exception('Server Error');
@@ -361,8 +363,8 @@ class TournamentApi {
   //   final response = await repo.post('/payment/tournamentFees', {
   //     'tournamentId': tournamentId,
   //   });
-  //   logger.d("Response Status Code: ${response.statusCode}");
-  //   logger.d("Response Body: ${response.body}");
+  //   //logger.d"Response Status Code: ${response.statusCode}");
+  //   //logger.d"Response Body: ${response.body}");
   //   if (response.statusCode! >= 500) {
   //     errorSnackBar('Server Error');
   //     throw Exception('Server Error');
@@ -485,7 +487,7 @@ class TournamentApi {
       }
       return ApiResponse.fromJson(response.body);
     } catch (e) {
-      logger.d("Error in API call: $e");
+      //logger.d"Error in API call: $e");
       rethrow;
     }
   }

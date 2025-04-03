@@ -25,15 +25,11 @@ class TournamentTeams extends GetView<TournamentController> {
   final TournamentModel tournament;
   final bool isTeamListOnly;
 
-  const TournamentTeams({
-    super.key,
-    required this.tournament,
-    this.isTeamListOnly = false
-  });
+  const TournamentTeams(
+      {super.key, required this.tournament, this.isTeamListOnly = false});
 
   @override
   Widget build(BuildContext context) {
-
     if (isTeamListOnly) {
       return DecoratedBox(
         decoration: const BoxDecoration(
@@ -110,11 +106,7 @@ class TournamentTeams extends GetView<TournamentController> {
               ),
             ),
             body: TabBarView(
-              children: [
-                registeredTeamsView(),
-                matchups(),
-                MySponsor()
-              ],
+              children: [registeredTeamsView(), matchups(), MySponsor()],
             ),
           ),
         ),
@@ -123,168 +115,179 @@ class TournamentTeams extends GetView<TournamentController> {
   }
 
   Widget registeredTeamsView() {
-    final MiscController connectionController=Get.find<MiscController>();
+    final MiscController connectionController = Get.find<MiscController>();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: Get.width * 0.07, vertical: 10),
-      child: !connectionController.isConnected.value ? Center(
-        child: SizedBox(
-          width: Get.width,
-          height: Get.height,
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.signal_wifi_off,
-                size: 48,
-                color: Colors.black54,
-              ),
-              SizedBox(height: 16),
-              Text(
-                'No internet connection',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18,
+      child: !connectionController.isConnected.value
+          ? Center(
+              child: SizedBox(
+                width: Get.width,
+                height: Get.height,
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.signal_wifi_off,
+                      size: 48,
+                      color: Colors.black54,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'No internet connection',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ):FutureBuilder<List<TeamModel>>(
-        future: controller.getRegisteredTeams(tournament.id),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.data?.isEmpty ?? true) {
-            return const Center(
-              child: Text(
-                'No teams have registered for this tournament yet.',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-                textAlign: TextAlign.center,
-              ),
-            );
-          }
-          return ListView.separated(
-            separatorBuilder: (context, index) => const SizedBox(height: 18),
-            itemCount: snapshot.data?.length ?? 0,
-            itemBuilder: (context, index) {
-              return _Card(team: snapshot.data![index]);
-            },
-          );
-        },
-      ),
+            )
+          : FutureBuilder<List<TeamModel>>(
+              future: controller.getRegisteredTeams(tournament.id),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (snapshot.data?.isEmpty ?? true) {
+                  return const Center(
+                    child: Text(
+                      'No teams have registered for this tournament yet.',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                }
+                return ListView.separated(
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 18),
+                  itemCount: snapshot.data?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    return _Card(team: snapshot.data![index]);
+                  },
+                );
+              },
+            ),
     );
   }
 
   Widget matchups() {
-    final MiscController connectionController=Get.find<MiscController>();
+    final MiscController connectionController = Get.find<MiscController>();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: Get.width * 0.02),
-      child: !connectionController.isConnected.value ? Center(
-        child: SizedBox(
-          width: Get.width,
-          height: Get.height,
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.signal_wifi_off,
-                size: 48,
-                color: Colors.black54,
-              ),
-              SizedBox(height: 16),
-              Text(
-                'No internet connection',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18,
+      child: !connectionController.isConnected.value
+          ? Center(
+              child: SizedBox(
+                width: Get.width,
+                height: Get.height,
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.signal_wifi_off,
+                      size: 48,
+                      color: Colors.black54,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'No internet connection',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ):FutureBuilder(
-          future: tournament.id !=null ? controller.getMatchup(tournament.id): controller.getMatchup(controller.state!.id),
-          builder: (context, snapshot) {
-            if (snapshot.data?.isEmpty ?? true) {
-              return const Center(
-                  child: EmptyTournamentWidget(
-                      message: 'No Matchups Found'));
-            } else {
-              return ListView.separated(
-                itemCount: snapshot.data?.length ?? 0,
-                shrinkWrap: true,
-                separatorBuilder: (context, index) =>
-                    SizedBox(height: Get.height * 0.01),
-                itemBuilder: (context, index) => MatchupCard(
-                  matchup: snapshot.data![index],
-                ),
-              );
-            }
-          }),
+            )
+          : FutureBuilder(
+              future: tournament.id != null
+                  ? controller.getMatchup(tournament.id)
+                  : controller.getMatchup(controller.state!.id),
+              builder: (context, snapshot) {
+                if (snapshot.data?.isEmpty ?? true) {
+                  return const Center(
+                      child:
+                          EmptyTournamentWidget(message: 'No Matchups Found'));
+                } else {
+                  return ListView.separated(
+                    itemCount: snapshot.data?.length ?? 0,
+                    shrinkWrap: true,
+                    separatorBuilder: (context, index) =>
+                        SizedBox(height: Get.height * 0.01),
+                    itemBuilder: (context, index) => MatchupCard(
+                      matchup: snapshot.data![index],
+                    ),
+                  );
+                }
+              }),
     );
   }
+
   Widget MySponsor() {
-    final MiscController connectionController=Get.find<MiscController>();
+    final MiscController connectionController = Get.find<MiscController>();
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: Get.width * 0.02),
-      child: !connectionController.isConnected.value ? Center(
-        child: SizedBox(
-          width: Get.width,
-          height: Get.height,
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.signal_wifi_off,
-                size: 48,
-                color: Colors.black54,
-              ),
-              SizedBox(height: 16),
-              Text(
-                'No internet connection',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 18,
+      child: !connectionController.isConnected.value
+          ? Center(
+              child: SizedBox(
+                width: Get.width,
+                height: Get.height,
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.signal_wifi_off,
+                      size: 48,
+                      color: Colors.black54,
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      'No internet connection',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ):FutureBuilder<List<TournamentSponsor>>(
-        future: controller.getMyTournamentSponsor(tournament.id),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (controller.MyTournamentSponsor.isEmpty) {
-            return const Center(child: Text("No Sponsors Found"));
-          }
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemBuilder: (context, index) {
-              final sponsor = controller.MyTournamentSponsor[index];
-              return MySponsorCard(
-                sponsor: sponsor,
-                tournament: tournament,
-              );
-            },
-            itemCount: controller.MyTournamentSponsor.length,
-          );
-        },
-      ),
+            )
+          : FutureBuilder<List<TournamentSponsor>>(
+              future: controller.getMyTournamentSponsor(tournament.id),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (controller.MyTournamentSponsor.isEmpty) {
+                  return const Center(child: Text("No Sponsors Found"));
+                }
+                return ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemBuilder: (context, index) {
+                    final sponsor = controller.MyTournamentSponsor[index];
+                    return MySponsorCard(
+                      sponsor: sponsor,
+                      tournament: tournament,
+                    );
+                  },
+                  itemCount: controller.MyTournamentSponsor.length,
+                );
+              },
+            ),
     );
   }
 }
 
-
 class MySponsorCard extends StatefulWidget {
   final TournamentSponsor sponsor;
   final TournamentModel tournament;
-  const MySponsorCard({super.key, required this.sponsor, required this.tournament});
+  const MySponsorCard(
+      {super.key, required this.sponsor, required this.tournament});
 
   @override
   State<StatefulWidget> createState() => MySponsorState();
@@ -318,12 +321,12 @@ class MySponsorState extends State<MySponsorCard>
 
   Future<void> _initializeVideoPlayer() async {
     _videoController =
-    VideoPlayerController.network(toImageUrl(widget.sponsor.brandMedia))
-      ..initialize().then((_) {
-        setState(() {});
-        _videoController?.pause();
-        _videoController?.setLooping(true);
-      });
+        VideoPlayerController.network(toImageUrl(widget.sponsor.brandMedia))
+          ..initialize().then((_) {
+            setState(() {});
+            _videoController?.pause();
+            _videoController?.setLooping(true);
+          });
   }
 
   @override
@@ -336,7 +339,6 @@ class MySponsorState extends State<MySponsorCard>
   void _toggleFullScreen() {
     setState(() => _isFullScreen = !_isFullScreen);
     if (_isFullScreen) {
-
       //It is USed to Set the orientation of a device
       // SystemChrome.setPreferredOrientations([
       //   DeviceOrientation.landscapeLeft,
@@ -392,6 +394,7 @@ class MySponsorState extends State<MySponsorCard>
         child: Column(
           children: [
             ClipRRect(
+              borderRadius: BorderRadius.circular(5),
               child: Stack(
                 children: [
                   if (widget.sponsor.isVideo && _videoController != null)
@@ -496,28 +499,32 @@ class MySponsorState extends State<MySponsorCard>
                           _launchURL(widget.sponsor.brandUrl!);
                         }
                       },
-                      child: SponsorDetails("Sponsor URL:", widget.sponsor.brandUrl ?? '',),
+                      child: SponsorDetails(
+                        "Sponsor URL:",
+                        widget.sponsor.brandUrl ?? '',
+                      ),
                     ),
                     const SizedBox(height: 5),
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: widget.sponsor.isActive
-                              ? [Colors.green.shade600, Colors.green.shade400]
-                              : [Colors.red.shade600, Colors.red.shade400],
-                        ),
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: Text(
-                        widget.sponsor.isActive ? "Active" : "Deleted",
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                    // Container(
+                    //   padding: const EdgeInsets.symmetric(
+                    //       vertical: 4, horizontal: 16),
+                    //   decoration: BoxDecoration(
+                    //     gradient: LinearGradient(
+                    //       colors: widget.sponsor.isActive
+                    //           ? [Colors.green.shade600, Colors.green.shade400]
+                    //           : [Colors.red.shade600, Colors.red.shade400],
+                    //     ),
+                    //     borderRadius: BorderRadius.circular(25),
+                    //   ),
+                    //   child: Text(
+                    //     widget.sponsor.isActive ? "Active" : "Deleted",
+                    //     style: const TextStyle(
+                    //       fontSize: 14,
+                    //       fontWeight: FontWeight.bold,
+                    //       color: Colors.white,
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -528,7 +535,7 @@ class MySponsorState extends State<MySponsorCard>
     );
   }
 
-  Widget SponsorDetails(String title, String details,{bool isUrl=false}) {
+  Widget SponsorDetails(String title, String details, {bool isUrl = false}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -557,8 +564,6 @@ class MySponsorState extends State<MySponsorCard>
     );
   }
 }
-
-
 
 class _Card extends StatelessWidget {
   final TeamModel team;
@@ -593,9 +598,7 @@ class _Card extends StatelessWidget {
               CircleAvatar(
                   radius: 24,
                   backgroundImage: FallbackImageProvider(
-                      toImageUrl(team.logo ?? ""),
-                      'assets/images/logo.png'
-                  )),
+                      toImageUrl(team.logo ?? ""), 'assets/images/logo.png')),
               const SizedBox(width: 16),
               Expanded(
                 child: Text(

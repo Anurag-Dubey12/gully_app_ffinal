@@ -8,7 +8,6 @@ import 'package:gully_app/data/model/partnership_model.dart';
 import 'package:gully_app/data/model/player_model.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/widgets/scorecard/change_batter.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'scoreboard_model.g.dart';
@@ -167,9 +166,9 @@ class ScoreboardModel {
       }
     }
 
-    logger.d(
-        "current Inning Data:${(getCurrentInnings.length / 6).toStringAsFixed(1)}");
-    logger.d("Current Over Data:$currentOver");
+    // logger.d(
+    //     "current Inning Data:${(getCurrentInnings.length / 6).toStringAsFixed(1)}");
+    // logger.d("Current Over Data:$currentOver");
     return temp;
   }
 
@@ -220,7 +219,7 @@ class ScoreboardModel {
 
   OverModel get lastBall {
     if (getCurrentInnings.values.isEmpty) {
-      logger.i('Over history is empty');
+      // logger.i('Over history is empty');
       return OverModel(
         over: 1,
         ball: 1,
@@ -246,15 +245,15 @@ class ScoreboardModel {
   String get getWinningTeam {
     if ((lastBall.over == totalOvers && lastBall.ball == 6) &&
         currentInningsScore > firstInnings!.totalScore) {
-      logger.i('Second team won');
+      // logger.i('Second team won');
       return team2.id;
     } else if ((lastBall.over == totalOvers && lastBall.ball == 6) ||
         currentInningsScore < firstInnings!.totalScore) {
-      logger.i('First team won');
+      // logger.i('First team won');
       return team1.id;
     }
     if (currentInningsScore > firstInnings!.totalScore) {
-      logger.i('Second team won');
+      // logger.i('Second team won');
       return team2.id;
     } else {
       return team1.id;
@@ -270,10 +269,10 @@ class ScoreboardModel {
   }
 
   bool get isFirstInningsOver {
-    logger.i('Checking if first innings is over $matchId');
+    // logger.i('Checking if first innings is over $matchId');
     if (currentInnings == 1) {
       if (currentOver == totalOvers || lastBall.wickets == 10) {
-        logger.i('First innings over');
+        // logger.i('First innings over');
         return true;
       }
     }
@@ -281,15 +280,15 @@ class ScoreboardModel {
   }
 
   bool get isSecondInningsOver {
-    logger.i('Checking if second innings is over $matchId');
+    // logger.i('Checking if second innings is over $matchId');
     if (currentInnings == 2) {
       // if (lastBall.over == totalOvers && lastBall.ball == 6) {
       if (currentOver == totalOvers || lastBall.wickets == 10) {
-        logger.i('Second innings over');
+        // logger.i('Second innings over');
         return true;
       }
       if (currentInningsScore > firstInnings!.totalScore) {
-        logger.i('Second innings over');
+        // logger.i('Second innings over');
         return true;
       }
     }
@@ -297,7 +296,7 @@ class ScoreboardModel {
   }
 
   String? get secondInningsText {
-    logger.i('Second Inning text is called');
+    // logger.i('Second Inning text is called');
     if (currentInnings == 2) {
       // if (lastBall.over == totalOvers && lastBall.ball == 6) {
       //   return 'Innings Over';
@@ -428,8 +427,8 @@ class ScoreboardModel {
 
   Future<void> addRuns(int runs,
       {List<EventType>? events, List<EventType>? extraEvents}) async {
-    logger.d("Starting addRuns with $runs runs");
-    logger.d("Current events: ${events?.map((e) => e.toString()).join(', ')}");
+    // logger.d("Starting addRuns with $runs runs");
+    // logger.d("Current events: ${events?.map((e) => e.toString()).join(', ')}");
 
     bool shouldAddRuns = true;
     events ??= [];
@@ -445,47 +444,47 @@ class ScoreboardModel {
         !events.contains(EventType.bye) &&
         !events.contains(EventType.wide) &&
         !events.contains(EventType.wicket)) {
-      logger.d("Adding $runs runs to striker ${striker.name}");
-      logger.d("Striker previous runs: ${striker.batting!.runs}");
+      // logger.d("Adding $runs runs to striker ${striker.name}");
+      // logger.d("Striker previous runs: ${striker.batting!.runs}");
       striker.batting!.runs = striker.batting!.runs + runs;
-      logger.d("Striker new runs: ${striker.batting!.runs}");
+      // logger.d("Striker new runs: ${striker.batting!.runs}");
 
-      logger.d(
-          "Partnership striker previous runs: ${_partnershipStriker.batting!.runs}");
+      // logger.d(
+      //     "Partnership striker previous runs: ${_partnershipStriker.batting!.runs}");
       _partnershipStriker.batting!.runs =
           _partnershipStriker.batting!.runs + runs;
-      logger.d(
-          "Partnership striker new runs: ${_partnershipStriker.batting!.runs}");
+      // logger.d(
+      //     "Partnership striker new runs: ${_partnershipStriker.batting!.runs}");
     }
 
     if (!events.contains(EventType.wide) &&
         !events.contains(EventType.noBall)) {
-      logger.d("Incrementing ball count");
+      // logger.d("Incrementing ball count");
       _incrementBall();
       ball = currentBall;
       over = currentOver;
-      logger.d("New ball: $ball, New over: $over");
+      // logger.d("New ball: $ball, New over: $over");
     }
 
     if (!events.contains(EventType.bye) &&
         !events.contains(EventType.noBall) &&
         !events.contains(EventType.wide) &&
         !events.contains(EventType.legByes)) {
-      logger.d("Incrementing balls faced for striker ${striker.name}");
+      // logger.d("Incrementing balls faced for striker ${striker.name}");
       striker.batting!.balls = striker.batting!.balls + 1;
       _partnershipStriker.batting!.balls =
           _partnershipStriker.batting!.balls + 1;
     }
 
     if (events.contains(EventType.four)) {
-      logger.d("Recording four for ${striker.name}");
+      // logger.d("Recording four for ${striker.name}");
       striker.batting!.fours = striker.batting!.fours + 1;
       _partnershipStriker.batting!.fours =
           _partnershipStriker.batting!.fours + 1;
     }
 
     if (events.contains(EventType.six)) {
-      logger.d("Recording six for ${striker.name}");
+      // logger.d("Recording six for ${striker.name}");
       striker.batting!.sixes = striker.batting!.sixes + 1;
       _partnershipStriker.batting!.sixes =
           _partnershipStriker.batting!.sixes + 1;
@@ -502,42 +501,42 @@ class ScoreboardModel {
             isScrollControlled: true,
             enableDrag: false);
         if (res != null) {
-          logger.d("Wicket result: $res");
+          // logger.d("Wicket result: $res");
           wickets += 1;
           _updateSR();
 
           if (res['outType'] == "RO") {
-            logger.d('Run out: Adding $runs runs to striker ${striker.name}');
+            // logger.d('Run out: Adding $runs runs to striker ${striker.name}');
             striker.batting!.runs = striker.batting!.runs + runs;
             _partnershipStriker.batting!.runs =
                 _partnershipStriker.batting!.runs + runs;
           } else {
-            logger
-                .d('Not adding runs due to dismissal type: ${res['outType']}');
+            // logger
+            //     .d('Not adding runs due to dismissal type: ${res['outType']}');
             shouldAddRuns = false;
           }
 
           if (res['playerToOut'] != null) {
-            logger.d('Processing playerToOut: ${res['playerToOut']}');
+            // logger.d('Processing playerToOut: ${res['playerToOut']}');
             if (res['playerToOut'] == strikerId) {
-              logger.d('Striker ${striker.name} is out');
+              // logger.d('Striker ${striker.name} is out');
               striker.batting!.bowledBy = controller.getBowlerName(bowlerId);
               striker.batting!.outType = res['outType'];
               // setStriker = res['batsmanId'];
             } else {
-              logger.d('Non-striker ${nonstriker.name} is out');
+              // logger.d('Non-striker ${nonstriker.name} is out');
               nonstriker.batting!.bowledBy = controller.getBowlerName(bowlerId);
               nonstriker.batting!.outType = res['outType'];
               // setNonStriker = res['batsmanId'];
             }
           } else {
-            logger.d('Default out processing for striker ${striker.name}');
+            // logger.d('Default out processing for striker ${striker.name}');
             striker.batting!.outType = res['outType'];
             striker.batting!.bowledBy = controller.getBowlerName(bowlerId);
             // setStriker = res['batsmanId'];
           }
 
-          logger.d('Updating partnership players');
+          // logger.d('Updating partnership players');
           _partnershipStriker = PlayerModel(
             name: striker.name,
             id: strikerId,
@@ -551,9 +550,9 @@ class ScoreboardModel {
             role: nonstriker.role,
           );
         } else {
-          logger.d("Wicket processing cancelled");
+          //logger.d("Wicket processing cancelled");
           if (events.contains(EventType.noBall)) {
-            logger.d("No Ball with wicket found ");
+            //logger.d("No Ball with wicket found ");
           } else {
             // List<EventType> selectedEvent=events;
             // controller.addEvent(EventType.dotBall);
@@ -563,40 +562,40 @@ class ScoreboardModel {
           return;
         }
       } catch (e) {
-        logger.e("Error processing wicket: $e");
+        //logger.e("Error processing wicket: $e");
         return;
       }
     }
 
     if (events.contains(EventType.bye)) {
-      logger.d("Adding $runs byes to extras");
+      //logger.d("Adding $runs byes to extras");
       extras.byes += runs;
     }
     if (events.contains(EventType.legByes)) {
-      logger.d("Adding $runs leg byes to extras");
+      //logger.d("Adding $runs leg byes to extras");
       extras.legByes += runs;
     }
 
     if (events.contains(EventType.noBall) || events.contains(EventType.wide)) {
       if (events.contains(EventType.noBall)) {
-        logger.d("Recording no ball");
+        //logger.d("Recording no ball");
         extras.noBalls += 1;
       } else {
-        logger.d("Recording wide");
+        //logger.d("Recording wide");
         extras.wides += 1;
       }
 
       if (events.contains(EventType.noBall) &&
           events.contains(EventType.wide)) {
-        logger.d("Removing wide from no ball delivery");
+        //logger.d("Removing wide from no ball delivery");
         events.remove(EventType.wide);
       }
 
       extraRuns += 1;
-      logger.d("Adding extra run, new total extras: $extraRuns");
+      //logger.d("Adding extra run, new total extras: $extraRuns");
 
       currentInningsScore += runs + extraRuns;
-      logger.d("New innings score after extras: $currentInningsScore");
+      //logger.d("New innings score after extras: $currentInningsScore");
       ballsToBowl += 1;
 
       getCurrentInnings.addAll({
@@ -610,11 +609,11 @@ class ScoreboardModel {
           events: events,
         ),
       });
-      logger.d("Updated over model for $key");
+      //logger.d("Updated over model for $key");
       bowler.bowling!.addRuns(runs, events: events);
     } else {
       if (shouldAddRuns) {
-        logger.d("Adding $runs to innings score");
+        //logger.d("Adding $runs to innings score");
         currentInningsScore += runs;
       }
 
@@ -630,38 +629,38 @@ class ScoreboardModel {
           events: events,
         ),
       });
-      logger.d("Updated over model for $key");
+      //logger.d("Updated over model for $key");
       bowler.bowling!.addRuns(shouldAddRuns ? runs : 0, events: events);
     }
 
     if (currentBall == 6) {
-      logger.d("Over completed");
+      //logger.d("Over completed");
       overCompleted = true;
       if (runs % 2 == 0) {
-        logger.d('Last ball of the over and even runs, changing strike');
+       // logger.d('Last ball of the over and even runs, changing strike');
         changeStrike();
       } else {
-        logger.d('Last ball of the over and odd runs, no strike change needed');
+        //logger.d('Last ball of the over and odd runs, no strike change needed');
       }
       currentBall = 0;
       currentOver += 1;
       ballsToBowl = 6;
     } else {
       if (runs % 2 != 0) {
-        logger.d('Odd runs in middle of over, changing strike');
+       // logger.d('Odd runs in middle of over, changing strike');
         changeStrike();
       } else {
-        logger.d('Even runs in middle of over, no strike change needed');
+       // logger.d('Even runs in middle of over, no strike change needed');
       }
     }
 
     _updateSR();
     _updatePartnership();
-    logger.d("=== Completed addRuns processing ===");
+    //logger.d("=== Completed addRuns processing ===");
   }
 
   void _updateSR() {
-    logger.d('Striker total Ball faced is :${striker.batting?.balls}');
+    //logger.d('Striker total Ball faced is :${striker.batting?.balls}');
     striker.batting!.strikeRate =
         (striker.batting!.runs / striker.batting!.balls) * 100;
 
@@ -674,7 +673,7 @@ class ScoreboardModel {
     if (nonstriker.batting!.strikeRate.isNaN) {
       nonstriker.batting!.strikeRate = 0;
     }
-    logger.f('Updating second Innings');
+    //logger.f('Updating second Innings');
     final Map<String, PartnershipModel> tempPartnerships =
         Map.from(partnerships);
     partnerships.clear();
@@ -797,7 +796,7 @@ class ScoreboardModel {
         );
       }
     } catch (e) {
-      logger.e(e);
+     // logger.e(e);
     }
   }
 
@@ -809,7 +808,7 @@ class ScoreboardModel {
   }
 
   void nextBatsmen(String id, bool isStrikerOut) {
-    logger.d("id got:${id}");
+    //logger.d("id got:${id}");
     if (isStrikerOut) {
       setStriker = id;
     } else {

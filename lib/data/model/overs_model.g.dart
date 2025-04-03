@@ -52,6 +52,7 @@ const _$EventTypeEnumMap = {
   EventType.dotBall: 'dotBall',
   EventType.changeBowler: 'changeBowler',
   EventType.changeStriker: 'changeStriker',
+  EventType.nextBatsmen: 'nextBatsmen',
   EventType.legByes: 'legByes',
   EventType.bye: 'bye',
   EventType.retire: 'retire',

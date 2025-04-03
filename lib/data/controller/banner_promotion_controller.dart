@@ -30,8 +30,8 @@ class PromotionController extends GetxController
 
   Future<PromotionalBanner> createBanner(Map<String, dynamic> banner) async {
     try {
-      final response= await bannerApi.createBanner(banner);
-      logger.d("The response for Banner Creation:${response.data}");
+      final response = await bannerApi.createBanner(banner);
+      //logger.d"The response for Banner Creation:${response.data}");
       return PromotionalBanner.fromJson(response.data!);
     } catch (e) {
       errorSnackBar(e.toString());
@@ -41,20 +41,21 @@ class PromotionController extends GetxController
 
   RxList<PromotionalBanner> bannerList = <PromotionalBanner>[].obs;
   Future<List<PromotionalBanner>> getPromotionalBanner() async {
-    try{
+    try {
       final response = await bannerApi.getbanner();
-      logger.d("My Banner Data:${response.data}");
+      //logger.d"My Banner Data:${response.data}");
       return bannerList.value = (response.data!['Banners'] as List<dynamic>?)
-          ?.map((e) => PromotionalBanner.fromJson(e as Map<String, dynamic>))
-          .toList() ??
+              ?.map(
+                  (e) => PromotionalBanner.fromJson(e as Map<String, dynamic>))
+              .toList() ??
           [];
-    }catch(err){
+    } catch (err) {
       errorSnackBar(err.toString());
       throw Exception(err.toString());
     }
   }
 
-  Future<bool> editBanner(String id,Map<String, dynamic> banner) async {
+  Future<bool> editBanner(String id, Map<String, dynamic> banner) async {
     try {
       return true;
     } catch (e) {

@@ -34,25 +34,29 @@ class _SponsorScreenState extends State<SponsorScreen> {
 
   @override
   void initState() {
-    logger.d("Found Sponsor Id:${widget.tournament.SponsorshipPackageId}");
+    //logger.d"Found Sponsor Id:${widget.tournament.SponsorshipPackageId}");
     getDetails();
   }
-  Future<void> getDetails() async{
-    final miscontroller=Get.find<MiscController>();
-    Package getpackage=await miscontroller.getPackagebyId("${widget.tournament.SponsorshipPackageId}");
+
+  Future<void> getDetails() async {
+    final miscontroller = Get.find<MiscController>();
+    Package getpackage = await miscontroller
+        .getPackagebyId("${widget.tournament.SponsorshipPackageId}");
     setState(() {
-      package=getpackage;
+      package = getpackage;
     });
   }
+
   @override
   void dispose() {
-    videocount=0;
+    videocount = 0;
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
-    final MiscController connectionController=Get.find<MiscController>();
+    final MiscController connectionController = Get.find<MiscController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -68,16 +72,16 @@ class _SponsorScreenState extends State<SponsorScreen> {
             tooltip: 'Add sponsor',
             child: const Icon(Icons.add, color: Colors.white),
             onPressed: () {
-              if(isFabEnabled){
-                videocount = controller.MyTournamentSponsor
-                    .where((sponsor) => sponsor.isVideo == true)
-                    .length;
+              if (isFabEnabled) {
+                videocount = controller.MyTournamentSponsor.where(
+                    (sponsor) => sponsor.isVideo == true).length;
                 if (videocount >= (package?.maxVideos ?? 0)) {
-                  isVideoLimitReached=true;
+                  isVideoLimitReached = true;
                 }
-                Get.to(() => SponsorAddingScreen(tournament: widget.tournament,isVideoLimitReached: isVideoLimitReached));
-
-              }else{
+                Get.to(() => SponsorAddingScreen(
+                    tournament: widget.tournament,
+                    isVideoLimitReached: isVideoLimitReached));
+              } else {
                 errorSnackBar("Your Have Reached your limit");
               }
             },
@@ -95,61 +99,64 @@ class _SponsorScreenState extends State<SponsorScreen> {
             ),
             leading: const BackButton(color: Colors.white),
           ),
-          body: !connectionController.isConnected.value ? const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.signal_wifi_off,
-                  size: 48,
-                  color: Colors.black54,
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'No internet connection',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 18,
+          body: !connectionController.isConnected.value
+              ? const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.signal_wifi_off,
+                        size: 48,
+                        color: Colors.black54,
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        'No internet connection',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-          ): FutureBuilder<List<TournamentSponsor>>(
-            future: controller.getMyTournamentSponsor(widget.tournament.id),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if (controller.MyTournamentSponsor.isEmpty) {
-                return const Center(child: Text("No Sponsors Found"));
-              }
-              return ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemBuilder: (context, index) {
-                  final sponsor = controller.MyTournamentSponsor[index];
-                  if(package?.maxMedia==controller.MyTournamentSponsor.length){
-                    isFabEnabled=false;
-                  }
-                  videocount = 0;
-                  for (var sponsor in controller.MyTournamentSponsor) {
-                    if (sponsor.isVideo == true) {
-                      videocount++;
+                )
+              : FutureBuilder<List<TournamentSponsor>>(
+                  future:
+                      controller.getMyTournamentSponsor(widget.tournament.id),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
                     }
-                  }
-                  videocount = controller.MyTournamentSponsor
-                      .where((sponsor) => sponsor.isVideo == true)
-                      .length;
-                  logger.d("Video COunt:${videocount}");
-                  return MySponsor(
-                    sponsor: sponsor,
-                    tournament: widget.tournament,
-                  );
-                },
-                itemCount: controller.MyTournamentSponsor.length,
-              );
-            },
-          ),
+                    if (controller.MyTournamentSponsor.isEmpty) {
+                      return const Center(child: Text("No Sponsors Found"));
+                    }
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemBuilder: (context, index) {
+                        final sponsor = controller.MyTournamentSponsor[index];
+                        if (package?.maxMedia ==
+                            controller.MyTournamentSponsor.length) {
+                          isFabEnabled = false;
+                        }
+                        videocount = 0;
+                        for (var sponsor in controller.MyTournamentSponsor) {
+                          if (sponsor.isVideo == true) {
+                            videocount++;
+                          }
+                        }
+                        videocount = controller.MyTournamentSponsor.where(
+                            (sponsor) => sponsor.isVideo == true).length;
+                        //logger.d"Video COunt:${videocount}");
+                        return MySponsor(
+                          sponsor: sponsor,
+                          tournament: widget.tournament,
+                        );
+                      },
+                      itemCount: controller.MyTournamentSponsor.length,
+                    );
+                  },
+                ),
         ),
       ),
     );
@@ -193,12 +200,12 @@ class MySponsorState extends State<MySponsor>
 
   Future<void> _initializeVideoPlayer() async {
     _videoController =
-    VideoPlayerController.network(toImageUrl(widget.sponsor.brandMedia))
-      ..initialize().then((_) {
-        setState(() {});
-        _videoController?.pause();
-        _videoController?.setLooping(true);
-      });
+        VideoPlayerController.network(toImageUrl(widget.sponsor.brandMedia))
+          ..initialize().then((_) {
+            setState(() {});
+            _videoController?.pause();
+            _videoController?.setLooping(true);
+          });
   }
 
   @override
@@ -211,7 +218,6 @@ class MySponsorState extends State<MySponsor>
   void _toggleFullScreen() {
     setState(() => _isFullScreen = !_isFullScreen);
     if (_isFullScreen) {
-
       //It is USed to Set the orientation of a device
       // SystemChrome.setPreferredOrientations([
       //   DeviceOrientation.landscapeLeft,
@@ -267,6 +273,7 @@ class MySponsorState extends State<MySponsor>
         child: Column(
           children: [
             ClipRRect(
+              borderRadius: BorderRadius.circular(5),
               child: Stack(
                 children: [
                   if (widget.sponsor.isVideo && _videoController != null)
@@ -319,44 +326,55 @@ class MySponsorState extends State<MySponsor>
                               color: Colors.white,
                             ),
                           ),
-                          widget.sponsor.isActive ? GestureDetector(
-                            onTap: () {
-                              Get.to(() => SponsorAddingScreen(
-                                  tournament: widget.tournament,
-                                  sponsor: widget.sponsor));
-                            },
-                            child: const Icon(
-                              Icons.edit_rounded,
-                              color: Colors.white,
-                            ),
-                          ):const SizedBox.shrink()
+                          widget.sponsor.isActive
+                              ? GestureDetector(
+                                  onTap: () {
+                                    Get.to(() => SponsorAddingScreen(
+                                        tournament: widget.tournament,
+                                        sponsor: widget.sponsor));
+                                  },
+                                  child: const Icon(
+                                    Icons.edit_rounded,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const SizedBox.shrink()
                         ],
                       ),
                     ),
                   ),
-                  !widget.sponsor.isActive ? Positioned(
-                    top: 5,
-                    right: 5,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: widget.sponsor.isActive
-                              ? [Colors.green.shade600, Colors.green.shade400]
-                              : [Colors.red.shade600, Colors.red.shade400],
-                        ),
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      child: const Text(
-                        "Deleted",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ):const SizedBox.shrink()
+                  !widget.sponsor.isActive
+                      ? Positioned(
+                          top: 5,
+                          right: 5,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 4, horizontal: 16),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: widget.sponsor.isActive
+                                    ? [
+                                        Colors.green.shade600,
+                                        Colors.green.shade400
+                                      ]
+                                    : [
+                                        Colors.red.shade600,
+                                        Colors.red.shade400
+                                      ],
+                              ),
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: const Text(
+                              "Deleted",
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink()
                 ],
               ),
             ),
@@ -382,11 +400,15 @@ class MySponsorState extends State<MySponsor>
                           _launchURL(widget.sponsor.brandUrl!);
                         }
                       },
-                      child: SponsorDetails("Sponsor URL:", widget.sponsor.brandUrl ?? '',),
+                      child: SponsorDetails(
+                        "Sponsor URL:",
+                        widget.sponsor.brandUrl ?? '',
+                      ),
                     ),
                     const SizedBox(height: 5),
                     Container(
-                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 4, horizontal: 16),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           colors: widget.sponsor.isActive
@@ -414,7 +436,7 @@ class MySponsorState extends State<MySponsor>
     );
   }
 
-  Widget SponsorDetails(String title, String details,{bool isUrl=false}) {
+  Widget SponsorDetails(String title, String details, {bool isUrl = false}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

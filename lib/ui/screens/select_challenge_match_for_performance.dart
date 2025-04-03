@@ -13,10 +13,12 @@ class SelectChallengeMatchForPerformance extends StatefulWidget {
   const SelectChallengeMatchForPerformance({super.key});
 
   @override
-  State<SelectChallengeMatchForPerformance> createState() => _SelectChallengeMatchForPerformanceState();
+  State<SelectChallengeMatchForPerformance> createState() =>
+      _SelectChallengeMatchForPerformanceState();
 }
 
-class _SelectChallengeMatchForPerformanceState extends State<SelectChallengeMatchForPerformance> {
+class _SelectChallengeMatchForPerformanceState
+    extends State<SelectChallengeMatchForPerformance> {
   @override
   Widget build(BuildContext context) {
     final TeamController teamController = Get.find<TeamController>();
@@ -42,17 +44,17 @@ class _SelectChallengeMatchForPerformanceState extends State<SelectChallengeMatc
                   // final acceptedChallenges = snapshot.data
                   //     ?.where((e) => e.status == 'played')
                   //     .toList();
-                  logger.d("Launched challenge");
+                  //logger.d"Launched challenge");
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());
                   }
                   // if (snapshot.hasError) {
-                  //   logger.e(snapshot.error);
+                  //   //logger.e(snapshot.error);
                   //   return const Center(
                   //     child: Text('Something went wrong'),
                   //   );
                   // }
-                  final challenges=snapshot.data ??[];
+                  final challenges = snapshot.data ?? [];
                   if (challenges.isEmpty) {
                     return const Center(
                       child: Text('No matches played yet'),
@@ -82,10 +84,10 @@ class _SelectChallengeMatchForPerformanceState extends State<SelectChallengeMatc
                             ),
                             trailing: IconButton(
                               onPressed: () {
-                                logger.d("Selected match ID: ${challenges[index].id}");
+                                //logger.d"Selected match ID: ${challenges[index].id}");
                                 Get.to(() => ChallengePerformanceStatScreen(
-                                  match: challenges[index],
-                                ));
+                                      match: challenges[index],
+                                    ));
                               },
                               icon: const Icon(
                                 Icons.arrow_forward_ios,

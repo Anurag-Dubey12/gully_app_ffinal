@@ -1,4 +1,4 @@
-import 'dart:async';  // Import for Timer class
+import 'dart:async'; // Import for Timer class
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,9 +34,9 @@ class LiveScoreState extends State<LiveScore> {
       final tournamentController = Get.find<TournamentController>();
       tournamentController.filter.value = 'current';
       await tournamentController.getCurrentTournamentList(filterD: 'current');
-      logger.d("Got live score");
+      //logger.d"Got live score");
     } catch (e) {
-      logger.e('Error refreshing data: $e');
+      //logger.e('Error refreshing data: $e');
     }
   }
 
@@ -84,10 +84,14 @@ class LiveScoreState extends State<LiveScore> {
               ..sort((a, b) {
                 int getPriority(String? status) {
                   switch (status?.toLowerCase()) {
-                    case 'current': return 0;
-                    case 'upcoming': return 1;
-                    case 'played': return 2;
-                    default: return 3;
+                    case 'current':
+                      return 0;
+                    case 'upcoming':
+                      return 1;
+                    case 'played':
+                      return 2;
+                    default:
+                      return 3;
                   }
                 }
 
@@ -106,7 +110,8 @@ class LiveScoreState extends State<LiveScore> {
               child: ListView.separated(
                 itemCount: sortedMatches.length,
                 padding: const EdgeInsets.all(16),
-                separatorBuilder: (context, index) => const SizedBox(height: 10),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 10),
                 itemBuilder: (context, index) {
                   return Card(
                     tournament: sortedMatches[index],
@@ -121,15 +126,14 @@ class LiveScoreState extends State<LiveScore> {
   }
 }
 
-
-class Card extends StatefulWidget{
+class Card extends StatefulWidget {
   final MatchupModel tournament;
-  const Card({super.key, 
+  const Card({
+    super.key,
     required this.tournament,
   });
   @override
-  State<StatefulWidget> createState() =>CardState();
-  
+  State<StatefulWidget> createState() => CardState();
 }
 
 class CardState extends State<Card> {
@@ -152,8 +156,7 @@ class CardState extends State<Card> {
               color: Colors.black.withOpacity(0.1),
               blurRadius: 5,
               spreadRadius: 2,
-              offset: const Offset(0, 1)
-          )
+              offset: const Offset(0, 1))
         ],
       ),
       child: Stack(
@@ -165,15 +168,15 @@ class CardState extends State<Card> {
                 padding: const EdgeInsets.all(8.0),
                 child: GestureDetector(
                   onTap: () {
-                    imageViewer(context, tournamentdata.coverPhoto,true);
+                    imageViewer(context, tournamentdata.coverPhoto, true);
                   },
                   child: CircleAvatar(
                     radius: 40,
-                    backgroundImage: tournamentdata.coverPhoto != null && tournamentdata.coverPhoto!.isNotEmpty
+                    backgroundImage: tournamentdata.coverPhoto != null &&
+                            tournamentdata.coverPhoto!.isNotEmpty
                         ? FallbackImageProvider(
-                        toImageUrl(tournamentdata.coverPhoto!),
-                        'assets/images/logo.png'
-                    ) as ImageProvider
+                            toImageUrl(tournamentdata.coverPhoto!),
+                            'assets/images/logo.png') as ImageProvider
                         : const AssetImage('assets/images/logo.png'),
                     backgroundColor: Colors.transparent,
                   ),
@@ -189,7 +192,8 @@ class CardState extends State<Card> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            widget.tournament.tournamentName ?? 'Unknown Tournament',
+                            widget.tournament.tournamentName ??
+                                'Unknown Tournament',
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -200,19 +204,22 @@ class CardState extends State<Card> {
                           IconButton(
                             onPressed: () {
                               Get.bottomSheet(
-                                IButtonDialog(
-                                  organizerName: tournamentdata.organizerName!,
-                                  location: tournamentdata.stadiumAddress,
-                                  tournamentName: tournamentdata.tournamentName,
-                                  tournamentPrice: tournamentdata.fees.toString(),
-                                  coverPhoto: tournamentdata.coverPhoto,
-                                  Rules: tournamentdata.rules,
-                                ),
-                                backgroundColor: Colors.white,
-                                isScrollControlled: true
-                              );
+                                  IButtonDialog(
+                                    organizerName:
+                                        tournamentdata.organizerName!,
+                                    location: tournamentdata.stadiumAddress,
+                                    tournamentName:
+                                        tournamentdata.tournamentName,
+                                    tournamentPrice:
+                                        tournamentdata.fees.toString(),
+                                    coverPhoto: tournamentdata.coverPhoto,
+                                    Rules: tournamentdata.rules,
+                                  ),
+                                  backgroundColor: Colors.white,
+                                  isScrollControlled: true);
                             },
-                            icon: const Icon(Icons.info_outline_rounded, size: 18),
+                            icon: const Icon(Icons.info_outline_rounded,
+                                size: 18),
                             color: Colors.grey,
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
@@ -243,10 +250,9 @@ class CardState extends State<Card> {
                     //   );
                     // }),
                     TeamScore(
-                      color: Colors.red,
-                      teamName: widget.tournament.team1.name,
-                      score: getScore(scoreboard?.firstInnings)
-                    ),
+                        color: Colors.red,
+                        teamName: widget.tournament.team1.name,
+                        score: getScore(scoreboard?.firstInnings)),
                     const SizedBox(height: 4),
                     TeamScore(
                       teamName: widget.tournament.team2.name,
@@ -262,7 +268,7 @@ class CardState extends State<Card> {
                           width: 100,
                           child: ElevatedButton(
                               onPressed: () {
-                                final res=Get.bottomSheet(
+                                final res = Get.bottomSheet(
                                   BottomSheet(
                                     enableDrag: false,
                                     builder: (context) => ScoreBottomDialog(
@@ -273,26 +279,32 @@ class CardState extends State<Card> {
                                   isScrollControlled: true,
                                 );
                                 controller.getCurrentTournamentList();
-                                logger.d("Called getCurrentTournamentList");
+                                //logger.d"Called getCurrentTournamentList");
                               },
                               style: ButtonStyle(
-                                padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 8)),
+                                padding: WidgetStateProperty.all(
+                                    const EdgeInsets.symmetric(horizontal: 8)),
                               ),
                               child: Text('View Score',
                                   style: Get.textTheme.bodyMedium?.copyWith(
                                       fontWeight: FontWeight.w500,
-                                      color: Colors.white
-                                  )
-                              )
-                          ),
+                                      color: Colors.white))),
                         ),
                         const SizedBox(width: 8),
                         GestureDetector(
-                          onTap: (){
-                            logger.d("The TournamentId is:${tournamentdata.id}");
-                            Get.to(() => ScheduleScreen(tournament: tournamentdata,));
+                          onTap: () {
+                            //logger.d"The TournamentId is:${tournamentdata.id}");
+                            Get.to(() => ScheduleScreen(
+                                  tournament: tournamentdata,
+                                ));
                           },
-                          child: const Text("View Schedule",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),),
+                          child: const Text(
+                            "View Schedule",
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         )
                       ],
                     ),
@@ -306,24 +318,25 @@ class CardState extends State<Card> {
             top: 7,
             left: 10,
             child: BlinkingLiveText(
-              status: widget.tournament.status== 'played'?'Ended':
-              widget.tournament.status== 'current'?'Live':
-              widget.tournament.status!.capitalize??'',
+              status: widget.tournament.status == 'played'
+                  ? 'Ended'
+                  : widget.tournament.status == 'current'
+                      ? 'Live'
+                      : widget.tournament.status!.capitalize ?? '',
               color: widget.tournament.status == 'current'
                   ? Colors.green
                   : widget.tournament.status == 'upcoming'
-                  ? AppTheme.primaryColor
-                  : widget.tournament.status == 'played'
-                  ? Colors.red
-                  : Colors.grey,
+                      ? AppTheme.primaryColor
+                      : widget.tournament.status == 'played'
+                          ? Colors.red
+                          : Colors.grey,
             ),
           ),
-
           Positioned(
             top: 1,
             right: 10,
             child: Text(
-              '${widget.tournament.round!.capitalize ??''} Match',
+              '${widget.tournament.round!.capitalize ?? ''} Match',
               style: const TextStyle(
                 fontSize: 10,
                 color: Colors.black87,
@@ -350,7 +363,8 @@ class TeamScore extends StatelessWidget {
   final String score;
   final Color color;
 
-  const TeamScore({super.key,
+  const TeamScore({
+    super.key,
     required this.teamName,
     required this.score,
     required this.color,
@@ -374,18 +388,12 @@ class TeamScore extends StatelessWidget {
           Expanded(
             child: Text(
               teamName,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
             ),
           ),
           Text(
             score,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 13
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
           ),
         ],
       ),

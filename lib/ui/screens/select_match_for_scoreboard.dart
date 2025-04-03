@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/controller/auth_controller.dart';
-import 'package:gully_app/data/controller/scoreboard_controller.dart';
-import 'package:gully_app/data/controller/tournament_controller.dart';
-import 'package:gully_app/data/model/scoreboard_model.dart';
-import 'package:gully_app/ui/screens/score_card_screen.dart';
-import 'package:gully_app/ui/screens/select_opening_team.dart';
-import 'package:gully_app/utils/date_time_helpers.dart';
+import '../../data/controller/auth_controller.dart';
+import '../../data/controller/scoreboard_controller.dart';
+import '../../data/controller/tournament_controller.dart';
+import '../../data/model/scoreboard_model.dart';
+import 'score_card_screen.dart';
+import 'select_opening_team.dart';
+import '../../utils/date_time_helpers.dart';
 import 'package:gully_app/utils/utils.dart';
 
 import '../../data/controller/misc_controller.dart';
@@ -170,9 +170,9 @@ class _MatchupCard extends GetView<ScoreBoardController> {
         //   errorSnackBar('You are not authorized to update the score board');
         //   return;
         // }
-        logger.d("Match Authority id:${matchup.matchAuthority}");
-        logger.d("auth  id:${authController.state?.id}");
-        if(matchup.matchAuthority!=authController.state?.id) {
+        // //logger.d"Match Authority id:${matchup.matchAuthority}");
+        // //logger.d"auth  id:${authController.state?.id}");
+        if (matchup.matchAuthority != authController.state?.id) {
           errorSnackBar('You are not authorized to update the score board');
           return;
         }
@@ -183,8 +183,9 @@ class _MatchupCard extends GetView<ScoreBoardController> {
         // }
 
         if (matchup.scoreBoard != null) {
-          Get.to(() => const ScoreCardScreen());
-          controller.setScoreBoard(ScoreboardModel.fromJson(matchup.scoreBoard!));
+          Get.off(() => const ScoreCardScreen());
+          controller
+              .setScoreBoard(ScoreboardModel.fromJson(matchup.scoreBoard!));
         } else {
           logger.i("Tournament Match: true");
           if (matchup.team1.players!.length < 11) {
@@ -202,7 +203,7 @@ class _MatchupCard extends GetView<ScoreBoardController> {
               ));
           controller.match = MatchupModel.fromJson(matchup.toJson());
 
-          logger.d("The Matchup Data is ${matchup.toJson()}");
+          //logger.d"The Matchup Data is ${matchup.toJson()}");
         }
       },
       child: Container(
@@ -303,20 +304,18 @@ class _MatchupCard extends GetView<ScoreBoardController> {
               SizedBox(height: Get.height * 0.01),
               matchup.winningTeam != null
                   ? Center(
-                    child: Text(
-                      scoreboard?.secondInningsText == 'Match Tied'
-                          ? "${matchup.getWinningTeamName()} Won The Match"
-                          : scoreboard?.secondInningsText ?? "",
-                        style: Get.textTheme.labelMedium?.copyWith()),
-                  )
-                  : (scoreboard?.secondInningsText?.isNotEmpty ??
-                  false)
-                  ? Center(
-                    child: Text(
-                      scoreboard?.secondInningsText ?? "",
-                        style: Get.textTheme.labelMedium?.copyWith()),
-                  )
-                  : const SizedBox.shrink(),
+                      child: Text(
+                          scoreboard?.secondInningsText == 'Match Tied'
+                              ? "${matchup.getWinningTeamName()} Won The Match"
+                              : scoreboard?.secondInningsText ?? "",
+                          style: Get.textTheme.labelMedium?.copyWith()),
+                    )
+                  : (scoreboard?.secondInningsText?.isNotEmpty ?? false)
+                      ? Center(
+                          child: Text(scoreboard?.secondInningsText ?? "",
+                              style: Get.textTheme.labelMedium?.copyWith()),
+                        )
+                      : const SizedBox.shrink(),
               // Center(
               //   child: Text(scoreboard?.secondInningsText ?? "",
               //       style: Get.textTheme.labelMedium?.copyWith()),

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
@@ -6,7 +5,6 @@ import 'package:gully_app/data/model/matchup_model.dart';
 import 'package:gully_app/ui/screens/schedule_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/home_screen/no_tournament_card.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import '../../../data/model/scoreboard_model.dart';
 import '../../../utils/BlinkingLiveText.dart';
 import '../../../utils/FallbackImageProvider.dart';
@@ -18,7 +16,7 @@ import 'i_button_dialog.dart';
 class CurrentTournamentCard extends GetView<TournamentController> {
   final bool isLive;
   const CurrentTournamentCard({
-    this.isLive=false,
+    this.isLive = false,
     super.key,
   });
 
@@ -32,10 +30,9 @@ class CurrentTournamentCard extends GetView<TournamentController> {
           if (controller.tournamentList.isEmpty) {
             return const NoTournamentCard();
           }
-          if(controller.matches.isEmpty){
+          if (controller.matches.isEmpty) {
             return const NoTournamentCard();
-          }
-          else {
+          } else {
             //For sorting the match if ended it will forward towards the end of the list
             // final sortedMatches = List<MatchupModel>.from(controller.matches)
             //   ..sort((a, b) {
@@ -72,6 +69,7 @@ class CurrentTournamentCard extends GetView<TournamentController> {
                       return 3;
                   }
                 }
+
                 int priorityA = getPriority(a.status);
                 int priorityB = getPriority(b.status);
                 if (priorityA != priorityB) {
@@ -79,9 +77,10 @@ class CurrentTournamentCard extends GetView<TournamentController> {
                 }
                 return (a.tournamentId ?? '').compareTo(b.tournamentId ?? '');
               });
-            final matchMap = sortedMatches.fold<Map<String, List<MatchupModel>>>(
+            final matchMap =
+                sortedMatches.fold<Map<String, List<MatchupModel>>>(
               {},
-                  (map, match) {
+              (map, match) {
                 if (match.tournamentName != null) {
                   map.putIfAbsent(match.tournamentName!, () => []).add(match);
                 }
@@ -102,12 +101,15 @@ class CurrentTournamentCard extends GetView<TournamentController> {
                       return 3;
                   }
                 }
+
                 int latestPriority = getPriority(latest.status);
                 int matchPriority = getPriority(match.status);
                 if (latestPriority != matchPriority) {
                   return latestPriority < matchPriority ? latest : match;
                 }
-                return match.matchDate.isAfter(latest.matchDate) ? match : latest;
+                return match.matchDate.isAfter(latest.matchDate)
+                    ? match
+                    : latest;
               });
             }).toList();
 
@@ -132,7 +134,6 @@ class CurrentTournamentCard extends GetView<TournamentController> {
   }
 }
 
-
 class _Card extends StatefulWidget {
   final MatchupModel tournament;
 
@@ -146,7 +147,6 @@ class _Card extends StatefulWidget {
 }
 
 class _CardState extends State<_Card> {
-
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
@@ -156,8 +156,8 @@ class _CardState extends State<_Card> {
     ScoreboardModel? scoreboard = widget.tournament.scoreBoard == null
         ? null
         : ScoreboardModel.fromJson(widget.tournament.scoreBoard!);
-    // logger.d("The second inning is over:${widget.tournament.getWinningTeamName()}");
-    logger.d("The match Id of Tournament are :${widget.tournament.tournamentId}");
+    // //logger.d"The second inning is over:${widget.tournament.getWinningTeamName()}");
+    //logger.d"The match Id of Tournament are :${widget.tournament.tournamentId}");
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
       child: Container(
@@ -170,8 +170,7 @@ class _CardState extends State<_Card> {
                 color: Colors.black.withOpacity(0.1),
                 blurRadius: 5,
                 spreadRadius: 2,
-                offset: const Offset(0, 1)
-            )
+                offset: const Offset(0, 1))
           ],
         ),
         child: Stack(
@@ -183,15 +182,15 @@ class _CardState extends State<_Card> {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
-                      imageViewer(context, tournamentdata.coverPhoto,true);
+                      imageViewer(context, tournamentdata.coverPhoto, true);
                     },
                     child: CircleAvatar(
                       radius: 40,
-                      backgroundImage: tournamentdata.coverPhoto != null && tournamentdata.coverPhoto!.isNotEmpty
+                      backgroundImage: tournamentdata.coverPhoto != null &&
+                              tournamentdata.coverPhoto!.isNotEmpty
                           ? FallbackImageProvider(
-                          toImageUrl(tournamentdata.coverPhoto!),
-                          'assets/images/logo.png'
-                      ) as ImageProvider
+                              toImageUrl(tournamentdata.coverPhoto!),
+                              'assets/images/logo.png') as ImageProvider
                           : const AssetImage('assets/images/logo.png'),
                       backgroundColor: Colors.transparent,
                     ),
@@ -205,9 +204,10 @@ class _CardState extends State<_Card> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(
-                            width:120,
+                            width: 120,
                             child: Text(
-                              widget.tournament.tournamentName ?? 'Unknown Tournament',
+                              widget.tournament.tournamentName ??
+                                  'Unknown Tournament',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
@@ -220,26 +220,28 @@ class _CardState extends State<_Card> {
                           IconButton(
                             onPressed: () {
                               Get.bottomSheet(
-                                IButtonDialog(
-                                  organizerName: tournamentdata.organizerName!,
-                                  location: tournamentdata.stadiumAddress,
-                                  tournamentName: tournamentdata.tournamentName,
-                                  tournamentPrice: tournamentdata.fees.toString(),
-                                  coverPhoto: tournamentdata.coverPhoto,
-                                  Rules: tournamentdata.rules,
-                                ),
-                                backgroundColor: Colors.white,
-                                isScrollControlled: true
-                              );
+                                  IButtonDialog(
+                                    organizerName:
+                                        tournamentdata.organizerName!,
+                                    location: tournamentdata.stadiumAddress,
+                                    tournamentName:
+                                        tournamentdata.tournamentName,
+                                    tournamentPrice:
+                                        tournamentdata.fees.toString(),
+                                    coverPhoto: tournamentdata.coverPhoto,
+                                    Rules: tournamentdata.rules,
+                                  ),
+                                  backgroundColor: Colors.white,
+                                  isScrollControlled: true);
                             },
-                            icon: const Icon(Icons.info_outline_rounded, size: 18),
+                            icon: const Icon(Icons.info_outline_rounded,
+                                size: 18),
                             color: Colors.grey,
                             padding: EdgeInsets.zero,
                             constraints: const BoxConstraints(),
                           ),
                         ],
                       ),
-
                       const SizedBox(height: 4),
                       TeamScore(
                         color: Colors.red,
@@ -253,7 +255,6 @@ class _CardState extends State<_Card> {
                         color: Colors.green.shade600,
                       ),
                       const SizedBox(height: 8),
-
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -262,7 +263,7 @@ class _CardState extends State<_Card> {
                             width: 100,
                             child: ElevatedButton(
                                 onPressed: () {
-                                  logger.d("The current match id:${widget.tournament.id}");
+                                  //logger.d"The current match id:${widget.tournament.id}");
                                   Get.bottomSheet(
                                     BottomSheet(
                                       enableDrag: false,
@@ -275,25 +276,32 @@ class _CardState extends State<_Card> {
                                   );
                                 },
                                 style: ButtonStyle(
-                                  padding: WidgetStateProperty.all(const EdgeInsets.symmetric(horizontal: 8)),
+                                  padding: WidgetStateProperty.all(
+                                      const EdgeInsets.symmetric(
+                                          horizontal: 8)),
                                 ),
                                 child: Text('View Score',
                                     style: Get.textTheme.bodyMedium?.copyWith(
                                         fontWeight: FontWeight.w500,
-                                        color: Colors.white
-                                    )
-                                )
-                            ),
+                                        color: Colors.white))),
                           ),
                           const SizedBox(width: 8),
                           GestureDetector(
-                            onTap: (){
-                              logger.d("The TournamentId is:${tournamentdata.id} }");
+                            onTap: () {
+                              //logger.d"The TournamentId is:${tournamentdata.id} }");
                               controller.setScheduleStatus(true);
-                              controller.tournamentname.value=tournamentdata.tournamentName;
-                              Get.to(() => ScheduleScreen(tournament: tournamentdata));
+                              controller.tournamentname.value =
+                                  tournamentdata.tournamentName;
+                              Get.to(() =>
+                                  ScheduleScreen(tournament: tournamentdata));
                             },
-                            child: const Text("View Schedule",style: TextStyle(fontSize: 12,fontWeight: FontWeight.bold,),),
+                            child: const Text(
+                              "View Schedule",
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           )
                         ],
                       ),
@@ -307,23 +315,25 @@ class _CardState extends State<_Card> {
               top: 7,
               left: 10,
               child: BlinkingLiveText(
-                status: widget.tournament.status== 'played'?'Ended':
-                widget.tournament.status== 'current'?'Live':
-                widget.tournament.status!.capitalize??'',
+                status: widget.tournament.status == 'played'
+                    ? 'Ended'
+                    : widget.tournament.status == 'current'
+                        ? 'Live'
+                        : widget.tournament.status!.capitalize ?? '',
                 color: widget.tournament.status == 'current'
                     ? Colors.green
                     : widget.tournament.status == 'upcoming'
-                    ? AppTheme.primaryColor
-                    : widget.tournament.status == 'played'
-                    ? Colors.red
-                    : Colors.grey,
+                        ? AppTheme.primaryColor
+                        : widget.tournament.status == 'played'
+                            ? Colors.red
+                            : Colors.grey,
               ),
             ),
             Positioned(
               top: 1,
               right: 10,
               child: Text(
-              '${widget.tournament.round!.capitalize ??''} Match',
+                '${widget.tournament.round!.capitalize ?? ''} Match',
                 style: const TextStyle(
                   fontSize: 10,
                   color: Colors.black87,
@@ -351,7 +361,8 @@ class TeamScore extends StatelessWidget {
   final String score;
   final Color color;
 
-  const TeamScore({super.key,
+  const TeamScore({
+    super.key,
     required this.teamName,
     required this.score,
     required this.color,
@@ -375,18 +386,12 @@ class TeamScore extends StatelessWidget {
           Expanded(
             child: Text(
               teamName,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13
-              ),
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
             ),
           ),
           Text(
             score,
-            style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 13
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
           ),
         ],
       ),

@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
@@ -127,7 +124,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                         children: [
                           FutureBuilder(
                             future: widget.performance != null
-                                ? controller.getMatchup(widget.performance!['_id'])
+                                ? controller
+                                    .getMatchup(widget.performance!['_id'])
                                 : widget.tournament?.id != null
                                     ? controller
                                         .getMatchup(widget.tournament!.id ?? '')
@@ -157,8 +155,10 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                                   final matchup = controller.matchups[index];
                                   return MatchupCard(
                                     matchup: matchup,
-                                    tourid: widget.performance!=null ? widget.performance!['_id']:widget.tournament?.id ??
-                                        controller.state!.id,
+                                    tourid: widget.performance != null
+                                        ? widget.performance!['_id']
+                                        : widget.tournament?.id ??
+                                            controller.state!.id,
                                   );
                                 },
                               );
@@ -166,7 +166,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                           ),
                           FutureBuilder<List<PointTableModel>>(
                             future: widget.performance != null
-                                ? controller.tournamentPointsTable(widget.performance!['_id'])
+                                ? controller.tournamentPointsTable(
+                                    widget.performance!['_id'])
                                 : controller.tournamentPointsTable(
                                     widget.tournament!.id ?? ''),
                             builder: (context, snapshot) {
@@ -284,7 +285,7 @@ class MatchupCard extends StatelessWidget {
         ? null
         : ScoreboardModel.fromJson(matchup.scoreBoard!);
     final controller = Get.find<TournamentController>();
-    logger.d("The Winner id is:${matchup.getWinningTeamName()}");
+    //logger.d"The Winner id is:${matchup.getWinningTeamName()}");
     return GestureDetector(
         onTap: () {
           if (scoreboard == null) {

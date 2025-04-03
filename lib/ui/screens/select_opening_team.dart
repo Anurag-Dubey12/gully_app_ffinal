@@ -28,7 +28,7 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
   @override
   void initState() {
     super.initState();
-    logger.d('isTournament ${widget.isTournament}');
+    //logger.d'isTournament ${widget.isTournament}');
     optedTo = 'Bat';
   }
 
@@ -42,7 +42,7 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
   Widget build(BuildContext context) {
     final scoreBoardController = Get.find<ScoreBoardController>();
     final match = scoreBoardController.match!;
-    final tournamentController=Get.find<TournamentController>();
+    final tournamentController = Get.find<TournamentController>();
     return GradientBuilder(
         child: Scaffold(
       backgroundColor: Colors.transparent,
@@ -136,14 +136,13 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                           //       overflow: TextOverflow.visible),
                           // ),
                           SizedBox(
-                            width: 90,
+                              width: 90,
                               child: Text(
-                                  match.team1.name,
-                              softWrap: true,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,)
-                          ),
-
+                                match.team1.name,
+                                softWrap: true,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                              )),
                         ],
                       ),
                       Row(
@@ -168,9 +167,8 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                                 match.team2.name,
                                 softWrap: true,
                                 overflow: TextOverflow.ellipsis,
-                                maxLines: 2,)
-                          ),
-
+                                maxLines: 2,
+                              )),
                         ],
                       ),
                     ],
@@ -217,7 +215,7 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                             groupValue: optedTo,
                             onChanged: (value) {
                               setState(() {
-                                logger.d(value);
+                                //logger.dvalue);
                                 optedTo = value;
                               });
                             },
@@ -262,7 +260,6 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
             if (tossWonBy == match.team1.id && optedTo == 'Bat') {
               battingTeam = match.team1;
               bowlingTeam = match.team2;
-
             } else if (tossWonBy == match.team1.id && optedTo == 'Bowl') {
               battingTeam = match.team2;
               bowlingTeam = match.team1;
@@ -270,9 +267,9 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
               battingTeam = match.team2;
               bowlingTeam = match.team1;
             } else {
-              logger.d('visitor team won the toss');
-              logger.d('visitor team ${visitorTeam?.name}');
-              logger.d('Host team ${hostTeam?.name}');
+              //logger.d'visitor team won the toss');
+              //logger.d'visitor team ${visitorTeam?.name}');
+              //logger.d'Host team ${hostTeam?.name}');
               battingTeam = match.team1;
               bowlingTeam = match.team2;
             }
@@ -296,8 +293,8 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
             }
             // logger.i('is tournament${widget.isTournament}');
             // logger.i('Total overs ${totalOvers.text}');
-            // logger.d("Navigating to SelectOpeningPlayer with match id: ${match.id}");
-            // logger.d("The Opening Team is: "
+            // //logger.d"Navigating to SelectOpeningPlayer with match id: ${match.id}");
+            // //logger.d"The Opening Team is: "
             //     "Host Team id: ${match.team1.id}, Players: ${match.team1.players?.map((p) => p.name).join(', ')}"
             //     "Visitor Team id: ${match.team2.id}, Players: ${match.team2.players?.map((p) => p.name).join(', ')}");
             tournamentController.updateState(
@@ -308,9 +305,8 @@ class _SelectOpeningTeamState extends State<SelectOpeningTeam> {
                 electedTo: optedTo!,
                 overs: int.parse(totalOvers.text),
                 isTournament: widget.isTournament);
-            Get.off(()=>const SelectOpeningPlayer());
-          }
-          )
+            Get.off(() => const SelectOpeningPlayer());
+          })
         ],
       ),
     ));

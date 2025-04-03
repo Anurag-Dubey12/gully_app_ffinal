@@ -29,10 +29,11 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
     selectedDate = DateTime.now();
     formatedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
   }
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.putOrFind(() => RankingController(Get.find()));
-    final MiscController connectionController=Get.find<MiscController>();
+    final MiscController connectionController = Get.find<MiscController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -137,17 +138,21 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                               children: [
                                 GestureDetector(
                                   onTap: () async {
-                                    final DateTime? picked = await showDatePicker(
+                                    final DateTime? picked =
+                                        await showDatePicker(
                                       context: context,
                                       initialDate: selectedDate,
                                       firstDate: DateTime(2021),
                                       lastDate: DateTime.now(),
                                     );
-                                    if (picked != null && picked != selectedDate) {
+                                    if (picked != null &&
+                                        picked != selectedDate) {
                                       setState(() {
-                                        selectedDate = DateTime(picked.year, picked.month, picked.day);
-                                        formatedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
-                                        logger.d("Selected date: $formatedDate");
+                                        selectedDate = DateTime(picked.year,
+                                            picked.month, picked.day);
+                                        formatedDate = DateFormat('yyyy-MM-dd')
+                                            .format(selectedDate);
+                                        //logger.d"Selected date: $formatedDate");
                                       });
                                     }
                                   },
@@ -164,14 +169,15 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                                             MainAxisAlignment.center,
                                         children: [
                                           const SizedBox(width: 10),
-                                        Text(
-                                          DateFormat('yyyy-MM-dd').format(selectedDate),
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 14,
+                                          Text(
+                                            DateFormat('yyyy-MM-dd')
+                                                .format(selectedDate),
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 14,
+                                            ),
                                           ),
-                                        ),
                                           const SizedBox(width: 10),
                                           const Icon(
                                             Icons.calendar_month,
@@ -190,57 +196,67 @@ class _TopPerformersScreenState extends State<TopPerformersScreen> {
                         const SizedBox(height: 20),
                         Expanded(
                           child: Container(
-                            color: Colors.black26,
-                            // height: Get.height * 0.6,
-                            child: !connectionController.isConnected.value ? const Center(
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(
-                                    Icons.signal_wifi_off,
-                                    size: 48,
-                                    color: Colors.black54,
-                                  ),
-                                  SizedBox(height: 16),
-                                  Text(
-                                    'No internet connection',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: 18,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                                :
-                            FutureBuilder<List<PlayerRankingModel>>(
-                                future: controller.getTopPerformers(
-                                  _selectedTab == 0 ? 'leather' : 'tennis',
-                                  formatedDate!,
-                                ),
-                                builder: (context, snapshot) {
-                                  logger.d("The selected tab value is :$_selectedTab and date is $formatedDate");
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
-                                    return const Center(child: CircularProgressIndicator());
-                                  }
-                                  else if (snapshot.hasError) {
-                                    return const Center(child: Text('Something went Wrong '));
-                                  }
-                                  else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                                    return const Center(child: Text('No top performers found'));
-                                  } else {
-                                    return ListView.separated(
-                                        padding: const EdgeInsets.all(20),
-                                        itemCount: snapshot.data!.length,
-                                        shrinkWrap: true,
-                                        separatorBuilder: (c, i) => const SizedBox(height: 10),
-                                        itemBuilder: (c, i) => _PlayerCard(player: snapshot.data![i],rank: i+1)
-                                    );
-                                  }
-                                }
-                            )
-                          ),
+                              color: Colors.black26,
+                              // height: Get.height * 0.6,
+                              child: !connectionController.isConnected.value
+                                  ? const Center(
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.signal_wifi_off,
+                                            size: 48,
+                                            color: Colors.black54,
+                                          ),
+                                          SizedBox(height: 16),
+                                          Text(
+                                            'No internet connection',
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w700,
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  : FutureBuilder<List<PlayerRankingModel>>(
+                                      future: controller.getTopPerformers(
+                                        _selectedTab == 0
+                                            ? 'leather'
+                                            : 'tennis',
+                                        formatedDate!,
+                                      ),
+                                      builder: (context, snapshot) {
+                                        //logger.d"The selected tab value is :$_selectedTab and date is $formatedDate");
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return const Center(
+                                              child:
+                                                  CircularProgressIndicator());
+                                        } else if (snapshot.hasError) {
+                                          return const Center(
+                                              child: Text(
+                                                  'Something went Wrong '));
+                                        } else if (!snapshot.hasData ||
+                                            snapshot.data!.isEmpty) {
+                                          return const Center(
+                                              child: Text(
+                                                  'No top performers found'));
+                                        } else {
+                                          return ListView.separated(
+                                              padding: const EdgeInsets.all(20),
+                                              itemCount: snapshot.data!.length,
+                                              shrinkWrap: true,
+                                              separatorBuilder: (c, i) =>
+                                                  const SizedBox(height: 10),
+                                              itemBuilder: (c, i) =>
+                                                  _PlayerCard(
+                                                      player: snapshot.data![i],
+                                                      rank: i + 1));
+                                        }
+                                      })),
                         )
                       ],
                     ),
@@ -281,7 +297,7 @@ class _PlayerCard extends StatelessWidget {
                 child: Center(
                   child: Text(
                     '$rank',
-                    style:  const TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: Colors.black,
@@ -292,10 +308,9 @@ class _PlayerCard extends StatelessWidget {
             const SizedBox(width: 5),
             CircleAvatar(
               radius: 29,
-              backgroundImage:FallbackImageProvider(
-                  toImageUrl(player.profilePhoto),
-                  'assets/images/logo.png'
-              ) as ImageProvider,
+              backgroundImage: FallbackImageProvider(
+                      toImageUrl(player.profilePhoto), 'assets/images/logo.png')
+                  as ImageProvider,
             ),
             const SizedBox(width: 12),
             Expanded(
@@ -304,9 +319,13 @@ class _PlayerCard extends StatelessWidget {
                 children: [
                   SizedBox(
                     width: 200,
-                    child: Text(player.playerName,
-                        style: Get.textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.bold, color: Colors.black),maxLines: 2,overflow: TextOverflow.ellipsis,),
+                    child: Text(
+                      player.playerName,
+                      style: Get.textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold, color: Colors.black),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                   // Text(
                   //   'Since ${formatDateTime('dd.MM.yyyy', player.registeredAt)}',
@@ -328,7 +347,8 @@ class BallType extends StatelessWidget {
   final int selectedTab;
   final String text;
   final Function(int tab) onTap;
-  const BallType({super.key, 
+  const BallType({
+    super.key,
     required this.onTap,
     required this.tab,
     required this.selectedTab,
@@ -339,36 +359,35 @@ class BallType extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: GestureDetector(
-          onTap: () => onTap(tab),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(40),
-              // border: Border.all(
-              //   color: Colors.black
-              // ),
-              color: tab == selectedTab
-                  ? AppTheme.secondaryYellowColor
-                  : Colors.white,
-              boxShadow: [
-                BoxShadow(
-                    color: const Color.fromARGB(57, 0, 0, 0).withOpacity(0.15),
-                    blurRadius: 20,
-                    spreadRadius: 2,
-                    offset: const Offset(0, 10))
-              ],
-            ),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: Text(
-                    text,
-                    style: Get.textTheme.bodyLarge?.copyWith(
-                        color: selectedTab == tab ? Colors.white : Colors.black,
-                        fontWeight: FontWeight.bold)),
-              ),
+        onTap: () => onTap(tab),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(40),
+            // border: Border.all(
+            //   color: Colors.black
+            // ),
+            color: tab == selectedTab
+                ? AppTheme.secondaryYellowColor
+                : Colors.white,
+            boxShadow: [
+              BoxShadow(
+                  color: const Color.fromARGB(57, 0, 0, 0).withOpacity(0.15),
+                  blurRadius: 20,
+                  spreadRadius: 2,
+                  offset: const Offset(0, 10))
+            ],
+          ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Text(text,
+                  style: Get.textTheme.bodyLarge?.copyWith(
+                      color: selectedTab == tab ? Colors.white : Colors.black,
+                      fontWeight: FontWeight.bold)),
             ),
           ),
         ),
+      ),
     );
   }
 }

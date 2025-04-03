@@ -40,7 +40,7 @@ class TxnHistoryScreen extends GetView<TournamentController> {
                   offset: const Offset(0, 10))
             ],
           ),
-          child:FutureBuilder<List<Transaction>>(
+          child: FutureBuilder<List<Transaction>>(
             future: controller.getTransactions(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -49,23 +49,26 @@ class TxnHistoryScreen extends GetView<TournamentController> {
                     child: const Center(child: CircularProgressIndicator()));
               }
               if (snapshot.hasError) {
-                logger.d("Error in FutureBuilder: ${snapshot.error}");
-                return Center(child: Text("Failed To Get Transaction History: ${snapshot.error}"));
+                //logger.d"Error in FutureBuilder: ${snapshot.error}");
+                return Center(
+                    child: Text(
+                        "Failed To Get Transaction History: ${snapshot.error}"));
               }
               if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                logger.d("No data in snapshot");
+                //logger.d"No data in snapshot");
                 return const Center(child: Text('No transactions found'));
               }
-              logger.d("Building list with ${snapshot.data!.length} transactions");
+              //logger.d
+                  // "Building list with ${snapshot.data!.length} transactions");
               return ListView.builder(
                   itemCount: snapshot.data!.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
                     final transaction = snapshot.data!.reversed.toList()[index];
-                    logger.d("Building card for transaction: $transaction");
+                    //logger.d"The snapshot has transaction: ${snapshot.data}");
+                    //logger.d"Building card for transaction: $transaction");
                     return _TxnHistoryCard(transaction);
-                  }
-              );
+                  });
             },
           ),
         ),
@@ -80,12 +83,11 @@ class _TxnHistoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return InkWell(
       onTap: () {
         Get.to(() => TxnDetailsView(
               transaction: transaction,
-          transactiontype: transaction.orderType,
+              transactiontype: transaction.orderType,
             ));
       },
       child: Padding(
@@ -130,20 +132,19 @@ class _TxnHistoryCard extends StatelessWidget {
                               children: [
                                 Text(
                                     transaction.orderType == 'banner'
-                                        ? transaction.banner?.bannerTitle ?? 'Promotional Banner'
+                                        ? transaction.banner?.bannerTitle ??
+                                            'Promotional Banner'
                                         : transaction.sponsor?.name ?? '',
                                     style: Get.textTheme.bodyMedium?.copyWith(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600,
-                                        fontSize: 18
-                                    )
-                                ),
+                                        fontSize: 18)),
                                 Text(
-                                  DateFormat('MMMM dd, yyyy - hh:mm a').format(
-                                      DateTime.parse(transaction.createdAt)),
+                                  'Date: ${DateFormat('MMMM dd, yyyy').format(DateTime.parse(transaction.createdAt))}',
                                   style: Get.textTheme.bodySmall?.copyWith(
-                                      color: Colors.grey.shade700,
-                                      fontSize: 12),
+                                    color: Colors.grey.shade700,
+                                    fontSize: 12,
+                                  ),
                                 ),
                                 const SizedBox(
                                   height: 4,

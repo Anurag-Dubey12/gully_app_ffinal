@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:gully_app/data/controller/team_controller.dart';
-import 'package:gully_app/data/model/challenge_match.dart';
-import 'package:gully_app/data/model/team_model.dart';
+import '../../data/controller/team_controller.dart';
+import '../../data/model/challenge_match.dart';
+import '../../data/model/team_model.dart';
 import 'package:gully_app/ui/screens/view_opponent_team.dart';
 import 'package:gully_app/utils/FallbackImageProvider.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -304,7 +304,8 @@ class _SearchChallengeTeamState extends State<SearchChallengeTeam> {
                                                                 filteredTeams![
                                                                         index]
                                                                     .id);
-                                                    successSnackBar(AppConstants.request_sent_successfully);
+                                                    successSnackBar(AppConstants
+                                                        .request_sent_successfully);
                                                     setState(() {});
                                                   },
                                                 ),

@@ -137,7 +137,7 @@ class TeamApi {
           'previousCaptainId':previousCaptainId,
           'previousCaptainRole':previousCaptainRole
     });
-    logger.d("The api response for change captain is :${response.body}");
+    //logger.d"The api response for change captain is :${response.body}");
     if (response.statusCode! >= 500) {
       errorSnackBar(generateErrorMessage(response.body));
       throw Exception('Server Error');
@@ -183,7 +183,7 @@ class TeamApi {
   //match/getChallengeMatch
   Future<ApiResponse> getChallengeMatch() async {
     final response = await repo.get('/match/getChallengeMatch');
-    logger.d('Raw Challenge response body: ${response.body}');
+    //logger.d'Raw Challenge response body: ${response.body}');
 
     if (response.statusCode! >= 500) {
       errorSnackBar(generateErrorMessage(response.body));
@@ -230,7 +230,7 @@ class TeamApi {
       'team2ID': opponentId,
       // 'dateTime': matchDate.toIso8601String(),
     };
-    logger.i(obj);
+    // logger.i(obj);
     final response = await repo.post('/match/createChallengeMatch', obj);
     if (response.statusCode! >= 500) {
       errorSnackBar(generateErrorMessage(response.body));
@@ -267,8 +267,8 @@ class TeamApi {
       final response = await repo.post('/match/myPerformance/$userId', {
         'category': category,
       });
-      logger.d(
-          "Raw API response for myPerformance: ${response.body} \ninning types is :$category");
+      //logger.d
+          // "Raw API response for myPerformance: ${response.body} \ninning types is :$category");
 
       if (response.statusCode! >= 500) {
         errorSnackBar(generateErrorMessage(response.body));
@@ -280,7 +280,7 @@ class TeamApi {
 
       return ApiResponse.fromJson(response.body);
     } catch (e) {
-      logger.e("Error in getMyPerformance API call: $e");
+      //logger.e("Error in getMyPerformance API call: $e");
       rethrow;
     }
   }
@@ -290,7 +290,7 @@ class TeamApi {
   }) async {
     final response =
         await repo.get('/match/getChallengeMatchPerformance/$matchId');
-    // logger.d("Challenge")
+    // //logger.d"Challenge")
     if (response.statusCode! >= 500) {
       errorSnackBar(generateErrorMessage(response.body));
       throw Exception('Server Error');

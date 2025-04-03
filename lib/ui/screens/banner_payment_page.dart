@@ -36,7 +36,7 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
   double discount = 0;
   DateTime? start_date;
   DateTime? end_date;
-  String bannerId='';
+  String bannerId = '';
   @override
   void initState() {
     super.initState();
@@ -50,8 +50,8 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
             .split('.')[0]) ??
         0.0;
 
-    logger.d("Start Date${widget.banner['startDate']}");
-    logger.d("endDate${widget.banner['endDate']}");
+    //logger.d"Start Date${widget.banner['startDate']}");
+    //logger.d"endDate${widget.banner['endDate']}");
   }
 
   _handlePaymentSuccess(PaymentSuccessResponse response) async {
@@ -68,9 +68,9 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
       "packageId": widget.banner['packageId'],
     };
     final res = await controller.createBanner(bannerdata);
-    logger.d("The Banner Id:${res.id}");
+
     if (res != null) {
-      bannerId=res.id;
+      bannerId = res.id;
       await ordercontroller.createbannerOrder(
         discountAmount: fees,
         bannerId: res.id,
@@ -82,12 +82,11 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
         'Congratulations !!!\nYour transaction has been successful. Your banner Details will be updated sortly!',
         title: "Payment Successful",
       ).then(
-    (value) => Get.offAll(() => const HomeScreen(),
-    predicate: (route) => route.name == '/HomeScreen'),
-    );
+        (value) => Get.offAll(() => const HomeScreen(),
+            predicate: (route) => route.name == '/HomeScreen'),
+      );
     }
     logger.f('Payment Success');
-
   }
 
   _handlePaymentError(PaymentFailureResponse response) async {
@@ -234,7 +233,7 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
                             )),
                         const Spacer(),
                         Text(
-                          '₹${(fees / 1.18).toStringAsFixed(0)}',
+                          '₹${(fees / 1.18).toStringAsFixed(2)}',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey.shade800,
@@ -252,7 +251,7 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
                               fontWeight: FontWeight.w400,
                             )),
                         const Spacer(),
-                        Text('₹${(fees - (fees / 1.18)).toStringAsFixed(0)}',
+                        Text('₹${(fees - (fees / 1.18)).toStringAsFixed(2)}',
                             style: TextStyle(
                               fontSize: 16,
                               color: Colors.grey.shade800,

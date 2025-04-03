@@ -30,9 +30,9 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
   void initState() {
     super.initState();
     final controller = Get.find<ScoreBoardController>();
-    if(widget.scoreboard!=null){
+    if (widget.scoreboard != null) {
       updateInningData();
-    }else{
+    } else {
       battingTeamPlayers =
           controller.scoreboard.value?.firstInnings?.battingTeam.players ?? [];
       controller.scoreboard.value?.firstInnings?.battingTeam.players ?? [];
@@ -45,24 +45,30 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
       selectedTeamName = controller.scoreboard.value?.team1.name ?? "";
     }
   }
+
   void updateInningData() {
     setState(() {
       if (widget.scoreboard != null) {
         battingTeamPlayers = currentInning == 1
             ? widget.scoreboard?.firstInnings?.battingTeam.players ?? []
-            : widget.scoreboard?.secondInnings?.battingTeam.players ?? widget.scoreboard?.team2.players?? [];
+            : widget.scoreboard?.secondInnings?.battingTeam.players ??
+                widget.scoreboard?.team2.players ??
+                [];
         opponentBattingTeamPlayers = currentInning == 1
             ? widget.scoreboard?.secondInnings?.bowlingTeam.players ?? []
             : widget.scoreboard?.firstInnings?.bowlingTeam.players ?? [];
         bowlingTeam = currentInning == 1
             ? widget.scoreboard?.firstInnings?.bowlingTeam.players ?? []
-            : widget.scoreboard?.secondInnings?.bowlingTeam.players ?? widget.scoreboard?.team1.players?? [];
+            : widget.scoreboard?.secondInnings?.bowlingTeam.players ??
+                widget.scoreboard?.team1.players ??
+                [];
         selectedTeamName = currentInning == 1
             ? widget.scoreboard?.team1.name ?? ""
             : widget.scoreboard?.team2.name ?? "";
       }
     });
   }
+
   void changeInning(int selected) {
     final controller = Get.find<ScoreBoardController>();
     setState(() {
@@ -72,16 +78,22 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
       } else {
         currentInning = selected;
         battingTeamPlayers = currentInning == 1
-            ? controller.scoreboard.value?.firstInnings?.battingTeam.players ?? []
-            : controller.scoreboard.value?.secondInnings?.battingTeam.players ?? [];
+            ? controller.scoreboard.value?.firstInnings?.battingTeam.players ??
+                []
+            : controller.scoreboard.value?.secondInnings?.battingTeam.players ??
+                [];
 
         opponentBattingTeamPlayers = currentInning == 1
-            ? controller.scoreboard.value?.secondInnings?.bowlingTeam.players ?? []
-            : controller.scoreboard.value?.firstInnings?.bowlingTeam.players ?? [];
+            ? controller.scoreboard.value?.secondInnings?.bowlingTeam.players ??
+                []
+            : controller.scoreboard.value?.firstInnings?.bowlingTeam.players ??
+                [];
 
         bowlingTeam = currentInning == 1
-            ? controller.scoreboard.value?.firstInnings?.bowlingTeam.players ?? []
-            : controller.scoreboard.value?.secondInnings?.bowlingTeam.players ?? [];
+            ? controller.scoreboard.value?.firstInnings?.bowlingTeam.players ??
+                []
+            : controller.scoreboard.value?.secondInnings?.bowlingTeam.players ??
+                [];
 
         selectedTeamName = currentInning == 1
             ? controller.scoreboard.value?.team1.name ?? ""
@@ -89,10 +101,11 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
       }
     });
 
-    logger.d("Current inning: $currentInning");
-    logger.d("Batting team players: ${battingTeamPlayers.map((player) => player.name)}");
-    logger.d("Opponent batting team players: ${opponentBattingTeamPlayers.map((player) => player.name)}");
+    //logger.d"Current inning: $currentInning");
+    //logger.d"Batting team players: ${battingTeamPlayers.map((player) => player.name)}");
+    //logger.d"Opponent batting team players: ${opponentBattingTeamPlayers.map((player) => player.name)}");
   }
+
   void _toggleDropdown(GlobalKey key) {
     if (_overlayEntry == null) {
       _overlayEntry = _createOverlayEntry(key);
@@ -132,71 +145,71 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child:
-                  widget.scoreboard==null ?
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-
-                      ListTile(
-                        title: Text(
-                          controller.scoreboard.value!.team1.name,
-                          style: const TextStyle(fontSize: 16),
+                  child: widget.scoreboard == null
+                      ? Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ListTile(
+                              title: Text(
+                                controller.scoreboard.value!.team1.name,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  changeInning(1);
+                                  selectedTeamName =
+                                      controller.scoreboard.value!.team1.name;
+                                });
+                                _overlayEntry?.remove();
+                                _overlayEntry = null;
+                              },
+                            ),
+                            const Divider(height: 1, color: Colors.grey),
+                            ListTile(
+                              title: Text(
+                                controller.scoreboard.value!.team2.name,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  changeInning(2);
+                                  selectedTeamName =
+                                      controller.scoreboard.value!.team2.name;
+                                });
+                                _overlayEntry?.remove();
+                                _overlayEntry = null;
+                              },
+                            ),
+                          ],
+                        )
+                      : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ListTile(
+                              title: Text(
+                                widget.scoreboard?.team1.name ?? "Team 1",
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              onTap: () {
+                                changeInning(1);
+                                _overlayEntry?.remove();
+                                _overlayEntry = null;
+                              },
+                            ),
+                            const Divider(height: 1, color: Colors.grey),
+                            ListTile(
+                              title: Text(
+                                widget.scoreboard?.team2.name ?? "Team 2",
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                              onTap: () {
+                                changeInning(2);
+                                _overlayEntry?.remove();
+                                _overlayEntry = null;
+                              },
+                            ),
+                          ],
                         ),
-                        onTap: () {
-                          setState(() {
-                            changeInning(1);
-                            selectedTeamName = controller.scoreboard.value!.team1.name;
-                          });
-                          _overlayEntry?.remove();
-                          _overlayEntry = null;
-                        },
-                      ),
-                      const Divider(height: 1, color: Colors.grey),
-                      ListTile(
-                        title: Text(
-                          controller.scoreboard.value!.team2.name,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        onTap: () {
-                          setState(() {
-                            changeInning(2);
-                            selectedTeamName = controller.scoreboard.value!.team2.name;
-                          });
-                          _overlayEntry?.remove();
-                          _overlayEntry = null;
-                        },
-                      ),
-                    ],
-                  ):
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ListTile(
-                        title: Text(
-                          widget.scoreboard?.team1.name ?? "Team 1",
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        onTap: () {
-                          changeInning(1);
-                          _overlayEntry?.remove();
-                          _overlayEntry = null;
-                        },
-                      ),
-                      const Divider(height: 1, color: Colors.grey),
-                      ListTile(
-                        title: Text(
-                          widget.scoreboard?.team2.name ?? "Team 2",
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        onTap: () {
-                          changeInning(2);
-                          _overlayEntry?.remove();
-                          _overlayEntry = null;
-                        },
-                      ),
-                    ],
-                  ),
                 ),
               ),
             ),
@@ -237,7 +250,8 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                       onTap: () => _toggleDropdown(_dropdownKey),
                       child: Container(
                         key: _dropdownKey,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8),
@@ -276,180 +290,197 @@ class _FullScoreboardScreenState extends State<FullScoreboardScreen> {
                             borderRadius: BorderRadius.circular(8),
                             color: Colors.white,
                           ),
-                          child: Column(
-                              children: [
-                                // widget.scoreboard?.secondInnings==null && opponentBattingTeamPlayers.isNotEmpty ?
-                                //   const Padding(
-                                //     padding: EdgeInsets.all(8.0),
-                                //     child: Text(
-                                //       "This inning has not Started. Showing lineup.",
-                                //       style: TextStyle(
-                                //         color: Colors.black,
-                                //         fontSize: 14,
-                                //         fontWeight: FontWeight.bold,
-                                //       ),
-                                //       textAlign: TextAlign.center,
-                                //     ),
-                                //   ):const SizedBox.shrink(),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.shade300,
-                                    // borderRadius: BorderRadius.circular(5)
-                                  ),
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 3,
-                                        child: GestureDetector(
-                                          child:
-                                          Text('Batter', style: Get.textTheme.labelMedium?.copyWith(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 14,
-                                              color: Colors.black
-                                          )),
-                                        ),
-                                      ),
-                                      const Spacer(flex: 1),
-                                      Expanded(
-                                        child: Center(
-                                          child: Text('R', style: Get.textTheme.labelMedium?.copyWith(
-                                              color: Colors.black
-                                          )),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Center(
-                                          child: Text('B', style: Get.textTheme.labelMedium?.copyWith(
-                                              color: Colors.black
-                                          )),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Center(
-                                          child: Text('4s', style: Get.textTheme.labelMedium?.copyWith(
-                                              color: Colors.black
-                                          )),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Center(
-                                          child: Text('6s', style: Get.textTheme.labelMedium?.copyWith(
-                                              color: Colors.black
-                                          )),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Center(
-                                          child: Text('SR', style: Get.textTheme.labelMedium?.copyWith(
-                                              color: Colors.black
-                                          )),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                const Divider(height: 1, color: Colors.grey),
-                                const SizedBox(height: 4),
-                                ListView.separated(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  separatorBuilder: (c, i) => const SizedBox(height: 10),
-                                  // itemCount: currentInning == 1 ? battingTeamPlayers.length : opponentBattingTeamPlayers.length,
-                                  itemCount: battingTeamPlayers.length,
-                                  itemBuilder: ((context, index) {
-                                    // final player = currentInning == 1 ? battingTeamPlayers[index] : opponentBattingTeamPlayers[index];
-                                    // return BatterPlayerStat(player, false, currentInning == 1);
-                                    // return BatterPlayerStat(battingTeamPlayers[index], false, currentInning == 1);
-                                    return BatterPlayerStat(battingTeamPlayers[index], false,true,false);
-                                  }),
-                                ),
-                                const SizedBox(height: 10),
-                                widget.scoreboard!=null ?
-                                ExtrasAndTotal(
-                                  currentInning: currentInning,
-                                  scoreboard: widget.scoreboard,
-                                ):ExtrasAndTotal(currentInning: currentInning),
-                                const Divider(height: 1),
-                                Column(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey.shade300,
-                                          // borderRadius: BorderRadius.circular()
-                                        ),
-                                        padding: const EdgeInsets.symmetric(horizontal: 8,vertical: 4),
-                                        child: Row(
-                                          children: [
-                                            Expanded(
-                                              flex: 3,
-                                              child: Text('Bowler', style: Get.textTheme.labelMedium?.copyWith(
+                          child: Column(children: [
+                            // widget.scoreboard?.secondInnings==null && opponentBattingTeamPlayers.isNotEmpty ?
+                            //   const Padding(
+                            //     padding: EdgeInsets.all(8.0),
+                            //     child: Text(
+                            //       "This inning has not Started. Showing lineup.",
+                            //       style: TextStyle(
+                            //         color: Colors.black,
+                            //         fontSize: 14,
+                            //         fontWeight: FontWeight.bold,
+                            //       ),
+                            //       textAlign: TextAlign.center,
+                            //     ),
+                            //   ):const SizedBox.shrink(),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade300,
+                                // borderRadius: BorderRadius.circular(5)
+                              ),
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    flex: 3,
+                                    child: GestureDetector(
+                                      child: Text('Batter',
+                                          style: Get.textTheme.labelMedium
+                                              ?.copyWith(
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 14,
-                                                  color: Colors.black
-                                              )),
-                                            ),
-                                            const Spacer(flex: 2),
-                                            Expanded(
-                                              child: Center(
-                                                child: Text('O', style: Get.textTheme.labelMedium?.copyWith(
-                                                    color: Colors.black
-                                                )),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Center(
-                                                child: Text('M', style: Get.textTheme.labelMedium?.copyWith(
-                                                    color: Colors.black
-                                                )),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Center(
-                                                child: Text('R', style: Get.textTheme.labelMedium?.copyWith(
-                                                    color: Colors.black
-                                                )),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Center(
-                                                child: Text('W', style: Get.textTheme.labelMedium?.copyWith(
-                                                    color: Colors.black
-                                                )),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Center(
-                                                child: Text('ER', style: Get.textTheme.labelMedium?.copyWith(
-                                                    color: Colors.black
-                                                )),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                                  color: Colors.black)),
+                                    ),
+                                  ),
+                                  const Spacer(flex: 1),
+                                  Expanded(
+                                    child: Center(
+                                      child: Text('R',
+                                          style: Get.textTheme.labelMedium
+                                              ?.copyWith(color: Colors.black)),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: Text('B',
+                                          style: Get.textTheme.labelMedium
+                                              ?.copyWith(color: Colors.black)),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: Text('4s',
+                                          style: Get.textTheme.labelMedium
+                                              ?.copyWith(color: Colors.black)),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: Text('6s',
+                                          style: Get.textTheme.labelMedium
+                                              ?.copyWith(color: Colors.black)),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: Text('SR',
+                                          style: Get.textTheme.labelMedium
+                                              ?.copyWith(color: Colors.black)),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const Divider(height: 1, color: Colors.grey),
+                            const SizedBox(height: 4),
+                            ListView.separated(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              separatorBuilder: (c, i) =>
+                                  const SizedBox(height: 10),
+                              // itemCount: currentInning == 1 ? battingTeamPlayers.length : opponentBattingTeamPlayers.length,
+                              itemCount: battingTeamPlayers.length,
+                              itemBuilder: ((context, index) {
+                                // final player = currentInning == 1 ? battingTeamPlayers[index] : opponentBattingTeamPlayers[index];
+                                // return BatterPlayerStat(player, false, currentInning == 1);
+                                // return BatterPlayerStat(battingTeamPlayers[index], false, currentInning == 1);
+                                return BatterPlayerStat(
+                                    battingTeamPlayers[index],
+                                    false,
+                                    true,
+                                    false);
+                              }),
+                            ),
+                            const SizedBox(height: 10),
+                            widget.scoreboard != null
+                                ? ExtrasAndTotal(
+                                    currentInning: currentInning,
+                                    scoreboard: widget.scoreboard,
+                                  )
+                                : ExtrasAndTotal(currentInning: currentInning),
+                            const Divider(height: 1),
+                            Column(children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade300,
+                                  // borderRadius: BorderRadius.circular()
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      flex: 3,
+                                      child: Text('Bowler',
+                                          style: Get.textTheme.labelMedium
+                                              ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14,
+                                                  color: Colors.black)),
+                                    ),
+                                    const Spacer(flex: 2),
+                                    Expanded(
+                                      child: Center(
+                                        child: Text('O',
+                                            style: Get.textTheme.labelMedium
+                                                ?.copyWith(
+                                                    color: Colors.black)),
                                       ),
-                                      const Divider(height: 1, color: Colors.grey),
-                                      const SizedBox(height: 3),
-                                      GetBuilder<ScoreBoardController>(
-                                        builder: (controller) {
-                                          final activeBowlers = bowlingTeam.where((player) =>
+                                    ),
+                                    Expanded(
+                                      child: Center(
+                                        child: Text('M',
+                                            style: Get.textTheme.labelMedium
+                                                ?.copyWith(
+                                                    color: Colors.black)),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Center(
+                                        child: Text('R',
+                                            style: Get.textTheme.labelMedium
+                                                ?.copyWith(
+                                                    color: Colors.black)),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Center(
+                                        child: Text('W',
+                                            style: Get.textTheme.labelMedium
+                                                ?.copyWith(
+                                                    color: Colors.black)),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Center(
+                                        child: Text('ER',
+                                            style: Get.textTheme.labelMedium
+                                                ?.copyWith(
+                                                    color: Colors.black)),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Divider(height: 1, color: Colors.grey),
+                              const SizedBox(height: 3),
+                              GetBuilder<ScoreBoardController>(
+                                builder: (controller) {
+                                  final activeBowlers = bowlingTeam
+                                      .where((player) =>
                                           player.bowling != null &&
-                                              (player.bowling!.currentOver > 0 || player.bowling!.currentBall > 0 || player.bowling!.runs > 0)
-                                          ).toList();
-                                          return ListView.separated(
-                                            shrinkWrap: true,
-                                            physics: const NeverScrollableScrollPhysics(),
-                                            separatorBuilder: (c, i) => const SizedBox(height: 10),
-                                            itemCount: activeBowlers.length,
-                                            itemBuilder: ((context, index) {
-                                              return ScoreboardBowlerPlayerStat(activeBowlers[index]);
-                                            }),
-                                          );
-                                        },
-                                      ),
-                                      const SizedBox(height: 4),
-                                    ])
-                              ]),
+                                          (player.bowling!.currentOver > 0 ||
+                                              player.bowling!.currentBall > 0 ||
+                                              player.bowling!.runs > 0))
+                                      .toList();
+                                  return ListView.separated(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    separatorBuilder: (c, i) =>
+                                        const SizedBox(height: 10),
+                                    itemCount: activeBowlers.length,
+                                    itemBuilder: ((context, index) {
+                                      return ScoreboardBowlerPlayerStat(
+                                          activeBowlers[index]);
+                                    }),
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 4),
+                            ])
+                          ]),
                         ),
                       ),
                     ],
@@ -508,6 +539,7 @@ class ScoreboardBowlerPlayerStat extends GetView<ScoreBoardController> {
     );
   }
 }
+
 String getCurrentBowl(BowlingModel bowling) {
   if (bowling.overs.length == 1) {
     return '0.0';
@@ -518,5 +550,3 @@ String getCurrentBowl(BowlingModel bowling) {
   }
   return '${bowling.currentOver}.${bowling.currentBall}';
 }
-
-

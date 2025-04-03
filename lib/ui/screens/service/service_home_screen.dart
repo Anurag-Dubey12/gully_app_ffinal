@@ -46,10 +46,9 @@ class _ServiceHomeScreenState extends State<ServiceHomeScreen> {
     try {
       await serviceController.getService();
     } catch (e) {
-      logger.e('Error refreshing data: $e');
+      //logger.e('Error refreshing data: $e');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +125,8 @@ class _ServiceHomeScreenState extends State<ServiceHomeScreen> {
                   return ListView.separated(
                     shrinkWrap: true,
                     padding: const EdgeInsets.all(16),
-                    separatorBuilder: (context, index) => const SizedBox(height: 10),
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 10),
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       final service = snapshot.data![index];
@@ -140,6 +140,7 @@ class _ServiceHomeScreenState extends State<ServiceHomeScreen> {
     );
   }
 }
+
 class ServiceListItem extends StatelessWidget {
   final ServiceModel service;
   final VoidCallback? onTap;
@@ -159,9 +160,13 @@ class ServiceListItem extends StatelessWidget {
       ),
       margin: const EdgeInsets.only(bottom: 16),
       child: InkWell(
-        onTap: onTap ?? () {
-          Get.to(() => ServiceProfileScreen(service: service,isAdmin: false,));
-        },
+        onTap: onTap ??
+            () {
+              Get.to(() => ServiceProfileScreen(
+                    service: service,
+                    isAdmin: false,
+                  ));
+            },
         borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -201,7 +206,7 @@ class ServiceListItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      service.category?? '',
+                      service.category ?? '',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
@@ -209,7 +214,7 @@ class ServiceListItem extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      service.name?? '',
+                      service.name ?? '',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 14,
@@ -218,7 +223,7 @@ class ServiceListItem extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      service.description?? '',
+                      service.description ?? '',
                       style: const TextStyle(
                         color: Colors.grey,
                         fontSize: 14,

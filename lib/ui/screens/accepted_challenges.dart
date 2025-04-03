@@ -22,7 +22,7 @@ class _AcceptedChallengesState extends State<AcceptedChallenges> {
   Widget build(BuildContext context) {
     final TeamController teamController = Get.find<TeamController>();
     final authController = Get.find<AuthController>();
-    logger.d("Launched Challenge");
+    //logger.d"Launched Challenge");
     return GradientBuilder(
       child: Scaffold(
           backgroundColor: Colors.transparent,

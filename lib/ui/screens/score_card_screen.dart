@@ -22,8 +22,8 @@ class _ScoreCardScreenState extends State<ScoreCardScreen> {
   void initState() {
     super.initState();
     final controller = Get.find<ScoreBoardController>();
-    final MiscController connectionController=Get.find<MiscController>();
-    if(connectionController.isConnected.value){
+    final MiscController connectionController = Get.find<MiscController>();
+    if (connectionController.isConnected.value) {
       controller.connectToSocket();
     }
   }
@@ -43,44 +43,44 @@ class _ScoreCardScreenState extends State<ScoreCardScreen> {
       if (controller.socket.value == null) {
         return const Scaffold(body: Center(child: CircularProgressIndicator()));
       }
-      logger.d(controller.scoreboard.value?.matchId);
+      //logger.dcontroller.scoreboard.value?.matchId);
       return GradientBuilder(
           child: Scaffold(
-            backgroundColor: Colors.transparent,
-            // floatingActionButton: kDebugMode
-            //     ? FloatingActionButton(
-            //   onPressed: () {
-            //     // copy to clipboard
-            //     Clipboard.setData(ClipboardData(
-            //         text: jsonEncode(controller.scoreboard.value!.toJson())));
-            //   },
-            //   child: const Icon(Icons.copy),
-            // )
-            //     : null,
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              iconTheme: const IconThemeData(color: Colors.white),
-              title: Text(
-                  '${controller.scoreboard.value?.team1.name} vs ${controller.scoreboard.value?.team2.name}',
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                  style: Get.textTheme.titleMedium?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 17,
-                  )),
-            ),
-            body: const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
-              child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                ScoreCard(),
-                BattingStats(),
-                BowlingStats(),
-                CurrentOverStats(),
-                Expanded(flex: 3, child: ScoreUpdater()),
-              ]),
-            ),
-          ));
+        backgroundColor: Colors.transparent,
+        // floatingActionButton: kDebugMode
+        //     ? FloatingActionButton(
+        //   onPressed: () {
+        //     // copy to clipboard
+        //     Clipboard.setData(ClipboardData(
+        //         text: jsonEncode(controller.scoreboard.value!.toJson())));
+        //   },
+        //   child: const Icon(Icons.copy),
+        // )
+        //     : null,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: Text(
+              '${controller.scoreboard.value?.team1.name} vs ${controller.scoreboard.value?.team2.name}',
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style: Get.textTheme.titleMedium?.copyWith(
+                color: Colors.white,
+                fontWeight: FontWeight.w900,
+                fontSize: 17,
+              )),
+        ),
+        body: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+            ScoreCard(),
+            BattingStats(),
+            BowlingStats(),
+            CurrentOverStats(),
+            Expanded(flex: 3, child: ScoreUpdater()),
+          ]),
+        ),
+      ));
     });
   }
 }

@@ -54,11 +54,7 @@ class FutureTournamentCard extends GetView<TournamentController> {
 class TournamentCard extends StatefulWidget {
   final TournamentModel tournament;
   final VoidCallback? onTap;
-  const TournamentCard({
-    super.key,
-    required this.tournament,
-    this.onTap
-  });
+  const TournamentCard({super.key, required this.tournament, this.onTap});
 
   @override
   State<TournamentCard> createState() => _TournamentCardState();
@@ -76,11 +72,13 @@ class _TournamentCardState extends State<TournamentCard> {
       _updateTime();
     });
   }
+
   void _updateTime() {
     if (widget.tournament.tournamentEndDateTime != null) {
       DateTime now = DateTime.now();
       if (now.isBefore(widget.tournament.tournamentStartDateTime)) {
-        Duration remainingTime = widget.tournament.tournamentStartDateTime.difference(now);
+        Duration remainingTime =
+            widget.tournament.tournamentStartDateTime.difference(now);
         String formattedTime =
             ' ${remainingTime.inDays}d:${remainingTime.inHours.remainder(24)}h:${remainingTime.inMinutes.remainder(60)}m:${remainingTime.inSeconds.remainder(60)}s';
         _timeStreamController.add(formattedTime);
@@ -93,16 +91,17 @@ class _TournamentCardState extends State<TournamentCard> {
       _timeStreamController.add('Date information not available');
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
     final tournamentdata = controller.tournamentList
         .firstWhereOrNull((t) => t.id == widget.tournament.id);
-    logger.d("Tournament Data:${tournamentdata?.coverPhoto} and name:${tournamentdata?.tournamentName}");
+    //logger.d"Tournament Data:${tournamentdata?.coverPhoto} and name:${tournamentdata?.tournamentName}");
     return GestureDetector(
-      onTap: widget.onTap ,
+      onTap: widget.onTap,
       child: Container(
-          margin: const EdgeInsets.only(left: 10,right: 10),
+          margin: const EdgeInsets.only(left: 10, right: 10),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(15),
@@ -117,22 +116,25 @@ class _TournamentCardState extends State<TournamentCard> {
           ),
           child: Row(
             children: [
-             Container(
-               margin: const EdgeInsets.only(left:10),
-               child: GestureDetector(
-                 onTap: () {
-                   imageViewer(context,tournamentdata?.coverPhoto,true);
-                   logger.e("The image url is ${tournamentdata?.coverPhoto}");
-                 },
-                 child: CircleAvatar(
-                      radius: 45,
-                      backgroundImage: tournamentdata?.coverPhoto != null
-                          ? FallbackImageProvider(toImageUrl(tournamentdata!.coverPhoto!),'assets/images/logo.png')
-                          : const AssetImage('assets/images/logo.png') as ImageProvider,
-                      backgroundColor: Colors.transparent,
-                    ),
-               ),
-             ),
+              Container(
+                margin: const EdgeInsets.only(left: 10),
+                child: GestureDetector(
+                  onTap: () {
+                    imageViewer(context, tournamentdata?.coverPhoto, true);
+                    //logger.e("The image url is ${tournamentdata?.coverPhoto}");
+                  },
+                  child: CircleAvatar(
+                    radius: 45,
+                    backgroundImage: tournamentdata?.coverPhoto != null
+                        ? FallbackImageProvider(
+                            toImageUrl(tournamentdata!.coverPhoto!),
+                            'assets/images/logo.png')
+                        : const AssetImage('assets/images/logo.png')
+                            as ImageProvider,
+                    backgroundColor: Colors.transparent,
+                  ),
+                ),
+              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 15),
@@ -160,10 +162,13 @@ class _TournamentCardState extends State<TournamentCard> {
                             onPressed: () {
                               Get.bottomSheet(
                                 IButtonDialog(
-                                  organizerName: widget.tournament.organizerName!,
+                                  organizerName:
+                                      widget.tournament.organizerName!,
                                   location: widget.tournament.stadiumAddress,
-                                  tournamentName: widget.tournament.tournamentName,
-                                  tournamentPrice: widget.tournament.fees.toString(),
+                                  tournamentName:
+                                      widget.tournament.tournamentName,
+                                  tournamentPrice:
+                                      widget.tournament.fees.toString(),
                                   coverPhoto: widget.tournament.coverPhoto,
                                   Rules: widget.tournament.rules,
                                 ),
@@ -171,7 +176,8 @@ class _TournamentCardState extends State<TournamentCard> {
                                 isScrollControlled: true,
                               );
                             },
-                            icon: const Icon(Icons.info_outline_rounded, size: 18),
+                            icon: const Icon(Icons.info_outline_rounded,
+                                size: 18),
                             color: Colors.grey,
                           ),
                         ],
@@ -200,7 +206,8 @@ class _TournamentCardState extends State<TournamentCard> {
                       Row(
                         children: [
                           Text(
-                            formatDateTime('dd/MM/yyyy', widget.tournament.tournamentStartDateTime),
+                            formatDateTime('dd/MM/yyyy',
+                                widget.tournament.tournamentStartDateTime),
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 14,
@@ -209,7 +216,8 @@ class _TournamentCardState extends State<TournamentCard> {
                           ),
                           const SizedBox(width: 10),
                           Text(
-                            formatDateTime('dd/MM/yyyy', widget.tournament.tournamentEndDateTime),
+                            formatDateTime('dd/MM/yyyy',
+                                widget.tournament.tournamentEndDateTime),
                             style: TextStyle(
                               fontWeight: FontWeight.w400,
                               fontSize: 14,
@@ -264,9 +272,12 @@ class _TournamentCardState extends State<TournamentCard> {
                       // ),
                       Row(
                         children: [
-                          const Text("Time Left:",style: TextStyle(
-                            color: Colors.black,
-                          ),),
+                          const Text(
+                            "Time Left:",
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
                           StreamBuilder<String>(
                             stream: _timeStreamController.stream,
                             builder: (context, snapshot) {
@@ -282,30 +293,37 @@ class _TournamentCardState extends State<TournamentCard> {
                         ],
                       ),
                       // const SizedBox(height: 2),
-                        Row(
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           ElevatedButton(
                             onPressed: () {
                               if (widget.tournament.registeredTeamsCount ==
-                                  widget.tournament.tournamentLimit || widget.tournament.tournamentEndDateTime.isBefore(DateTime.now())) {
+                                      widget.tournament.tournamentLimit ||
+                                  widget.tournament.tournamentEndDateTime
+                                      .isBefore(DateTime.now())) {
                                 return;
                               }
-                              controller.setSelectedTournament(widget.tournament);
+                              controller
+                                  .setSelectedTournament(widget.tournament);
                               Get.to(() => const RegisterTeam());
                             },
                             style: ButtonStyle(
                               padding: WidgetStateProperty.all(
-                                const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                                const EdgeInsets.symmetric(
+                                    vertical: 6, horizontal: 12),
                               ),
                               backgroundColor:
-                              WidgetStateProperty.resolveWith((states) {
+                                  WidgetStateProperty.resolveWith((states) {
                                 if (widget.tournament.registeredTeamsCount ==
-                                    widget.tournament.tournamentLimit ||widget.tournament.tournamentEndDateTime.isBefore(DateTime.now())) {
+                                        widget.tournament.tournamentLimit ||
+                                    widget.tournament.tournamentEndDateTime
+                                        .isBefore(DateTime.now())) {
                                   return Colors.grey;
                                 }
                                 if (states.contains(WidgetState.pressed)) {
-                                  return AppTheme.secondaryYellowColor.withOpacity(0.8);
+                                  return AppTheme.secondaryYellowColor
+                                      .withOpacity(0.8);
                                 } else {
                                   return AppTheme.secondaryYellowColor;
                                 }
@@ -320,7 +338,7 @@ class _TournamentCardState extends State<TournamentCard> {
                               ),
                             ),
                           ),
-                          const SizedBox(width:10),
+                          const SizedBox(width: 10),
                           Text(
                             'Team: ${widget.tournament.registeredTeamsCount}/${widget.tournament.tournamentLimit}',
                             style: const TextStyle(
@@ -336,8 +354,7 @@ class _TournamentCardState extends State<TournamentCard> {
                 ),
               ),
             ],
-          )
-      ),
+          )),
     );
   }
 }

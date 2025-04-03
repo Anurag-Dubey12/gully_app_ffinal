@@ -27,34 +27,38 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
   @override
   void initState() {
     teamStats = calculateTeamStats();
-    logger.d("Toss Won by:${widget.scoreboard.tossWonBy}");
+    //logger.d"Toss Won by:${widget.scoreboard.tossWonBy}");
     super.initState();
   }
 
   Map<String, Map<String, int>> calculateTeamStats() {
     final team1Fours = widget.scoreboard.firstInningHistory.entries
-        .where((entry) => entry.value.run == 4 &&
-        !entry.value.events.contains(EventType.legByes) &&
-        !entry.value.events.contains(EventType.bye))
+        .where((entry) =>
+            entry.value.run == 4 &&
+            !entry.value.events.contains(EventType.legByes) &&
+            !entry.value.events.contains(EventType.bye))
         .length;
 
     final team1Sixes = widget.scoreboard.firstInningHistory.entries
-        .where((entry) => entry.value.run == 6 &&
-        !entry.value.events.contains(EventType.legByes) &&
-        !entry.value.events.contains(EventType.bye))
+        .where((entry) =>
+            entry.value.run == 6 &&
+            !entry.value.events.contains(EventType.legByes) &&
+            !entry.value.events.contains(EventType.bye))
         .length;
     final team1Wickets = widget.scoreboard.firstInnings!.totalWickets ?? 0;
 
     final team2Fours = widget.scoreboard.secondInningHistory.entries
-        .where((entry) => entry.value.run == 4 &&
-        !entry.value.events.contains(EventType.legByes) &&
-        !entry.value.events.contains(EventType.bye))
+        .where((entry) =>
+            entry.value.run == 4 &&
+            !entry.value.events.contains(EventType.legByes) &&
+            !entry.value.events.contains(EventType.bye))
         .length;
 
     final team2Sixes = widget.scoreboard.secondInningHistory.entries
-        .where((entry) => entry.value.run == 6 &&
-        !entry.value.events.contains(EventType.legByes) &&
-        !entry.value.events.contains(EventType.bye))
+        .where((entry) =>
+            entry.value.run == 6 &&
+            !entry.value.events.contains(EventType.legByes) &&
+            !entry.value.events.contains(EventType.bye))
         .length;
 
     final team2Wickets = widget.scoreboard.secondInnings!.totalWickets ?? 0;
@@ -65,14 +69,16 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
         'sixes': team1Sixes,
         'wickets': team1Wickets,
         'boundaries': team1Fours + team1Sixes,
-        'toss':widget.scoreboard.tossWonBy==widget.scoreboard.team1.id ?1:0,
+        'toss':
+            widget.scoreboard.tossWonBy == widget.scoreboard.team1.id ? 1 : 0,
       },
       widget.scoreboard.team2.id: {
         'fours': team2Fours,
         'sixes': team2Sixes,
         'wickets': team2Wickets,
         'boundaries': team2Fours + team2Sixes,
-        'toss':widget.scoreboard.tossWonBy==widget.scoreboard.team2.id ?1:0,
+        'toss':
+            widget.scoreboard.tossWonBy == widget.scoreboard.team2.id ? 1 : 0,
       }
     };
   }
@@ -87,9 +93,10 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
       });
       return;
     }
-    final team1Value = teamStats[widget.scoreboard.team1.id]![SelectedCriteria]!;
-    final team2Value = teamStats[widget.scoreboard.team2.id]![SelectedCriteria]!;
-
+    final team1Value =
+        teamStats[widget.scoreboard.team1.id]![SelectedCriteria]!;
+    final team2Value =
+        teamStats[widget.scoreboard.team2.id]![SelectedCriteria]!;
 
     if (team1Value == team2Value) {
       setState(() {
@@ -100,17 +107,16 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
     } else {
       setState(() {
         isManualSelection = false;
-        isManualOptionSelected=false;
+        isManualOptionSelected = false;
         if (SelectedCriteria == 'wickets') {
           SelectedTeamId = team1Value < team2Value
               ? widget.scoreboard.team1.id
               : widget.scoreboard.team2.id;
-        }else if(SelectedCriteria=='toss'){
-          SelectedTeamId=team1Value>team2Value ?
-          widget.scoreboard.team1.id
+        } else if (SelectedCriteria == 'toss') {
+          SelectedTeamId = team1Value > team2Value
+              ? widget.scoreboard.team1.id
               : widget.scoreboard.team2.id;
-        }
-        else {
+        } else {
           SelectedTeamId = team1Value > team2Value
               ? widget.scoreboard.team1.id
               : widget.scoreboard.team2.id;
@@ -139,13 +145,13 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
             onPressed: () {
               if (criteria == 'superovers') {
                 // updateSuperOverData();
-                logger.d("Clicked Scoreboar");
+                //logger.d"Clicked Scoreboar");
               } else {
                 setState(() {
                   SelectedCriteria = criteria;
                   updateSelectedTeam();
                 });
-                logger.d("Selected Types:$criteria");
+                //logger.d"Selected Types:$criteria");
               }
             },
             icon: Image.asset(
@@ -166,6 +172,7 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
       ],
     );
   }
+
   Widget TeamStats({
     required String? imagePath,
     required String teamName,
@@ -174,11 +181,13 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
     required bool isWinner,
   }) {
     return GestureDetector(
-      onTap: (isManualSelection || isManualOptionSelected) ? () {
-        setState(() {
-          SelectedTeamId = teamId;
-        });
-      } : null,
+      onTap: (isManualSelection || isManualOptionSelected)
+          ? () {
+              setState(() {
+                SelectedTeamId = teamId;
+              });
+            }
+          : null,
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -190,12 +199,12 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
           ),
           boxShadow: isWinner
               ? [
-            BoxShadow(
-              color: Colors.blue.withOpacity(0.1),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            )
-          ]
+                  BoxShadow(
+                    color: Colors.blue.withOpacity(0.1),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  )
+                ]
               : null,
         ),
         child: Column(
@@ -219,14 +228,18 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
                               teamName,
                               style: TextStyle(
                                 fontSize: 16,
-                                fontWeight: isWinner ? FontWeight.bold : FontWeight.w200,
+                                fontWeight: isWinner
+                                    ? FontWeight.bold
+                                    : FontWeight.w200,
                                 color: isWinner ? Colors.black : Colors.grey,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          if (isWinner && (!isManualSelection && !isManualOptionSelected)) ...[
+                          if (isWinner &&
+                              (!isManualSelection &&
+                                  !isManualOptionSelected)) ...[
                             const SizedBox(width: 8),
                             Container(
                               padding: const EdgeInsets.symmetric(
@@ -287,7 +300,9 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
                                 getCriteriaText(score),
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: isWinner ? Colors.white : Colors.grey.shade700,
+                                  color: isWinner
+                                      ? Colors.white
+                                      : Colors.grey.shade700,
                                 ),
                               ),
                             ],
@@ -303,6 +318,7 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
       ),
     );
   }
+
   Widget teamlogo({
     required String? logoUrl,
     required bool isWinner,
@@ -323,21 +339,22 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
           height: 50,
           child: logoUrl != null && logoUrl.isNotEmpty
               ? Image.network(
-            logoUrl,
-            fit: BoxFit.contain,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return teamIconPlaceHolder(isWinner);
-            },
-            errorBuilder: (context, error, stackTrace) {
-              return teamInitialsPlaceholder(teamName, isWinner);
-            },
-          )
+                  logoUrl,
+                  fit: BoxFit.contain,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return teamIconPlaceHolder(isWinner);
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return teamInitialsPlaceholder(teamName, isWinner);
+                  },
+                )
               : teamInitialsPlaceholder(teamName, isWinner),
         ),
       ),
     );
   }
+
   Widget teamIconPlaceHolder(bool isWinner) {
     return Container(
       color: Colors.grey[200],
@@ -371,6 +388,7 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
       ),
     );
   }
+
   IconData _getCriteriaIcon() {
     switch (SelectedCriteria) {
       case 'fours':
@@ -381,7 +399,7 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
         return Icons.sports_cricket;
       case 'boundaries':
         return Icons.score;
-        case 'Manual':
+      case 'Manual':
         return Icons.fiber_manual_record_sharp;
       default:
         return Icons.analytics;
@@ -398,7 +416,7 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
         return '$score Wickets Lost';
       case 'boundaries':
         return '$score Boundaries';
-        case 'Manual':
+      case 'Manual':
         return '$score Boundaries';
       default:
         return 'Score: $score';
@@ -454,12 +472,14 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
               // ),
             ],
           ),
-          if (SelectedCriteria != null ) ...[
-             Padding(
+          if (SelectedCriteria != null) ...[
+            Padding(
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: Center(
                 child: Text(
-                  isManualOptionSelected ?"Please Select The Winning Team ":"Team Comparison",
+                  isManualOptionSelected
+                      ? "Please Select The Winning Team "
+                      : "Team Comparison",
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -483,7 +503,9 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
               teamName: widget.scoreboard.team1.name,
               imagePath: widget.scoreboard.team1.logo,
               teamId: widget.scoreboard.team1.id,
-              score: isManualOptionSelected ? 0 : teamStats[widget.scoreboard.team1.id]![SelectedCriteria]!,
+              score: isManualOptionSelected
+                  ? 0
+                  : teamStats[widget.scoreboard.team1.id]![SelectedCriteria]!,
               isWinner: SelectedTeamId == widget.scoreboard.team1.id,
             ),
             const SizedBox(height: 12),
@@ -491,8 +513,9 @@ class _TieBreakerSheetState extends State<TieBreakerSheet> {
               teamName: widget.scoreboard.team2.name,
               imagePath: widget.scoreboard.team2.logo,
               teamId: widget.scoreboard.team2.id,
-              score: isManualOptionSelected ? 0 : teamStats[widget.scoreboard.team2.id]![SelectedCriteria]!,
-
+              score: isManualOptionSelected
+                  ? 0
+                  : teamStats[widget.scoreboard.team2.id]![SelectedCriteria]!,
               isWinner: SelectedTeamId == widget.scoreboard.team2.id,
             ),
             const SizedBox(height: 20),
@@ -534,28 +557,27 @@ class SuperOverData {
   final int team1Score;
   final int team2Score;
 
-  SuperOverData({
-    required this.team1Id,
-    required this.team2Id,
-    required this.team1Score,
-    required this.team2Score
-  });
+  SuperOverData(
+      {required this.team1Id,
+      required this.team2Id,
+      required this.team1Score,
+      required this.team2Score});
 
   int getTeamScore(String teamId) {
     return teamId == team1Id ? team1Score : team2Score;
   }
 }
+
 class SuperOverDialog extends StatefulWidget {
   final TeamModel team1;
   final TeamModel team2;
   final Function(SuperOverData) onSubmit;
 
-  const SuperOverDialog({
-    super.key,
-    required this.team1,
-    required this.team2,
-    required this.onSubmit
-  });
+  const SuperOverDialog(
+      {super.key,
+      required this.team1,
+      required this.team2,
+      required this.onSubmit});
 
   @override
   _SuperOverDialogState createState() => _SuperOverDialogState();
@@ -605,8 +627,7 @@ class _SuperOverDialogState extends State<SuperOverDialog> {
                 team1Id: widget.team1.id,
                 team2Id: widget.team2.id,
                 team1Score: team1Score,
-                team2Score: team2Score
-            );
+                team2Score: team2Score);
 
             widget.onSubmit(superOverData);
             Navigator.of(context).pop();

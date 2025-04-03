@@ -33,7 +33,7 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TeamController>();
-    final MiscController connectionController=Get.find<MiscController>();
+    final MiscController connectionController = Get.find<MiscController>();
     return Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -182,112 +182,144 @@ class _ViewTeamPlayersState extends State<ViewTeamPlayers> {
                               SizedBox(height: Get.height * 0.001),
                               SizedBox(
                                 // height: Get.height * 0.58,
-                                height: Get.height ,
+                                height: Get.height,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Obx(() {
                                     final playersList = controller.players;
 
-                                    return !connectionController.isConnected.value ? Center(
-                                      child: SizedBox(
-                                        width: Get.width,
-                                        height: Get.height,
-                                        child: const Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Icon(
-                                              Icons.signal_wifi_off,
-                                              size: 48,
-                                              color: Colors.black54,
-                                            ),
-                                            SizedBox(height: 16),
-                                            Text(
-                                              'No internet connection',
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w700,
-                                                fontSize: 18,
+                                    return !connectionController
+                                            .isConnected.value
+                                        ? Center(
+                                            child: SizedBox(
+                                              width: Get.width,
+                                              height: Get.height,
+                                              child: const Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Icon(
+                                                    Icons.signal_wifi_off,
+                                                    size: 48,
+                                                    color: Colors.black54,
+                                                  ),
+                                                  SizedBox(height: 16),
+                                                  Text(
+                                                    'No internet connection',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                      fontSize: 18,
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                      ),
-                                    ):ListView.separated(
-                                        padding: const EdgeInsets.only(bottom: 10),
-                                        shrinkWrap: true,
-                                        itemCount: playersList.length,
-                                        separatorBuilder: (context, index) =>
-                                            const SizedBox(height: 10),
-                                        itemBuilder: (context, index) {
-                                          return Container(
-                                            padding: const EdgeInsets.symmetric(vertical:5,horizontal: 5),
-                                            decoration: BoxDecoration(
-                                              color: const Color.fromARGB(255, 255, 255, 255),
-                                              borderRadius: BorderRadius.circular(19),
-                                              border: Border.all(color: Colors.black87),
-                                            ),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(16.0),
-                                              child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                  children: [
-                                                    SizedBox(
-                                                      width:150,
-                                                      child: Text(playersList[index].name,
-                                                        overflow: TextOverflow.ellipsis,
-                                                        style: Get.textTheme.titleMedium
-                                                            ?.copyWith(
-                                                                fontWeight: FontWeight.w500, fontSize: 18),
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      playersList[index].role,
-                                                      overflow: TextOverflow.ellipsis,
-                                                      style: Get.textTheme.titleMedium
-                                                          ?.copyWith(
-                                                              color: Colors.grey[600],
-                                                              fontWeight:
-                                                                  FontWeight.w500, fontSize: 14),
-                                                    ),
-                                                    // IconButton(
-                                                    //   onPressed: () async {
-                                                    //     bool? confirm =await Get.dialog(
-                                                    //             AlertDialog.adaptive(
-                                                    //       title: const Text('Confirm Delete'),
-                                                    //       content: Text('Are you sure you want to remove ${playersList[index].name}?'),
-                                                    //       actions: [
-                                                    //         TextButton(
-                                                    //           onPressed: () {Navigator.of(context).pop(false); },
-                                                    //           child: const Text('Cancel'),
-                                                    //         ),
-                                                    //         TextButton(
-                                                    //           onPressed: () {Navigator.of(context).pop(true);},
-                                                    //           child: const Text('Delete', style: TextStyle(color: Colors.red)),
-                                                    //         ),
-                                                    //       ],
-                                                    //     ));
-                                                    //     if (confirm == true) {
-                                                    //       logger.d(
-                                                    //           "Player delete Data is:\n Team id ${widget.teamModel.id}\n"
-                                                    //           "player id ${playersList[index].id}");
-                                                    //       bool isRemoved = await controller.removePlayerFromTeam(
-                                                    //         teamId: widget.teamModel.id,
-                                                    //         playerId: playersList[index].id,
-                                                    //       );
-                                                    //       if (isRemoved) {
-                                                    //         logger.d("Player removed successfully");
-                                                    //       }
-                                                    //     }
-                                                    //   },
-                                                    //   icon: const Icon(
-                                                    //       Icons.delete,
-                                                    //       color: Colors.red,
-                                                    //       size: 20),
-                                                    // )
-                                                  ]),
-                                            ),
-                                          );
-                                        });
+                                          )
+                                        : ListView.separated(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 10),
+                                            shrinkWrap: true,
+                                            itemCount: playersList.length,
+                                            separatorBuilder:
+                                                (context, index) =>
+                                                    const SizedBox(height: 10),
+                                            itemBuilder: (context, index) {
+                                              return Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 5,
+                                                        horizontal: 5),
+                                                decoration: BoxDecoration(
+                                                  color: const Color.fromARGB(
+                                                      255, 255, 255, 255),
+                                                  borderRadius:
+                                                      BorderRadius.circular(19),
+                                                  border: Border.all(
+                                                      color: Colors.black87),
+                                                ),
+                                                child: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      16.0),
+                                                  child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 150,
+                                                          child: Text(
+                                                            playersList[index]
+                                                                .name,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            style: Get.textTheme
+                                                                .titleMedium
+                                                                ?.copyWith(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontSize:
+                                                                        18),
+                                                          ),
+                                                        ),
+                                                        Text(
+                                                          playersList[index]
+                                                              .role,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          style: Get.textTheme
+                                                              .titleMedium
+                                                              ?.copyWith(
+                                                                  color: Colors
+                                                                          .grey[
+                                                                      600],
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  fontSize: 14),
+                                                        ),
+                                                        // IconButton(
+                                                        //   onPressed: () async {
+                                                        //     bool? confirm =await Get.dialog(
+                                                        //             AlertDialog.adaptive(
+                                                        //       title: const Text('Confirm Delete'),
+                                                        //       content: Text('Are you sure you want to remove ${playersList[index].name}?'),
+                                                        //       actions: [
+                                                        //         TextButton(
+                                                        //           onPressed: () {Navigator.of(context).pop(false); },
+                                                        //           child: const Text('Cancel'),
+                                                        //         ),
+                                                        //         TextButton(
+                                                        //           onPressed: () {Navigator.of(context).pop(true);},
+                                                        //           child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                                        //         ),
+                                                        //       ],
+                                                        //     ));
+                                                        //     if (confirm == true) {
+                                                        //       //logger.d
+                                                        //           "Player delete Data is:\n Team id ${widget.teamModel.id}\n"
+                                                        //           "player id ${playersList[index].id}");
+                                                        //       bool isRemoved = await controller.removePlayerFromTeam(
+                                                        //         teamId: widget.teamModel.id,
+                                                        //         playerId: playersList[index].id,
+                                                        //       );
+                                                        //       if (isRemoved) {
+                                                        //         //logger.d"Player removed successfully");
+                                                        //       }
+                                                        //     }
+                                                        //   },
+                                                        //   icon: const Icon(
+                                                        //       Icons.delete,
+                                                        //       color: Colors.red,
+                                                        //       size: 20),
+                                                        // )
+                                                      ]),
+                                                ),
+                                              );
+                                            });
                                   }),
                                 ),
                               )

@@ -141,7 +141,7 @@ class BannerAddingState extends State<BannerAdding> {
         }
       }
     } catch (e) {
-      logger.d('Error picking image: $e');
+      //logger.d'Error picking image: $e');
       errorSnackBar('An error occurred while picking the image.',
           title: "Error");
     }
@@ -231,7 +231,7 @@ class BannerAddingState extends State<BannerAdding> {
 
   @override
   Widget build(BuildContext context) {
-    final MiscController connectionController=Get.find<MiscController>();
+    final MiscController connectionController = Get.find<MiscController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -260,92 +260,63 @@ class BannerAddingState extends State<BannerAdding> {
           ),
           body: Padding(
             padding: const EdgeInsets.all(18.0),
-            child: !connectionController.isConnected.value ? const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.signal_wifi_off,
-                    size: 48,
-                    color: Colors.black54,
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'No internet connection',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 18,
+            child: !connectionController.isConnected.value
+                ? const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.signal_wifi_off,
+                          size: 48,
+                          color: Colors.black54,
+                        ),
+                        SizedBox(height: 16),
+                        Text(
+                          'No internet connection',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            ): SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 10),
-                  InkWell(
-                    onTap: () {
-                      showInfoSheet(context);
-                    },
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      width: Get.width,
-                      height: 120,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
+                  )
+                : SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 10),
+                        InkWell(
+                          onTap: () {
+                            showInfoSheet(context);
+                          },
                           borderRadius: BorderRadius.circular(20),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black.withOpacity(0.1),
-                                blurRadius: 5,
-                                spreadRadius: 2,
-                                offset: const Offset(0, 1))
-                          ]),
-                      child: _image != null
-                          ? Stack(
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: SizedBox(
-                                    width: Get.width,
-                                    height: 200,
-                                    child: Image.file(
-                                      File(
-                                        _image!.path,
-                                      ),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                Positioned(
-                                  right: 0,
-                                  bottom: 0,
-                                  child: IconButton(
-                                      onPressed: () {
-                                        pickImage();
-                                      },
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.white,
-                                      )),
-                                )
-                              ],
-                            )
-                          : widget.banner?.bannerImage != null
-                              ? SizedBox(
-                                  height: 130,
-                                  child: Stack(
+                          child: Container(
+                            width: Get.width,
+                            height: 120,
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(20),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: Colors.black.withOpacity(0.1),
+                                      blurRadius: 5,
+                                      spreadRadius: 2,
+                                      offset: const Offset(0, 1))
+                                ]),
+                            child: _image != null
+                                ? Stack(
                                     children: [
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(20),
                                         child: SizedBox(
                                           width: Get.width,
-                                          height: 120,
-                                          child: Image.network(
-                                            toImageUrl(
-                                                widget.banner!.bannerImage),
+                                          height: 200,
+                                          child: Image.file(
+                                            File(
+                                              _image!.path,
+                                            ),
                                             fit: BoxFit.cover,
                                           ),
                                         ),
@@ -363,243 +334,286 @@ class BannerAddingState extends State<BannerAdding> {
                                             )),
                                       )
                                     ],
-                                  ),
-                                )
-                              : const Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Icon(Icons.photo),
-                                      Text('Add Banner Photo',
-                                          style: TextStyle(
-                                              color: Colors.grey,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w500)),
-                                    ],
-                                  ),
-                                ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  FormInput(
-                    controller: bannerTitleController,
-                    label: "Banner Title",
-                    textInputType: TextInputType.text,
-                    iswhite: false,
-                    filled: true,
-                    validator: (e) {
-                      if (e!.isEmpty) {
-                        return null;
-                      }
-                      if (e[0] == " ") {
-                        return "First character should not be a space";
-                      }
-                      if (e.trim().isEmpty) {
-                        return "Please enter Banner Title";
-                      }
-                      if (!e.contains(RegExp(r'^[a-zA-Z0-9- ]*$'))) {
-                        return "Please enter valid name";
-                      }
-                      // if (e.contains(RegExp(
-                      //     r'[^\x00-\x7F\uD800-\uDBFF\uDC00-\uDFFF]+'))) {
-                      //   return AppLocalizations.of(context)!
-                      //       .rulesCannotContainEmojis;
-                      // }
-                      return null;
-                    },
-                  ),
-                  FormInput(
-                    controller: _addressController,
-                    label: 'Select Banner Location',
-                    readOnly: true,
-                    isinfo: true,
-                    enabled: widget.banner != null ? false : true,
-                    infotitle: "Banner Location Information",
-                    infotext:
-                        "Your banner will be displayed within a 25Km radius of the selected location. "
-                        "Make sure to choose a location where your audience is most likely to engage. "
-                        "A banner placed too far from the target area might not be visible to the relevant users.",
-                    onTap: () async {
-                      Get.to(
-                        () => SelectLocationScreen(
-                          onSelected: (e, l) {
-                            setState(() {
-                              _addressController.text = e;
-                            });
-                            if (l != null) {
-                              setState(() {
-                                location = l;
-                                logger.d("The Location is $l");
-                              });
-                            }
-                            FocusScope.of(context).unfocus();
-                          },
-                          initialLocation:
-                              LatLng(location.latitude, location.longitude),
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                  Text("Select Your Suitable Banner Package",
-                      style: Get.textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          fontSize: 16)),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: Get.width,
-                    child: GestureDetector(
-                      onTap: () async {
-                        if (widget.banner != null) {
-                          errorSnackBar(
-                              "You are not able to edit banner package");
-                        } else {
-                          final result = await Get.to(
-                              () => PackageScreen(package: selectedPackage));
-                          if (result != null &&
-                              result is Map<String, dynamic>) {
-                            setState(() {
-                              selectedPackage = result.containsKey('package')
-                                  ? (result['package'] is Map ? result : null)
-                                  : null;
-                              logger.d(
-                                  "Selected Package Id:${selectedPackage!['package']['_id']}");
-                              if (from != null && selectedPackage != null) {
-                                to = calculateEndDate(
-                                    from!, selectedPackage!['package']);
-                              }
-                            });
-                          }
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          selectedPackage == null || selectedPackage!.isEmpty
-                              ? 'Tap here to select a package'
-                              : '${selectedPackage!['package']['name']} for ₹${selectedPackage!['package']['price']}',
-                          style: const TextStyle(color: Colors.black54),
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  selectedPackage != null
-                      ? TopCard(
-                          from: from,
-                          key: const Key('date_picker'),
-                          to: to,
-                          controller: _DateController,
-                          onFromChanged: (e) {
-                            setState(() {
-                              if (selectedPackage != null) {
-                                from = e;
-                                to = calculateEndDate(
-                                    from!, selectedPackage!['package']);
-                              }
-                            });
-                          },
-                          onToChanged: (e) {},
-                          isAds: true,
-                          isenable: widget.banner != null ? false : true,
-                        )
-                      : const SizedBox.shrink(),
-                  const SizedBox(height: 16),
-                  PrimaryButton(
-                      title: widget.banner != null ? 'Update ' : 'Pay Now',
-                      isDisabled: !connectionController.isConnected.value,
-                      onTap: () async {
-                        try {
-                          final controller = Get.find<PromotionController>();
-                          if (_image == null) {
-                            errorSnackBar('Please select an image');
-                            return;
-                          }
-                          if (bannerTitleController.text.isEmpty) {
-                            errorSnackBar("Please enter banner title");
-                            return;
-                          }
-                          if (selectedPackage == null) {
-                            errorSnackBar("Please select a package");
-                            return;
-                          }
-                          if (from == null) {
-                            errorSnackBar("Please select date for promotion");
-                            return;
-                          }
-                          String? base64;
-                          if (_image != null) {
-                            base64 = await convertImageToBase64(_image!);
-                          }
-
-                          logger.d("The lat and log is:${location.latitude} ${location.longitude}");
-                          Map<String, dynamic> bannerdata = {
-                            "banner_title": bannerTitleController.text,
-                            "banner_image": _image?.path,
-                            "startDate": from?.toIso8601String(),
-                            "endDate": to?.toIso8601String(),
-                            "bannerlocationaddress": _addressController.text,
-                            "longitude": location.longitude,
-                            "latitude": location.latitude,
-                            "packageId": selectedPackage!['package']['_id'],
-                          };
-                          if (widget.banner != null) {
-                            bool isOk =
-                                await controller.editBanner(widget.banner!.id, {
-                              'banner_title': bannerTitleController.text,
-                              'banner_image': base64,
-                            });
-                            if (isOk) {
-                              successSnackBar('Banner Updated Successfully');
-                              Get.forceAppUpdate();
-                            }
-                          } else {
-                            controller.banner.value = bannerdata;
-                            Get.to(() => BannerPaymentPage(
-                                  banner: controller.banner.value,
-                                  base64: base64 ?? '',
-                                  SelectedPakcage: selectedPackage ?? {},
-                                ));
-                          }
-                        } catch (e) {
-                          errorSnackBar(e.toString());
-                          rethrow;
-                        }
-                      }),
-                  const SizedBox(height: 10),
-                  widget.banner != null
-                      ? const Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.warning,
-                                color: Colors.red,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                "Only Banner Title and Image Can Be Edited",
-                                textAlign: TextAlign.center,
-                                maxLines: 3,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
+                                  )
+                                : widget.banner?.bannerImage != null
+                                    ? SizedBox(
+                                        height: 130,
+                                        child: Stack(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              child: SizedBox(
+                                                width: Get.width,
+                                                height: 120,
+                                                child: Image.network(
+                                                  toImageUrl(widget
+                                                      .banner!.bannerImage),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            Positioned(
+                                              right: 0,
+                                              bottom: 0,
+                                              child: IconButton(
+                                                  onPressed: () {
+                                                    pickImage();
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.edit,
+                                                    color: Colors.white,
+                                                  )),
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    : const Center(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Icons.photo),
+                                            Text('Add Banner Photo',
+                                                style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                          ],
+                                        ),
+                                      ),
                           ),
-                        )
-                      : const SizedBox.shrink(),
-                ],
-              ),
-            ),
+                        ),
+                        const SizedBox(height: 10),
+                        FormInput(
+                          controller: bannerTitleController,
+                          label: "Banner Title",
+                          textInputType: TextInputType.text,
+                          iswhite: false,
+                          filled: true,
+                          validator: (e) {
+                            if (e!.isEmpty) {
+                              return null;
+                            }
+                            if (e[0] == " ") {
+                              return "First character should not be a space";
+                            }
+                            if (e.trim().isEmpty) {
+                              return "Please enter Banner Title";
+                            }
+                            if (!e.contains(RegExp(r'^[a-zA-Z0-9- ]*$'))) {
+                              return "Please enter valid name";
+                            }
+                            // if (e.contains(RegExp(
+                            //     r'[^\x00-\x7F\uD800-\uDBFF\uDC00-\uDFFF]+'))) {
+                            //   return AppLocalizations.of(context)!
+                            //       .rulesCannotContainEmojis;
+                            // }
+                            return null;
+                          },
+                        ),
+                        FormInput(
+                          controller: _addressController,
+                          label: 'Select Banner Location',
+                          readOnly: true,
+                          isinfo: true,
+                          enabled: widget.banner != null ? false : true,
+                          infotitle: AppConstants.bannerlocInfo,
+                          infotext: AppConstants.bannerinfotext,
+                          onTap: () async {
+                            Get.to(
+                              () => SelectLocationScreen(
+                                onSelected: (e, l) {
+                                  setState(() {
+                                    _addressController.text = e;
+                                  });
+                                  if (l != null) {
+                                    setState(() {
+                                      location = l;
+                                      //logger.d"The Location is $l");
+                                    });
+                                  }
+                                  FocusScope.of(context).unfocus();
+                                },
+                                initialLocation: LatLng(
+                                    location.latitude, location.longitude),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 10),
+                        Text("Select Your Suitable Banner Package",
+                            style: Get.textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                                fontSize: 16)),
+                        const SizedBox(height: 10),
+                        SizedBox(
+                          width: Get.width,
+                          child: GestureDetector(
+                            onTap: () async {
+                              if (widget.banner != null) {
+                                errorSnackBar(
+                                    "You are not able to edit banner package");
+                              } else {
+                                final result = await Get.to(() =>
+                                    PackageScreen(package: selectedPackage));
+                                if (result != null &&
+                                    result is Map<String, dynamic>) {
+                                  setState(() {
+                                    selectedPackage =
+                                        result.containsKey('package')
+                                            ? (result['package'] is Map
+                                                ? result
+                                                : null)
+                                            : null;
+                                    //logger.d
+                                        // "Selected Package Id:${selectedPackage!['package']['_id']}");
+                                    if (from != null &&
+                                        selectedPackage != null) {
+                                      to = calculateEndDate(
+                                          from!, selectedPackage!['package']);
+                                    }
+                                  });
+                                }
+                              }
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                selectedPackage == null ||
+                                        selectedPackage!.isEmpty
+                                    ? 'Tap here to select a package'
+                                    : '${selectedPackage!['package']['name']} for ₹${selectedPackage!['package']['price']}',
+                                style: const TextStyle(color: Colors.black54),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        selectedPackage != null
+                            ? TopCard(
+                                from: from,
+                                key: const Key('date_picker'),
+                                to: to,
+                                controller: _DateController,
+                                onFromChanged: (e) {
+                                  setState(() {
+                                    if (selectedPackage != null) {
+                                      from = e;
+                                      to = calculateEndDate(
+                                          from!, selectedPackage!['package']);
+                                    }
+                                  });
+                                },
+                                onToChanged: (e) {},
+                                isAds: true,
+                                isenable: widget.banner != null ? false : true,
+                              )
+                            : const SizedBox.shrink(),
+                        const SizedBox(height: 16),
+                        PrimaryButton(
+                            title:
+                                widget.banner != null ? 'Update ' : 'Pay Now',
+                            isDisabled: !connectionController.isConnected.value,
+                            onTap: () async {
+                              try {
+                                final controller =
+                                    Get.find<PromotionController>();
+                                if (_image == null) {
+                                  errorSnackBar('Please select an image');
+                                  return;
+                                }
+                                if (bannerTitleController.text.isEmpty) {
+                                  errorSnackBar("Please enter banner title");
+                                  return;
+                                }
+                                if (selectedPackage == null) {
+                                  errorSnackBar("Please select a package");
+                                  return;
+                                }
+                                if (from == null) {
+                                  errorSnackBar(
+                                      "Please select date for promotion");
+                                  return;
+                                }
+                                String? base64;
+                                if (_image != null) {
+                                  base64 = await convertImageToBase64(_image!);
+                                }
+
+                                //logger.d
+                                    // "The lat and log is:${location.latitude} ${location.longitude}");
+                                Map<String, dynamic> bannerdata = {
+                                  "banner_title": bannerTitleController.text,
+                                  "banner_image": _image?.path,
+                                  "startDate": from?.toIso8601String(),
+                                  "endDate": to?.toIso8601String(),
+                                  "bannerlocationaddress":
+                                      _addressController.text,
+                                  "longitude": location.longitude,
+                                  "latitude": location.latitude,
+                                  "packageId": selectedPackage!['package']
+                                      ['_id'],
+                                };
+                                if (widget.banner != null) {
+                                  bool isOk = await controller
+                                      .editBanner(widget.banner!.id, {
+                                    'banner_title': bannerTitleController.text,
+                                    'banner_image': base64,
+                                  });
+                                  if (isOk) {
+                                    successSnackBar(
+                                        'Banner Updated Successfully');
+                                    Get.forceAppUpdate();
+                                  }
+                                } else {
+                                  controller.banner.value = bannerdata;
+                                  Get.to(() => BannerPaymentPage(
+                                        banner: controller.banner.value,
+                                        base64: base64 ?? '',
+                                        SelectedPakcage: selectedPackage ?? {},
+                                      ));
+                                }
+                              } catch (e) {
+                                errorSnackBar(e.toString());
+                                rethrow;
+                              }
+                            }),
+                        const SizedBox(height: 10),
+                        widget.banner != null
+                            ? const Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.warning,
+                                      color: Colors.red,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      "Only Banner Title and Image Can Be Edited",
+                                      textAlign: TextAlign.center,
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : const SizedBox.shrink(),
+                      ],
+                    ),
+                  ),
           ),
         ),
       ),
@@ -735,7 +749,7 @@ class BannerAddingState extends State<BannerAdding> {
 //                   // "promotionFor": selectedTournament!.id
 //                   "promotionFor": "shop"
 //                 };
-//                 logger.d(
+//                 //logger.d
 //                     "The tournament is selected :${selectedTournament!.id}");
 //                 banner.createBanner(bannerdata);
 //                 if (advertisementModel != null) {

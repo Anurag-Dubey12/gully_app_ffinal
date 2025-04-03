@@ -34,7 +34,7 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
 
     location.value =
         await getAddressFromLatLng(coordinates.latitude, coordinates.longitude);
-    logger.d('Location ${location.value}');
+    //logger.d'Location ${location.value}');
   }
 
   set setLocation(String value) => location.value = value;
@@ -57,7 +57,7 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       // successSnackBar('User  found at Google ${googleUser.displayName}');
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
-      logger.t("googleAuth: $googleAuth");
+      // logger.t("googleAuth: $googleAuth");
       // successSnackBar('Google Auth: ${googleAuth.accessToken}');
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
@@ -121,11 +121,11 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
 
       return true;
     } on FirebaseAuthException catch (e) {
-      errorSnackBar(e.message?? "Something went wrong at Firebase Auth");
+      errorSnackBar(e.message ?? "Something went wrong at Firebase Auth");
       return false;
     } catch (e) {
       errorSnackBar(e.toString());
-      logger.e('the error messgae is ${e.toString() }');
+      //logger.e('the error messgae is ${e.toString()}');
       change(GetStatus.error(e.toString()));
       return false;
     }
@@ -143,7 +143,7 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
         return;
       }
       final pref = Get.put<Preferences>(Preferences(), permanent: true);
-      logger.f("Language: ${pref.getLanguage()}");
+      // logger.f("Language: ${pref.getLanguage()}");
       // if (!pref.languageSelected) {
       //   Get.offAll(() => const ChooseLanguageScreen());
       //   // return false;
@@ -151,7 +151,7 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       refresh();
       getCurrentLocation();
     } catch (e) {
-      logger.e(e.toString());
+      //logger.e(e.toString());
       Get.offAll(() => const SignUpScreen());
       throw Exception(e.toString());
     }
@@ -266,7 +266,7 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
         await googleSignIn.disconnect();
         await googleSignIn.signOut();
       } catch (e) {
-        logger.e(e);
+        //logger.e(e);
       }
       if (FirebaseAuth.instance.currentUser != null) {
         await FirebaseAuth.instance.signOut();

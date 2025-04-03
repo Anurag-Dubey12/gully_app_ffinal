@@ -12,13 +12,17 @@ class Transaction {
   final String? endDate;
   final String status;
   final double amount;
-  @JsonKey(defaultValue: "")
-  final String coupon;
+  @JsonKey(name: "gstAmount", defaultValue: 0.0)
+  final double gstAmount;
+  @JsonKey(name: "amountbeforegst", defaultValue: 0)
+  final double amountbeforegst;
+  @JsonKey(name: "totalAmountWithGST", defaultValue: 0.0)
+  final double totalAmountWithGST;
+  @JsonKey(defaultValue: 0.0)
   final double amountWithoutCoupon;
   final String orderId;
   final String createdAt;
-  // final String? invoiceUrl;
-  @JsonKey(name: "ordertype")
+  @JsonKey(name: "ordertype", defaultValue: '')
   final String orderType;
   @JsonKey(name: "bannerId")
   final PromotionalBanner? banner;
@@ -30,25 +34,28 @@ class Transaction {
     this.tournamentName,
     this.startDate,
     this.endDate,
-    required this.status,
-    required this.amount,
-    required this.coupon,
-    required this.amountWithoutCoupon,
-    required this.orderId,
-    // this.invoiceUrl,
-    required this.createdAt,
-    required this.orderType,
+    this.status = '',
+    this.amount = 0.0,
+    this.gstAmount = 0.0,
+    this.amountbeforegst = 0,
+    this.totalAmountWithGST = 0.0,
+    this.amountWithoutCoupon = 0.0,
+    this.orderId = '',
+    this.createdAt = '',
+    this.orderType = '',
     this.banner,
     this.sponsor,
     this.locationAddress,
   });
 
-  factory Transaction.fromJson(Map<String, dynamic> json) => _$TransactionFromJson(json);
+  factory Transaction.fromJson(Map<String, dynamic> json) =>
+      _$TransactionFromJson(json);
 
   Map<String, dynamic> toJson() => _$TransactionToJson(this);
 
   String get displayDate {
-    if (orderType.toLowerCase() == 'banner' || orderType.toLowerCase() == 'sponsor') {
+    if (orderType.toLowerCase() == 'banner' ||
+        orderType.toLowerCase() == 'sponsor') {
       return startDate ?? createdAt;
     }
     return createdAt;

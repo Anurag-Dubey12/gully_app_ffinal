@@ -133,7 +133,7 @@
 //         });
 //       }
 //     } catch (e) {
-//       logger.d('Error picking image: $e');
+//       //logger.d'Error picking image: $e');
 //       errorSnackBar('An error occurred while picking the image.',
 //           title: "Error");
 //     }

@@ -17,7 +17,7 @@ class RankingController extends GetxController {
           .map<TeamRankingModel>((e) => TeamRankingModel.fromJson(e))
           .toList();
     } catch (e) {
-      logger.d("Team ranking list Error:${e.toString()}");
+      //logger.d"Team ranking list Error:${e.toString()}");
       // errorSnackBar(e.toString());
       rethrow;
     }
@@ -33,7 +33,7 @@ class RankingController extends GetxController {
           .toList();
     } catch (e) {
       // errorSnackBar(e.toString());
-      logger.d("GetPlayerRanking Error: $e");
+      //logger.d"GetPlayerRanking Error: $e");
       rethrow;
     }
   }
@@ -43,7 +43,7 @@ class RankingController extends GetxController {
   //     String ballType, String startDate) async {
   //   try {
   //     final response = await api.getTopPerformers(ballType, startDate);
-  //     logger.d("The response Data is :${response.data}");
+  //     //logger.d"The response Data is :${response.data}");
   //     if (response.data == null || !response.data!.containsKey('topPerformers')) {
   //       throw 'Invalid response format: missing topPerformers data';
   //     }
@@ -61,12 +61,12 @@ class RankingController extends GetxController {
       String ballType, String startDate) async {
     try {
       final response = await api.getTopPerformers(ballType, startDate);
-      logger.d("The response Data is :${response.data}");
-      if (response.data == null || !response.data!.containsKey('topPerformers')) {
+      //logger.d"The response Data is :${response.data}");
+      if (response.data == null ||
+          !response.data!.containsKey('topPerformers')) {
         throw 'Invalid response format: missing topPerformers data';
       }
-      return response.data!['topPerformers']
-          .map<PlayerRankingModel>((e) {
+      return response.data!['topPerformers'].map<PlayerRankingModel>((e) {
         final playerName = e['playerName']?.isNotEmpty == true
             ? e['playerName']
             : (e['name'] ?? 'Unknown Player');
@@ -76,7 +76,7 @@ class RankingController extends GetxController {
         });
       }).toList();
     } catch (e) {
-      logger.d("GetPlayerRanking Error: $e");
+      //logger.d"GetPlayerRanking Error: $e");
       // errorSnackBar(e.toString());
       rethrow;
     }

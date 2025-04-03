@@ -27,7 +27,8 @@ class PackageScreenState extends State<PackageScreen> {
     if (widget.package != null) {
       final controller = Get.find<MiscController>();
       controller.getPackage('Banner').then((packages) {
-        final index = packages.indexWhere((p) => p.id == widget.package!['package']['_id']);
+        final index = packages
+            .indexWhere((p) => p.id == widget.package!['package']['_id']);
         if (index != -1) {
           setState(() {
             selectedIndex = index;
@@ -55,97 +56,100 @@ class PackageScreenState extends State<PackageScreen> {
           ),
         ),
       ),
-      body:!controller.isConnected.value ? const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.signal_wifi_off,
-              size: 48,
-              color: Colors.black54,
-            ),
-            SizedBox(height: 16),
-            Text(
-              'No internet connection',
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w700,
-                fontSize: 18,
+      body: !controller.isConnected.value
+          ? const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.signal_wifi_off,
+                    size: 48,
+                    color: Colors.black54,
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    'No internet connection',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-      ): Column(
-        children: [
-          Container(
-            color: AppTheme.primaryColor,
-            height: Get.height * 0.21,
-            width: double.infinity,
-            child: Center(
-              child: Image.asset(
-                'assets/images/logo.png',
-                fit: BoxFit.contain,
-                height: 150,
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          FutureBuilder<List<Package>>(
-            future: controller.getPackage('Banner'),
-            builder: (context, snapshot) {
-              return Expanded(
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(16),
-                  separatorBuilder: (context, index) =>
-                  const SizedBox(height: 1),
-                  itemCount: snapshot.data?.length ?? 0,
-                  itemBuilder: (context, index) {
-                    final package = snapshot.data![index];
-                    final isSelected = selectedIndex == index;
-                    return PackageCard(
-                      package: package,
-                      isSelected: isSelected,
-                      onSelect: () {
-                        setState(() {
-                          selectedIndex = index;
-                          selectedPackage=package.toJson();
-                        });
-                      },
+            )
+          : Column(
+              children: [
+                Container(
+                  color: AppTheme.primaryColor,
+                  height: Get.height * 0.21,
+                  width: double.infinity,
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/logo.png',
+                      fit: BoxFit.contain,
+                      height: 150,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                FutureBuilder<List<Package>>(
+                  future: controller.getPackage('Banner'),
+                  builder: (context, snapshot) {
+                    return Expanded(
+                      child: ListView.separated(
+                        padding: const EdgeInsets.all(16),
+                        separatorBuilder: (context, index) =>
+                            const SizedBox(height: 1),
+                        itemCount: snapshot.data?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          final package = snapshot.data![index];
+                          final isSelected = selectedIndex == index;
+                          return PackageCard(
+                            package: package,
+                            isSelected: isSelected,
+                            onSelect: () {
+                              setState(() {
+                                selectedIndex = index;
+                                selectedPackage = package.toJson();
+                              });
+                            },
+                          );
+                        },
+                      ),
                     );
                   },
                 ),
-              );
-            },
-          ),
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                PrimaryButton(
-                  onTap: () {
-                    if (selectedPackage != null) {
-                      final result = selectedPackage!.containsKey('package')
-                          ? selectedPackage
-                          : {'package': selectedPackage};
-                      Get.back(result: result);
-                    }
-                  },
-                  title: 'Continue',
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      PrimaryButton(
+                        onTap: () {
+                          if (selectedPackage != null) {
+                            final result =
+                                selectedPackage!.containsKey('package')
+                                    ? selectedPackage
+                                    : {'package': selectedPackage};
+                            Get.back(result: result);
+                          }
+                        },
+                        title: 'Continue',
+                      ),
+                      // const SizedBox(height: 10),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   children: [
+                      //     _buildTextLink('Terms of use'),
+                      //     const Text(' | '),
+                      //     _buildTextLink('Privacy Policy'),
+                      //   ],
+                      // ),
+                    ],
+                  ),
                 ),
-                // const SizedBox(height: 10),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: [
-                //     _buildTextLink('Terms of use'),
-                //     const Text(' | '),
-                //     _buildTextLink('Privacy Policy'),
-                //   ],
-                // ),
               ],
             ),
-          ),
-        ],
-      ),
     );
   }
 

@@ -36,7 +36,7 @@ class RankingApi {
       'longitude': position.longitude,
       'startDate': startDate
     });
-    logger.d("Response Body: ${response.body}");
+    //logger.d"Response Body: ${response.body}");
     if (!response.isOk) {
       throw response.body['message'] ?? 'Unable to Process Request';
     }

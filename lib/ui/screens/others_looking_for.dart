@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/model/looking_for_model.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
+import 'package:gully_app/utils/app_logger.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -26,7 +27,7 @@ class OthersLookingForScreen extends StatelessWidget {
       child: GradientBuilder(
         child: Scaffold(
           backgroundColor: Colors.transparent,
-          appBar:  AppBar(
+          appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
             centerTitle: true,
@@ -88,7 +89,7 @@ class OthersLookingForScreen extends StatelessWidget {
                     //     onTap: () {},
                     //     decoration: InputDecoration(
                     //       isDense: true,
-        
+
                     //       suffixIcon: const Icon(
                     //         CupertinoIcons.search,
                     //         color: AppTheme.secondaryYellowColor,
@@ -113,7 +114,7 @@ class OthersLookingForScreen extends StatelessWidget {
                     //     ),
                     //   ),
                     // ),
-                    
+
                     Padding(
                       padding: const EdgeInsets.all(18.0),
                       child: Column(
@@ -134,11 +135,13 @@ class OthersLookingForScreen extends StatelessWidget {
                                       child: CircularProgressIndicator());
                                 }
                                 if (s.hasError) {
-                                  return Center(child: Text('Error: ${s.error}'));
+                                  return Center(
+                                      child: Text('Error: ${s.error}'));
                                 }
                                 if (s.data!.isEmpty) {
                                   return const Center(
-                                    child: Text("No players found near your location"),
+                                    child: Text(
+                                        "No players found near your location"),
                                   );
                                 }
                                 return ListView.separated(
@@ -175,6 +178,7 @@ class _LookingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final startIndex = model.role!.indexOf("for a") + "for a".length;
     final roleString = model.role!.substring(startIndex).trim();
+    // //logger.d"found looking for:${model.role}");
     return Container(
       width: Get.width,
       decoration: BoxDecoration(
@@ -247,8 +251,7 @@ class _LookingCard extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () {
-                      HapticFeedback.heavyImpact();
-                      launchUrl(Uri.parse('tel:+91${model.phoneNumber}'));
+                      _showContactOptions(context, model.phoneNumber ?? '');
                     },
                     child: const CircleAvatar(
                       backgroundColor: AppTheme.secondaryYellowColor,
@@ -262,5 +265,143 @@ class _LookingCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void _showContactOptions(BuildContext context, String phoneNumber) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: const Text(
+            'Contact Options',
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+              color: Colors.black,
+            ),
+          ),
+          content: const Text(
+            'Would you like to call or message via WhatsApp?',
+            style: TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+            ),
+          ),
+          actions: [
+            // Call Button with Icon
+            TextButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                _callPlayer(phoneNumber);
+              },
+              icon: const Icon(
+                Icons.phone,
+                color: Colors.green,
+              ),
+              label: const Text(
+                'Call',
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            // WhatsApp Button with Icon
+            TextButton.icon(
+              onPressed: () {
+                Navigator.pop(context);
+                _whatsappMessage(phoneNumber);
+              },
+              icon: const Icon(
+                Icons.message,
+                color: Colors.green,
+              ),
+              label: const Text(
+                'WhatsApp',
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+// Function to initiate a call
+  void _callPlayer(String phoneNumber) {
+    launchUrl(Uri.parse('tel:+91$phoneNumber'));
+  }
+
+  void _whatsappMessage(String phoneNumber) async {
+    String message =
+        setMessage(model.role ?? '', model.fullName, model.location ?? '');
+    final encodedMessage = Uri.encodeComponent(message);
+
+    final whatsappUrl = 'https://wa.me/+91$phoneNumber?text=$encodedMessage';
+
+    if (await canLaunch(whatsappUrl)) {
+      launchUrl(Uri.parse(whatsappUrl));
+    } else {
+      throw 'Could not launch $whatsappUrl';
+    }
+  }
+
+  String setMessage(String role, String fullName, String location) {
+    String message;
+
+    switch (role.toLowerCase()) {
+      case 'i am looking for a team to join as a batsman':
+        message =
+            'Hey, $fullName! I found that you are looking to join a team as a Batsman. Located in $location.';
+        break;
+
+      case 'all-rounder':
+        message =
+            'Hey, $fullName! I noticed that you are an All-rounder looking for a team. Located in $location.';
+        break;
+
+      case 'i am looking for a team to join as a wicket-keeper':
+        message =
+            'Hey, $fullName! I saw that you are looking to join a team as a Wicket-keeper. Located in $location.';
+        break;
+
+      case 'i am looking for a team to join as a bowler':
+        message =
+            'Hey, $fullName! I saw that you are looking to join a team as a Bowler. Located in $location.';
+        break;
+
+      case 'i am looking for a teammate to join as a bowler':
+        message =
+            'Hey, $fullName! I found that you are looking for a teammate to join as a Bowler. Located in $location.';
+        break;
+
+      case 'i am looking for a teammate to join as a batsman':
+        message =
+            'Hey, $fullName! I noticed that you are looking for a teammate to join as a Batsman. Located in $location.';
+        break;
+
+      case 'i am looking for a teammate to join as a wicket-keeper':
+        message =
+            'Hey, $fullName! I saw that you are looking for a teammate to join as a Wicket-keeper. Located in $location.';
+        break;
+
+      case 'i am looking for a teammate to join as an all-rounder':
+        message =
+            'Hey, $fullName! I found that you are looking for a teammate to join as an All-rounder. Located in $location.';
+        break;
+
+      default:
+        message =
+            'Hey, $fullName! I saw that you are looking for a team. Located in $location.';
+        break;
+    }
+
+    return message;
   }
 }

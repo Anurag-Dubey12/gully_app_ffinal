@@ -43,13 +43,15 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
       'Congratulations! Your transaction has been successful. Your Service is now active!',
       title: "Payment Successful",
     ).then(
-          (value) => Get.offAll(() => const HomeScreen(), predicate: (route) => route.name == '/HomeScreen'),
+      (value) => Get.offAll(() => const HomeScreen(),
+          predicate: (route) => route.name == '/HomeScreen'),
     );
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     logger.f('Payment Error ${response.message.toString()}');
-    errorSnackBar('Your transaction has failed. Please try again!', title: "Payment Failed!");
+    errorSnackBar('Your transaction has failed. Please try again!',
+        title: "Payment Failed!");
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
@@ -81,7 +83,8 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
         appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
           backgroundColor: AppTheme.primaryColor,
-          title: const Text('Review Service', style: TextStyle(color: Colors.white, fontSize: 18)),
+          title: const Text('Review Service',
+              style: TextStyle(color: Colors.white, fontSize: 18)),
         ),
         body: Padding(
           padding: const EdgeInsets.all(12.0),
@@ -126,11 +129,11 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                     const SizedBox(height: 5),
                     AdvertisementSummary(
                       label: 'Name',
-                      value: widget.service.name?? '',
+                      value: widget.service.name ?? '',
                     ),
                     AdvertisementSummary(
                       label: 'Contact Number',
-                      value: widget.service.phoneNumber?? '',
+                      value: widget.service.phoneNumber ?? '',
                     ),
                     AdvertisementSummary(
                       label: 'Year of Experience',
@@ -138,7 +141,7 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                     ),
                     AdvertisementSummary(
                       label: 'Location',
-                      value: widget.service.address?? '',
+                      value: widget.service.address ?? '',
                     ),
                     AdvertisementSummary(
                       label: 'Charges',
@@ -200,7 +203,7 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                         ),
                         const Spacer(),
                         Text(
-                          '₹${fees/1.18}',
+                          '₹${fees / 1.18}',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey.shade800,
@@ -221,7 +224,7 @@ class ServicePaymentPageState extends State<ServicePaymentPage> {
                         ),
                         const Spacer(),
                         Text(
-                          '₹${fees-(fees/1.18)}',
+                          '₹${fees - (fees / 1.18)}',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.grey.shade800,

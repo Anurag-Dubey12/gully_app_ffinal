@@ -21,19 +21,20 @@ class MiscController extends GetxController with StateMixin {
       getCurrentLocation();
     });
   }
-  RxBool isaspectRatioequal=false.obs;
-
+  RxBool isaspectRatioequal = false.obs;
+  RxBool isLocationEnable = false.obs;
 
   Future<void> getCurrentLocation() async {
     final position = await determinePosition();
-    logger.d("The Banner Coordinates is:${LatLng(position.latitude, position.longitude)}");
+    //logger.d(// "The Banner Coordinates is:${LatLng(position.latitude, position.longitude)}");
     coordinates.value = LatLng(position.latitude, position.longitude);
     coordinates.refresh();
+    isLocationEnable.value = true;
   }
 
   set setCoordinates(LatLng value) {
     coordinates.value = value;
-    logger.d("The Banner Coordinates is:${coordinates.value}");
+    //logger.d"The Banner Coordinates is:${coordinates.value}");
     coordinates.refresh();
   }
 
@@ -45,25 +46,45 @@ class MiscController extends GetxController with StateMixin {
     indexvalue.value = index;
   }
 
-  RxList<BannerModel> banners = <BannerModel>[].obs;
   Future<String> getContent(String slug) async {
     var response = await repo.getContent(slug);
-    logger.d("The Content Data is:${response.data}");
+    //logger.d"The Content Data is:${response.data}");
     return response.data!['content'];
   }
 
-
-  Future<void> getBanners() async {
+  RxList<BannerModel> banners = <BannerModel>[].obs;
+  Future<int> getBanners() async {
+  try {
+    // Default coordinates if location is disabled
+    double lat = coordinates.value.latitude;
+    double lng = coordinates.value.longitude;
+    
+    // If location is not available (0,0), use default coordinates
+    if (lat == 0 && lng == 0) {
+      // Use default coordinates (could be your app's default location)
+      // or proceed without coordinates
+    }
+    
     var response = await repo.getBanners(
-      latitude: coordinates.value.latitude,
-      longitude: coordinates.value.longitude
-    );
-    logger.d("The Banners Data is:${response.data}");
+        latitude: lat,
+        longitude: lng);
+        
     banners.value = response.data!['banners']
         .map<BannerModel>((e) => BannerModel.fromJson(e))
         .toList();
     banners.refresh();
+    return banners.length;
+  } catch (e) {
+    // Handle error but ensure banners list is at least initialized
+    // so UI can show appropriate feedback
+    if (banners.isEmpty) {
+      banners.value = [];
+      banners.refresh();
+    }
+    logger.e('Error getting banners: $e');
+    return 0;
   }
+}
 
   Future<bool> addhelpDesk(Map<String, dynamic> data) async {
     change(GetStatus.loading());
@@ -133,7 +154,7 @@ class MiscController extends GetxController with StateMixin {
   Future<List<Package>> getPackage(String packagefor) async {
     try {
       var response = await repo.getPackages(packagefor);
-      logger.d("The Package Response:${packagefor}");
+      //logger.d"The Package Response:${packagefor}");
       return packages.value = (response.data!['packages'] as List<dynamic>?)
               ?.map((e) => Package.fromJson(e as Map<String, dynamic>))
               .toList() ??

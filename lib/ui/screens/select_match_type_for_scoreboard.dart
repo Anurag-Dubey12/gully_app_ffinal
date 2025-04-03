@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/ui/theme/theme.dart';
@@ -66,7 +65,7 @@ class _SelectMatchCategoryState extends State<SelectMatchCategory> {
                   _Card(
                     title: 'Challenge',
                     onTap: () {
-                      logger.d("click on Launcged challenge scoreboard");
+                      //logger.d"click on Launcged challenge scoreboard");
                       Get.to(() => const SelectChallengeForScoreboard());
                       scorerboardController.isChallenge = true;
                     },

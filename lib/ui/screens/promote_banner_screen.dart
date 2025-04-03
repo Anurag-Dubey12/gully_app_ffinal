@@ -20,7 +20,7 @@ class PromoteBannerScreenState extends State<PromoteBannerScreen> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<PromotionController>();
-    final MiscController connectionController=Get.find<MiscController>();
+    final MiscController connectionController = Get.find<MiscController>();
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -36,7 +36,9 @@ class PromoteBannerScreenState extends State<PromoteBannerScreen> {
             tooltip: 'Add Banner',
             child: const Icon(Icons.add, color: Colors.white),
             onPressed: () {
-              connectionController.isConnected.value ? Get.to(() => const BannerAdding()) : errorSnackBar("Please Connect to the internet ");
+              connectionController.isConnected.value
+                  ? Get.to(() => const BannerAdding())
+                  : errorSnackBar("Please Connect to the internet ");
             },
           ),
           appBar: AppBar(
@@ -52,47 +54,49 @@ class PromoteBannerScreenState extends State<PromoteBannerScreen> {
             ),
             leading: const BackButton(color: Colors.white),
           ),
-          body: !connectionController.isConnected.value ? const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.signal_wifi_off,
-                  size: 48,
-                  color: Colors.black54,
-                ),
-                SizedBox(height: 16),
-                Text(
-                  'No internet connection',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 18,
+          body: !connectionController.isConnected.value
+              ? const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.signal_wifi_off,
+                        size: 48,
+                        color: Colors.black54,
+                      ),
+                      SizedBox(height: 16),
+                      Text(
+                        'No internet connection',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
                   ),
+                )
+              : FutureBuilder<List<PromotionalBanner>>(
+                  future: controller.getPromotionalBanner(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    if (snapshot.data!.isEmpty) {
+                      return const Center(
+                        child: Text("No Banner Found"),
+                      );
+                    }
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemBuilder: (context, index) {
+                        final banner = controller.bannerList[index];
+                        return MyBanner(banner: banner);
+                      },
+                      itemCount: controller.bannerList.length,
+                    );
+                  },
                 ),
-              ],
-            ),
-          ): FutureBuilder<List<PromotionalBanner>>(
-            future: controller.getPromotionalBanner(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              if(snapshot.data!.isEmpty){
-                return const Center(
-                  child: Text("No Banner Found"),
-                );
-              }
-              return ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemBuilder: (context, index) {
-                  final banner = controller.bannerList[index];
-                  return MyBanner(banner: banner);
-                },
-                itemCount: controller.bannerList.length,
-              );
-            },
-          ),
         ),
       ),
     );
@@ -155,7 +159,7 @@ class MyBannerState extends State<MyBanner>
         child: Column(
           children: [
             ClipRRect(
-              // borderRadius: BorderRadius.circular(5),
+              borderRadius: BorderRadius.circular(5),
               child: Stack(
                 children: [
                   Image.network(
@@ -169,20 +173,6 @@ class MyBannerState extends State<MyBanner>
                       return Image.asset('assets/images/logo.png',
                           fit: BoxFit.cover);
                     },
-                    // loadingBuilder: (context, child, loadingProgress) {
-                    //   if (loadingProgress == null) {
-                    //     return child;
-                    //   } else {
-                    //     return Center(
-                    //       child: CircularProgressIndicator(
-                    //         value: loadingProgress.expectedTotalBytes != null
-                    //             ? loadingProgress.cumulativeBytesLoaded /
-                    //             (loadingProgress.expectedTotalBytes ?? 1)
-                    //             : null,
-                    //       ),
-                    //     );
-                    //   }
-                    // },
                   ),
                   Positioned(
                     bottom: 0,
@@ -274,10 +264,6 @@ class MyBannerState extends State<MyBanner>
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 8),
-                      // decoration: BoxDecoration(
-                      //   color: Theme.of(context).primaryColor.withOpacity(0.1),
-                      //   borderRadius: BorderRadius.circular(25),
-                      // ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

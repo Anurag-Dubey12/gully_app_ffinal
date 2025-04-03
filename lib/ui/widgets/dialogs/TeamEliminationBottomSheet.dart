@@ -9,7 +9,6 @@ import '../../../utils/utils.dart';
 import '../../theme/theme.dart';
 import '../primary_button.dart';
 
-
 class TeamTransformation {
   final TeamModel team;
   final bool isCurrentlyEliminated;
@@ -19,6 +18,7 @@ class TeamTransformation {
     required this.isCurrentlyEliminated,
   });
 }
+
 class TeamEliminationBottomSheet extends StatefulWidget {
   final String tournamentId;
   final Function onTeamsUpdated;
@@ -36,10 +36,12 @@ class TeamEliminationBottomSheet extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<TeamEliminationBottomSheet> createState() => _TeamEliminationBottomSheetState();
+  State<TeamEliminationBottomSheet> createState() =>
+      _TeamEliminationBottomSheetState();
 }
 
-class _TeamEliminationBottomSheetState extends State<TeamEliminationBottomSheet> {
+class _TeamEliminationBottomSheetState
+    extends State<TeamEliminationBottomSheet> {
   String selectedFilter = 'all';
   List<String> selectedTeamsForElimination = [];
 
@@ -82,11 +84,13 @@ class _TeamEliminationBottomSheetState extends State<TeamEliminationBottomSheet>
     }
   }
 
-  void showTransformationDialog(BuildContext context, List<String> selectedIds) {
+  void showTransformationDialog(
+      BuildContext context, List<String> selectedIds) {
     final controller = Get.find<TournamentController>();
     List<TeamTransformation> transformations = selectedIds.map((id) {
       TeamModel team = controller.AllTeam.firstWhere((team) => team.id == id);
-      bool isCurrentlyEliminated = controller.eliminatedTeam.any((eliminated) => eliminated.id == id);
+      bool isCurrentlyEliminated =
+          controller.eliminatedTeam.any((eliminated) => eliminated.id == id);
       return TeamTransformation(
         team: team,
         isCurrentlyEliminated: isCurrentlyEliminated,
@@ -112,40 +116,40 @@ class _TeamEliminationBottomSheetState extends State<TeamEliminationBottomSheet>
     ).then((confirmed) async {
       if (confirmed == true) {
         //Code to show error if team has not played any matches
-      //   final controller = Get.find<TournamentController>();
-      //   controller.getMatchup(widget.tournamentId);
-      //   List<String> teamsWithoutMatches = [];
-      //   for (String teamId in selectedTeamsForElimination) {
-      //     logger.d("Selected Team id :${teamId}");
-      //     bool teamHasMatch = controller.matchups.value.any((match) =>
-      //     match.team1.id == teamId || match.team2.id == teamId
-      //     );
-      //     if (!teamHasMatch) {
-      //       String teamName = controller.AllTeam
-      //           .firstWhere((team) => team.id == teamId)
-      //           .name;
-      //       logger.d("Team Name: " + teamName);
-      //       teamsWithoutMatches.add(teamName);
-      //     }
-      //   }
-      //   if (teamsWithoutMatches.isNotEmpty) {
-      //     String teamNames = teamsWithoutMatches.join(", ");
-      //     logger.e("Match not found for teams: $teamNames");
-      //     errorSnackBar("Match not found for teams: $teamNames");
-      // }else{
-      //     final response = await controller.teamElimination(
-      //       widget.tournamentId,
-      //       selectedTeamsForElimination,
-      //     );
-      //     if (response) {
-      //       await widget.onTeamsUpdated();
-      //       Navigator.pop(context, {
-      //         'selectedTeam':selectedTeamsForElimination
-      //       }); //return the selected eliminated teams
-      //       successSnackBar('Teams updated successfully');
-      //
-      //     }
-      //   }
+        //   final controller = Get.find<TournamentController>();
+        //   controller.getMatchup(widget.tournamentId);
+        //   List<String> teamsWithoutMatches = [];
+        //   for (String teamId in selectedTeamsForElimination) {
+        //     //logger.d"Selected Team id :${teamId}");
+        //     bool teamHasMatch = controller.matchups.value.any((match) =>
+        //     match.team1.id == teamId || match.team2.id == teamId
+        //     );
+        //     if (!teamHasMatch) {
+        //       String teamName = controller.AllTeam
+        //           .firstWhere((team) => team.id == teamId)
+        //           .name;
+        //       //logger.d"Team Name: " + teamName);
+        //       teamsWithoutMatches.add(teamName);
+        //     }
+        //   }
+        //   if (teamsWithoutMatches.isNotEmpty) {
+        //     String teamNames = teamsWithoutMatches.join(", ");
+        //     //logger.e("Match not found for teams: $teamNames");
+        //     errorSnackBar("Match not found for teams: $teamNames");
+        // }else{
+        //     final response = await controller.teamElimination(
+        //       widget.tournamentId,
+        //       selectedTeamsForElimination,
+        //     );
+        //     if (response) {
+        //       await widget.onTeamsUpdated();
+        //       Navigator.pop(context, {
+        //         'selectedTeam':selectedTeamsForElimination
+        //       }); //return the selected eliminated teams
+        //       successSnackBar('Teams updated successfully');
+        //
+        //     }
+        //   }
         final response = await controller.teamElimination(
           widget.tournamentId,
           selectedTeamsForElimination,
@@ -153,10 +157,9 @@ class _TeamEliminationBottomSheetState extends State<TeamEliminationBottomSheet>
         if (response) {
           await widget.onTeamsUpdated();
           Navigator.pop(context, {
-            'selectedTeam':selectedTeamsForElimination
+            'selectedTeam': selectedTeamsForElimination
           }); //return the selected eliminated teams
           successSnackBar('Teams updated successfully');
-
         }
       }
     });
@@ -182,9 +185,7 @@ class _TeamEliminationBottomSheetState extends State<TeamEliminationBottomSheet>
                     child: Container(
                       padding: const EdgeInsets.all(6),
                       decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: AppTheme.primaryColor
-                      ),
+                          shape: BoxShape.circle, color: AppTheme.primaryColor),
                       child: const Icon(
                         Icons.arrow_back,
                         color: Colors.white,
@@ -197,10 +198,8 @@ class _TeamEliminationBottomSheetState extends State<TeamEliminationBottomSheet>
                     child: Center(
                       child: Text(
                         'Manage Teams',
-                        style: Get.textTheme.titleLarge?.copyWith(
-                            color: Colors.black,
-                            fontSize: 20
-                        ),
+                        style: Get.textTheme.titleLarge
+                            ?.copyWith(color: Colors.black, fontSize: 20),
                       ),
                     ),
                   ),
@@ -238,11 +237,13 @@ class _TeamEliminationBottomSheetState extends State<TeamEliminationBottomSheet>
                 itemCount: _getFilteredTeams(selectedFilter).length,
                 itemBuilder: (context, index) {
                   final team = _getFilteredTeams(selectedFilter)[index];
-                  final isEliminated = widget.eliminatedTeams.any((eliminated) => eliminated.id == team.id);
+                  final isEliminated = widget.eliminatedTeams
+                      .any((eliminated) => eliminated.id == team.id);
                   return Stack(
                     children: [
                       CustomItemCheckbox(
-                        isSelected: selectedTeamsForElimination.contains(team.id),
+                        isSelected:
+                            selectedTeamsForElimination.contains(team.id),
                         title: team.name,
                         imageUrl: team.toImageUrl(),
                         borderColor: isEliminated ? Colors.red : Colors.black45,
@@ -305,10 +306,12 @@ class _TeamEliminationBottomSheetState extends State<TeamEliminationBottomSheet>
                   PrimaryButton(
                     onTap: () {
                       if (selectedTeamsForElimination.isEmpty) {
-                        errorSnackBar('Please select teams to update modify Elimination');
+                        errorSnackBar(
+                            'Please select teams to update modify Elimination');
                         return;
                       }
-                      showTransformationDialog(context, selectedTeamsForElimination);
+                      showTransformationDialog(
+                          context, selectedTeamsForElimination);
                     },
                     title: 'Update Teams',
                   ),
@@ -321,7 +324,6 @@ class _TeamEliminationBottomSheetState extends State<TeamEliminationBottomSheet>
     );
   }
 }
-
 
 class TeamTransformationDialog extends StatelessWidget {
   final List<TeamTransformation> transformations;
@@ -377,91 +379,109 @@ class TeamTransformationDialog extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ...transformations.map((transformation) => Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: transformation.isCurrentlyEliminated ? Colors.green.shade200 : Colors.red.shade200,
-                          width: 1,
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: transformation.isCurrentlyEliminated
+                                  ? Colors.green.shade200
+                                  : Colors.red.shade200,
+                              width: 1,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 24,
+                                    backgroundImage: FallbackImageProvider(
+                                        transformation.team.toImageUrl(),
+                                        'assets/images/logo.png'),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Text(
+                                      transformation.team.name,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 12),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            transformation.isCurrentlyEliminated
+                                                ? Colors.red.shade100
+                                                : Colors.green.shade100,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        transformation.isCurrentlyEliminated
+                                            ? 'Eliminated'
+                                            : 'Active',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: transformation
+                                                  .isCurrentlyEliminated
+                                              ? Colors.red
+                                              : Colors.green,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16),
+                                    child: Icon(
+                                      Icons.arrow_forward,
+                                      color: Colors.grey[600],
+                                      size: 24,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            transformation.isCurrentlyEliminated
+                                                ? Colors.green.shade100
+                                                : Colors.red.shade100,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        transformation.isCurrentlyEliminated
+                                            ? 'Active'
+                                            : 'Eliminated',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          color: transformation
+                                                  .isCurrentlyEliminated
+                                              ? Colors.green
+                                              : Colors.red,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              CircleAvatar(
-                                radius: 24,
-                                backgroundImage: FallbackImageProvider(
-                                    transformation.team.toImageUrl(),
-                                  'assets/images/logo.png'
-                                ),
-                              ),
-                              const SizedBox(width: 12),
-                              Expanded(
-                                child: Text(
-                                  transformation.team.name,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: transformation.isCurrentlyEliminated ? Colors.red.shade100 : Colors.green.shade100,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    transformation.isCurrentlyEliminated ? 'Eliminated' : 'Active',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: transformation.isCurrentlyEliminated ? Colors.red : Colors.green,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
-                                child: Icon(
-                                  Icons.arrow_forward,
-                                  color: Colors.grey[600],
-                                  size: 24,
-                                ),
-                              ),
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: transformation.isCurrentlyEliminated ? Colors.green.shade100 : Colors.red.shade100,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    transformation.isCurrentlyEliminated ? 'Active' : 'Eliminated',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      color: transformation.isCurrentlyEliminated ? Colors.green : Colors.red,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  )),
+                      )),
                 ],
               ),
             ),

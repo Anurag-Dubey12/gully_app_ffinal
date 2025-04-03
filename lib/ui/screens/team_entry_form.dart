@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/controller/auth_controller.dart';
-import 'package:gully_app/data/controller/misc_controller.dart';
+import '../../data/controller/auth_controller.dart';
+import '../../data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/team_model.dart';
 import 'package:gully_app/ui/screens/home_screen.dart';
@@ -40,7 +40,7 @@ class _TeamEntryFormState extends State<TeamEntryForm> {
     final TournamentController controller = Get.find<TournamentController>();
     final AuthController authController = Get.find<AuthController>();
     final MiscController connectionController = Get.find<MiscController>();
-    logger.d("Cover Image:${controller.state!.coverPhoto}");
+    //logger.d"Cover Image:${controller.state!.coverPhoto}");
     return GradientBuilder(
       child: Scaffold(
         bottomNavigationBar: Container(

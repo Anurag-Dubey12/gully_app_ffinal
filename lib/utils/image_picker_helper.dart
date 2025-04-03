@@ -31,7 +31,7 @@ Future<String> convertImageToBase64(XFile image) async {
   final mimeType = lookupMimeType(image.path);
 
   final String base64Image = base64Encode(bytes);
-  logger.d("The base64 image is: $base64Image");
+  // logger.d("The base64 image is: $base64Image");
   return mimeType != null ? 'data:$mimeType;base64,$base64Image' : base64Image;
 }
 
@@ -51,6 +51,7 @@ String _encodeFileToBase64(XFile image) {
   return mimeType != null ? 'data:$mimeType;base64,$base64Image' : base64Image;
 }
 
+// MARK: Image Viewer
 void imageViewer(BuildContext context, String? photoUrl, bool isnetworkimage,
     {VoidCallback? onTap}) {
   if (photoUrl == null || photoUrl.isEmpty) {
@@ -93,33 +94,55 @@ void imageViewer(BuildContext context, String? photoUrl, bool isnetworkimage,
                             parent: ModalRoute.of(context)!.animation!,
                             curve: Curves.easeInOut,
                           ),
-                          child: InteractiveViewer(
-                            minScale: 0.5,
-                            maxScale: 4.0,
-                            child: isnetworkimage
-                                ? Container(
-                                    width: Get.width,
-                                    height: Get.height,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: FallbackImageProvider(
-                                          toImageUrl(photoUrl),
-                                          'assets/images/logo.png',
-                                        ),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              InteractiveViewer(
+                                minScale: 0.5,
+                                maxScale: 4.0,
+                                child: isnetworkimage
+                                    ? Image.network(
+                                        toImageUrl(photoUrl),
+                                        width: Get.width,
+                                        height: Get.height,
+                                        fit: BoxFit.contain,
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child; 
+                                          } else {
+                                           
+                                            return Center(
+                                              child: CircularProgressIndicator(
+                                                value: loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        (loadingProgress
+                                                                .expectedTotalBytes ??
+                                                            1)
+                                                    : null,
+                                              ),
+                                            );
+                                          }
+                                        },
+                                        errorBuilder:
+                                            (context, error, stackTrace) {
+                                          return Image.asset(
+                                            'assets/images/logo.png',
+                                            fit: BoxFit.contain,
+                                          );
+                                        },
+                                      )
+                                    : Image.file(
+                                        File(photoUrl!),
+                                        width: Get.width,
+                                        height: Get.height,
                                         fit: BoxFit.contain,
                                       ),
-                                    ),
-                                  )
-                                : Container(
-                                    width: Get.width,
-                                    height: Get.height,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: FileImage(File(photoUrl)),
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ),
-                                  ),
+                              ),
+                            ],
                           ),
                         ),
                       );
@@ -153,7 +176,6 @@ ImageProvider _getImageProvider(String photoUrl) {
     return FileImage(File(photoUrl));
   }
 }
-
 void multiImageViewer(BuildContext context, List<String?> imageUrls,
     int initialIndex, bool isNetworkImage) {
   if (imageUrls.isEmpty) {

@@ -197,7 +197,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
               onChanged: (value) {
                 setState(() {
                   selectedAuthority = value;
-                  logger.d("value: $selectedAuthority");
+                  //logger.d"value: $selectedAuthority");
                 });
               },
               isExpanded: true,
@@ -231,8 +231,8 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
     });
 
     if (widget.tourId != null) {
-      logger.d("Match data is available: ${widget.match}");
-      logger.d("Total teams: $totalteams");
+      //logger.d"Match data is available: ${widget.match}");
+      //logger.d"Total teams: $totalteams");
       setState(() {
         selectedTeam1 = totalteams.firstWhereOrNull(
           (team) => team.id == widget.match!.team1.id,
@@ -244,10 +244,10 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
         if (widget.match != null) {
           selectedRound = widget.match!.round;
         }
-        logger.d("Selected Team 1: ${selectedTeam1?.name}");
-        logger.d("Selected Team 2: ${selectedTeam2?.name}");
-        logger.d("Selected Date: $selectedDate");
-        logger.d("Selected Round: $selectedRound");
+        //logger.d"Selected Team 1: ${selectedTeam1?.name}");
+        //logger.d"Selected Team 2: ${selectedTeam2?.name}");
+        //logger.d"Selected Date: $selectedDate");
+        //logger.d"Selected Round: $selectedRound");
       });
     } else {
       selectedDate =
@@ -264,7 +264,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
           onItemSelected: (value) {
             setState(() {
               selectedRound = value;
-              logger.d("Selected Round: $selectedRound");
+              //logger.d"Selected Round: $selectedRound");
             });
           },
         );
@@ -306,10 +306,10 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
         //   selectedTeam2 = null;
         // }
       });
-      logger.d(
-          "Selected Team 1 after elimination update: ${selectedTeam1?.name}");
-      logger.d(
-          "Selected Team 2 after elimination update: ${selectedTeam2?.name}");
+      //logger.d
+          // "Selected Team 1 after elimination update: ${selectedTeam1?.name}");
+      //logger.d
+          // "Selected Team 2 after elimination update: ${selectedTeam2?.name}");
     }
   }
 
@@ -705,10 +705,10 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                       'dateTime':
                                           selectedDate!.toIso8601String(),
                                     };
-                                    logger.d("Selected Date is:$selectedDate");
+                                    //logger.d"Selected Date is:$selectedDate");
                                     bool response = await controller.editMatch(
                                         obj, widget.match!.id);
-                                    logger.d(response);
+                                    //logger.dresponse);
                                     if (response) {
                                       successSnackBar('Matchup Edited')
                                           .then((value) => Get.back());
@@ -726,7 +726,7 @@ class _SelectOrganizeTeamState extends State<SelectOrganizeTeam> {
                                           1,
                                           selectedRound ?? '',
                                           selectedAuthority!);
-                                  logger.d(response);
+                                  //logger.dresponse);
                                   if (response) {
                                     successSnackBar('Matchup created')
                                         .then((value) => Get.back());

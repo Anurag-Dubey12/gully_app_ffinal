@@ -37,7 +37,7 @@ class _LookingForScreenState extends State<LookingForScreen> {
   @override
   initState() {
     super.initState();
-    logger.d("Connectivity Status:$_isConnected");
+    //logger.d"Connectivity Status:$_isConnected");
     _connectivityService.listenToConnectionChanges((isConnected) {
       setState(() {
         _isConnected = isConnected;
@@ -47,11 +47,13 @@ class _LookingForScreenState extends State<LookingForScreen> {
       }
     });
   }
+
   @override
   void dispose() {
     _connectivityService.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final AuthController authController = Get.find<AuthController>();
@@ -78,7 +80,7 @@ class _LookingForScreenState extends State<LookingForScreen> {
                 style: TextStyle(color: Colors.white, fontSize: 25)),
           ),
           body: Padding(
-            padding: const EdgeInsets.only(top: 15,left: 18,right: 18),
+            padding: const EdgeInsets.only(top: 15, left: 18, right: 18),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -104,7 +106,8 @@ class _LookingForScreenState extends State<LookingForScreen> {
                     "I am looking for a Teammate to join as a Batsman",
                     "I am looking for a Teammate to join as a Wicket-keeper",
                     "I am looking for a Teammate to join as an All-rounder"
-                  ], isAds: false,
+                  ],
+                  isAds: false,
                 ),
                 // const SizedBox(height: 5),
                 FormInput(
@@ -135,7 +138,7 @@ class _LookingForScreenState extends State<LookingForScreen> {
                               location = LatLng(
                                   double.parse(e.lat!), double.parse(e.lng!));
                             });
-                            logger.d('location: ${e.lat} ${e.lng}');
+                            //logger.d'location: ${e.lat} ${e.lng}');
                             Get.back();
                           }
                           FocusScope.of(context).unfocus();
@@ -278,30 +281,31 @@ class _LookingForScreenState extends State<LookingForScreen> {
                         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 10),
                 Expanded(
-                  child: _isConnected ? FutureBuilder<List<LookingForPlayerModel>>(
-                      future: miscController.getMyLookings(),
-                      builder: (context, snapshot) {
-                        return ListView.separated(
-                            shrinkWrap: true,
-                            itemCount: snapshot.data?.length ?? 0,
-                            separatorBuilder: (context, index) {
-                              return const SizedBox(
-                                height: 10,
-                              );
-                            },
-                            itemBuilder: (context, index) {
-                              return _PostCard(
-                                key: ValueKey(snapshot.data![index].id),
-                                post: snapshot.data![index],
-                                onDelete: () {
-                                  setState(() {});
-                                },
-                              );
-                            });
-                      }):const Center(
-                    child: Text("No Data Found"),
-                  )
-                )
+                    child: _isConnected
+                        ? FutureBuilder<List<LookingForPlayerModel>>(
+                            future: miscController.getMyLookings(),
+                            builder: (context, snapshot) {
+                              return ListView.separated(
+                                  shrinkWrap: true,
+                                  itemCount: snapshot.data?.length ?? 0,
+                                  separatorBuilder: (context, index) {
+                                    return const SizedBox(
+                                      height: 10,
+                                    );
+                                  },
+                                  itemBuilder: (context, index) {
+                                    return _PostCard(
+                                      key: ValueKey(snapshot.data![index].id),
+                                      post: snapshot.data![index],
+                                      onDelete: () {
+                                        setState(() {});
+                                      },
+                                    );
+                                  });
+                            })
+                        : const Center(
+                            child: Text("No Data Found"),
+                          ))
               ],
             ),
           ),

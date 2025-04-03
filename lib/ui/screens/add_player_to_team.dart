@@ -455,10 +455,10 @@ class _PlayerCardState extends State<PlayerCard> {
                                               ),
                                             ),
                                             onTap: () async {
-                                              logger.d(
-                                                  "The Previous Captain Details : \n Id:$previousCaptainid \n Name :$previousCaptainName \n Role:$previousCaptainRole");
-                                              logger.d(
-                                                  "The New Captain Details: \n Id:${player.id} \n Name:${player.name} \n Role:${player.role}");
+                                              // logger.d(
+                                              //     "The Previous Captain Details : \n Id:$previousCaptainid \n Name :$previousCaptainName \n Role:$previousCaptainRole");
+                                              // logger.d(
+                                              //     "The New Captain Details: \n Id:${player.id} \n Name:${player.name} \n Role:${player.role}");
                                               final List<String>
                                                   availableRoles = [
                                                 'Wicket Keeper',
@@ -594,13 +594,13 @@ class _PlayerCardState extends State<PlayerCard> {
                                                                     previousCaptainid,
                                                               );
                                                               if (isChanged) {
-                                                                logger.d(
-                                                                    "Captain changed successfully");
+                                                                // logger.d(
+                                                                //     "Captain changed successfully");
                                                                 successSnackBar(
                                                                     "Captain role updated successfully");
                                                               } else {
-                                                                logger.d(
-                                                                    "Failed to change captain");
+                                                                // logger.d(
+                                                                //     "Failed to change captain");
                                                                 errorSnackBar(
                                                                     "Failed to update captain role");
                                                               }

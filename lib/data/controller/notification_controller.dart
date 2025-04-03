@@ -11,7 +11,7 @@ class NotificationController extends GetxController {
   final Preferences preferences;
   RxList<NotificationModel> notifications = <NotificationModel>[].obs;
   //Class Used to show Popup Notification
-  FirebaseNotification popup=FirebaseNotification();
+  FirebaseNotification popup = FirebaseNotification();
   NotificationController({required this.preferences});
   @override
   void onInit() {
@@ -42,9 +42,8 @@ class NotificationController extends GetxController {
             'Message also contained a notification: ${message.notification}');
         popup.showNotification(
             id: DateTime.now().microsecond,
-            title:message.notification?.title??'New Update',
-            body:message.notification?.body??''
-        );
+            title: message.notification?.title ?? 'New Update',
+            body: message.notification?.body ?? '');
         notifications.value.add(NotificationModel(
             title: message.notification?.title ?? 'Title N/A',
             body: message.notification?.body ?? '',
@@ -55,7 +54,7 @@ class NotificationController extends GetxController {
             createdAt: DateTime.now()));
       }
       notifications.refresh();
-      logger.d("Recevied Notification:$notifications");
+      //logger.d"Recevied Notification:$notifications");
       preferences.setNotifications(notifications);
     });
   }

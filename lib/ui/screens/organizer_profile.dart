@@ -33,7 +33,7 @@ class OrganizerProfileScreen extends StatefulWidget {
 
 class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
   XFile? _image;
-  final MiscController connectionController=Get.find<MiscController>();
+  final MiscController connectionController = Get.find<MiscController>();
   pickImage() async {
     _image = await imagePickerHelper();
     setState(() {});
@@ -50,7 +50,7 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
           toImageUrl(controller.state!.profilePhoto));
 
       successSnackBar('Profile updated successfully');
-    }else{
+    } else {
       errorSnackBar('Failed to update profile');
     }
   }
@@ -98,20 +98,20 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                     children: [
                       Obx(() => _image != null
                           ? CircleAvatar(
-                          radius: 40,
-                          backgroundColor: Colors.white,
-                          backgroundImage: FileImage(File(_image!.path)))
+                              radius: 40,
+                              backgroundColor: Colors.white,
+                              backgroundImage: FileImage(File(_image!.path)))
                           : Container(
-                          width: 80,
-                          height: 80,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.white,
-                              image: DecorationImage(
-                                  image: CachedNetworkImageProvider(
-                                      toImageUrl(
-                                          controller.state!.profilePhoto)),
-                                  fit: BoxFit.cover)))),
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                  image: DecorationImage(
+                                      image: CachedNetworkImageProvider(
+                                          toImageUrl(
+                                              controller.state!.profilePhoto)),
+                                      fit: BoxFit.cover)))),
                       Positioned(
                         bottom: 0,
                         right: 0,
@@ -135,7 +135,7 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                 ),
                 const SizedBox(height: 20),
                 Obx(
-                      () => Column(
+                  () => Column(
                     children: [
                       Text(
                         controller.state!.captializedName,
@@ -240,11 +240,11 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                             //   },
                             // ),
                             ProfileTileCard(
-                              text: 'View Opponent',
+                              text: 'View Match Schedule',
                               onTap: () {
                                 Get.to(() => const OpponentTournamentsScreen(
-                                  opponentView: true,
-                                ));
+                                      opponentView: true,
+                                    ));
                               },
                             ),
                             InkWell(
@@ -263,21 +263,21 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                                 Get.find<TournamentController>()
                                     .getOrganizerTournamentList();
                                 Get.to(() => SelectPerformanceCategory(
-                                  onTouranmentTap: () {
-                                    Get.to(() =>
-                                    const CurrentTournamentListScreen(
-                                      redirectType: RedirectType
-                                          .currentTournament,
-                                    ));
-                                  },
-                                  onChallengeTap: () {
-                                    Get.to(
+                                      onTouranmentTap: () {
+                                        Get.to(() =>
+                                            const CurrentTournamentListScreen(
+                                              redirectType: RedirectType
+                                                  .currentTournament,
+                                            ));
+                                      },
+                                      onChallengeTap: () {
+                                        Get.to(
                                             () => const AcceptedChallenges());
-                                  },
+                                      },
 
-                                  // redirectType:
-                                  //     RedirectType.currentTournament,
-                                ));
+                                      // redirectType:
+                                      //     RedirectType.currentTournament,
+                                    ));
                               },
                             ),
                             ProfileTileCard(
@@ -286,9 +286,9 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                                 Get.find<TournamentController>()
                                     .getOrganizerTournamentList();
                                 Get.to(() => const CurrentTournamentListScreen(
-                                  redirectType:
-                                  RedirectType.manageAuthority,
-                                ));
+                                      redirectType:
+                                          RedirectType.manageAuthority,
+                                    ));
                               },
                             ),
                             ProfileTileCard(
@@ -297,8 +297,8 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                                 Get.find<TournamentController>()
                                     .getOrganizerTournamentList();
                                 Get.to(() => const CurrentTournamentListScreen(
-                                  redirectType: RedirectType.organizeMatch,
-                                ));
+                                      redirectType: RedirectType.organizeMatch,
+                                    ));
                               },
                             ),
                             ProfileTileCard(
@@ -307,15 +307,15 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                                 Get.find<TournamentController>()
                                     .getOrganizerTournamentList();
                                 Get.to(() => const CurrentTournamentListScreen(
-                                  redirectType: RedirectType.matchup,
-                                ));
+                                      redirectType: RedirectType.matchup,
+                                    ));
                               },
                             ),
                             ProfileTileCard(
                               text: 'Score Board',
                               onTap: () {
                                 final controller =
-                                Get.find<TournamentController>();
+                                    Get.find<TournamentController>();
                                 controller.getOrganizerTournamentList();
 
                                 // Get.to(() => const CurrentTournamentListScreen(
@@ -331,8 +331,8 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                                     .getOrganizerTournamentList();
 
                                 Get.to(() => const CurrentTournamentListScreen(
-                                  redirectType: RedirectType.editForm,
-                                ));
+                                      redirectType: RedirectType.editForm,
+                                    ));
                               },
                             ),
                             // ProfileTileCard(
@@ -359,8 +359,8 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                                 Get.find<TournamentController>()
                                     .getOrganizerTournamentList();
                                 Get.to(() => const CurrentTournamentListScreen(
-                                  redirectType: RedirectType.sponsor,
-                                ));
+                                      redirectType: RedirectType.sponsor,
+                                    ));
                               },
                             ),
                             ProfileTileCard(

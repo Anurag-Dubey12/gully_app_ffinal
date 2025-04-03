@@ -16,7 +16,7 @@ Future<Position> determinePosition(
         desiredAccuracy: accuracy, forceAndroidLocationManager: true);
     return position;
   } catch (e) {
-    logger.e(e.toString());
+    //logger.e(e.toString());
     // errorSnackBar(e.toString());
     // return Future.error(e.toString());
     rethrow;

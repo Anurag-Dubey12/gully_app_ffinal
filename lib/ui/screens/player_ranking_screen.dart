@@ -201,8 +201,8 @@ class _PlayerRankingScreenState extends State<PlayerRankingScreen> {
                                           selectedChildTab),
                                       builder: (context, snapshot) {
                                         if (snapshot.error != null) {
-                                          logger.e(
-                                              "Player Ranking Screen Error: ${snapshot.error}");
+                                          //logger.e(
+                                              // "Player Ranking Screen Error: ${snapshot.error}");
                                           return const Center(
                                             child:
                                                 Text('Something went Wrong '),
@@ -232,7 +232,7 @@ class _PlayerRankingScreenState extends State<PlayerRankingScreen> {
                                                   (i < 3) ? (i + 1) : null;
                                               return _TeamCard(
                                                 player: player,
-                                                rank: i+1,
+                                                rank: i + 1,
                                                 selectedChildTab:
                                                     selectedChildTab,
                                               );
@@ -289,7 +289,7 @@ class _TeamCard extends StatelessWidget {
                 child: Center(
                   child: Text(
                     '$rank',
-                    style:  const TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: Colors.black,

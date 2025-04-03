@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/model/scoreboard_model.dart';
+import '../../../data/model/scoreboard_model.dart';
 import '../../../data/controller/scoreboard_controller.dart';
 import '../../../data/model/extras_model.dart';
 import '../../../data/model/innings_model.dart';

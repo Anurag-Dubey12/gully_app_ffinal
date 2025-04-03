@@ -105,7 +105,7 @@ class _ShopState extends State<RegisterShop>
         // errorSnackBar("Please Upload All The Required Documents");
         return;
       }
-      if (currentStep == 0 && _documentImage==null) {
+      if (currentStep == 0 && _documentImage == null) {
         errorSnackBar("ID proof document required.");
         return;
       }
@@ -135,7 +135,7 @@ class _ShopState extends State<RegisterShop>
     if (_formKeys[currentStep].currentState!.validate()) {
       try {
         final AuthController authController = Get.find<AuthController>();
-        if(_validateImages()){
+        if (_validateImages()) {
           // setState(() {
           //   isLoading = true;
           // });
@@ -149,12 +149,14 @@ class _ShopState extends State<RegisterShop>
             gstCertificate: _Gstcertificate?.path,
             registrationCertificate: _Rstcertificate?.path,
             shopLogo: _shopLogo?.path,
-            businessHours: _businessHours.map((key, value) => MapEntry(key, business_hours_model(
-              isOpen: value.isOpen,
-              openTime: value.openTime?.format(context),
-              closeTime: value.closeTime?.format(context),
-              id: null,
-            ))),
+            businessHours: _businessHours.map((key, value) => MapEntry(
+                key,
+                business_hours_model(
+                  isOpen: value.isOpen,
+                  openTime: value.openTime?.format(context),
+                  closeTime: value.closeTime?.format(context),
+                  id: null,
+                ))),
             websiteUrl: _shop_website_Controller.text,
             description: _shop_description_Controller.text,
             locationProof: _shop_Location?.path,
@@ -164,15 +166,19 @@ class _ShopState extends State<RegisterShop>
               name: _nameController.text,
               email: _emailController.text,
               phoneNumber: _numberController.text,
-              alternatePhoneNumber: int.tryParse(_alternateNumberController.text),
+              alternatePhoneNumber:
+                  int.tryParse(_alternateNumberController.text),
               address: _addressController.text,
-              id_proof: _documentImage?.path, id: '',
+              id_proof: _documentImage?.path,
+              id: '',
             ),
           );
           controller.addShop(shopData);
-          logger.d('The shop data is saved');
-          Get.to(()=>ShopPaymentPage(shopData: shopData,));
-        }else{
+          //logger.d'The shop data is saved');
+          Get.to(() => ShopPaymentPage(
+                shopData: shopData,
+              ));
+        } else {
           setState(() {
             isLoading = false;
           });
@@ -182,12 +188,13 @@ class _ShopState extends State<RegisterShop>
         //   base64 =
         //   await convertImageToBase64(_image!);
         // }
-      } catch(e){
+      } catch (e) {
         setState(() {
           isLoading = false;
         });
-        errorSnackBar("An error occurred while submitting the form.", title: "Error");
-        logger.d("Error submitting form: $e");
+        errorSnackBar("An error occurred while submitting the form.",
+            title: "Error");
+        //logger.d"Error submitting form: $e");
       } finally {
         setState(() {
           isLoading = false;
@@ -261,7 +268,7 @@ class _ShopState extends State<RegisterShop>
         });
       }
     } catch (e) {
-      logger.d('Error picking image: $e');
+      //logger.d'Error picking image: $e');
       errorSnackBar('An error occurred while picking the image.',
           title: "Error");
     }
@@ -667,19 +674,21 @@ class _ShopState extends State<RegisterShop>
               image: _shop_Location,
               onTap: () => pickImage(ImageType.shop_location),
               hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
-              title: "Upload Shop Location Proof (e.g., Utility bill, Rent agreement, etc.)",
+              title:
+                  "Upload Shop Location Proof (e.g., Utility bill, Rent agreement, etc.)",
             ),
             ImageUploadWidget(
               image: _Business_license,
               onTap: () => pickImage(ImageType.Business_License),
               hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
-    title: "Upload Business License",
+              title: "Upload Business License",
             ),
             ImageUploadWidget(
               image: _tax_certificate,
               onTap: () => pickImage(ImageType.Tax_Certificate),
-              hintText: "Select Documents for Verification\n(JPG, PNG  max 2MB)",
-    title: "Upload VAT or Sales Tax Certificate (if applicable)",
+              hintText:
+                  "Select Documents for Verification\n(JPG, PNG  max 2MB)",
+              title: "Upload VAT or Sales Tax Certificate (if applicable)",
             ),
           ],
         ));

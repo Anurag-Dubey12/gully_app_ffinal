@@ -45,23 +45,23 @@ class SelectFromToCard extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () async {
-                   if(isenable){
-                     final date = await showDatePicker(
-                         context: context,
-                         initialDate: isAds
-                             ? DateTime.now()
-                             :
-                         // DateTime.now().add(const Duration(days: 4)),
-                         DateTime.now(),
-                         // firstDate: isAds ? DateTime.now():DateTime.now().add(const Duration(days: 4)),
-                         firstDate: isAds ? DateTime.now() : DateTime.now(),
-                         lastDate:
-                         DateTime.now().add(const Duration(days: 365)));
-                     if (date != null) {
-                       logger.d('Date: $date');
-                       onFromChanged(date);
-                     }
-                   }
+                    if (isenable) {
+                      final date = await showDatePicker(
+                          context: context,
+                          initialDate: isAds
+                              ? DateTime.now()
+                              :
+                              // DateTime.now().add(const Duration(days: 4)),
+                              DateTime.now(),
+                          // firstDate: isAds ? DateTime.now():DateTime.now().add(const Duration(days: 4)),
+                          firstDate: isAds ? DateTime.now() : DateTime.now(),
+                          lastDate:
+                              DateTime.now().add(const Duration(days: 365)));
+                      if (date != null) {
+                        //logger.d'Date: $date');
+                        onFromChanged(date);
+                      }
+                    }
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -107,15 +107,16 @@ class SelectFromToCard extends StatelessWidget {
                           "The end date is automatically calculated based on the selected package and its start date.");
                     }
                   : () async {
-                      if(isenable){
+                      if (isenable) {
                         final date0 = await showDatePicker(
                             context: context,
                             // initialDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
-                            initialDate: isAds ? DateTime.now() : DateTime.now(),
+                            initialDate:
+                                isAds ? DateTime.now() : DateTime.now(),
                             // firstDate: isAds ? DateTime.now() : DateTime.now().add(const Duration(days: 4)),
                             firstDate: isAds ? DateTime.now() : DateTime.now(),
                             lastDate:
-                            DateTime.now().add(const Duration(days: 365)));
+                                DateTime.now().add(const Duration(days: 365)));
                         if (date0 != null) {
                           onToChanged(date0);
                         }

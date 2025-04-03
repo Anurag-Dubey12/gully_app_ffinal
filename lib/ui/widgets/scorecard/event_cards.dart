@@ -2,19 +2,15 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/model/extras_model.dart';
-import 'package:gully_app/data/model/player_model.dart';
-import 'package:gully_app/data/model/scoreboard_model.dart';
-import 'package:gully_app/ui/theme/theme.dart';
-import 'package:gully_app/ui/widgets/primary_button.dart';
-import 'package:gully_app/ui/widgets/scorecard/change_bowler.dart';
-import 'package:gully_app/utils/FallbackImageProvider.dart';
-import 'package:gully_app/utils/app_logger.dart';
-import 'package:gully_app/utils/utils.dart';
+import '../../../data/model/extras_model.dart';
+import '../../../data/model/player_model.dart';
+import '../../theme/theme.dart';
+import '../primary_button.dart';
+import 'change_bowler.dart';
+import '../../../utils/app_logger.dart';
+import '../../../utils/utils.dart';
 
 import '../../../data/controller/scoreboard_controller.dart';
-import 'TieBreakerSheet.dart';
-import 'change_batter.dart';
 import 'scorecard_dialogs.dart';
 
 class PartnershipDialog extends GetView<ScoreBoardController> {
@@ -363,6 +359,11 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                               errorSnackBar('Match Over');
                               return;
                             }
+                            if (!controller.isBothBatsmenNotOut.value) {
+                              errorSnackBar(
+                                  'Please select the New batsman before using the Retire Player feature.');
+                              return;
+                            }
                             if ((controller
                                     .scoreboard.value?.inningsCompleted ??
                                 false)) {
@@ -401,6 +402,7 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                                     errorSnackBar('Innings Completed');
                                     return;
                                   }
+                                  //TODO: Modify the ui to show the new batsmen dialog
                                   showModalBottomSheet(
                                       showDragHandle: true,
                                       context: Get.context!,
@@ -409,7 +411,7 @@ class UpdateEvent extends GetView<ScoreBoardController> {
                                       isDismissible: true);
                                   // Get.bottomSheet(ChangeBatterDialog());
                                 },
-                                child: const Text('Change Batsmen',
+                                child: const Text('New Batsmen',
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 10,

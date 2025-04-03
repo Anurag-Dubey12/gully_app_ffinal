@@ -15,7 +15,7 @@ import '../../../data/controller/misc_controller.dart';
 import '../../../data/model/package_model.dart';
 import '../../../data/model/sponsor_model.dart';
 import '../../../data/model/tournament_model.dart';
-import '../../../utils/app_logger.dart';
+// import '../../../utils/app_logger.dart';
 import '../../../utils/image_picker_helper.dart';
 import '../../../utils/utils.dart';
 import '../../theme/theme.dart';
@@ -171,7 +171,7 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
         await _pickImage(source);
       }
     } catch (e) {
-      logger.d('Error picking media: $e');
+      // logger.d('Error picking media: $e');
       errorSnackBar('An error occurred while picking the media.',
           title: "Error");
     }
@@ -239,7 +239,7 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
         }
       }
     } catch (e) {
-      logger.d('Error picking image: $e');
+      //logger.d('Error picking image: $e');
       errorSnackBar('An error occurred while picking the image.',
           title: "Error");
     }
@@ -322,7 +322,7 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
         if (videoSizeInMB > 2.0) {
           _compressSubscription =
               VideoCompress.compressProgress$.subscribe((progress) {
-            logger.d('Compression progress: $progress%');
+           // logger.d('Compression progress: $progress%');
           });
 
           try {
@@ -334,7 +334,7 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
               frameRate: 15,
             );
             if (info != null && info.path != null) {
-              logger.d("Compression Completed with path: ${info.path}");
+             // logger.d("Compression Completed with path: ${info.path}");
               final compressedFile = File(info.path!);
               final compressedFileSize = await compressedFile.length();
               final compressedSizeInMB = compressedFileSize / (1024 * 1024);
@@ -352,14 +352,14 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                       _videoController!.setLooping(true);
                     });
 
-                    logger.d(
-                        'Video compressed from ${videoSizeInMB.toStringAsFixed(1)} MB to ${compressedSizeInMB.toStringAsFixed(1)} MB (${(spaceSaved).toStringAsFixed(1)} MB saved)');
+                   // logger.d(
+                    //    'Video compressed from ${videoSizeInMB.toStringAsFixed(1)} MB to ${compressedSizeInMB.toStringAsFixed(1)} MB (${(spaceSaved).toStringAsFixed(1)} MB saved)');
                   });
               } else {
-                logger.d(
-                    'Compression did not reduce size. Using original video.');
-                logger.d(
-                    'Original: ${videoSizeInMB.toStringAsFixed(2)} MB, Compressed: ${compressedSizeInMB.toStringAsFixed(2)} MB');
+                //logger.d(
+                //    'Compression did not reduce size. Using original video.');
+                //logger.d(
+                //    'Original: ${videoSizeInMB.toStringAsFixed(2)} MB, Compressed: ${compressedSizeInMB.toStringAsFixed(2)} MB');
                 setState(() {
                   _isVideoCompressed = false;
                 });
@@ -376,7 +376,7 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
         }
       }
     } catch (e) {
-      logger.d('Error picking video: $e');
+     // logger.d('Error picking video: $e');
       errorSnackBar('An error occurred while picking the video.',
           title: "Error");
     }
@@ -540,7 +540,7 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                                                   }
                                                 } catch (e) {
                                                   errorSnackBar("An error occurred. Please try again.");
-                                                  logger.e("Error deleting sponsor: $e");
+                                                //  logger.e("Error deleting sponsor: $e");
                                                 }
                                               }
                                             },
@@ -802,7 +802,7 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                                                       }
                                                     } catch (e) {
                                                       errorSnackBar("An error occurred. Please try again.");
-                                                      logger.e("Error adding sponsor: $e");
+                                                     // logger.e("Error adding sponsor: $e");
                                                     }
                                                   }
                                                 },

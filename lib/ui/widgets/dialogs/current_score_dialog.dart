@@ -52,8 +52,8 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
 
   @override
   void initState() {
-    logger.d("The match is is:${widget.match.id}");
-    logger.d("The scoreboard is:${widget.match.scoreBoard}");
+    //logger.d"The match is is:${widget.match.id}");
+    //logger.d"The scoreboard is:${widget.match.scoreBoard}");
     getMatchScoreboard();
     super.initState();
   }
@@ -70,8 +70,8 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
     final controller = Get.find<ScoreBoardController>();
     final tournamentcontroller = Get.find<TournamentController>();
     tournamentcontroller.getTournamentSponsor(widget.match.tournamentId ?? '');
-    logger.d(
-        "These tournament Sponsor are:${tournamentcontroller.tournamentSponsor.length}");
+    //logger.d(
+        // "These tournament Sponsor are:${tournamentcontroller.tournamentSponsor.length}");
     // if (tournamentcontroller.tournamentSponsor.isEmpty) {
     //   return const Center(child: CircularProgressIndicator());
     // }
@@ -80,7 +80,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
           height: Get.height * 0.4,
           child: const Center(child: CircularProgressIndicator()));
     } else if (controller.isScoreboardNull.value) {
-      logger.d("Found a scorecard null");
+      //logger.d"Found a scorecard null");
       return SizedBox(
         width: Get.width,
         child: Padding(
@@ -572,18 +572,18 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                               '${controller.scoreboard.value?.striker.name}',
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
-                                                  fontSize: 13,
-                                                  decoration: controller
-                                                              .scoreboard
-                                                              .value
-                                                              ?.striker
-                                                              .batting
-                                                              ?.outType
-                                                              .isNotEmpty ==
-                                                          true
-                                                      ? TextDecoration
-                                                          .lineThrough
-                                                      : TextDecoration.none),
+                                                fontSize: 13,
+                                                color: controller
+                                                            .scoreboard
+                                                            .value
+                                                            ?.striker
+                                                            .batting
+                                                            ?.outType
+                                                            .isNotEmpty ==
+                                                        true
+                                                    ? Colors.red
+                                                    : Colors.black,
+                                              ),
                                             ),
                                           )
                                         ],
@@ -638,7 +638,7 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                               overflow: TextOverflow.ellipsis,
                                               style: TextStyle(
                                                   fontSize: 13,
-                                                  decoration: controller
+                                                  color: controller
                                                               .scoreboard
                                                               .value
                                                               ?.nonstriker
@@ -646,9 +646,8 @@ class _ScoreBottomDialogState extends State<ScoreBottomDialog> {
                                                               ?.outType
                                                               .isNotEmpty ==
                                                           true
-                                                      ? TextDecoration
-                                                          .lineThrough
-                                                      : TextDecoration.none),
+                                                      ? Colors.red
+                                                      : Colors.black),
                                             ),
                                           )
                                         ],
@@ -746,7 +745,7 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
       controller.dispose();
     }
     _videoControllers.clear();
-    logger.d("Cleared Done");
+    //logger.d"Cleared Done");
     tournamentcontroller.indexvalue.value = 0;
     super.dispose();
   }
@@ -770,7 +769,7 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
         setState(() {});
       }
     } catch (e) {
-      logger.e("Error initializing video player for $mediaUrl: $e");
+      //logger.e("Error initializing video player for $mediaUrl: $e");
     }
   }
 

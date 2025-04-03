@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/controller/scoreboard_controller.dart';
+import '../../../data/controller/scoreboard_controller.dart';
 
 class BowlingStats extends GetView<ScoreBoardController> {
   const BowlingStats({
@@ -16,7 +16,7 @@ class BowlingStats extends GetView<ScoreBoardController> {
       ),
       child: Column(children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           child: Row(
             children: [
               Expanded(
@@ -66,7 +66,6 @@ class _BowlerPlayerStat extends GetView<ScoreBoardController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() => Padding(
-
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
             children: [

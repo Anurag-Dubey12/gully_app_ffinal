@@ -16,22 +16,22 @@ class GetConnectClient extends GetConnect {
 
     httpClient.timeout = const Duration(seconds: 12);
     httpClient.addRequestModifier<dynamic>((request) {
-      logger.d("--> ${request.method.toUpperCase()}: ${request.url}");
+      // //logger.d("--> ${request.method.toUpperCase()}: ${request.url}");
       request.headers.addAll({
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'Authorization': 'Bearer ${preferences.getToken()}'
       });
-      logger.d("Headers: ${request.headers.toString()}");
+      ////logger.d("Headers: ${request.headers.toString()}");
       return request;
     });
     httpClient.addResponseModifier((request, response) {
       if (kDebugMode) {
-        logger.i("<-- END HTTP | STATUS ${response.statusCode}");
-        logger.i(
-            "--> START RESPONSE ${request.method.toUpperCase()}: ${request.url} -->");
-        logger.i("${response.body}");
-        logger.i("<-- END RESPONSE ");
+        // logger.i("<-- END HTTP | STATUS ${response.statusCode}");
+        // logger.i(
+        //     "--> START RESPONSE ${request.method.toUpperCase()}: ${request.url} -->");
+        // logger.i("${response.body}");
+        // logger.i("<-- END RESPONSE ");
       }
       if (response.statusCode == 401) {
         preferences.clear();

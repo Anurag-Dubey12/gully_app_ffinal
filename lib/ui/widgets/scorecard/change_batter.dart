@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/select_opening_players.dart';
-import 'package:gully_app/ui/widgets/primary_button.dart';
-import 'package:gully_app/ui/widgets/scorecard/event_cards.dart';
-import 'package:gully_app/utils/app_logger.dart';
-import 'package:gully_app/utils/utils.dart';
+import '../../screens/select_opening_players.dart';
+import '../primary_button.dart';
+import 'event_cards.dart';
+import '../../../utils/app_logger.dart';
+import '../../../utils/utils.dart';
 
 import '../../../data/controller/scoreboard_controller.dart';
 import '../../../data/model/player_model.dart';
@@ -348,7 +348,7 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                     //     ? playerToOut
                     //     : controller.scoreboard.value!.striker.id;
                   }
-                  // logger.d("Selected Batsman Id:${selectedBatsman!.name}");
+                  // //logger.d"Selected Batsman Id:${selectedBatsman!.name}");
                   Navigator.pop(context, {
                     // 'batsmanId': batsmanId,
                     'outType': outType,
@@ -373,7 +373,7 @@ class _ChangeBatterWidgetState extends State<ChangeBatterWidget> {
                   //         ? playerToOut
                   //         : controller.scoreboard.value!.striker.id;
                   //   }
-                  //   logger.d("Selected Batsman Id:${selectedBatsman!.name}");
+                  //   //logger.d"Selected Batsman Id:${selectedBatsman!.name}");
                   //   Navigator.pop(context, {
                   //     'batsmanId': batsmanId,
                   //     'outType': outType,

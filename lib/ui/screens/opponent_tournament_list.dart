@@ -286,7 +286,8 @@ class _OpponentScheduleScreenState extends State<OpponentScheduleScreen>
                                 separatorBuilder: (context, index) =>
                                     SizedBox(height: Get.height * 0.01),
                                 itemBuilder: (context, index) {
-                                  final matchup = controller.matchups[index];
+                                  final matchup = controller.matchups.reversed
+                                      .toList()[index];
                                   return OpponentMatchupCard(
                                       matchup: matchup,
                                       tourid: widget.tournamentId);

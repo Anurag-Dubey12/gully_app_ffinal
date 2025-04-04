@@ -9,6 +9,8 @@ import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/notification_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
+import 'package:gully_app/ui/screens/SponsorScreen.dart';
+import 'package:gully_app/ui/screens/current_tournament_list.dart';
 import 'package:gully_app/ui/screens/promote_banner_screen.dart';
 import 'package:gully_app/ui/screens/search_tournament_screen.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
@@ -19,6 +21,7 @@ import 'package:gully_app/ui/widgets/home_screen/bannerIndicators.dart';
 import 'package:gully_app/ui/widgets/home_screen/date_times_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/ui/widgets/sponsor/addSponsorDetails.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -728,7 +731,17 @@ class _FullBannerSliderState extends State<FullBannerSlider> {
       onTap: () {
         imageViewer(context, controller.banners.value[_current].imageUrl, true,
             onTap: () {
-          Get.to(() => const BannerAdding());
+          if (controller.banners.value[_current].link == "TournamentSponsor") {
+            Get.find<TournamentController>().getOrganizerTournamentList();
+            Get.to(() => const CurrentTournamentListScreen(
+                  redirectType: RedirectType.sponsor,
+                ));
+          } else if (controller.banners.value[_current].link ==
+              "inAppBannerPromotion") {
+            Get.to(() => const BannerAdding());
+          } else {
+            Get.to(() => const BannerAdding());
+          }
         });
       },
       child: CarouselSlider(

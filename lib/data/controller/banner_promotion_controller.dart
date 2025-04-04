@@ -57,9 +57,14 @@ class PromotionController extends GetxController
 
   Future<bool> editBanner(String id, Map<String, dynamic> banner) async {
     try {
+      final response = await bannerApi.editBanner(id, banner);
+      if (response.status == false) {
+        errorSnackBar(response.message!);
+        return false;
+      }
       return true;
     } catch (e) {
-      errorSnackBar(e.toString());
+      errorSnackBar("Failed to Edit Banner");
       rethrow;
     }
   }

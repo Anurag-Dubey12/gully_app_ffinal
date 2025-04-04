@@ -850,24 +850,13 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
             borderRadius: BorderRadius.circular(20.0),
           ),
           backgroundColor: Colors.white,
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
+          child: const Padding(
+            padding:EdgeInsets.all(20.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // ClipRRect(
-                //   borderRadius: BorderRadius.circular(12.0),
-                //   child: Lottie.asset(
-                //     'assets/animation/video.json',
-                //     width: 120,
-                //     height: 120,
-                //     fit: BoxFit.contain,
-                //     frameRate: const FrameRate(60),
-                //     repeat: true,
-                //   ),
-                // ),
-                const SizedBox(height: 20),
-                const Text(
+                SizedBox(height: 20),
+                Text(
                   "Uploading Sponsor Video...",
                   style: TextStyle(
                     fontSize: 18,
@@ -875,8 +864,8 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                     color: Colors.black,
                   ),
                 ),
-                const SizedBox(height: 10),
-                const Text(
+                SizedBox(height: 10),
+                Text(
                   "Please wait while we upload your video.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -884,7 +873,7 @@ class _SponsorAddingScreenState extends State<SponsorAddingScreen> {
                     color: Colors.grey,
                   ),
                 ),
-                const SizedBox(height: 20),
+                 SizedBox(height: 20),
               ],
             ),
           ),

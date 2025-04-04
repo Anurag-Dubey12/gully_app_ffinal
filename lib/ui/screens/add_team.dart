@@ -172,7 +172,8 @@ class _AddTeamState extends State<AddTeam> {
                                 if (!base64Image.contains(RegExp(
                                     r'data:image\/(png|jpeg);base64,'))) {
                                   // ignore: use_build_context_synchronously
-                                  errorSnackBar(AppConstants.please_select_a_valid_image);
+                                  errorSnackBar(
+                                      AppConstants.please_select_a_valid_image);
                                   return;
                                 }
                               }

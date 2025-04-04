@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:isolate';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -54,7 +57,8 @@ class BannerAddingState extends State<BannerAdding> {
   TournamentModel? selectedTournament;
   Map<String, dynamic>? selectedPackage;
   bool isInfoShown = false;
-
+  DateTime now = DateTime.now();
+  DateTime? endDate;
   Package? package;
 
   @override
@@ -64,6 +68,7 @@ class BannerAddingState extends State<BannerAdding> {
       _addressController.text = widget.banner!.bannerlocationaddress;
       from = widget.banner?.startDate;
       to = widget.banner?.endDate;
+      endDate = widget.banner!.endDate;
       selectedPackage = {
         'package': {
           '_id': widget.banner!.packageId.id,
@@ -469,7 +474,7 @@ class BannerAddingState extends State<BannerAdding> {
                                                 : null)
                                             : null;
                                     //logger.d
-                                        // "Selected Package Id:${selectedPackage!['package']['_id']}");
+                                    // "Selected Package Id:${selectedPackage!['package']['_id']}");
                                     if (from != null &&
                                         selectedPackage != null) {
                                       to = calculateEndDate(
@@ -521,14 +526,20 @@ class BannerAddingState extends State<BannerAdding> {
                         PrimaryButton(
                             title:
                                 widget.banner != null ? 'Update ' : 'Pay Now',
-                            isDisabled: !connectionController.isConnected.value,
+                            isDisabled:
+                                !connectionController.isConnected.value ||
+                                        widget.banner != null
+                                    ? now.isAfter(widget.banner!.endDate)
+                                    : false,
                             onTap: () async {
                               try {
                                 final controller =
                                     Get.find<PromotionController>();
-                                if (_image == null) {
-                                  errorSnackBar('Please select an image');
-                                  return;
+                                if (widget.banner == null) {
+                                  if (_image == null) {
+                                    errorSnackBar('Please select an image');
+                                    return;
+                                  }
                                 }
                                 if (bannerTitleController.text.isEmpty) {
                                   errorSnackBar("Please enter banner title");
@@ -543,13 +554,12 @@ class BannerAddingState extends State<BannerAdding> {
                                       "Please select date for promotion");
                                   return;
                                 }
-                                String? base64;
+                                String? base64Image;
                                 if (_image != null) {
-                                  base64 = await convertImageToBase64(_image!);
+                                  base64Image =
+                                      await convertImageToBase64(_image!);
                                 }
 
-                                //logger.d
-                                    // "The lat and log is:${location.latitude} ${location.longitude}");
                                 Map<String, dynamic> bannerdata = {
                                   "banner_title": bannerTitleController.text,
                                   "banner_image": _image?.path,
@@ -563,21 +573,26 @@ class BannerAddingState extends State<BannerAdding> {
                                       ['_id'],
                                 };
                                 if (widget.banner != null) {
+                                  await _addBannerInIsolate(context);
+
                                   bool isOk = await controller
                                       .editBanner(widget.banner!.id, {
                                     'banner_title': bannerTitleController.text,
-                                    'banner_image': base64,
+                                    'banner_image': base64Image ??
+                                        widget.banner!.bannerImage,
                                   });
                                   if (isOk) {
+                                    Navigator.of(context).pop();
                                     successSnackBar(
-                                        'Banner Updated Successfully');
+                                            'Banner Updated Successfully')
+                                        .then((value) => Get.back());
                                     Get.forceAppUpdate();
                                   }
                                 } else {
                                   controller.banner.value = bannerdata;
                                   Get.to(() => BannerPaymentPage(
                                         banner: controller.banner.value,
-                                        base64: base64 ?? '',
+                                        base64: base64Image ?? '',
                                         SelectedPakcage: selectedPackage ?? {},
                                       ));
                                 }
@@ -588,21 +603,23 @@ class BannerAddingState extends State<BannerAdding> {
                             }),
                         const SizedBox(height: 10),
                         widget.banner != null
-                            ? const Center(
+                            ? Center(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.warning,
                                       color: Colors.red,
                                     ),
-                                    SizedBox(width: 8),
+                                    const SizedBox(width: 8),
                                     Text(
-                                      "Only Banner Title and Image Can Be Edited",
+                                      now.isAfter(widget.banner!.endDate)
+                                          ? "Your Banner Promotion has expired"
+                                          : "Only Banner Title and Image Can Be Edited",
                                       textAlign: TextAlign.center,
                                       maxLines: 3,
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Colors.red,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -618,6 +635,74 @@ class BannerAddingState extends State<BannerAdding> {
         ),
       ),
     );
+  }
+
+  Future<void> _addBannerInIsolate(BuildContext context) async {
+    final receivePort = ReceivePort();
+    final progressPort = ReceivePort();
+    final progressController = StreamController<double>();
+    final completer = Completer<dynamic>();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20.0),
+          ),
+          backgroundColor: Colors.white,
+          child: const Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 20),
+                Text(
+                  "Uploading Your Banner...",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 10),
+                Text(
+                  "Please wait while we upload Your Banner.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                ),
+                SizedBox(height: 20),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+
+    receivePort.listen((message) {
+      if (message is String && message == "done" && !completer.isCompleted) {
+        completer.complete("done");
+      }
+    });
+
+    progressPort.listen((message) {
+      if (message is double) {
+        progressController.add(message);
+      }
+    });
+
+    compute(_processbannerInIsolate, {
+      'sendPort': receivePort.sendPort,
+      'progressPort': progressPort.sendPort,
+      'image': _image?.path
+    });
+
+    final result = await completer.future;
+
+    return result;
   }
 
   DateTime calculateEndDate(DateTime startDate, Map<String, dynamic> package) {
@@ -772,4 +857,13 @@ class BannerAddingState extends State<BannerAdding> {
 //     ),
 //   );
 // }
+}
+
+Future<void> _processbannerInIsolate(Map<String, dynamic> args) async {
+  final SendPort sendPort = args['sendPort'];
+  final SendPort progressPort = args['progressPort'];
+  final String image = args['image'];
+
+  int progress = 0;
+  sendPort.send("done");
 }

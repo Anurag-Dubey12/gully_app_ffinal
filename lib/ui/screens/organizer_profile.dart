@@ -10,6 +10,8 @@ import 'package:gully_app/ui/screens/current_tournament_list.dart';
 import 'package:gully_app/ui/screens/promote_banner_screen.dart';
 import 'package:gully_app/ui/screens/select_match_type_for_scoreboard.dart';
 import 'package:gully_app/ui/screens/select_performance_type.dart';
+import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/my_shop.dart';
+import 'package:gully_app/ui/screens/shop/register_shop.dart';
 import 'package:gully_app/ui/screens/tournament_requests_screen.dart';
 import 'package:gully_app/ui/screens/txn_history_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
@@ -335,12 +337,12 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                                     ));
                               },
                             ),
-                            // ProfileTileCard(
-                            //   text: 'View My Shop',
-                            //   onTap: () {
-                            //     Get.to(() => const MyShop());
-                            //   },
-                            // ),
+                            ProfileTileCard(
+                              text: 'View My Shop',
+                              onTap: () {
+                                Get.to(() => const RegisterShop());
+                              },
+                            ),
                             // ProfileTileCard(
                             //   text: 'View My Services',
                             //   onTap: () {

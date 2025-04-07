@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/ui/screens/shop/add_product.dart';
+import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/add_product.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'dart:io';

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../data/controller/shop_controller.dart';
-import '../../../data/model/shop_model.dart';
+import '../../../../data/controller/shop_controller.dart';
+import '../../../../data/model/shop_model.dart';
 import 'my_shop_dashboard.dart';
-import '../../theme/theme.dart';
-import '../../widgets/arc_clipper.dart';
+import '../../../theme/theme.dart';
+import '../../../widgets/arc_clipper.dart';
 
 class MyShop extends GetView<ShopController> {
   const MyShop({Key? key}) : super(key: key);

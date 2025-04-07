@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/shop_model.dart';
-import 'package:gully_app/ui/screens/shop/my_shop.dart';
+import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/my_shop.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 import '../../data/controller/auth_controller.dart';

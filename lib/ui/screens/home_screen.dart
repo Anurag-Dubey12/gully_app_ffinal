@@ -13,6 +13,8 @@ import 'package:gully_app/ui/screens/SponsorScreen.dart';
 import 'package:gully_app/ui/screens/current_tournament_list.dart';
 import 'package:gully_app/ui/screens/promote_banner_screen.dart';
 import 'package:gully_app/ui/screens/search_tournament_screen.dart';
+import 'package:gully_app/ui/screens/service/service_home_screen.dart';
+import 'package:gully_app/ui/screens/shop/shops_home_screen.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/app_drawer.dart';
@@ -301,8 +303,9 @@ class _HomePageState extends State<HomePage>
     tournamentController.filter.value = 'current';
     return [
       const HomePageContent(),
+      const ShopHome(),
       const SizedBox(),
-      // const ServiceHomeScreen(),
+      const ShopHome(),
       // const ServiceHomeScreen(),
       const LiveScore()
     ];
@@ -316,12 +319,12 @@ class _HomePageState extends State<HomePage>
         activeColorPrimary: AppTheme.primaryColor,
         inactiveColorPrimary: Colors.grey,
       ),
-      // PersistentBottomNavBarItem(
-      //   icon: const Icon(Icons.home_filled),
-      //   title: "vendor",
-      //   activeColorPrimary: AppTheme.primaryColor,
-      //   inactiveColorPrimary: Colors.grey,
-      // ),
+      PersistentBottomNavBarItem(
+        icon: const Icon(Icons.sports_kabaddi_outlined),
+        title: "Shop",
+        activeColorPrimary: AppTheme.primaryColor,
+        inactiveColorPrimary: Colors.grey,
+      ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.circle),
         title: "",
@@ -329,12 +332,12 @@ class _HomePageState extends State<HomePage>
         inactiveColorPrimary: Colors.transparent,
         onPressed: (context) {},
       ),
-      // PersistentBottomNavBarItem(
-      //   icon: const Icon(Icons.home_filled),
-      //   title: "vendor",
-      //   activeColorPrimary: AppTheme.primaryColor,
-      //   inactiveColorPrimary: Colors.grey,
-      // ),
+      PersistentBottomNavBarItem(
+        icon: const Icon(Icons.room_service),
+        title: "Service",
+        activeColorPrimary: AppTheme.primaryColor,
+        inactiveColorPrimary: Colors.grey,
+      ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.live_tv_outlined),
         title: "Live Score",

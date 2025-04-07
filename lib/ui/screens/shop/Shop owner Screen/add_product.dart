@@ -6,10 +6,10 @@ import 'package:gully_app/ui/widgets/custom_drop_down_field.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../utils/app_logger.dart';
-import '../../../utils/image_picker_helper.dart';
-import '../../widgets/create_tournament/form_input.dart';
-import '../../widgets/primary_button.dart';
+import '../../../../utils/app_logger.dart';
+import '../../../../utils/image_picker_helper.dart';
+import '../../../widgets/create_tournament/form_input.dart';
+import '../../../widgets/primary_button.dart';
 
 class AddProduct extends StatefulWidget {
   final Map<String, dynamic>? product;

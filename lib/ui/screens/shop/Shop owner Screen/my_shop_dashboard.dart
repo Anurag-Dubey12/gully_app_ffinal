@@ -3,9 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/ui/theme/theme.dart';
-import '../../../data/controller/shop_controller.dart';
-import '../../widgets/gradient_builder.dart';
-import 'product_detail_screen.dart';
+import '../../../../data/controller/shop_controller.dart';
+import '../../../widgets/gradient_builder.dart';
+import '../product_detail_screen.dart';
 import 'add_product.dart';
 
 class ShopDashboard extends StatefulWidget {

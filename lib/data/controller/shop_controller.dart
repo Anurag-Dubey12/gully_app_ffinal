@@ -21,6 +21,8 @@ class ShopController extends GetxController with StateMixin {
     loadShopsData();
   }
 
+    // MARK: Add Shop
+    
   void updateVendorDetails(vendor_model vendorData) {
     vendor.value = vendorData;
   }

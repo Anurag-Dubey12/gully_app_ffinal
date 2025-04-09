@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../screens/shop/shop_details_screen.dart';
+import '../../screens/shop/User Screen/shop_details_screen.dart';
 
 class ShopCard extends StatelessWidget {
   final Map<String, dynamic> shop;

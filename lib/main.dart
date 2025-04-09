@@ -18,6 +18,7 @@ import 'package:gully_app/data/api/ranking_api.dart';
 import 'package:gully_app/data/api/score_board_api.dart';
 import 'package:gully_app/data/api/service_api.dart';
 import 'package:gully_app/data/api/team_api.dart';
+import 'package:gully_app/data/controller/SelectLocationScreenController.dart';
 import 'package:gully_app/data/controller/banner_promotion_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/notification_controller.dart';
@@ -220,6 +221,8 @@ class _MyAppState extends State<MyApp> {
         Bind.put<ScoreBoardController>(
             ScoreBoardController(scoreboardApi: Get.find())),
         Bind.put<TournamentController>(TournamentController(Get.find())),
+        Bind.put<SelectLocationScreenController>(
+            SelectLocationScreenController()),
         Bind.lazyPut<TournamentController>(
             () => TournamentController(Get.find())),
         Bind.put<PromotionController>(
@@ -228,7 +231,7 @@ class _MyAppState extends State<MyApp> {
         //         () => PromotionController(bannerApi: Get.find())),
         Bind.lazyPut<ServiceController>(
             () => ServiceController(serviceApi: Get.find())),
-        Bind.lazyPut<ShopController>(() => ShopController()),
+        Bind.lazyPut<ShopController>(() => ShopController(shopApi: Get.find())),
         Bind.put<MiscController>(MiscController(repo: Get.find())),
       ],
       defaultTransition: Transition.cupertino,

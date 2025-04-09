@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../data/controller/auth_controller.dart';
-import '../../widgets/shop/shop_card.dart';
+import '../../../../data/controller/auth_controller.dart';
+import '../../../widgets/shop/shop_card.dart';
 
 class ShopHome extends StatefulWidget {
   const ShopHome({super.key});

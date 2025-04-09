@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
+import 'package:gully_app/data/api/shop_api.dart';
 import 'package:gully_app/data/model/vendor_model.dart';
 import 'package:gully_app/data/model/shop_model.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,15 +14,27 @@ class ShopController extends GetxController with StateMixin {
   RxList<shop_model> shops = <shop_model>[].obs;
   Rx<XFile?> vendorDocumentImage = Rx<XFile?>(null);
   RxList<Map<String, dynamic>> products = <Map<String, dynamic>>[].obs;
-
+  final ShopApi shopApi;
+  ShopController({required this.shopApi}) {
+    // getCurrentLocation();
+    // Geolocator.getServiceStatusStream().listen((event) {
+    //   getCurrentLocation();
+    // });
+    change(GetStatus.empty());
+  }
   @override
   void onInit() {
     super.onInit();
     loadShopsData();
   }
 
-    // MARK: Add Shop
-    
+  // MARK: Register Shop
+  Future<shop_model> registerShop(Map<String, dynamic> shop) async {
+    final result = await shopApi.registerShop(shop);
+
+    return shop_model.fromJson(result.data!);
+  }
+
   void updateVendorDetails(vendor_model vendorData) {
     vendor.value = vendorData;
   }

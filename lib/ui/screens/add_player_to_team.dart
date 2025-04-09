@@ -691,7 +691,8 @@ class _PlayerCardState extends State<PlayerCard> {
                           Get.dialog(
                             AlertDialog.adaptive(
                               title: const Text(AppConstants.deletePlayer),
-                              content: const Text(AppConstants.deletePlayerConfirmation),
+                              content: const Text(
+                                  AppConstants.deletePlayerConfirmation),
                               actions: [
                                 TextButton(
                                   onPressed: () {
@@ -788,15 +789,15 @@ class AddPlayerDialog extends GetView<TeamController> {
                         ),
                       ],
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    child: const Padding(
+                      padding: EdgeInsets.all(8.0),
                       child: Row(
                         children: [
-                          const CircleAvatar(
+                          CircleAvatar(
                             backgroundColor: AppTheme.secondaryYellowColor,
                             child: Icon(Icons.person_add),
                           ),
-                          const SizedBox(width: 15),
+                          SizedBox(width: 15),
                           Text(AppConstants.addViaPhoneNumber),
                         ],
                       ),
@@ -1149,7 +1150,6 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                     if (value!.isEmpty) {
                       return AppConstants.fillAllFields;
                     }
-                    // prevent only spaces
                     if (value.trim().isEmpty) {
                       return AppConstants.fillAllFields;
                     }
@@ -1160,7 +1160,7 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                   },
                 ),
                 const SizedBox(height: 20),
-                Text(AppConstants.contactNumber),
+                const Text(AppConstants.contactNumber),
                 const SizedBox(height: 10),
                 CustomTextField(
                   controller: phoneController,
@@ -1226,7 +1226,16 @@ class _AddPlayerDetailsState extends State<_AddPlayerDetails> {
                         phoneController.text.length != 10 ||
                         !phoneController.text.isNumericOnly) {
                       setState(() {
-                        errorSnackBar(AppConstants.validPhoneNumber);
+                        Get.snackbar(
+                          'Oops',
+                          AppConstants.validPhoneNumber,
+                          snackPosition: SnackPosition.top,
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                          margin: const EdgeInsets.all(10),
+                          padding: const EdgeInsets.all(12),
+                          borderRadius: 8,
+                        );
                       });
                       return;
                     }

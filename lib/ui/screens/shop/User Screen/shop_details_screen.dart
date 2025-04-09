@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../theme/theme.dart';
+import '../../../theme/theme.dart';
 import 'product_detail_screen.dart';
 
 class ShopDetailsScreen extends StatefulWidget {

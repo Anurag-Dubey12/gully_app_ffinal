@@ -11,7 +11,7 @@ import 'package:gully_app/ui/screens/promote_banner_screen.dart';
 import 'package:gully_app/ui/screens/select_match_type_for_scoreboard.dart';
 import 'package:gully_app/ui/screens/select_performance_type.dart';
 import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/my_shop.dart';
-import 'package:gully_app/ui/screens/shop/register_shop.dart';
+import 'package:gully_app/ui/screens/shop/User%20Screen/register_shop.dart';
 import 'package:gully_app/ui/screens/tournament_requests_screen.dart';
 import 'package:gully_app/ui/screens/txn_history_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';

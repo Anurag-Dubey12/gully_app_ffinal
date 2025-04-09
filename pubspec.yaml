@@ -2,7 +2,7 @@ name: gully_app
 description: A new Flutter project.
 publish_to: "none"
 
-version: 1.1.10+12
+version: 1.1.11+13
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -27,6 +27,7 @@ dependencies:
   google_places_flutter: ^2.1.0
   video_player: ^2.9.3
   mime: ^1.0.4
+  google_mlkit_text_recognition: ^0.15.0
   http: ^1.2.1
   connectivity_plus: ^6.1.1
   permission_handler: ^11.0.1

@@ -211,8 +211,8 @@ class _CardState extends State<_Card> {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<TournamentController>();
-   // logger.d(
-   //     "The Total Tournament: ${controller.tournamentList.map((t) => t.tournamentName)}");
+    // logger.d(
+    //     "The Total Tournament: ${controller.tournamentList.map((t) => t.tournamentName)}");
     //logger.d('build');
 
     return GestureDetector(
@@ -353,7 +353,7 @@ class _CardState extends State<_Card> {
               Get.to(() => SponsorPackageScreen(tournament: widget.tournament));
             } else {
               //logger.d(
-                  // "Tournament sponsor Id:${widget.tournament.SponsorshipPackageId}");
+              // "Tournament sponsor Id:${widget.tournament.SponsorshipPackageId}");
               Get.to(() => SponsorScreen(tournament: widget.tournament));
             }
             break;
@@ -519,7 +519,7 @@ class _InputRoundNumberState extends State<InputRoundNumber> {
     final authController = Get.find<AuthController>();
     final TournamnetController = Get.find<TournamentController>();
     //logger.d(
-        // "The id is:${authController.state!.id} and authority id is:${TournamnetController.tournamentauthority}");
+    // "The id is:${authController.state!.id} and authority id is:${TournamnetController.tournamentauthority}");
     return Dialog(
       child: Padding(
         padding: const EdgeInsets.all(16.0),

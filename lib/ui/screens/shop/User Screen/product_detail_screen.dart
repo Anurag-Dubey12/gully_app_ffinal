@@ -6,7 +6,7 @@ import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'dart:io';
 
-import '../../widgets/gradient_builder.dart';
+import '../../../widgets/gradient_builder.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final Map<String, dynamic> product;

@@ -20,6 +20,7 @@ class FormInput extends StatelessWidget {
   final String? infotitle;
 //ontap
   final Function()? onTap;
+  final bool isUpperCase;
   final int? maxLines;
   const FormInput(
       {super.key,
@@ -37,6 +38,7 @@ class FormInput extends StatelessWidget {
       this.maxLines,
       this.iswhite = false,
       this.isinfo = false,
+      this.isUpperCase = false,
       this.maxLength});
 
   @override
@@ -63,12 +65,11 @@ class FormInput extends StatelessWidget {
                             return AlertDialog(
                               title: Center(
                                 child: Text(
-                                  infotitle??'',
+                                  infotitle ?? '',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: Colors.black,
-                                    fontSize: 15
-                                  ),
+                                      fontSize: 15),
                                   maxLines: 2,
                                 ),
                               ),
@@ -111,6 +112,7 @@ class FormInput extends StatelessWidget {
             maxLines: maxLines,
             controller: controller,
             textInputType: textInputType,
+            isUpperCase: isUpperCase,
           ),
         ],
       ),

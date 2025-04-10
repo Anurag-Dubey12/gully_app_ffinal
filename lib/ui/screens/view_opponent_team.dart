@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/team_model.dart';
+import 'package:gully_app/utils/FallbackImageProvider.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -131,9 +132,15 @@ class _ViewOpponentTeamState extends State<ViewOpponentTeam> {
                                         children: [
                                           CircleAvatar(
                                             radius: 49,
-                                            backgroundImage: NetworkImage(
-                                                toImageUrl(
-                                                    widget.team.logo ?? "")),
+                                            // backgroundImage: NetworkImage(
+                                            //     toImageUrl(
+                                            //         widget.team.logo ?? "")
+                                            //         ),
+                                            backgroundImage:
+                                                FallbackImageProvider(
+                                                    toImageUrl(
+                                                        widget.team.logo ?? ""),
+                                                    "assets/images/logo.png"),
                                           ),
                                         ],
                                       ),
@@ -192,7 +199,7 @@ class _ViewOpponentTeamState extends State<ViewOpponentTeam> {
                                         );
                                       }),
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),

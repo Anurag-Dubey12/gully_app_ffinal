@@ -296,9 +296,9 @@ class _HomePageState extends State<HomePage>
     tournamentController.filter.value = 'current';
     return [
       const HomePageContent(),
-      const ShopHome(),
+      // const ShopHome(),
       const SizedBox(),
-      const ShopHome(),
+      // const ShopHome(),
       // const ServiceHomeScreen(),
       const LiveScore()
     ];
@@ -312,12 +312,12 @@ class _HomePageState extends State<HomePage>
         activeColorPrimary: AppTheme.primaryColor,
         inactiveColorPrimary: Colors.grey,
       ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.sports_kabaddi_outlined),
-        title: "Shop",
-        activeColorPrimary: AppTheme.primaryColor,
-        inactiveColorPrimary: Colors.grey,
-      ),
+      // PersistentBottomNavBarItem(
+      //   icon: const Icon(Icons.sports_kabaddi_outlined),
+      //   title: "Shop",
+      //   activeColorPrimary: AppTheme.primaryColor,
+      //   inactiveColorPrimary: Colors.grey,
+      // ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.circle),
         title: "",
@@ -325,12 +325,12 @@ class _HomePageState extends State<HomePage>
         inactiveColorPrimary: Colors.transparent,
         onPressed: (context) {},
       ),
-      PersistentBottomNavBarItem(
-        icon: const Icon(Icons.room_service),
-        title: "Service",
-        activeColorPrimary: AppTheme.primaryColor,
-        inactiveColorPrimary: Colors.grey,
-      ),
+      // PersistentBottomNavBarItem(
+      //   icon: const Icon(Icons.room_service),
+      //   title: "Service",
+      //   activeColorPrimary: AppTheme.primaryColor,
+      //   inactiveColorPrimary: Colors.grey,
+      // ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.live_tv_outlined),
         title: "Live Score",

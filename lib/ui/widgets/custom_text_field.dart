@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   final String? hintText;
@@ -17,6 +18,7 @@ class CustomTextField extends StatelessWidget {
   final bool? filled;
   final int? maxLines;
   final int? minLines;
+  final bool isUpperCase;
 
   final int? maxLen;
   const CustomTextField(
@@ -37,6 +39,7 @@ class CustomTextField extends StatelessWidget {
       this.filled,
       this.maxLines,
       this.minLines,
+      this.isUpperCase = false,
       this.maxLen});
 
   @override
@@ -53,6 +56,9 @@ class CustomTextField extends StatelessWidget {
       minLines: maxLines,
       // smartDashesType: SmartDashe
       // sType.enabled,
+      inputFormatters: isUpperCase
+    ? [UpperCaseTextFormatter()]
+    : [],
 
       readOnly: readOnly ?? false,
       onTap: onTap == null ? () {} : () => onTap!(),
@@ -90,6 +96,17 @@ class CustomTextField extends StatelessWidget {
                 borderSide: const BorderSide(color: Color(0xff737382)),
               ),
       ),
+    );
+  }
+}
+
+class UpperCaseTextFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    return newValue.copyWith(
+      text: newValue.text.toUpperCase(),
+      selection: newValue.selection,
     );
   }
 }

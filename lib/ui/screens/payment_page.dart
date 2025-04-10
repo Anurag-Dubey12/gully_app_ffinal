@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
+import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/tournament_model.dart';
 import 'package:gully_app/ui/screens/coupon_view.dart';
@@ -103,6 +104,7 @@ class _PaymentPageState extends State<PaymentPage> {
   @override
   Widget build(BuildContext context) {
     final TournamentController controller = Get.find<TournamentController>();
+    final MiscController connectionController = Get.find<MiscController>();
     // getFee();
     return GradientBuilder(
       child: Scaffold(
@@ -230,25 +232,20 @@ class _PaymentPageState extends State<PaymentPage> {
                       ],
                     ),
                     const SizedBox(height: 22),
-                    Row(
-                      children: [
-                        Text('Tournament Prize:',
-                            style: TextStyle(
-                              // color: AppTheme.secondaryYellowColor,
-                              fontSize: 14,
-                              color: Colors.grey.shade800,
-                              fontWeight: FontWeight.w400,
-                            )),
-                        const Spacer(),
-                        Text(widget.tournament['tournamentPrize'] ?? "N/A",
-                            style: TextStyle(
-                              // color: AppTheme.secondaryYellowColor,
-                              fontSize: 16,
-                              color: Colors.grey.shade800,
-                              fontWeight: FontWeight.w600,
-                            )),
-                      ],
-                    ),
+                    Text('Tournament Prize:',
+                        style: TextStyle(
+                          // color: AppTheme.secondaryYellowColor,
+                          fontSize: 14,
+                          color: Colors.grey.shade800,
+                          fontWeight: FontWeight.w400,
+                        )),
+                    Text(widget.tournament['tournamentPrize'] ?? "N/A",
+                        style: TextStyle(
+                          // color: AppTheme.secondaryYellowColor,
+                          fontSize: 16,
+                          color: Colors.grey.shade800,
+                          fontWeight: FontWeight.w600,
+                        )),
                     const SizedBox(height: 15),
                     Row(
                       children: [
@@ -550,14 +547,19 @@ class _PaymentPageState extends State<PaymentPage> {
                       ),
                       child: TextButton(
                         onPressed: () {
-                          final response =
-                              controller.createTournament(widget.tournament);
-                          successSnackBar('Tournament Create Successfully')
-                              .then(
-                            (value) => Get.offAll(() => const HomeScreen(),
-                                predicate: (route) =>
-                                    route.name == '/HomeScreen'),
-                          );
+                          if (connectionController.isConnected.value) {
+                            final response =
+                                controller.createTournament(widget.tournament);
+                            successSnackBar('Tournament Create Successfully')
+                                .then(
+                              (value) => Get.offAll(() => const HomeScreen(),
+                                  predicate: (route) =>
+                                      route.name == '/HomeScreen'),
+                            );
+                          } else {
+                            errorSnackBar(
+                                'No Internet Connection. Please try again later.');
+                          }
                         },
                         child: const Text('Submit',
                             style: TextStyle(

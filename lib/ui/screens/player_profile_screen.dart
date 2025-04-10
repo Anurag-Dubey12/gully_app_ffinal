@@ -9,6 +9,7 @@ import 'package:gully_app/ui/screens/my_teams.dart';
 import 'package:gully_app/ui/screens/opponent_tournament_list.dart';
 import 'package:gully_app/ui/screens/promote_banner_screen.dart';
 import 'package:gully_app/ui/screens/select_match_type_for_scoreboard.dart';
+import 'package:gully_app/ui/screens/txn_history_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -270,6 +271,12 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                             //     Get.to(() => const PromoteBannerScreen());
                             //   },
                             // ),
+                            ProfileTileCard(
+                              text: 'Transaction History',
+                              onTap: () {
+                                Get.to(() => const TxnHistoryScreen());
+                              },
+                            ),
                           ],
                         ),
                       ),

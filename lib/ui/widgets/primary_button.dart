@@ -9,6 +9,7 @@ class PrimaryButton extends StatefulWidget {
   final bool? isDisabled;
   final double? fontSize;
   final String? disabledText;
+  final Color color;
   const PrimaryButton(
       {super.key,
       required this.onTap,
@@ -16,6 +17,7 @@ class PrimaryButton extends StatefulWidget {
       this.isLoading,
       this.isDisabled,
       this.fontSize,
+      this.color = AppTheme.primaryColor,
       this.disabledText});
 
   @override
@@ -47,7 +49,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
             borderRadius: const BorderRadius.all(Radius.circular(8)),
             color: (widget.isDisabled ?? false)
                 ? Colors.grey.shade400
-                : AppTheme.primaryColor,
+                : widget.color,
             boxShadow: const [
               BoxShadow(
                 color: Color.fromRGBO(100, 93, 93, 0.4),

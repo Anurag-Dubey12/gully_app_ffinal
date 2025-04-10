@@ -3,13 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'package:gully_app/data/controller/SelectLocationScreenController.dart';
+import 'package:gully_app/config/app_constants.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/ui/screens/select_location.dart';
 import 'package:gully_app/ui/screens/shop_payment_screen.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
-import 'package:gully_app/ui/widgets/shop/image_upload.dart';
+import 'package:gully_app/ui/widgets/shop/aadhar_card_upload.dart';
 import 'package:gully_app/ui/widgets/shop/shop_imagepicker.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -21,323 +20,6 @@ import '../../../../data/model/vendor_model.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/create_tournament/form_input.dart';
 import '../../../widgets/shop/business_hours.dart';
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:get/get.dart';
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:get/get.dart';
-
-class AadhaarVerificationScreen extends StatefulWidget {
-  @override
-  _AadhaarVerificationScreenState createState() =>
-      _AadhaarVerificationScreenState();
-}
-
-class _AadhaarVerificationScreenState extends State<AadhaarVerificationScreen> {
-  File? _frontImageFile;
-  File? _backImageFile;
-  bool isProcessingAadhaar = false;
-  String aadharnumber = '';
-  String dob = '';
-  String name = '';
-  String aadharnumberBack = '';
-  String nameBack = '';
-  final TextEditingController _identificationNumberController =
-      TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _dobController = TextEditingController();
-
-  @override
-  void dispose() {
-    _identificationNumberController.dispose();
-    _nameController.dispose();
-    _dobController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _pickImage(ImageSource source, {bool isFrontSide = true}) async {
-    final ImagePicker picker = ImagePicker();
-    try {
-      final XFile? image = await picker.pickImage(source: source);
-      if (image != null) {
-        setState(() {
-          if (isFrontSide) {
-            _frontImageFile = File(image.path);
-          } else {
-            _backImageFile = File(image.path);
-          }
-        });
-        // Trigger text extraction after selecting the image
-        if (isFrontSide) {
-          _extractAadhaarInfo(_frontImageFile!, isFrontSide: true);
-        } else {
-          _extractAadhaarInfo(_backImageFile!, isFrontSide: false);
-        }
-      }
-    } catch (e) {
-      errorSnackBar('An error occurred while picking the image.',
-          title: "Error");
-    }
-  }
-
-  Future<void> _extractAadhaarInfo(File imageFile,
-      {required bool isFrontSide}) async {
-    setState(() {
-      isProcessingAadhaar = true;
-    });
-
-    try {
-      // Create an InputImage from the file
-      final inputImage = InputImage.fromFile(imageFile);
-
-      // Initialize the text recognizer
-      final textRecognizer = TextRecognizer();
-
-      // Process the image
-      final RecognizedText recognizedText =
-          await textRecognizer.processImage(inputImage);
-
-      // Release resources
-      await textRecognizer.close();
-
-      // Extract Aadhaar number using regex
-      final aadhaarRegex = RegExp(r'\d{4}\s\d{4}\s\d{4}|\d{12}');
-      final dobRegex = RegExp(r'\d{2}/\d{2}/\d{4}');
-
-      String extractedName = "";
-      String extractedDob = "";
-      String extractedAadhaar = "";
-
-      // Check each text block for Aadhaar number, name, and DOB
-      for (TextBlock block in recognizedText.blocks) {
-        final text = block.text;
-
-        // Try to find Aadhaar number
-        final aadhaarMatch = aadhaarRegex.firstMatch(text);
-        if (aadhaarMatch != null && extractedAadhaar.isEmpty) {
-          extractedAadhaar = aadhaarMatch.group(0)!.replaceAll(' ', '');
-        }
-
-        // Try to find DOB
-        final dobMatch = dobRegex.firstMatch(text);
-        if (dobMatch != null && extractedDob.isEmpty) {
-          extractedDob = dobMatch.group(0)!;
-        }
-
-        // Look for name - typically found near "Name:" or similar text
-        if (text.toLowerCase().contains('name') && extractedName.isEmpty) {
-          final nameLines = text.split('\n');
-          for (int i = 0; i < nameLines.length; i++) {
-            if (nameLines[i].toLowerCase().contains('name')) {
-              if (i + 1 < nameLines.length) {
-                extractedName = nameLines[i + 1].trim();
-                break;
-              }
-            }
-          }
-        }
-      }
-
-      // Update the state with extracted information
-      setState(() {
-        if (isFrontSide) {
-          aadharnumber = extractedAadhaar;
-          dob = extractedDob;
-          name = extractedName;
-
-          // Update form fields with extracted values
-          _identificationNumberController.text = aadharnumber;
-          _nameController.text = name;
-          _dobController.text = dob;
-        } else {
-          aadharnumberBack = extractedAadhaar;
-          nameBack = extractedName;
-        }
-
-        isProcessingAadhaar = false;
-      });
-
-      // Show feedback to user
-      if (aadharnumber.isNotEmpty ||
-          dob.isNotEmpty ||
-          name.isNotEmpty ||
-          aadharnumberBack.isNotEmpty ||
-          nameBack.isNotEmpty) {
-        final extractedItems = [
-          if (aadharnumber.isNotEmpty) "Front Aadhaar: $aadharnumber",
-          if (name.isNotEmpty) "Front Name: $name",
-          if (dob.isNotEmpty) "Front DOB: $dob",
-          if (aadharnumberBack.isNotEmpty) "Back Aadhaar: $aadharnumberBack",
-          if (nameBack.isNotEmpty) "Back Name: $nameBack",
-        ];
-
-        Get.snackbar(
-          "Information Extracted",
-          "Successfully extracted: ${extractedItems.join(', ')}",
-          backgroundColor: Colors.green.withOpacity(0.7),
-          colorText: Colors.white,
-          duration: const Duration(seconds: 3),
-        );
-      } else {
-        Get.snackbar(
-          "Extraction Failed",
-          "Could not extract information from the Aadhaar card. Please enter manually.",
-          backgroundColor: Colors.orange.withOpacity(0.7),
-          colorText: Colors.white,
-          duration: const Duration(seconds: 3),
-        );
-      }
-    } catch (e) {
-      setState(() {
-        isProcessingAadhaar = false;
-      });
-      errorSnackBar("Error extracting information from ID: $e",
-          title: "Extraction Error");
-    }
-  }
-
-  void errorSnackBar(String message, {String? title}) {
-    Get.snackbar(
-      title ?? "Error",
-      message,
-      backgroundColor: Colors.red.withOpacity(0.7),
-      colorText: Colors.white,
-      duration: const Duration(seconds: 3),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Aadhaar Verification')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Front side image section
-            _frontImageFile == null
-                ? Column(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () =>
-                            _pickImage(ImageSource.camera, isFrontSide: true),
-                        child: Text("Capture Front Side"),
-                      ),
-                      SizedBox(height: 10),
-                      ElevatedButton(
-                        onPressed: () =>
-                            _pickImage(ImageSource.gallery, isFrontSide: true),
-                        child: Text("Select Front Side from Gallery"),
-                      ),
-                    ],
-                  )
-                : Column(
-                    children: [
-                      Image.file(
-                        _frontImageFile!,
-                        width: 150,
-                        height: 150,
-                        fit: BoxFit.cover,
-                      ),
-                      SizedBox(height: 20),
-                      isProcessingAadhaar
-                          ? CircularProgressIndicator()
-                          : Column(
-                              children: [
-                                TextField(
-                                  controller: _identificationNumberController,
-                                  decoration: InputDecoration(
-                                      labelText: 'Aadhaar Number'),
-                                ),
-                                TextField(
-                                  controller: _nameController,
-                                  decoration:
-                                      InputDecoration(labelText: 'Name'),
-                                ),
-                                TextField(
-                                  controller: _dobController,
-                                  decoration: InputDecoration(labelText: 'DOB'),
-                                ),
-                                SizedBox(height: 20),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    // Optionally, submit the data here
-                                  },
-                                  child: Text("Verify Aadhaar Front Details"),
-                                ),
-                              ],
-                            ),
-                    ],
-                  ),
-            SizedBox(height: 20),
-
-            // Back side image section
-            _backImageFile == null
-                ? Column(
-                    children: [
-                      ElevatedButton(
-                        onPressed: () =>
-                            _pickImage(ImageSource.camera, isFrontSide: false),
-                        child: Text("Capture Back Side"),
-                      ),
-                      SizedBox(height: 10),
-                      ElevatedButton(
-                        onPressed: () =>
-                            _pickImage(ImageSource.gallery, isFrontSide: false),
-                        child: Text("Select Back Side from Gallery"),
-                      ),
-                    ],
-                  )
-                : Column(
-                    children: [
-                      Image.file(
-                        _backImageFile!,
-                        width: 150,
-                        height: 150,
-                        fit: BoxFit.cover,
-                      ),
-                      SizedBox(height: 20),
-                      isProcessingAadhaar
-                          ? CircularProgressIndicator()
-                          : Column(
-                              children: [
-                                TextField(
-                                  controller: TextEditingController(
-                                      text: aadharnumberBack),
-                                  decoration: InputDecoration(
-                                      labelText: 'Back Aadhaar Number'),
-                                ),
-                                TextField(
-                                  controller:
-                                      TextEditingController(text: nameBack),
-                                  decoration:
-                                      InputDecoration(labelText: 'Back Name'),
-                                ),
-                                SizedBox(height: 20),
-                                ElevatedButton(
-                                  onPressed: () {
-                                    // Optionally, submit the data here
-                                  },
-                                  child: Text("Verify Aadhaar Back Details"),
-                                ),
-                              ],
-                            ),
-                    ],
-                  ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
 class RegisterShop extends StatefulWidget {
   const RegisterShop({Key? key}) : super(key: key);
@@ -374,17 +56,24 @@ class _ShopState extends State<RegisterShop>
   bool isLoading = false;
   int currentStep = 0;
   final ScrollController _controller = ScrollController();
+  Map<String, String> aadhaarData = {};
+
   final _formKeys = [
     GlobalKey<FormState>(),
     GlobalKey<FormState>(),
     GlobalKey<FormState>(),
   ];
+  String? frontImagePath;
+  String? backImagePath;
+  XFile? frontImageXFile;
+  XFile? backImageXFile;
 
   final List<String> _stepTitles = [
     'Vendor Details',
     'Shop Details',
     'Additional Shop Details'
   ];
+  List<String> documentImage = [];
   List<String>? images = [
     'assets/images/logo.png',
     'assets/images/logo.png',
@@ -393,6 +82,24 @@ class _ShopState extends State<RegisterShop>
   late AnimationController _progressController;
   late Animation<double> _progressAnimation;
   List<String> summaries = [];
+
+  void _updateAadharImages(Map<String, String> data) {
+    setState(() {
+      documentImage.clear();
+      frontImagePath = data["frontImage"];
+      backImagePath = data["backImage"];
+
+      if (frontImagePath != null) {
+        frontImageXFile = XFile(frontImagePath!);
+        _documentImage = frontImageXFile;
+      }
+
+      if (backImagePath != null) {
+        backImageXFile = XFile(backImagePath!);
+      }
+      aadhaarData = data;
+    });
+  }
 
   Map<String, BusinessHours> _businessHours = {
     'Sunday': BusinessHours(isOpen: false),
@@ -466,7 +173,7 @@ class _ShopState extends State<RegisterShop>
     // }
     if (_formKeys[currentStep].currentState!.validate()) {
       try {
-        final AuthController authController = Get.find<AuthController>();
+        // final AuthController authController = Get.find<AuthController>();
         if (_validateImages()) {
           // setState(() {
           //   isLoading = true;
@@ -574,26 +281,25 @@ class _ShopState extends State<RegisterShop>
 
         setState(() {
           switch (imageType) {
-            case ImageType.GST_Certificate:
+            case ImageType.gstCertificate:
               gstCertificate = image;
               break;
-            case ImageType.Id_Proof:
+            case ImageType.idProof:
               _documentImage = image;
-              Get.to(() => AadhaarVerificationScreen());
               break;
-            case ImageType.Registration_Certificate:
+            case ImageType.registrationCertificate:
               rstCertificate = image;
               break;
-            case ImageType.shop_logo:
+            case ImageType.shopLogo:
               _shopLogo = image;
               break;
-            case ImageType.shop_location:
+            case ImageType.shopLocation:
               shopLocation = image;
               break;
-            case ImageType.Business_License:
+            case ImageType.businessLicense:
               businessLicense = image;
               break;
-            case ImageType.Tax_Certificate:
+            case ImageType.taxCertificate:
               taxCertificate = image;
               break;
           }
@@ -609,25 +315,25 @@ class _ShopState extends State<RegisterShop>
   void _clearImage(ImageType imageType) {
     setState(() {
       switch (imageType) {
-        case ImageType.GST_Certificate:
+        case ImageType.gstCertificate:
           gstCertificate = null;
           break;
-        case ImageType.Id_Proof:
+        case ImageType.idProof:
           _documentImage = null;
           break;
-        case ImageType.Registration_Certificate:
+        case ImageType.registrationCertificate:
           rstCertificate = null;
           break;
-        case ImageType.shop_logo:
+        case ImageType.shopLogo:
           _shopLogo = null;
           break;
-        case ImageType.shop_location:
+        case ImageType.shopLocation:
           shopLocation = null;
           break;
-        case ImageType.Business_License:
+        case ImageType.businessLicense:
           businessLicense = null;
           break;
-        case ImageType.Tax_Certificate:
+        case ImageType.taxCertificate:
           taxCertificate = null;
           break;
       }
@@ -792,7 +498,7 @@ class _ShopState extends State<RegisterShop>
                     controller: _controller,
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: CurrentStepBuild(),
+                      child: currentStepBuild(),
                     ),
                   ),
                 ),
@@ -804,20 +510,20 @@ class _ShopState extends State<RegisterShop>
     );
   }
 
-  Widget CurrentStepBuild() {
+  Widget currentStepBuild() {
     switch (currentStep) {
       case 0:
-        return FirstStep();
+        return firstStep();
       case 1:
-        return SecondStep();
+        return secondStep();
       case 2:
-        return ThirdStep();
+        return thirdStep();
       default:
-        return FirstStep();
+        return firstStep();
     }
   }
 
-  Widget FirstStep() {
+  Widget firstStep() {
     return Form(
       key: _formKeys[0],
       child: Column(
@@ -826,25 +532,25 @@ class _ShopState extends State<RegisterShop>
           // SizedBox(height: Get.height * 0.00),
           FormInput(
             controller: _nameController,
-            label: "Name",
+            label: AppConstants.ownerName,
             enabled: false,
             textInputType: TextInputType.name,
           ),
           FormInput(
             controller: _emailController,
             enabled: false,
-            label: "Email Address",
+            label: AppConstants.owneremail,
             textInputType: TextInputType.emailAddress,
           ),
           FormInput(
             controller: _numberController,
             enabled: false,
-            label: "Phone Number",
+            label: AppConstants.ownerPhone,
             textInputType: TextInputType.number,
           ),
           FormInput(
             controller: _addressController,
-            label: "Owner Address",
+            label: AppConstants.ownerAddress,
             textInputType: TextInputType.multiline,
             // validator: (value) {
             //   if (value!.isEmpty) {
@@ -886,20 +592,183 @@ class _ShopState extends State<RegisterShop>
           //     return null;
           //   },
           // ),
-
-          ImageUploadWidget(
-            image: _documentImage,
-            onTap: () => pickImage(ImageType.Id_Proof),
-            title: "ID Proof Document",
-            hintText: "Select Documents for Verification\n(JPG, PNG, max 2MB)",
+          Text(
+            AppConstants.ownerAddharCard,
+            style: Get.textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold, color: Colors.black, fontSize: 16),
           ),
+          const SizedBox(
+            height: 5,
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.black),
+                borderRadius: BorderRadius.circular(10)),
+            child: InkWell(
+              onTap: () {
+                Get.bottomSheet(
+                  isDismissible: true,
+                  enableDrag: true,
+                  BottomSheet(
+                    onClosing: () {},
+                    builder: (c) => SizedBox(
+                      height: Get.height * 0.5,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: AadharCardUpload(
+                          onSubmit: (data) {
+                            setState(() {
+                              _updateAadharImages(data);
+                            });
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.verified_user,
+                          color: Colors.blue,
+                          size: 20,
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          "Aadhaar Details",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Spacer(),
+                        Icon(
+                          aadhaarData.isNotEmpty
+                              ? Icons.check_circle
+                              : Icons.arrow_forward_ios,
+                          color: aadhaarData.isNotEmpty
+                              ? Colors.green
+                              : Colors.black,
+                          size: 20,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      aadhaarData.isNotEmpty
+                          ? AppConstants.aadharCardAdded
+                          : AppConstants.tapToEdit,
+                      style: TextStyle(
+                        color: aadhaarData.isNotEmpty
+                            ? Colors.green
+                            : Colors.grey[600],
+                      ),
+                    ),
+                    if (frontImagePath != null && backImagePath != null)
+                      const SizedBox(height: 16),
+                    if (frontImagePath != null && backImagePath != null)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // const Text(
+                          //   "Uploaded Aadhaar Images:",
+                          //   style: TextStyle(
+                          //     fontWeight: FontWeight.bold,
+                          //     fontSize: 14,
+                          //   ),
+                          // ),
+                          // const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      "Front Side",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Container(
+                                      height: 180,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: Colors.grey[200],
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: Image.file(
+                                          File(frontImagePath!),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      "Back Side",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Container(
+                                      height: 180,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        color: Colors.grey[200],
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: Image.file(
+                                          File(backImagePath!),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
           FormInput(
             controller: _identificationNumber,
-            label: "Owner Identification Number",
+            label: AppConstants.ownerPanCard,
             textInputType: TextInputType.multiline,
+            isUpperCase: true,
             // validator: (value) {
             //   if (value!.isEmpty) {
             //     return "Address cannot be empty.";
+            //   }
+            //   if (!RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$').hasMatch(value)) {
+            //     return "Please Enter a Valid Pan Card ";
             //   }
             //   return null;
             // },
@@ -910,7 +779,7 @@ class _ShopState extends State<RegisterShop>
   }
 
   //#TODO need to add Validation
-  Widget SecondStep() {
+  Widget secondStep() {
     return Form(
       key: _formKeys[1],
       child: Column(
@@ -970,7 +839,7 @@ class _ShopState extends State<RegisterShop>
     );
   }
 
-  // Widget ThirdStep() {
+  // Widget thirdStep() {
   //   return Form(
   //       key: _formKeys[2],
   //       child: Column(
@@ -978,38 +847,38 @@ class _ShopState extends State<RegisterShop>
   //         children: [
   //           ImageUploadWidget(
   //             image: gstCertificate,
-  //             onTap: () => pickImage(ImageType.GST_Certificate),
+  //             onTap: () => pickImage(ImageType.gstCertificate),
   //             hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
   //             title: "Upload GST Certificate",
   //           ),
   //           ImageUploadWidget(
   //             image: rstCertificate,
-  //             onTap: () => pickImage(ImageType.Registration_Certificate),
+  //             onTap: () => pickImage(ImageType.registrationCertificate),
   //             hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
   //             title: "Upload Shop Registration Certificate",
   //           ),
   //           ImageUploadWidget(
   //             image: _shopLogo,
-  //             onTap: () => pickImage(ImageType.shop_logo),
+  //             onTap: () => pickImage(ImageType.shopLogo),
   //             hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
   //             title: "Upload Shop Logo/Image",
   //           ),
   //           ImageUploadWidget(
   //             image: shopLocation,
-  //             onTap: () => pickImage(ImageType.shop_location),
+  //             onTap: () => pickImage(ImageType.shopLocation),
   //             hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
   //             title:
   //                 "Upload Shop Location Proof (e.g., Utility bill, Rent agreement, etc.)",
   //           ),
   //           ImageUploadWidget(
   //             image: businessLicense,
-  //             onTap: () => pickImage(ImageType.Business_License),
+  //             onTap: () => pickImage(ImageType.businessLicense),
   //             hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
   //             title: "Upload Business License",
   //           ),
   //           ImageUploadWidget(
   //             image: taxCertificate,
-  //             onTap: () => pickImage(ImageType.Tax_Certificate),
+  //             onTap: () => pickImage(ImageType.taxCertificate),
   //             hintText:
   //                 "Select Documents for Verification\n(JPG, PNG  max 2MB)",
   //             title: "Upload VAT or Sales Tax Certificate (if applicable)",
@@ -1018,7 +887,7 @@ class _ShopState extends State<RegisterShop>
   //       ));
   // }
 
-  Widget ThirdStep() {
+  Widget thirdStep() {
     return Form(
         key: _formKeys[2],
         child: Column(
@@ -1205,11 +1074,13 @@ class _ShopState extends State<RegisterShop>
 }
 
 enum ImageType {
-  GST_Certificate,
-  Registration_Certificate,
-  shop_logo,
-  shop_location,
-  Business_License,
-  Tax_Certificate,
-  Id_Proof
+  gstCertificate,
+  registrationCertificate,
+  shopLogo,
+  shopLocation,
+  businessLicense,
+  taxCertificate,
+  idProof
 }
+
+enum AadhaarSide { front, back }

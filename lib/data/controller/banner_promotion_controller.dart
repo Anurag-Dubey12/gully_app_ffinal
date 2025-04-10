@@ -4,7 +4,6 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/utils/utils.dart';
 
-import '../../utils/app_logger.dart';
 import '../../utils/geo_locator_helper.dart';
 import '../api/banner_promotion_api.dart';
 import '../model/PromotionalBannerModel.dart';

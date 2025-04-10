@@ -7,7 +7,7 @@ class AppConstants {
       ? "http://3.7.92.159:3000/api"
       // : "http://192.168.0.105:3000/api";//personL
       : "http://192.168.29.9:3000/api"; //Office
-      // : "http://3.7.92.159:3000/api"; //server
+  // : "http://3.7.92.159:3000/api"; //server
   // : "http://172.20.10.5:3000/api";
   static const websocketUrl =
       kReleaseMode ? "ws://65.1.61.197:3001" : "ws://65.1.61.197:3001";
@@ -217,4 +217,22 @@ class AppConstants {
       "Your banner will be displayed within a 15Km radius of the selected location. "
       "Make sure to choose a location where your audience is most likely to engage. "
       "A banner placed too far from the target area might not be visible to the relevant users.";
+
+  //Shop Text
+  static const String aadharBothSideImage =
+      "Please upload both the front and back sides of your Aadhaar card for verification ";
+
+  //Shop Owner
+  static const String ownerAddharCard = "Owner Id Proof (Addhar Card)";
+  static const String ownerPanCard = "Owner Pan Card";
+
+  static const String ownerAddress = "Owner Address";
+  static const String ownerPhone = "Phone Number";
+  static const String owneremail = "Email Address";
+  static const String ownerName = "Name";
+
+  //Aadhar Card
+  static const String aadharCardAdded =
+      "Aadhaar Card Added to Edit click on Image";
+  static const String tapToEdit = "Tap to Add Aadhaar Details";
 }

@@ -6,52 +6,89 @@ part of 'shop_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-shop_model _$shop_modelFromJson(Map<String, dynamic> json) => shop_model(
-      id: (json['_id'] as num?)?.toInt(),
-      shopName: json['shop_name'] as String?,
-      shopAddress: json['shop_address'] as String?,
-      shopNumber: json['shop_number'] as String?,
-      shopEmail: json['shop_email'] as String?,
-      gstNumber: json['gst_number'] as String?,
-      gstCertificate: json['gst_certificate'] as String?,
-      registrationCertificate: json['registration_certificate'] as String?,
-      shopLogo: json['shop_logo'] as String?,
-      businessHours: (json['business_hours'] as Map<String, dynamic>?)?.map(
+ShopModel _$ShopModelFromJson(Map<String, dynamic> json) => ShopModel(
+      locationHistory: LocationHistory.fromJson(
+          json['locationHistory'] as Map<String, dynamic>),
+      shopTiming: (json['shopTiming'] as Map<String, dynamic>?)?.map(
         (k, e) => MapEntry(
             k, business_hours_model.fromJson(e as Map<String, dynamic>)),
       ),
-      websiteUrl: json['website_url'] as String?,
-      description: json['description'] as String?,
-      locationProof: json['location_proof'] as String?,
-      businessLicense: json['business_license'] as String?,
-      taxCertificate: json['tax_certificate'] as String?,
-      vendor: json['vendor'] == null
-          ? null
-          : vendor_model.fromJson(json['vendor'] as Map<String, dynamic>),
-      socialLinks: (json['socialLinks'] as List<dynamic>?)
-              ?.map((e) => e as String?)
-              .toList() ??
-          const [],
+      id: json['_id'] as String,
+      shopImage:
+          (json['shopImage'] as List<dynamic>).map((e) => e as String).toList(),
+      shopName: json['shopName'] as String,
+      shopDescription: json['shopDescription'] as String,
+      shopAddress: json['shopAddress'] as String,
+      shopContact: json['shopContact'] as String,
+      shopEmail: json['shopEmail'] as String,
+      ownerName: json['ownerName'] as String,
+      ownerPhoneNumber: json['ownerPhoneNumber'] as String,
+      ownerEmail: json['ownerEmail'] as String,
+      ownerAddress: json['ownerAddress'] as String,
+      ownerAddharImages: (json['ownerAddharImages'] as List<dynamic>)
+          .map((e) => OwnerAddharImage.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      ownerPanNumber: json['ownerPanNumber'] as String,
+      userId: json['userId'] as String,
+      isSubscriptionPurchased: json['isSubscriptionPurchased'] as bool,
+      additionalPackages: json['AdditionalPackages'] as List<dynamic>,
+      joinedAt: DateTime.parse(json['joinedAt'] as String),
     );
 
-Map<String, dynamic> _$shop_modelToJson(shop_model instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ShopModelToJson(ShopModel instance) => <String, dynamic>{
+      'locationHistory': instance.locationHistory,
+      'shopTiming': instance.shopTiming,
       '_id': instance.id,
-      'shop_name': instance.shopName,
-      'shop_address': instance.shopAddress,
-      'shop_number': instance.shopNumber,
-      'shop_email': instance.shopEmail,
-      'gst_number': instance.gstNumber,
-      'gst_certificate': instance.gstCertificate,
-      'registration_certificate': instance.registrationCertificate,
-      'shop_logo': instance.shopLogo,
-      'business_hours':
-          instance.businessHours?.map((k, e) => MapEntry(k, e.toJson())),
-      'website_url': instance.websiteUrl,
-      'description': instance.description,
-      'location_proof': instance.locationProof,
-      'business_license': instance.businessLicense,
-      'tax_certificate': instance.taxCertificate,
-      'vendor': instance.vendor?.toJson(),
-      'socialLinks': instance.socialLinks,
+      'shopImage': instance.shopImage,
+      'shopName': instance.shopName,
+      'shopDescription': instance.shopDescription,
+      'shopAddress': instance.shopAddress,
+      'shopContact': instance.shopContact,
+      'shopEmail': instance.shopEmail,
+      'ownerName': instance.ownerName,
+      'ownerPhoneNumber': instance.ownerPhoneNumber,
+      'ownerEmail': instance.ownerEmail,
+      'ownerAddress': instance.ownerAddress,
+      'ownerAddharImages': instance.ownerAddharImages,
+      'ownerPanNumber': instance.ownerPanNumber,
+      'userId': instance.userId,
+      'isSubscriptionPurchased': instance.isSubscriptionPurchased,
+      'AdditionalPackages': instance.additionalPackages,
+      'joinedAt': instance.joinedAt.toIso8601String(),
+    };
+
+LocationHistory _$LocationHistoryFromJson(Map<String, dynamic> json) =>
+    LocationHistory(
+      point: Point.fromJson(json['point'] as Map<String, dynamic>),
+    );
+
+Map<String, dynamic> _$LocationHistoryToJson(LocationHistory instance) =>
+    <String, dynamic>{
+      'point': instance.point,
+    };
+
+Point _$PointFromJson(Map<String, dynamic> json) => Point(
+      type: json['type'] as String,
+      coordinates: (json['coordinates'] as List<dynamic>)
+          .map((e) => (e as num).toDouble())
+          .toList(),
+      selectLocation: json['selectLocation'] as String,
+    );
+
+Map<String, dynamic> _$PointToJson(Point instance) => <String, dynamic>{
+      'type': instance.type,
+      'coordinates': instance.coordinates,
+      'selectLocation': instance.selectLocation,
+    };
+
+OwnerAddharImage _$OwnerAddharImageFromJson(Map<String, dynamic> json) =>
+    OwnerAddharImage(
+      aadharFrontSide: json['aadharFrontSide'] as String,
+      aadharBackSide: json['aadharBackSide'] as String,
+    );
+
+Map<String, dynamic> _$OwnerAddharImageToJson(OwnerAddharImage instance) =>
+    <String, dynamic>{
+      'aadharFrontSide': instance.aadharFrontSide,
+      'aadharBackSide': instance.aadharBackSide,
     };

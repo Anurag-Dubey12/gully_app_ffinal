@@ -245,8 +245,6 @@ class _AadhaarBottomSheetState extends State<AadharCardUpload> {
                       title: "Submit",
                       onTap: () {
                         if (frontImage != null && backImage != null) {
-                          print(
-                              "The Front Image:${frontImage?.path ?? ''} and Back Image:${backImage?.path ?? ''}");
                           widget.onSubmit({
                             "frontImage": frontImage?.path ?? '',
                             "backImage": backImage?.path ?? '',

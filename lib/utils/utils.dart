@@ -4,9 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/ui/theme/theme.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import 'package:video_player/video_player.dart';
-
+import 'package:intl/intl.dart';
 import '../ui/screens/home_screen.dart';
 
 class ApiResponse {
@@ -140,6 +139,10 @@ Future<String> getAddressFromLatLng(double latitude, double longitude) async {
     throw e;
   });
   return address;
+}
+
+String getCurrentDay() {
+  return DateFormat('EEEE').format(DateTime.now());
 }
 
 String toImageUrl(String endpoint) {

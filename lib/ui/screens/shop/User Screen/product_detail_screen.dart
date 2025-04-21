@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/model/product_model.dart';
+import 'package:gully_app/data/model/shop_model.dart';
 import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/add_product.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
+import 'package:gully_app/utils/utils.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'dart:io';
 
 import '../../../widgets/gradient_builder.dart';
 
 class ProductDetailScreen extends StatefulWidget {
-  final Map<String, dynamic> product;
+  final ProductModel product;
+  final ShopModel shop;
   final bool isadmin;
   const ProductDetailScreen(
-      {Key? key, required this.product, required this.isadmin})
+      {Key? key,
+      required this.product,
+      required this.isadmin,
+      required this.shop})
       : super(key: key);
   @override
   _ProductDetailScreenState createState() => _ProductDetailScreenState();
@@ -23,15 +30,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<String>? images = widget.isadmin
-        ? widget.product['images']?.cast<String>()
-        : widget.product['logo']?.cast<String>() ??
-            [
-              'assets/images/logo.png',
-              'assets/images/logo.png',
-              'assets/images/logo.png'
-            ];
-
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -50,7 +48,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               children: [
                 Expanded(
                   child: Text(
-                    widget.product['name'] ?? 'Product Info',
+                    widget.product.productName ?? 'Product Info',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -59,24 +57,24 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ),
                 ),
                 const SizedBox(width: 120),
-                if(widget.isadmin)
-                GestureDetector(
-                    onTap: () {
-                      Get.to(() => AddProduct(
-                            product: widget.product,
-                          ));
-                    },
-                    child: const Icon(
-                      Icons.edit_rounded,
-                      color: Colors.white,
-                    )),
-                const SizedBox(width: 10),
-                if(widget.isadmin)
+                if (widget.isadmin)
                   GestureDetector(
-                    child: const Icon(
-                  Icons.delete_outlined,
-                  color: Colors.white,
-                ))
+                      onTap: () {
+                        // Get.to(() => AddProduct(
+                        //       product: widget.product,
+                        //     ));
+                      },
+                      child: const Icon(
+                        Icons.edit_rounded,
+                        color: Colors.white,
+                      )),
+                const SizedBox(width: 10),
+                if (widget.isadmin)
+                  GestureDetector(
+                      child: const Icon(
+                    Icons.delete_outlined,
+                    color: Colors.white,
+                  ))
               ],
             ),
             leading: const BackButton(
@@ -88,7 +86,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (images != null && images.isNotEmpty)
+                if (widget.product.productsImage != null)
                   Column(
                     children: [
                       CarouselSlider(
@@ -103,7 +101,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                             });
                           },
                         ),
-                        items: images.map((imagePath) {
+                        items: widget.product.productsImage?.map((imagePath) {
                           return Builder(
                             builder: (BuildContext context) {
                               return GestureDetector(
@@ -116,9 +114,26 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8.0),
                                   ),
-                                  child: Image.file(
-                                    File(imagePath),
+                                  child: Image.network(
+                                    toImageUrl(imagePath),
+                                    width: Get.width,
                                     fit: BoxFit.cover,
+                                    loadingBuilder:
+                                        (context, child, loadingProgress) {
+                                      if (loadingProgress == null) return child;
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress
+                                                      .expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                               );
@@ -130,7 +145,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       Center(
                         child: AnimatedSmoothIndicator(
                           activeIndex: _currentImageIndex,
-                          count: images.length,
+                          count: widget.product.productsImage!.length,
                           effect: ExpandingDotsEffect(
                             dotHeight: 8,
                             dotWidth: 8,
@@ -141,41 +156,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ],
                   ),
-                const SizedBox(height: 16),
-                const Center(
+                GestureDetector(
+                  onTap: () {},
                   child: Text(
-                    "Product Info",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    widget.shop.shopName,
+                    style: const TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-                const SizedBox(height: 16),
-                Table(
-                  border: TableBorder.all(color: Colors.grey, width: 1),
-                  columnWidths: const {
-                    0: FlexColumnWidth(1),
-                    1: FlexColumnWidth(2),
-                  },
-                  children: [
-                    _ProductInfo('Name', widget.product['name'] ?? 'N/A'),
-                    _ProductInfo(
-                        'Category', widget.product['category'] ?? 'N/A'),
-                    _ProductInfo(
-                        'Subcategory', widget.product['subcategory'] ?? 'N/A'),
-                    _ProductInfo(
-                        'Price', '${widget.product['price'] ?? 'N/A'}'),
-                    _ProductInfo(
-                        'Discount', '₹${widget.product['discount'] ?? '0'}'),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Description:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
                 Text(
-                  widget.product['description'] ?? 'No description available.',
-                  style: const TextStyle(fontSize: 16),
+                  widget.product.productName,
                 ),
+                
               ],
             ),
           ),

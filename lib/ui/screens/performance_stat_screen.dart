@@ -5,19 +5,11 @@ import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/ui/screens/schedule_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
-import 'package:intl/intl.dart';
 
 import '../../data/controller/tournament_controller.dart';
-import '../../data/model/matchup_model.dart';
-import '../../data/model/scoreboard_model.dart';
-import '../../utils/FallbackImageProvider.dart';
-import '../../utils/app_logger.dart';
-import '../../utils/date_time_helpers.dart';
-import '../../utils/utils.dart';
 import '../widgets/performance/BestPerformanceCard.dart';
 import '../widgets/performance/performance_matches.dart';
 import '../widgets/performance/performance_tournament.dart';
-import 'full_scorecard.dart';
 
 class PerformanceStatScreen extends StatefulWidget {
   final String category;

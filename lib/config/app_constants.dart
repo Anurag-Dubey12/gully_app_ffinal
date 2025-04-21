@@ -208,7 +208,7 @@ class AppConstants {
   static const String transactionHistory = "Transaction History";
   static const String viewYourTournament = "View Your Tournament";
   static const String bannerlocInfo = "Banner Location Information";
-
+  static const String shoplocInfo = "Shop Location Information";
   static const String bannerwarningtext =
       'To ensure your banner displays properly, make sure it meets the recommended size.\n\n'
       '✅ Optimal size: 1260px (width) x 459px (height)\n\n'
@@ -222,6 +222,10 @@ class AppConstants {
   static const String aadharBothSideImage =
       "Please upload both the front and back sides of your Aadhaar card for verification ";
 
+  static const String shopinfotext =
+      "Please select a location near your shop. This helps us display your shop to users within a 15Km radius. "
+      "Choosing a nearby location ensures that potential customers in your area can easily discover your business.";
+
   //Shop Owner
   static const String ownerAddharCard = "Owner Id Proof (Addhar Card)";
   static const String ownerPanCard = "Owner Pan Card";
@@ -234,5 +238,9 @@ class AppConstants {
   //Aadhar Card
   static const String aadharCardAdded =
       "Aadhaar Card Added to Edit click on Image";
-  static const String tapToEdit = "Tap to Add Aadhaar Details";
+  static const String tapToEdit = "Tap to Add Aadhaar Images";
+
+  static const String selectproductcategory = "Select Product Category";
+  static const String selectallproductcategory = "Select Product Category";
+  static const String productaddedsuccessfully = "Product Added SUccessfully";
 }

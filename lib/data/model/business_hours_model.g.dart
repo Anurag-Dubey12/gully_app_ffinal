@@ -9,10 +9,9 @@ part of 'business_hours_model.dart';
 business_hours_model _$business_hours_modelFromJson(
         Map<String, dynamic> json) =>
     business_hours_model(
-      isOpen: json['isOpen'] as bool? ?? true,
+      isOpen: json['isOpen'] as bool? ?? false,
       openTime: json['openTime'] as String?,
       closeTime: json['closeTime'] as String?,
-      id: json['_id'] as String?,
     );
 
 Map<String, dynamic> _$business_hours_modelToJson(
@@ -21,5 +20,4 @@ Map<String, dynamic> _$business_hours_modelToJson(
       'isOpen': instance.isOpen,
       'openTime': instance.openTime,
       'closeTime': instance.closeTime,
-      '_id': instance.id,
     };

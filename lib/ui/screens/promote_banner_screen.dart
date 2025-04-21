@@ -8,6 +8,7 @@ import '../../data/model/PromotionalBannerModel.dart';
 import '../../utils/date_time_helpers.dart';
 import '../widgets/banner/banner_adding.dart';
 import '../widgets/gradient_builder.dart';
+import 'package:shimmer/shimmer.dart';
 
 class PromoteBannerScreen extends StatefulWidget {
   const PromoteBannerScreen({super.key});
@@ -87,8 +88,13 @@ class PromoteBannerScreenState extends State<PromoteBannerScreen> {
                         child: Text("No Banner Found"),
                       );
                     }
+                    if (snapshot.hasError) {
+                      return const Center(
+                        child: Text("SomeThing Went wrong"),
+                      );
+                    }
                     return ListView.builder(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 65),
                       itemBuilder: (context, index) {
                         final banner = controller.bannerList[index];
                         return MyBanner(banner: banner);
@@ -169,6 +175,18 @@ class MyBannerState extends State<MyBanner>
                     width: Get.width,
                     height: 120,
                     fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Shimmer.fromColors(
+                        baseColor: Colors.grey[300]!,
+                        highlightColor: Colors.grey[100]!,
+                        child: Container(
+                          width: Get.width,
+                          height: 120,
+                          color: Colors.white,
+                        ),
+                      );
+                    },
                     errorBuilder: (context, error, stackTrace) {
                       return Image.asset('assets/images/logo.png',
                           fit: BoxFit.cover);

@@ -2,19 +2,20 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gully_app/ui/theme/theme.dart';
-import 'package:gully_app/ui/widgets/custom_snackbar.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ShopImagePicker extends StatefulWidget {
   final List<String> images;
   final Function(List<String>) onImagesChanged;
+  final Function(List<XFile>) onImageSelected;
   final int maxImages;
 
   const ShopImagePicker({
     Key? key,
     required this.images,
     required this.onImagesChanged,
+    required this.onImageSelected,
     this.maxImages = 3,
   }) : super(key: key);
 
@@ -24,13 +25,15 @@ class ShopImagePicker extends StatefulWidget {
 
 class _ShopImagePickerState extends State<ShopImagePicker> {
   final ImagePicker _picker = ImagePicker();
-  late List<String> _images;
+  List<String> _images = [];
+  List<XFile> _shopImages = [];
   int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
     _images = List.from(widget.images);
+    _shopImages = widget.images.map((image) => XFile(image)).toList();
   }
 
   Future<void> _pickImage() async {
@@ -74,10 +77,13 @@ class _ShopImagePickerState extends State<ShopImagePicker> {
 
         setState(() {
           _images.add(image.path);
+          _shopImages.add(image);
           widget.onImagesChanged(_images);
+          widget.onImageSelected(_shopImages);
         });
       }
     } catch (e) {
+      print("Failed to get image:${e.toString()}");
       errorSnackBar("An error occurred while picking the image");
     }
   }

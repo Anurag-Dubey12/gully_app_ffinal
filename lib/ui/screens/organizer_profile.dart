@@ -337,12 +337,12 @@ class _OrganizerProfileScreenState extends State<OrganizerProfileScreen> {
                                     ));
                               },
                             ),
-                            // ProfileTileCard(
-                            //   text: 'View My Shop',
-                            //   onTap: () {
-                            //     Get.to(() => const RegisterShop());
-                            //   },
-                            // ),
+                            ProfileTileCard(
+                              text: 'View My Shop',
+                              onTap: () {
+                                Get.to(() => const MyShop());
+                              },
+                            ),
                             // ProfileTileCard(
                             //   text: 'View My Services',
                             //   onTap: () {

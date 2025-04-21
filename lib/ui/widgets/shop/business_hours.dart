@@ -1,17 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/model/business_hours_model.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import '../../theme/theme.dart';
 
-class BusinessHours {
-  bool isOpen;
-  TimeOfDay? openTime;
-  TimeOfDay? closeTime;
-  BusinessHours({this.isOpen = true, this.openTime, this.closeTime});
-}
-
 class BusinessHoursScreen extends StatefulWidget {
-  final Map<String, BusinessHours> initialHours;
+  final Map<String, business_hours_model> initialHours;
 
   const BusinessHoursScreen({Key? key, required this.initialHours})
       : super(key: key);
@@ -21,7 +15,7 @@ class BusinessHoursScreen extends StatefulWidget {
 }
 
 class _BusinessHoursScreenState extends State<BusinessHoursScreen> {
-  late Map<String, BusinessHours> _businessHours;
+  late Map<String, business_hours_model> _businessHours;
 
   List<String> weekdays = [
     'Monday',
@@ -32,45 +26,126 @@ class _BusinessHoursScreenState extends State<BusinessHoursScreen> {
     'Saturday',
     'Sunday',
   ];
+
   @override
   void initState() {
     super.initState();
-    _businessHours = Map.from(widget.initialHours);
+    Map<String, business_hours_model> defaultHours = {
+      'Monday': business_hours_model(
+        isOpen: true,
+        openTime: '09:00 AM',
+        closeTime: '05:00 PM',
+      ),
+      'Tuesday': business_hours_model(
+        isOpen: true,
+        openTime: '09:00 AM',
+        closeTime: '05:00 PM',
+      ),
+      'Wednesday': business_hours_model(
+        isOpen: true,
+        openTime: '09:00 AM',
+        closeTime: '05:00 PM',
+      ),
+      'Thursday': business_hours_model(
+        isOpen: true,
+        openTime: '09:00 AM',
+        closeTime: '05:00 PM',
+      ),
+      'Friday': business_hours_model(
+        isOpen: true,
+        openTime: '09:00 AM',
+        closeTime: '05:00 PM',
+      ),
+      'Saturday': business_hours_model(isOpen: false),
+      'Sunday': business_hours_model(isOpen: false),
+    };
+
+    if (widget.initialHours.isNotEmpty) {
+      _businessHours = widget.initialHours;
+    } else {
+      _businessHours = defaultHours;
+    }
   }
 
   Future<void> _selectTime(
-      BuildContext context, String days, bool isOpenTime) async {
+      BuildContext context, String day, bool isOpenTime) async {
+    TimeOfDay initialTime;
+    if (isOpenTime) {
+      initialTime = _parseTimeString(_businessHours[day]!.openTime) ??
+          const TimeOfDay(hour: 9, minute: 0);
+    } else {
+      initialTime = _parseTimeString(_businessHours[day]!.closeTime) ??
+          const TimeOfDay(hour: 17, minute: 0);
+    }
+
     final TimeOfDay? picked = await showTimePicker(
       context: context,
-      initialTime: isOpenTime
-          ? _businessHours[days]!.openTime ??
-              const TimeOfDay(hour: 9, minute: 0)
-          : _businessHours[days]!.closeTime ??
-              const TimeOfDay(hour: 17, minute: 0),
+      initialTime: initialTime,
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: ThemeData.light().copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: AppTheme.primaryColor,
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Colors.black,
+            ),
+            dialogBackgroundColor: Colors.white,
+          ),
+          child: child!,
+        );
+      },
     );
+
     if (picked != null) {
       setState(() {
-        final timeString =
-            '${picked.hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')}';
+        final period = picked.hour >= 12 ? 'PM' : 'AM';
+        final hour = picked.hour > 12
+            ? picked.hour - 12
+            : picked.hour == 0
+                ? 12
+                : picked.hour;
+        final formattedTime =
+            '${hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')} $period';
+
         if (isOpenTime) {
-          _businessHours[days]!.openTime = picked;
+          _businessHours[day]!.openTime = formattedTime;
         } else {
-          _businessHours[days]!.closeTime = picked;
+          _businessHours[day]!.closeTime = formattedTime;
         }
       });
     }
   }
 
-  TimeOfDay _parseTimeString(String? timeString) {
-    if (timeString == null) return const TimeOfDay(hour: 9, minute: 0);
-    final parts = timeString.split(':');
-    return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));
+  TimeOfDay? _parseTimeString(String? timeString) {
+    if (timeString == null || timeString.isEmpty) return null;
+
+    final parts = timeString.split(' ');
+    if (parts.length != 2) return const TimeOfDay(hour: 9, minute: 0);
+
+    final timeParts = parts[0].split(':');
+    int hour = int.parse(timeParts[0]);
+    final int minute = int.parse(timeParts[1]);
+
+    if (parts[1] == 'PM' && hour < 12) {
+      hour += 12;
+    } else if (parts[1] == 'AM' && hour == 12) {
+      hour = 0;
+    }
+
+    return TimeOfDay(hour: hour, minute: minute);
   }
 
-  String _formatTimeString(String? timeString) {
-    if (timeString == null) return '00:00';
-    final time = _parseTimeString(timeString);
-    return time.format(context);
+  void _setDefaultTime(String day) {
+    setState(() {
+      if (_businessHours[day]!.isOpen) {
+        _businessHours[day]!.openTime = '09:00 AM';
+        _businessHours[day]!.closeTime = '05:00 PM';
+      } else {
+        _businessHours[day]!.openTime = null;
+        _businessHours[day]!.closeTime = null;
+      }
+    });
   }
 
   @override
@@ -106,15 +181,14 @@ class _BusinessHoursScreenState extends State<BusinessHoursScreen> {
           ),
           const Divider(),
           const Text(
-            'Tap on the time to change the opening and closing times.',
+            'Set when your shop is open. Tap on the time to change hours.',
             style: TextStyle(
               fontSize: 14,
               color: Colors.grey,
-              fontStyle: FontStyle.italic,
             ),
           ),
           const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 5.0),
+            padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
             child: Row(
               children: [
                 Expanded(
@@ -127,7 +201,7 @@ class _BusinessHoursScreenState extends State<BusinessHoursScreen> {
                 Expanded(
                   flex: 7,
                   child: Text(
-                    'Shop Timing',
+                    'Hours',
                     style: TextStyle(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
@@ -144,86 +218,105 @@ class _BusinessHoursScreenState extends State<BusinessHoursScreen> {
             ),
           ),
           Expanded(
-            child: ListView.builder(
+            child: ListView.separated(
               itemCount: weekdays.length,
+              separatorBuilder: (context, index) => const Divider(height: 1),
               itemBuilder: (context, index) {
                 final day = weekdays[index];
                 return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Row(
                     children: [
                       Expanded(
-                        flex: 4,
+                        flex: 3,
                         child: Text(
                           day,
-                          style: const TextStyle(fontSize: 16),
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                       Expanded(
-                        flex: 7,
+                        flex: 6,
                         child: _businessHours[day]!.isOpen
                             ? Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   InkWell(
                                     onTap: () =>
                                         _selectTime(context, day, true),
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 4, vertical: 4),
+                                          horizontal: 4, vertical: 6),
                                       decoration: BoxDecoration(
                                         color: AppTheme.primaryColor
                                             .withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(4),
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: AppTheme.primaryColor
+                                              .withOpacity(0.5),
+                                          width: 1,
+                                        ),
                                       ),
                                       child: Text(
-                                        _businessHours[day]!
-                                                .openTime
-                                                ?.format(context) ??
-                                            '9:00 AM',
+                                        _businessHours[day]!.openTime ??
+                                            '09:00 AM',
                                         style: const TextStyle(
                                           color: AppTheme.primaryColor,
                                           fontWeight: FontWeight.bold,
+                                          fontSize: 14,
                                         ),
                                       ),
                                     ),
                                   ),
                                   const Padding(
                                     padding:
-                                        EdgeInsets.symmetric(horizontal: 6.0),
-                                    child: Text('to'),
+                                        EdgeInsets.symmetric(horizontal: 8.0),
+                                    child: Text(
+                                      'to',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
                                   ),
                                   InkWell(
                                     onTap: () =>
                                         _selectTime(context, day, false),
                                     child: Container(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 4),
+                                          horizontal: 4, vertical: 6),
                                       decoration: BoxDecoration(
                                         color: AppTheme.primaryColor
                                             .withOpacity(0.1),
-                                        borderRadius: BorderRadius.circular(4),
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color: AppTheme.primaryColor
+                                              .withOpacity(0.5),
+                                          width: 1,
+                                        ),
                                       ),
                                       child: Text(
-                                        _businessHours[day]!
-                                                .closeTime
-                                                ?.format(context) ??
-                                            '5:00 PM',
+                                        _businessHours[day]!.closeTime ??
+                                            '05:00 PM',
                                         style: const TextStyle(
                                           color: AppTheme.primaryColor,
                                           fontWeight: FontWeight.bold,
+                                          fontSize: 14,
                                         ),
                                       ),
                                     ),
                                   ),
                                 ],
                               )
-                            : const Text(
-                                'Closed',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold,
+                            : Container(
+                                alignment: Alignment.center,
+                                child: const Text(
+                                  'Closed on These Day',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                       ),
@@ -235,6 +328,7 @@ class _BusinessHoursScreenState extends State<BusinessHoursScreen> {
                           onChanged: (value) {
                             setState(() {
                               _businessHours[day]!.isOpen = value;
+                              _setDefaultTime(day);
                             });
                           },
                         ),
@@ -249,7 +343,7 @@ class _BusinessHoursScreenState extends State<BusinessHoursScreen> {
             width: Get.width,
             child: PrimaryButton(
               onTap: () => Navigator.pop(context, _businessHours),
-              title: "Confirm Shop Timing",
+              title: "Save Business Hours",
             ),
           )
         ],

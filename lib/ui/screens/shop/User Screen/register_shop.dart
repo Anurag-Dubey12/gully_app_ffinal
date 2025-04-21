@@ -5,18 +5,17 @@ import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/config/app_constants.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
+import 'package:gully_app/data/model/business_hours_model.dart';
 import 'package:gully_app/ui/screens/select_location.dart';
-import 'package:gully_app/ui/screens/shop_payment_screen.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/shop/aadhar_card_upload.dart';
 import 'package:gully_app/ui/widgets/shop/shop_imagepicker.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
+import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../data/controller/auth_controller.dart';
-import '../../../../data/model/business_hours_model.dart';
 import '../../../../data/model/shop_model.dart';
-import '../../../../data/model/vendor_model.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/create_tournament/form_input.dart';
 import '../../../widgets/shop/business_hours.dart';
@@ -34,18 +33,21 @@ class _ShopState extends State<RegisterShop>
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _numberController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
-  XFile? _documentImage;
-  bool tncAccepted = false;
   final TextEditingController _shopnameController = TextEditingController();
   final TextEditingController shopAddressController = TextEditingController();
   final TextEditingController shoplocationController = TextEditingController();
-  final TextEditingController _identificationNumber = TextEditingController();
+  final TextEditingController panCardNumberController = TextEditingController();
   final TextEditingController shopNumberController = TextEditingController();
   final TextEditingController shopEmailController = TextEditingController();
   final TextEditingController shopGstController = TextEditingController();
+  final TextEditingController businessLicenseController =
+      TextEditingController();
   final TextEditingController shopWebsiteController = TextEditingController();
   final TextEditingController shopDescriptionController =
       TextEditingController();
+
+  XFile? _documentImage;
+  bool tncAccepted = false;
   XFile? gstCertificate;
   XFile? shopLocation;
   XFile? businessLicense;
@@ -53,16 +55,17 @@ class _ShopState extends State<RegisterShop>
   XFile? rstCertificate;
   XFile? _shopLogo;
   List<String>? shopimages;
+  List<XFile>? base64shopimages;
   bool isLoading = false;
   int currentStep = 0;
   final ScrollController _controller = ScrollController();
   Map<String, String> aadhaarData = {};
-
   final _formKeys = [
     GlobalKey<FormState>(),
     GlobalKey<FormState>(),
     GlobalKey<FormState>(),
   ];
+
   String? frontImagePath;
   String? backImagePath;
   XFile? frontImageXFile;
@@ -81,7 +84,6 @@ class _ShopState extends State<RegisterShop>
   ];
   late AnimationController _progressController;
   late Animation<double> _progressAnimation;
-  List<String> summaries = [];
 
   void _updateAadharImages(Map<String, String> data) {
     setState(() {
@@ -101,21 +103,26 @@ class _ShopState extends State<RegisterShop>
     });
   }
 
-  Map<String, BusinessHours> _businessHours = {
-    'Sunday': BusinessHours(isOpen: false),
-    'Monday': BusinessHours(),
-    'Tuesday': BusinessHours(),
-    'Wednesday': BusinessHours(),
-    'Thursday': BusinessHours(),
-    'Friday': BusinessHours(),
-    'Saturday': BusinessHours(isOpen: false),
-  };
-  String name = "";
-  String dob = "";
-  String aadharnumber = "";
-  bool isProcessingAadhaar = false;
-
+  Map<String, business_hours_model> businesshours = {};
   late LatLng location;
+  @override
+  void initState() {
+    super.initState();
+    final AuthController authController = Get.find<AuthController>();
+    _nameController.text = authController.state!.fullName;
+    _emailController.text = authController.state!.email;
+    _numberController.text = authController.state!.phoneNumber ?? '';
+    _progressController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+    _progressAnimation =
+        Tween<double>(begin: 0, end: 0).animate(_progressController);
+
+    final shop = Get.find<ShopController>().getMyShop();
+    fetchLocation();
+  }
+
   fetchLocation() async {
     final postion = await determinePosition();
     location = LatLng(postion.latitude, postion.longitude);
@@ -140,14 +147,15 @@ class _ShopState extends State<RegisterShop>
     if (_formKeys[currentStep].currentState!.validate()) {
       _formKeys[currentStep].currentState!.save();
 
-      // if (currentStep == 2 && !_validateImages()) {
-      //   // errorSnackBar("Please Upload All The Required Documents");
-      //   return;
-      // }
-      // if (currentStep == 0 && _documentImage == null) {
-      //   errorSnackBar("ID proof document required.");
-      //   return;
-      // }
+      if (currentStep == 0 && aadhaarData.isEmpty) {
+        errorSnackBar("Aadhar Card document required.");
+        return;
+      }
+      if (currentStep == 1 && shopimages == null) {
+        errorSnackBar("Please Add An Shop Images");
+        return;
+      }
+
       if (currentStep < _formKeys.length - 1) {
         setState(() {
           currentStep++;
@@ -167,93 +175,78 @@ class _ShopState extends State<RegisterShop>
   }
 
   void _submitForm() async {
-    // if (tncAccepted == false) {
-    //   errorSnackBar('Please accept the Terms and Conditions');
-    //   return;
-    // }
     if (_formKeys[currentStep].currentState!.validate()) {
       try {
-        // final AuthController authController = Get.find<AuthController>();
-        if (_validateImages()) {
-          // setState(() {
-          //   isLoading = true;
-          // });
-          final controller = Get.find<ShopController>();
-          final shopData = shop_model(
-            shopName: _shopnameController.text,
-            shopAddress: shopAddressController.text,
-            shopNumber: shopNumberController.text,
-            shopEmail: shopEmailController.text,
-            gstNumber: shopGstController.text,
-            gstCertificate: gstCertificate?.path,
-            registrationCertificate: rstCertificate?.path,
-            shopLogo: _shopLogo?.path,
-            businessHours: _businessHours.map((key, value) => MapEntry(
-                key,
-                business_hours_model(
-                  isOpen: value.isOpen,
-                  openTime: value.openTime?.format(context),
-                  closeTime: value.closeTime?.format(context),
-                  id: null,
-                ))),
-            websiteUrl: shopWebsiteController.text,
-            description: shopDescriptionController.text,
-            locationProof: shopLocation?.path,
-            businessLicense: businessLicense?.path,
-            taxCertificate: taxCertificate?.path,
-            vendor: vendor_model(
-              name: _nameController.text,
-              email: _emailController.text,
-              phoneNumber: _numberController.text,
-              address: _addressController.text,
-              id_proof: _documentImage?.path,
-              id: '',
-            ),
-          );
-          controller.addShop(shopData);
-          //logger.d'The shop data is saved');
-          Get.to(() => ShopPaymentPage(
-                shopData: shopData,
-              ));
-        } else {
-          setState(() {
-            isLoading = false;
-          });
+        final authController = Get.find<AuthController>();
+        final controller = Get.find<ShopController>();
+
+        List<String> shopBase64Images = [];
+
+        if (base64shopimages != null) {
+          for (XFile image in base64shopimages!) {
+            String convertedImage = await convertImageToBase64(image);
+            shopBase64Images.add(convertedImage);
+          }
         }
-        // String? base64;
-        // if (_image != null) {
-        //   base64 =
-        //   await convertImageToBase64(_image!);
-        // }
-      } catch (e) {
-        setState(() {
-          isLoading = false;
+
+        List<OwnerAddharImage>? ownerAadharImages;
+        String? frontImagebase64;
+        String? backImagebase64;
+        if (frontImagePath != null && backImagePath != null) {
+          frontImagebase64 = await convertImageToBase64(frontImageXFile!);
+          backImagebase64 = await convertImageToBase64(backImageXFile!);
+          ownerAadharImages = [
+            OwnerAddharImage(
+              aadharFrontSide: frontImagebase64,
+              aadharBackSide: backImagebase64,
+            )
+          ];
+        }
+        final Map<String, dynamic> shopTiming = businesshours.map((day, model) {
+          return MapEntry(day, {
+            "isOpen": model.isOpen,
+            "openTime": model.isOpen ? model.openTime : "Closed on These Day",
+            "closeTime": model.isOpen ? model.closeTime : "Closed on These Day",
+          });
         });
+
+        final Map<String, dynamic> shopData = {
+          "shopImage": shopBase64Images,
+          "shopName": _shopnameController.text,
+          "shopAddress": shopAddressController.text,
+          "shopDescription": shopDescriptionController.text,
+          "shopContact": shopNumberController.text,
+          "shopEmail": shopEmailController.text,
+          "shopLink": shopWebsiteController.text,
+          "joinedAt": DateTime.now().toIso8601String(),
+          // "gstNumber": shopGstController.text,
+          "selectLocation": shoplocationController.text,
+          "latitude": location.latitude,
+          "longitude": location.longitude,
+          "shopTiming": shopTiming,
+          "ownerName": _nameController.text,
+          "ownerEmail": _emailController.text,
+          "ownerPhoneNumber": _numberController.text,
+          "ownerAddress": _addressController.text,
+          "ownerPanNumber": panCardNumberController.text,
+          "aadharFrontSide": frontImagebase64,
+          "aadharBackSide": backImagebase64,
+        };
+        try {
+          bool isOk = await controller.registerShop(shopData);
+          if (isOk) {
+            successSnackBar("Shop registration submitted successfully!");
+          }
+        } catch (e) {
+          print(e);
+        }
+      } catch (e) {
+        print(e.toString());
         errorSnackBar("An error occurred while submitting the form.",
             title: "Error");
-        //logger.d"Error submitting form: $e");
-      } finally {
-        setState(() {
-          isLoading = false;
-        });
+        //logger.d("Error submitting form: $e");
       }
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    final AuthController authController = Get.find<AuthController>();
-    _nameController.text = authController.state!.fullName;
-    _emailController.text = authController.state!.email;
-    _numberController.text = authController.state!.phoneNumber ?? '';
-    _progressController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-    _progressAnimation =
-        Tween<double>(begin: 0, end: 0).animate(_progressController);
-    fetchLocation();
   }
 
   void pickImage(ImageType imageType) async {
@@ -552,21 +545,21 @@ class _ShopState extends State<RegisterShop>
             controller: _addressController,
             label: AppConstants.ownerAddress,
             textInputType: TextInputType.multiline,
-            // validator: (value) {
-            //   if (value!.isEmpty) {
-            //     return "Address cannot be empty.";
-            //   }
-            //   RegExp addressRegExp = RegExp(r'^(?=.*[A-Za-z])(?=.*\d).+$');
-            //   if (!addressRegExp.hasMatch(value)) {
-            //     return "Address must contain at least one letter and one number.";
-            //   }
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "Address cannot be empty.";
+              }
+              RegExp addressRegExp = RegExp(r'^(?=.*[A-Za-z])(?=.*\d).+$');
+              if (!addressRegExp.hasMatch(value)) {
+                return "Address must contain at least one letter \nand one number.";
+              }
 
-            //   if (value.length < 10) {
-            //     return "Address must be at least 10 characters long.";
-            //   }
+              if (value.length < 10) {
+                return "Address must be at least 10 characters long.";
+              }
 
-            //   return null;
-            // },
+              return null;
+            },
           ),
           // FormInput(
           //   controller: _addressController,
@@ -679,14 +672,6 @@ class _ShopState extends State<RegisterShop>
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // const Text(
-                          //   "Uploaded Aadhaar Images:",
-                          //   style: TextStyle(
-                          //     fontWeight: FontWeight.bold,
-                          //     fontSize: 14,
-                          //   ),
-                          // ),
-                          // const SizedBox(height: 8),
                           Row(
                             children: [
                               Expanded(
@@ -757,21 +742,20 @@ class _ShopState extends State<RegisterShop>
               ),
             ),
           ),
-
           FormInput(
-            controller: _identificationNumber,
+            controller: panCardNumberController,
             label: AppConstants.ownerPanCard,
             textInputType: TextInputType.multiline,
             isUpperCase: true,
-            // validator: (value) {
-            //   if (value!.isEmpty) {
-            //     return "Address cannot be empty.";
-            //   }
-            //   if (!RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$').hasMatch(value)) {
-            //     return "Please Enter a Valid Pan Card ";
-            //   }
-            //   return null;
-            // },
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "Address cannot be empty.";
+              }
+              if (!RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$').hasMatch(value)) {
+                return "Please Enter a Valid Pan Card ";
+              }
+              return null;
+            },
           ),
         ],
       ),
@@ -788,50 +772,120 @@ class _ShopState extends State<RegisterShop>
           ShopImagePicker(
             images: shopimages ?? [],
             onImagesChanged: _handleImageChange,
+            onImageSelected: _handleonImageSelected,
           ),
           FormInput(
             controller: _shopnameController,
             label: "Shop Name",
             textInputType: TextInputType.name,
-            // validator: (value) {
-            //   if (value!.isEmpty) {
-            //     return "Enter Shop Name";
-            //   }
-            //   return null;
-            // },
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "Enter Shop Name";
+              }
+              return null;
+            },
           ),
           FormInput(
             controller: shopNumberController,
             label: "Shop Phone Number",
             textInputType: TextInputType.number,
             maxLength: 10,
-            // validator: (value) {
-            //   if (value!.isEmpty) {
-            //     return "Enter Shop Number";
-            //   }
-            //   return null;
-            // },
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "Enter Shop Number";
+              }
+              if (value.length < 10) {
+                return "Please Enter a Valid Shop Phone Number";
+              }
+
+              if (RegExp(r'^(\d)\1{9}$').hasMatch(value)) {
+                return "Phone number cannot be all the same digit";
+              }
+
+              if (RegExp(r'(\d)\1{4,}').hasMatch(value)) {
+                return "Phone number has too many repeated digits";
+              }
+
+              final ascending = '0123456789';
+              final descending = '9876543210';
+              if (ascending.contains(value) || descending.contains(value)) {
+                return "Phone number cannot be a simple sequence";
+              }
+
+              return null;
+            },
           ),
           FormInput(
             controller: shopEmailController,
             label: "Shop Email Address",
             textInputType: TextInputType.emailAddress,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return "Enter Shop Email Address";
+              }
+
+              final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$');
+
+              if (!emailRegex.hasMatch(value)) {
+                return "Enter a valid email address";
+              }
+
+              final email = value.toLowerCase();
+
+              final typoDomains = [
+                'gmil.com',
+                'gmal.com',
+                'gmaill.com',
+                'gnail.com',
+                'gmaik.com',
+                'gmail.con',
+                'gmail.co',
+                'outlok.com',
+                'yaho.com',
+              ];
+
+              if (typoDomains.any((domain) => email.endsWith('@$domain'))) {
+                return "Email seems incorrect.Please check for Again.";
+              }
+
+              return null;
+            },
           ),
           FormInput(
             controller: shopGstController,
             label: "Shop GST Number",
-            textInputType: TextInputType.emailAddress,
-            validator: (value) {
-              if (value!.isNotEmpty) {
-                if (!RegExp(
-                        r"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$")
-                    .hasMatch(value)) {
-                  return "Invalid GST Number";
-                }
-                return null;
-              }
-              return null;
-            },
+            textInputType: TextInputType.text,
+            // validator: (value) {
+            //   if (value == null || value.trim().isEmpty) {
+            //     return "Enter GST Number";
+            //   }
+            //   if (value.isNotEmpty) {
+            //     if (!RegExp(
+            //             r"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$")
+            //         .hasMatch(value)) {
+            //       return "Invalid GST Number";
+            //     }
+            //     return null;
+            //   }
+            //   return null;
+            // },
+          ),
+          FormInput(
+            controller: businessLicenseController,
+            label: "Business License Number",
+            textInputType: TextInputType.text,
+            // validator: (value) {
+            //   if (value == null || value.trim().isEmpty) {
+            //     return "Enter Business License Number";
+            //   }
+            //   if (value.isNotEmpty) {
+            //     if (!RegExp(r"^[a-zA-Z0-9]{5,15}$").hasMatch(value)) {
+            //       return "Invalid Business License Number";
+            //     }
+            //     return null;
+            //   }
+            //   return null;
+            // },
           ),
           const SizedBox(height: 10),
         ],
@@ -899,19 +953,29 @@ class _ShopState extends State<RegisterShop>
               label: "Shop Address",
               textInputType: TextInputType.multiline,
               autofocus: false,
-              // validator: (value) {
-              //   if (value!.isEmpty) {
-              //     return "Enter Shop Address";
-              //   }
-              //   return null;
-              // },
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Address cannot be empty.";
+                }
+                RegExp addressRegExp = RegExp(r'^(?=.*[A-Za-z])(?=.*\d).+$');
+                if (!addressRegExp.hasMatch(value)) {
+                  return "Address must contain at least one letter \nand one number.";
+                }
+
+                if (value.length < 10) {
+                  return "Address must be at least 10 characters long.";
+                }
+
+                return null;
+              },
             ),
             FormInput(
-              controller: _addressController,
-              label: "Select Location",
+              controller: shoplocationController,
+              label: 'Select Nearby Location',
               readOnly: true,
-              iswhite: false,
-              filled: true,
+              isinfo: true,
+              infotitle: AppConstants.shoplocInfo,
+              infotext: AppConstants.shopinfotext,
               onTap: () async {
                 Get.to(
                   () => SelectLocationScreen(
@@ -938,7 +1002,7 @@ class _ShopState extends State<RegisterShop>
               textInputType: TextInputType.multiline,
             ),
             Text(
-              "Business Hours",
+              "Shop Working Hours",
               style: Get.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -954,21 +1018,21 @@ class _ShopState extends State<RegisterShop>
                 title: Text(_getBusinessHoursSummary()),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () async {
-                  final result =
-                      await showModalBottomSheet<Map<String, BusinessHours>>(
+                  final result = await showModalBottomSheet<
+                      Map<String, business_hours_model>>(
                     context: context,
                     isScrollControlled: true,
                     builder: (context) {
                       return SizedBox(
                           height: Get.height * 0.8,
-                          child: BusinessHoursScreen(
-                              initialHours: _businessHours));
+                          child:
+                              BusinessHoursScreen(initialHours: businesshours));
                     },
                   );
 
                   if (result != null) {
                     setState(() {
-                      _businessHours = result;
+                      businesshours = result;
                     });
                   }
                 },
@@ -997,6 +1061,12 @@ class _ShopState extends State<RegisterShop>
   void _handleImageChange(List<String> updatedImages) {
     setState(() {
       shopimages = updatedImages;
+    });
+  }
+
+  void _handleonImageSelected(List<XFile> updatedImages) {
+    setState(() {
+      base64shopimages = updatedImages;
     });
   }
 
@@ -1062,13 +1132,59 @@ class _ShopState extends State<RegisterShop>
   }
 
   String _getBusinessHoursSummary() {
-    final openDays = _businessHours.entries
+    if (businesshours.isEmpty) {
+      return "Set shop hours";
+    }
+
+    final openDays = businesshours.entries
         .where((entry) => entry.value.isOpen)
         .map((entry) => entry.key)
         .toList();
-    if (openDays.isEmpty) return "Closed all week";
-    if (openDays.length == 7) return "Open all week";
 
+    if (openDays.isEmpty) {
+      return "Closed all days";
+    }
+
+    if (openDays.length == 7) {
+      final firstDay = businesshours[openDays.first]!;
+      bool allSameHours = true;
+
+      for (var day in openDays.skip(1)) {
+        final currentDay = businesshours[day]!;
+        if (currentDay.openTime != firstDay.openTime ||
+            currentDay.closeTime != firstDay.closeTime) {
+          allSameHours = false;
+          break;
+        }
+      }
+
+      if (allSameHours) {
+        return "Open daily ${firstDay.openTime} - ${firstDay.closeTime}";
+      }
+
+      return "Open all days (varied hours)";
+    }
+    final weekdaysList = [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday'
+    ];
+    final weekendsList = ['Saturday', 'Sunday'];
+
+    bool allWeekdaysOpen =
+        weekdaysList.every((day) => businesshours[day]?.isOpen == true);
+    bool allWeekendsOpen =
+        weekendsList.every((day) => businesshours[day]?.isOpen == true);
+
+    if (allWeekdaysOpen && !allWeekendsOpen) {
+      return "Open weekdays only";
+    }
+
+    if (!allWeekdaysOpen && allWeekendsOpen) {
+      return "Open weekends only";
+    }
     return "Open ${openDays.join(', ')}";
   }
 }

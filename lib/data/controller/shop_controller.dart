@@ -1,17 +1,20 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/api/shop_api.dart';
-import 'package:gully_app/data/model/vendor_model.dart';
+import 'package:gully_app/data/model/product_model.dart';
 import 'package:gully_app/data/model/shop_model.dart';
+import 'package:gully_app/data/model/vendor_model.dart';
+import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ShopController extends GetxController with StateMixin {
   Rx<vendor_model?> vendor = Rx<vendor_model?>(null);
-  Rx<shop_model?> shop = Rx<shop_model?>(null);
+  Rx<ShopModel?> shop = Rx<ShopModel?>(null);
   RxList sociallinks = [].obs;
-  RxList<shop_model> shops = <shop_model>[].obs;
+  RxList<ShopModel> shops = <ShopModel>[].obs;
   Rx<XFile?> vendorDocumentImage = Rx<XFile?>(null);
   RxList<Map<String, dynamic>> products = <Map<String, dynamic>>[].obs;
   final ShopApi shopApi;
@@ -28,18 +31,125 @@ class ShopController extends GetxController with StateMixin {
     loadShopsData();
   }
 
-  // MARK: Register Shop
-  Future<shop_model> registerShop(Map<String, dynamic> shop) async {
-    final result = await shopApi.registerShop(shop);
+  Future<bool> registerShop(Map<String, dynamic> shop) async {
+    final response = await shopApi.registerShop(shop);
+    if (response.status == false) {
+      errorSnackBar(response.message!);
+      return false;
+    }
+    change(GetStatus.success(ShopModel.fromJson(response.data!)));
+    return true;
+  }
 
-    return shop_model.fromJson(result.data!);
+  RxList<ShopModel> myShops = <ShopModel>[].obs;
+  Future<List<ShopModel>> getMyShop() async {
+    final response = await shopApi.getMyShops();
+    final dataMap = response.data as Map<String, dynamic>;
+    final List<dynamic> jsonList = dataMap['shops'] as List<dynamic>;
+    myShops.value = jsonList
+        .map((e) => ShopModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+    if (kDebugMode) {
+      print("The Myshop Data: ${myShops.value.map((e) => e.ownerEmail)}");
+    }
+    return myShops;
+  }
+
+  RxList<String> category = <String>[].obs;
+  Future<List<String>> getCategory() async {
+    try {
+      final response = await shopApi.getCategory();
+      if (response.status == false) {
+        errorSnackBar("Failed to get Category");
+        return [];
+      }
+      return category.value = List<String>.from(response.data!['category']);
+    } catch (e) {
+      if (kDebugMode) {
+        print("Failed to Fetch The Sub Category:${e.toString()}");
+      }
+      return [];
+    }
+  }
+
+  RxList<String> subcategory = <String>[].obs;
+  Future<List<String>> getsubCategory(String category) async {
+    try {
+      final response = await shopApi.getsubCategory(category);
+      if (response.status == false) {
+        errorSnackBar("Failed to get Category");
+        return [];
+      }
+      return subcategory.value =
+          List<String>.from(response.data!['subCategory']);
+    } catch (e) {
+      if (kDebugMode) {
+        print("Failed to Fetch The Sub Category:${e.toString()}");
+      }
+      return [];
+    }
+  }
+
+  RxList<String> brands = <String>[].obs;
+  Future<List<String>> getbrands() async {
+    try {
+      final response = await shopApi.getbrands();
+      if (response.status == false) {
+        errorSnackBar("Failed to get Category");
+        return [];
+      }
+      return brands.value = List<String>.from(response.data!['Brands']);
+    } catch (e) {
+      if (kDebugMode) {
+        print("Failed to Fetch The Sub Category:${e.toString()}");
+      }
+      return [];
+    }
+  }
+
+  Future<bool> addShopProduct(Map<String, dynamic> product) async {
+    final response = await shopApi.addShopProduct(product);
+    if (response.status == false) {
+      errorSnackBar(response.message!);
+      return false;
+    }
+    change(GetStatus.success(ProductModel.fromJson(response.data!)));
+    return true;
+  }
+
+  RxInt selectedCategory = 0.obs;
+  RxInt selectedsubCategory = 0.obs;
+  RxInt selectedbrand = 0.obs;
+  RxDouble setPrice = 0.0.obs;
+  RxList<ProductModel> product = <ProductModel>[].obs;
+  RxList<String> productsCategory = <String>[].obs;
+  RxList<String> productssubCategory = <String>[].obs;
+  RxList<String> productsBrand = <String>[].obs;
+  RxDouble higestPriceProduct = 0.0.obs;
+  Future<List<ProductModel>> getShopProduct(String shopid) async {
+    final response = await shopApi.getShopProduct(shopid);
+    product.value = (response.data!['products'] as List<dynamic>)
+        .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+    productsCategory.value =
+        product.map((category) => category.productCategory).toSet().toList();
+    productssubCategory.value = product
+        .map((subcatgeory) => subcatgeory.productSubCategory)
+        .toSet()
+        .toList();
+    productsBrand.value =
+        product.map((brand) => brand.productBrand).toSet().toList();
+    higestPriceProduct.value = product
+        .map((highest) => highest.productsPrice)
+        .reduce((a, b) => a > b ? a : b);
+    return product;
   }
 
   void updateVendorDetails(vendor_model vendorData) {
     vendor.value = vendorData;
   }
 
-  void updateShopDetails(shop_model shopData) {
+  void updateShopDetails(ShopModel shopData) {
     shop.value = shopData;
     saveShopData();
   }
@@ -62,12 +172,12 @@ class ShopController extends GetxController with StateMixin {
   }
 
   //Shared Preferences
-  void addShop(shop_model shopData) {
+  void addShop(ShopModel shopData) {
     shops.add(shopData);
     saveShopData();
   }
 
-  void updateShop(int index, shop_model shopData) {
+  void updateShop(int index, ShopModel shopData) {
     if (index >= 0 && index < shops.length) {
       shops[index] = shopData;
       saveShopData();
@@ -94,7 +204,7 @@ class ShopController extends GetxController with StateMixin {
     if (jsonData != null) {
       final List<dynamic> shopsJson = json.decode(jsonData);
       shops.value =
-          shopsJson.map((shopJson) => shop_model.fromJson(shopJson)).toList();
+          shopsJson.map((shopJson) => ShopModel.fromJson(shopJson)).toList();
     }
   }
 

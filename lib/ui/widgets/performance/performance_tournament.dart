@@ -25,7 +25,7 @@ class PerformanceTournament extends StatelessWidget {
             GestureDetector(
               onTap: onTap,
               child: Container(
-                height: Get.height*0.2,
+                height: Get.height * 0.2,
                 // margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -41,10 +41,11 @@ class PerformanceTournament extends StatelessWidget {
                   image: DecorationImage(
                     image: tournament['coverPhoto'] != null
                         ? FallbackImageProvider(
-                      toImageUrl(tournament['coverPhoto']),
-                      'assets/images/logo.png',
-                    )
-                        : const AssetImage('assets/images/logo.png') as ImageProvider,
+                            toImageUrl(tournament['coverPhoto']),
+                            'assets/images/logo.png',
+                          )
+                        : const AssetImage('assets/images/logo.png')
+                            as ImageProvider,
                     fit: BoxFit.cover,
                   ),
                 ),

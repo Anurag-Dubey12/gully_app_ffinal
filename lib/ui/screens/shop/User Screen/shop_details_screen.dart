@@ -17,17 +17,122 @@ class ShopDetailsScreen extends StatefulWidget {
 class DetailsState extends State<ShopDetailsScreen> {
   final Map<String, List<String>> _categories = {
     'All': [],
-    'Cricket': ['Bat', 'Ball', 'T-shirt', 'Shorts', 'Boots', 'Wickets', 'Helmet', 'Gloves', 'Cap', 'Arm Guard'],
-    'Soccer': ['Football', 'Goal Net', 'Jersey', 'Shorts', 'Cleats', 'Shin Guards', 'Socks', 'Water Bottle'],
-    'Basketball': ['Basketball', 'Hoop', 'Jersey', 'Shorts', 'Sneakers', 'Headband'],
-    'Tennis': ['Tennis Racket', 'Tennis Ball', 'T-shirt', 'Shorts/Skirt', 'Tennis Shoes', 'Wristbands', 'Visor'],
-    'Swimming': ['Goggles', 'Swimming Cap', 'Swimsuit', 'Towel', 'Flip-flops', 'Kickboard'],
-    'Running': ['Running Shorts', 'Running Shirt', 'Running Shoes', 'Sweatband', 'Hydration Belt', 'GPS Watch'],
-    'Badminton': ['Shuttlecock', 'Badminton Racket', 'T-shirt', 'Shorts', 'Indoor Shoes'],
-    'Baseball': ['Baseball Bat', 'Baseball Glove', 'Cap', 'Jersey', 'Cleats', 'Baseball', 'Helmet', 'Base'],
-    'Golf': ['Golf Club', 'Golf Ball', 'Golf Cap', 'Golf Shoes', 'Golf Bag', 'Tee', 'Glove'],
-    'Hockey': ['Hockey Stick', 'Hockey Ball', 'Jersey', 'Shorts', 'Shoes', 'Shin Guards'],
-    'Football': ['Football', 'Football Boots', 'Goalkeeper Gloves', 'Shin Guards', 'Socks', 'Jerseys', 'Shorts', 'Goalkeeper Jersey', 'Cones', 'Training Bibs', 'Nets', 'Goal Posts', 'Pumps', 'Bags', 'Corner Flags', 'Whistles', 'Captain Armbands', 'Kit Bag', 'Agility Ladders', 'Speed Hurdles', 'Water Bottles', 'Training Balls', 'Medical Kit', 'Coaching Clipboard', 'Marker Discs'],
+    'Cricket': [
+      'Bat',
+      'Ball',
+      'T-shirt',
+      'Shorts',
+      'Boots',
+      'Wickets',
+      'Helmet',
+      'Gloves',
+      'Cap',
+      'Arm Guard'
+    ],
+    'Soccer': [
+      'Football',
+      'Goal Net',
+      'Jersey',
+      'Shorts',
+      'Cleats',
+      'Shin Guards',
+      'Socks',
+      'Water Bottle'
+    ],
+    'Basketball': [
+      'Basketball',
+      'Hoop',
+      'Jersey',
+      'Shorts',
+      'Sneakers',
+      'Headband'
+    ],
+    'Tennis': [
+      'Tennis Racket',
+      'Tennis Ball',
+      'T-shirt',
+      'Shorts/Skirt',
+      'Tennis Shoes',
+      'Wristbands',
+      'Visor'
+    ],
+    'Swimming': [
+      'Goggles',
+      'Swimming Cap',
+      'Swimsuit',
+      'Towel',
+      'Flip-flops',
+      'Kickboard'
+    ],
+    'Running': [
+      'Running Shorts',
+      'Running Shirt',
+      'Running Shoes',
+      'Sweatband',
+      'Hydration Belt',
+      'GPS Watch'
+    ],
+    'Badminton': [
+      'Shuttlecock',
+      'Badminton Racket',
+      'T-shirt',
+      'Shorts',
+      'Indoor Shoes'
+    ],
+    'Baseball': [
+      'Baseball Bat',
+      'Baseball Glove',
+      'Cap',
+      'Jersey',
+      'Cleats',
+      'Baseball',
+      'Helmet',
+      'Base'
+    ],
+    'Golf': [
+      'Golf Club',
+      'Golf Ball',
+      'Golf Cap',
+      'Golf Shoes',
+      'Golf Bag',
+      'Tee',
+      'Glove'
+    ],
+    'Hockey': [
+      'Hockey Stick',
+      'Hockey Ball',
+      'Jersey',
+      'Shorts',
+      'Shoes',
+      'Shin Guards'
+    ],
+    'Football': [
+      'Football',
+      'Football Boots',
+      'Goalkeeper Gloves',
+      'Shin Guards',
+      'Socks',
+      'Jerseys',
+      'Shorts',
+      'Goalkeeper Jersey',
+      'Cones',
+      'Training Bibs',
+      'Nets',
+      'Goal Posts',
+      'Pumps',
+      'Bags',
+      'Corner Flags',
+      'Whistles',
+      'Captain Armbands',
+      'Kit Bag',
+      'Agility Ladders',
+      'Speed Hurdles',
+      'Water Bottles',
+      'Training Balls',
+      'Medical Kit',
+      'Coaching Clipboard',
+      'Marker Discs'
+    ],
   };
 
   String selectedMainCategory = 'All';
@@ -76,8 +181,11 @@ class DetailsState extends State<ShopDetailsScreen> {
           ),
         ],
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded,color: Colors.white,),
-          onPressed: ()=>Get.back(),
+          icon: const Icon(
+            Icons.arrow_back_rounded,
+            color: Colors.white,
+          ),
+          onPressed: () => Get.back(),
         ),
       ),
       body: ListView(
@@ -224,10 +332,10 @@ class DetailsState extends State<ShopDetailsScreen> {
 
     return GestureDetector(
       onTap: () {
-        Get.to(() => ProductDetailScreen(
-              product: product,
-              isadmin: false,
-            ));
+        // Get.to(() => ProductDetailScreen(
+        //       product: product,
+        //       isadmin: false,
+        //     ));
       },
       child: Card(
         margin: const EdgeInsets.all(8),
@@ -252,7 +360,8 @@ class DetailsState extends State<ShopDetailsScreen> {
                 children: [
                   Text(
                     product['name'],
-                    style: const TextStyle(fontWeight: FontWeight.bold,fontSize: 14),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 14),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -330,6 +439,7 @@ class DetailsState extends State<ShopDetailsScreen> {
       ),
     );
   }
+
   Widget productList(String title, List<dynamic> products, String shopNumber) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -361,10 +471,10 @@ class DetailsState extends State<ShopDetailsScreen> {
               final hasDiscount = totalDiscount > 0;
               return GestureDetector(
                 onTap: () {
-                  Get.to(() => ProductDetailScreen(
-                        product: product,
-                        isadmin: false,
-                      ));
+                  // Get.to(() => ProductDetailScreen(
+                  //       product: product,
+                  //       isadmin: false,
+                  //     ));
                 },
                 child: Container(
                   width: 150,
@@ -494,6 +604,7 @@ class DetailsState extends State<ShopDetailsScreen> {
       ],
     );
   }
+
   void filterOptions() {
     showModalBottomSheet(
       isScrollControlled: true,
@@ -577,10 +688,10 @@ class DetailsState extends State<ShopDetailsScreen> {
                         ),
                       ),
                       const SizedBox(height: 20),
-
                       if (selectedMainCategory != 'All') ...[
                         const Text('Select Subcategories',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
                         SizedBox(
                           height: 35,
                           child: ListView(
@@ -590,12 +701,16 @@ class DetailsState extends State<ShopDetailsScreen> {
                               return GestureDetector(
                                 onTap: () {
                                   setModalState(() {
-                                    selectedSubCategory = selectedSubCategory == subCategory ? null : subCategory;
+                                    selectedSubCategory =
+                                        selectedSubCategory == subCategory
+                                            ? null
+                                            : subCategory;
                                   });
                                 },
                                 child: Container(
                                   height: 10,
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 8),
                                   margin: const EdgeInsets.only(right: 8),
                                   decoration: BoxDecoration(
                                     color: selectedSubCategory == subCategory
@@ -607,9 +722,10 @@ class DetailsState extends State<ShopDetailsScreen> {
                                     child: Text(
                                       subCategory,
                                       style: TextStyle(
-                                        color: selectedSubCategory == subCategory
-                                            ? Colors.white
-                                            : Colors.black,
+                                        color:
+                                            selectedSubCategory == subCategory
+                                                ? Colors.white
+                                                : Colors.black,
                                       ),
                                     ),
                                   ),
@@ -620,7 +736,9 @@ class DetailsState extends State<ShopDetailsScreen> {
                         ),
                         const SizedBox(height: 20),
                       ],
-                      const Text('Price Range', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      const Text('Price Range',
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
                       RangeSlider(
                         values: const RangeValues(0, 234),
                         min: 0,
@@ -631,13 +749,15 @@ class DetailsState extends State<ShopDetailsScreen> {
                       ),
                       const SizedBox(height: 20),
                       const Spacer(),
-
                       PrimaryButton(
                         onTap: () {
-                          applyFilter(selectedMainCategory, selectedSubCategory);
+                          applyFilter(
+                              selectedMainCategory, selectedSubCategory);
                           Navigator.pop(context);
                         },
-                        title: selectedMainCategory == "All"? 'Show All Product':'Show ${_getFilteredProductCount(selectedMainCategory, selectedSubCategory)} results',
+                        title: selectedMainCategory == "All"
+                            ? 'Show All Product'
+                            : 'Show ${_getFilteredProductCount(selectedMainCategory, selectedSubCategory)} results',
                       ),
                     ],
                   ),
@@ -649,6 +769,7 @@ class DetailsState extends State<ShopDetailsScreen> {
       },
     );
   }
+
   int _getFilteredProductCount(String? mainCategory, String? subCategory) {
     if (mainCategory == null && subCategory == null) {
       return widget.shop['products']?.length ?? 0;
@@ -664,6 +785,7 @@ class DetailsState extends State<ShopDetailsScreen> {
           .length;
     }
   }
+
   void _launchCaller(String phoneNumber) async {
     final url = "tel:$phoneNumber";
     if (await canLaunch(url)) {

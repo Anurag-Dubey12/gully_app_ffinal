@@ -17,6 +17,7 @@ import 'package:gully_app/data/api/misc_api.dart';
 import 'package:gully_app/data/api/ranking_api.dart';
 import 'package:gully_app/data/api/score_board_api.dart';
 import 'package:gully_app/data/api/service_api.dart';
+import 'package:gully_app/data/api/shop_api.dart';
 import 'package:gully_app/data/api/team_api.dart';
 import 'package:gully_app/data/controller/SelectLocationScreenController.dart';
 import 'package:gully_app/data/controller/banner_promotion_controller.dart';
@@ -212,6 +213,7 @@ class _MyAppState extends State<MyApp> {
         Bind.put<AuthApi>(AuthApi(client: Get.find())),
         Bind.put<MiscApi>(MiscApi(repo: Get.find())),
         Bind.put<BannerApi>(BannerApi(repo: Get.find())),
+        Bind.put<ShopApi>(ShopApi(repo: Get.find())),
         Bind.put<ServiceApi>(ServiceApi(repo: Get.find())),
         Bind.lazyPut<TournamentApi>(() => TournamentApi(repo: Get.find())),
         Bind.lazyPut<ScoreboardApi>(() => ScoreboardApi(repo: Get.find())),

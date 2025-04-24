@@ -10,6 +10,7 @@ import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/ui/widgets/shop/actionButton.dart';
 import 'package:gully_app/ui/widgets/shop/build_info_card.dart';
 import 'package:gully_app/ui/widgets/shop/build_timing_row.dart.dart';
+import 'package:gully_app/ui/widgets/shop/product_card.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -18,55 +19,23 @@ import '../../../../data/controller/shop_controller.dart';
 
 class ShopDashboard extends StatefulWidget {
   final ShopModel shop;
-
-  const ShopDashboard({Key? key, required this.shop}) : super(key: key);
+  final bool isAdmin;
+  const ShopDashboard({Key? key, required this.shop, this.isAdmin = false})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _DashboardState();
 }
 
-class _DashboardState extends State<ShopDashboard>
-    with AutomaticKeepAliveClientMixin {
+class _DashboardState extends State<ShopDashboard> {
   final ShopController controller = Get.find<ShopController>();
   String _selectedCategory = 'All';
-  final ScrollController _scrollController = ScrollController();
   bool _isAppBarCollapsed = false;
   bool _showAllTimings = false;
   bool isMore = false;
   List<String> categories = [];
 
-  // Override to help with SurfaceView buffer issues
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  void initState() {
-    super.initState();
-    // Load product data more efficiently
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controller.loadProductsForShop(widget.shop.id);
-    });
-    _scrollController.addListener(_onScroll);
-  }
-
-  @override
-  void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _onScroll() {
-    final double offset = _scrollController.offset;
-    final bool isCollapsed = offset > 180;
-    if (isCollapsed != _isAppBarCollapsed) {
-      setState(() {
-        _isAppBarCollapsed = isCollapsed;
-      });
-    }
-  }
-
-  Widget _buildTimingSection() {
+  Widget shopTimingSection() {
     String currentDay = getCurrentDay();
     return buildInfoCard(
       title: "Shop Timings",
@@ -81,10 +50,10 @@ class _DashboardState extends State<ShopDashboard>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (!_showAllTimings)
-              buildDayTimingRow(currentDay, widget.shop, isHighlighted: true)
+              shopDayTimingRow(currentDay, widget.shop, isHighlighted: true)
             else
               ...widget.shop.shopTiming?.entries.map((entry) {
-                    return buildDayTimingRow(
+                    return shopDayTimingRow(
                       entry.key,
                       widget.shop,
                       isHighlighted: entry.key == currentDay,
@@ -134,8 +103,6 @@ class _DashboardState extends State<ShopDashboard>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context); // Required by AutomaticKeepAliveClientMixin
-
     return GradientBuilder(
       child: Scaffold(
         backgroundColor: Colors.transparent,
@@ -143,7 +110,7 @@ class _DashboardState extends State<ShopDashboard>
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: Text(
-            "${widget.shop.shopName} Shop",
+            widget.shop.shopName,
             style: Get.textTheme.headlineMedium?.copyWith(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -156,75 +123,471 @@ class _DashboardState extends State<ShopDashboard>
             color: Colors.white,
           ),
         ),
-        body: RepaintBoundary(
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CarouselSlider(
-                  options: CarouselOptions(
-                    height: 200,
-                    viewportFraction: 1.0,
-                    autoPlay: true,
-                    enlargeCenterPage: false,
-                    autoPlayInterval: const Duration(seconds: 5),
+        body: widget.isAdmin ? adminShopView() : userShopView(),
+      ),
+    );
+  }
+
+  Widget adminShopView() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CarouselSlider(
+            options: CarouselOptions(
+              height: 200,
+              viewportFraction: 1.0,
+              autoPlay: true,
+              enlargeCenterPage: false,
+              autoPlayInterval: const Duration(seconds: 5),
+            ),
+            items: widget.shop.shopImage.map((imageUrl) {
+              return Builder(
+                builder: (context) => GestureDetector(
+                  onTap: () => imageViewer(context, imageUrl, true),
+                  child: Container(
+                    width: Get.width,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(toImageUrl(imageUrl)),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.transparent,
+                            Colors.black.withOpacity(0.7),
+                          ],
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 5, vertical: 3),
+                        child: Align(
+                          alignment: Alignment.bottomLeft,
+                          child: Text(widget.shop.shopName,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                      ),
+                    ),
                   ),
-                  items: widget.shop.shopImage.map((imageUrl) {
-                    return Builder(
-                      builder: (context) => GestureDetector(
-                        onTap: () => imageViewer(context, imageUrl, true),
-                        child: Container(
-                          width: Get.width,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(toImageUrl(imageUrl)),
-                              fit: BoxFit.cover,
-                            ),
+                ),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 5),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: buildInfoCard(
+              title: "Description",
+              icon: Icons.description,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AnimatedCrossFade(
+                    crossFadeState: isMore
+                        ? CrossFadeState.showSecond
+                        : CrossFadeState.showFirst,
+                    duration: const Duration(milliseconds: 200),
+                    firstChild: Text(
+                      widget.shop.shopDescription,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    secondChild: Text(
+                      widget.shop.shopDescription,
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => setState(() => isMore = !isMore),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 4.0),
+                      child: Text(
+                        isMore ? 'Read less' : 'Read more',
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: AppTheme.primaryColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 3),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: buildInfoCard(
+              title: "Address",
+              icon: Icons.location_on,
+              child: Text(
+                widget.shop.shopAddress,
+                style: const TextStyle(fontSize: 14),
+              ),
+            ),
+          ),
+          const SizedBox(height: 3),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: buildInfoCard(
+              title: "Shop Contacts ",
+              icon: Icons.contact_phone,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  actionButton(
+                    icon: Icons.phone,
+                    label: 'Call',
+                    onTap: () => _launchPhone(widget.shop.shopContact),
+                    color: Colors.green,
+                  ),
+                  actionButton(
+                    icon: Icons.email,
+                    label: 'Email',
+                    onTap: () => _launchEmail(widget.shop.shopEmail),
+                    color: Colors.blue,
+                  ),
+                  actionButton(
+                    icon: Icons.directions,
+                    label: 'Directions',
+                    onTap: () => _launchMaps(
+                      widget.shop.locationHistory.point.coordinates[1],
+                      widget.shop.locationHistory.point.coordinates[0],
+                    ),
+                    color: Colors.orange,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 3),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: shopTimingSection(),
+          ),
+          const SizedBox(height: 10),
+          FutureBuilder<List<ProductModel>>(
+            future: controller.getShopProduct(widget.shop.id),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+              if (snapshot.hasError) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Text("Error: ${snapshot.error}"),
+                  ),
+                );
+              }
+              if (snapshot.data == null || snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Text("No products available"),
+                  ),
+                );
+              }
+              Map<String, List<ProductModel>> categorizedProduct =
+                  _organizeByCategories(snapshot.data!);
+
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Products",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.black.withOpacity(0.7),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: GestureDetector(
+                            onTap: () => filterOptions(),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                    color: Colors.grey[400]!, width: 1),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.2),
+                                    spreadRadius: 2,
+                                    blurRadius: 5,
+                                    offset: const Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: const Row(
+                                children: [
+                                  Text(
+                                    'Filter',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Icon(
+                                    Icons.filter,
+                                    size: 16,
+                                    color: Colors.black,
+                                  ),
                                 ],
                               ),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 5, vertical: 3),
-                              child: Align(
-                                alignment: Alignment.bottomLeft,
-                                child: Text(widget.shop.shopName,
-                                    style: const TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis),
-                              ),
-                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildAllCategoriesList(categorizedProduct)
+                ],
+              );
+            },
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
+    );
+  }
+
+  Widget userShopView() {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Stack(
+            children: [
+              CarouselSlider(
+                options: CarouselOptions(
+                  height: 150,
+                  viewportFraction: 1.0,
+                  autoPlay: true,
+                  enlargeCenterPage: false,
+                  autoPlayInterval: const Duration(seconds: 5),
+                ),
+                items: widget.shop.shopImage.map((imageUrl) {
+                  return GestureDetector(
+                    onTap: () => imageViewer(context, imageUrl, true),
+                    child: Container(
+                      width: Get.width,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(toImageUrl(imageUrl)),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
+              ),
+              IgnorePointer(
+                child: Container(
+                  height: 150,
+                  width: Get.width,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.7),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 10,
+                left: 10,
+                right: 10,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.shop.shopName,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(blurRadius: 6, color: Colors.black54),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    GestureDetector(
+                      onTap: _showShopDetailsSheet,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 6, horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.9),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: const Text(
+                          "View Shop Details",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black87,
                           ),
                         ),
                       ),
-                    );
-                  }).toList(),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 5),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: buildInfoCard(
-                    title: "Description",
-                    icon: Icons.description,
-                    child: Column(
+              )
+            ],
+          ),
+          const SizedBox(height: 5),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Shop Products",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => filterOptions(),
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: const Row(
+                      children: [
+                        Icon(Icons.filter_list, size: 18),
+                        SizedBox(width: 6),
+                        Text("Filter",
+                            style: TextStyle(fontWeight: FontWeight.w500)),
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          FutureBuilder<List<ProductModel>>(
+            future: controller.getShopProduct(widget.shop.id),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+              if (snapshot.hasError) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Text("Failed to Load Product"),
+                  ),
+                );
+              }
+
+              if (snapshot.data == null || snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20.0),
+                    child: Text("No products available"),
+                  ),
+                );
+              }
+              Map<String, List<ProductModel>> categorizedProducts =
+                  _organizeByCategories(snapshot.data!);
+
+              return _buildAllCategoriesList(categorizedProducts);
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showShopDetailsSheet() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        bool modelisMore = false;
+        String currentDay = getCurrentDay();
+        bool showModelAllTimings = false;
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 5,
+                      margin: const EdgeInsets.only(bottom: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade400,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.storefront_outlined,
+                        color: AppTheme.primaryColor),
+                    title: Text(widget.shop.shopName,
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.description,
+                        color: AppTheme.primaryColor),
+                    title: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         AnimatedCrossFade(
-                          crossFadeState: isMore
+                          crossFadeState: modelisMore
                               ? CrossFadeState.showSecond
                               : CrossFadeState.showFirst,
                           duration: const Duration(milliseconds: 200),
@@ -240,7 +603,8 @@ class _DashboardState extends State<ShopDashboard>
                           ),
                         ),
                         InkWell(
-                          onTap: () => setState(() => isMore = !isMore),
+                          onTap: () =>
+                              setModalState(() => modelisMore = !modelisMore),
                           child: Padding(
                             padding: const EdgeInsets.only(top: 4.0),
                             child: Text(
@@ -256,161 +620,68 @@ class _DashboardState extends State<ShopDashboard>
                       ],
                     ),
                   ),
-                ),
-                const SizedBox(height: 3),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: buildInfoCard(
-                    title: "Address",
-                    icon: Icons.location_on,
-                    child: Text(
-                      widget.shop.shopAddress,
-                      style: const TextStyle(fontSize: 14),
+                  ListTile(
+                    leading: const Icon(Icons.location_on_outlined,
+                        color: Colors.redAccent),
+                    title: Text(widget.shop.shopAddress),
+                  ),
+                  ListTile(
+                    leading:
+                        const Icon(Icons.phone_outlined, color: Colors.green),
+                    title: Text(widget.shop.shopContact),
+                    onTap: () => _launchPhone(widget.shop.shopContact),
+                  ),
+                  ListTile(
+                    leading:
+                        const Icon(Icons.email_outlined, color: Colors.blue),
+                    title: Text(widget.shop.shopEmail),
+                    onTap: () => _launchEmail(widget.shop.shopEmail),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      setModalState(() {
+                        showModelAllTimings = !showModelAllTimings;
+                      });
+                    },
+                    child: buildInfoCard(
+                      title: "Shop Timings",
+                      icon: Icons.access_time,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          showModelAllTimings
+                              ? const Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                      "Tap to hide the full list of timings"))
+                              : const Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                      "Tap to see the full list of shop timings")),
+                          const SizedBox(height: 10),
+                          if (!showModelAllTimings)
+                            shopDayTimingRow(currentDay, widget.shop,
+                                isHighlighted: true)
+                          else
+                            ...widget.shop.shopTiming?.entries.map((entry) {
+                                  return shopDayTimingRow(
+                                    entry.key,
+                                    widget.shop,
+                                    isHighlighted: entry.key == currentDay,
+                                  );
+                                }).toList() ??
+                                [],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 3),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: buildInfoCard(
-                    title: "Shop Contacts ",
-                    icon: Icons.contact_phone,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        actionButton(
-                          icon: Icons.phone,
-                          label: 'Call',
-                          onTap: () => _launchPhone(widget.shop.shopContact),
-                          color: Colors.green,
-                        ),
-                        actionButton(
-                          icon: Icons.email,
-                          label: 'Email',
-                          onTap: () => _launchEmail(widget.shop.shopEmail),
-                          color: Colors.blue,
-                        ),
-                        actionButton(
-                          icon: Icons.directions,
-                          label: 'Directions',
-                          onTap: () => _launchMaps(
-                            widget.shop.locationHistory.point.coordinates[1],
-                            widget.shop.locationHistory.point.coordinates[0],
-                          ),
-                          color: Colors.orange,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 3),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
-                  child: _buildTimingSection(),
-                ),
-                const SizedBox(height: 10),
-                FutureBuilder<List<ProductModel>>(
-                  future: controller.getShopProduct("67ea8204d3eaae65cdc7a455"),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(20.0),
-                          child: CircularProgressIndicator(),
-                        ),
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Text("Error: ${snapshot.error}"),
-                        ),
-                      );
-                    }
-                    if (snapshot.data == null || snapshot.data!.isEmpty) {
-                      return const Center(
-                        child: Padding(
-                          padding: EdgeInsets.all(20.0),
-                          child: Text("No products available"),
-                        ),
-                      );
-                    }
-                    Map<String, List<ProductModel>> categorizedProduct =
-                        _organizeByCategories(snapshot.data!);
-
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
-                                "Products",
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 10),
-                                child: GestureDetector(
-                                  onTap: () => filterOptions(),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 10, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      borderRadius: BorderRadius.circular(8),
-                                      border: Border.all(
-                                          color: Colors.grey[400]!, width: 1),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.2),
-                                          spreadRadius: 2,
-                                          blurRadius: 5,
-                                          offset: const Offset(0, 2),
-                                        ),
-                                      ],
-                                    ),
-                                    child: const Row(
-                                      children: [
-                                        Text(
-                                          'Filter',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        SizedBox(width: 5),
-                                        Icon(
-                                          Icons.filter,
-                                          size: 16,
-                                          color: Colors.black,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        _buildAllCategoriesList(categorizedProduct)
-                      ],
-                    );
-                  },
-                ),
-                const SizedBox(height: 16),
-              ],
-            ),
-          ),
-        ),
-      ),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -419,7 +690,6 @@ class _DashboardState extends State<ShopDashboard>
       "Category",
       "Sub Category",
       "Brand",
-      "Price"
     ];
     int selectedIndex = 0;
     showModalBottomSheet(
@@ -449,9 +719,7 @@ class _DashboardState extends State<ShopDashboard>
                       TextButton(
                         child: const Text('Reset',
                             style: TextStyle(color: Colors.black)),
-                        onPressed: () {
-                          // Reset filter logic
-                        },
+                        onPressed: () {},
                       ),
                     ],
                   ),
@@ -522,21 +790,22 @@ class _DashboardState extends State<ShopDashboard>
 
   Widget getFilterContent(int index, StateSetter setModalState) {
     final controller = Get.find<ShopController>();
+    controller.getCategory();
     switch (index) {
       case 0:
         return Obx(() => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: controller.productsCategory
+              children: controller.category
                   .map((category) => CheckboxListTile.adaptive(
                         controlAffinity: ListTileControlAffinity.leading,
                         title: Text(category),
-                        value: controller.category.contains(category),
+                        value: controller.selectedcategory.contains(category),
                         onChanged: (value) {
                           if (value == true) {
-                            controller.category.add(category);
+                            controller.selectedcategory.add(category);
                             controller.selectedCategory.value += 1;
                           } else {
-                            controller.category.remove(category);
+                            controller.selectedcategory.remove(category);
                             controller.selectedCategory.value -= 1;
                           }
                           setModalState(() {});
@@ -586,27 +855,6 @@ class _DashboardState extends State<ShopDashboard>
                       ))
                   .toList(),
             ));
-      case 3:
-        return Obx(() {
-          double currentValue = controller.higestPriceProduct.value;
-          double maxPrice = controller.higestPriceProduct.value;
-
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Price Range: Up to ₹${currentValue.toStringAsFixed(0)}'),
-              Slider(
-                min: 0,
-                max: maxPrice,
-                value: currentValue == 0 ? maxPrice / 2 : currentValue,
-                onChanged: (value) {
-                  controller.higestPriceProduct.value = value;
-                  setModalState(() {});
-                },
-              ),
-            ],
-          );
-        });
       default:
         return const SizedBox.shrink();
     }
@@ -626,7 +874,9 @@ class _DashboardState extends State<ShopDashboard>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 10,
+          ),
           child: Text(
             category,
             style: const TextStyle(
@@ -639,7 +889,7 @@ class _DashboardState extends State<ShopDashboard>
         SizedBox(
           height: 300,
           child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             scrollDirection: Axis.horizontal,
             itemCount: products.length,
             physics: const BouncingScrollPhysics(), // Improved scroll physics
@@ -653,142 +903,6 @@ class _DashboardState extends State<ShopDashboard>
         ),
         const SizedBox(height: 16),
       ],
-    );
-  }
-}
-
-class ProductCard extends StatelessWidget {
-  final ProductModel product;
-  final ShopModel shop;
-  const ProductCard({Key? key, required this.product, required this.shop})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Get.to(() => ProductDetailScreen(
-              product: product,
-              isadmin: true,
-              shop: shop,
-            ));
-      },
-      child: Container(
-        width: 180,
-        margin: const EdgeInsets.only(right: 12, bottom: 12),
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white10),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              height: 200,
-              width: 180,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                ),
-              ),
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(12),
-                  topRight: Radius.circular(12),
-                ),
-                child: product.productsImage != null &&
-                        product.productsImage!.isNotEmpty
-                    ? Image.network(
-                        toImageUrl(product.productsImage!.last),
-                        width: Get.width,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Center(
-                            child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                      loadingProgress.expectedTotalBytes!
-                                  : null,
-                            ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Center(
-                            child: Icon(Icons.error, color: Colors.grey),
-                          );
-                        },
-                      )
-                    : Image.asset(
-                        'assets/images/logo.png',
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product.productBrand,
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    product.productName,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    children: [
-                      Text(
-                        '₹${product.productsPrice.toStringAsFixed(0)}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        '₹1149',
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ),
-                      const SizedBox(width: 6),
-                      const Text(
-                        '39% OFF',
-                        style: TextStyle(
-                          color: Colors.yellow,
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

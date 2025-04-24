@@ -8,9 +8,9 @@ class ShopModel {
   @JsonKey(name: "locationHistory")
   LocationHistory locationHistory;
   @JsonKey(name: "shopTiming")
-  final Map<String, business_hours_model>? shopTiming;
-  @JsonKey(name: "_id")
-  String id;
+  final Map<String, business_hours_model> shopTiming;
+  @JsonKey(name: '_id')
+  final String id;
   @JsonKey(name: "shopImage")
   List<String> shopImage;
   @JsonKey(name: "shopName")

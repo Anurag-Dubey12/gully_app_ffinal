@@ -82,70 +82,56 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             ),
           ),
           body: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(10),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (widget.product.productsImage != null)
                   Column(
                     children: [
-                      CarouselSlider(
-                        options: CarouselOptions(
-                          height: 200,
-                          autoPlay: false,
-                          enlargeCenterPage: true,
-                          enableInfiniteScroll: true,
-                          onPageChanged: (index, reason) {
+                      SizedBox(
+                        height: 300,
+                        child: PageView.builder(
+                          itemCount: widget.product.productsImage?.length ?? 0,
+                          controller: PageController(viewportFraction: 0.85),
+                          onPageChanged: (index) {
                             setState(() {
                               _currentImageIndex = index;
                             });
                           },
-                        ),
-                        items: widget.product.productsImage?.map((imagePath) {
-                          return Builder(
-                            builder: (BuildContext context) {
-                              return GestureDetector(
-                                onTap: () =>
-                                    imageViewer(context, imagePath, false),
-                                child: Container(
-                                  width: Get.width,
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 5.0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
+                          itemBuilder: (context, index) {
+                            final imagePath =
+                                widget.product.productsImage![index];
+                            return GestureDetector(
+                              onTap: () =>
+                                  imageViewer(context, imagePath, true),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 5),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
                                   child: Image.network(
                                     toImageUrl(imagePath),
-                                    width: Get.width,
                                     fit: BoxFit.cover,
+                                    width: Get.width,
                                     loadingBuilder:
                                         (context, child, loadingProgress) {
                                       if (loadingProgress == null) return child;
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress
-                                                      .expectedTotalBytes !=
-                                                  null
-                                              ? loadingProgress
-                                                      .cumulativeBytesLoaded /
-                                                  loadingProgress
-                                                      .expectedTotalBytes!
-                                              : null,
-                                        ),
-                                      );
+                                      return const Center(
+                                          child: CircularProgressIndicator());
                                     },
                                   ),
                                 ),
-                              );
-                            },
-                          );
-                        }).toList(),
+                              ),
+                            );
+                          },
+                        ),
                       ),
                       const SizedBox(height: 16),
                       Center(
                         child: AnimatedSmoothIndicator(
                           activeIndex: _currentImageIndex,
-                          count: widget.product.productsImage!.length,
+                          count: widget.product.productsImage?.length ?? 0,
                           effect: ExpandingDotsEffect(
                             dotHeight: 8,
                             dotWidth: 8,
@@ -156,45 +142,84 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                       ),
                     ],
                   ),
-                GestureDetector(
-                  onTap: () {},
-                  child: Text(
-                    widget.shop.shopName,
-                    style: const TextStyle(
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                // GestureDetector(
+                //   onTap: () {},
+                //   child: Text(
+                //     widget.shop.shopName,
+                //     style: const TextStyle(
+                //       color: Colors.blue,
+                //       decoration: TextDecoration.underline,
+                //       fontSize: 16,
+                //       fontWeight: FontWeight.w500,
+                //     ),
+                //   ),
+                // ),
+                // Text(
+                //   "${widget.product.productCategory}-${widget.product.productSubCategory}",
+                //   style: const TextStyle(
+                //     fontWeight: FontWeight.bold,
+                //   ),
+                // ),
+                const SizedBox(height: 5),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 200,
+                      child: Text(
+                        widget.product.productName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                        maxLines: 5,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                  ),
+                    Text(
+                      "₹${widget.product.productsPrice.toStringAsFixed(2)}",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 5),
+                const Text(
+                  "Product Description",
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  widget.product.productName,
+                  widget.product.productsDescription!,
                 ),
-                
+                const SizedBox(height: 5),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     Text(
+                //       "More From ${widget.shop.shopName}",
+                //       style: const TextStyle(fontWeight: FontWeight.bold),
+                //     ),
+                //     GestureDetector(
+                //       onTap: () {},
+                //       child: const Text(
+                //         "View More",
+                //         style: TextStyle(
+                //           decoration: TextDecoration.underline,
+                //           fontWeight: FontWeight.bold,
+                //         ),
+                //       ),
+                //     ),
+                //   ],
+                // ),
               ],
             ),
           ),
         ),
       ),
-    );
-  }
-
-  TableRow _ProductInfo(String label, String value) {
-    return TableRow(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(
-            label,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text(value),
-        ),
-      ],
     );
   }
 }

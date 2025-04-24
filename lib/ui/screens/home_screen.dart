@@ -10,7 +10,7 @@ import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/ui/screens/current_tournament_list.dart';
 import 'package:gully_app/ui/screens/search_tournament_screen.dart';
-import 'package:gully_app/ui/screens/shop/User%20Screen/shops_home_screen.dart';
+import 'package:gully_app/ui/screens/shop/User%20Screen/nearby_shop_screen.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/app_drawer.dart';
@@ -296,7 +296,7 @@ class _HomePageState extends State<HomePage>
     tournamentController.filter.value = 'current';
     return [
       const HomePageContent(),
-      // const ShopHome(),
+      const ShopHome(),
       const SizedBox(),
       // const ShopHome(),
       // const ServiceHomeScreen(),
@@ -312,12 +312,12 @@ class _HomePageState extends State<HomePage>
         activeColorPrimary: AppTheme.primaryColor,
         inactiveColorPrimary: Colors.grey,
       ),
-      // PersistentBottomNavBarItem(
-      //   icon: const Icon(Icons.sports_kabaddi_outlined),
-      //   title: "Shop",
-      //   activeColorPrimary: AppTheme.primaryColor,
-      //   inactiveColorPrimary: Colors.grey,
-      // ),
+      PersistentBottomNavBarItem(
+        icon: const Icon(Icons.sports_kabaddi_outlined),
+        title: "Shop",
+        activeColorPrimary: AppTheme.primaryColor,
+        inactiveColorPrimary: Colors.grey,
+      ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.circle),
         title: "",

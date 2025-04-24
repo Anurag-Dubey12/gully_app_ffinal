@@ -12,7 +12,7 @@ class ShopCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Get.to(()=>ShopDetailsScreen(shop: shop));
+        // Get.to(()=>ShopDetailsScreen(shop: shop));
       },
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -47,7 +47,8 @@ class ShopCard extends StatelessWidget {
                   children: [
                     Text(
                       shop['name'],
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18),
                     ),
                     const SizedBox(height: 8),
                     Text(
@@ -57,12 +58,14 @@ class ShopCard extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(Icons.location_on, color: Colors.red, size: 20),
+                        const Icon(Icons.location_on,
+                            color: Colors.red, size: 20),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
                             shop['location'],
-                            style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                            style: TextStyle(
+                                color: Colors.grey[600], fontSize: 14),
                           ),
                         ),
                       ],

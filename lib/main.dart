@@ -233,8 +233,8 @@ class _MyAppState extends State<MyApp> {
         //         () => PromotionController(bannerApi: Get.find())),
         Bind.lazyPut<ServiceController>(
             () => ServiceController(serviceApi: Get.find())),
-        Bind.lazyPut<ShopController>(() => ShopController(shopApi: Get.find())),
         Bind.put<MiscController>(MiscController(repo: Get.find())),
+        Bind.put<ShopController>(ShopController(shopApi: Get.find())),
       ],
       defaultTransition: Transition.cupertino,
       title: AppConstants.appName,

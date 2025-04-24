@@ -9,7 +9,7 @@ part of 'shop_model.dart';
 ShopModel _$ShopModelFromJson(Map<String, dynamic> json) => ShopModel(
       locationHistory: LocationHistory.fromJson(
           json['locationHistory'] as Map<String, dynamic>),
-      shopTiming: (json['shopTiming'] as Map<String, dynamic>?)?.map(
+      shopTiming: (json['shopTiming'] as Map<String, dynamic>).map(
         (k, e) => MapEntry(
             k, business_hours_model.fromJson(e as Map<String, dynamic>)),
       ),

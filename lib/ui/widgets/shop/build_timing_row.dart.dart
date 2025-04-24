@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gully_app/data/model/shop_model.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 
-Widget buildDayTimingRow(String day, ShopModel shop,
+Widget shopDayTimingRow(String day, ShopModel shop,
     {bool isHighlighted = false}) {
   final timing = shop.shopTiming?[day];
   final bool isOpen = timing?.isOpen ?? false;
@@ -46,5 +46,28 @@ Widget buildDayTimingRow(String day, ShopModel shop,
         ),
       ],
     ),
+  );
+}
+
+Widget shopInfo(String title,String description){
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        title,
+        style: const TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      const SizedBox(height: 4),
+      Text(
+        description,
+        style: const TextStyle(
+          fontSize: 14,
+          color: Colors.black54,
+        ),
+      ),
+    ],
   );
 }

@@ -67,8 +67,8 @@ class ShopApi {
     return ApiResponse.fromJson(response.body);
   }
 
-  Future<ApiResponse> addShopProduct(Map<String,dynamic> product) async {
-    final response = await repo.post("/shop/addProduct",product);
+  Future<ApiResponse> addShopProduct(Map<String, dynamic> product) async {
+    final response = await repo.post("/shop/addProduct", product);
     if (response.statusCode! >= 500) {
       errorSnackBar(generateErrorMessage(response.body));
       throw Exception('Server Error');
@@ -78,8 +78,23 @@ class ShopApi {
     }
     return ApiResponse.fromJson(response.body);
   }
-   Future<ApiResponse> getShopProduct(String shopid) async {
-    final response = await repo.get("/shop/getShopProduct/$shopid");
+
+  Future<ApiResponse> getShopProduct(String shopId) async {
+    final response = await repo.get("/shop/getShopProduct/$shopId");
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getNearbyShop(
+      {required double latitude, required double longitude}) async {
+    final response = await repo.post(
+        "/shop/getNearbyShop/", {'longitude': longitude, 'latitude': latitude});
     if (response.statusCode! >= 500) {
       errorSnackBar(generateErrorMessage(response.body));
       throw Exception('Server Error');

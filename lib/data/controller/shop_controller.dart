@@ -1,11 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/api/shop_api.dart';
 import 'package:gully_app/data/model/product_model.dart';
 import 'package:gully_app/data/model/shop_model.dart';
 import 'package:gully_app/data/model/vendor_model.dart';
+import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -19,17 +22,26 @@ class ShopController extends GetxController with StateMixin {
   RxList<Map<String, dynamic>> products = <Map<String, dynamic>>[].obs;
   final ShopApi shopApi;
   ShopController({required this.shopApi}) {
-    // getCurrentLocation();
-    // Geolocator.getServiceStatusStream().listen((event) {
-    //   getCurrentLocation();
-    // });
+    getCurrentLocation();
+    Geolocator.getServiceStatusStream().listen((event) {
+      getCurrentLocation();
+    });
     change(GetStatus.empty());
   }
-  @override
-  void onInit() {
-    super.onInit();
-    loadShopsData();
+  Future<void> getCurrentLocation() async {
+    final position = await determinePosition();
+    //logger.d(// "The Banner Coordinates is:${LatLng(position.latitude, position.longitude)}");
+    coordinates.value = LatLng(position.latitude, position.longitude);
+    coordinates.refresh();
   }
+
+  set setCoordinates(LatLng value) {
+    coordinates.value = value;
+    //logger.d"The Banner Coordinates is:${coordinates.value}");
+    coordinates.refresh();
+  }
+
+  Rx<LatLng> coordinates = const LatLng(0, 0).obs;
 
   Future<bool> registerShop(Map<String, dynamic> shop) async {
     final response = await shopApi.registerShop(shop);
@@ -56,6 +68,7 @@ class ShopController extends GetxController with StateMixin {
   }
 
   RxList<String> category = <String>[].obs;
+  RxList<String> selectedcategory = <String>[].obs;
   Future<List<String>> getCategory() async {
     try {
       final response = await shopApi.getCategory();
@@ -121,28 +134,42 @@ class ShopController extends GetxController with StateMixin {
   RxInt selectedsubCategory = 0.obs;
   RxInt selectedbrand = 0.obs;
   RxDouble setPrice = 0.0.obs;
+
   RxList<ProductModel> product = <ProductModel>[].obs;
   RxList<String> productsCategory = <String>[].obs;
   RxList<String> productssubCategory = <String>[].obs;
   RxList<String> productsBrand = <String>[].obs;
   RxDouble higestPriceProduct = 0.0.obs;
-  Future<List<ProductModel>> getShopProduct(String shopid) async {
-    final response = await shopApi.getShopProduct(shopid);
-    product.value = (response.data!['products'] as List<dynamic>)
+
+  Future<List<ProductModel>> getShopProduct(String shopId) async {
+    final response = await shopApi.getShopProduct(shopId);
+    if (response.status == false) {
+      errorSnackBar(response.message!);
+      return [];
+    }
+    return product.value = (response.data!['products'] as List<dynamic>)
         .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
         .toList();
-    productsCategory.value =
-        product.map((category) => category.productCategory).toSet().toList();
-    productssubCategory.value = product
-        .map((subcatgeory) => subcatgeory.productSubCategory)
-        .toSet()
+  }
+
+  RxList<ShopModel> nearbyShop = <ShopModel>[].obs;
+  List<double> shoplocation = [];
+  Future<List<ShopModel>> getNearbyShop() async {
+    print(
+        "The cooradinates are :${coordinates.value.latitude} :${coordinates.value.longitude}");
+    final response = await shopApi.getNearbyShop(
+        latitude: coordinates.value.latitude,
+        longitude: coordinates.value.longitude);
+    if (response.status == false) {
+      return [];
+    }
+    nearbyShop.value = (response.data!['nearbyshop'] as List<dynamic>)
+        .map((e) => ShopModel.fromJson(e as Map<String, dynamic>))
         .toList();
-    productsBrand.value =
-        product.map((brand) => brand.productBrand).toSet().toList();
-    higestPriceProduct.value = product
-        .map((highest) => highest.productsPrice)
-        .reduce((a, b) => a > b ? a : b);
-    return product;
+    shoplocation = (response.data!['nearbyshop'] as List)
+        .map<double>((e) => (e['distanceInKm'] as num).toDouble())
+        .toList();
+    return nearbyShop;
   }
 
   void updateVendorDetails(vendor_model vendorData) {

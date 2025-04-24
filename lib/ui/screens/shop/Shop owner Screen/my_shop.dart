@@ -159,6 +159,7 @@ class _ShopCardState extends State<ShopCard>
       onTap: () {
         Get.to(() => ShopDashboard(
               shop: shop,
+              isAdmin: true,
             ));
       },
       child: ScaleTransition(

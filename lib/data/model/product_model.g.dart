@@ -19,6 +19,10 @@ ProductModel _$ProductModelFromJson(Map<String, dynamic> json) => ProductModel(
       shopId: json['shopId'] as String,
       isActive: json['isActive'] as bool,
       id: json['_id'] as String,
+      productDiscount: json['productDiscount'] == null
+          ? null
+          : ProductDiscount.fromJson(
+              json['productDiscount'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
@@ -33,4 +37,17 @@ Map<String, dynamic> _$ProductModelToJson(ProductModel instance) =>
       'shopId': instance.shopId,
       'isActive': instance.isActive,
       '_id': instance.id,
+      'productDiscount': instance.productDiscount,
+    };
+
+ProductDiscount _$ProductDiscountFromJson(Map<String, dynamic> json) =>
+    ProductDiscount(
+      discountPrice: (json['discountedvalue'] as num).toInt(),
+      discountType: json['discounttype'] as String,
+    );
+
+Map<String, dynamic> _$ProductDiscountToJson(ProductDiscount instance) =>
+    <String, dynamic>{
+      'discountedvalue': instance.discountPrice,
+      'discounttype': instance.discountType,
     };

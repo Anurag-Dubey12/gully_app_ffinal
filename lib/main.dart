@@ -28,6 +28,7 @@ import 'package:gully_app/data/controller/service_controller.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/controller/team_controller.dart';
 import 'package:gully_app/ui/widgets/location_permission_builder.dart';
+import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -67,6 +68,28 @@ void main() async {
   await DefaultCacheManager().emptyCache();
 
   runApp(const MyApp());
+}
+
+class Error404Screen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            "assets/images/error_image.png",
+            fit: BoxFit.cover,
+          ),
+          Positioned(
+              bottom: MediaQuery.of(context).size.height * 0.15,
+              left: MediaQuery.of(context).size.width * 0.3,
+              right: MediaQuery.of(context).size.width * 0.3,
+              child: PrimaryButton(onTap: () {}))
+        ],
+      ),
+    );
+  }
 }
 
 class MyApp extends StatefulWidget {

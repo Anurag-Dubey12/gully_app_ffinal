@@ -593,7 +593,7 @@ class BannerAddingState extends State<BannerAdding> {
                                   Get.to(() => BannerPaymentPage(
                                         banner: controller.banner.value,
                                         base64: base64Image ?? '',
-                                        SelectedPakcage: selectedPackage ?? {},
+                                        selectedpackage: selectedPackage ?? {},
                                       ));
                                 }
                               } catch (e) {

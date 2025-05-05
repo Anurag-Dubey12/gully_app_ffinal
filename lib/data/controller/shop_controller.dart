@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -7,19 +5,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/api/shop_api.dart';
 import 'package:gully_app/data/model/product_model.dart';
 import 'package:gully_app/data/model/shop_model.dart';
-import 'package:gully_app/data/model/vendor_model.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ShopController extends GetxController with StateMixin {
-  Rx<vendor_model?> vendor = Rx<vendor_model?>(null);
-  Rx<ShopModel?> shop = Rx<ShopModel?>(null);
-  RxList sociallinks = [].obs;
-  RxList<ShopModel> shops = <ShopModel>[].obs;
-  Rx<XFile?> vendorDocumentImage = Rx<XFile?>(null);
-  RxList<Map<String, dynamic>> products = <Map<String, dynamic>>[].obs;
   final ShopApi shopApi;
   ShopController({required this.shopApi}) {
     getCurrentLocation();
@@ -28,21 +17,24 @@ class ShopController extends GetxController with StateMixin {
     });
     change(GetStatus.empty());
   }
+
+  // MARK: GetCurrentLocation
   Future<void> getCurrentLocation() async {
     final position = await determinePosition();
-    //logger.d(// "The Banner Coordinates is:${LatLng(position.latitude, position.longitude)}");
     coordinates.value = LatLng(position.latitude, position.longitude);
     coordinates.refresh();
   }
 
   set setCoordinates(LatLng value) {
     coordinates.value = value;
-    //logger.d"The Banner Coordinates is:${coordinates.value}");
+
     coordinates.refresh();
   }
 
+  Rx<ProductModel?> productModel = Rx<ProductModel?>(null);
   Rx<LatLng> coordinates = const LatLng(0, 0).obs;
 
+  // MARK: RegisterShop
   Future<bool> registerShop(Map<String, dynamic> shop) async {
     final response = await shopApi.registerShop(shop);
     if (response.status == false) {
@@ -54,6 +46,7 @@ class ShopController extends GetxController with StateMixin {
   }
 
   RxList<ShopModel> myShops = <ShopModel>[].obs;
+  // MARK: GetMyShop
   Future<List<ShopModel>> getMyShop() async {
     final response = await shopApi.getMyShops();
     final dataMap = response.data as Map<String, dynamic>;
@@ -61,14 +54,30 @@ class ShopController extends GetxController with StateMixin {
     myShops.value = jsonList
         .map((e) => ShopModel.fromJson(e as Map<String, dynamic>))
         .toList();
-    if (kDebugMode) {
-      print("The Myshop Data: ${myShops.value.map((e) => e.ownerEmail)}");
-    }
     return myShops;
+  }
+
+  RxList<ShopModel> nearbyShop = <ShopModel>[].obs;
+  List<double> shoplocation = [];
+
+  // MARK: getNearbyShop
+  Future<List<ShopModel>> getNearbyShop() async {
+    final response = await shopApi.getNearbyShop(
+        latitude: coordinates.value.latitude,
+        longitude: coordinates.value.longitude);
+    if (response.status == false) {
+      return [];
+    }
+
+    nearbyShop.value = (response.data!['nearbyshop'] as List<dynamic>)
+        .map((e) => ShopModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+    return nearbyShop;
   }
 
   RxList<String> category = <String>[].obs;
   RxList<String> selectedcategory = <String>[].obs;
+  // MARK: GetCategory
   Future<List<String>> getCategory() async {
     try {
       final response = await shopApi.getCategory();
@@ -85,7 +94,10 @@ class ShopController extends GetxController with StateMixin {
     }
   }
 
+  RxMap<String, dynamic> subcategories = <String, dynamic>{}.obs;
   RxList<String> subcategory = <String>[].obs;
+
+  // MARK: GetSubCategory
   Future<List<String>> getsubCategory(String category) async {
     try {
       final response = await shopApi.getsubCategory(category);
@@ -93,6 +105,9 @@ class ShopController extends GetxController with StateMixin {
         errorSnackBar("Failed to get Category");
         return [];
       }
+      List<String> fetchedSubcategories =
+          List<String>.from(response.data!['subCategory']);
+      subcategories[category] = fetchedSubcategories;
       return subcategory.value =
           List<String>.from(response.data!['subCategory']);
     } catch (e) {
@@ -103,7 +118,10 @@ class ShopController extends GetxController with StateMixin {
     }
   }
 
+  RxList<String> selectedbrands = <String>[].obs;
   RxList<String> brands = <String>[].obs;
+
+  // MARK: GetBrands
   Future<List<String>> getbrands() async {
     try {
       final response = await shopApi.getbrands();
@@ -120,6 +138,7 @@ class ShopController extends GetxController with StateMixin {
     }
   }
 
+  // MARK: AddShopProduct
   Future<bool> addShopProduct(Map<String, dynamic> product) async {
     final response = await shopApi.addShopProduct(product);
     if (response.status == false) {
@@ -139,133 +158,99 @@ class ShopController extends GetxController with StateMixin {
   RxList<String> productsCategory = <String>[].obs;
   RxList<String> productssubCategory = <String>[].obs;
   RxList<String> productsBrand = <String>[].obs;
-  RxDouble higestPriceProduct = 0.0.obs;
+  RxInt totalImagesAdded = 0.obs;
+  RxInt totalPackagelimit = 0.obs;
 
+  // MARK: getShopProduct
   Future<List<ProductModel>> getShopProduct(String shopId) async {
     final response = await shopApi.getShopProduct(shopId);
     if (response.status == false) {
       errorSnackBar(response.message!);
       return [];
     }
-    return product.value = (response.data!['products'] as List<dynamic>)
+    final shopproducts = (response.data!['products'] as List<dynamic>)
         .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
         .toList();
+    int imageCount = 0;
+    for (final image in shopproducts) {
+      imageCount += image.productsImage!.length;
+    }
+    totalImagesAdded.value = imageCount;
+    return product.value = shopproducts;
   }
 
-  RxList<ShopModel> nearbyShop = <ShopModel>[].obs;
-  List<double> shoplocation = [];
-  Future<List<ShopModel>> getNearbyShop() async {
-    print(
-        "The cooradinates are :${coordinates.value.latitude} :${coordinates.value.longitude}");
-    final response = await shopApi.getNearbyShop(
-        latitude: coordinates.value.latitude,
-        longitude: coordinates.value.longitude);
+  // MARK: setProductStatus
+  Future<bool> setProductStatus(String productId, bool isActive) async {
+    final response = await shopApi.setProductStatus(productId, isActive);
     if (response.status == false) {
-      return [];
+      errorSnackBar("Failed to Change Product Status");
+      if (kDebugMode) {
+        print("Failed to change Product Status:${response.message}");
+      }
+      return false;
     }
-    nearbyShop.value = (response.data!['nearbyshop'] as List<dynamic>)
-        .map((e) => ShopModel.fromJson(e as Map<String, dynamic>))
-        .toList();
-    shoplocation = (response.data!['nearbyshop'] as List)
-        .map<double>((e) => (e['distanceInKm'] as num).toDouble())
-        .toList();
-    return nearbyShop;
+    GetStatus.success(ProductModel.fromJson(response.data!));
+    return true;
   }
 
-  void updateVendorDetails(vendor_model vendorData) {
-    vendor.value = vendorData;
-  }
-
-  void updateShopDetails(ShopModel shopData) {
-    shop.value = shopData;
-    saveShopData();
-  }
-
-  void updateVendorDocumentImage(XFile? image) {
-    vendorDocumentImage.value = image;
-  }
-
-  vendor_model? getVendorDetails() {
-    return vendor.value;
-  }
-
-  XFile? getVendorDocumentImage() {
-    return vendorDocumentImage.value;
-  }
-
-  void resetAllData() {
-    vendor.value = null;
-    vendorDocumentImage.value = null;
-  }
-
-  //Shared Preferences
-  void addShop(ShopModel shopData) {
-    shops.add(shopData);
-    saveShopData();
-  }
-
-  void updateShop(int index, ShopModel shopData) {
-    if (index >= 0 && index < shops.length) {
-      shops[index] = shopData;
-      saveShopData();
+  // MARK: updateSubscriptionStatus
+  Future<ShopModel> updateSubscriptionStatus(
+      Map<String, dynamic> shopsubscription) async {
+    final response = await shopApi.updateSubscriptionStatus(shopsubscription);
+    if (response.status == false) {
+      if (kDebugMode) {
+        print("Failed to update shop subscription ");
+      }
     }
+    return ShopModel.fromJson(response.data!);
   }
 
-  void removeShop(int index) {
-    if (index >= 0 && index < shops.length) {
-      shops.removeAt(index);
-      saveShopData();
+  RxList<ShopModel> searchedShops = <ShopModel>[].obs;
+  RxList<ProductModel> searchedProducts = <ProductModel>[].obs;
+  RxBool isSearching = false.obs;
+
+// MARK: searchShopsAndProducts
+  Future<void> searchShopsAndProducts(String query) async {
+    if (query.isEmpty) {
+      searchedShops.clear();
+      searchedProducts.clear();
+      return;
     }
-  }
 
-  Future<void> saveShopData() async {
-    final pref = await SharedPreferences.getInstance();
-    final shopsJson = shops.map((shop) => shop.toJson()).toList();
-    await pref.setString('shops', json.encode(shopsJson));
-    //logger.d'The shops data is saved');
-  }
+    isSearching.value = true;
+    try {
+      final response = await shopApi.searchShopsAndProducts(query);
+      if (response.status == false) {
+        errorSnackBar("Search failed");
+        return;
+      }
+      print("Called");
+      final dataMap = response.data as Map<String, dynamic>;
 
-  Future<void> loadShopsData() async {
-    final pref = await SharedPreferences.getInstance();
-    final jsonData = pref.getString('shops');
-    if (jsonData != null) {
-      final List<dynamic> shopsJson = json.decode(jsonData);
-      shops.value =
-          shopsJson.map((shopJson) => ShopModel.fromJson(shopJson)).toList();
-    }
-  }
+      if (dataMap.containsKey('shops')) {
+        final List<dynamic> shopsJson = dataMap['shops'] as List<dynamic>;
+        searchedShops.value = shopsJson
+            .map((e) => ShopModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      } else {
+        searchedShops.clear();
+      }
 
-  Future<void> loadProductsForShop(String shopId) async {
-    final prefs = await SharedPreferences.getInstance();
-    final productsJson = prefs.getString('products_$shopId');
-    if (productsJson != null) {
-      final List<dynamic> decodedProducts = json.decode(productsJson);
-      products.value = List<Map<String, dynamic>>.from(decodedProducts);
-    }
-  }
-
-  Future<void> addProductsToShop(
-      String shopId, List<Map<String, dynamic>> newProducts) async {
-    products.addAll(newProducts);
-    await saveProductsForShop(shopId);
-  }
-
-  Future<void> saveProductsForShop(String shopId) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('products_$shopId', json.encode(products.toList()));
-  }
-
-  Future<void> updateProductForShop(String shopId, String productId,
-      Map<String, dynamic> updatedProduct) async {
-    await loadProductsForShop(shopId);
-
-    int index = products.indexWhere((product) => product['id'] == productId);
-    if (index != -1) {
-      products[index] = updatedProduct;
-      await saveProductsForShop(shopId);
-      //logger.d'Product updated successfully: $productId');
-    } else {
-      //logger.d'Product not found: $productId');
+      if (dataMap.containsKey('products')) {
+        final List<dynamic> productsJson = dataMap['products'] as List<dynamic>;
+        searchedProducts.value = productsJson
+            .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      } else {
+        searchedProducts.clear();
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Search error: ${e.toString()}");
+      }
+      errorSnackBar("Failed to perform search");
+    } finally {
+      isSearching.value = false;
     }
   }
 }

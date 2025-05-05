@@ -1,26 +1,32 @@
+import 'dart:ui';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/model/product_model.dart';
 import 'package:gully_app/data/model/shop_model.dart';
 import 'package:gully_app/ui/screens/shop/User%20Screen/product_detail_screen.dart';
+import 'package:gully_app/ui/screens/shop/User%20Screen/shop_packages.dart';
 import 'package:gully_app/ui/theme/theme.dart';
+import 'package:gully_app/ui/widgets/banner/package_screen.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/ui/widgets/shop/actionButton.dart';
 import 'package:gully_app/ui/widgets/shop/build_info_card.dart';
 import 'package:gully_app/ui/widgets/shop/build_timing_row.dart.dart';
+import 'package:gully_app/ui/widgets/shop/filter_bottomsheet.dart';
 import 'package:gully_app/ui/widgets/shop/product_card.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
+import 'package:gully_app/utils/launch_external_service.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../data/controller/shop_controller.dart';
 
 class ShopDashboard extends StatefulWidget {
-  final ShopModel shop;
+  ShopModel shop;
   final bool isAdmin;
-  const ShopDashboard({Key? key, required this.shop, this.isAdmin = false})
+  ShopDashboard({Key? key, required this.shop, this.isAdmin = false})
       : super(key: key);
 
   @override
@@ -66,29 +72,6 @@ class _DashboardState extends State<ShopDashboard> {
     );
   }
 
-  void _launchPhone(String phoneNumber) async {
-    final url = 'tel:$phoneNumber';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    }
-  }
-
-  void _launchEmail(String email) async {
-    final url = 'mailto:$email';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url));
-    }
-  }
-
-  void _launchMaps(double lat, double lng) async {
-    final url = 'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng';
-    if (await canLaunchUrl(Uri.parse(url))) {
-      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
-    } else {
-      throw 'Could not launch Maps';
-    }
-  }
-
   Map<String, List<ProductModel>> _organizeByCategories(
       List<ProductModel> products) {
     final Map<String, List<ProductModel>> categorizedProducts = {};
@@ -96,7 +79,7 @@ class _DashboardState extends State<ShopDashboard> {
       if (!categorizedProducts.containsKey(product.productCategory)) {
         categorizedProducts[product.productCategory] = [];
       }
-      categorizedProducts[product.productCategory]!.add(product);
+      categorizedProducts[product.productCategory]?.add(product);
     }
     return categorizedProducts;
   }
@@ -123,6 +106,25 @@ class _DashboardState extends State<ShopDashboard> {
             color: Colors.white,
           ),
         ),
+        floatingActionButton: widget.isAdmin
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: FloatingActionButton(
+                  onPressed: () {
+                    if (widget.shop.isSubscriptionPurchased) {
+                      if (controller.totalImagesAdded.value <=
+                          controller.totalPackagelimit.value) {
+                      } else {
+                        errorSnackBar("You have reached your limit");
+                      }
+                    } else {
+                      errorSnackBar("You have not SUbscribe ");
+                    }
+                  },
+                  child: const Icon(Icons.add),
+                ),
+              )
+            : const SizedBox.shrink(),
         body: widget.isAdmin ? adminShopView() : userShopView(),
       ),
     );
@@ -252,19 +254,19 @@ class _DashboardState extends State<ShopDashboard> {
                   actionButton(
                     icon: Icons.phone,
                     label: 'Call',
-                    onTap: () => _launchPhone(widget.shop.shopContact),
+                    onTap: () => launchPhone(widget.shop.shopContact),
                     color: Colors.green,
                   ),
                   actionButton(
                     icon: Icons.email,
                     label: 'Email',
-                    onTap: () => _launchEmail(widget.shop.shopEmail),
+                    onTap: () => launchEmail(widget.shop.shopEmail),
                     color: Colors.blue,
                   ),
                   actionButton(
                     icon: Icons.directions,
                     label: 'Directions',
-                    onTap: () => _launchMaps(
+                    onTap: () => launchMaps(
                       widget.shop.locationHistory.point.coordinates[1],
                       widget.shop.locationHistory.point.coordinates[0],
                     ),
@@ -279,104 +281,204 @@ class _DashboardState extends State<ShopDashboard> {
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: shopTimingSection(),
           ),
-          const SizedBox(height: 10),
-          FutureBuilder<List<ProductModel>>(
-            future: controller.getShopProduct(widget.shop.id),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              }
-              if (snapshot.hasError) {
-                return Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Text("Error: ${snapshot.error}"),
-                  ),
-                );
-              }
-              if (snapshot.data == null || snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Text("No products available"),
-                  ),
-                );
-              }
-              Map<String, List<ProductModel>> categorizedProduct =
-                  _organizeByCategories(snapshot.data!);
-
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Products",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+          const SizedBox(height: 5),
+          // !widget.shop.isSubscriptionPurchased
+          //     ? Column(
+          //         crossAxisAlignment: CrossAxisAlignment.start,
+          //         children: [
+          //           const Padding(
+          //             padding: EdgeInsets.symmetric(horizontal: 8),
+          //             child: Text(
+          //               "My Shop Products",
+          //               style: TextStyle(
+          //                 fontSize: 16,
+          //                 fontWeight: FontWeight.bold,
+          //               ),
+          //             ),
+          //           ),
+          //           Center(
+          //             child: ClipRRect(
+          //               borderRadius: BorderRadius.circular(20),
+          //               child: Container(
+          //                 height: 400,
+          //                 width: Get.width,
+          //                 decoration: BoxDecoration(
+          //                   color: Colors.white.withOpacity(0.1),
+          //                   borderRadius: BorderRadius.circular(20),
+          //                   border: Border.all(
+          //                       color: Colors.white.withOpacity(0.2)),
+          //                 ),
+          //                 child: Stack(
+          //                   children: [
+          //                     Container(
+          //                       color: Colors.white.withOpacity(0.3),
+          //                     ),
+          //                     BackdropFilter(
+          //                       filter:
+          //                           ImageFilter.blur(sigmaX: 50, sigmaY: 50),
+          //                       child: Container(color: Colors.transparent),
+          //                     ),
+          //                     Align(
+          //                       alignment: Alignment.center,
+          //                       child: Padding(
+          //                         padding: const EdgeInsets.symmetric(
+          //                             horizontal: 8.0),
+          //                         child: Column(
+          //                           mainAxisSize: MainAxisSize.min,
+          //                           mainAxisAlignment: MainAxisAlignment.center,
+          //                           children: [
+          //                             const Icon(
+          //                               Icons.lock_outline_rounded,
+          //                               size: 48,
+          //                               color: Colors.black87,
+          //                             ),
+          //                             const SizedBox(height: 16),
+          //                             const Text(
+          //                               "You need a subscription to start adding products to your store.",
+          //                               textAlign: TextAlign.center,
+          //                               style: TextStyle(
+          //                                 fontSize: 18,
+          //                                 color: Colors.black87,
+          //                                 fontWeight: FontWeight.w600,
+          //                               ),
+          //                             ),
+          //                             const SizedBox(height: 10),
+          //                             ElevatedButton.icon(
+          //                               style: ElevatedButton.styleFrom(
+          //                                 backgroundColor: Colors.black87,
+          //                                 foregroundColor: Colors.white,
+          //                                 padding: const EdgeInsets.symmetric(
+          //                                     horizontal: 24, vertical: 12),
+          //                                 shape: RoundedRectangleBorder(
+          //                                   borderRadius:
+          //                                       BorderRadius.circular(12),
+          //                                 ),
+          //                               ),
+          //                               onPressed: () {
+          //                                 Get.to(() => ShopPackages(
+          //                                     onPayment: (ShopModel shop) {
+          //                                       setState(() {
+          //                                         widget.shop = shop;
+          //                                       });
+          //                                     },
+          //                                     shop: widget.shop));
+          //                               },
+          //                               icon: const Icon(Icons.star_rounded),
+          //                               label: const Text("Subscribe Now"),
+          //                             ),
+          //                           ],
+          //                         ),
+          //                       ),
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       )
+          //     :
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Products",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: GestureDetector(
+                        onTap: () => filterOptions(),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(8),
+                            border:
+                                Border.all(color: Colors.grey[400]!, width: 1),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.2),
+                                spreadRadius: 2,
+                                blurRadius: 5,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: const Row(
+                            children: [
+                              Text(
+                                'Filter',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              SizedBox(width: 5),
+                              Icon(
+                                Icons.filter,
+                                size: 16,
+                                color: Colors.black,
+                              ),
+                            ],
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(right: 10),
-                          child: GestureDetector(
-                            onTap: () => filterOptions(),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 2),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(8),
-                                border: Border.all(
-                                    color: Colors.grey[400]!, width: 1),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    spreadRadius: 2,
-                                    blurRadius: 5,
-                                    offset: const Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              child: const Row(
-                                children: [
-                                  Text(
-                                    'Filter',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  SizedBox(width: 5),
-                                  Icon(
-                                    Icons.filter,
-                                    size: 16,
-                                    color: Colors.black,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  _buildAllCategoriesList(categorizedProduct)
-                ],
-              );
-            },
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              FutureBuilder<List<ProductModel>>(
+                future: controller.getShopProduct(widget.shop.id),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Text("Error: ${snapshot.error}"),
+                      ),
+                    );
+                  }
+                  if (snapshot.data == null || snapshot.data!.isEmpty) {
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Text("No products available"),
+                      ),
+                    );
+                  }
+                  Map<String, List<ProductModel>> categorizedProduct =
+                      _organizeByCategories(snapshot.data!);
+
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [_buildAllCategoriesList(categorizedProduct)],
+                  );
+                },
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
+          !widget.shop.isSubscriptionPurchased
+              ? const SizedBox.shrink()
+              : const SizedBox(height: 16),
         ],
       ),
     );
@@ -484,7 +586,16 @@ class _DashboardState extends State<ShopDashboard> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => filterOptions(),
+                  onTap: () async {
+                    await Get.bottomSheet(
+                        BottomSheet(
+                            backgroundColor: Colors.white,
+                            onClosing: () {},
+                            builder: (c) => filterOptions()),
+                        isDismissible: true,
+                        isScrollControlled: true,
+                        enableDrag: false);
+                  },
                   child: Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -629,13 +740,13 @@ class _DashboardState extends State<ShopDashboard> {
                     leading:
                         const Icon(Icons.phone_outlined, color: Colors.green),
                     title: Text(widget.shop.shopContact),
-                    onTap: () => _launchPhone(widget.shop.shopContact),
+                    onTap: () => launchPhone(widget.shop.shopContact),
                   ),
                   ListTile(
                     leading:
                         const Icon(Icons.email_outlined, color: Colors.blue),
                     title: Text(widget.shop.shopEmail),
-                    onTap: () => _launchEmail(widget.shop.shopEmail),
+                    onTap: () => launchEmail(widget.shop.shopEmail),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -685,181 +796,6 @@ class _DashboardState extends State<ShopDashboard> {
     );
   }
 
-  void filterOptions() {
-    final List<String> sectionheader = [
-      "Category",
-      "Sub Category",
-      "Brand",
-    ];
-    int selectedIndex = 0;
-    showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setModalState) {
-            return SizedBox(
-              height: Get.height * 0.7,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                      const Text('Filter Product',
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      TextButton(
-                        child: const Text('Reset',
-                            style: TextStyle(color: Colors.black)),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
-                  const Divider(height: 1),
-                  Expanded(
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 120,
-                          color: Colors.grey.shade200,
-                          child: ListView.builder(
-                            itemCount: sectionheader.length,
-                            itemBuilder: (context, index) {
-                              final isSelected = index == selectedIndex;
-                              return GestureDetector(
-                                onTap: () {
-                                  setModalState(() {
-                                    selectedIndex = index;
-                                  });
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 18, horizontal: 12),
-                                  color: isSelected
-                                      ? Colors.white
-                                      : Colors.grey.shade200,
-                                  child: Text(
-                                    sectionheader[index],
-                                    style: TextStyle(
-                                      fontWeight: isSelected
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                      color: isSelected
-                                          ? Colors.blue
-                                          : Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        Expanded(
-                          child: ListView(
-                            children: [
-                              getFilterContent(selectedIndex, setModalState)
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                      child: PrimaryButton(
-                        onTap: () {},
-                        title: "Apply Filter",
-                      )),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget getFilterContent(int index, StateSetter setModalState) {
-    final controller = Get.find<ShopController>();
-    controller.getCategory();
-    switch (index) {
-      case 0:
-        return Obx(() => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: controller.category
-                  .map((category) => CheckboxListTile.adaptive(
-                        controlAffinity: ListTileControlAffinity.leading,
-                        title: Text(category),
-                        value: controller.selectedcategory.contains(category),
-                        onChanged: (value) {
-                          if (value == true) {
-                            controller.selectedcategory.add(category);
-                            controller.selectedCategory.value += 1;
-                          } else {
-                            controller.selectedcategory.remove(category);
-                            controller.selectedCategory.value -= 1;
-                          }
-                          setModalState(() {});
-                        },
-                      ))
-                  .toList(),
-            ));
-      case 1:
-        return Obx(() => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: controller.productssubCategory
-                  .map((subCat) => CheckboxListTile.adaptive(
-                        controlAffinity: ListTileControlAffinity.leading,
-                        title: Text(subCat),
-                        value: controller.subcategory.contains(subCat),
-                        onChanged: (value) {
-                          if (value == true) {
-                            controller.subcategory.add(subCat);
-                            controller.selectedsubCategory.value += 1;
-                          } else {
-                            controller.subcategory.remove(subCat);
-                            controller.selectedsubCategory.value -= 1;
-                          }
-                          setModalState(() {});
-                        },
-                      ))
-                  .toList(),
-            ));
-      case 2:
-        return Obx(() => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: controller.productsBrand
-                  .map((brand) => CheckboxListTile.adaptive(
-                        controlAffinity: ListTileControlAffinity.leading,
-                        title: Text(brand),
-                        value: controller.brands.contains(brand),
-                        onChanged: (value) {
-                          if (value == true) {
-                            controller.brands.add(brand);
-                            controller.selectedbrand.value += 1;
-                          } else {
-                            controller.brands.remove(brand);
-                            controller.selectedbrand.value -= 1;
-                          }
-                          setModalState(() {});
-                        },
-                      ))
-                  .toList(),
-            ));
-      default:
-        return const SizedBox.shrink();
-    }
-  }
-
   Widget _buildAllCategoriesList(
       Map<String, List<ProductModel>> categorizedProducts) {
     return Column(
@@ -897,6 +833,7 @@ class _DashboardState extends State<ShopDashboard> {
               return ProductCard(
                 product: products[index],
                 shop: widget.shop,
+                isAdmin: widget.isAdmin,
               );
             },
           ),

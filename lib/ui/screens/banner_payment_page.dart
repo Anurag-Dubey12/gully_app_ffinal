@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/config/app_constants.dart';
 import 'package:gully_app/data/controller/banner_promotion_controller.dart';
 import 'package:gully_app/ui/screens/payment_page.dart';
 import 'package:intl/intl.dart';
@@ -16,12 +17,12 @@ import 'home_screen.dart';
 
 class BannerPaymentPage extends StatefulWidget {
   final Map<String, dynamic> banner;
-  final Map<String, dynamic> SelectedPakcage;
+  final Map<String, dynamic> selectedpackage;
   final String base64;
   const BannerPaymentPage(
       {Key? key,
       required this.banner,
-      required this.SelectedPakcage,
+      required this.selectedpackage,
       required this.base64})
       : super(key: key);
 
@@ -45,7 +46,7 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
     start_date = DateTime.parse(widget.banner['startDate']);
     end_date = DateTime.parse(widget.banner['endDate']);
-    fees = double.tryParse(widget.SelectedPakcage['package']['price']
+    fees = double.tryParse(widget.selectedpackage['package']['price']
             .toString()
             .split('.')[0]) ??
         0.0;
@@ -79,7 +80,7 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
         status: "Successful",
       );
       successSnackBar(
-        'Congratulations !!!\nYour transaction has been successful. Your banner Details will be updated sortly!',
+        AppConstants.bannerPaymentSuccessful,
         title: "Payment Successful",
       ).then(
         (value) => Get.offAll(() => const HomeScreen(),
@@ -211,10 +212,10 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
                     const SizedBox(height: 10),
                     packageDetails(
                       'Package Name:',
-                      widget.SelectedPakcage['package']['name'],
+                      widget.selectedpackage['package']['name'],
                     ),
                     packageDetails('Package Price:',
-                        '₹${widget.SelectedPakcage['package']['price']}/-'),
+                        '₹${widget.selectedpackage['package']['price']}/-'),
                     const SizedBox(height: 15),
                     Text('Payment Summary',
                         style: TextStyle(
@@ -260,41 +261,6 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
                       ],
                     ),
                     const SizedBox(height: 5),
-                    // Row(
-                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                    //   children: [
-                    //     Column(
-                    //       crossAxisAlignment: CrossAxisAlignment.start,
-                    //       mainAxisAlignment: MainAxisAlignment.start,
-                    //       children: [
-                    //         Text('Discount:',
-                    //             style: TextStyle(
-                    //               fontSize: 14,
-                    //               color: Colors.grey.shade800,
-                    //               fontWeight: FontWeight.w400,
-                    //             )),
-                    //         const SizedBox(height: 5),
-                    //         if (couponCode != null)
-                    //           Chip(
-                    //             label: Text(
-                    //               'Promocode: $couponCode',
-                    //               style: const TextStyle(fontSize: 12),
-                    //             ),
-                    //             side: BorderSide(
-                    //                 style: BorderStyle.solid,
-                    //                 color: Colors.red.shade400),
-                    //           )
-                    //       ],
-                    //     ),
-                    //     const Spacer(),
-                    //     Text('- ₹$discount',
-                    //         style: TextStyle(
-                    //           fontSize: 16,
-                    //           color: Colors.grey.shade800,
-                    //           fontWeight: FontWeight.w600,
-                    //         )),
-                    //   ],
-                    // ),
                     const Divider(
                       color: Colors.grey,
                     ),
@@ -336,8 +302,7 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
                     ),
                     const SizedBox(height: 22),
                     const CancellationPolicyWidget(
-                      content:
-                          'The Banner fee is non-refundable. In case of any issue, kindly contact Gully Support.',
+                      content: AppConstants.bannerfeescancellation,
                     )
                   ],
                 ),
@@ -369,6 +334,33 @@ class BannerPaymentPageState extends State<BannerPaymentPage> {
               fontSize: 13,
               color: Colors.grey.shade800,
               fontWeight: FontWeight.w400,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget paymentSummaryRow(String label, String value, {bool isTotal = false}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Row(
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: isTotal ? 15 : 14,
+              color: Colors.grey.shade800,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.w400,
+            ),
+          ),
+          const Spacer(),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: isTotal ? 16 : 14,
+              color: Colors.grey.shade800,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.w500,
             ),
           ),
         ],

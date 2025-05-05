@@ -28,6 +28,8 @@ class Package {
   final int? maxVideos;
   @JsonKey(name: "sponsorshipDetails")
   final String? sponsorshipDetails;
+  @JsonKey(name: "MaxEditAllowed")
+  final int? maxEditAllowed;
 
   Package({
     required this.id,
@@ -42,6 +44,7 @@ class Package {
     this.maxMedia,
     this.maxVideos,
     this.sponsorshipDetails,
+    this.maxEditAllowed
   });
 
   factory Package.fromJson(Map<String, dynamic> json) =>

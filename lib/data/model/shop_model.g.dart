@@ -10,8 +10,8 @@ ShopModel _$ShopModelFromJson(Map<String, dynamic> json) => ShopModel(
       locationHistory: LocationHistory.fromJson(
           json['locationHistory'] as Map<String, dynamic>),
       shopTiming: (json['shopTiming'] as Map<String, dynamic>).map(
-        (k, e) => MapEntry(
-            k, business_hours_model.fromJson(e as Map<String, dynamic>)),
+        (k, e) =>
+            MapEntry(k, BusinessHoursModel.fromJson(e as Map<String, dynamic>)),
       ),
       id: json['_id'] as String,
       shopImage:
@@ -31,7 +31,18 @@ ShopModel _$ShopModelFromJson(Map<String, dynamic> json) => ShopModel(
       ownerPanNumber: json['ownerPanNumber'] as String,
       userId: json['userId'] as String,
       isSubscriptionPurchased: json['isSubscriptionPurchased'] as bool,
-      additionalPackages: json['AdditionalPackages'] as List<dynamic>,
+      additionalPackages: (json['AdditionalPackages'] as List<dynamic>?)
+          ?.map((e) => Package.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      package: json['packageId'] == null
+          ? null
+          : Package.fromJson(json['packageId'] as Map<String, dynamic>),
+      packageStartDate: json['packageStartDate'] == null
+          ? null
+          : DateTime.parse(json['packageStartDate'] as String),
+      packageEndDate: json['packageEndDate'] == null
+          ? null
+          : DateTime.parse(json['packageEndDate'] as String),
       joinedAt: DateTime.parse(json['joinedAt'] as String),
     );
 
@@ -54,6 +65,9 @@ Map<String, dynamic> _$ShopModelToJson(ShopModel instance) => <String, dynamic>{
       'userId': instance.userId,
       'isSubscriptionPurchased': instance.isSubscriptionPurchased,
       'AdditionalPackages': instance.additionalPackages,
+      'packageStartDate': instance.packageStartDate?.toIso8601String(),
+      'packageEndDate': instance.packageEndDate?.toIso8601String(),
+      'packageId': instance.package,
       'joinedAt': instance.joinedAt.toIso8601String(),
     };
 

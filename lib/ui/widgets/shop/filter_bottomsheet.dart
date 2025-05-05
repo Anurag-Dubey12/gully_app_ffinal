@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
-
+ //TODO Filter Option bottom sheet need to optizme and need to check wheather it is responsive or not
 class filterOptions extends StatefulWidget {
   @override
   State<filterOptions> createState() => _filterOptionsState();
@@ -17,15 +17,12 @@ class _filterOptionsState extends State<filterOptions> {
     "Sub Category",
     "Brand",
   ];
-  @override
-  void initState() {
-    controller.getCategory();
-    super.initState();
-  }
+  final selectedcategory = <String>{}.obs;
 
   int selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
+    controller.getCategory();
     return SizedBox(
       height: Get.height * 0.7,
       child: Column(
@@ -82,11 +79,11 @@ class _filterOptionsState extends State<filterOptions> {
                     },
                   ),
                 ),
-                // Expanded(
-                //   child: ListView(
-                //     children: [getFilterContent(selectedIndex)],
-                //   ),
-                // ),
+                Expanded(
+                  child: ListView(
+                    children: [getFilterContent(selectedIndex)],
+                  ),
+                ),
               ],
             ),
           ),
@@ -99,5 +96,86 @@ class _filterOptionsState extends State<filterOptions> {
         ],
       ),
     );
+  }
+
+  Widget getFilterContent(int index) {
+    final controller = Get.find<ShopController>();
+    controller.getCategory();
+    switch (index) {
+      case 0:
+        return Obx(() {
+          final categories = controller.category;
+          return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: List.generate(categories.length, (index) {
+                final category = categories[index];
+                final isChecked =
+                    controller.selectedcategory.contains(category);
+                return CheckboxListTile.adaptive(
+                  controlAffinity: ListTileControlAffinity.leading,
+                  title: Text(category),
+                  value: isChecked,
+                  onChanged: (value) {
+                    if (value == true) {
+                      controller.selectedcategory.add(category);
+                    } else {
+                      controller.selectedcategory.remove(category);
+                      controller.selectedCategory.value--;
+                    }
+                  },
+                );
+              }));
+        });
+      case 1:
+        return Obx(() {
+          final subcategory = controller.subcategories.entries;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: controller.productssubCategory
+                .map((subCat) => CheckboxListTile.adaptive(
+                      controlAffinity: ListTileControlAffinity.leading,
+                      title: Text(subCat),
+                      value: controller.subcategory.contains(subCat),
+                      onChanged: (value) {
+                        if (value == true) {
+                          controller.subcategory.add(subCat);
+                          controller.selectedsubCategory.value += 1;
+                        } else {
+                          controller.subcategory.remove(subCat);
+                          controller.selectedsubCategory.value -= 1;
+                        }
+                      },
+                    ))
+                .toList(),
+          );
+        });
+      case 2:
+        return Obx(() {
+          final brands = controller.brands;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: List.generate(brands.length, (index) {
+              final brand = brands[index];
+              final isChecked = controller.selectedbrands.contains(brand);
+              return CheckboxListTile.adaptive(
+                controlAffinity: ListTileControlAffinity.leading,
+                title: Text(brand),
+                value: controller.brands.contains(brand),
+                onChanged: (value) {
+                  if (value == true) {
+                    controller.brands.add(brand);
+                    controller.selectedbrand.value += 1;
+                  } else {
+                    controller.brands.remove(brand);
+                    controller.selectedbrand.value -= 1;
+                  }
+                },
+              );
+            }),
+          );
+        });
+      default:
+        return const SizedBox.shrink();
+    }
   }
 }

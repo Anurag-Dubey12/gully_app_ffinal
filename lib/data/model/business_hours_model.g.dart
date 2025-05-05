@@ -6,16 +6,14 @@ part of 'business_hours_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-business_hours_model _$business_hours_modelFromJson(
-        Map<String, dynamic> json) =>
-    business_hours_model(
+BusinessHoursModel _$BusinessHoursModelFromJson(Map<String, dynamic> json) =>
+    BusinessHoursModel(
       isOpen: json['isOpen'] as bool? ?? false,
       openTime: json['openTime'] as String?,
       closeTime: json['closeTime'] as String?,
     );
 
-Map<String, dynamic> _$business_hours_modelToJson(
-        business_hours_model instance) =>
+Map<String, dynamic> _$BusinessHoursModelToJson(BusinessHoursModel instance) =>
     <String, dynamic>{
       'isOpen': instance.isOpen,
       'openTime': instance.openTime,

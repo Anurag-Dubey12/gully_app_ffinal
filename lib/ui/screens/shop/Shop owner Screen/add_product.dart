@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/config/app_constants.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
+import 'package:gully_app/data/model/product_model.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/shop/categorySelection.dart';
 import 'package:gully_app/ui/widgets/shop/itemSelectedField.dart';
@@ -15,7 +16,7 @@ import '../../../widgets/create_tournament/form_input.dart';
 import '../../../widgets/primary_button.dart';
 
 class AddProduct extends StatefulWidget {
-  final Map<String, dynamic>? product;
+  final ProductModel? product;
   const AddProduct({super.key, this.product});
 
   @override
@@ -36,10 +37,22 @@ class Product extends State<AddProduct> {
 
   final controller = Get.find<ShopController>();
   bool? isDialogshown;
+
+  bool isDiscount = false;
   @override
   void initState() {
     super.initState();
     isDialogshown = false;
+    if (widget.product != null) {
+      productName.text = widget.product!.productName;
+      productdescriptionController.text =
+          widget.product!.productsDescription ?? '';
+      productpriceController.text = widget.product!.productsPrice.toString();
+      selectedCategory = widget.product!.productCategory;
+      selectedSubcategory = widget.product!.productSubCategory;
+      selectedBrand = widget.product!.productBrand;
+      // productImage = widget.product.productsImage.;
+    }
     controller.getCategory();
     controller.getbrands();
   }
@@ -69,22 +82,6 @@ class Product extends State<AddProduct> {
       },
     );
   }
-
-  // Future<void> showAlterDialog() {
-  //   return Get.bottomSheet(BottomSheet(
-  //     backgroundColor: const Color(0xffEBEBEB),
-  //     enableDrag: false,
-  //     showDragHandle: true,
-  //     builder: (context) => showDialog(),
-  //     onClosing: () {
-  //       setState(() {});
-  //     },
-  //   ));
-  // }
-
-  // Widget showDialog() {
-  //   return Container();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -239,18 +236,21 @@ class Product extends State<AddProduct> {
                           "productBrand": selectedBrand,
                           "shopId": "67ea8204d3eaae65cdc7a455"
                         };
-                        bool isOk = await controller.addShopProduct(product);
-                        if (isOk) {
-                          Get.snackbar(
-                            'Yayy',
-                            AppConstants.productaddedsuccessfully,
-                            snackPosition: SnackPosition.top,
-                            backgroundColor: Colors.green,
-                            colorText: Colors.white,
-                            margin: const EdgeInsets.all(10),
-                            padding: const EdgeInsets.all(12),
-                            borderRadius: 8,
-                          );
+                        if (widget.product != null) {
+                        } else {
+                          bool isOk = await controller.addShopProduct(product);
+                          if (isOk) {
+                            Get.snackbar(
+                              'Yayy',
+                              AppConstants.productaddedsuccessfully,
+                              snackPosition: SnackPosition.top,
+                              backgroundColor: Colors.green,
+                              colorText: Colors.white,
+                              margin: const EdgeInsets.all(10),
+                              padding: const EdgeInsets.all(12),
+                              borderRadius: 8,
+                            );
+                          }
                         }
                       } catch (e) {
                         print(e);
@@ -318,84 +318,182 @@ class Product extends State<AddProduct> {
                                   ),
                                 ),
                               )
-                            : GridView.builder(
-                                shrinkWrap: true,
-                                physics: const NeverScrollableScrollPhysics(),
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10,
-                                ),
-                                itemCount: productImage.length + 1,
-                                itemBuilder: (context, index) {
-                                  if (index == productImage.length) {
-                                    return GestureDetector(
-                                      onTap: pickImages,
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          color: Colors.grey[100],
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          border: Border.all(
-                                            color: Colors.grey[300]!,
-                                          ),
-                                        ),
-                                        child: Icon(
-                                          Icons.add_photo_alternate,
-                                          color: Colors.blue[400],
-                                          size: 30,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                  return Stack(
-                                    children: [
-                                      GestureDetector(
-                                        onTap: () {
-                                          imageViewer(context,
-                                              productImage[index].path, false);
-                                        },
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                            image: DecorationImage(
-                                              image: FileImage(File(
-                                                  productImage[index].path)),
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        right: 5,
-                                        top: 5,
-                                        child: GestureDetector(
-                                          onTap: () {
-                                            setState(() {
-                                              productImage.removeAt(index);
-                                            });
-                                          },
+                            : widget.product != null
+                                ? GridView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      crossAxisSpacing: 10,
+                                      mainAxisSpacing: 10,
+                                    ),
+                                    itemCount:
+                                        widget.product!.productsImage!.length +
+                                            1,
+                                    itemBuilder: (context, index) {
+                                      if (index ==
+                                          widget
+                                              .product!.productsImage!.length) {
+                                        return GestureDetector(
+                                          onTap: pickImages,
                                           child: Container(
-                                            padding: const EdgeInsets.all(4),
                                             decoration: BoxDecoration(
-                                              color:
-                                                  Colors.black.withOpacity(0.7),
-                                              shape: BoxShape.circle,
+                                              color: Colors.grey[100],
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: Colors.grey[300]!,
+                                              ),
                                             ),
-                                            child: const Icon(
-                                              Icons.close,
-                                              color: Colors.white,
-                                              size: 14,
+                                            child: Icon(
+                                              Icons.add_photo_alternate,
+                                              color: Colors.blue[400],
+                                              size: 30,
                                             ),
                                           ),
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              ),
+                                        );
+                                      }
+                                      return Stack(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              imageViewer(
+                                                  context,
+                                                  productImage[index].path,
+                                                  false);
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: Image.network(
+                                                toImageUrl(widget.product!
+                                                    .productsImage![index]),
+                                                fit: BoxFit.contain,
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  return Image.asset(
+                                                      'assets/images/logo.png',
+                                                      fit: BoxFit.cover);
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            right: 5,
+                                            top: 5,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  productImage.removeAt(index);
+                                                });
+                                              },
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(4),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black
+                                                      .withOpacity(0.7),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: const Icon(
+                                                  Icons.close,
+                                                  color: Colors.white,
+                                                  size: 14,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  )
+                                : GridView.builder(
+                                    shrinkWrap: true,
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 3,
+                                      crossAxisSpacing: 10,
+                                      mainAxisSpacing: 10,
+                                    ),
+                                    itemCount: productImage.length + 1,
+                                    itemBuilder: (context, index) {
+                                      if (index == productImage.length) {
+                                        return GestureDetector(
+                                          onTap: pickImages,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[100],
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: Colors.grey[300]!,
+                                              ),
+                                            ),
+                                            child: Icon(
+                                              Icons.add_photo_alternate,
+                                              color: Colors.blue[400],
+                                              size: 30,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                      return Stack(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              imageViewer(
+                                                  context,
+                                                  productImage[index].path,
+                                                  false);
+                                            },
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                image: DecorationImage(
+                                                  image: FileImage(File(
+                                                      productImage[index]
+                                                          .path)),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            right: 5,
+                                            top: 5,
+                                            child: GestureDetector(
+                                              onTap: () {
+                                                setState(() {
+                                                  productImage.removeAt(index);
+                                                });
+                                              },
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(4),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black
+                                                      .withOpacity(0.7),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: const Icon(
+                                                  Icons.close,
+                                                  color: Colors.white,
+                                                  size: 14,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
                       ],
                     ),
                   ),
@@ -514,13 +612,45 @@ class Product extends State<AddProduct> {
                     label: "Product Price",
                     textInputType: TextInputType.text,
                   ),
-
-                  // FormInput(
-                  //   iswhite: false,
-                  //   controller: _discountController,
-                  //   label: "Discount(if any)",
-                  //   textInputType: TextInputType.number,
-                  // ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Is there any discount?",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          const Text(
+                            "No",
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          Switch.adaptive(
+                            value: isDiscount,
+                            onChanged: (value) {
+                              setState(() {
+                                isDiscount = value;
+                              });
+                            },
+                          ),
+                          const Text(
+                            "Yes",
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  if (isDiscount)
+                    FormInput(
+                      iswhite: false,
+                      controller: _discountController,
+                      label: "Discount (%)",
+                      textInputType: TextInputType.number,
+                    ),
                 ],
               ),
             ),

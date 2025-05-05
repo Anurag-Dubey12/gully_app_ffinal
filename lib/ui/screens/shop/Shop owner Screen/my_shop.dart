@@ -119,7 +119,8 @@ class _ShopCardState extends State<ShopCard>
   late Animation<double> _scaleAnimation;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
-
+  int totalPackageImageLimit = 0;
+  final shopController = Get.find<ShopController>();
   @override
   void initState() {
     super.initState();
@@ -150,6 +151,21 @@ class _ShopCardState extends State<ShopCard>
     super.dispose();
   }
 
+  int getShopPackageImageLimit() {
+    final baseLimit = widget.shop.package?.maxMedia ?? 0;
+
+    final additionalLimit = widget.shop.additionalPackages != null
+        ? widget.shop.additionalPackages!
+            .map((pkg) => pkg.maxMedia ?? 0)
+            .fold(0, (sum, value) => sum + value)
+        : 0;
+
+    final totalLimit = baseLimit + additionalLimit;
+
+    shopController.totalPackagelimit.value = totalLimit;
+    return totalLimit;
+  }
+
   @override
   Widget build(BuildContext context) {
     final shop = widget.shop;
@@ -161,6 +177,7 @@ class _ShopCardState extends State<ShopCard>
               shop: shop,
               isAdmin: true,
             ));
+        getShopPackageImageLimit();
       },
       child: ScaleTransition(
         scale: _scaleAnimation,

@@ -4,10 +4,11 @@ import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/model/business_hours_model.dart';
 import 'package:gully_app/data/model/shop_model.dart';
 import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/my_shop_dashboard.dart';
-import 'package:gully_app/ui/screens/shop/User%20Screen/shop_details_screen.dart';
+import 'package:gully_app/ui/screens/shop/User%20Screen/shop_search_screen.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../data/controller/auth_controller.dart';
 
 class ShopHome extends StatefulWidget {
@@ -22,7 +23,7 @@ class ShopHomeState extends State<ShopHome> {
 
   Future<void> refreshShopData() async {
     await shopController.getNearbyShop();
-    setState(() {}); // Trigger rebuild after refresh
+    setState(() {});
   }
 
   @override
@@ -38,7 +39,7 @@ class ShopHomeState extends State<ShopHome> {
           IconButton(
             icon: const Icon(Icons.search_rounded, color: Colors.white),
             onPressed: () {
-              // Handle search action here
+              Get.to(() => const ShopSearchScreen());
             },
           ),
         ],
@@ -124,7 +125,7 @@ class _NearbyShopCardState extends State<NearbyShopCard>
     super.dispose();
   }
 
-  String getShopStatus(Map<String, business_hours_model>? timing) {
+  String getShopStatus(Map<String, BusinessHoursModel>? timing) {
     if (timing == null) return "Closed";
 
     final now = DateTime.now();
@@ -167,7 +168,7 @@ class _NearbyShopCardState extends State<NearbyShopCard>
     }
   }
 
-  String getClosingTime(Map<String, business_hours_model>? timing) {
+  String getClosingTime(Map<String, BusinessHoursModel>? timing) {
     if (timing == null) return "";
 
     final now = DateTime.now();
@@ -188,14 +189,12 @@ class _NearbyShopCardState extends State<NearbyShopCard>
     return todayTiming.closeTime ?? "";
   }
 
-// 10441
   @override
   Widget build(BuildContext context) {
     final shop = widget.shop;
     final status = getShopStatus(shop.shopTiming);
     final closingTime = getClosingTime(shop.shopTiming);
-    // print(
-    //     "Shop Status:${shop.shopTiming.map((key, ent) => MapEntry(key, ent.openTime))}");
+
     return GestureDetector(
       onTap: () {
         Get.to(() => ShopDashboard(
@@ -242,6 +241,31 @@ class _NearbyShopCardState extends State<NearbyShopCard>
                                       height: 150,
                                       width: 150,
                                       fit: BoxFit.cover,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                        if (loadingProgress == null) {
+                                          return child;
+                                        }
+                                        return Shimmer.fromColors(
+                                          baseColor: Colors.grey[300]!,
+                                          highlightColor: Colors.grey[100]!,
+                                          child: Container(
+                                            height: 150,
+                                            width: 150,
+                                            color: Colors.white,
+                                          ),
+                                        );
+                                      },
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                        return Container(
+                                          height: 150,
+                                          width: 150,
+                                          color: Colors.grey[200],
+                                          child: const Icon(Icons.broken_image,
+                                              color: Colors.grey),
+                                        );
+                                      },
                                     ),
                                   ),
                                 );

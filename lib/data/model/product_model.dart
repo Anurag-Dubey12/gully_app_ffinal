@@ -5,41 +5,40 @@ part 'product_model.g.dart';
 @JsonSerializable()
 class ProductModel {
   @JsonKey(name: "productsImage")
-  final List<String>? productsImage;
+  List<String>? productsImage;
   @JsonKey(name: "productName")
-  final String productName;
+  String productName;
   @JsonKey(name: "productsDescription")
-  final String? productsDescription;
+  String? productsDescription;
   @JsonKey(name: "productsPrice")
-  final double productsPrice;
+  double productsPrice;
   @JsonKey(name: "productCategory")
-  final String productCategory;
+  String productCategory;
   @JsonKey(name: "productSubCategory")
-  final String productSubCategory;
+  String productSubCategory;
   @JsonKey(name: "productBrand")
-  final String productBrand;
+  String productBrand;
   @JsonKey(name: "shopId")
-  final String shopId;
+  String shopId;
   @JsonKey(name: "isActive")
-  final bool isActive;
+  bool isActive;
   @JsonKey(name: "_id")
   final String id;
   @JsonKey(name: "productDiscount")
   ProductDiscount? productDiscount;
 
-  ProductModel({
-    this.productsImage,
-    required this.productName,
-    this.productsDescription,
-    required this.productsPrice,
-    required this.productCategory,
-    required this.productSubCategory,
-    required this.productBrand,
-    required this.shopId,
-    required this.isActive,
-    required this.id,
-    this.productDiscount
-  });
+  ProductModel(
+      {this.productsImage,
+      required this.productName,
+      this.productsDescription,
+      required this.productsPrice,
+      required this.productCategory,
+      required this.productSubCategory,
+      required this.productBrand,
+      required this.shopId,
+      required this.isActive,
+      required this.id,
+      this.productDiscount});
 
   factory ProductModel.fromJson(Map<String, dynamic> json) =>
       _$ProductModelFromJson(json);

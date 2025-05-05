@@ -103,7 +103,7 @@ class _ShopState extends State<RegisterShop>
     });
   }
 
-  Map<String, business_hours_model> businesshours = {};
+  Map<String, BusinessHoursModel> businesshours = {};
   late LatLng location;
   @override
   void initState() {
@@ -1019,7 +1019,7 @@ class _ShopState extends State<RegisterShop>
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () async {
                   final result = await showModalBottomSheet<
-                      Map<String, business_hours_model>>(
+                      Map<String, BusinessHoursModel>>(
                     context: context,
                     isScrollControlled: true,
                     builder: (context) {

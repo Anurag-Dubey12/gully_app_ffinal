@@ -5,7 +5,7 @@ import 'package:gully_app/ui/widgets/primary_button.dart';
 import '../../theme/theme.dart';
 
 class BusinessHoursScreen extends StatefulWidget {
-  final Map<String, business_hours_model> initialHours;
+  final Map<String, BusinessHoursModel> initialHours;
 
   const BusinessHoursScreen({Key? key, required this.initialHours})
       : super(key: key);
@@ -15,7 +15,7 @@ class BusinessHoursScreen extends StatefulWidget {
 }
 
 class _BusinessHoursScreenState extends State<BusinessHoursScreen> {
-  late Map<String, business_hours_model> _businessHours;
+  late Map<String, BusinessHoursModel> _businessHours;
 
   List<String> weekdays = [
     'Monday',
@@ -30,34 +30,34 @@ class _BusinessHoursScreenState extends State<BusinessHoursScreen> {
   @override
   void initState() {
     super.initState();
-    Map<String, business_hours_model> defaultHours = {
-      'Monday': business_hours_model(
+    Map<String, BusinessHoursModel> defaultHours = {
+      'Monday': BusinessHoursModel(
         isOpen: true,
         openTime: '09:00 AM',
         closeTime: '05:00 PM',
       ),
-      'Tuesday': business_hours_model(
+      'Tuesday': BusinessHoursModel(
         isOpen: true,
         openTime: '09:00 AM',
         closeTime: '05:00 PM',
       ),
-      'Wednesday': business_hours_model(
+      'Wednesday': BusinessHoursModel(
         isOpen: true,
         openTime: '09:00 AM',
         closeTime: '05:00 PM',
       ),
-      'Thursday': business_hours_model(
+      'Thursday': BusinessHoursModel(
         isOpen: true,
         openTime: '09:00 AM',
         closeTime: '05:00 PM',
       ),
-      'Friday': business_hours_model(
+      'Friday': BusinessHoursModel(
         isOpen: true,
         openTime: '09:00 AM',
         closeTime: '05:00 PM',
       ),
-      'Saturday': business_hours_model(isOpen: false),
-      'Sunday': business_hours_model(isOpen: false),
+      'Saturday': BusinessHoursModel(isOpen: false),
+      'Sunday': BusinessHoursModel(isOpen: false),
     };
 
     if (widget.initialHours.isNotEmpty) {

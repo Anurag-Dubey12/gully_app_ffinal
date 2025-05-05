@@ -8,7 +8,12 @@ import 'package:gully_app/utils/utils.dart';
 class ProductCard extends StatelessWidget {
   final ProductModel product;
   final ShopModel shop;
-  const ProductCard({Key? key, required this.product, required this.shop})
+  final bool isAdmin;
+  const ProductCard(
+      {Key? key,
+      required this.product,
+      required this.shop,
+      this.isAdmin = false})
       : super(key: key);
 
   @override
@@ -24,13 +29,11 @@ class ProductCard extends StatelessWidget {
     }
 
     return GestureDetector(
-      onTap: () {
-        Get.to(() => ProductDetailScreen(
-              product: product,
-              isadmin: true,
-              shop: shop,
-            ));
-      },
+      onTap: () => Get.to(() => ProductDetailScreen(
+            product: product,
+            isadmin: isAdmin,
+            shop: shop,
+          )),
       child: Container(
         width: 180,
         margin: const EdgeInsets.only(right: 12),

@@ -21,6 +21,7 @@ Package _$PackageFromJson(Map<String, dynamic> json) => Package(
       maxMedia: (json['maxMedia'] as num?)?.toInt(),
       maxVideos: (json['maxVideos'] as num?)?.toInt(),
       sponsorshipDetails: json['sponsorshipDetails'] as String?,
+      maxEditAllowed: (json['MaxEditAllowed'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$PackageToJson(Package instance) => <String, dynamic>{
@@ -36,4 +37,5 @@ Map<String, dynamic> _$PackageToJson(Package instance) => <String, dynamic>{
       'maxMedia': instance.maxMedia,
       'maxVideos': instance.maxVideos,
       'sponsorshipDetails': instance.sponsorshipDetails,
+      'MaxEditAllowed': instance.maxEditAllowed,
     };

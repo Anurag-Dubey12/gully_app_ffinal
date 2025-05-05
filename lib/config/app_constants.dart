@@ -218,6 +218,8 @@ class AppConstants {
       "Make sure to choose a location where your audience is most likely to engage. "
       "A banner placed too far from the target area might not be visible to the relevant users.";
 
+  static const String bannerfeescancellation  = "The Banner fee is non-refundable. In case of any issue, kindly contact Gully Support.";
+  static const String shopfeescancellation  = "Please note that the fee to enable product listing is non-refundable. For support or further assistance, contact Gully Support.";
   //Shop Text
   static const String aadharBothSideImage =
       "Please upload both the front and back sides of your Aadhaar card for verification ";
@@ -243,4 +245,13 @@ class AppConstants {
   static const String selectproductcategory = "Select Product Category";
   static const String selectallproductcategory = "Select Product Category";
   static const String productaddedsuccessfully = "Product Added SUccessfully";
+
+  static const String unlistProduct =
+      "Are you sure you want to unlist this product? It will no longer be visible to other users, but you can relist it anytime from your dashboard.";
+  static const String relistProduct =
+      "Would you like to relist this product? It will be active again and visible to all users.";
+  static const String shopPaymentSuccessful =
+      "Congratulations !!!\nYour transaction was successful. You can now start adding your products and manage your shop listings.";
+  static const String bannerPaymentSuccessful =
+      "Congratulations !!!\nYour transaction has been successful. Your banner Details will be updated sortly!";
 }

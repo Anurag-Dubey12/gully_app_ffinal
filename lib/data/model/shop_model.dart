@@ -1,4 +1,5 @@
 import 'package:gully_app/data/model/business_hours_model.dart';
+import 'package:gully_app/data/model/package_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'shop_model.g.dart';
@@ -8,7 +9,7 @@ class ShopModel {
   @JsonKey(name: "locationHistory")
   LocationHistory locationHistory;
   @JsonKey(name: "shopTiming")
-  final Map<String, business_hours_model> shopTiming;
+  final Map<String, BusinessHoursModel> shopTiming;
   @JsonKey(name: '_id')
   final String id;
   @JsonKey(name: "shopImage")
@@ -40,7 +41,13 @@ class ShopModel {
   @JsonKey(name: "isSubscriptionPurchased")
   bool isSubscriptionPurchased;
   @JsonKey(name: "AdditionalPackages")
-  List<dynamic> additionalPackages;
+  List<Package>? additionalPackages;
+  @JsonKey(name: "packageStartDate")
+  DateTime? packageStartDate;
+  @JsonKey(name: "packageEndDate")
+  DateTime? packageEndDate;
+  @JsonKey(name: "packageId")
+  Package? package;
   @JsonKey(name: "joinedAt")
   DateTime joinedAt;
 
@@ -62,7 +69,10 @@ class ShopModel {
     required this.ownerPanNumber,
     required this.userId,
     required this.isSubscriptionPurchased,
-    required this.additionalPackages,
+    this.additionalPackages,
+    this.package,
+    this.packageStartDate,
+    this.packageEndDate,
     required this.joinedAt,
   });
 

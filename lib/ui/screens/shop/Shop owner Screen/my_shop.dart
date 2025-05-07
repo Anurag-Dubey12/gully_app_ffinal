@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/utils/FallbackImageProvider.dart';
 import 'package:gully_app/utils/utils.dart';
 import '../../../../data/controller/shop_controller.dart';
 import '../../../../data/model/shop_model.dart';

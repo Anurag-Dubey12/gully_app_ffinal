@@ -6,7 +6,7 @@ import 'package:gully_app/config/app_constants.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/model/product_model.dart';
 import 'package:gully_app/data/model/shop_model.dart';
-import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/add_product.dart';
+import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/product_adding_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
@@ -17,13 +17,10 @@ import '../../../widgets/gradient_builder.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final ProductModel product;
-  final ShopModel shop;
+  final ShopModel? shop;
   final bool isadmin;
   const ProductDetailScreen(
-      {Key? key,
-      required this.product,
-      required this.isadmin,
-      required this.shop})
+      {Key? key, required this.product, required this.isadmin, this.shop})
       : super(key: key);
   @override
   State<StatefulWidget> createState() => _ProductDetailScreenState();
@@ -334,7 +331,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                         ),
                       ),
                       PrimaryButton(
-                        onTap: () => launchPhone(widget.shop.shopContact),
+                        onTap: () => launchPhone(widget.shop!.shopContact),
                         title: "Call Now",
                       ),
                     ],
@@ -557,9 +554,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
     String percentageoff = '';
     if (discount != null) {
       if (discount.discountType == 'percent') {
-        var calculatedoff =
-            (discount.discountPrice / widget.product.productsPrice) * 100;
-        percentageoff = '${calculatedoff.toStringAsFixed(2)}% OFF';
+        final remainingPercentage = 100 - discount.discountPrice;
+        percentageoff = '${remainingPercentage.toStringAsFixed(2)}% OFF';
       }
     }
     return widget.product.productDiscount?.discountType == "percent"

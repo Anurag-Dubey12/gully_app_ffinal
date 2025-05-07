@@ -18,7 +18,7 @@ import '../widgets/arc_clipper.dart';
 import '../widgets/gradient_builder.dart';
 import '../widgets/sponsor/FullScreenVideoPlayer.dart';
 import '../widgets/sponsor/VideoPlayerWidget.dart';
-import '../widgets/sponsor/addSponsorDetails.dart';
+import '../widgets/sponsor/sponsor_details_add_screen.dart';
 import 'opponent_tournament_list.dart';
 
 class TournamentTeams extends GetView<TournamentController> {

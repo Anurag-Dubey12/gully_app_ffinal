@@ -77,6 +77,7 @@ class ShopController extends GetxController with StateMixin {
 
   RxList<String> category = <String>[].obs;
   RxList<String> selectedcategory = <String>[].obs;
+
   // MARK: GetCategory
   Future<List<String>> getCategory() async {
     try {
@@ -94,9 +95,10 @@ class ShopController extends GetxController with StateMixin {
     }
   }
 
-  RxMap<String, dynamic> subcategories = <String, dynamic>{}.obs;
+  RxMap<String, List<String>> subcategories = <String, List<String>>{}.obs;
   RxList<String> subcategory = <String>[].obs;
-
+  RxList<String> selectedsubcategory = <String>[].obs;
+  
   // MARK: GetSubCategory
   Future<List<String>> getsubCategory(String category) async {
     try {
@@ -105,11 +107,8 @@ class ShopController extends GetxController with StateMixin {
         errorSnackBar("Failed to get Category");
         return [];
       }
-      List<String> fetchedSubcategories =
-          List<String>.from(response.data!['subCategory']);
-      subcategories[category] = fetchedSubcategories;
-      return subcategory.value =
-          List<String>.from(response.data!['subCategory']);
+      subcategory.value = List<String>.from(response.data!['subCategory']);
+      return List<String>.from(response.data!['subCategory']);
     } catch (e) {
       if (kDebugMode) {
         print("Failed to Fetch The Sub Category:${e.toString()}");
@@ -149,10 +148,6 @@ class ShopController extends GetxController with StateMixin {
     return true;
   }
 
-  RxInt selectedCategory = 0.obs;
-  RxInt selectedsubCategory = 0.obs;
-  RxInt selectedbrand = 0.obs;
-  RxDouble setPrice = 0.0.obs;
 
   RxList<ProductModel> product = <ProductModel>[].obs;
   RxList<String> productsCategory = <String>[].obs;
@@ -205,9 +200,13 @@ class ShopController extends GetxController with StateMixin {
     return ShopModel.fromJson(response.data!);
   }
 
+  RxString searchQuery = ''.obs;
   RxList<ShopModel> searchedShops = <ShopModel>[].obs;
   RxList<ProductModel> searchedProducts = <ProductModel>[].obs;
   RxBool isSearching = false.obs;
+  RxBool iscorrectedQuery = false.obs;
+  RxString originalQuery = ''.obs;
+  RxString correctedQuery = ''.obs;
 
 // MARK: searchShopsAndProducts
   Future<void> searchShopsAndProducts(String query) async {
@@ -224,11 +223,10 @@ class ShopController extends GetxController with StateMixin {
         errorSnackBar("Search failed");
         return;
       }
-      print("Called");
-      final dataMap = response.data as Map<String, dynamic>;
+      final result = response.data as Map<String, dynamic>;
 
-      if (dataMap.containsKey('shops')) {
-        final List<dynamic> shopsJson = dataMap['shops'] as List<dynamic>;
+      if (result.containsKey('shops')) {
+        final List<dynamic> shopsJson = result['shops'] as List<dynamic>;
         searchedShops.value = shopsJson
             .map((e) => ShopModel.fromJson(e as Map<String, dynamic>))
             .toList();
@@ -236,19 +234,25 @@ class ShopController extends GetxController with StateMixin {
         searchedShops.clear();
       }
 
-      if (dataMap.containsKey('products')) {
-        final List<dynamic> productsJson = dataMap['products'] as List<dynamic>;
+      if (result.containsKey('products')) {
+        final List<dynamic> productsJson = result['products'] as List<dynamic>;
         searchedProducts.value = productsJson
             .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
             .toList();
       } else {
         searchedProducts.clear();
       }
+      if (result['searchInfo']['correctedQuery'] != null) {
+        iscorrectedQuery.value = true;
+        originalQuery.value = result['searchInfo']['originalQuery'];
+        correctedQuery.value = result['searchInfo']['correctedQuery'];
+      } else {
+        iscorrectedQuery.value = false;
+      }
     } catch (e) {
       if (kDebugMode) {
         print("Search error: ${e.toString()}");
       }
-      errorSnackBar("Failed to perform search");
     } finally {
       isSearching.value = false;
     }

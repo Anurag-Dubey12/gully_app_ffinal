@@ -1,48 +1,37 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
- //TODO Filter Option bottom sheet need to optizme and need to check wheather it is responsive or not
-class filterOptions extends StatefulWidget {
+import 'package:gully_app/ui/widgets/shop/filter_section_widget.dart';
+
+class FilterOptions extends StatefulWidget {
+  const FilterOptions({super.key});
+
   @override
-  State<filterOptions> createState() => _filterOptionsState();
+  State<FilterOptions> createState() => _FilterOptionsState();
 }
 
-class _filterOptionsState extends State<filterOptions> {
+class _FilterOptionsState extends State<FilterOptions> {
   final controller = Get.find<ShopController>();
-  final List<String> sectionheader = [
-    "Category",
-    "Sub Category",
-    "Brand",
-  ];
-  final selectedcategory = <String>{}.obs;
 
+  final List<String> sectionHeaders = ["Category", "Sub Category", "Brand"];
   int selectedIndex = 0;
   @override
+  void dispose() {
+    super.dispose();
+    resetData();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    controller.getCategory();
-    return SizedBox(
-      height: Get.height * 0.7,
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Filter Product',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      ),
+      body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back),
-                onPressed: () => Navigator.pop(context),
-              ),
-              const Text('Filter Product',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-              TextButton(
-                child:
-                    const Text('Reset', style: TextStyle(color: Colors.black)),
-                onPressed: () {},
-              ),
-            ],
-          ),
           const Divider(height: 1),
           Expanded(
             child: Row(
@@ -51,7 +40,7 @@ class _filterOptionsState extends State<filterOptions> {
                   width: 120,
                   color: Colors.grey.shade200,
                   child: ListView.builder(
-                    itemCount: sectionheader.length,
+                    itemCount: sectionHeaders.length,
                     itemBuilder: (context, index) {
                       final isSelected = index == selectedIndex;
                       return GestureDetector(
@@ -66,7 +55,7 @@ class _filterOptionsState extends State<filterOptions> {
                           color:
                               isSelected ? Colors.white : Colors.grey.shade200,
                           child: Text(
-                            sectionheader[index],
+                            sectionHeaders[index],
                             style: TextStyle(
                               fontWeight: isSelected
                                   ? FontWeight.bold
@@ -80,102 +69,50 @@ class _filterOptionsState extends State<filterOptions> {
                   ),
                 ),
                 Expanded(
-                  child: ListView(
-                    children: [getFilterContent(selectedIndex)],
+                  child: IndexedStack(
+                    index: selectedIndex,
+                    children: const [
+                      CategoryFilter(),
+                      SubCategoryFilter(),
+                      BrandFilter(),
+                    ],
                   ),
                 ),
               ],
             ),
           ),
           Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: PrimaryButton(
-                onTap: () {},
-                title: "Apply Filter",
-              )),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: PrimaryButton(
+                    color: Colors.black,
+                    onTap: resetData,
+                    title: "Reset",
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  flex: 4,
+                  child: PrimaryButton(
+                    onTap: () {},
+                    title: "Apply Filter",
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget getFilterContent(int index) {
-    final controller = Get.find<ShopController>();
-    controller.getCategory();
-    switch (index) {
-      case 0:
-        return Obx(() {
-          final categories = controller.category;
-          return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: List.generate(categories.length, (index) {
-                final category = categories[index];
-                final isChecked =
-                    controller.selectedcategory.contains(category);
-                return CheckboxListTile.adaptive(
-                  controlAffinity: ListTileControlAffinity.leading,
-                  title: Text(category),
-                  value: isChecked,
-                  onChanged: (value) {
-                    if (value == true) {
-                      controller.selectedcategory.add(category);
-                    } else {
-                      controller.selectedcategory.remove(category);
-                      controller.selectedCategory.value--;
-                    }
-                  },
-                );
-              }));
-        });
-      case 1:
-        return Obx(() {
-          final subcategory = controller.subcategories.entries;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: controller.productssubCategory
-                .map((subCat) => CheckboxListTile.adaptive(
-                      controlAffinity: ListTileControlAffinity.leading,
-                      title: Text(subCat),
-                      value: controller.subcategory.contains(subCat),
-                      onChanged: (value) {
-                        if (value == true) {
-                          controller.subcategory.add(subCat);
-                          controller.selectedsubCategory.value += 1;
-                        } else {
-                          controller.subcategory.remove(subCat);
-                          controller.selectedsubCategory.value -= 1;
-                        }
-                      },
-                    ))
-                .toList(),
-          );
-        });
-      case 2:
-        return Obx(() {
-          final brands = controller.brands;
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: List.generate(brands.length, (index) {
-              final brand = brands[index];
-              final isChecked = controller.selectedbrands.contains(brand);
-              return CheckboxListTile.adaptive(
-                controlAffinity: ListTileControlAffinity.leading,
-                title: Text(brand),
-                value: controller.brands.contains(brand),
-                onChanged: (value) {
-                  if (value == true) {
-                    controller.brands.add(brand);
-                    controller.selectedbrand.value += 1;
-                  } else {
-                    controller.brands.remove(brand);
-                    controller.selectedbrand.value -= 1;
-                  }
-                },
-              );
-            }),
-          );
-        });
-      default:
-        return const SizedBox.shrink();
-    }
+  void resetData() {
+    controller.selectedcategory.clear();
+    controller.selectedbrands.clear();
+    controller.selectedsubcategory.clear();
+    controller.subcategories.clear();
   }
 }

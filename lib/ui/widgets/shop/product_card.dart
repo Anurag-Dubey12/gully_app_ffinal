@@ -7,13 +7,10 @@ import 'package:gully_app/utils/utils.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductModel product;
-  final ShopModel shop;
+  final ShopModel? shop;
   final bool isAdmin;
   const ProductCard(
-      {Key? key,
-      required this.product,
-      required this.shop,
-      this.isAdmin = false})
+      {Key? key, required this.product, this.shop, this.isAdmin = false})
       : super(key: key);
 
   @override

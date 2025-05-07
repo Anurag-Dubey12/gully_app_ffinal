@@ -6,6 +6,7 @@ import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/model/package_model.dart';
 import 'package:gully_app/data/model/shop_model.dart';
+import 'package:gully_app/ui/screens/home_screen.dart';
 import 'package:gully_app/ui/screens/payment_page.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
@@ -18,13 +19,11 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 class ShopPaymentPage extends StatefulWidget {
   final ShopModel shop;
   final Package selectedpackage;
-  final void Function(ShopModel shop) onPayment;
 
   const ShopPaymentPage(
       {Key? key,
       required this.shop,
-      required this.selectedpackage,
-      required this.onPayment})
+      required this.selectedpackage})
       : super(key: key);
 
   @override
@@ -86,9 +85,9 @@ class ShopPaymentPageState extends State<ShopPaymentPage> {
         AppConstants.shopPaymentSuccessful,
         title: "Payment Successful",
       ).then(
-        (value) => Get.back(),
+        (value) => Get.offAll(() => const HomeScreen(),
+            predicate: (route) => route.name == '/HomeScreen'),
       );
-      widget.onPayment(shopData);
       // successSnackBar("The Subscription added successfully");
     }
     logger.f('Payment Success');

@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/misc_controller.dart';
+import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/ui/screens/current_tournament_list.dart';
 import 'package:gully_app/ui/screens/search_tournament_screen.dart';
@@ -263,6 +264,7 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
+    final controller = Get.find<ShopController>();
     _controller = PersistentTabController(initialIndex: 0);
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 300),
@@ -272,6 +274,8 @@ class _HomePageState extends State<HomePage>
       parent: _animationController,
       curve: Curves.easeInOut,
     );
+    controller.getCategory();
+    controller.getbrands();
   }
 
   @override

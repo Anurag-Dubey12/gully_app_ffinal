@@ -5,6 +5,11 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/model/shop_model.dart';
 import 'package:gully_app/data/model/product_model.dart';
+import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/my_shop_dashboard.dart';
+import 'package:gully_app/ui/screens/shop/User%20Screen/nearby_shop_screen.dart';
+import 'package:gully_app/ui/screens/shop/User%20Screen/product_detail_screen.dart';
+import 'package:gully_app/ui/screens/shop/User%20Screen/search_full_result.dart';
+import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/utils/utils.dart';
 
 class SearchResultItem {
@@ -15,7 +20,8 @@ class SearchResultItem {
 }
 
 class ShopSearchScreen extends StatefulWidget {
-  const ShopSearchScreen({super.key});
+  final String? searchQuery;
+  const ShopSearchScreen({super.key, this.searchQuery});
 
   @override
   State<ShopSearchScreen> createState() => _ShopSearchScreenState();
@@ -38,7 +44,11 @@ class _ShopSearchScreenState extends State<ShopSearchScreen> {
   void initState() {
     super.initState();
     searchController.addListener(() {
-      setState(() {});
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) {
+          setState(() {});
+        }
+      });
     });
   }
 
@@ -46,6 +56,7 @@ class _ShopSearchScreenState extends State<ShopSearchScreen> {
   void dispose() {
     _debounce?.cancel();
     searchController.dispose();
+
     super.dispose();
   }
 
@@ -64,9 +75,10 @@ class _ShopSearchScreenState extends State<ShopSearchScreen> {
     final imageUrl = shop.shopImage.isNotEmpty ? shop.shopImage.first : null;
 
     return GestureDetector(
-      onTap: () {
-        print('Tapped on shop: ${shop.shopName}');
-      },
+      onTap: () => Get.to(() => ShopDashboard(
+            shop: shop,
+            isAdmin: false,
+          )),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         decoration: BoxDecoration(
@@ -104,9 +116,10 @@ class _ShopSearchScreenState extends State<ShopSearchScreen> {
             : null;
 
     return GestureDetector(
-      onTap: () {
-        print('Tapped on product: ${product.productName}');
-      },
+      onTap: () => Get.to(() => ProductDetailScreen(
+            product: product,
+            isadmin: false,
+          )),
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         decoration: BoxDecoration(
@@ -153,7 +166,7 @@ class _ShopSearchScreenState extends State<ShopSearchScreen> {
           decoration: InputDecoration(
             hintText: "Search for shops or products...",
             border: InputBorder.none,
-            hintStyle: const TextStyle(color: Colors.white54),
+            hintStyle: const TextStyle(color: Colors.white),
             suffixIcon: searchController.text.isNotEmpty
                 ? IconButton(
                     icon: const Icon(Icons.clear, color: Colors.white),
@@ -167,7 +180,15 @@ class _ShopSearchScreenState extends State<ShopSearchScreen> {
                 : null,
           ),
           onSubmitted: (query) {
-            print("Click submit");
+            if (searchController.text.isNotEmpty) {
+              shopController.searchQuery.value = searchController.text;
+              Get.to(
+                  () => SearchFullResult(
+                        searchQuery: shopController.searchQuery.value,
+                      ),
+                  transition: Transition.fadeIn,
+                  duration: const Duration(milliseconds: 300));
+            }
           },
           style: const TextStyle(color: Colors.white),
         ),

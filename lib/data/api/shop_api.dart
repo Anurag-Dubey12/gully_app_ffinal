@@ -22,9 +22,9 @@ class ShopApi {
 
   Future<ApiResponse> getMyShops() async {
     final response = await repo.get("/shop/getMyShop");
-    final prettyJson =
-        const JsonEncoder.withIndent('  ').convert(response.body);
-    debugPrint(prettyJson, wrapWidth: 1024);
+    // final prettyJson =
+    //     const JsonEncoder.withIndent('  ').convert(response.body);
+    // debugPrint(prettyJson, wrapWidth: 1024);
 
     if (response.statusCode! >= 500) {
       errorSnackBar(generateErrorMessage(response.body));

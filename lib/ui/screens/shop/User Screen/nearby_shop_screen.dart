@@ -39,7 +39,9 @@ class ShopHomeState extends State<ShopHome> {
           IconButton(
             icon: const Icon(Icons.search_rounded, color: Colors.white),
             onPressed: () {
-              Get.to(() => const ShopSearchScreen());
+              Get.to(() => const ShopSearchScreen(),
+                  transition: Transition.fadeIn,
+                  duration: const Duration(milliseconds: 300));
             },
           ),
         ],

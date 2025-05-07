@@ -14,7 +14,7 @@ import 'package:gully_app/ui/screens/update_authority_screen.dart';
 import 'package:gully_app/ui/screens/view_matchups_screen.dart';
 import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
-import 'package:gully_app/ui/widgets/sponsor/addSponsorDetails.dart';
+import 'package:gully_app/ui/widgets/sponsor/sponsor_details_add_screen.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
 

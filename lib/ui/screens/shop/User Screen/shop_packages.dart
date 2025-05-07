@@ -9,8 +9,9 @@ import 'package:gully_app/ui/widgets/primary_button.dart';
 
 class ShopPackages extends StatefulWidget {
   final ShopModel shop;
-  final void Function(ShopModel shop) onPayment;
-  const ShopPackages({required this.shop, super.key, required this.onPayment});
+  final bool isAdditional;
+  const ShopPackages(
+      {required this.shop, super.key, this.isAdditional = false});
 
   @override
   State<StatefulWidget> createState() => SponsorPackageScreenState();
@@ -85,7 +86,9 @@ class SponsorPackageScreenState extends State<ShopPackages> {
                 // ),
                 const SizedBox(height: 10),
                 FutureBuilder<List<Package>>(
-                  future: controller.getPackage('shop'),
+                  future: widget.isAdditional
+                      ? controller.getAdditionalPackages()
+                      : controller.getPackage('shop'),
                   builder: (context, snapshot) {
                     return Expanded(
                       child: ListView.separated(
@@ -117,10 +120,6 @@ class SponsorPackageScreenState extends State<ShopPackages> {
                     children: [
                       PrimaryButton(
                         onTap: () => Get.to(() => ShopPaymentPage(
-                            onPayment: (ShopModel shop) {
-                              widget.onPayment(shop);
-                              Get.back();
-                            },
                             shop: widget.shop,
                             selectedpackage:
                                 controller.selectedpackage.value!)),

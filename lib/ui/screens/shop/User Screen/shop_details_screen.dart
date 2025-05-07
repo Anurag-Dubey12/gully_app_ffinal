@@ -187,7 +187,7 @@ class DetailsState extends State<ShopDetailsScreen> {
                   itemCount: filteredProducts.length,
                   itemBuilder: (context, index) {
                     final product = filteredProducts[index];
-                    return productCard(product, "7328783272837238");
+                    return productCard(product, widget.shop.shopContact);
                   },
                 ),
         ],

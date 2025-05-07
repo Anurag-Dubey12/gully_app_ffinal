@@ -54,37 +54,35 @@ class MiscController extends GetxController with StateMixin {
 
   RxList<BannerModel> banners = <BannerModel>[].obs;
   Future<int> getBanners() async {
-  try {
-    // Default coordinates if location is disabled
-    double lat = coordinates.value.latitude;
-    double lng = coordinates.value.longitude;
-    
-    // If location is not available (0,0), use default coordinates
-    if (lat == 0 && lng == 0) {
-      // Use default coordinates (could be your app's default location)
-      // or proceed without coordinates
-    }
-    
-    var response = await repo.getBanners(
-        latitude: lat,
-        longitude: lng);
-        
-    banners.value = response.data!['banners']
-        .map<BannerModel>((e) => BannerModel.fromJson(e))
-        .toList();
-    banners.refresh();
-    return banners.length;
-  } catch (e) {
-    // Handle error but ensure banners list is at least initialized
-    // so UI can show appropriate feedback
-    if (banners.isEmpty) {
-      banners.value = [];
+    try {
+      // Default coordinates if location is disabled
+      double lat = coordinates.value.latitude;
+      double lng = coordinates.value.longitude;
+
+      // If location is not available (0,0), use default coordinates
+      if (lat == 0 && lng == 0) {
+        // Use default coordinates (could be your app's default location)
+        // or proceed without coordinates
+      }
+
+      var response = await repo.getBanners(latitude: lat, longitude: lng);
+
+      banners.value = response.data!['banners']
+          .map<BannerModel>((e) => BannerModel.fromJson(e))
+          .toList();
       banners.refresh();
+      return banners.length;
+    } catch (e) {
+      // Handle error but ensure banners list is at least initialized
+      // so UI can show appropriate feedback
+      if (banners.isEmpty) {
+        banners.value = [];
+        banners.refresh();
+      }
+      logger.e('Error getting banners: $e');
+      return 0;
     }
-    logger.e('Error getting banners: $e');
-    return 0;
   }
-}
 
   Future<bool> addhelpDesk(Map<String, dynamic> data) async {
     change(GetStatus.loading());
@@ -154,6 +152,20 @@ class MiscController extends GetxController with StateMixin {
   Future<List<Package>> getPackage(String packagefor) async {
     try {
       var response = await repo.getPackages(packagefor);
+      //logger.d"The Package Response:${packagefor}");
+      return packages.value = (response.data!['packages'] as List<dynamic>?)
+              ?.map((e) => Package.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [];
+    } catch (e) {
+      errorSnackBar(e.toString());
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<List<Package>> getAdditionalPackages() async {
+    try {
+      var response = await repo.getAdditionalPackages();
       //logger.d"The Package Response:${packagefor}");
       return packages.value = (response.data!['packages'] as List<dynamic>?)
               ?.map((e) => Package.fromJson(e as Map<String, dynamic>))

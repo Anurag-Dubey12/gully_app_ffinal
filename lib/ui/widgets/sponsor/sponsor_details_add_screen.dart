@@ -922,8 +922,3 @@ Future<void> _processVideoInIsolate(Map<String, dynamic> args) async {
 }
 
 
-Future<void> _addSponsor(List<dynamic> args) async {
-  final SendPort sendPort = args[0];
-  await Future.delayed(const Duration(seconds: 3));
-  sendPort.send("done");
-}

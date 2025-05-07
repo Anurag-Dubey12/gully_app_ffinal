@@ -16,7 +16,7 @@ import '../../utils/utils.dart';
 import '../widgets/gradient_builder.dart';
 import '../widgets/sponsor/FullScreenVideoPlayer.dart';
 import '../widgets/sponsor/VideoPlayerWidget.dart';
-import '../widgets/sponsor/addSponsorDetails.dart';
+import '../widgets/sponsor/sponsor_details_add_screen.dart';
 
 class SponsorScreen extends StatefulWidget {
   final TournamentModel tournament;

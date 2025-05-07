@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../utils/app_logger.dart';
-import '../../screens/shop/Shop owner Screen/add_product.dart';
+import '../../screens/shop/Shop owner Screen/product_adding_screen.dart';
 
 class ProductDetails extends StatefulWidget {
   final GlobalKey<FormState> formKey;

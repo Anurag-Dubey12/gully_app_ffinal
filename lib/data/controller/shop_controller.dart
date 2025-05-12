@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -7,6 +9,13 @@ import 'package:gully_app/data/model/product_model.dart';
 import 'package:gully_app/data/model/shop_model.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
+
+class ProductData {
+  final String category;
+  final List<ProductModel> product;
+
+  ProductData({required this.category, required this.product});
+}
 
 class ShopController extends GetxController with StateMixin {
   final ShopApi shopApi;
@@ -98,7 +107,7 @@ class ShopController extends GetxController with StateMixin {
   RxMap<String, List<String>> subcategories = <String, List<String>>{}.obs;
   RxList<String> subcategory = <String>[].obs;
   RxList<String> selectedsubcategory = <String>[].obs;
-  
+
   // MARK: GetSubCategory
   Future<List<String>> getsubCategory(String category) async {
     try {
@@ -148,31 +157,78 @@ class ShopController extends GetxController with StateMixin {
     return true;
   }
 
-
   RxList<ProductModel> product = <ProductModel>[].obs;
+  RxList<ProductData> products = <ProductData>[].obs;
   RxList<String> productsCategory = <String>[].obs;
   RxList<String> productssubCategory = <String>[].obs;
   RxList<String> productsBrand = <String>[].obs;
   RxInt totalImagesAdded = 0.obs;
   RxInt totalPackagelimit = 0.obs;
-
-  // MARK: getShopProduct
-  Future<List<ProductModel>> getShopProduct(String shopId) async {
-    final response = await shopApi.getShopProduct(shopId);
+  // MARK: getShopProducts
+  Future<List<ProductData>> getShopProducts(String shopId, int page) async {
+    final response = await shopApi.getShopProduct(shopId, page);
     if (response.status == false) {
       errorSnackBar(response.message!);
       return [];
     }
-    final shopproducts = (response.data!['products'] as List<dynamic>)
-        .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
-        .toList();
+
+    final Map<String, dynamic> categorizedProducts = response.data!['products'];
+    final List<ProductData> parsedProducts = [];
     int imageCount = 0;
-    for (final image in shopproducts) {
-      imageCount += image.productsImage!.length;
-    }
+    categorizedProducts.forEach((categoryName, productList) {
+      final List<ProductModel> productsInCategory =
+          (productList as List<dynamic>)
+              .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
+              .toList();
+
+      for (final product in productsInCategory) {
+        imageCount += product.productsImage?.length ?? 0;
+      }
+
+      parsedProducts.add(ProductData(
+        category: categoryName,
+        product: productsInCategory,
+      ));
+    });
+
     totalImagesAdded.value = imageCount;
-    return product.value = shopproducts;
+    products.value = parsedProducts;
+    return parsedProducts;
   }
+
+// Future<List<ProductModel>> getShopProductPaginated({
+//   required String shopId,
+//   int page = 1,
+//   int limit = 10,
+// }) async {
+//   final response = await shopApi.getShopProduct(shopId, page, limit);
+
+//   if (response.status == false) {
+//     errorSnackBar(response.message ?? "Failed to load products");
+//     return [];
+//   }
+
+//   final data = response.data!;
+//   final shopproducts = (data['products'] as List<dynamic>)
+//       .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
+//       .toList();
+
+//   int imageCount = 0;
+//   for (final image in shopproducts) {
+//     imageCount += image.productsImage?.length ?? 0;
+//   }
+
+//   totalImagesAdded.value += imageCount;
+
+//   // Set categories (only once on first page)
+//   if (page == 1) {
+//     productsCategory.value = List<String>.from(data['categories'] ?? []);
+//     productssubCategory.value = List<String>.from(data['subCategories'] ?? []);
+//     productsBrand.value = List<String>.from(data['brands'] ?? []);
+//   }
+
+//   return shopproducts;
+// }
 
   // MARK: setProductStatus
   Future<bool> setProductStatus(String productId, bool isActive) async {
@@ -198,6 +254,19 @@ class ShopController extends GetxController with StateMixin {
       }
     }
     return ShopModel.fromJson(response.data!);
+  }
+
+  // MARK: Add Addtional Package
+  Future<bool> addAddtionalPackage(
+      Map<String, dynamic> shopsubscription) async {
+    final response = await shopApi.addAddtionalPackage(shopsubscription);
+    if (response.status == false) {
+      if (kDebugMode) {
+        print("Failed to update shop subscription ");
+      }
+      return false;
+    }
+    return true;
   }
 
   RxString searchQuery = ''.obs;
@@ -257,4 +326,94 @@ class ShopController extends GetxController with StateMixin {
       isSearching.value = false;
     }
   }
+
+  // MARK: GetSimilarProduct
+  RxList<ProductModel> similarproduct = <ProductModel>[].obs;
+  Future<List<ProductModel>> getSimilarProduct({
+    required String productId,
+    int page = 1,
+    int limit = 20,
+  }) async {
+    final response = await shopApi.getSimilarProduct(
+        productId: productId,
+        latitude: coordinates.value.latitude,
+        longitude: coordinates.value.longitude,
+        page: page,
+        limit: limit);
+    if (response.status == false) {
+      errorSnackBar(response.message!);
+      return [];
+    }
+    final shopproducts = (response.data!['similarProduct'] as List<dynamic>)
+        .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+    return similarproduct.value = shopproducts;
+  }
+
+  // MARK: getSimilarShopProduct
+  RxList<ProductModel> similarshopproduct = <ProductModel>[].obs;
+  Future<List<ProductModel>> getSimilarShopProduct({
+    required String productId,
+    required String shopId,
+    int page = 1,
+    int limit = 20,
+  }) async {
+    final response = await shopApi.getSimilarShopProduct(
+        productId: productId, shopId: shopId, page: page, limit: limit);
+    if (response.status == false) {
+      errorSnackBar(response.message!);
+      return [];
+    }
+    final shopproducts = (response.data!['similarshopproduct'] as List<dynamic>)
+        .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
+        .toList();
+    return similarshopproduct.value = shopproducts;
+  }
+
+  final RxList<ProductModel> similarProducts = <ProductModel>[].obs;
+  final RxBool isLoadingMore = false.obs;
+  int currentPage = 1;
+  bool hasMore = true;
+
+  // Future<void> fetchSimilarProducts({
+  //   required String productId,
+  //   bool isInitialLoad = false,
+  //   int limit = 20,
+  // }) async {
+  //   if (isLoadingMore.value || !hasMore) return;
+
+  //   isLoadingMore.value = true;
+  //   final response = await shopApi.getSimilarProduct(
+  //     productId: productId,
+  //     latitude: coordinates.value.latitude,
+  //     longitude: coordinates.value.longitude,
+  //     page: currentPage,
+  //     limit: limit,
+  //   );
+
+  //   if (response.status == false) {
+  //     errorSnackBar(response.message!);
+  //     isLoadingMore.value = false;
+  //     return;
+  //   }
+
+  //   final List<ProductModel> newProducts =
+  //       (response.data!['similarProduct'] as List)
+  //           .map((e) => ProductModel.fromJson(e))
+  //           .toList();
+
+  //   if (isInitialLoad) {
+  //     similarProducts.assignAll(newProducts);
+  //   } else {
+  //     similarProducts.addAll(newProducts);
+  //   }
+  //   print(similarProducts);
+  //   if (newProducts.length < limit) {
+  //     hasMore = false;
+  //   } else {
+  //     currentPage++;
+  //   }
+
+  //   isLoadingMore.value = false;
+  // }
 }

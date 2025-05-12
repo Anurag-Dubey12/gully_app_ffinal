@@ -49,7 +49,7 @@ Widget shopDayTimingRow(String day, ShopModel shop,
   );
 }
 
-Widget shopInfo(String title,String description){
+Widget shopInfo(String title, String description) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -70,4 +70,20 @@ Widget shopInfo(String title,String description){
       ),
     ],
   );
+}
+
+String? getExpirationTag(ShopModel shop) {
+  final now = DateTime.now();
+  final packageEndDate = shop.packageEndDate;
+
+  if (packageEndDate == null) return null;
+
+  final daysDifference = packageEndDate.difference(now).inDays;
+  if (daysDifference >= 0 && daysDifference <= 6) {
+    return "Expires in $daysDifference day${daysDifference == 1 ? '' : 's'}";
+  } else if (daysDifference < 0) {
+    return "Expired ${-daysDifference} day${-daysDifference == 1 ? '' : 's'} ago";
+  }
+
+  return null;
 }

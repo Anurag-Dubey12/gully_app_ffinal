@@ -9,6 +9,7 @@ import 'package:gully_app/data/model/shop_model.dart';
 import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/product_adding_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
+import 'package:gully_app/ui/widgets/shop/product_card.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/launch_external_service.dart';
 import 'package:gully_app/utils/utils.dart';
@@ -543,7 +544,39 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
           Text(
             widget.product.productsDescription!,
           ),
+          const SizedBox(height: 20),
+          const Divider(
+            color: Colors.grey,
+            height: 1,
+          ),
           const SizedBox(height: 5),
+          const Text(
+            "Similar Products",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              color: Colors.black,
+              letterSpacing: 1.2,
+            ),
+          ),
+          const SizedBox(height: 5),
+          SimilarProductsWidget(
+            productId: widget.product.id,
+          ),
+          // Text(
+          //   "Similar Products from ${widget.shop!.shopName}",
+          //   style: const TextStyle(
+          //     fontWeight: FontWeight.w600,
+          //     fontSize: 18,
+          //     color: Colors.black,
+          //     letterSpacing: 1.2,
+          //   ),
+          // ),
+          // const SizedBox(height: 5),
+          // SimilarShopProductsWidget(
+          //   productId: widget.product.id,
+          //   shopId: widget.product.shopId,
+          // ),
         ],
       ),
     );
@@ -665,5 +698,199 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
               const SizedBox(width: 6),
             ],
           );
+  }
+}
+
+class SimilarProductsWidget extends StatefulWidget {
+  final String productId;
+
+  const SimilarProductsWidget({super.key, required this.productId});
+
+  @override
+  State<SimilarProductsWidget> createState() => _SimilarProductsWidgetState();
+}
+
+class _SimilarProductsWidgetState extends State<SimilarProductsWidget> {
+  final ScrollController _scrollController = ScrollController();
+  final List<ProductModel> _products = [];
+  final controller = Get.find<ShopController>();
+  bool _isLoading = false;
+  bool _hasMore = true;
+  int _page = 1;
+  final int _limit = 5;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchProducts();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+              _scrollController.position.maxScrollExtent - 200 &&
+          !_isLoading &&
+          _hasMore) {
+        _fetchProducts();
+      }
+    });
+  }
+
+  Future<void> _fetchProducts() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final newProducts = await controller.getSimilarProduct(
+      productId: widget.productId,
+      page: _page,
+      limit: _limit,
+    );
+
+    setState(() {
+      _isLoading = false;
+      if (newProducts.isEmpty) {
+        _hasMore = false;
+      } else {
+        _page++;
+        _products.addAll(newProducts);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_products.isEmpty && _isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_products.isEmpty) {
+      return const Center(child: Text("No products available"));
+    }
+
+    return SizedBox(
+      height: 320,
+      child: ListView.builder(
+        controller: _scrollController,
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        itemCount: _products.length + (_hasMore ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (index == _products.length) {
+            return const Center(
+                child: SizedBox(width: 60, child: CircularProgressIndicator()));
+          }
+
+          final product = _products[index];
+          return Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: ProductCard(product: product),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class SimilarShopProductsWidget extends StatefulWidget {
+  final String productId;
+  final String shopId;
+
+  const SimilarShopProductsWidget(
+      {super.key, required this.productId, required this.shopId});
+
+  @override
+  State<SimilarShopProductsWidget> createState() =>
+      _SimilarShopProductsWidgetState();
+}
+
+class _SimilarShopProductsWidgetState extends State<SimilarShopProductsWidget> {
+  final ScrollController _scrollController = ScrollController();
+  final List<ProductModel> _products = [];
+  final controller = Get.find<ShopController>();
+  bool _isLoading = false;
+  bool _hasMore = true;
+  int _page = 1;
+  final int _limit = 5;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchProducts();
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels >=
+              _scrollController.position.maxScrollExtent - 200 &&
+          !_isLoading &&
+          _hasMore) {
+        _fetchProducts();
+      }
+    });
+  }
+
+  Future<void> _fetchProducts() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final newProducts = await controller.getSimilarShopProduct(
+      productId: widget.productId,
+      shopId: widget.shopId,
+      page: _page,
+      limit: _limit,
+    );
+
+    setState(() {
+      _isLoading = false;
+      if (newProducts.isEmpty) {
+        _hasMore = false;
+      } else {
+        _page++;
+        _products.addAll(newProducts);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_products.isEmpty && _isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_products.isEmpty) {
+      return const Center(child: Text("No products available"));
+    }
+
+    return SizedBox(
+      height: 320,
+      child: ListView.builder(
+        controller: _scrollController,
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        itemCount: _products.length + (_hasMore ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (index == _products.length) {
+            return const Center(
+                child: SizedBox(width: 60, child: CircularProgressIndicator()));
+          }
+
+          final product = _products[index];
+          return Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: ProductCard(product: product),
+          );
+        },
+      ),
+    );
   }
 }

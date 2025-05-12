@@ -21,7 +21,8 @@ import '../../../widgets/create_tournament/form_input.dart';
 import '../../../widgets/shop/business_hours.dart';
 
 class RegisterShop extends StatefulWidget {
-  const RegisterShop({Key? key}) : super(key: key);
+  final ShopModel? shop;
+  const RegisterShop({Key? key, this.shop}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ShopState();
@@ -29,17 +30,18 @@ class RegisterShop extends StatefulWidget {
 
 class _ShopState extends State<RegisterShop>
     with SingleTickerProviderStateMixin {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _numberController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _shopnameController = TextEditingController();
+  final TextEditingController ownerNameController = TextEditingController();
+  final TextEditingController ownerEmailController = TextEditingController();
+  final TextEditingController ownerPhoneController = TextEditingController();
+  final TextEditingController ownerAddressController = TextEditingController();
+  final TextEditingController ownerPanCardController = TextEditingController();
+
+  final TextEditingController shopNameController = TextEditingController();
   final TextEditingController shopAddressController = TextEditingController();
   final TextEditingController shoplocationController = TextEditingController();
-  final TextEditingController panCardNumberController = TextEditingController();
-  final TextEditingController shopNumberController = TextEditingController();
+  final TextEditingController shopPhoneController = TextEditingController();
   final TextEditingController shopEmailController = TextEditingController();
-  final TextEditingController shopGstController = TextEditingController();
+  final TextEditingController gstNumberController = TextEditingController();
   final TextEditingController businessLicenseController =
       TextEditingController();
   final TextEditingController shopWebsiteController = TextEditingController();
@@ -48,7 +50,7 @@ class _ShopState extends State<RegisterShop>
 
   XFile? _documentImage;
   bool tncAccepted = false;
-  XFile? gstCertificate;
+  XFile? gstCertificateImage;
   XFile? shopLocation;
   XFile? businessLicense;
   XFile? taxCertificate;
@@ -56,10 +58,11 @@ class _ShopState extends State<RegisterShop>
   XFile? _shopLogo;
   List<String>? shopimages;
   List<XFile>? base64shopimages;
-  bool isLoading = false;
   int currentStep = 0;
+
   final ScrollController _controller = ScrollController();
   Map<String, String> aadhaarData = {};
+  
   final _formKeys = [
     GlobalKey<FormState>(),
     GlobalKey<FormState>(),
@@ -77,11 +80,6 @@ class _ShopState extends State<RegisterShop>
     'Additional Shop Details'
   ];
   List<String> documentImage = [];
-  List<String>? images = [
-    'assets/images/logo.png',
-    'assets/images/logo.png',
-    'assets/images/logo.png'
-  ];
   late AnimationController _progressController;
   late Animation<double> _progressAnimation;
 
@@ -104,14 +102,30 @@ class _ShopState extends State<RegisterShop>
   }
 
   Map<String, BusinessHoursModel> businesshours = {};
+
   late LatLng location;
+  
   @override
   void initState() {
     super.initState();
     final AuthController authController = Get.find<AuthController>();
-    _nameController.text = authController.state!.fullName;
-    _emailController.text = authController.state!.email;
-    _numberController.text = authController.state!.phoneNumber ?? '';
+    if (widget.shop != null) {
+      ownerAddressController.text = widget.shop!.ownerAddress;
+      ownerPanCardController.text = widget.shop!.ownerPanNumber;
+      shopNameController.text = widget.shop!.shopName;
+      shopPhoneController.text = widget.shop!.shopContact;
+      shopEmailController.text = widget.shop!.shopEmail;
+      shopAddressController.text = widget.shop!.shopAddress;
+      shoplocationController.text =
+          widget.shop!.locationHistory.point.selectLocation;
+      shopDescriptionController.text = widget.shop!.shopDescription;
+
+      businesshours = widget.shop!.shopTiming;
+      shopimages = widget.shop!.shopImage;
+    }
+    ownerNameController.text = authController.state!.fullName;
+    ownerEmailController.text = authController.state!.email;
+    ownerPhoneController.text = authController.state!.phoneNumber ?? '';
     _progressController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -119,7 +133,6 @@ class _ShopState extends State<RegisterShop>
     _progressAnimation =
         Tween<double>(begin: 0, end: 0).animate(_progressController);
 
-    final shop = Get.find<ShopController>().getMyShop();
     fetchLocation();
   }
 
@@ -147,11 +160,11 @@ class _ShopState extends State<RegisterShop>
     if (_formKeys[currentStep].currentState!.validate()) {
       _formKeys[currentStep].currentState!.save();
 
-      if (currentStep == 0 && aadhaarData.isEmpty) {
+      if (currentStep == 0 && aadhaarData.isEmpty && widget.shop == null) {
         errorSnackBar("Aadhar Card document required.");
         return;
       }
-      if (currentStep == 1 && shopimages == null) {
+      if (currentStep == 1 && shopimages == null && widget.shop == null) {
         errorSnackBar("Please Add An Shop Images");
         return;
       }
@@ -179,9 +192,8 @@ class _ShopState extends State<RegisterShop>
       try {
         final authController = Get.find<AuthController>();
         final controller = Get.find<ShopController>();
-
         List<String> shopBase64Images = [];
-
+        
         if (base64shopimages != null) {
           for (XFile image in base64shopimages!) {
             String convertedImage = await convertImageToBase64(image);
@@ -212,23 +224,23 @@ class _ShopState extends State<RegisterShop>
 
         final Map<String, dynamic> shopData = {
           "shopImage": shopBase64Images,
-          "shopName": _shopnameController.text,
+          "shopName": shopNameController.text,
           "shopAddress": shopAddressController.text,
           "shopDescription": shopDescriptionController.text,
-          "shopContact": shopNumberController.text,
+          "shopContact": shopPhoneController.text,
           "shopEmail": shopEmailController.text,
           "shopLink": shopWebsiteController.text,
           "joinedAt": DateTime.now().toIso8601String(),
-          // "gstNumber": shopGstController.text,
+          // "gstNumber": gstNumberController.text,
           "selectLocation": shoplocationController.text,
           "latitude": location.latitude,
           "longitude": location.longitude,
           "shopTiming": shopTiming,
-          "ownerName": _nameController.text,
-          "ownerEmail": _emailController.text,
-          "ownerPhoneNumber": _numberController.text,
-          "ownerAddress": _addressController.text,
-          "ownerPanNumber": panCardNumberController.text,
+          "ownerName": ownerNameController.text,
+          "ownerEmail": ownerEmailController.text,
+          "ownerPhoneNumber": ownerPhoneController.text,
+          "ownerAddress": ownerAddressController.text,
+          "ownerPanNumber": ownerPanCardController.text,
           "aadharFrontSide": frontImagebase64,
           "aadharBackSide": backImagebase64,
         };
@@ -274,8 +286,8 @@ class _ShopState extends State<RegisterShop>
 
         setState(() {
           switch (imageType) {
-            case ImageType.gstCertificate:
-              gstCertificate = image;
+            case ImageType.gstCertificateImage:
+              gstCertificateImage = image;
               break;
             case ImageType.idProof:
               _documentImage = image;
@@ -308,8 +320,8 @@ class _ShopState extends State<RegisterShop>
   void _clearImage(ImageType imageType) {
     setState(() {
       switch (imageType) {
-        case ImageType.gstCertificate:
-          gstCertificate = null;
+        case ImageType.gstCertificateImage:
+          gstCertificateImage = null;
           break;
         case ImageType.idProof:
           _documentImage = null;
@@ -354,7 +366,7 @@ class _ShopState extends State<RegisterShop>
       isValid = false;
     }
 
-    if (shopGstController.text.isNotEmpty && gstCertificate == null) {
+    if (gstNumberController.text.isNotEmpty && gstCertificateImage == null) {
       missingImages.add("GST Certificate");
       isValid = false;
     }
@@ -517,110 +529,87 @@ class _ShopState extends State<RegisterShop>
   }
 
   Widget firstStep() {
+    final bool hasAadhaarImages =
+        frontImagePath != null && backImagePath != null;
+
     return Form(
       key: _formKeys[0],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // SizedBox(height: Get.height * 0.00),
           FormInput(
-            controller: _nameController,
+            controller: ownerNameController,
             label: AppConstants.ownerName,
             enabled: false,
             textInputType: TextInputType.name,
           ),
           FormInput(
-            controller: _emailController,
+            controller: ownerEmailController,
             enabled: false,
             label: AppConstants.owneremail,
             textInputType: TextInputType.emailAddress,
           ),
           FormInput(
-            controller: _numberController,
+            controller: ownerPhoneController,
             enabled: false,
             label: AppConstants.ownerPhone,
             textInputType: TextInputType.number,
           ),
           FormInput(
-            controller: _addressController,
+            controller: ownerAddressController,
             label: AppConstants.ownerAddress,
             textInputType: TextInputType.multiline,
             validator: (value) {
-              if (value!.isEmpty) {
+              if (value == null || value.isEmpty) {
                 return "Address cannot be empty.";
               }
-              RegExp addressRegExp = RegExp(r'^(?=.*[A-Za-z])(?=.*\d).+$');
-              if (!addressRegExp.hasMatch(value)) {
-                return "Address must contain at least one letter \nand one number.";
+              if (!RegExp(r'^(?=.*[A-Za-z])(?=.*\d).+$').hasMatch(value)) {
+                return "Address must contain at least one letter and one number.";
               }
-
               if (value.length < 10) {
                 return "Address must be at least 10 characters long.";
               }
-
               return null;
             },
           ),
-          // FormInput(
-          //   controller: _addressController,
-          //   label: "Owner Address",
-          //   textInputType: TextInputType.multiline,
-          //   validator: (value) {
-          //     if (value!.isEmpty) {
-          //       return "Address cannot be empty.";
-          //     }
-
-          //     // Check if the address contains at least one letter (optional to allow spaces, commas, etc.)
-          //     RegExp addressRegExp = RegExp(
-          //         r'^[A-Za-z0-9\s,.-]+$'); // Letters, numbers, spaces, commas, periods, hyphens
-          //     if (!addressRegExp.hasMatch(value)) {
-          //       return "Address can only contain letters, numbers, spaces, commas, periods, or hyphens.";
-          //     }
-
-          //     // Optional: Add more checks like length
-          //     if (value.length < 10) {
-          //       return "Address must be at least 10 characters long.";
-          //     }
-
-          //     return null;
-          //   },
-          // ),
           Text(
             AppConstants.ownerAddharCard,
             style: Get.textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold, color: Colors.black, fontSize: 16),
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              fontSize: 16,
+            ),
           ),
-          const SizedBox(
-            height: 5,
-          ),
+          const SizedBox(height: 5),
           Container(
             decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: Colors.black),
-                borderRadius: BorderRadius.circular(10)),
+              color: Colors.white,
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(10),
+            ),
             child: InkWell(
               onTap: () {
-                Get.bottomSheet(
-                  isDismissible: true,
-                  enableDrag: true,
-                  BottomSheet(
-                    onClosing: () {},
-                    builder: (c) => SizedBox(
-                      height: Get.height * 0.5,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(20),
-                        child: AadharCardUpload(
-                          onSubmit: (data) {
-                            setState(() {
-                              _updateAadharImages(data);
-                            });
-                            Navigator.pop(context);
-                          },
+                if (widget.shop == null) {
+                  Get.bottomSheet(
+                    BottomSheet(
+                      onClosing: () {},
+                      builder: (_) => SizedBox(
+                        height: Get.height * 0.5,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(20),
+                          child: AadharCardUpload(
+                            onSubmit: (data) {
+                              setState(() => _updateAadharImages(data));
+                              Navigator.pop(context);
+                            },
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                );
+                    isDismissible: true,
+                    enableDrag: true,
+                  );
+                }
               },
               borderRadius: BorderRadius.circular(12),
               child: Padding(
@@ -630,110 +619,184 @@ class _ShopState extends State<RegisterShop>
                   children: [
                     Row(
                       children: [
-                        const Icon(
-                          Icons.verified_user,
-                          color: Colors.blue,
-                          size: 20,
-                        ),
+                        const Icon(Icons.verified_user,
+                            color: Colors.blue, size: 20),
                         const SizedBox(width: 8),
                         const Text(
                           "Aadhaar Details",
                           style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         const Spacer(),
-                        Icon(
-                          aadhaarData.isNotEmpty
-                              ? Icons.check_circle
-                              : Icons.arrow_forward_ios,
-                          color: aadhaarData.isNotEmpty
-                              ? Colors.green
-                              : Colors.black,
-                          size: 20,
-                        ),
+                        if (widget.shop == null)
+                          Icon(
+                            aadhaarData.isNotEmpty
+                                ? Icons.check_circle
+                                : Icons.arrow_forward_ios,
+                            color: aadhaarData.isNotEmpty
+                                ? Colors.green
+                                : Colors.black,
+                            size: 20,
+                          ),
                       ],
                     ),
                     const SizedBox(height: 2),
-                    Text(
-                      aadhaarData.isNotEmpty
-                          ? AppConstants.aadharCardAdded
-                          : AppConstants.tapToEdit,
-                      style: TextStyle(
-                        color: aadhaarData.isNotEmpty
-                            ? Colors.green
-                            : Colors.grey[600],
+                    if (widget.shop == null)
+                      Text(
+                        aadhaarData.isNotEmpty
+                            ? AppConstants.aadharCardAdded
+                            : AppConstants.tapToEdit,
+                        style: TextStyle(
+                          color: aadhaarData.isNotEmpty
+                              ? Colors.green
+                              : Colors.grey[600],
+                        ),
                       ),
-                    ),
-                    if (frontImagePath != null && backImagePath != null)
-                      const SizedBox(height: 16),
-                    if (frontImagePath != null && backImagePath != null)
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    if (widget.shop != null)
+                      Text(
+                        AppConstants.tapToView,
+                        style: TextStyle(
+                          color: aadhaarData.isNotEmpty
+                              ? Colors.green
+                              : Colors.grey[600],
+                        ),
+                      ),
+                    const SizedBox(height: 16),
+                    if (widget.shop == null && hasAadhaarImages)
+                      Row(
                         children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Text(
-                                      "Front Side",
-                                      style: TextStyle(
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text("Front Side",
+                                    style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 12,
-                                      ),
+                                        fontSize: 12)),
+                                const SizedBox(height: 4),
+                                Container(
+                                  height: 180,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: Colors.grey[200],
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.file(
+                                      File(frontImagePath!),
+                                      fit: BoxFit.cover,
                                     ),
-                                    const SizedBox(height: 4),
-                                    Container(
-                                      height: 180,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: Colors.grey[200],
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Image.file(
-                                          File(frontImagePath!),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Text(
-                                      "Back Side",
-                                      style: TextStyle(
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text("Back Side",
+                                    style: TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 12,
-                                      ),
+                                        fontSize: 12)),
+                                const SizedBox(height: 4),
+                                Container(
+                                  height: 180,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: Colors.grey[200],
+                                  ),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.file(
+                                      File(backImagePath!),
+                                      fit: BoxFit.cover,
                                     ),
-                                    const SizedBox(height: 4),
-                                    Container(
-                                      height: 180,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: Colors.grey[200],
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Image.file(
-                                          File(backImagePath!),
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    if (widget.shop != null)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text("Front Side",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12)),
+                                const SizedBox(height: 4),
+                                GestureDetector(
+                                  onTap: () => imageViewer(
+                                      context,
+                                      widget.shop!.ownerAddharImages.single
+                                          .aadharFrontSide,
+                                      true),
+                                  child: Container(
+                                    height: 180,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: Colors.grey[200],
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Image.network(
+                                        toImageUrl(widget
+                                            .shop!
+                                            .ownerAddharImages
+                                            .single
+                                            .aadharFrontSide),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                const Text("Back Side",
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 12)),
+                                const SizedBox(height: 4),
+                                GestureDetector(
+                                  onTap: () => imageViewer(
+                                      context,
+                                      widget.shop!.ownerAddharImages.single
+                                          .aadharBackSide,
+                                      true),
+                                  child: Container(
+                                    height: 180,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: Colors.grey[200],
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Image.network(
+                                        toImageUrl(widget
+                                            .shop!
+                                            .ownerAddharImages
+                                            .first
+                                            .aadharBackSide),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -742,17 +805,18 @@ class _ShopState extends State<RegisterShop>
               ),
             ),
           ),
+          const SizedBox(height: 16),
           FormInput(
-            controller: panCardNumberController,
+            controller: ownerPanCardController,
             label: AppConstants.ownerPanCard,
-            textInputType: TextInputType.multiline,
+            textInputType: TextInputType.text,
             isUpperCase: true,
             validator: (value) {
-              if (value!.isEmpty) {
-                return "Address cannot be empty.";
+              if (value == null || value.isEmpty) {
+                return "PAN card number cannot be empty.";
               }
               if (!RegExp(r'^[A-Z]{5}[0-9]{4}[A-Z]{1}$').hasMatch(value)) {
-                return "Please Enter a Valid Pan Card ";
+                return "Please enter a valid PAN card number.";
               }
               return null;
             },
@@ -773,9 +837,10 @@ class _ShopState extends State<RegisterShop>
             images: shopimages ?? [],
             onImagesChanged: _handleImageChange,
             onImageSelected: _handleonImageSelected,
+            isNetworkFetch: widget.shop != null ? true : false,
           ),
           FormInput(
-            controller: _shopnameController,
+            controller: shopNameController,
             label: "Shop Name",
             textInputType: TextInputType.name,
             validator: (value) {
@@ -786,7 +851,7 @@ class _ShopState extends State<RegisterShop>
             },
           ),
           FormInput(
-            controller: shopNumberController,
+            controller: shopPhoneController,
             label: "Shop Phone Number",
             textInputType: TextInputType.number,
             maxLength: 10,
@@ -820,39 +885,11 @@ class _ShopState extends State<RegisterShop>
             label: "Shop Email Address",
             textInputType: TextInputType.emailAddress,
             validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "Enter Shop Email Address";
-              }
-
-              final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$');
-
-              if (!emailRegex.hasMatch(value)) {
-                return "Enter a valid email address";
-              }
-
-              final email = value.toLowerCase();
-
-              final typoDomains = [
-                'gmil.com',
-                'gmal.com',
-                'gmaill.com',
-                'gnail.com',
-                'gmaik.com',
-                'gmail.con',
-                'gmail.co',
-                'outlok.com',
-                'yaho.com',
-              ];
-
-              if (typoDomains.any((domain) => email.endsWith('@$domain'))) {
-                return "Email seems incorrect.Please check for Again.";
-              }
-
-              return null;
+              return validateEmail(value ?? '');
             },
           ),
           FormInput(
-            controller: shopGstController,
+            controller: gstNumberController,
             label: "Shop GST Number",
             textInputType: TextInputType.text,
             // validator: (value) {
@@ -900,8 +937,8 @@ class _ShopState extends State<RegisterShop>
   //         crossAxisAlignment: CrossAxisAlignment.start,
   //         children: [
   //           ImageUploadWidget(
-  //             image: gstCertificate,
-  //             onTap: () => pickImage(ImageType.gstCertificate),
+  //             image: gstCertificateImage,
+  //             onTap: () => pickImage(ImageType.gstCertificateImage),
   //             hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
   //             title: "Upload GST Certificate",
   //           ),
@@ -1190,7 +1227,7 @@ class _ShopState extends State<RegisterShop>
 }
 
 enum ImageType {
-  gstCertificate,
+  gstCertificateImage,
   registrationCertificate,
   shopLogo,
   shopLocation,

@@ -166,7 +166,6 @@ class MiscController extends GetxController with StateMixin {
   Future<List<Package>> getAdditionalPackages() async {
     try {
       var response = await repo.getAdditionalPackages();
-      //logger.d"The Package Response:${packagefor}");
       return packages.value = (response.data!['packages'] as List<dynamic>?)
               ?.map((e) => Package.fromJson(e as Map<String, dynamic>))
               .toList() ??

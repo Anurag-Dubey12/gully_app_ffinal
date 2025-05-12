@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/utils/utils.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../data/controller/shop_controller.dart';
 import '../../../../data/model/shop_model.dart';
 import 'my_shop_dashboard.dart';
@@ -172,10 +173,13 @@ class _ShopCardState extends State<ShopCard>
 
     return GestureDetector(
       onTap: () {
-        Get.to(() => ShopDashboard(
-              shop: shop,
-              isAdmin: true,
-            ));
+        Get.to(
+            () => ShopDashboard(
+                  shop: shop,
+                  isAdmin: true,
+                ),
+            transition: Transition.fadeIn,
+            duration: const Duration(milliseconds: 300));
         getShopPackageImageLimit();
       },
       child: ScaleTransition(
@@ -199,9 +203,33 @@ class _ShopCardState extends State<ShopCard>
                       child: shop.shopImage.isNotEmpty
                           ? Image.network(
                               toImageUrl(shop.shopImage.first),
-                              width: 100,
-                              height: 100,
+                              width: 110,
+                              height: 110,
                               fit: BoxFit.cover,
+                              loadingBuilder:
+                                  (context, child, loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child;
+                                }
+                                return Shimmer.fromColors(
+                                  baseColor: Colors.grey[300]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  child: Container(
+                                    height: 150,
+                                    width: 150,
+                                    color: Colors.white,
+                                  ),
+                                );
+                              },
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  height: 150,
+                                  width: 150,
+                                  color: Colors.grey[200],
+                                  child: const Icon(Icons.broken_image,
+                                      color: Colors.grey),
+                                );
+                              },
                             )
                           : Image.asset(
                               "assets/images/logo.png",

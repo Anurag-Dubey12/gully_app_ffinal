@@ -16,6 +16,7 @@ class _CategoryFilterState extends State<CategoryFilter> {
   final controller = Get.find<ShopController>();
   final TextEditingController searchController = TextEditingController();
   final RxString searchText = ''.obs;
+
   @override
   void initState() {
     super.initState();
@@ -56,37 +57,42 @@ class _CategoryFilterState extends State<CategoryFilter> {
             final filteredCategories = controller.category
                 .where((cat) => cat.toLowerCase().contains(searchText.value))
                 .toList();
-            return ListView(
+
+            return ListView.builder(
               physics: const BouncingScrollPhysics(),
-              children: filteredCategories.map((category) {
-                final isChecked =
-                    controller.selectedcategory.contains(category);
-                return CheckboxListTile.adaptive(
-                  controlAffinity: ListTileControlAffinity.leading,
-                  title: Text(category),
-                  value: isChecked,
-                  onChanged: (value) async {
-                    if (value == true) {
-                      controller.selectedcategory.add(category);
-                      await _getSubcategoryInIsolate(context);
-                      // final fetchsubcategory =
-                      //     await controller.getsubCategory(category);
-                      // controller.subcategories[category] = fetchsubcategory;
-                      // controller.subcategory.value = controller
-                      //     .subcategories.values
-                      //     .expand((e) => e)
-                      //     .toList();
-                    } else {
-                      controller.selectedcategory.remove(category);
-                      controller.subcategories.remove(category);
-                      controller.subcategory.value = controller
-                          .subcategories.values
-                          .expand((e) => e)
-                          .toList();
-                    }
-                  },
-                );
-              }).toList(),
+              itemCount: filteredCategories.length,
+              itemBuilder: (context, index) {
+                final category = filteredCategories[index];
+                return Obx(() {
+                  final isChecked =
+                      controller.selectedcategory.contains(category);
+                  return CheckboxListTile.adaptive(
+                    controlAffinity: ListTileControlAffinity.leading,
+                    title: Text(category),
+                    value: isChecked,
+                    onChanged: (value) async {
+                      if (value == true) {
+                        controller.selectedcategory.add(category);
+                        await _getSubcategoryInIsolate(context);
+                        final fetchsubcategory =
+                            await controller.getsubCategory(category);
+                        controller.subcategories[category] = fetchsubcategory;
+                        controller.subcategory.value = controller
+                            .subcategories.values
+                            .expand((e) => e)
+                            .toList();
+                      } else {
+                        controller.selectedcategory.remove(category);
+                        controller.subcategories.remove(category);
+                        controller.subcategory.value = controller
+                            .subcategories.values
+                            .expand((e) => e)
+                            .toList();
+                      }
+                    },
+                  );
+                });
+              },
             );
           }),
         ),
@@ -147,6 +153,7 @@ class _SubCategoryFilterState extends State<SubCategoryFilter> {
   final controller = Get.find<ShopController>();
   final TextEditingController searchController = TextEditingController();
   final RxString searchText = ''.obs;
+
   @override
   void initState() {
     super.initState();
@@ -160,12 +167,15 @@ class _SubCategoryFilterState extends State<SubCategoryFilter> {
     return Obx(() {
       if (controller.subcategories.isEmpty) {
         return const Center(
-            child: Padding(
-          padding: EdgeInsets.all(12.0),
-          child:
-              Text('Sub Categories will be shown after category is selected'),
-        ));
+          child: Padding(
+            padding: EdgeInsets.all(12.0),
+            child:
+                Text('Sub Categories will be shown after category is selected'),
+          ),
+        );
       }
+
+      final entries = controller.subcategories.entries.toList();
 
       return Column(
         children: [
@@ -192,14 +202,17 @@ class _SubCategoryFilterState extends State<SubCategoryFilter> {
             ),
           ),
           Expanded(
-            child: ListView(
+            child: ListView.builder(
               physics: const BouncingScrollPhysics(),
-              children: controller.subcategories.entries.map((entry) {
-                final categoryName = entry.key;
-                final subCatList = entry.value
+              itemCount: entries.length,
+              itemBuilder: (context, index) {
+                final categoryName = entries[index].key;
+                final subCatList = entries[index]
+                    .value
                     .where((subCat) =>
                         subCat.toLowerCase().contains(searchText.value))
                     .toList();
+
                 if (subCatList.isEmpty) return const SizedBox.shrink();
 
                 return Column(
@@ -218,24 +231,26 @@ class _SubCategoryFilterState extends State<SubCategoryFilter> {
                       ),
                     ),
                     ...subCatList.map((subCat) {
-                      final isChecked =
-                          controller.selectedsubcategory.contains(subCat);
-                      return CheckboxListTile.adaptive(
-                        controlAffinity: ListTileControlAffinity.leading,
-                        title: Text(subCat),
-                        value: isChecked,
-                        onChanged: (value) {
-                          if (value == true) {
-                            controller.selectedsubcategory.add(subCat);
-                          } else {
-                            controller.selectedsubcategory.remove(subCat);
-                          }
-                        },
-                      );
+                      return Obx(() {
+                        final isChecked =
+                            controller.selectedsubcategory.contains(subCat);
+                        return CheckboxListTile.adaptive(
+                          controlAffinity: ListTileControlAffinity.leading,
+                          title: Text(subCat),
+                          value: isChecked,
+                          onChanged: (value) {
+                            if (value == true) {
+                              controller.selectedsubcategory.add(subCat);
+                            } else {
+                              controller.selectedsubcategory.remove(subCat);
+                            }
+                          },
+                        );
+                      });
                     }).toList(),
                   ],
                 );
-              }).toList(),
+              },
             ),
           ),
         ],
@@ -255,6 +270,7 @@ class _BrandFilterState extends State<BrandFilter> {
   final controller = Get.find<ShopController>();
   final TextEditingController searchController = TextEditingController();
   final RxString searchText = ''.obs;
+
   @override
   void initState() {
     super.initState();
@@ -296,23 +312,27 @@ class _BrandFilterState extends State<BrandFilter> {
                     (brand) => brand.toLowerCase().contains(searchText.value))
                 .toList();
 
-            return ListView(
+            return ListView.builder(
               physics: const BouncingScrollPhysics(),
-              children: filteredBrands.map((brand) {
-                final isChecked = controller.selectedbrands.contains(brand);
-                return CheckboxListTile.adaptive(
-                  controlAffinity: ListTileControlAffinity.leading,
-                  title: Text(brand),
-                  value: isChecked,
-                  onChanged: (value) {
-                    if (value == true) {
-                      controller.selectedbrands.add(brand);
-                    } else {
-                      controller.selectedbrands.remove(brand);
-                    }
-                  },
-                );
-              }).toList(),
+              itemCount: filteredBrands.length,
+              itemBuilder: (context, index) {
+                final brand = filteredBrands[index];
+                return Obx(() {
+                  final isChecked = controller.selectedbrands.contains(brand);
+                  return CheckboxListTile.adaptive(
+                    controlAffinity: ListTileControlAffinity.leading,
+                    title: Text(brand),
+                    value: isChecked,
+                    onChanged: (value) {
+                      if (value == true) {
+                        controller.selectedbrands.add(brand);
+                      } else {
+                        controller.selectedbrands.remove(brand);
+                      }
+                    },
+                  );
+                });
+              },
             );
           }),
         ),

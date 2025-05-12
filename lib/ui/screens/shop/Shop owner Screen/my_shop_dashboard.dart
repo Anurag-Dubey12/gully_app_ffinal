@@ -1,16 +1,15 @@
 import 'dart:ui';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/model/product_model.dart';
 import 'package:gully_app/data/model/shop_model.dart';
-import 'package:gully_app/ui/screens/shop/User%20Screen/product_detail_screen.dart';
+import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/product_adding_screen.dart';
+import 'package:gully_app/ui/screens/shop/User%20Screen/register_shop.dart';
 import 'package:gully_app/ui/screens/shop/User%20Screen/shop_packages.dart';
 import 'package:gully_app/ui/theme/theme.dart';
-import 'package:gully_app/ui/widgets/banner/package_screen.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
-import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/ui/widgets/shop/actionButton.dart';
 import 'package:gully_app/ui/widgets/shop/build_info_card.dart';
 import 'package:gully_app/ui/widgets/shop/build_timing_row.dart.dart';
@@ -19,14 +18,13 @@ import 'package:gully_app/ui/widgets/shop/product_card.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/launch_external_service.dart';
 import 'package:gully_app/utils/utils.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../data/controller/shop_controller.dart';
 
 class ShopDashboard extends StatefulWidget {
-  ShopModel shop;
+  final ShopModel shop;
   final bool isAdmin;
-  ShopDashboard({Key? key, required this.shop, this.isAdmin = false})
+  const ShopDashboard({Key? key, required this.shop, this.isAdmin = false})
       : super(key: key);
 
   @override
@@ -35,12 +33,15 @@ class ShopDashboard extends StatefulWidget {
 
 class _DashboardState extends State<ShopDashboard> {
   final ShopController controller = Get.find<ShopController>();
-  String _selectedCategory = 'All';
-  bool _isAppBarCollapsed = false;
   bool _showAllTimings = false;
   bool isMore = false;
   List<String> categories = [];
-
+  late Future<List<ProductData>> _shopProductsFuture;
+  final ScrollController scrollController = ScrollController();
+  int _page = 1;
+  bool _isLoadingMore = false;
+  bool _hasMore = true;
+  List<ProductData> products = [];
   Widget shopTimingSection() {
     String currentDay = getCurrentDay();
     return buildInfoCard(
@@ -58,47 +59,51 @@ class _DashboardState extends State<ShopDashboard> {
             if (!_showAllTimings)
               shopDayTimingRow(currentDay, widget.shop, isHighlighted: true)
             else
-              ...widget.shop.shopTiming?.entries.map((entry) {
-                    return shopDayTimingRow(
-                      entry.key,
-                      widget.shop,
-                      isHighlighted: entry.key == currentDay,
-                    );
-                  }).toList() ??
-                  [],
+              ...widget.shop.shopTiming.entries.map((entry) {
+                return shopDayTimingRow(
+                  entry.key,
+                  widget.shop,
+                  isHighlighted: entry.key == currentDay,
+                );
+              }).toList(),
           ],
         ),
       ),
     );
   }
 
-  Map<String, List<ProductModel>> _organizeByCategories(
-      List<ProductModel> products) {
-    final Map<String, List<ProductModel>> categorizedProducts = {};
-    for (var product in products) {
-      if (!categorizedProducts.containsKey(product.productCategory)) {
-        categorizedProducts[product.productCategory] = [];
+  @override
+  void initState() {
+    super.initState();
+    fetchShopProducts();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels >=
+              scrollController.position.maxScrollExtent - 10 &&
+          !_isLoadingMore &&
+          _hasMore) {
+        fetchShopProducts();
       }
-      categorizedProducts[product.productCategory]?.add(product);
-    }
-    return categorizedProducts;
+    });
   }
 
-  String? getExpirationTag() {
-    final now = DateTime.now();
-    final packageEndDate = widget.shop.packageEndDate;
-
-    if (packageEndDate == null) return null;
-
-    final daysDifference = packageEndDate.difference(now).inDays;
-
-    if (daysDifference >= 0 && daysDifference <= 6) {
-      return "Expires in $daysDifference day${daysDifference == 1 ? '' : 's'}";
-    } else if (daysDifference < 0) {
-      return "Expired ${-daysDifference} day${-daysDifference == 1 ? '' : 's'} ago";
+  Future<void> fetchShopProducts() async {
+    setState(() => _isLoadingMore = true);
+    try {
+      final newProducts =
+          await controller.getShopProducts(widget.shop.id, _page);
+      setState(() {
+        products.addAll(newProducts);
+        _page++;
+        _hasMore = newProducts.isNotEmpty;
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print("Failed to get data:${e}");
+      }
+    } finally {
+      setState(() => _isLoadingMore = false);
     }
-
-    return null;
   }
 
   @override
@@ -118,17 +123,17 @@ class _DashboardState extends State<ShopDashboard> {
                         style: Get.textTheme.headlineMedium?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 20,
+                          fontSize: 16,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
                     const SizedBox(width: 8),
-                    if (getExpirationTag() != null)
+                    if (getExpirationTag(widget.shop) != null)
                       GestureDetector(
                         onTap: () {
-                          final tag = getExpirationTag();
+                          final tag = getExpirationTag(widget.shop);
                           if (tag != null && tag.startsWith("Expired")) {
                             Get.to(() => ShopPackages(
                                   shop: widget.shop,
@@ -144,7 +149,7 @@ class _DashboardState extends State<ShopDashboard> {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            getExpirationTag()!,
+                            getExpirationTag(widget.shop)!,
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 12),
                           ),
@@ -166,15 +171,40 @@ class _DashboardState extends State<ShopDashboard> {
             color: Colors.white,
           ),
           centerTitle: true,
+          actions: [
+            if (widget.isAdmin)
+              IconButton(
+                icon: const Icon(Icons.mode_edit_rounded, color: Colors.white),
+                onPressed: () {
+                  Get.to(() => RegisterShop(
+                        shop: widget.shop,
+                      ));
+                },
+              ),
+          ],
         ),
         floatingActionButton: widget.isAdmin
             ? ClipRRect(
                 borderRadius: BorderRadius.circular(50),
                 child: FloatingActionButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    print(controller.totalImagesAdded.value);
                     if (widget.shop.isSubscriptionPurchased) {
                       if (controller.totalImagesAdded.value <=
                           controller.totalPackagelimit.value) {
+                        final result = await Get.to(
+                            () => AddProduct(shop: widget.shop),
+                            transition: Transition.fadeIn,
+                            duration: const Duration(milliseconds: 500));
+                        if (result != null &&
+                            result is Map &&
+                            result['IsDone'] == true) {
+                          // setState(() {
+                          //   _shopProductsFuture =
+                          //       controller.getShopProducts(widget.shop.id, 1);
+                          // });
+                          fetchShopProducts();
+                        }
                       } else {
                         showModalBottomSheet(
                           context: context,
@@ -258,6 +288,7 @@ class _DashboardState extends State<ShopDashboard> {
 
   Widget adminShopView() {
     return SingleChildScrollView(
+      controller: scrollController,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -514,27 +545,17 @@ class _DashboardState extends State<ShopDashboard> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+
+                          //TODO: Need to look out filter section Entire
                           Padding(
                             padding: const EdgeInsets.only(right: 10),
                             child: GestureDetector(
-                              onTap: () {
-                                final stopwatch = Stopwatch();
-                                print("StopWatch Started");
-                                stopwatch.start();
-                                Get.to(() => FilterOptions(),
+                              onTap: () async {
+                                final res = await Get.to(() => FilterOptions(),
                                     transition: Transition.fadeIn,
                                     duration:
                                         const Duration(milliseconds: 300));
-                                print("StopWatch :${stopwatch.elapsed}");
-                                stopwatch.stop();
-                                // Get.bottomSheet(
-                                //     BottomSheet(
-                                //         backgroundColor: Colors.white,
-                                //         onClosing: () {},
-                                //         builder: (c) => FilterOptions()),
-                                //     isDismissible: true,
-                                //     isScrollControlled: true,
-                                //     enableDrag: false);
+                                if (res != null && res is Map) {}
                               },
                               child: Container(
                                 padding: const EdgeInsets.symmetric(
@@ -560,46 +581,55 @@ class _DashboardState extends State<ShopDashboard> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    FutureBuilder<List<ProductModel>>(
-                      future: controller.getShopProduct(widget.shop.id),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: CircularProgressIndicator(),
-                            ),
-                          );
-                        }
-                        if (snapshot.hasError) {
-                          return Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(20.0),
-                              child: Text("Error: ${snapshot.error}"),
-                            ),
-                          );
-                        }
-                        if (snapshot.data == null || snapshot.data!.isEmpty) {
-                          return const Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(20.0),
-                              child: Text("No products available"),
-                            ),
-                          );
-                        }
-                        Map<String, List<ProductModel>> categorizedProduct =
-                            _organizeByCategories(snapshot.data!);
-
+                    const SizedBox(height: 4),
+                    if (products.isEmpty && _isLoadingMore)
+                      const Center(child: CircularProgressIndicator())
+                    else if (products.isEmpty)
+                      const Center(
+                          child: Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: Text("No products available"),
+                      ))
+                    else
+                      ...products.map((productData) {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildAllCategoriesList(categorizedProduct)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              child: Text(
+                                productData.category,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppTheme.primaryColor,
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 300,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: productData.product.length,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                itemBuilder: (context, index) {
+                                  return ProductCard(
+                                      product: productData.product[index]);
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 16),
                           ],
                         );
-                      },
-                    ),
+                      }),
+                    if (_isLoadingMore)
+                      const Center(
+                          child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20),
+                        child: CircularProgressIndicator(),
+                      )),
                   ],
                 ),
           !widget.shop.isSubscriptionPurchased
@@ -612,6 +642,7 @@ class _DashboardState extends State<ShopDashboard> {
 
   Widget userShopView() {
     return SingleChildScrollView(
+      controller: scrollController,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -746,40 +777,53 @@ class _DashboardState extends State<ShopDashboard> {
               ],
             ),
           ),
-          FutureBuilder<List<ProductModel>>(
-            future: controller.getShopProduct(widget.shop.id),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: CircularProgressIndicator(),
+          const SizedBox(height: 4),
+          if (products.isEmpty && _isLoadingMore)
+            const Center(child: CircularProgressIndicator())
+          else if (products.isEmpty)
+            const Center(
+                child: Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text("No products available"),
+            ))
+          else
+            ...products.map((productData) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
+                    child: Text(
+                      productData.category,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppTheme.primaryColor,
+                      ),
+                    ),
                   ),
-                );
-              }
-              if (snapshot.hasError) {
-                return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Text("Failed to Load Product"),
+                  SizedBox(
+                    height: 300,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: productData.product.length,
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      itemBuilder: (context, index) {
+                        return ProductCard(product: productData.product[index]);
+                      },
+                    ),
                   ),
-                );
-              }
-
-              if (snapshot.data == null || snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Text("No products available"),
-                  ),
-                );
-              }
-              Map<String, List<ProductModel>> categorizedProducts =
-                  _organizeByCategories(snapshot.data!);
-
-              return _buildAllCategoriesList(categorizedProducts);
-            },
-          ),
+                  const SizedBox(height: 16),
+                ],
+              );
+            }),
+          if (_isLoadingMore)
+            const Center(
+                child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: CircularProgressIndicator(),
+            )),
         ],
       ),
     );
@@ -903,14 +947,13 @@ class _DashboardState extends State<ShopDashboard> {
                             shopDayTimingRow(currentDay, widget.shop,
                                 isHighlighted: true)
                           else
-                            ...widget.shop.shopTiming?.entries.map((entry) {
-                                  return shopDayTimingRow(
-                                    entry.key,
-                                    widget.shop,
-                                    isHighlighted: entry.key == currentDay,
-                                  );
-                                }).toList() ??
-                                [],
+                            ...widget.shop.shopTiming.entries.map((entry) {
+                              return shopDayTimingRow(
+                                entry.key,
+                                widget.shop,
+                                isHighlighted: entry.key == currentDay,
+                              );
+                            }).toList(),
                         ],
                       ),
                     ),
@@ -922,53 +965,6 @@ class _DashboardState extends State<ShopDashboard> {
           },
         );
       },
-    );
-  }
-
-  Widget _buildAllCategoriesList(
-      Map<String, List<ProductModel>> categorizedProducts) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: categorizedProducts.entries.map((entry) {
-          return _buildCategorySection(entry.key, entry.value);
-        }).toList());
-  }
-
-  Widget _buildCategorySection(String category, List<ProductModel> products) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-          ),
-          child: Text(
-            category,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: AppTheme.primaryColor,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 300,
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            scrollDirection: Axis.horizontal,
-            itemCount: products.length,
-            physics: const BouncingScrollPhysics(),
-            itemBuilder: (context, index) {
-              return ProductCard(
-                product: products[index],
-                shop: widget.shop,
-                isAdmin: widget.isAdmin,
-              );
-            },
-          ),
-        ),
-        const SizedBox(height: 16),
-      ],
     );
   }
 }

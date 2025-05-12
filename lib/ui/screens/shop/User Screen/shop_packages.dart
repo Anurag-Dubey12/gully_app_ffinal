@@ -18,7 +18,7 @@ class ShopPackages extends StatefulWidget {
 }
 
 class SponsorPackageScreenState extends State<ShopPackages> {
-  int? selectedIndex;
+  int? selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MiscController>();
@@ -121,6 +121,7 @@ class SponsorPackageScreenState extends State<ShopPackages> {
                       PrimaryButton(
                         onTap: () => Get.to(() => ShopPaymentPage(
                             shop: widget.shop,
+                            isAdditional: widget.isAdditional,
                             selectedpackage:
                                 controller.selectedpackage.value!)),
                         title: 'Continue',

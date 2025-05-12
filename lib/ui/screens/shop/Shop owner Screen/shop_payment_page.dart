@@ -19,11 +19,12 @@ import 'package:razorpay_flutter/razorpay_flutter.dart';
 class ShopPaymentPage extends StatefulWidget {
   final ShopModel shop;
   final Package selectedpackage;
-
+  final bool isAdditional;
   const ShopPaymentPage(
       {Key? key,
       required this.shop,
-      required this.selectedpackage})
+      required this.selectedpackage,
+      this.isAdditional = false})
       : super(key: key);
 
   @override
@@ -78,17 +79,31 @@ class ShopPaymentPageState extends State<ShopPaymentPage> {
       "packageEndDate":
           calculatePackageEndDate(widget.selectedpackage.duration ?? ''),
     };
-    final shopData =
-        await controller.updateSubscriptionStatus(subscriptiondata);
-    if (shopData != null) {
-      successSnackBar(
-        AppConstants.shopPaymentSuccessful,
-        title: "Payment Successful",
-      ).then(
-        (value) => Get.offAll(() => const HomeScreen(),
-            predicate: (route) => route.name == '/HomeScreen'),
-      );
-      // successSnackBar("The Subscription added successfully");
+    if (widget.isAdditional) {
+      bool isOK = await controller.addAddtionalPackage(subscriptiondata);
+      if (isOK) {
+        successSnackBar(
+          AppConstants.additionalPackagePaymentSuccess,
+          title: "Payment Successful",
+        ).then(
+          (value) => Get.offAll(() => const HomeScreen(),
+              predicate: (route) => route.name == '/HomeScreen'),
+        );
+        // successSnackBar("The Subscription added successfully");
+      }
+    } else {
+      final shopData =
+          await controller.updateSubscriptionStatus(subscriptiondata);
+      if (shopData != null) {
+        successSnackBar(
+          AppConstants.shopPaymentSuccessful,
+          title: "Payment Successful",
+        ).then(
+          (value) => Get.offAll(() => const HomeScreen(),
+              predicate: (route) => route.name == '/HomeScreen'),
+        );
+        // successSnackBar("The Subscription added successfully");
+      }
     }
     logger.f('Payment Success');
   }

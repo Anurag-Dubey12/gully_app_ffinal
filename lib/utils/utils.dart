@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/config/app_constants.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:video_player/video_player.dart';
 import 'package:intl/intl.dart';
@@ -173,3 +174,33 @@ Future<Duration> getVideoDuration(File videoFile) async {
   await videoPlayerController.dispose();
   return duration;
 }
+ // MARK: Email Validation
+  String? validateEmail(String email) {
+    final RegExp emailRegExp = RegExp(r"^[\w-\.]+@([\w-]+\.)+[\w]{2,4}$");
+    if (email.isEmpty) {
+      return AppConstants.pleaseEnterYourEmail;
+    }
+
+    // Basic email format validation
+    if (!emailRegExp.hasMatch(email)) {
+      return AppConstants.enterValildEmailAddress;
+    }
+
+    // Allowed Gmail domains
+    final allowedDomains = [
+      'gmail.com',
+      'googlemail.com',
+      'outlook.com',
+      'yahoo.com',
+      'hotmail.com',
+    ];
+
+    // Extract domain part
+    final domain = email.split('@').last.toLowerCase();
+
+    if (!allowedDomains.contains(domain)) {
+      return "Please enter a valid Email address \nE.g xyz@gmail.com or xyz@outlook.com";
+    }
+
+    return null;
+  }

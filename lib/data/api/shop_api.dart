@@ -101,8 +101,8 @@ class ShopApi {
     return ApiResponse.fromJson(response.body);
   }
 
-  Future<ApiResponse> getShopProduct(String shopId) async {
-    final response = await repo.get("/shop/getShopProduct/$shopId");
+  Future<ApiResponse> getShopProduct(String shopId, int page) async {
+    final response = await repo.get("/shop/getShopProduct/$shopId/$page");
     if (response.statusCode! >= 500) {
       errorSnackBar(generateErrorMessage(response.body));
       throw Exception('Server Error');
@@ -140,12 +140,72 @@ class ShopApi {
     return ApiResponse.fromJson(response.body);
   }
 
+  Future<ApiResponse> addAddtionalPackage(
+      Map<String, dynamic> shopsubscription) async {
+    final response =
+        await repo.post("/shop/additionalPackage/", shopsubscription);
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
   Future<ApiResponse> searchShopsAndProducts(String query) async {
     final response = await repo.get("/shop/search/$query");
     // final prettyJson =
     //     const JsonEncoder.withIndent('  ').convert(response.body);
     // debugPrint(prettyJson, wrapWidth: 1024);
 
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getSimilarProduct({
+    required String productId,
+    required double longitude,
+    required double latitude,
+    required int page,
+    required int limit,
+  }) async {
+    final response = await repo.post("/shop/getSimilarProduct/", {
+      "productId": productId,
+      "longitude": longitude,
+      "latitude": latitude,
+      "page": page,
+      "limit": limit,
+    });
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getSimilarShopProduct({
+    required String productId,
+    required String shopId,
+    required int page,
+    required int limit,
+  }) async {
+    final response = await repo.post("/shop/getSimilarShopProduct/", {
+      "productId": productId,
+      "shopId": shopId,
+      "page": page,
+      "limit": limit,
+    });
     if (response.statusCode! >= 500) {
       errorSnackBar(generateErrorMessage(response.body));
       throw Exception('Server Error');

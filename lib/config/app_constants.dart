@@ -173,12 +173,15 @@ class AppConstants {
   static const String emptyMessageError = "Please enter message";
   static const String shortMessageError =
       "Message should be at least 20 characters long";
+  static const String pleaseEnterYourEmail = "Please enter your email";
+  static const String enterValildEmailAddress = "Enter a valid email address";
   static const String thankYouMessage = "Thank you for contacting us.";
   static const String replySoonMessage =
       "Your request has been sent successfully. Please wait for the revert. We will get back to you in 2-3 working days.";
   static const String submitButton = "Submit";
   static const String okButton = "OK";
   static const String emailInfo = "info@nileegames.com";
+
   static const String addressInfo =
       "508, 5th floor, Fly Edge building, S.V. Road, Borivali East";
   static const String phoneInfo = "+91 9855453210, 555-899-80085";
@@ -218,8 +221,10 @@ class AppConstants {
       "Make sure to choose a location where your audience is most likely to engage. "
       "A banner placed too far from the target area might not be visible to the relevant users.";
 
-  static const String bannerfeescancellation  = "The Banner fee is non-refundable. In case of any issue, kindly contact Gully Support.";
-  static const String shopfeescancellation  = "Please note that the fee to enable product listing is non-refundable. For support or further assistance, contact Gully Support.";
+  static const String bannerfeescancellation =
+      "The Banner fee is non-refundable. In case of any issue, kindly contact Gully Support.";
+  static const String shopfeescancellation =
+      "Please note that the fee to enable product listing is non-refundable. For support or further assistance, contact Gully Support.";
   //Shop Text
   static const String aadharBothSideImage =
       "Please upload both the front and back sides of your Aadhaar card for verification ";
@@ -241,6 +246,7 @@ class AppConstants {
   static const String aadharCardAdded =
       "Aadhaar Card Added to Edit click on Image";
   static const String tapToEdit = "Tap to Add Aadhaar Images";
+  static const String tapToView = "Tap to View your Aadhaar Images";
 
   static const String selectproductcategory = "Select Product Category";
   static const String selectallproductcategory = "Select Product Category";
@@ -252,6 +258,9 @@ class AppConstants {
       "Would you like to relist this product? It will be active again and visible to all users.";
   static const String shopPaymentSuccessful =
       "Congratulations !!!\nYour transaction was successful. You can now start adding your products and manage your shop listings.";
+
+  static const String additionalPackagePaymentSuccess =
+      "Payment Successful!\nYour additional package has been activated. You can now upload more product images and continue growing your shop seamlessly.";
   static const String bannerPaymentSuccessful =
       "Congratulations !!!\nYour transaction has been successful. Your banner Details will be updated sortly!";
 }

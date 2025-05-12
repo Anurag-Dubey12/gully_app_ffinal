@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,14 +12,16 @@ class ShopImagePicker extends StatefulWidget {
   final Function(List<String>) onImagesChanged;
   final Function(List<XFile>) onImageSelected;
   final int maxImages;
+  final bool isNetworkFetch;
 
-  const ShopImagePicker({
-    Key? key,
-    required this.images,
-    required this.onImagesChanged,
-    required this.onImageSelected,
-    this.maxImages = 3,
-  }) : super(key: key);
+  const ShopImagePicker(
+      {Key? key,
+      required this.images,
+      required this.onImagesChanged,
+      required this.onImageSelected,
+      this.maxImages = 3,
+      this.isNetworkFetch = false})
+      : super(key: key);
 
   @override
   State<ShopImagePicker> createState() => _ShopImagePickerState();
@@ -84,7 +88,7 @@ class _ShopImagePickerState extends State<ShopImagePicker> {
       }
     } catch (e) {
       print("Failed to get image:${e.toString()}");
-      errorSnackBar("An error occurred while picking the image");
+      errorSnackBar("Something went wrong");
     }
   }
 
@@ -135,6 +139,20 @@ class _ShopImagePickerState extends State<ShopImagePicker> {
                       itemBuilder: (context, index) {
                         return Stack(
                           children: [
+                            if (widget.isNetworkFetch)
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(12),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Image.network(
+                                    toImageUrl(_images[index]),
+                                    fit: BoxFit.cover,
+                                    height: Get.height,
+                                  ),
+                                ),
+                              ),
                             Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
@@ -202,8 +220,8 @@ class _ShopImagePickerState extends State<ShopImagePicker> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: _currentIndex == index
-                                  ? AppTheme.primaryColor
-                                  : Colors.white,
+                                  ? Colors.white
+                                  : AppTheme.primaryColor,
                             ),
                           ),
                         ),

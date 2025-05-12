@@ -97,7 +97,7 @@ class _FilterOptionsState extends State<FilterOptions> {
                 Expanded(
                   flex: 4,
                   child: PrimaryButton(
-                    onTap: () {},
+                    onTap: getFilterData,
                     title: "Apply Filter",
                   ),
                 ),
@@ -114,5 +114,16 @@ class _FilterOptionsState extends State<FilterOptions> {
     controller.selectedbrands.clear();
     controller.selectedsubcategory.clear();
     controller.subcategories.clear();
+  }
+
+  void getFilterData() {
+    final category = controller.selectedcategory.value;
+    final subcategory = controller.selectedsubcategory.value;
+    final brand = controller.selectedbrands.value;
+    Navigator.pop(context, {
+      'category': category,
+      'subcategory': subcategory,
+      'brand': brand,
+    });
   }
 }

@@ -38,6 +38,10 @@ class ShopModel {
   String ownerPanNumber;
   @JsonKey(name: "userId")
   String userId;
+  @JsonKey(name: "TotalEditDone")
+  int totalEditDone;
+  @JsonKey(name: "shoplink")
+  String? shoplink;
   @JsonKey(name: "isSubscriptionPurchased")
   bool isSubscriptionPurchased;
   @JsonKey(name: "AdditionalPackages")
@@ -61,6 +65,8 @@ class ShopModel {
     required this.shopAddress,
     required this.shopContact,
     required this.shopEmail,
+    required this.totalEditDone,
+    this.shoplink,
     required this.ownerName,
     required this.ownerPhoneNumber,
     required this.ownerEmail,

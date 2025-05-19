@@ -1,4 +1,5 @@
 import 'package:gully_app/data/model/package_model.dart';
+import 'package:gully_app/data/model/shop_model.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'PromotionalBannerModel.dart';
@@ -26,8 +27,10 @@ class Transaction {
   final String orderType;
   @JsonKey(name: "bannerId")
   final PromotionalBanner? banner;
-  @JsonKey(name: "sponsorPackageId")
-  final Package? sponsor;
+  @JsonKey(name: "shopId")
+  final String? shop;
+  @JsonKey(name: "PackageId")
+  final Package? package;
   final String? locationAddress;
 
   Transaction({
@@ -44,7 +47,8 @@ class Transaction {
     this.createdAt = '',
     this.orderType = '',
     this.banner,
-    this.sponsor,
+    this.package,
+    this.shop,
     this.locationAddress,
   });
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/model/product_model.dart';
 import 'package:gully_app/data/model/shop_model.dart';
 import 'package:gully_app/ui/screens/shop/User%20Screen/product_detail_screen.dart';
@@ -26,11 +27,14 @@ class ProductCard extends StatelessWidget {
     }
 
     return GestureDetector(
-      onTap: () => Get.to(() => ProductDetailScreen(
-            product: product,
-            isadmin: isAdmin,
-            shop: shop,
-          )),
+      onTap: () {
+        final controller = Get.find<ShopController>();
+        controller.shopProduct.value = product;
+        Get.to(() => ProductDetailScreen(
+              isadmin: isAdmin,
+              shop: shop,
+            ));
+      },
       child: Container(
         width: 180,
         margin: const EdgeInsets.only(right: 12),

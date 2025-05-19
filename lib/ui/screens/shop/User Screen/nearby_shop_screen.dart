@@ -199,8 +199,9 @@ class _NearbyShopCardState extends State<NearbyShopCard>
 
     return GestureDetector(
       onTap: () {
-        Get.to(() => ShopDashboard(
-              shop: widget.shop,
+        final shopController = Get.find<ShopController>();
+        shopController.shop.value = shop;
+        Get.to(() => const ShopDashboard(
               isAdmin: false,
             ));
       },

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/config/app_constants.dart';
+import 'package:gully_app/data/controller/misc_controller.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/model/product_model.dart';
 import 'package:gully_app/data/model/shop_model.dart';
@@ -34,7 +35,7 @@ class Product extends State<AddProduct> {
   final TextEditingController productName = TextEditingController();
   final TextEditingController productpriceController = TextEditingController();
   final TextEditingController _discountController = TextEditingController();
-  List<XFile> productImage = [];
+  List<dynamic> productImage = [];
 
   String? selectedCategory;
   String? selectedSubcategory;
@@ -42,32 +43,41 @@ class Product extends State<AddProduct> {
   final _formKeys = GlobalKey<FormState>();
   final controller = Get.find<ShopController>();
   bool? isDialogshown;
-
   bool isDiscount = false;
+  bool isImageEditDone = false;
   bool isuploaded = false;
+  final misccontroller = Get.find<MiscController>();
+
   @override
   void initState() {
     super.initState();
     isDialogshown = false;
     if (widget.product != null) {
-      productName.text = widget.product!.productName;
-      productdescriptionController.text =
-          widget.product!.productsDescription ?? '';
-      productpriceController.text = widget.product!.productsPrice.toString();
-      selectedCategory = widget.product!.productCategory;
-      selectedSubcategory = widget.product!.productSubCategory;
-      selectedBrand = widget.product!.productBrand;
-      isDiscount = widget.product!.productDiscount!.discountType == 'fixed'
-          ? false
-          : true;
-      _discountController.text =
-          widget.product!.productDiscount!.discountType == 'fixed'
-              ? '0'
-              : widget.product!.productDiscount!.discountPrice.toString();
-      // productImage = widget.product.productsImage.;
+      getproductData();
     }
     controller.getCategory();
     controller.getbrands();
+  }
+
+  Future<void> getproductData() async {
+    productName.text = widget.product!.productName;
+    productdescriptionController.text =
+        widget.product!.productsDescription ?? '';
+    productpriceController.text = widget.product!.productsPrice.toString();
+    selectedCategory = widget.product!.productCategory;
+    selectedSubcategory = widget.product!.productSubCategory;
+    selectedBrand = widget.product!.productBrand;
+    isDiscount =
+        widget.product!.productDiscount!.discountType == 'fixed' ? false : true;
+    _discountController.text =
+        widget.product!.productDiscount!.discountType == 'fixed'
+            ? '0'
+            : widget.product!.productDiscount!.discountPrice.toString();
+    // productImage = widget.product!.productsImage ?? [];
+    if (widget.product!.productsImage != null) {
+      productImage = List.from(widget.product!.productsImage!);
+    }
+    await misccontroller.getPackagebyId(controller.shop.value!.package!.id);
   }
 
   pickImages() async {
@@ -75,7 +85,10 @@ class Product extends State<AddProduct> {
 
     if (imgs != null && imgs.isNotEmpty) {
       setState(() {
-        productImage.addAll(imgs.whereType<XFile>());
+        productImage.addAll(imgs);
+        if (kDebugMode) {
+          print("Find Added image:$imgs");
+        }
       });
     }
   }
@@ -98,6 +111,9 @@ class Product extends State<AddProduct> {
 
   @override
   Widget build(BuildContext context) {
+    final product = widget.product;
+    final totalEditDone = controller.shop.value?.totalEditDone ?? 0;
+    final editLimit = misccontroller.packageLimit.value;
     return DecoratedBox(
       decoration: const BoxDecoration(
         color: Colors.white,
@@ -239,15 +255,25 @@ class Product extends State<AddProduct> {
                             barrierDismissible: false,
                             builder: (_) => const UploadingDialog(),
                           );
-
                           List<String> productbase64Image = [];
-                          for (XFile images in productImage) {
-                            String converImage =
-                                await convertImageToBase64(images);
-                            productbase64Image.add(converImage);
+                          for (dynamic image in productImage) {
+                            if (image is XFile) {
+                              String base64Image =
+                                  await convertImageToBase64(image);
+                              if (widget.product != null) {
+                                isImageEditDone = true;
+                              }
+                              productbase64Image.add(base64Image);
+                            } else if (image is String) {
+                              productbase64Image.add(image);
+                            }
                           }
 
                           Map<String, dynamic> product = {
+                            if (widget.product != null)
+                              "productId": widget.product!.id,
+                            if (widget.product != null)
+                              "isImageEditDone": isImageEditDone,
                             "productsImage": productbase64Image,
                             "productName": productName.text,
                             "productsDescription":
@@ -256,39 +282,140 @@ class Product extends State<AddProduct> {
                             "productCategory": selectedCategory,
                             "productSubCategory": selectedSubcategory,
                             "productBrand": selectedBrand,
-                            "shopId": widget.shop?.id,
+                            if (widget.product == null)
+                              "shopId": widget.shop?.id,
                             "discounttype": isDiscount ? "percent" : "fixed",
                             "discountedvalue": isDiscount
                                 ? int.parse(_discountController.text)
                                 : 0
                           };
-                          bool isOk = await controller.addShopProduct(product);
-                          if (Navigator.canPop(dialogContext)) {
-                            Navigator.of(dialogContext).pop();
-                          }
-                          if (isOk) {
-                            Get.snackbar(
-                              'Success',
-                              AppConstants.productaddedsuccessfully,
-                              snackPosition: SnackPosition.top,
-                              backgroundColor: Colors.green,
-                              colorText: Colors.white,
-                              margin: const EdgeInsets.all(10),
-                              padding: const EdgeInsets.all(12),
-                              borderRadius: 8,
-                            );
-                            Navigator.pop(context, {'IsDone': true});
+                          if (widget.product != null) {
+                            bool isOk = await controller.editProduct(product);
+                            // if (Navigator.canPop(dialogContext)) {
+                            //   Navigator.of(dialogContext).pop();
+                            // }
+                            if (isOk) {
+                              if (isImageEditDone) {
+                                showDialog(
+                                  context: context,
+                                  barrierDismissible: false,
+                                  builder: (context) => WillPopScope(
+                                    onWillPop: () async => false,
+                                    child: AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+                                      title: const Row(
+                                        children: [
+                                          Icon(Icons.info_outline,
+                                              color: Colors.blueAccent),
+                                          SizedBox(width: 8),
+                                          Text(
+                                            "Heads Up!",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            "You're editing an image. This will use 1 image edit from your remaining limit.",
+                                            style: TextStyle(
+                                                fontSize: 16, height: 1.4),
+                                          ),
+                                          const SizedBox(height: 12),
+                                          Text(
+                                            "Edits left: ${misccontroller.packageLimit.value - controller.shop.value!.totalEditDone}",
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.green,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      actions: [
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            successSnackBar(
+                                              AppConstants
+                                                  .producteditedsuccessfully,
+                                            ).then(
+                                              (value) => Get.back(),
+                                            );
+                                            await controller
+                                                .getProduct(widget.product!.id);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.blueAccent,
+                                            foregroundColor: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20, vertical: 12),
+                                          ),
+                                          child: const Text("Continue"),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              } else {
+                                successSnackBar(
+                                  AppConstants.producteditedsuccessfully,
+                                ).then(
+                                  (value) => Get.back(),
+                                );
+                                await controller.getProduct(widget.product!.id);
+                              }
+                            } else {
+                              Get.snackbar(
+                                'Error',
+                                'Failed to add product. Please try again.',
+                                snackPosition: SnackPosition.top,
+                                backgroundColor: Colors.red,
+                                colorText: Colors.white,
+                                margin: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(12),
+                                borderRadius: 8,
+                              );
+                            }
                           } else {
-                            Get.snackbar(
-                              'Error',
-                              'Failed to add product. Please try again.',
-                              snackPosition: SnackPosition.top,
-                              backgroundColor: Colors.red,
-                              colorText: Colors.white,
-                              margin: const EdgeInsets.all(10),
-                              padding: const EdgeInsets.all(12),
-                              borderRadius: 8,
-                            );
+                            bool isOk =
+                                await controller.addShopProduct(product);
+                            if (Navigator.canPop(dialogContext)) {
+                              Navigator.of(dialogContext).pop();
+                            }
+                            if (isOk) {
+                              Get.snackbar(
+                                'Success',
+                                AppConstants.productaddedsuccessfully,
+                                snackPosition: SnackPosition.top,
+                                backgroundColor: Colors.green,
+                                colorText: Colors.white,
+                                margin: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(12),
+                                borderRadius: 8,
+                              );
+                              Navigator.pop(context, {'IsDone': true});
+                            } else {
+                              Get.snackbar(
+                                'Error',
+                                'Failed to add product. Please try again.',
+                                snackPosition: SnackPosition.top,
+                                backgroundColor: Colors.red,
+                                colorText: Colors.white,
+                                margin: const EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(12),
+                                borderRadius: 8,
+                              );
+                            }
                           }
                         }
                       } catch (e) {
@@ -310,7 +437,9 @@ class Product extends State<AddProduct> {
                         isuploaded = false;
                       }
                     },
-                    title: 'Save Product',
+                    title: widget.product != null
+                        ? 'Edit Product'
+                        : 'Save Product',
                   ),
                 )
               ],
@@ -374,184 +503,126 @@ class Product extends State<AddProduct> {
                                     ),
                                   ),
                                 )
-                              : widget.product != null
-                                  ? GridView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                        crossAxisSpacing: 10,
-                                        mainAxisSpacing: 10,
-                                      ),
-                                      itemCount: widget
-                                              .product!.productsImage!.length +
-                                          1,
-                                      itemBuilder: (context, index) {
-                                        if (index ==
-                                            widget.product!.productsImage!
-                                                .length) {
-                                          return GestureDetector(
-                                            onTap: pickImages,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: Colors.grey[100],
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                border: Border.all(
-                                                  color: Colors.grey[300]!,
-                                                ),
-                                              ),
+                              : SizedBox(
+                                  height: 250,
+                                  child: PageView.builder(
+                                    controller:
+                                        PageController(viewportFraction: 0.85),
+                                    itemCount: productImage.length + 1,
+                                    itemBuilder: (context, index) {
+                                      if (index == productImage.length) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            if (product != null) {
+                                              if (totalEditDone >= editLimit) {
+                                                errorSnackBar(
+                                                    "Your image edit limit has been reached.");
+                                              } else {
+                                                pickImages();
+                                              }
+                                            } else {
+                                              pickImages();
+                                            }
+                                          },
+                                          child: Container(
+                                            margin: const EdgeInsets.symmetric(
+                                                horizontal: 8),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              border: Border.all(
+                                                  color: Colors.grey[300]!),
+                                              color: Colors.grey[100],
+                                            ),
+                                            child: const Center(
                                               child: Icon(
                                                 Icons.add_photo_alternate,
-                                                color: Colors.blue[400],
-                                                size: 30,
+                                                color: Colors.blue,
+                                                size: 40,
                                               ),
                                             ),
-                                          );
-                                        }
-                                        return Stack(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
+                                          ),
+                                        );
+                                      }
+                                      final image = productImage[index];
+                                      final isNetworkImage = image is String;
+
+                                      return Stack(
+                                        children: [
+                                          GestureDetector(
+                                            onTap: () {
+                                              if (isNetworkImage) {
+                                                imageViewer(
+                                                    context, image, true);
+                                              } else {
                                                 imageViewer(
                                                     context,
-                                                    productImage[index].path,
+                                                    (image as XFile).path,
                                                     false);
-                                              },
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                                child: Image.network(
-                                                  toImageUrl(widget.product!
-                                                      .productsImage![index]),
-                                                  fit: BoxFit.contain,
-                                                  errorBuilder: (context, error,
-                                                      stackTrace) {
-                                                    return Image.asset(
-                                                        'assets/images/logo.png',
-                                                        fit: BoxFit.cover);
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                            Positioned(
-                                              right: 5,
-                                              top: 5,
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    productImage
-                                                        .removeAt(index);
-                                                  });
-                                                },
-                                                child: Container(
-                                                  padding:
-                                                      const EdgeInsets.all(4),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.black
-                                                        .withOpacity(0.7),
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                  child: const Icon(
-                                                    Icons.close,
-                                                    color: Colors.white,
-                                                    size: 14,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    )
-                                  : GridView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 3,
-                                        crossAxisSpacing: 10,
-                                        mainAxisSpacing: 10,
-                                      ),
-                                      itemCount: productImage.length + 1,
-                                      itemBuilder: (context, index) {
-                                        if (index == productImage.length) {
-                                          return GestureDetector(
-                                            onTap: pickImages,
+                                              }
+                                            },
                                             child: Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 8),
                                               decoration: BoxDecoration(
-                                                color: Colors.grey[100],
                                                 borderRadius:
-                                                    BorderRadius.circular(10),
-                                                border: Border.all(
-                                                  color: Colors.grey[300]!,
+                                                    BorderRadius.circular(12),
+                                                image: DecorationImage(
+                                                  image: isNetworkImage
+                                                      ? NetworkImage(
+                                                              toImageUrl(image))
+                                                          as ImageProvider
+                                                      : FileImage(File(
+                                                          (image as XFile)
+                                                              .path)),
+                                                  fit: BoxFit.cover,
                                                 ),
                                               ),
-                                              child: Icon(
-                                                Icons.add_photo_alternate,
-                                                color: Colors.blue[400],
-                                                size: 30,
-                                              ),
                                             ),
-                                          );
-                                        }
-                                        return Stack(
-                                          children: [
-                                            GestureDetector(
+                                          ),
+                                          Positioned(
+                                            top: 5,
+                                            right: 15,
+                                            child: GestureDetector(
                                               onTap: () {
-                                                imageViewer(
-                                                    context,
-                                                    productImage[index].path,
-                                                    false);
+                                                if (product != null) {
+                                                  if (totalEditDone <
+                                                      editLimit) {
+                                                    setState(() {
+                                                      productImage
+                                                          .removeAt(index);
+                                                    });
+                                                  } else {
+                                                    errorSnackBar(
+                                                        "Your image edit limit has been reached.");
+                                                  }
+                                                } else {
+                                                  errorSnackBar(
+                                                      "No product found. Cannot remove image.");
+                                                }
                                               },
                                               child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(4),
                                                 decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  image: DecorationImage(
-                                                    image: FileImage(File(
-                                                        productImage[index]
-                                                            .path)),
-                                                    fit: BoxFit.cover,
-                                                  ),
+                                                  color: Colors.black
+                                                      .withOpacity(0.7),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: const Icon(
+                                                  Icons.close,
+                                                  color: Colors.white,
+                                                  size: 14,
                                                 ),
                                               ),
                                             ),
-                                            Positioned(
-                                              right: 5,
-                                              top: 5,
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    productImage
-                                                        .removeAt(index);
-                                                  });
-                                                },
-                                                child: Container(
-                                                  padding:
-                                                      const EdgeInsets.all(4),
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.black
-                                                        .withOpacity(0.7),
-                                                    shape: BoxShape.circle,
-                                                  ),
-                                                  child: const Icon(
-                                                    Icons.close,
-                                                    color: Colors.white,
-                                                    size: 14,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    ),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ),
                         ],
                       ),
                     ),

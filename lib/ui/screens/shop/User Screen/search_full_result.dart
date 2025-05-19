@@ -224,11 +224,14 @@ class SearchResultProductCard extends StatelessWidget {
     }
 
     return GestureDetector(
-      onTap: () => Get.to(() => ProductDetailScreen(
-            product: product,
-            isadmin: isAdmin,
-            shop: shop,
-          )),
+      onTap: () {
+        final controller = Get.find<ShopController>();
+        controller.shopProduct.value = product;
+        Get.to(() => ProductDetailScreen(
+              isadmin: isAdmin,
+              shop: shop,
+            ));
+      },
       child: Container(
         width: Get.width,
         padding: const EdgeInsets.all(8),

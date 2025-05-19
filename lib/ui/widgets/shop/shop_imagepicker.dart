@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,6 +10,7 @@ class ShopImagePicker extends StatefulWidget {
   final List<String> images;
   final Function(List<String>) onImagesChanged;
   final Function(List<XFile>) onImageSelected;
+  final Function(int) removedAtIndex;
   final int maxImages;
   final bool isNetworkFetch;
 
@@ -19,6 +19,7 @@ class ShopImagePicker extends StatefulWidget {
       required this.images,
       required this.onImagesChanged,
       required this.onImageSelected,
+      required this.removedAtIndex,
       this.maxImages = 3,
       this.isNetworkFetch = false})
       : super(key: key);
@@ -81,6 +82,7 @@ class _ShopImagePickerState extends State<ShopImagePicker> {
 
         setState(() {
           _images.add(image.path);
+          print("Image Selected:${_images}");
           _shopImages.add(image);
           widget.onImagesChanged(_images);
           widget.onImageSelected(_shopImages);
@@ -100,6 +102,7 @@ class _ShopImagePickerState extends State<ShopImagePicker> {
       }
       if (_currentIndex < 0) _currentIndex = 0;
       widget.onImagesChanged(_images);
+      widget.removedAtIndex(index);
     });
   }
 

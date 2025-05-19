@@ -59,7 +59,7 @@ class TxnHistoryScreen extends GetView<TournamentController> {
                 return const Center(child: Text('No transactions found'));
               }
               //logger.d
-                  // "Building list with ${snapshot.data!.length} transactions");
+              // "Building list with ${snapshot.data!.length} transactions");
               return ListView.builder(
                   itemCount: snapshot.data!.length,
                   shrinkWrap: true,
@@ -134,7 +134,7 @@ class _TxnHistoryCard extends StatelessWidget {
                                     transaction.orderType == 'banner'
                                         ? transaction.banner?.bannerTitle ??
                                             'Promotional Banner'
-                                        : transaction.sponsor?.name ?? '',
+                                        : transaction.package?.name ?? '',
                                     style: Get.textTheme.bodyMedium?.copyWith(
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600,

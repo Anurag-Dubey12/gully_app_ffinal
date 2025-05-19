@@ -1,8 +1,5 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gully_app/data/controller/banner_promotion_controller.dart';
 import 'package:gully_app/ui/screens/payment_page.dart';
 import 'package:intl/intl.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
@@ -11,9 +8,7 @@ import '../../data/controller/auth_controller.dart';
 import '../../data/controller/tournament_controller.dart';
 import '../../data/model/package_model.dart';
 import '../../data/model/tournament_model.dart';
-import '../../utils/FallbackImageProvider.dart';
 import '../../utils/app_logger.dart';
-import '../../utils/image_picker_helper.dart';
 import '../../utils/utils.dart';
 import 'home_screen.dart';
 import '../theme/theme.dart';

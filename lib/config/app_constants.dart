@@ -5,6 +5,7 @@ class AppConstants {
   static const String appName = 'Gully Cricket';
   static const baseUrl = kReleaseMode
       ? "http://3.7.92.159:3000/api"
+      // ? "http://192.168.185.11:3000/api"
       // : "http://192.168.0.105:3000/api";//personL
       : "http://192.168.29.9:3000/api"; //Office
   // : "http://3.7.92.159:3000/api"; //server
@@ -238,9 +239,9 @@ class AppConstants {
   static const String ownerPanCard = "Owner Pan Card";
 
   static const String ownerAddress = "Owner Address";
-  static const String ownerPhone = "Phone Number";
-  static const String owneremail = "Email Address";
-  static const String ownerName = "Name";
+  static const String ownerPhone = "Owner Phone Number";
+  static const String owneremail = "Owner Email Address";
+  static const String ownerName = "Owner Name";
 
   //Aadhar Card
   static const String aadharCardAdded =
@@ -250,7 +251,8 @@ class AppConstants {
 
   static const String selectproductcategory = "Select Product Category";
   static const String selectallproductcategory = "Select Product Category";
-  static const String productaddedsuccessfully = "Product Added SUccessfully";
+  static const String productaddedsuccessfully = "Product Added Successfully";
+  static const String producteditedsuccessfully = "Product Edited SUccessfully";
 
   static const String unlistProduct =
       "Are you sure you want to unlist this product? It will no longer be visible to other users, but you can relist it anytime from your dashboard.";

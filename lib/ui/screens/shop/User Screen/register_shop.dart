@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -55,14 +56,13 @@ class _ShopState extends State<RegisterShop>
   XFile? businessLicense;
   XFile? taxCertificate;
   XFile? rstCertificate;
-  XFile? _shopLogo;
-  List<String>? shopimages;
+  List<dynamic> shopimages = [];
+  List<dynamic> editShopImage = [];
   List<XFile>? base64shopimages;
   int currentStep = 0;
-
   final ScrollController _controller = ScrollController();
   Map<String, String> aadhaarData = {};
-  
+
   final _formKeys = [
     GlobalKey<FormState>(),
     GlobalKey<FormState>(),
@@ -75,7 +75,7 @@ class _ShopState extends State<RegisterShop>
   XFile? backImageXFile;
 
   final List<String> _stepTitles = [
-    'Vendor Details',
+    'Owner Details',
     'Shop Details',
     'Additional Shop Details'
   ];
@@ -102,14 +102,17 @@ class _ShopState extends State<RegisterShop>
   }
 
   Map<String, BusinessHoursModel> businesshours = {};
+  Map<String, String> existingImage = {};
 
   late LatLng location;
-  
+
   @override
   void initState() {
     super.initState();
-    final AuthController authController = Get.find<AuthController>();
     if (widget.shop != null) {
+      ownerNameController.text = widget.shop!.ownerName;
+      ownerEmailController.text = widget.shop!.ownerEmail;
+      ownerPhoneController.text = widget.shop!.ownerPhoneNumber;
       ownerAddressController.text = widget.shop!.ownerAddress;
       ownerPanCardController.text = widget.shop!.ownerPanNumber;
       shopNameController.text = widget.shop!.shopName;
@@ -119,13 +122,13 @@ class _ShopState extends State<RegisterShop>
       shoplocationController.text =
           widget.shop!.locationHistory.point.selectLocation;
       shopDescriptionController.text = widget.shop!.shopDescription;
-
+      shopWebsiteController.text = widget.shop!.shoplink ?? '';
       businesshours = widget.shop!.shopTiming;
-      shopimages = widget.shop!.shopImage;
+      // shopimages = widget.shop!.shopImage;
+      if (widget.shop!.shopImage != null) {
+        shopimages = List.from(widget.shop!.shopImage);
+      }
     }
-    ownerNameController.text = authController.state!.fullName;
-    ownerEmailController.text = authController.state!.email;
-    ownerPhoneController.text = authController.state!.phoneNumber ?? '';
     _progressController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
@@ -164,6 +167,7 @@ class _ShopState extends State<RegisterShop>
         errorSnackBar("Aadhar Card document required.");
         return;
       }
+
       if (currentStep == 1 && shopimages == null && widget.shop == null) {
         errorSnackBar("Please Add An Shop Images");
         return;
@@ -190,29 +194,29 @@ class _ShopState extends State<RegisterShop>
   void _submitForm() async {
     if (_formKeys[currentStep].currentState!.validate()) {
       try {
-        final authController = Get.find<AuthController>();
         final controller = Get.find<ShopController>();
         List<String> shopBase64Images = [];
-        
-        if (base64shopimages != null) {
-          for (XFile image in base64shopimages!) {
-            String convertedImage = await convertImageToBase64(image);
-            shopBase64Images.add(convertedImage);
+
+        for (dynamic image in shopimages) {
+          if (image is XFile) {
+            String base64Image = await convertImageToBase64(image);
+            shopBase64Images.add(base64Image);
+          } else if (image is String) {
+            shopBase64Images.add(image);
           }
         }
+        // if (base64shopimages != null && base64shopimages!.isNotEmpty) {
+        //   for (XFile image in base64shopimages!) {
+        //     String convertedImage = await convertImageToBase64(image);
+        //     shopBase64Images.add(convertedImage);
+        //   }
+        // }
 
-        List<OwnerAddharImage>? ownerAadharImages;
         String? frontImagebase64;
         String? backImagebase64;
         if (frontImagePath != null && backImagePath != null) {
           frontImagebase64 = await convertImageToBase64(frontImageXFile!);
           backImagebase64 = await convertImageToBase64(backImageXFile!);
-          ownerAadharImages = [
-            OwnerAddharImage(
-              aadharFrontSide: frontImagebase64,
-              aadharBackSide: backImagebase64,
-            )
-          ];
         }
         final Map<String, dynamic> shopTiming = businesshours.map((day, model) {
           return MapEntry(day, {
@@ -223,14 +227,15 @@ class _ShopState extends State<RegisterShop>
         });
 
         final Map<String, dynamic> shopData = {
+          if (widget.shop != null) "shopId": widget.shop!.id,
           "shopImage": shopBase64Images,
           "shopName": shopNameController.text,
           "shopAddress": shopAddressController.text,
           "shopDescription": shopDescriptionController.text,
           "shopContact": shopPhoneController.text,
           "shopEmail": shopEmailController.text,
-          "shopLink": shopWebsiteController.text,
-          "joinedAt": DateTime.now().toIso8601String(),
+          "shoplink": shopWebsiteController.text,
+          if (widget.shop == null) "joinedAt": DateTime.now().toIso8601String(),
           // "gstNumber": gstNumberController.text,
           "selectLocation": shoplocationController.text,
           "latitude": location.latitude,
@@ -240,20 +245,35 @@ class _ShopState extends State<RegisterShop>
           "ownerEmail": ownerEmailController.text,
           "ownerPhoneNumber": ownerPhoneController.text,
           "ownerAddress": ownerAddressController.text,
-          "ownerPanNumber": ownerPanCardController.text,
-          "aadharFrontSide": frontImagebase64,
-          "aadharBackSide": backImagebase64,
+          if (widget.shop == null)
+            "ownerPanNumber": ownerPanCardController.text,
+          if (widget.shop == null) "aadharFrontSide": frontImagebase64,
+          if (widget.shop == null) "aadharBackSide": backImagebase64,
         };
         try {
-          bool isOk = await controller.registerShop(shopData);
-          if (isOk) {
-            successSnackBar("Shop registration submitted successfully!");
+          if (widget.shop != null) {
+            bool isOk = await controller.editShop(shopData);
+            if (isOk) {
+              successSnackBar("Shop Edited successfully!").then(
+                (value) => Get.back(),
+              );
+              controller.getMyShop();
+            }
+          } else {
+            bool isOk = await controller.registerShop(shopData);
+            if (isOk) {
+              successSnackBar("Shop registration submitted successfully!");
+            }
           }
         } catch (e) {
-          print(e);
+          if (kDebugMode) {
+            print(e);
+          }
         }
       } catch (e) {
-        print(e.toString());
+        if (kDebugMode) {
+          print(e.toString());
+        }
         errorSnackBar("An error occurred while submitting the form.",
             title: "Error");
         //logger.d("Error submitting form: $e");
@@ -295,9 +315,6 @@ class _ShopState extends State<RegisterShop>
             case ImageType.registrationCertificate:
               rstCertificate = image;
               break;
-            case ImageType.shopLogo:
-              _shopLogo = image;
-              break;
             case ImageType.shopLocation:
               shopLocation = image;
               break;
@@ -329,9 +346,6 @@ class _ShopState extends State<RegisterShop>
         case ImageType.registrationCertificate:
           rstCertificate = null;
           break;
-        case ImageType.shopLogo:
-          _shopLogo = null;
-          break;
         case ImageType.shopLocation:
           shopLocation = null;
           break;
@@ -343,50 +357,6 @@ class _ShopState extends State<RegisterShop>
           break;
       }
     });
-  }
-
-  bool _validateImages() {
-    bool isValid = true;
-    List<String> missingImages = [];
-
-    if (_documentImage == null) {
-      missingImages.add("ID Proof");
-      isValid = false;
-    }
-    if (_shopLogo == null) {
-      missingImages.add("Shop Logo");
-      isValid = false;
-    }
-    if (shopLocation == null) {
-      missingImages.add("Shop Location Proof");
-      isValid = false;
-    }
-    if (businessLicense == null) {
-      missingImages.add("Business License");
-      isValid = false;
-    }
-
-    if (gstNumberController.text.isNotEmpty && gstCertificateImage == null) {
-      missingImages.add("GST Certificate");
-      isValid = false;
-    }
-    if (rstCertificate == null) {
-      missingImages.add("Shop Registration Certificate");
-      isValid = false;
-    }
-    if (taxCertificate == null) {
-      missingImages.add("VAT or Sales Tax Certificate");
-      isValid = false;
-    }
-
-    if (!isValid) {
-      String errorMessage =
-          // "Please upload the following images: ${missingImages.join(', ')}";
-          "Please Upload All The Required Documents";
-      errorSnackBar(errorMessage, title: "Missing Images");
-    }
-
-    return isValid;
   }
 
   @override
@@ -419,18 +389,18 @@ class _ShopState extends State<RegisterShop>
             padding: const EdgeInsets.symmetric(horizontal: 5.0, vertical: 3.0),
             width: Get.width,
             child: currentStep == 0
-                ? _nextNavigationButton('Next', _nextPage)
+                ? nextNavigationButton('Next', _nextPage)
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       if (currentStep > 0)
-                        _previousNavigationButton(_previousPage)
+                        previousNavigationButton(_previousPage)
                       else
                         const SizedBox(width: 80),
                       if (currentStep < _formKeys.length - 1)
-                        _nextNavigationButton('Next', _nextPage)
+                        nextNavigationButton('Next', _nextPage)
                       else if (currentStep == _formKeys.length - 1)
-                        _nextNavigationButton('Submit', _submitForm)
+                        nextNavigationButton('Submit', _submitForm)
                       else
                         const SizedBox(width: 80),
                     ],
@@ -540,20 +510,54 @@ class _ShopState extends State<RegisterShop>
           FormInput(
             controller: ownerNameController,
             label: AppConstants.ownerName,
-            enabled: false,
+            enabled: true,
             textInputType: TextInputType.name,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "Enter Owner Name";
+              }
+              return null;
+            },
           ),
           FormInput(
             controller: ownerEmailController,
-            enabled: false,
+            enabled: true,
             label: AppConstants.owneremail,
             textInputType: TextInputType.emailAddress,
+            validator: (value) {
+              return validateEmail(value ?? '');
+            },
           ),
           FormInput(
             controller: ownerPhoneController,
-            enabled: false,
+            enabled: true,
             label: AppConstants.ownerPhone,
             textInputType: TextInputType.number,
+            maxLength: 10,
+            validator: (value) {
+              if (value!.isEmpty) {
+                return "Enter Owner Phone Number";
+              }
+              if (value.length < 10) {
+                return "Please Enter a Valid Shop Phone Number";
+              }
+
+              if (RegExp(r'^(\d)\1{9}$').hasMatch(value)) {
+                return "Phone number cannot be all the same digit";
+              }
+
+              if (RegExp(r'(\d)\1{4,}').hasMatch(value)) {
+                return "Phone number has too many repeated digits";
+              }
+
+              const ascending = '0123456789';
+              const descending = '9876543210';
+              if (ascending.contains(value) || descending.contains(value)) {
+                return "Phone number cannot be a simple sequence";
+              }
+
+              return null;
+            },
           ),
           FormInput(
             controller: ownerAddressController,
@@ -833,12 +837,161 @@ class _ShopState extends State<RegisterShop>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ShopImagePicker(
-            images: shopimages ?? [],
-            onImagesChanged: _handleImageChange,
-            onImageSelected: _handleonImageSelected,
-            isNetworkFetch: widget.shop != null ? true : false,
+          const Padding(
+            padding: EdgeInsets.only(bottom: 8.0),
+            child: Text(
+              'Shop Images (max 3)',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
           ),
+          shopimages.isEmpty
+              ? SizedBox(
+                  height: 200,
+                  child: GestureDetector(
+                    onTap: pickImages,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.grey[300]!),
+                        color: Colors.grey[100],
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Center(
+                            child: Icon(
+                              Icons.add_photo_alternate,
+                              color: Colors.black,
+                              size: 40,
+                            ),
+                          ),
+                          Text(
+                            'Add Shop Images (${shopimages.length}/3)',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : Container(
+                  height: 200,
+                  padding: const EdgeInsets.all(8.0),
+                  child: shopimages.isEmpty
+                      ? _buildAddImageButton()
+                      : Stack(
+                          children: [
+                            PageView.builder(
+                              controller:
+                                  PageController(viewportFraction: 0.85),
+                              itemCount: shopimages.length +
+                                  (shopimages.length < 3 ? 1 : 0),
+                              itemBuilder: (context, index) {
+                                if (index == shopimages.length) {
+                                  return GestureDetector(
+                                    onTap: pickImages,
+                                    child: Container(
+                                      margin: const EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                            color: Colors.grey[300]!),
+                                        color: Colors.grey[100],
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          const Center(
+                                            child: Icon(
+                                              Icons.add_photo_alternate,
+                                              color: Colors.black,
+                                              size: 40,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Add Shop Images (${shopimages.length}/3)',
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }
+                                final image = shopimages[index];
+                                final isNetworkImage = image is String;
+                                return Stack(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        if (isNetworkImage) {
+                                          imageViewer(context, image, true);
+                                        } else {
+                                          imageViewer(context,
+                                              (image as XFile).path, false);
+                                        }
+                                      },
+                                      child: Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          image: DecorationImage(
+                                            image: isNetworkImage
+                                                ? NetworkImage(
+                                                        toImageUrl(image))
+                                                    as ImageProvider
+                                                : FileImage(File(
+                                                    (image as XFile).path)),
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 5,
+                                      right: 15,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            shopimages.removeAt(index);
+                                          });
+                                        },
+                                        child: Container(
+                                          padding: const EdgeInsets.all(4),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.7),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size: 14,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                ),
           FormInput(
             controller: shopNameController,
             label: "Shop Name",
@@ -871,8 +1024,8 @@ class _ShopState extends State<RegisterShop>
                 return "Phone number has too many repeated digits";
               }
 
-              final ascending = '0123456789';
-              final descending = '9876543210';
+              const ascending = '0123456789';
+              const descending = '9876543210';
               if (ascending.contains(value) || descending.contains(value)) {
                 return "Phone number cannot be a simple sequence";
               }
@@ -892,37 +1045,37 @@ class _ShopState extends State<RegisterShop>
             controller: gstNumberController,
             label: "Shop GST Number",
             textInputType: TextInputType.text,
-            // validator: (value) {
-            //   if (value == null || value.trim().isEmpty) {
-            //     return "Enter GST Number";
-            //   }
-            //   if (value.isNotEmpty) {
-            //     if (!RegExp(
-            //             r"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$")
-            //         .hasMatch(value)) {
-            //       return "Invalid GST Number";
-            //     }
-            //     return null;
-            //   }
-            //   return null;
-            // },
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return "Enter GST Number";
+              }
+              if (value.isNotEmpty) {
+                if (!RegExp(
+                        r"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$")
+                    .hasMatch(value)) {
+                  return "Invalid GST Number";
+                }
+                return null;
+              }
+              return null;
+            },
           ),
           FormInput(
             controller: businessLicenseController,
             label: "Business License Number",
             textInputType: TextInputType.text,
-            // validator: (value) {
-            //   if (value == null || value.trim().isEmpty) {
-            //     return "Enter Business License Number";
-            //   }
-            //   if (value.isNotEmpty) {
-            //     if (!RegExp(r"^[a-zA-Z0-9]{5,15}$").hasMatch(value)) {
-            //       return "Invalid Business License Number";
-            //     }
-            //     return null;
-            //   }
-            //   return null;
-            // },
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return "Enter Business License Number";
+              }
+              if (value.isNotEmpty) {
+                if (!RegExp(r"^[a-zA-Z0-9]{5,15}$").hasMatch(value)) {
+                  return "Invalid Business License Number";
+                }
+                return null;
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 10),
         ],
@@ -977,6 +1130,15 @@ class _ShopState extends State<RegisterShop>
   //         ],
   //       ));
   // }
+  pickImages() async {
+    final imgs = await multipleimagePickerHelper();
+
+    if (imgs != null && imgs.isNotEmpty) {
+      setState(() {
+        shopimages.addAll(imgs);
+      });
+    }
+  }
 
   Widget thirdStep() {
     return Form(
@@ -1095,6 +1257,32 @@ class _ShopState extends State<RegisterShop>
         ));
   }
 
+  Widget _buildAddImageButton() {
+    return InkWell(
+      onTap: pickImages,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(
+              Icons.add_a_photo,
+              color: Colors.black,
+              size: 48,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Add Shop Images (${shopimages!.length}/3)',
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void _handleImageChange(List<String> updatedImages) {
     setState(() {
       shopimages = updatedImages;
@@ -1104,68 +1292,35 @@ class _ShopState extends State<RegisterShop>
   void _handleonImageSelected(List<XFile> updatedImages) {
     setState(() {
       base64shopimages = updatedImages;
+      int nextAvailableIndex = 0;
+      while (existingImage.containsKey(nextAvailableIndex.toString())) {
+        nextAvailableIndex++;
+      }
+
+      for (int i = 0; i < updatedImages.length; i++) {
+        final file = updatedImages[i];
+        existingImage[nextAvailableIndex.toString()] = file.path;
+        nextAvailableIndex++;
+      }
+
+      print("Updated Existing Map: $existingImage");
     });
   }
 
-  Widget _previousNavigationButton(VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        width: 80,
-        height: 60,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.white,
-          border: Border.all(
-            color: AppTheme.primaryColor,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.primaryColor.withOpacity(0.3),
-              spreadRadius: 1,
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: const Center(
-            child:
-                Icon(Icons.arrow_back_rounded, color: Colors.black, size: 30)),
-      ),
-    );
-  }
+  void _removedAtIndex(int index) {
+    setState(() {
+      existingImage.remove(index.toString());
 
-  Widget _nextNavigationButton(String text, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        width: 250,
-        height: 60,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: AppTheme.primaryColor,
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.primaryColor.withOpacity(0.3),
-              spreadRadius: 1,
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            text,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ),
-      ),
-    );
+      if (shopimages != null && index < shopimages!.length) {
+        shopimages!.removeAt(index);
+      }
+
+      if (base64shopimages != null && index < base64shopimages!.length) {
+        base64shopimages!.removeAt(index);
+      }
+
+      print("Image removed at $index. New map: $existingImage");
+    });
   }
 
   String _getBusinessHoursSummary() {
@@ -1229,7 +1384,6 @@ class _ShopState extends State<RegisterShop>
 enum ImageType {
   gstCertificateImage,
   registrationCertificate,
-  shopLogo,
   shopLocation,
   businessLicense,
   taxCertificate,

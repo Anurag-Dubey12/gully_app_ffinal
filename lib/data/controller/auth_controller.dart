@@ -7,7 +7,6 @@ import 'package:gully_app/config/preferences.dart';
 import 'package:gully_app/data/model/user_model.dart';
 import 'package:gully_app/ui/screens/create_profile_screen.dart';
 import 'package:gully_app/ui/screens/signup_screen.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 

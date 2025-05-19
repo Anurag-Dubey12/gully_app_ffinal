@@ -25,9 +25,10 @@ Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
           ? null
           : PromotionalBanner.fromJson(
               json['bannerId'] as Map<String, dynamic>),
-      sponsor: json['sponsorPackageId'] == null
+      package: json['PackageId'] == null
           ? null
-          : Package.fromJson(json['sponsorPackageId'] as Map<String, dynamic>),
+          : Package.fromJson(json['PackageId'] as Map<String, dynamic>),
+      shop: json['shopId'] as String?,
       locationAddress: json['locationAddress'] as String?,
     );
 
@@ -46,6 +47,7 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
       'createdAt': instance.createdAt,
       'ordertype': instance.orderType,
       'bannerId': instance.banner?.toJson(),
-      'sponsorPackageId': instance.sponsor?.toJson(),
+      'shopId': instance.shop,
+      'PackageId': instance.package?.toJson(),
       'locationAddress': instance.locationAddress,
     };

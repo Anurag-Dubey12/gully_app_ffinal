@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
@@ -739,6 +740,23 @@ class TournamentController extends GetxController
           status: status,
           tournamentId: tournamentId);
       return response.data!['order']['id'];
+    } catch (e) {
+      errorSnackBar(e.toString());
+      rethrow;
+    }
+  }
+
+  Future<bool> createShopOrder(Map<String,dynamic>order) async {
+    try {
+      final response = await tournamentApi.createShopOrder(order);
+      if (response.status == false) {
+        errorSnackBar("Something went wrong");
+        if (kDebugMode) {
+          print("Failed to create Order:${response.message}");
+        }
+        return false;
+      }
+      return true;
     } catch (e) {
       errorSnackBar(e.toString());
       rethrow;

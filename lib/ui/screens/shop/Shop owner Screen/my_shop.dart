@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:gully_app/ui/screens/shop/User%20Screen/register_shop.dart';
+import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../data/controller/shop_controller.dart';
@@ -54,6 +56,7 @@ class MyShop extends GetView<ShopController> {
                 AppBar(
                   backgroundColor: Colors.transparent,
                   elevation: 0,
+                  leading: const BackButton(color: Colors.white),
                   title: Text(
                     "My Shops",
                     style: Get.textTheme.headlineMedium?.copyWith(
@@ -62,11 +65,36 @@ class MyShop extends GetView<ShopController> {
                       fontSize: 24,
                     ),
                   ),
-                  leading: const BackButton(
-                    color: Colors.white,
-                  ),
+                  actions: controller.myShops.isNotEmpty
+                      ? [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            child: ElevatedButton.icon(
+                              onPressed: () {
+                                Get.to(
+                                  () => const RegisterShop(),
+                                  transition: Transition.fadeIn,
+                                  duration: const Duration(milliseconds: 500),
+                                );
+                              },
+                              icon: const Icon(Icons.add_business, size: 18),
+                              label: const Text("Register Shop"),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                foregroundColor: AppTheme.primaryColor,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 8),
+                                textStyle: const TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w600),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          )
+                        ]
+                      : null,
                 ),
-                // Inside Column:
                 Expanded(
                   child: FutureBuilder<List<ShopModel>>(
                     future: controller.getMyShop(),
@@ -79,19 +107,62 @@ class MyShop extends GetView<ShopController> {
                           child: Text("Failed to Retrieve Shop"),
                         );
                       }
-                      return ListView.builder(
-                        itemCount: controller.myShops.length,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: Get.width * 0.02,
-                          vertical: Get.height * 0.02,
-                        ),
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 16.0),
-                            child: ShopCard(shop: snapshot.data![index]),
-                          );
-                        },
-                      );
+                      if (snapshot.data!.isEmpty) {
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 24),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Icon(
+                                  Icons.store_mall_directory_outlined,
+                                  size: 64,
+                                  color: Colors.grey,
+                                ),
+                                const SizedBox(height: 20),
+                                const Text(
+                                  "No Shops Found",
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                const Text(
+                                  "You haven't registered any shops yet. Get started by creating your first shop.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black54,
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                PrimaryButton(
+                                    title: "Register My Shop",
+                                    onTap: () => Get.to(
+                                        () => const RegisterShop(),
+                                        transition: Transition.fadeIn,
+                                        duration:
+                                            const Duration(milliseconds: 500)))
+                              ],
+                            ),
+                          ),
+                        );
+                      }
+
+                      return Obx(() => ListView.builder(
+                            itemCount: controller.myShops.length,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: Get.width * 0.02,
+                              vertical: Get.height * 0.02,
+                            ),
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 16.0),
+                                child: ShopCard(shop: snapshot.data![index]),
+                              );
+                            },
+                          ));
                     },
                   ),
                 ),
@@ -173,9 +244,9 @@ class _ShopCardState extends State<ShopCard>
 
     return GestureDetector(
       onTap: () {
+        shopController.shop.value = shop;
         Get.to(
-            () => ShopDashboard(
-                  shop: shop,
+            () => const ShopDashboard(
                   isAdmin: true,
                 ),
             transition: Transition.fadeIn,

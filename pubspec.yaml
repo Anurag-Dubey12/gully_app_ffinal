@@ -51,6 +51,7 @@ dependencies:
   package_info_plus: ^6.0.0
   app_links: ^4.0.1
   connectivity_widget: ^3.0.0
+  fl_chart: any
 #  connectivity_widget: ^2.0.0
   photo_view: ^0.14.0
   smooth_page_indicator: any

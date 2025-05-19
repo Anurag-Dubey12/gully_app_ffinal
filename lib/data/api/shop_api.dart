@@ -20,6 +20,18 @@ class ShopApi {
     return ApiResponse.fromJson(response.body);
   }
 
+  Future<ApiResponse> editShop(Map<String, dynamic> shop) async {
+    final response = await repo.post("/shop/editShop", shop);
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
   Future<ApiResponse> getMyShops() async {
     final response = await repo.get("/shop/getMyShop");
     // final prettyJson =
@@ -91,6 +103,55 @@ class ShopApi {
 
   Future<ApiResponse> addShopProduct(Map<String, dynamic> product) async {
     final response = await repo.post("/shop/addProduct", product);
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> editProduct(Map<String, dynamic> product) async {
+    final response = await repo.post("/shop/editProduct", product);
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getProduct(String productId) async {
+    final response =
+        await repo.post("/shop/getProduct", {"productId": productId});
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getFilterProduct(Map<String, dynamic> filteritem) async {
+    final response = await repo.post("/shop/getFilterProduct", filteritem);
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getShop(String shopId) async {
+    final response = await repo.post("/shop/getShop", {"shopId": shopId});
     if (response.statusCode! >= 500) {
       errorSnackBar(generateErrorMessage(response.body));
       throw Exception('Server Error');
@@ -206,6 +267,91 @@ class ShopApi {
       "page": page,
       "limit": limit,
     });
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getShopAnalytics(String shopId) async {
+    final response = await repo.get("/shop/getShopAnalytics/$shopId");
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getProductViewAnalytics(
+    String shopId,
+    String timeRange,
+  ) async {
+    final response =
+        await repo.get("/shop/getProductViewAnalytics/$shopId/$timeRange");
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getVisitorAnalytics(
+    String shopId,
+    String timeRange,
+  ) async {
+    final response =
+        await repo.get("/shop/getVisitorAnalytics/$shopId/$timeRange");
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> getDailyVisitors(
+    String shopId,
+    String days,
+  ) async {
+    final response = await repo.get("/shop/getDailyVisitors/$shopId/$days");
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> recordProductView(String productId, String shopId) async {
+    final response = await repo.post(
+        "/shop/recordProductView/", {"productId": productId, "shopId": shopId});
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> recordShopVisit(String shopId) async {
+    final response =
+        await repo.post("/shop/getDailyVisitors/", {"shopId": shopId});
     if (response.statusCode! >= 500) {
       errorSnackBar(generateErrorMessage(response.body));
       throw Exception('Server Error');

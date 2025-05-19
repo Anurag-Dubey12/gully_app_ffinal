@@ -445,6 +445,18 @@ class TournamentApi {
     return ApiResponse.fromJson(response.body);
   }
 
+  Future<ApiResponse> createShopOrder(Map<String,dynamic> order) async {
+    final response = await repo.post('/payment/createShopOrder', order);
+    if (response.statusCode! >= 500) {
+      errorSnackBar('Server Error');
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(response.body['message']);
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
   Future<ApiResponse> getCoupons() async {
     final response = await repo.get('/payment/getCoupon');
     if (response.statusCode! >= 500) {

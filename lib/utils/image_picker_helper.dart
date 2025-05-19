@@ -10,7 +10,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mime/mime.dart';
 
 import 'MultiImageViewerWidget.dart';
-import 'app_logger.dart';
 
 Future<XFile?> imagePickerHelper() async {
   final ImagePicker picker = ImagePicker();

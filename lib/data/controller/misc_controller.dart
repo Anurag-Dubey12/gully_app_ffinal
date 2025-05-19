@@ -176,9 +176,11 @@ class MiscController extends GetxController with StateMixin {
     }
   }
 
+  RxInt packageLimit = 0.obs;
   Future<Package> getPackagebyId(String packageId) async {
     try {
       var response = await repo.getPackagebyId(packageId);
+      packageLimit.value = response.data!['MaxEditAllowed'];
       return Package.fromJson(response.data!);
       // return packages.value = (response.data!['packages'] as List<dynamic>?)
       //     ?.map((e) => Package.fromJson(e as Map<String, dynamic>))

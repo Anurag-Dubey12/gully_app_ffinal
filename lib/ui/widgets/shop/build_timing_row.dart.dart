@@ -78,11 +78,21 @@ String? getExpirationTag(ShopModel shop) {
 
   if (packageEndDate == null) return null;
 
-  final daysDifference = packageEndDate.difference(now).inDays;
-  if (daysDifference >= 0 && daysDifference <= 6) {
+  final duration = packageEndDate.difference(now);
+  final daysDifference = duration.inDays;
+  final hoursDifference = duration.inHours;
+
+  if (duration.isNegative) {
+    final expiredDays = -duration.inDays;
+    return "Expired $expiredDays day${expiredDays == 1 ? '' : 's'} ago";
+  } else if (daysDifference == 0) {
+    if (hoursDifference > 0) {
+      return "Expires in $hoursDifference hour${hoursDifference == 1 ? '' : 's'}";
+    } else {
+      return "Expires soon";
+    }
+  } else if (daysDifference <= 6) {
     return "Expires in $daysDifference day${daysDifference == 1 ? '' : 's'}";
-  } else if (daysDifference < 0) {
-    return "Expired ${-daysDifference} day${-daysDifference == 1 ? '' : 's'} ago";
   }
 
   return null;

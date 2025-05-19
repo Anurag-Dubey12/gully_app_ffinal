@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter_media_downloader/flutter_media_downloader.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
+import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/ui/screens/txn_history_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:intl/intl.dart';
 
 import '../../data/model/txn_model.dart';
-import '../../utils/app_logger.dart';
 import '../../utils/utils.dart';
 
 class TxnDetailsView extends StatefulWidget {
@@ -24,6 +23,14 @@ class TxnDetailsView extends StatefulWidget {
 
 class _TxnDetailsViewState extends State<TxnDetailsView> {
   // final _flutterMediaDownloaderPlugin = MediaDownload();
+  final shopController = Get.find<ShopController>();
+  @override
+  void initState() {
+    super.initState();
+    if (widget.transaction.shop != null) {
+      shopController.getShop(widget.transaction.shop ?? '');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +43,9 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
         title: Text(
             widget.transactiontype == 'banner'
                 ? 'Banner Transaction Details'
-                : 'Sponsor Transaction Details',
+                : widget.transactiontype == 'Shop'
+                    ? 'Shop Transaction Details'
+                    : 'Sponsor Transaction Details',
             style: const TextStyle(color: Colors.white, fontSize: 20)),
         centerTitle: true,
         backgroundColor: AppTheme.primaryColor,
@@ -63,19 +72,15 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
               child: Wrap(
                 runSpacing: 10,
                 children: [
-                  // Center(
-                  //   child: ElevatedButton(
-
-                  //       child: const Text('Media Download')),
-                  // ),
-
                   Center(
                     child: Text(
                         widget.transaction.orderType == 'banner'
                             ? widget.transaction.banner?.bannerTitle ??
                                 'Promotional Banner'
-                            : widget.transaction.sponsor?.name ??
-                                'Tournament Sponsor',
+                            : widget.transactiontype == 'Shop'
+                                ? shopController.shop.value!.shopName
+                                : widget.transaction.package?.name ??
+                                    'Tournament Sponsor',
                         style: Get.textTheme.bodyMedium?.copyWith(
                             color: Colors.black,
                             fontWeight: FontWeight.w600,
@@ -99,13 +104,13 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                                 fit: BoxFit.cover);
                           },
                         ),
-                        TransactionDetails('Banner Title',
+                        transactionDetails('Banner Title',
                             widget.transaction.banner!.bannerTitle),
-                        TransactionDetails(
+                        transactionDetails(
                             'Banner Start Date',
                             DateFormat("dd-MMM-yyyy")
                                 .format(widget.transaction.banner!.startDate)),
-                        TransactionDetails(
+                        transactionDetails(
                             'Banner End Date',
                             DateFormat("dd-MMM-yyyy")
                                 .format(widget.transaction.banner!.endDate)),
@@ -142,16 +147,38 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
                   if (widget.transactiontype == 'Sponsor')
                     Column(
                       children: [
-                        TransactionDetails(
-                            'Package Name', widget.transaction.sponsor!.name),
-                        TransactionDetails('Package Media Limit',
-                            "${widget.transaction.sponsor!.maxMedia}"),
-                        TransactionDetails('Package Video Limit',
-                            "${widget.transaction.sponsor!.maxVideos}"),
-                        TransactionDetails('Package Fees',
-                            "${widget.transaction.sponsor!.price}"),
+                        transactionDetails(
+                            'Package Name', widget.transaction.package!.name),
+                        transactionDetails('Package Media Limit',
+                            "${widget.transaction.package!.maxMedia}"),
+                        transactionDetails('Package Video Limit',
+                            "${widget.transaction.package!.maxVideos}"),
+                        transactionDetails('Package Fees',
+                            "${widget.transaction.package!.price}"),
                       ],
                     ),
+                  if (widget.transactiontype == 'Shop')
+                    Obx(() {
+                      final shop = shopController.shop.value;
+                      if (shop == null) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          shopDetailsItem('Shop Name', shop.shopName),
+                          shopDetailsItem('Shop Address', shop.shopAddress),
+                          shopDetailsItem('Shop Contact', shop.shopContact),
+                          shopDetailsItem('Shop Email', shop.shopEmail),
+                          shopDetailsItem('Owner Name', shop.ownerName),
+                          if (shop.package != null) ...[
+                            shopDetailsItem('Package Name', shop.package!.name),
+                            shopDetailsItem(
+                                'Media Limit', '${shop.package!.maxMedia}'),
+                          ],
+                        ],
+                      );
+                    }),
                   // if (widget.transaction.invoiceUrl != null)
                   //   Row(
                   //     mainAxisAlignment: MainAxisAlignment.center,
@@ -455,7 +482,7 @@ class _TxnDetailsViewState extends State<TxnDetailsView> {
   }
 }
 
-Widget TransactionDetails(String title, String? value) {
+Widget transactionDetails(String title, String? value) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),
     child: Row(
@@ -477,6 +504,30 @@ Widget TransactionDetails(String title, String? value) {
             fontWeight: FontWeight.w400,
           ),
         ),
+      ],
+    ),
+  );
+}
+
+Widget shopDetailsItem(String title, String value) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12.0),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+            flex: 2,
+            child: Text(
+              title,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            )),
+        const SizedBox(width: 8),
+        Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              style: const TextStyle(color: Colors.black87),
+            )),
       ],
     ),
   );

@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -7,8 +6,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/data/api/shop_api.dart';
 import 'package:gully_app/data/model/product_model.dart';
 import 'package:gully_app/data/model/shop_model.dart';
+import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/shop_analytics_screen.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
+import 'package:intl/intl.dart';
 
 class ProductData {
   final String category;
@@ -54,7 +55,33 @@ class ShopController extends GetxController with StateMixin {
     return true;
   }
 
+  Rx<ShopModel?> shop = Rx<ShopModel?>(null);
+
+// MARK: EditShop
+  Future<bool> editShop(Map<String, dynamic> shopData) async {
+    try {
+      final response = await shopApi.editShop(shopData);
+
+      if (response.status == false) {
+        errorSnackBar(response.message ?? "Something went wrong.");
+        return false;
+      }
+      final shopJson = response.data!['shop'];
+      if (shopJson == null) {
+        errorSnackBar("Invalid response format: 'shop' data missing.");
+        return false;
+      }
+      shop.value = ShopModel.fromJson(shopJson);
+      return true;
+    } catch (e) {
+      if (kDebugMode) print("Edit Shop Error: $e");
+      errorSnackBar("Failed to update shop. Please try again.");
+      return false;
+    }
+  }
+
   RxList<ShopModel> myShops = <ShopModel>[].obs;
+
   // MARK: GetMyShop
   Future<List<ShopModel>> getMyShop() async {
     final response = await shopApi.getMyShops();
@@ -157,6 +184,82 @@ class ShopController extends GetxController with StateMixin {
     return true;
   }
 
+  Rx<ProductModel?> shopProduct = Rx<ProductModel?>(null);
+
+  // MARK: EditShopProduct
+  Future<bool> editProduct(Map<String, dynamic> product) async {
+    try {
+      final response = await shopApi.editProduct(product);
+      if (response.status == false) {
+        errorSnackBar(response.message ?? "Something went wrong.");
+        return false;
+      }
+      final productJson = response.data!['product'];
+      if (productJson == null) {
+        errorSnackBar("Invalid response format: 'shop' data missing.");
+        return false;
+      }
+      shopProduct.value = ProductModel.fromJson(productJson);
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+      return false;
+    }
+  }
+
+  // MARK: GetProduct
+  Future<bool> getProduct(String product) async {
+    try {
+      final response = await shopApi.getProduct(product);
+      if (response.status == false) {
+        errorSnackBar(response.message ?? "Something went wrong.");
+        return false;
+      }
+      final productJson = response.data!['product'];
+      if (productJson == null) {
+        errorSnackBar("Invalid response format: 'shop' data missing.");
+        return false;
+      }
+      final updatedproduct = ProductModel.fromJson(productJson);
+      shopProduct.value = updatedproduct;
+      if (kDebugMode) {
+        print(updatedproduct.productsPrice);
+      }
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+      return false;
+    }
+  }
+
+  // MARK: GetShop
+  Future<bool> getShop(String shopId) async {
+    try {
+      final response = await shopApi.getShop(shopId);
+      if (response.status == false) {
+        errorSnackBar(response.message ?? "Something went wrong.");
+        return false;
+      }
+      final shopJson = response.data!['shop'];
+      if (shopJson == null) {
+        errorSnackBar("Invalid response format: 'shop' data missing.");
+        return false;
+      }
+      final shopData = ShopModel.fromJson(shopJson);
+      shop.value = shopData;
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e.toString());
+      }
+      return false;
+    }
+  }
+
   RxList<ProductModel> product = <ProductModel>[].obs;
   RxList<ProductData> products = <ProductData>[].obs;
   RxList<String> productsCategory = <String>[].obs;
@@ -164,6 +267,7 @@ class ShopController extends GetxController with StateMixin {
   RxList<String> productsBrand = <String>[].obs;
   RxInt totalImagesAdded = 0.obs;
   RxInt totalPackagelimit = 0.obs;
+
   // MARK: getShopProducts
   Future<List<ProductData>> getShopProducts(String shopId, int page) async {
     final response = await shopApi.getShopProduct(shopId, page);
@@ -196,39 +300,40 @@ class ShopController extends GetxController with StateMixin {
     return parsedProducts;
   }
 
-// Future<List<ProductModel>> getShopProductPaginated({
-//   required String shopId,
-//   int page = 1,
-//   int limit = 10,
-// }) async {
-//   final response = await shopApi.getShopProduct(shopId, page, limit);
+  RxList<ProductData> filterproducts = <ProductData>[].obs;
+  // MARK: GetFilterProduct
+  Future<List<ProductData>> getFilterProduct(
+      Map<String, dynamic> filterItem) async {
+    final response = await shopApi.getFilterProduct(filterItem);
+    if (response.status == false) {
+      errorSnackBar(response.message!);
+      return [];
+    }
 
-//   if (response.status == false) {
-//     errorSnackBar(response.message ?? "Failed to load products");
-//     return [];
-//   }
+    final Map<String, dynamic> categorizedProducts =
+        response.data!['filterProducts'];
+    final List<ProductData> parsedProducts = [];
+    int imageCount = 0;
+    categorizedProducts.forEach((categoryName, productList) {
+      final List<ProductModel> productsInCategory =
+          (productList as List<dynamic>)
+              .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
+              .toList();
 
-//   final data = response.data!;
-//   final shopproducts = (data['products'] as List<dynamic>)
-//       .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
-//       .toList();
+      for (final product in productsInCategory) {
+        imageCount += product.productsImage?.length ?? 0;
+      }
 
-//   int imageCount = 0;
-//   for (final image in shopproducts) {
-//     imageCount += image.productsImage?.length ?? 0;
-//   }
+      parsedProducts.add(ProductData(
+        category: categoryName,
+        product: productsInCategory,
+      ));
+    });
 
-//   totalImagesAdded.value += imageCount;
-
-//   // Set categories (only once on first page)
-//   if (page == 1) {
-//     productsCategory.value = List<String>.from(data['categories'] ?? []);
-//     productssubCategory.value = List<String>.from(data['subCategories'] ?? []);
-//     productsBrand.value = List<String>.from(data['brands'] ?? []);
-//   }
-
-//   return shopproducts;
-// }
+    totalImagesAdded.value = imageCount;
+    filterproducts.value = parsedProducts;
+    return parsedProducts;
+  }
 
   // MARK: setProductStatus
   Future<bool> setProductStatus(String productId, bool isActive) async {
@@ -245,7 +350,7 @@ class ShopController extends GetxController with StateMixin {
   }
 
   // MARK: updateSubscriptionStatus
-  Future<ShopModel> updateSubscriptionStatus(
+  Future<bool> updateSubscriptionStatus(
       Map<String, dynamic> shopsubscription) async {
     final response = await shopApi.updateSubscriptionStatus(shopsubscription);
     if (response.status == false) {
@@ -253,7 +358,7 @@ class ShopController extends GetxController with StateMixin {
         print("Failed to update shop subscription ");
       }
     }
-    return ShopModel.fromJson(response.data!);
+    return true;
   }
 
   // MARK: Add Addtional Package
@@ -370,50 +475,204 @@ class ShopController extends GetxController with StateMixin {
     return similarshopproduct.value = shopproducts;
   }
 
-  final RxList<ProductModel> similarProducts = <ProductModel>[].obs;
-  final RxBool isLoadingMore = false.obs;
-  int currentPage = 1;
-  bool hasMore = true;
+  // ***********************    Shop Analytics Section      ****************************
 
-  // Future<void> fetchSimilarProducts({
-  //   required String productId,
-  //   bool isInitialLoad = false,
-  //   int limit = 20,
-  // }) async {
-  //   if (isLoadingMore.value || !hasMore) return;
+  final isLoading = true.obs;
+  final selectedPeriod = 'Last 7 Days'.obs;
+  final availablePeriods =
+      ['Last 7 Days', 'Last 15 Days', 'Last 30 Days', 'All Time'].obs;
 
-  //   isLoadingMore.value = true;
-  //   final response = await shopApi.getSimilarProduct(
-  //     productId: productId,
-  //     latitude: coordinates.value.latitude,
-  //     longitude: coordinates.value.longitude,
-  //     page: currentPage,
-  //     limit: limit,
-  //   );
+  // Analytics data
+  final mostViewedProducts = <ProductAnalytics>[].obs;
+  final productViewsOverTime = <DateTime, int>{}.obs;
+  final shopVisits = <DateTime, int>{}.obs;
+  final totalProductViews = 0.obs;
+  final totalShopVisits = 0.obs;
+  final totalProducts = 0.obs;
+  final activeProducts = 0.obs;
+  final uniqueVisitors = 0.obs;
+  final categoryDistribution = <Map<String, dynamic>>[].obs;
 
-  //   if (response.status == false) {
-  //     errorSnackBar(response.message!);
-  //     isLoadingMore.value = false;
-  //     return;
+  // Chart data
+  final productViewsChartData = <FlSpot>[].obs;
+  final shopVisitsChartData = <FlSpot>[].obs;
+
+  // Date labels for charts
+  final dateLabels = <String>[].obs;
+
+  void changePeriod(String period) async {
+    selectedPeriod.value = period;
+    await loadAnalyticsData(shop.value!.id);
+  }
+
+  String getTimeRangeParam() {
+    switch (selectedPeriod.value) {
+      case 'Last 7 Days':
+        return '7days';
+      case 'Last 15 Days':
+        return '15days';
+      case 'Last 30 Days':
+        return '30days';
+      case 'All Time':
+        return 'all';
+      default:
+        return '7days';
+    }
+  }
+
+  // Future<void> initShopAnalytics(String shopId) async {
+  //   isLoading.value = true;
+  //   try {
+  //     await loadAnalyticsData(shopId: shopId);
+  //   } catch (e) {
+  //     print('Error initializing shop analytics: $e');
+  //   } finally {
+  //     isLoading.value = false;
   //   }
-
-  //   final List<ProductModel> newProducts =
-  //       (response.data!['similarProduct'] as List)
-  //           .map((e) => ProductModel.fromJson(e))
-  //           .toList();
-
-  //   if (isInitialLoad) {
-  //     similarProducts.assignAll(newProducts);
-  //   } else {
-  //     similarProducts.addAll(newProducts);
-  //   }
-  //   print(similarProducts);
-  //   if (newProducts.length < limit) {
-  //     hasMore = false;
-  //   } else {
-  //     currentPage++;
-  //   }
-
-  //   isLoadingMore.value = false;
   // }
+
+  Future<void> loadAnalyticsData(String shopId) async {
+    if (shopId.isEmpty) {
+      return;
+    }
+    isLoading.value = true;
+    try {
+      await Future.wait([
+        getShopOverview(shopId),
+        getProductViewData(shopId),
+        getVisitorData(shopId)
+      ]);
+      processChartData();
+    } catch (e) {
+      print('Error loading analytics data: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> getShopOverview(String shopId) async {
+    try {
+      final response = await shopApi.getShopAnalytics(shopId);
+      final data = response.data;
+      print('Called these');
+      totalProductViews.value = data!['totalProductViews'] ?? 0;
+      totalShopVisits.value = data['totalShopVisits'] ?? 0;
+      totalProducts.value = data['totalProducts'] ?? 0;
+      activeProducts.value = data['activeProducts'] ?? 0;
+      mostViewedProducts.clear();
+      if (data['topProducts'] != null) {
+        final List topProducts = data['topProducts'];
+        for (var product in topProducts) {
+          if (product['product'] != null) {
+            mostViewedProducts.add(ProductAnalytics(
+              product: ProductModel.fromJson(product['product']),
+              viewCount: product['viewCount'] ?? 0,
+            ));
+          }
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting shop overview: $e');
+      }
+    }
+  }
+
+  Future<void> getProductViewData(String shopId) async {
+    try {
+      final response =
+          await shopApi.getProductViewAnalytics(shopId, getTimeRangeParam());
+      final data = response.data;
+      productViewsOverTime.clear();
+
+      if (data!['dailyViewTrend'] != null) {
+        final List trend = data['dailyViewTrend'];
+        for (var point in trend) {
+          final date = DateTime.parse(point['date']);
+          final count = point['count'] ?? 0;
+          productViewsOverTime[date] = count;
+        }
+      }
+      categoryDistribution.clear();
+      if (data['categoryDistribution'] != null) {
+        final List categories = data['categoryDistribution'];
+        for (var category in categories) {
+          categoryDistribution.add({
+            'category': category['category'] ?? 'Unknown',
+            'viewCount': category['viewCount'] ?? 0,
+          });
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting product view data: $e');
+      }
+    }
+  }
+
+  Future<void> getVisitorData(String shopId) async {
+    try {
+      final response =
+          await shopApi.getVisitorAnalytics(shopId, getTimeRangeParam());
+      final data = response.data;
+      uniqueVisitors.value = data!['uniqueVisitors'] ?? 0;
+
+      shopVisits.clear();
+      if (data['dailyVisitorTrend'] != null) {
+        final List trend = data['dailyVisitorTrend'];
+        for (var point in trend) {
+          final date = DateTime.parse(point['date']);
+          final count = point['count'] ?? 0;
+          shopVisits[date] = count;
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error getting visitor data: $e');
+      }
+    }
+  }
+
+  void processChartData() {
+    productViewsChartData.clear();
+    dateLabels.clear();
+
+    final sortedDates = productViewsOverTime.keys.toList()
+      ..sort((a, b) => a.compareTo(b));
+
+    for (int i = 0; i < sortedDates.length; i++) {
+      final date = sortedDates[i];
+      final count = productViewsOverTime[date] ?? 0;
+      productViewsChartData.add(FlSpot(i.toDouble(), count.toDouble()));
+      dateLabels.add(DateFormat('MM/dd').format(date));
+    }
+    shopVisitsChartData.clear();
+
+    final sortedVisitDates = shopVisits.keys.toList()
+      ..sort((a, b) => a.compareTo(b));
+
+    for (int i = 0; i < sortedVisitDates.length; i++) {
+      final date = sortedVisitDates[i];
+      final count = shopVisits[date] ?? 0;
+      shopVisitsChartData.add(FlSpot(i.toDouble(), count.toDouble()));
+    }
+  }
+
+  String getCurrentShopId() {
+    return '';
+  }
+
+  Future<void> recordProductView(String productId, String shopId) async {
+    try {
+      await shopApi.recordProductView(productId, shopId);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error recording product view: $e');
+      }
+    }
+  }
+
+  List<String> getDateLabels() {
+    return dateLabels;
+  }
 }

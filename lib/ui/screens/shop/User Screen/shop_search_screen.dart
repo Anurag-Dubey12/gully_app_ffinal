@@ -75,10 +75,13 @@ class _ShopSearchScreenState extends State<ShopSearchScreen> {
     final imageUrl = shop.shopImage.isNotEmpty ? shop.shopImage.first : null;
 
     return GestureDetector(
-      onTap: () => Get.to(() => ShopDashboard(
-            shop: shop,
-            isAdmin: false,
-          )),
+      onTap: () {
+        final shopController = Get.find<ShopController>();
+        shopController.shop.value = shop;
+        Get.to(() => const ShopDashboard(
+              isAdmin: false,
+            ));
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         decoration: BoxDecoration(
@@ -116,10 +119,13 @@ class _ShopSearchScreenState extends State<ShopSearchScreen> {
             : null;
 
     return GestureDetector(
-      onTap: () => Get.to(() => ProductDetailScreen(
-            product: product,
-            isadmin: false,
-          )),
+      onTap: () {
+        final controller = Get.find<ShopController>();
+        controller.shopProduct.value = product;
+        Get.to(() => ProductDetailScreen(
+              isadmin: false,
+            ));
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
         decoration: BoxDecoration(

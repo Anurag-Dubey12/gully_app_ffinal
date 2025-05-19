@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/scoreboard_controller.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import '../../data/controller/misc_controller.dart';
 import '../widgets/scorecard/batting_card.dart';
 import '../widgets/scorecard/bowling_card.dart';

@@ -448,18 +448,18 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
                   const EdgeInsets.symmetric(horizontal: 5.0, vertical: 3.0),
               width: Get.width,
               child: currentStep == 0
-                  ? _nextNavigationButton('Next', _nextPage)
+                  ? nextNavigationButton('Next', _nextPage)
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         if (currentStep > 0)
-                          _previousNavigationButton(_previousPage)
+                          previousNavigationButton(_previousPage)
                         else
                           const SizedBox(width: 80),
                         if (currentStep < _formKeys.length - 1)
-                          _nextNavigationButton('Next', _nextPage)
+                          nextNavigationButton('Next', _nextPage)
                         else if (currentStep == _formKeys.length - 1)
-                          _nextNavigationButton('Submit', _submitForm)
+                          nextNavigationButton('Submit', _submitForm)
                         else
                           const SizedBox(width: 80),
                       ],
@@ -1202,64 +1202,5 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
     );
   }
 
-  Widget _previousNavigationButton(VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        width: 80,
-        height: 60,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: Colors.white,
-          border: Border.all(
-            color: AppTheme.primaryColor,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.primaryColor.withOpacity(0.3),
-              spreadRadius: 1,
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: const Center(
-            child:
-                Icon(Icons.arrow_back_rounded, color: Colors.black, size: 30)),
-      ),
-    );
-  }
 
-  Widget _nextNavigationButton(String text, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        width: 250,
-        height: 60,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: AppTheme.primaryColor,
-          boxShadow: [
-            BoxShadow(
-              color: AppTheme.primaryColor.withOpacity(0.3),
-              spreadRadius: 1,
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Center(
-          child: Text(
-            text,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.5,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 }

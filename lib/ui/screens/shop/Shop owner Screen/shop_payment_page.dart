@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/config/app_constants.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
+import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/data/model/package_model.dart';
 import 'package:gully_app/data/model/shop_model.dart';
 import 'package:gully_app/ui/screens/home_screen.dart';
@@ -38,6 +39,7 @@ class ShopPaymentPageState extends State<ShopPaymentPage> {
   double discount = 0;
   String startDate = '';
   String enddate = '';
+  final ordercontroller = Get.find<TournamentController>();
   @override
   void initState() {
     super.initState();
@@ -80,28 +82,61 @@ class ShopPaymentPageState extends State<ShopPaymentPage> {
           calculatePackageEndDate(widget.selectedpackage.duration ?? ''),
     };
     if (widget.isAdditional) {
-      bool isOK = await controller.addAddtionalPackage(subscriptiondata);
-      if (isOK) {
-        successSnackBar(
-          AppConstants.additionalPackagePaymentSuccess,
-          title: "Payment Successful",
-        ).then(
-          (value) => Get.offAll(() => const HomeScreen(),
-              predicate: (route) => route.name == '/HomeScreen'),
-        );
-        // successSnackBar("The Subscription added successfully");
+      bool orderCreated =
+          await controller.addAddtionalPackage(subscriptiondata);
+      if (orderCreated) {
+        Map<String, dynamic> order = {
+          'amountWithoutCoupon': widget.selectedpackage.price.toDouble(),
+          'PackageId': widget.selectedpackage.id,
+          'amount': widget.selectedpackage.price.toDouble(),
+          'coupon': couponCode,
+          'status': "Successful",
+          'shopId': widget.shop.id
+        };
+        bool orderCreated = await ordercontroller.createShopOrder(order);
+        if (orderCreated) {
+          successSnackBar(
+            AppConstants.additionalPackagePaymentSuccess,
+            title: "Payment Successful",
+          ).then(
+            (value) => Get.offAll(() => const HomeScreen(),
+                predicate: (route) => route.name == '/HomeScreen'),
+          );
+        } else {
+          errorSnackBar("Something Went Wrong");
+        }
       }
     } else {
       final shopData =
           await controller.updateSubscriptionStatus(subscriptiondata);
       if (shopData != null) {
-        successSnackBar(
-          AppConstants.shopPaymentSuccessful,
-          title: "Payment Successful",
-        ).then(
-          (value) => Get.offAll(() => const HomeScreen(),
-              predicate: (route) => route.name == '/HomeScreen'),
-        );
+        Map<String, dynamic> order = {
+          'amountWithoutCoupon': widget.selectedpackage.price.toDouble(),
+          'PackageId': widget.selectedpackage.id,
+          'amount': widget.selectedpackage.price.toDouble(),
+          'coupon': couponCode,
+          'status': "Successful",
+          'shopId': widget.shop.id
+        };
+        bool orderCreated = await ordercontroller.createShopOrder(order);
+        if (orderCreated) {
+          successSnackBar(
+            AppConstants.shopPaymentSuccessful,
+            title: "Payment Successful",
+          ).then(
+            (value) => Get.offAll(() => const HomeScreen(),
+                predicate: (route) => route.name == '/HomeScreen'),
+          );
+        } else {
+          errorSnackBar("Something Went Wrong");
+        }
+        // successSnackBar(
+        //   AppConstants.shopPaymentSuccessful,
+        //   title: "Payment Successful",
+        // ).then(
+        //   (value) => Get.offAll(() => const HomeScreen(),
+        //       predicate: (route) => route.name == '/HomeScreen'),
+        // );
         // successSnackBar("The Subscription added successfully");
       }
     }
@@ -110,6 +145,29 @@ class ShopPaymentPageState extends State<ShopPaymentPage> {
 
   _handlePaymentError(PaymentFailureResponse response) async {
     logger.f('Payment Error ${response.message.toString()}');
+    errorSnackBar('Your transaction has failed. Please try again!',
+        title: "Payment Failed!");
+    Map<String, dynamic> order = {
+      'amountWithoutCoupon': widget.selectedpackage.price.toDouble(),
+      'PackageId': widget.selectedpackage.id,
+      'amount': widget.selectedpackage.price.toDouble(),
+      'coupon': couponCode,
+      'status': "Failed",
+      'shopId': widget.shop.id
+    };
+
+    bool orderCreated = await ordercontroller.createShopOrder(order);
+    if (orderCreated) {
+      successSnackBar(
+        AppConstants.shopPaymentSuccessful,
+        title: "Payment Successful",
+      ).then(
+        (value) => Get.offAll(() => const HomeScreen(),
+            predicate: (route) => route.name == '/HomeScreen'),
+      );
+    } else {
+      errorSnackBar("Failed to ");
+    }
   }
 
   _handleExternalWallet(ExternalWalletResponse response) {

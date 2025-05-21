@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/model/business_hours_model.dart';
 import 'package:gully_app/data/model/shop_model.dart';
-import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/my_shop_dashboard.dart';
+import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/shop_dashboard.dart';
 import 'package:gully_app/ui/screens/shop/User%20Screen/shop_search_screen.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';

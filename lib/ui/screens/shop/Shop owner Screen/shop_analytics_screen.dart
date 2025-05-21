@@ -44,6 +44,22 @@ class ShopAnalyticsScreenState extends State<ShopAnalyticsScreen> {
           leading: const BackButton(
             color: Colors.white,
           ),
+          actions: [
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.filter_alt, color: Colors.white),
+              onSelected: (value) {
+                controller.changePeriod(value);
+              },
+              itemBuilder: (BuildContext context) {
+                return controller.availablePeriods.map((String period) {
+                  return PopupMenuItem<String>(
+                    value: period,
+                    child: Text(period),
+                  );
+                }).toList();
+              },
+            ),
+          ],
         ),
         body: Obx(() {
           if (controller.isLoading.value) {
@@ -57,12 +73,6 @@ class ShopAnalyticsScreenState extends State<ShopAnalyticsScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // PeriodSelector(
-                  //   periods: controller.availablePeriods,
-                  //   selectedPeriod: controller.selectedPeriod.value,
-                  //   onPeriodChanged: controller.changePeriod,
-                  // ),
-                  const SizedBox(height: 24),
                   const Text(
                     'Overview',
                     style: TextStyle(
@@ -110,22 +120,12 @@ class ShopAnalyticsScreenState extends State<ShopAnalyticsScreen> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Product Views Trend',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      PeriodSelector(
-                        periods: controller.availablePeriods,
-                        selectedPeriod: controller.selectedPeriod.value,
-                        onPeriodChanged: controller.changePeriod,
-                      ),
-                    ],
+                  const Text(
+                    'Product Views Trend',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Container(
@@ -147,22 +147,12 @@ class ShopAnalyticsScreenState extends State<ShopAnalyticsScreen> {
                         : const Center(child: Text('No data available')),
                   ),
                   const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        'Shop Visits',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      PeriodSelector(
-                        periods: controller.availablePeriods,
-                        selectedPeriod: controller.selectedPeriod.value,
-                        onPeriodChanged: controller.changePeriod,
-                      ),
-                    ],
+                  const Text(
+                    'Shop Visits',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Container(
@@ -183,65 +173,77 @@ class ShopAnalyticsScreenState extends State<ShopAnalyticsScreen> {
                         ? BarChart(_buildShopVisitsChart())
                         : const Center(child: Text('No data available')),
                   ),
-                  const SizedBox(height: 24),
-                  const Text(
-                    'Top Products',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  ListView.separated(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: controller.mostViewedProducts.length > 5
-                        ? 5
-                        : controller.mostViewedProducts.length,
-                    separatorBuilder: (context, index) => const Divider(),
-                    itemBuilder: (context, index) {
-                      final viewproduct = controller.mostViewedProducts[index];
-                      return ListTile(
-                          leading: Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              image: viewproduct
-                                      .product.productsImage!.isNotEmpty
-                                  ? DecorationImage(
-                                      image: NetworkImage(toImageUrl(viewproduct
-                                          .product.productsImage!.first)),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : null,
-                              color: Colors.grey[200],
-                            ),
-                            child: viewproduct.product.productsImage!.isEmpty
-                                ? Center(
-                                    child: Text(
-                                      '#${index + 1}',
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 16,
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Top Products',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      if (controller.mostViewedProducts.length > 5)
+                        GestureDetector(
+                          onTap: () {
+                            Get.bottomSheet(
+                              Container(
+                                height: Get.height * 0.8,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10)),
+                                padding: const EdgeInsets.all(10.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          'More Products',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.close),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Expanded(
+                                      child: ProductListView(
+                                        products: controller.mostViewedProducts,
+                                        isScroll: true,
                                       ),
                                     ),
-                                  )
-                                : null,
+                                  ],
+                                ),
+                              ),
+                              isScrollControlled: true,
+                            );
+                          },
+                          child: const Text(
+                            'View More',
+                            style: TextStyle(
+                              fontSize: 14,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
-                          title: Text(
-                            viewproduct.product.productName,
-                            style: const TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                          subtitle: Text('${viewproduct.viewCount} views'),
-                          trailing: const Icon(Icons.chevron_right),
-                          onTap: () {
-                            final controller = Get.find<ShopController>();
-                            controller.shopProduct.value = viewproduct.product;
-                            Get.to(
-                                () => const ProductDetailScreen(isadmin: true));
-                          });
-                    },
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  ProductListView(
+                    products: controller.mostViewedProducts.length > 5
+                        ? controller.mostViewedProducts.sublist(0, 5)
+                        : controller.mostViewedProducts,
                   ),
                   if (controller.categoryDistribution.isNotEmpty) ...[
                     const SizedBox(height: 24),
@@ -529,6 +531,67 @@ class ShopAnalyticsScreenState extends State<ShopAnalyticsScreen> {
           ],
         );
       }),
+    );
+  }
+}
+
+class ProductListView extends StatelessWidget {
+  final List<ProductAnalytics> products;
+  final bool isScroll;
+  const ProductListView(
+      {super.key, required this.products, this.isScroll = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: isScroll
+          ? const AlwaysScrollableScrollPhysics()
+          : const NeverScrollableScrollPhysics(),
+      itemCount: products.length,
+      separatorBuilder: (context, index) => const Divider(),
+      itemBuilder: (context, index) {
+        final viewproduct = products[index];
+        return ListTile(
+          leading: Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              image: viewproduct.product.productsImage!.isNotEmpty
+                  ? DecorationImage(
+                      image: NetworkImage(
+                          toImageUrl(viewproduct.product.productsImage!.first)),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+              color: Colors.grey[200],
+            ),
+            child: viewproduct.product.productsImage!.isEmpty
+                ? Center(
+                    child: Text(
+                      '#${index + 1}',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  )
+                : null,
+          ),
+          title: Text(
+            viewproduct.product.productName,
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
+          subtitle: Text('${viewproduct.viewCount} views'),
+          trailing: const Icon(Icons.chevron_right),
+          onTap: () {
+            final controller = Get.find<ShopController>();
+            controller.shopProduct.value = viewproduct.product;
+            Get.to(() => const ProductDetailScreen(isadmin: true));
+          },
+        );
+      },
     );
   }
 }

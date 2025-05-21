@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/model/shop_model.dart';
 import 'package:gully_app/data/model/product_model.dart';
-import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/my_shop_dashboard.dart';
+import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/shop_dashboard.dart';
 import 'package:gully_app/ui/screens/shop/User%20Screen/nearby_shop_screen.dart';
 import 'package:gully_app/ui/screens/shop/User%20Screen/product_detail_screen.dart';
 import 'package:gully_app/ui/screens/shop/User%20Screen/search_full_result.dart';

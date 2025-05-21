@@ -51,7 +51,8 @@ class ShopController extends GetxController with StateMixin {
       errorSnackBar(response.message!);
       return false;
     }
-    change(GetStatus.success(ShopModel.fromJson(response.data!)));
+
+    // change(GetStatus.success(ShopModel.fromJson(response.data!)));
     return true;
   }
 
@@ -475,6 +476,14 @@ class ShopController extends GetxController with StateMixin {
     return similarshopproduct.value = shopproducts;
   }
 
+  void resetData() {
+    selectedcategory.clear();
+    selectedbrands.clear();
+    selectedsubcategory.clear();
+    subcategories.clear();
+    appliedFilter.value = 0;
+  }
+
   // ***********************    Shop Analytics Section      ****************************
 
   final isLoading = true.obs;
@@ -484,8 +493,10 @@ class ShopController extends GetxController with StateMixin {
 
   // Analytics data
   final mostViewedProducts = <ProductAnalytics>[].obs;
+  final mostViewedProductsList = <ProductAnalytics>[].obs;
   final productViewsOverTime = <DateTime, int>{}.obs;
   final shopVisits = <DateTime, int>{}.obs;
+  final appliedFilter = 0.obs;
   final totalProductViews = 0.obs;
   final totalShopVisits = 0.obs;
   final totalProducts = 0.obs;
@@ -554,7 +565,6 @@ class ShopController extends GetxController with StateMixin {
     try {
       final response = await shopApi.getShopAnalytics(shopId);
       final data = response.data;
-      print('Called these');
       totalProductViews.value = data!['totalProductViews'] ?? 0;
       totalShopVisits.value = data['totalShopVisits'] ?? 0;
       totalProducts.value = data['totalProducts'] ?? 0;
@@ -565,6 +575,10 @@ class ShopController extends GetxController with StateMixin {
         for (var product in topProducts) {
           if (product['product'] != null) {
             mostViewedProducts.add(ProductAnalytics(
+              product: ProductModel.fromJson(product['product']),
+              viewCount: product['viewCount'] ?? 0,
+            ));
+            mostViewedProductsList.add(ProductAnalytics(
               product: ProductModel.fromJson(product['product']),
               viewCount: product['viewCount'] ?? 0,
             ));

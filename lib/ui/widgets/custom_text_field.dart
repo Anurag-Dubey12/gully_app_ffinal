@@ -53,6 +53,7 @@ class CustomTextField extends StatelessWidget {
       style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
       maxLines: minLines,
       maxLength: maxLen,
+  
       minLines: maxLines,
       // smartDashesType: SmartDashe
       // sType.enabled,

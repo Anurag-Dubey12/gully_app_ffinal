@@ -12,6 +12,7 @@ import 'package:gully_app/ui/screens/shop/User%20Screen/register_shop.dart';
 import 'package:gully_app/ui/screens/shop/User%20Screen/shop_packages.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
+import 'package:gully_app/ui/widgets/home_screen/top_header.dart';
 import 'package:gully_app/ui/widgets/shop/actionButton.dart';
 import 'package:gully_app/ui/widgets/shop/build_info_card.dart';
 import 'package:gully_app/ui/widgets/shop/build_timing_row.dart.dart';
@@ -37,7 +38,6 @@ class _DashboardState extends State<ShopDashboard> {
   bool _showAllTimings = false;
   bool isMore = false;
   List<String> categories = [];
-  late Future<List<ProductData>> _shopProductsFuture;
   final ScrollController scrollController = ScrollController();
   int _page = 1;
   bool _isLoadingMore = false;
@@ -82,6 +82,7 @@ class _DashboardState extends State<ShopDashboard> {
     shop = controller.shop.value;
     if (shop != null) fetchShopProducts(shop);
     // shop = controller.shop.value;
+
     scrollController.addListener(() {
       if (scrollController.position.pixels >=
               scrollController.position.maxScrollExtent - 10 &&
@@ -116,7 +117,6 @@ class _DashboardState extends State<ShopDashboard> {
   Future<void> fetchFilteredProducts(Map<String, dynamic> filterData) async {
     setState(() {
       _isLoadingMore = true;
-      // Reset filtered products when applying a new filter
       filteredProducts.clear();
     });
 
@@ -139,7 +139,16 @@ class _DashboardState extends State<ShopDashboard> {
     setState(() {
       isFilterApplied = false;
       filteredProducts.clear();
+      controller.appliedFilter.value = 0;
+      controller.resetData();
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.appliedFilter.value = 0;
+    controller.resetData();
   }
 
   @override
@@ -175,7 +184,7 @@ class _DashboardState extends State<ShopDashboard> {
                             if (tag != null && tag.startsWith("Expired")) {
                               Get.to(() => ShopPackages(
                                     shop: shop,
-                                    isAdditional: true,
+                                    isAdditional: false,
                                   ));
                             }
                           },
@@ -228,6 +237,9 @@ class _DashboardState extends State<ShopDashboard> {
                               ),
                           transition: Transition.fadeIn,
                           duration: const Duration(milliseconds: 300));
+                      // Get.to(() => GoogleMapSearchPlacesApi(),
+                      //     transition: Transition.fadeIn,
+                      //     duration: const Duration(milliseconds: 300));
                       break;
                   }
                 },
@@ -637,48 +649,15 @@ class _DashboardState extends State<ShopDashboard> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              isFilterApplied
-                                  ? "Filtered Products"
-                                  : "Shop Products",
-                              style: const TextStyle(
+                            const Text(
+                              "Shop Products",
+                              style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Row(
                               children: [
-                                // Show clear filter button when filter is applied
-                                if (isFilterApplied)
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    child: GestureDetector(
-                                      onTap: clearFilters,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10, vertical: 5),
-                                        decoration: BoxDecoration(
-                                          color: Colors.red.shade50,
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                          border: Border.all(
-                                              color: Colors.red.shade200),
-                                        ),
-                                        child: const Row(
-                                          children: [
-                                            Icon(Icons.clear,
-                                                size: 18, color: Colors.red),
-                                            SizedBox(width: 6),
-                                            Text("Clear Filter",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.red)),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-
                                 Padding(
                                   padding: const EdgeInsets.only(right: 10),
                                   child: GestureDetector(
@@ -689,53 +668,127 @@ class _DashboardState extends State<ShopDashboard> {
                                           duration: const Duration(
                                               milliseconds: 500));
                                       if (res != null && res is Map) {
-                                        Map<String, dynamic> filterData = {
-                                          "productCategory": res['category'],
-                                          "productSubCategory":
-                                              res['subcategory'],
-                                          "productBrand": res['brand'],
-                                          "shopId": controller.shop.value!.id,
-                                          "page": 1
-                                        };
-                                        await fetchFilteredProducts(filterData);
+                                        bool isFilterEmpty = (res['category'] ==
+                                                    null ||
+                                                res['category'].isEmpty) &&
+                                            (res['subcategory'] == null ||
+                                                res['subcategory'].isEmpty) &&
+                                            (res['brand'] == null ||
+                                                res['brand'].isEmpty);
+
+                                        if (isFilterEmpty) {
+                                          clearFilters();
+                                        } else {
+                                          Map<String, dynamic> filterData = {
+                                            "productCategory": res['category'],
+                                            "productSubCategory":
+                                                res['subcategory'],
+                                            "productBrand": res['brand'],
+                                            "shopId": controller.shop.value!.id,
+                                            "page": 1
+                                          };
+
+                                          await fetchFilteredProducts(
+                                              filterData);
+                                          controller.appliedFilter.value =
+                                              getAppliedFilterSectionCount(res);
+                                        }
                                       }
                                     },
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 5),
-                                      decoration: BoxDecoration(
-                                        color: isFilterApplied
-                                            ? Colors.blue.shade100
-                                            : Colors.grey.shade100,
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                            color: isFilterApplied
-                                                ? Colors.blue.shade300
-                                                : Colors.grey.shade300),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.filter_list,
-                                              size: 18,
-                                              color: isFilterApplied
-                                                  ? Colors.blue
-                                                  : Colors.black87),
-                                          const SizedBox(width: 6),
-                                          Text(
-                                            isFilterApplied
-                                                ? "Filter Applied"
-                                                : "Filter",
-                                            style: TextStyle(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10, vertical: 5),
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey.shade100,
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                          border: Border.all(
+                                              color: Colors.grey.shade300),
+                                        ),
+                                        child: Stack(
+                                          children: [
+                                            const Row(
+                                              children: [
+                                                Icon(Icons.filter_list,
+                                                    size: 18,
+                                                    color: Colors.black87),
+                                                SizedBox(width: 6),
+                                                Text(
+                                                  "Filter",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.black87),
+                                                ),
+                                              ],
+                                            ),
+                                            if (controller.appliedFilter.value >
+                                                0)
+                                              Obx(
+                                                () => Positioned(
+                                                  left: 7,
+                                                  top: 1,
+                                                  child: Container(
+                                                    width: 10,
+                                                    height: 10,
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                      color: Colors.red,
+                                                      shape: BoxShape.circle,
+                                                    ),
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      "${controller.appliedFilter.value}",
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 8,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                          ],
+                                        )),
+                                  ),
+                                ),
+                                if (isFilterApplied)
+                                  Container(
+                                    constraints:
+                                        const BoxConstraints(minWidth: 80),
+                                    padding: const EdgeInsets.only(right: 5),
+                                    child: GestureDetector(
+                                      onTap: clearFilters,
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red.shade50,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: Colors.red.shade200),
+                                        ),
+                                        child: const Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            Icon(Icons.clear,
+                                                size: 16, color: Colors.red),
+                                            SizedBox(width: 4),
+                                            Text(
+                                              "Clear",
+                                              style: TextStyle(
+                                                fontSize: 12,
                                                 fontWeight: FontWeight.w500,
-                                                color: isFilterApplied
-                                                    ? Colors.blue
-                                                    : Colors.black87),
-                                          ),
-                                        ],
+                                                color: Colors.red,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
                               ],
                             ),
                           ],
@@ -777,7 +830,6 @@ class _DashboardState extends State<ShopDashboard> {
                           ),
                         ))
                       else
-                        // Display either filtered products or regular products
                         ...(isFilterApplied ? filteredProducts : products)
                             .map((productData) {
                           return Column(
@@ -785,7 +837,7 @@ class _DashboardState extends State<ShopDashboard> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 10, vertical: 10),
+                                    horizontal: 10, vertical: 4),
                                 child: Text(
                                   productData.category,
                                   style: const TextStyle(
@@ -957,70 +1009,182 @@ class _DashboardState extends State<ShopDashboard> {
             ),
             const SizedBox(height: 5),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.all(8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   const Text(
                     "Shop Products",
                     style: TextStyle(
-                      fontSize: 18,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () async {
-                      // await Get.bottomSheet(
-                      //     BottomSheet(
-                      //         backgroundColor: Colors.white,
-                      //         onClosing: () {},
-                      //         builder: (c) => FilterOptions()),
-                      //     isDismissible: true,
-                      //     isScrollControlled: true,
-                      //     enableDrag: false);
-                      final result = await Get.to(() => const FilterOptions(),
-                          transition: Transition.fadeIn,
-                          duration: const Duration(milliseconds: 500));
-                      if (result != null && result is Map) {}
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: Colors.grey.shade300),
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: GestureDetector(
+                          onTap: () async {
+                            final res = await Get.to(
+                                () => const FilterOptions(),
+                                transition: Transition.fadeIn,
+                                duration: const Duration(milliseconds: 500));
+                            if (res != null && res is Map) {
+                              bool isFilterEmpty = (res['category'] == null ||
+                                      res['category'].isEmpty) &&
+                                  (res['subcategory'] == null ||
+                                      res['subcategory'].isEmpty) &&
+                                  (res['brand'] == null ||
+                                      res['brand'].isEmpty);
+
+                              if (isFilterEmpty) {
+                                clearFilters();
+                              } else {
+                                Map<String, dynamic> filterData = {
+                                  "productCategory": res['category'],
+                                  "productSubCategory": res['subcategory'],
+                                  "productBrand": res['brand'],
+                                  "shopId": controller.shop.value!.id,
+                                  "page": 1
+                                };
+
+                                await fetchFilteredProducts(filterData);
+                                controller.appliedFilter.value =
+                                    getAppliedFilterSectionCount(res);
+                              }
+                            }
+                          },
+                          child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade100,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Colors.grey.shade300),
+                              ),
+                              child: Stack(
+                                children: [
+                                  const Row(
+                                    children: [
+                                      Icon(Icons.filter_list,
+                                          size: 18, color: Colors.black87),
+                                      SizedBox(width: 6),
+                                      Text(
+                                        "Filter",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black87),
+                                      ),
+                                    ],
+                                  ),
+                                  if (controller.appliedFilter.value > 0)
+                                    Obx(
+                                      () => Positioned(
+                                        left: 7,
+                                        top: 1,
+                                        child: Container(
+                                          width: 10,
+                                          height: 10,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.red,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            "${controller.appliedFilter.value}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 8,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              )),
+                        ),
                       ),
-                      child: const Row(
-                        children: [
-                          Icon(Icons.filter_list, size: 18),
-                          SizedBox(width: 6),
-                          Text("Filter",
-                              style: TextStyle(fontWeight: FontWeight.w500)),
-                        ],
-                      ),
-                    ),
-                  )
+                      if (isFilterApplied)
+                        Container(
+                          constraints: const BoxConstraints(minWidth: 80),
+                          padding: const EdgeInsets.only(right: 5),
+                          child: GestureDetector(
+                            onTap: clearFilters,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: Colors.red.shade50,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.red.shade200),
+                              ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.clear,
+                                      size: 16, color: Colors.red),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    "Clear",
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.red,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ],
               ),
             ),
             const SizedBox(height: 4),
-            if (products.isEmpty && _isLoadingMore)
+            if ((isFilterApplied ? filteredProducts : products).isEmpty &&
+                _isLoadingMore)
               const Center(child: CircularProgressIndicator())
-            else if (products.isEmpty)
-              const Center(
+            else if ((isFilterApplied ? filteredProducts : products).isEmpty)
+              Center(
                   child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text("No products available"),
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  children: [
+                    Icon(
+                      isFilterApplied
+                          ? Icons.filter_list_off
+                          : Icons.shopping_bag_outlined,
+                      size: 48,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      isFilterApplied
+                          ? "No products match your filter criteria"
+                          : "No products available",
+                      style: const TextStyle(fontSize: 16, color: Colors.grey),
+                    ),
+                    if (isFilterApplied)
+                      TextButton(
+                        onPressed: clearFilters,
+                        child: const Text("Clear Filter"),
+                      ),
+                  ],
+                ),
               ))
             else
-              ...products.map((productData) {
+              ...(isFilterApplied ? filteredProducts : products)
+                  .map((productData) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 10),
+                          horizontal: 10, vertical: 4),
                       child: Text(
                         productData.category,
                         style: const TextStyle(
@@ -1048,7 +1212,7 @@ class _DashboardState extends State<ShopDashboard> {
                   ],
                 );
               }),
-            if (_isLoadingMore)
+            if (_isLoadingMore && !isFilterApplied)
               const Center(
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 20),
@@ -1065,11 +1229,34 @@ class _DashboardState extends State<ShopDashboard> {
                     ],
                   ),
                 ),
-              ),
+              )
           ],
         ),
       );
     });
+  }
+
+  int getAppliedFilterSectionCount(Map res) {
+    int count = 0;
+
+    if (res['category'] != null &&
+        ((res['category'] is String && res['category'].toString().isNotEmpty) ||
+            (res['category'] is List && res['category'].isNotEmpty))) {
+      count++;
+    }
+    if (res['subcategory'] != null &&
+        ((res['subcategory'] is String &&
+                res['subcategory'].toString().isNotEmpty) ||
+            (res['subcategory'] is List && res['subcategory'].isNotEmpty))) {
+      count++;
+    }
+    if (res['brand'] != null &&
+        ((res['brand'] is String && res['brand'].toString().isNotEmpty) ||
+            (res['brand'] is List && res['brand'].isNotEmpty))) {
+      count++;
+    }
+
+    return count;
   }
 
   void _showShopDetailsSheet(ShopModel shop) {

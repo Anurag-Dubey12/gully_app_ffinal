@@ -13,14 +13,8 @@ class FilterOptions extends StatefulWidget {
 
 class _FilterOptionsState extends State<FilterOptions> {
   final controller = Get.find<ShopController>();
-
   final List<String> sectionHeaders = ["Category", "Sub Category", "Brand"];
   int selectedIndex = 0;
-  @override
-  void dispose() {
-    super.dispose();
-    resetData();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +83,7 @@ class _FilterOptionsState extends State<FilterOptions> {
                   flex: 3,
                   child: PrimaryButton(
                     color: Colors.black,
-                    onTap: resetData,
+                    onTap: controller.resetData,
                     title: "Reset",
                   ),
                 ),
@@ -107,13 +101,6 @@ class _FilterOptionsState extends State<FilterOptions> {
         ],
       ),
     );
-  }
-
-  void resetData() {
-    controller.selectedcategory.clear();
-    controller.selectedbrands.clear();
-    controller.selectedsubcategory.clear();
-    controller.subcategories.clear();
   }
 
   void getFilterData() {

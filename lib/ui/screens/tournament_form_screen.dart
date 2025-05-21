@@ -14,7 +14,6 @@ import 'package:gully_app/ui/widgets/create_tournament/form_input.dart';
 import 'package:gully_app/ui/widgets/create_tournament/top_card.dart';
 import 'package:gully_app/ui/widgets/custom_drop_down_field.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
-import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
@@ -194,24 +193,16 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
       return;
     }
     if (_formKeys[currentStep].currentState!.validate()) {
-      // _formKeys.forEach((key) => key.currentState!.save());
       try {
         final TournamentController tournamentController =
             Get.find<TournamentController>();
-        final AuthController authController = Get.find<AuthController>();
         final MiscController connectionController = Get.find<MiscController>();
-        // if (_key.currentState!.validate()) {
-        //   if (_image == null &&
-        //       widget.tournament?.coverPhoto == null) {
-        //     errorSnackBar(
-        //         'Please select a cover image');
-        //     return;
-        //   }
         if (isCoHost()) {
           errorSnackBar('Co-hosts are not allowed to edit tournament details');
           return;
         }
         // tournmanent name should not contain emojis or special characters except for alphabets and numbers
+
         setState(() {
           isLoading = true;
         });
@@ -549,7 +540,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
                         child: SingleChildScrollView(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 16),
-                            child: CurrentStepBuild(),
+                            child: currentStepBuild(),
                           ),
                         ),
                       ),
@@ -564,20 +555,20 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
     );
   }
 
-  Widget CurrentStepBuild() {
+  Widget currentStepBuild() {
     switch (currentStep) {
       case 0:
-        return FirstStep();
+        return firstStep();
       case 1:
-        return SecondStep();
+        return secondStep();
       case 2:
         return ThirdStep();
       default:
-        return FirstStep();
+        return firstStep();
     }
   }
 
-  Widget FirstStep() {
+  Widget firstStep() {
     return Form(
       key: _formKeys[0],
       child: Column(
@@ -729,7 +720,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
             onFromChanged: (e) {
               setState(() {
                 if (to != null && e.isAfter(to)) {
-                  errorSnackBar(AppConstants.tournamentStartDateShouldBeLessThanEndDate);
+                  errorSnackBar(
+                      AppConstants.tournamentStartDateShouldBeLessThanEndDate);
                   return;
                 }
                 from = e;
@@ -742,7 +734,8 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
                   return;
                 }
                 if (e.isBefore(from!)) {
-                  errorSnackBar(AppConstants.tournamentEndDateShouldBeGreaterThanStartDate);
+                  errorSnackBar(AppConstants
+                      .tournamentEndDateShouldBeGreaterThanStartDate);
                   return;
                 }
                 to = e;
@@ -830,7 +823,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
     );
   }
 
-  Widget SecondStep() {
+  Widget secondStep() {
     final AuthController authController = Get.find<AuthController>();
     return Form(
       key: _formKeys[1],
@@ -865,30 +858,22 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
             iswhite: false,
             filled: true,
             validator: (e) {
-              if (e!.isEmpty) {
-                return null;
-              }
-              if (e[0] == " ") {
-                return "First character should not be a space";
-              }
-              if (e.trim().isEmpty && _cohost1Phone.text.isNotEmpty) {
+              final name = e ?? '';
+              final phone = _cohost1Phone.text;
+
+              if (name.trim().isEmpty && phone.trim().isNotEmpty) {
                 return "Please enter co-host 1 name";
               }
-              if (_cohost1Phone.text.isEmpty && e.isNotEmpty) {
-                return AppConstants.pleaseEnterCohost1ContactNo;
+              if (name.startsWith(" ")) {
+                return "First character should not be a space";
               }
-              // first character should be a alphabet
-              if (e.isNotEmpty && !RegExp(r'^[a-zA-Z]+$').hasMatch(e[0])) {
+              if (name.isNotEmpty && !RegExp(r'^[a-zA-Z]').hasMatch(name)) {
                 return "First character should be an alphabet";
               }
-              if (!e.contains(RegExp(r'^[a-zA-Z0-9- ]*$'))) {
+              if (name.isNotEmpty &&
+                  !RegExp(r'^[a-zA-Z0-9\- ]+$').hasMatch(name)) {
                 return "Please enter valid name";
               }
-              // if (e.contains(RegExp(
-              //     r'[^\x00-\x7F\uD800-\uDBFF\uDC00-\uDFFF]+'))) {
-              //   return AppLocalizations.of(context)!
-              //       .rulesCannotContainEmojis;
-              // }
               return null;
             },
           ),
@@ -900,31 +885,20 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
             filled: true,
             maxLength: 10,
             validator: (e) {
-              if (e!.isEmpty) {
-                return null;
-              }
-              if (e.trim().isEmpty) {
-                return "First character should not be a space";
-              }
-              if ((_cohost1Name.text.isNotEmpty) && e.isEmpty) {
+              final phone = e ?? '';
+              final name = _cohost1Name.text;
+
+              if (name.trim().isNotEmpty && phone.trim().isEmpty) {
                 return AppConstants.pleaseEnterCohost1ContactNo;
               }
-
-              if ((_cohost1Name.text.isEmpty) && e.isNotEmpty) {
-                return "Please enter co-host 1 name";
+              if (phone.trim().isEmpty) {
+                return null;
               }
-
-              if (!RegExp(r'^\d+$').hasMatch(e)) {
-                return AppConstants.pleaseEnterValidCohost1ContactNo;
-              }
-              if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                return AppConstants.rulesCannotContainEmojis;
-              }
-              if (_cohost2Phone.text == e) {
-                return AppConstants.cohost1AndCohost2ContactNoCannotBeSame;
-              }
-              if (e.length != 10) {
+              if (!RegExp(r'^\d{10}$').hasMatch(phone)) {
                 return AppConstants.pleaseEnterValidContactNo;
+              }
+              if (_cohost2Phone.text == phone) {
+                return AppConstants.cohost1AndCohost2ContactNoCannotBeSame;
               }
               return null;
             },
@@ -936,22 +910,22 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
             iswhite: false,
             filled: true,
             validator: (e) {
-              if (e!.trim().isEmpty && _cohost2Phone.text.isNotEmpty) {
+              final name = e ?? '';
+              final phone = _cohost2Phone.text;
+
+              if (name.trim().isEmpty && phone.trim().isNotEmpty) {
                 return "Please enter co-host 2 name";
               }
-              if (_cohost2Phone.text.trim().isEmpty && e.isNotEmpty) {
-                return 'Please enter co-host 2 contact no';
+              if (name.startsWith(" ")) {
+                return "First character should not be a space";
               }
-              if (e.isNotEmpty && !RegExp(r'^[a-zA-Z]+$').hasMatch(e[0])) {
+              if (name.isNotEmpty && !RegExp(r'^[a-zA-Z]').hasMatch(name)) {
                 return "First character should be an alphabet";
               }
-              if (!e.contains(RegExp(r'^[a-zA-Z0-9- ]*$'))) {
+              if (name.isNotEmpty &&
+                  !RegExp(r'^[a-zA-Z0-9\- ]+$').hasMatch(name)) {
                 return "Please enter valid name";
               }
-              // if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-              //   return AppLocalizations.of(context)!
-              //       .rulesCannotContainEmojis;
-              // }
               return null;
             },
           ),
@@ -963,23 +937,20 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
             filled: true,
             maxLength: 10,
             validator: (e) {
-              if ((_cohost2Name.text.isNotEmpty) && e!.trim().isEmpty) {
-                return 'Please enter co-host 2 contact no';
+              final phone = e ?? '';
+              final name = _cohost2Name.text;
+
+              if (name.trim().isNotEmpty && phone.trim().isEmpty) {
+                return AppConstants.pleaseEnterCohost2ContactNo;
               }
-              if (e!.trim().isEmpty) {
-                return null;
+              if (phone.trim().isEmpty) {
+                return null; // allow empty if name is also empty
               }
-              if (!RegExp(r'^\d+$').hasMatch(e)) {
-                return 'Please enter co-host 2 contact no';
-              }
-              if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                return AppConstants.rulesCannotContainEmojis;
-              }
-              if (_cohost1Phone.text == e) {
-                return AppConstants.cohost1AndCohost2ContactNoCannotBeSame;
-              }
-              if (e.length != 10) {
+              if (!RegExp(r'^\d{10}$').hasMatch(phone)) {
                 return AppConstants.pleaseEnterValidContactNo;
+              }
+              if (_cohost1Phone.text == phone) {
+                return AppConstants.cohost1AndCohost2ContactNoCannotBeSame;
               }
               return null;
             },
@@ -1048,7 +1019,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
                       setState(() {
                         location = l;
                         //logger.d
-                            // "The selected Location is $l and address is:${_addressController.text}");
+                        // "The selected Location is $l and address is:${_addressController.text}");
                       });
                     }
                     FocusScope.of(context).unfocus();
@@ -1057,6 +1028,12 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
                       LatLng(location.latitude, location.longitude),
                 ),
               );
+            },
+            validator: (e) {
+              if (e!.trim().isEmpty) {
+                return "Please enter stadium address";
+              }
+              return null;
             },
           ),
           FormInput(
@@ -1201,6 +1178,4 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
       ),
     );
   }
-
-
 }

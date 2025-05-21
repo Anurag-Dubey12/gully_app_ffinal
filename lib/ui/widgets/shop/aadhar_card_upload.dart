@@ -9,8 +9,15 @@ import 'package:image_picker/image_picker.dart';
 
 class AadharCardUpload extends StatefulWidget {
   final Function(Map<String, String>) onSubmit;
+  final String? initialFrontImagePath;
+  final String? initialBackImagePath;
 
-  const AadharCardUpload({super.key, required this.onSubmit});
+  const AadharCardUpload({
+    super.key,
+    required this.onSubmit,
+    this.initialFrontImagePath,
+    this.initialBackImagePath,
+  });
 
   @override
   State<AadharCardUpload> createState() => _AadhaarBottomSheetState();
@@ -23,8 +30,14 @@ class _AadhaarBottomSheetState extends State<AadharCardUpload> {
   bool imageUploaded = false;
 
   @override
-  void dispose() {
-    super.dispose();
+  void initState() {
+    super.initState();
+    if (widget.initialFrontImagePath != null) {
+      frontImage = File(widget.initialFrontImagePath!);
+    }
+    if (widget.initialBackImagePath != null) {
+      backImage = File(widget.initialBackImagePath!);
+    }
   }
 
   Future<void> _showImageSourceDialog() async {
@@ -38,7 +51,7 @@ class _AadhaarBottomSheetState extends State<AadharCardUpload> {
             ListTile(
               title: const Text("Capture Image",
                   style: TextStyle(fontWeight: FontWeight.bold)),
-              leading: Icon(Icons.camera_alt, color: Colors.blue),
+              leading: const Icon(Icons.camera_alt, color: Colors.blue),
               onTap: () {
                 Navigator.pop(context);
                 _pickImage(ImageSource.camera);

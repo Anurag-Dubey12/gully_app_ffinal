@@ -9,6 +9,7 @@ import 'package:gully_app/ui/screens/my_teams.dart';
 import 'package:gully_app/ui/screens/opponent_tournament_list.dart';
 import 'package:gully_app/ui/screens/promote_banner_screen.dart';
 import 'package:gully_app/ui/screens/select_match_type_for_scoreboard.dart';
+import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/my_shop.dart';
 import 'package:gully_app/ui/screens/txn_history_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
@@ -248,11 +249,18 @@ class _PlayerProfileScreenState extends State<PlayerProfileScreen> {
                               },
                             ),
                             ProfileTileCard(
+                              text: 'View My Shop',
+                              onTap: () {
+                                Get.to(() => const MyShop());
+                              },
+                            ),
+                            ProfileTileCard(
                               text: 'Promote Your Banner',
                               onTap: () {
                                 Get.to(() => const PromoteBannerScreen());
                               },
                             ),
+
                             // ProfileTileCard(
                             //   text: 'View My Shop',
                             //   onTap: () {

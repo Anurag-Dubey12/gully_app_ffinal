@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -214,7 +215,9 @@ class _ShopState extends State<RegisterShop>
 
         String? frontImagebase64;
         String? backImagebase64;
-        if (frontImagePath != null && backImagePath != null) {
+        if (frontImagePath != null &&
+            backImagePath != null &&
+            widget.shop == null) {
           frontImagebase64 = await convertImageToBase64(frontImageXFile!);
           backImagebase64 = await convertImageToBase64(backImageXFile!);
         }
@@ -227,14 +230,14 @@ class _ShopState extends State<RegisterShop>
         });
 
         final Map<String, dynamic> shopData = {
-          if (widget.shop != null) "shopId": widget.shop!.id,
+          if (widget.shop != null) "shopId": widget.shop?.id,
           "shopImage": shopBase64Images,
           "shopName": shopNameController.text,
           "shopAddress": shopAddressController.text,
           "shopDescription": shopDescriptionController.text,
           "shopContact": shopPhoneController.text,
           "shopEmail": shopEmailController.text,
-          "shoplink": shopWebsiteController.text,
+          "shopLink": shopWebsiteController.text,
           if (widget.shop == null) "joinedAt": DateTime.now().toIso8601String(),
           // "gstNumber": gstNumberController.text,
           "selectLocation": shoplocationController.text,
@@ -260,6 +263,9 @@ class _ShopState extends State<RegisterShop>
               controller.getMyShop();
             }
           } else {
+            final prettyJson =
+                const JsonEncoder.withIndent('  ').convert(shopData);
+            debugPrint(prettyJson, wrapWidth: 10024);
             bool isOk = await controller.registerShop(shopData);
             if (isOk) {
               successSnackBar("Shop registration submitted successfully!");
@@ -602,6 +608,8 @@ class _ShopState extends State<RegisterShop>
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20),
                           child: AadharCardUpload(
+                            initialFrontImagePath: frontImagePath,
+                            initialBackImagePath: backImagePath,
                             onSubmit: (data) {
                               setState(() => _updateAadharImages(data));
                               Navigator.pop(context);
@@ -1045,37 +1053,37 @@ class _ShopState extends State<RegisterShop>
             controller: gstNumberController,
             label: "Shop GST Number",
             textInputType: TextInputType.text,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return "Enter GST Number";
-              }
-              if (value.isNotEmpty) {
-                if (!RegExp(
-                        r"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$")
-                    .hasMatch(value)) {
-                  return "Invalid GST Number";
-                }
-                return null;
-              }
-              return null;
-            },
+            // validator: (value) {
+            //   if (value == null || value.trim().isEmpty) {
+            //     return "Enter GST Number";
+            //   }
+            //   if (value.isNotEmpty) {
+            //     if (!RegExp(
+            //             r"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$")
+            //         .hasMatch(value)) {
+            //       return "Invalid GST Number";
+            //     }
+            //     return null;
+            //   }
+            //   return null;
+            // },
           ),
           FormInput(
             controller: businessLicenseController,
             label: "Business License Number",
             textInputType: TextInputType.text,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return "Enter Business License Number";
-              }
-              if (value.isNotEmpty) {
-                if (!RegExp(r"^[a-zA-Z0-9]{5,15}$").hasMatch(value)) {
-                  return "Invalid Business License Number";
-                }
-                return null;
-              }
-              return null;
-            },
+            // validator: (value) {
+            //   if (value == null || value.trim().isEmpty) {
+            //     return "Enter Business License Number";
+            //   }
+            //   if (value.isNotEmpty) {
+            //     if (!RegExp(r"^[a-zA-Z0-9]{5,15}$").hasMatch(value)) {
+            //       return "Invalid Business License Number";
+            //     }
+            //     return null;
+            //   }
+            //   return null;
+            // },
           ),
           const SizedBox(height: 10),
         ],
@@ -1134,8 +1142,22 @@ class _ShopState extends State<RegisterShop>
     final imgs = await multipleimagePickerHelper();
 
     if (imgs != null && imgs.isNotEmpty) {
+      final remainingSlots = 3 - shopimages.length;
+
+      if (remainingSlots <= 0) {
+        errorSnackBar("You can upload a maximum of 3 images.");
+        return;
+      }
+
+      final limitedImgs = imgs.take(remainingSlots).toList();
+
+      // if (imgs.length > remainingSlots) {
+      //   errorSnackBar(
+      //       "Only ${remainingSlots} more image(s) can be uploaded. Extra images were ignored.");
+      // }
+
       setState(() {
-        shopimages.addAll(imgs);
+        shopimages.addAll(limitedImgs);
       });
     }
   }
@@ -1244,6 +1266,9 @@ class _ShopState extends State<RegisterShop>
               textInputType: TextInputType.url,
               validator: (value) {
                 if (value != null && value.isNotEmpty) {
+                  if (kDebugMode) {
+                    print('');
+                  }
                   if (!RegExp(
                           r"^(http|https):\/\/[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,6}(:[0-9]{1,5})?(\/.*)?$")
                       .hasMatch(value)) {

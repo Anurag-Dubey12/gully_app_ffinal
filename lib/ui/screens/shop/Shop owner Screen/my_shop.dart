@@ -6,7 +6,7 @@ import 'package:gully_app/utils/utils.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../../../data/controller/shop_controller.dart';
 import '../../../../data/model/shop_model.dart';
-import 'my_shop_dashboard.dart';
+import 'shop_dashboard.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/arc_clipper.dart';
 

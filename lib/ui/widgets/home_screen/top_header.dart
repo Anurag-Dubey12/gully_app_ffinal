@@ -1,3 +1,5 @@
+
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +17,7 @@ import '../../../data/controller/tournament_controller.dart';
 import '../../screens/notification_screen.dart';
 import '../../screens/organizer_profile.dart';
 import '../../screens/player_profile_screen.dart';
+
 
 class TopHeader extends GetView<AuthController> {
   final Color? color;
@@ -193,3 +196,4 @@ class LocationBuilder extends GetView<AuthController> {
     );
   }
 }
+

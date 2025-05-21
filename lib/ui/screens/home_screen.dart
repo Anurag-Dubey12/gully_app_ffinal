@@ -276,6 +276,7 @@ class _HomePageState extends State<HomePage>
     );
     controller.getCategory();
     controller.getbrands();
+    controller.getMyShop();
   }
 
   @override

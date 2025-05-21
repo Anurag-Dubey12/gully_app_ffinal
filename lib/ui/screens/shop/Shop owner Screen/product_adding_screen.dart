@@ -598,8 +598,10 @@ class Product extends State<AddProduct> {
                                                         "Your image edit limit has been reached.");
                                                   }
                                                 } else {
-                                                  errorSnackBar(
-                                                      "No product found. Cannot remove image.");
+                                                  setState(() {
+                                                    productImage
+                                                        .removeAt(index);
+                                                  });
                                                 }
                                               },
                                               child: Container(

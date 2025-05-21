@@ -5,6 +5,7 @@ class AppConstants {
   static const String appName = 'Gully Cricket';
   static const baseUrl = kReleaseMode
       ? "http://3.7.92.159:3000/api"
+      // ? "http://192.168.29.9:3000/api" //Office
       // ? "http://192.168.185.11:3000/api"
       // : "http://192.168.0.105:3000/api";//personL
       : "http://192.168.29.9:3000/api"; //Office
@@ -88,6 +89,8 @@ class AppConstants {
   static const String cohost1Name = "Co-host 1 Name";
   static const String pleaseEnterCohost1ContactNo =
       "Please enter co-host 1 contact no";
+  static const String pleaseEnterCohost2ContactNo =
+      "Please enter co-host 2 contact no";
   static const String rulesCannotContainEmojis = "Rules cannot contain emojis";
   static const String cohost1ContactNo = "Co-host 1 Contact No";
   static const String pleaseEnterValidCohost1ContactNo =
@@ -225,7 +228,7 @@ class AppConstants {
   static const String bannerfeescancellation =
       "The Banner fee is non-refundable. In case of any issue, kindly contact Gully Support.";
   static const String shopfeescancellation =
-      "Please note that the fee to enable product listing is non-refundable. For support or further assistance, contact Gully Support.";
+      "Please note that the fee for enabling product listings is non-refundable. If you require any assistance, feel free to contact Gully Support.";
   //Shop Text
   static const String aadharBothSideImage =
       "Please upload both the front and back sides of your Aadhaar card for verification ";
@@ -245,7 +248,7 @@ class AppConstants {
 
   //Aadhar Card
   static const String aadharCardAdded =
-      "Aadhaar Card Added to Edit click on Image";
+      "Aadhaar Card Added to edit, click on image";
   static const String tapToEdit = "Tap to Add Aadhaar Images";
   static const String tapToView = "Tap to View your Aadhaar Images";
 

@@ -114,7 +114,7 @@ class AppDrawer extends GetView<AuthController> {
                           decoration: transBg(),
                           child: const Center(
                               child: Text(
-                            'What i am looking for',
+                            'What I am looking for',
                             style: TextStyle(color: Colors.white),
                           )),
                         ),
@@ -136,7 +136,7 @@ class AppDrawer extends GetView<AuthController> {
                           decoration: transBg(),
                           child: const Center(
                               child: Text(
-                                AppConstants.what_others_looking_for,
+                            AppConstants.what_others_looking_for,
                             style: TextStyle(color: Colors.white),
                           )),
                         ),

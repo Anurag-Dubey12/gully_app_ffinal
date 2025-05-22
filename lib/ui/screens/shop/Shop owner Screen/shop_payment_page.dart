@@ -158,15 +158,8 @@ class ShopPaymentPageState extends State<ShopPaymentPage> {
 
     bool orderCreated = await ordercontroller.createShopOrder(order);
     if (orderCreated) {
-      successSnackBar(
-        AppConstants.shopPaymentSuccessful,
-        title: "Payment Successful",
-      ).then(
-        (value) => Get.offAll(() => const HomeScreen(),
-            predicate: (route) => route.name == '/HomeScreen'),
-      );
-    } else {
-      errorSnackBar("Failed to ");
+      errorSnackBar('Your transaction has failed. Please try again!',
+          title: "Payment Failed!");
     }
   }
 

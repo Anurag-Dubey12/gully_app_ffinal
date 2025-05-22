@@ -18,6 +18,7 @@ class FormInput extends StatelessWidget {
   final bool isinfo;
   final String? infotext;
   final String? infotitle;
+  final FocusNode? focusNode;
 //ontap
   final Function()? onTap;
   final bool isUpperCase;
@@ -39,6 +40,7 @@ class FormInput extends StatelessWidget {
       this.iswhite = false,
       this.isinfo = false,
       this.isUpperCase = false,
+      this.focusNode,
       this.maxLength});
 
   @override
@@ -113,6 +115,7 @@ class FormInput extends StatelessWidget {
             controller: controller,
             textInputType: textInputType,
             isUpperCase: isUpperCase,
+            focusNode: focusNode,
           ),
         ],
       ),

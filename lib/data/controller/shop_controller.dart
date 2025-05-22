@@ -266,8 +266,6 @@ class ShopController extends GetxController with StateMixin {
   RxList<String> productsCategory = <String>[].obs;
   RxList<String> productssubCategory = <String>[].obs;
   RxList<String> productsBrand = <String>[].obs;
-  RxInt totalImagesAdded = 0.obs;
-  RxInt totalPackagelimit = 0.obs;
 
   // MARK: getShopProducts
   Future<List<ProductData>> getShopProducts(String shopId, int page) async {
@@ -295,10 +293,24 @@ class ShopController extends GetxController with StateMixin {
         product: productsInCategory,
       ));
     });
-
-    totalImagesAdded.value = imageCount;
+    if (page == 1) {
+      products.clear();
+    }
     products.value = parsedProducts;
     return parsedProducts;
+  }
+
+  RxInt totalImagesAdded = 0.obs;
+  RxInt totalPackagelimit = 0.obs;
+  // MARK: getShopImageCount
+  Future<int> getShopImageCount(String shopId) async {
+    final response = await shopApi.getShopImageCount(shopId);
+    if (response.status == false) {
+      errorSnackBar(response.message!);
+    }
+    totalImagesAdded.value = response.data!['totalImageCount'];
+    totalPackagelimit.value = response.data!['totalMediaLimit'];
+    return totalImagesAdded.value;
   }
 
   RxList<ProductData> filterproducts = <ProductData>[].obs;
@@ -314,24 +326,16 @@ class ShopController extends GetxController with StateMixin {
     final Map<String, dynamic> categorizedProducts =
         response.data!['filterProducts'];
     final List<ProductData> parsedProducts = [];
-    int imageCount = 0;
     categorizedProducts.forEach((categoryName, productList) {
       final List<ProductModel> productsInCategory =
           (productList as List<dynamic>)
               .map((e) => ProductModel.fromJson(e as Map<String, dynamic>))
               .toList();
-
-      for (final product in productsInCategory) {
-        imageCount += product.productsImage?.length ?? 0;
-      }
-
       parsedProducts.add(ProductData(
         category: categoryName,
         product: productsInCategory,
       ));
     });
-
-    totalImagesAdded.value = imageCount;
     filterproducts.value = parsedProducts;
     return parsedProducts;
   }

@@ -55,6 +55,22 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
   final TextEditingController _cohost2Name = TextEditingController();
   final TextEditingController _cohost2Phone = TextEditingController();
 
+  //Focus Node
+  final FocusNode _nameFocusNode = FocusNode();
+  final FocusNode _rulesFocusNode = FocusNode();
+  final FocusNode _prizesFocusNode = FocusNode();
+  final FocusNode _entryFeeFocusNode = FocusNode();
+  final FocusNode _ballChargesFocusNode = FocusNode();
+  final FocusNode _breakfastChargesFocusNode = FocusNode();
+  final FocusNode _teamLimitFocusNode = FocusNode();
+
+  final FocusNode _addressFocusNode = FocusNode();
+  final FocusNode _disclaimerFocusNode = FocusNode();
+  final FocusNode _cohost1NameFocusNode = FocusNode();
+  final FocusNode _cohost1PhoneFocusNode = FocusNode();
+  final FocusNode _cohost2NameFocusNode = FocusNode();
+  final FocusNode _cohost2PhoneFocusNode = FocusNode();
+
   bool isLoading = false;
   int currentStep = 0;
   final _formKeys = [
@@ -284,6 +300,43 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
         });
       }
     }
+  }
+
+  @override
+  void dispose() {
+    // Dispose each FocusNode
+    _nameFocusNode.dispose();
+    _rulesFocusNode.dispose();
+    _prizesFocusNode.dispose();
+    _entryFeeFocusNode.dispose();
+    _ballChargesFocusNode.dispose();
+    _breakfastChargesFocusNode.dispose();
+    _teamLimitFocusNode.dispose();
+
+    _addressFocusNode.dispose();
+    _disclaimerFocusNode.dispose();
+    _cohost1NameFocusNode.dispose();
+    _cohost1PhoneFocusNode.dispose();
+    _cohost2NameFocusNode.dispose();
+    _cohost2PhoneFocusNode.dispose();
+
+    // Dispose controllers as well
+    _nameController.dispose();
+    _rulesController.dispose();
+    _prizesController.dispose();
+    _entryFeeController.dispose();
+    _ballChargesController.dispose();
+    _breakfastChargesController.dispose();
+    _teamLimitController.dispose();
+
+    _addressController.dispose();
+    _disclaimerController.dispose();
+    _cohost1Name.dispose();
+    _cohost1Phone.dispose();
+    _cohost2Name.dispose();
+    _cohost2Phone.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -685,6 +738,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
             label: AppConstants.tournamentName,
             // readOnly: widget.tournament != null && isCoHost(),
             iswhite: false,
+            focusNode: _nameFocusNode,
             filled: true,
             validator: (p0) {
               if (p0!.isEmpty) {
@@ -722,9 +776,11 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
                 if (to != null && e.isAfter(to)) {
                   errorSnackBar(
                       AppConstants.tournamentStartDateShouldBeLessThanEndDate);
+
                   return;
                 }
                 from = e;
+                FocusManager.instance.primaryFocus?.unfocus();
               });
             },
             onToChanged: (e) {
@@ -739,6 +795,7 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
                   return;
                 }
                 to = e;
+                FocusManager.instance.primaryFocus?.unfocus();
               });
             },
             isAds: false,
@@ -751,6 +808,9 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
           DropDownWidget(
             title: AppConstants.selectTournamentCategory,
             onSelect: (e) {
+              Future.delayed(const Duration(milliseconds: 100), () {
+                FocusScope.of(context).unfocus();
+              });
               setState(() {
                 tournamentType = e;
               });
@@ -770,11 +830,12 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
           DropDownWidget(
             title: AppConstants.selectBallType,
             onSelect: (e) {
+              Future.delayed(const Duration(milliseconds: 100), () {
+                FocusScope.of(context).unfocus();
+              });
               setState(() {
                 ballType = e;
               });
-              // Get.back();
-              // Get.close();
             },
             selectedValue: ballType.toUpperCase(),
             items: const [
@@ -800,11 +861,12 @@ class _TournamentFormScreenState extends State<TournamentFormScreen>
                     DropDownWidget(
                       title: AppConstants.selectPitchType,
                       onSelect: (e) {
+                        Future.delayed(const Duration(milliseconds: 100), () {
+                          FocusScope.of(context).unfocus();
+                        });
                         setState(() {
                           pitchType = e;
                         });
-                        // Get.close();
-                        // Get.close();
                       },
                       selectedValue: pitchType.toUpperCase(),
                       items: const [

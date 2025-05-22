@@ -17,12 +17,20 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ProductDiscount? discount = product.productDiscount;
-    String percentageoff = '';
+    String percentageOff = '';
+    double? discountedPrice;
+
     if (discount != null) {
-      if (discount.discountType == 'percent') {
-        var calculatedoff =
-            (discount.discountPrice / product.productsPrice) * 100;
-        percentageoff = '${calculatedoff.toStringAsFixed(2)}% OFF';
+      if (discount.discountType == 'percent' ||
+          discount.discountType == 'fixed') {
+        discountedPrice = product.productsPrice - discount.discountPrice;
+
+        if (discountedPrice < 0) discountedPrice = 0;
+
+        final percentOff =
+            ((discount.discountPrice / product.productsPrice) * 100)
+                .clamp(0, 100);
+        percentageOff = '${percentOff.toStringAsFixed(0)}% OFF';
       }
     }
 
@@ -119,7 +127,7 @@ class ProductCard extends StatelessWidget {
                       ? Row(
                           children: [
                             Text(
-                              '₹${product.productDiscount?.discountPrice.toStringAsFixed(2)}',
+                              '₹${discountedPrice!.toStringAsFixed(2)}',
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w700,
@@ -137,7 +145,7 @@ class ProductCard extends StatelessWidget {
                             ),
                             const SizedBox(width: 6),
                             Text(
-                              percentageoff,
+                              percentageOff,
                               style: const TextStyle(
                                 color: Colors.yellow,
                                 fontSize: 11,

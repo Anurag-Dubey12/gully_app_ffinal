@@ -52,47 +52,51 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(const Duration(seconds: 2), () async {
       if (updateAvailable) {
         if (Platform.isIOS) {
-          Get.dialog(CupertinoAlertDialog(
-            title: const Text('Update Available'),
-            content: const Text('Please update the app to continue'),
-            actions: [
-              update.forceUpdate
-                  ? const SizedBox()
-                  : TextButton(
+          Get.dialog(
+              barrierDismissible: false,
+              CupertinoAlertDialog(
+                title: const Text('Update Available'),
+                content: const Text('Please update the app to continue'),
+                actions: [
+                  update.forceUpdate
+                      ? const SizedBox()
+                      : TextButton(
+                          onPressed: () {
+                            route();
+                            Get.back();
+                          },
+                          child: const Text('Later')),
+                  TextButton(
                       onPressed: () {
-                        route();
-                        Get.back();
+                        launchUrl(Uri.parse(
+                            'https://apps.apple.com/in/app/gully-app/id1581440134'));
                       },
-                      child: const Text('Later')),
-              TextButton(
-                  onPressed: () {
-                    launchUrl(Uri.parse(
-                        'https://apps.apple.com/in/app/gully-app/id1581440134'));
-                  },
-                  child: const Text('Update'))
-            ],
-          ));
+                      child: const Text('Update'))
+                ],
+              ));
         } else {
-          Get.dialog(AlertDialog(
-            title: const Text('Update Available'),
-            content: const Text('Please update the app to continue'),
-            actions: [
-              update.forceUpdate
-                  ? const SizedBox()
-                  : TextButton(
+          Get.dialog(
+              barrierDismissible: false,
+              AlertDialog.adaptive(
+                title: const Text('Update Available'),
+                content: const Text('Please update the app to continue'),
+                actions: [
+                  update.forceUpdate
+                      ? const SizedBox()
+                      : TextButton(
+                          onPressed: () {
+                            Get.back();
+                            route();
+                          },
+                          child: const Text('Later')),
+                  TextButton(
                       onPressed: () {
-                        Get.back();
-                        route();
+                        launchUrl(Uri.parse(
+                            'https://play.google.com/store/apps/details?id=com.nileegames.gullyteam'));
                       },
-                      child: const Text('Later')),
-              TextButton(
-                  onPressed: () {
-                    launchUrl(Uri.parse(
-                        'https://play.google.com/store/apps/details?id=com.nileegames.gullyteam'));
-                  },
-                  child: const Text('Update'))
-            ],
-          ));
+                      child: const Text('Update'))
+                ],
+              ));
         }
       } else {
         route();

@@ -11,12 +11,10 @@ import 'package:gully_app/data/model/business_hours_model.dart';
 import 'package:gully_app/ui/screens/select_location.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:gully_app/ui/widgets/shop/aadhar_card_upload.dart';
-import 'package:gully_app/ui/widgets/shop/shop_imagepicker.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
-import '../../../../data/controller/auth_controller.dart';
 import '../../../../data/model/shop_model.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/create_tournament/form_input.dart';
@@ -49,6 +47,23 @@ class _ShopState extends State<RegisterShop>
   final TextEditingController shopWebsiteController = TextEditingController();
   final TextEditingController shopDescriptionController =
       TextEditingController();
+
+  //Focus Node
+  final FocusNode ownerNameFocus = FocusNode();
+  final FocusNode ownerEmailFocus = FocusNode();
+  final FocusNode ownerPhoneFocus = FocusNode();
+  final FocusNode ownerAddressFocus = FocusNode();
+  final FocusNode ownerPanCardFocus = FocusNode();
+
+  final FocusNode shopNameFocus = FocusNode();
+  final FocusNode shopAddressFocus = FocusNode();
+  final FocusNode shopLocationFocus = FocusNode();
+  final FocusNode shopPhoneFocus = FocusNode();
+  final FocusNode shopEmailFocus = FocusNode();
+  final FocusNode gstNumberFocus = FocusNode();
+  final FocusNode businessLicenseFocus = FocusNode();
+  final FocusNode shopWebsiteFocus = FocusNode();
+  final FocusNode shopDescriptionFocus = FocusNode();
 
   XFile? _documentImage;
   bool tncAccepted = false;
@@ -366,6 +381,26 @@ class _ShopState extends State<RegisterShop>
   }
 
   @override
+  void dispose() {
+    ownerNameFocus.dispose();
+    ownerEmailFocus.dispose();
+    ownerPhoneFocus.dispose();
+    ownerAddressFocus.dispose();
+    ownerPanCardFocus.dispose();
+
+    shopNameFocus.dispose();
+    shopAddressFocus.dispose();
+    shopLocationFocus.dispose();
+    shopPhoneFocus.dispose();
+    shopEmailFocus.dispose();
+    gstNumberFocus.dispose();
+    businessLicenseFocus.dispose();
+    shopWebsiteFocus.dispose();
+    shopDescriptionFocus.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: const BoxDecoration(
@@ -516,6 +551,7 @@ class _ShopState extends State<RegisterShop>
           FormInput(
             controller: ownerNameController,
             label: AppConstants.ownerName,
+            focusNode: ownerNameFocus,
             enabled: true,
             textInputType: TextInputType.name,
             validator: (value) {
@@ -528,6 +564,7 @@ class _ShopState extends State<RegisterShop>
           FormInput(
             controller: ownerEmailController,
             enabled: true,
+            focusNode: ownerEmailFocus,
             label: AppConstants.owneremail,
             textInputType: TextInputType.emailAddress,
             validator: (value) {
@@ -537,6 +574,7 @@ class _ShopState extends State<RegisterShop>
           FormInput(
             controller: ownerPhoneController,
             enabled: true,
+            focusNode: ownerPhoneFocus,
             label: AppConstants.ownerPhone,
             textInputType: TextInputType.number,
             maxLength: 10,
@@ -568,6 +606,7 @@ class _ShopState extends State<RegisterShop>
           FormInput(
             controller: ownerAddressController,
             label: AppConstants.ownerAddress,
+            focusNode: ownerAddressFocus,
             textInputType: TextInputType.multiline,
             validator: (value) {
               if (value == null || value.isEmpty) {
@@ -599,6 +638,7 @@ class _ShopState extends State<RegisterShop>
             ),
             child: InkWell(
               onTap: () {
+                FocusManager.instance.primaryFocus?.unfocus();
                 if (widget.shop == null) {
                   Get.bottomSheet(
                     BottomSheet(
@@ -1023,7 +1063,9 @@ class _ShopState extends State<RegisterShop>
               if (value.length < 10) {
                 return "Please Enter a Valid Shop Phone Number";
               }
-
+              if (!RegExp(r'^\d+$').hasMatch(value)) {
+                return "Phone number must contain digits only";
+              }
               if (RegExp(r'^(\d)\1{9}$').hasMatch(value)) {
                 return "Phone number cannot be all the same digit";
               }
@@ -1239,6 +1281,7 @@ class _ShopState extends State<RegisterShop>
                 title: Text(_getBusinessHoursSummary()),
                 trailing: const Icon(Icons.chevron_right),
                 onTap: () async {
+                  FocusManager.instance.primaryFocus?.unfocus();
                   final result = await showModalBottomSheet<
                       Map<String, BusinessHoursModel>>(
                     context: context,
@@ -1296,7 +1339,7 @@ class _ShopState extends State<RegisterShop>
             ),
             const SizedBox(height: 8),
             Text(
-              'Add Shop Images (${shopimages!.length}/3)',
+              'Add Shop Images (${shopimages.length}/3)',
               style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
@@ -1306,46 +1349,6 @@ class _ShopState extends State<RegisterShop>
         ),
       ),
     );
-  }
-
-  void _handleImageChange(List<String> updatedImages) {
-    setState(() {
-      shopimages = updatedImages;
-    });
-  }
-
-  void _handleonImageSelected(List<XFile> updatedImages) {
-    setState(() {
-      base64shopimages = updatedImages;
-      int nextAvailableIndex = 0;
-      while (existingImage.containsKey(nextAvailableIndex.toString())) {
-        nextAvailableIndex++;
-      }
-
-      for (int i = 0; i < updatedImages.length; i++) {
-        final file = updatedImages[i];
-        existingImage[nextAvailableIndex.toString()] = file.path;
-        nextAvailableIndex++;
-      }
-
-      print("Updated Existing Map: $existingImage");
-    });
-  }
-
-  void _removedAtIndex(int index) {
-    setState(() {
-      existingImage.remove(index.toString());
-
-      if (shopimages != null && index < shopimages!.length) {
-        shopimages!.removeAt(index);
-      }
-
-      if (base64shopimages != null && index < base64shopimages!.length) {
-        base64shopimages!.removeAt(index);
-      }
-
-      print("Image removed at $index. New map: $existingImage");
-    });
   }
 
   String _getBusinessHoursSummary() {

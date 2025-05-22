@@ -41,7 +41,8 @@ class _CategoryFilterState extends State<CategoryFilter> {
                       icon: const Icon(Icons.clear, color: Colors.black),
                       onPressed: () {
                         searchController.clear();
-                        setState(() {});
+                        searchText.value = '';
+                        FocusScope.of(context).unfocus();
                       },
                     )
                   : null,
@@ -191,7 +192,8 @@ class _SubCategoryFilterState extends State<SubCategoryFilter> {
                         icon: const Icon(Icons.clear, color: Colors.black),
                         onPressed: () {
                           searchController.clear();
-                          setState(() {});
+                          searchText.value = '';
+                          FocusScope.of(context).unfocus();
                         },
                       )
                     : null,
@@ -295,7 +297,8 @@ class _BrandFilterState extends State<BrandFilter> {
                       icon: const Icon(Icons.clear, color: Colors.black),
                       onPressed: () {
                         searchController.clear();
-                        setState(() {});
+                        searchText.value = '';
+                        FocusScope.of(context).unfocus();
                       },
                     )
                   : null,

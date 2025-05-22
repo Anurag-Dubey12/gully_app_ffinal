@@ -173,6 +173,17 @@ class ShopApi {
     }
     return ApiResponse.fromJson(response.body);
   }
+  Future<ApiResponse> getShopImageCount(String shopId) async {
+    final response = await repo.get("/shop/getShopImageCount/$shopId");
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
 
   Future<ApiResponse> setProductStatus(String productId, bool isActive) async {
     final response = await repo.post("/shop/ChangedProductStatus/",

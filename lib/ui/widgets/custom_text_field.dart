@@ -19,7 +19,7 @@ class CustomTextField extends StatelessWidget {
   final int? maxLines;
   final int? minLines;
   final bool isUpperCase;
-
+  final FocusNode? focusNode;
   final int? maxLen;
   const CustomTextField(
       {super.key,
@@ -40,6 +40,7 @@ class CustomTextField extends StatelessWidget {
       this.maxLines,
       this.minLines,
       this.isUpperCase = false,
+      this.focusNode,
       this.maxLen});
 
   @override
@@ -53,13 +54,11 @@ class CustomTextField extends StatelessWidget {
       style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
       maxLines: minLines,
       maxLength: maxLen,
-  
+      focusNode: focusNode,
       minLines: maxLines,
       // smartDashesType: SmartDashe
       // sType.enabled,
-      inputFormatters: isUpperCase
-    ? [UpperCaseTextFormatter()]
-    : [],
+      inputFormatters: isUpperCase ? [UpperCaseTextFormatter()] : [],
 
       readOnly: readOnly ?? false,
       onTap: onTap == null ? () {} : () => onTap!(),

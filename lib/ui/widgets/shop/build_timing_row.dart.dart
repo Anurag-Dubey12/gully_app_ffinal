@@ -72,6 +72,32 @@ Widget shopInfo(String title, String description) {
   );
 }
 
+// String? getExpirationTag(ShopModel shop) {
+//   final now = DateTime.now();
+//   final packageEndDate = shop.packageEndDate;
+
+//   if (packageEndDate == null) return null;
+
+//   final duration = packageEndDate.difference(now);
+//   final daysDifference = duration.inDays;
+//   final hoursDifference = duration.inHours;
+
+//   if (duration.isNegative) {
+//     final expiredDays = -duration.inDays;
+//     return "Expired $expiredDays day${expiredDays == 1 ? '' : 's'} ago";
+//   } else if (daysDifference == 0) {
+//     if (hoursDifference > 0) {
+//       return "Expires in $hoursDifference hour${hoursDifference == 1 ? '' : 's'}";
+//     } else {
+//       return "Expires soon";
+//     }
+//   } else if (daysDifference <= 6) {
+//     return "Expires in $daysDifference day${daysDifference == 1 ? '' : 's'}";
+//   }
+
+//   return null;
+// }
+
 String? getExpirationTag(ShopModel shop) {
   final now = DateTime.now();
   final packageEndDate = shop.packageEndDate;
@@ -79,20 +105,35 @@ String? getExpirationTag(ShopModel shop) {
   if (packageEndDate == null) return null;
 
   final duration = packageEndDate.difference(now);
-  final daysDifference = duration.inDays;
-  final hoursDifference = duration.inHours;
+  final isExpired = duration.isNegative;
 
-  if (duration.isNegative) {
-    final expiredDays = -duration.inDays;
-    return "Expired $expiredDays day${expiredDays == 1 ? '' : 's'} ago";
-  } else if (daysDifference == 0) {
-    if (hoursDifference > 0) {
-      return "Expires in $hoursDifference hour${hoursDifference == 1 ? '' : 's'}";
+  if (isExpired) {
+    final expiredDuration = now.difference(packageEndDate);
+
+    if (expiredDuration.inDays >= 1) {
+      final days = expiredDuration.inDays;
+      return "Expired $days day${days == 1 ? '' : 's'} ago";
+    } else if (expiredDuration.inHours >= 1) {
+      final hours = expiredDuration.inHours;
+      return "Expired $hours hour${hours == 1 ? '' : 's'} ago";
     } else {
-      return "Expires soon";
+      final minutes = expiredDuration.inMinutes;
+      return "Expired $minutes min${minutes == 1 ? '' : 's'} ago";
     }
-  } else if (daysDifference <= 6) {
-    return "Expires in $daysDifference day${daysDifference == 1 ? '' : 's'}";
+  } else {
+    final days = duration.inDays;
+    final hours = duration.inHours;
+    final minutes = duration.inMinutes;
+
+    if (days == 0) {
+      if (hours >= 1) {
+        return "Expires in $hours hour${hours == 1 ? '' : 's'}";
+      } else {
+        return "Expires in $minutes minute${minutes == 1 ? '' : 's'}";
+      }
+    } else if (days <= 6) {
+      return "Expires in $days day${days == 1 ? '' : 's'}";
+    }
   }
 
   return null;

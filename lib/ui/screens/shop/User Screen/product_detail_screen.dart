@@ -415,7 +415,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                                 },
                                 errorBuilder: (context, error, stackTrace) {
                                   return Image.asset('assets/images/logo.png',
-                                      fit: BoxFit.cover);
+                                      fit: BoxFit.contain);
                                 },
                               ),
                             ),
@@ -639,11 +639,20 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
 
   Widget showPrice(ProductModel product) {
     final ProductDiscount? discount = product.productDiscount;
-    String percentageoff = '';
+    String percentageOff = '';
+    double? discountedPrice;
+
     if (discount != null) {
-      if (discount.discountType == 'percent') {
-        final remainingPercentage = 100 - discount.discountPrice;
-        percentageoff = '${remainingPercentage.toStringAsFixed(2)}% OFF';
+      if (discount.discountType == 'percent' ||
+          discount.discountType == 'fixed') {
+        discountedPrice = product.productsPrice - discount.discountPrice;
+
+        if (discountedPrice < 0) discountedPrice = 0;
+
+        final percentOff =
+            ((discount.discountPrice / product.productsPrice) * 100)
+                .clamp(0, 100);
+        percentageOff = '${percentOff.toStringAsFixed(0)}% OFF';
       }
     }
     return product.productDiscount?.discountType == "percent"
@@ -684,7 +693,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                   child: ScaleTransition(
                     scale: _discountScaleAnimation,
                     child: Text(
-                      '₹${product.productDiscount?.discountPrice.toStringAsFixed(2)}',
+                      '₹${discountedPrice!.toStringAsFixed(2)}',
                       style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -705,7 +714,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Text(
-                      percentageoff,
+                      percentageOff,
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,

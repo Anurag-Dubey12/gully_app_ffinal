@@ -35,9 +35,14 @@ class ProductCard extends StatelessWidget {
     }
 
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         final controller = Get.find<ShopController>();
         controller.shopProduct.value = product;
+        if (!isAdmin) {
+          await controller.recordProductView(
+              product.id, controller.shop.value!.id);
+        }
+
         Get.to(() => ProductDetailScreen(
               isadmin: isAdmin,
               shop: shop,

@@ -173,6 +173,7 @@ class ShopApi {
     }
     return ApiResponse.fromJson(response.body);
   }
+
   Future<ApiResponse> getShopImageCount(String shopId) async {
     final response = await repo.get("/shop/getShopImageCount/$shopId");
     if (response.statusCode! >= 500) {
@@ -362,7 +363,7 @@ class ShopApi {
 
   Future<ApiResponse> recordShopVisit(String shopId) async {
     final response =
-        await repo.post("/shop/getDailyVisitors/", {"shopId": shopId});
+        await repo.post("/shop/recordShopVisit/", {"shopId": shopId});
     if (response.statusCode! >= 500) {
       errorSnackBar(generateErrorMessage(response.body));
       throw Exception('Server Error');

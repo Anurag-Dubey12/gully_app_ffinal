@@ -166,6 +166,26 @@ class _SubCategoryFilterState extends State<SubCategoryFilter> {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
+      if (controller.isDataLoading.value) {
+        return const Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.hourglass_top, size: 32, color: Colors.grey),
+                SizedBox(height: 8),
+                Text(
+                  "Please wait, your data is currently loading...",
+                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+
       if (controller.subcategories.isEmpty) {
         return const Center(
           child: Padding(

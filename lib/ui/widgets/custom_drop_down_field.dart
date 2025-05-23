@@ -160,12 +160,12 @@ class _DropDownWidgetState extends State<DropDownWidget> {
       'type': type,
       'value': type == "Hours"
           ? {
-        'hours': hoursController.text,
-        'minutes': minutesController.text,
-      }
+              'hours': hoursController.text,
+              'minutes': minutesController.text,
+            }
           : type == "Days"
-          ? {'days': daysController.text}
-          : {'months': monthsController.text},
+              ? {'days': daysController.text}
+              : {'months': monthsController.text},
     };
     widget.onSelect(durationValue);
   }
@@ -225,7 +225,8 @@ class _DropDownWidgetState extends State<DropDownWidget> {
                                             fontWeight: FontWeight.bold),
                                         prefixIcon: const Icon(Icons.search),
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                         ),
                                       ),
                                       onChanged: (value) {
@@ -247,82 +248,94 @@ class _DropDownWidgetState extends State<DropDownWidget> {
                                     children: [
                                       widget.isAds
                                           ? CheckboxListTile(
-                                        title: Text(item),
-                                        contentPadding: EdgeInsets.zero,
-                                        value: _selectedValues.contains(item),
-                                        onChanged: (bool? value) {
-                                          setStateSheet(() {
-                                            if (_selectedValues
-                                                .contains(item)) {
-                                              _selectedValues.remove(item);
-                                            } else {
-                                              if (_selectedValues.length ==
-                                                  3) {
-                                                Get.snackbar(
-                                                  "Service Limit",
-                                                  "You can only select a maximum of 3 services",
-                                                  colorText: Colors.white,
-                                                  backgroundColor:
-                                                  AppTheme.primaryColor,
-                                                  icon: const Icon(
-                                                    Icons.add_alert,
-                                                    color: Colors.white,
-                                                  ),
-                                                );
-                                              } else {
-                                                _selectedValues.add(item);
-                                              }
-                                            }
-                                          });
-                                          widget.onSelect(
-                                              _selectedValues.toList());
-                                        },
-                                      )
-                                          : Column(
-                                        children: [
-                                          GestureDetector(
-                                            onTap: () {
-                                              setStateSheet(() {
-                                                selectedDuration = item;
-                                              });
-                                              if (!widget.isDuration) {
-                                                widget.onSelect(item);
-                                                Navigator.of(context).pop();
-                                              } else {
-                                                updateDurationValue(item);
-                                              }
-                                            },
-                                            child: RadioListTile<String>(
                                               title: Text(item),
                                               contentPadding: EdgeInsets.zero,
-                                              value: item,
-                                              groupValue: getCurrentSelectedValue(),
-                                              onChanged: (String? value) {
-                                                if (value != null) {
-                                                  setStateSheet(() {
-                                                    selectedDuration = value;
-                                                  });
-                                                  if (!widget.isDuration) {
-                                                    widget.onSelect(value);
-                                                    Navigator.of(context).pop();
+                                              value: _selectedValues
+                                                  .contains(item),
+                                              onChanged: (bool? value) {
+                                                setStateSheet(() {
+                                                  if (_selectedValues
+                                                      .contains(item)) {
+                                                    _selectedValues
+                                                        .remove(item);
                                                   } else {
-                                                    updateDurationValue(value);
+                                                    if (_selectedValues
+                                                            .length ==
+                                                        3) {
+                                                      Get.snackbar(
+                                                        "Service Limit",
+                                                        "You can only select a maximum of 3 services",
+                                                        colorText: Colors.white,
+                                                        backgroundColor:
+                                                            AppTheme
+                                                                .primaryColor,
+                                                        icon: const Icon(
+                                                          Icons.add_alert,
+                                                          color: Colors.white,
+                                                        ),
+                                                      );
+                                                    } else {
+                                                      _selectedValues.add(item);
+                                                    }
                                                   }
-                                                }
+                                                });
+                                                widget.onSelect(
+                                                    _selectedValues.toList());
                                               },
+                                            )
+                                          : Column(
+                                              children: [
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setStateSheet(() {
+                                                      selectedDuration = item;
+                                                    });
+                                                    if (!widget.isDuration) {
+                                                      widget.onSelect(item);
+                                                      Navigator.of(context)
+                                                          .pop();
+                                                    } else {
+                                                      updateDurationValue(item);
+                                                    }
+                                                  },
+                                                  child: RadioListTile<String>(
+                                                    title: Text(item),
+                                                    contentPadding:
+                                                        EdgeInsets.zero,
+                                                    value: item,
+                                                    groupValue:
+                                                        getCurrentSelectedValue(),
+                                                    onChanged: (String? value) {
+                                                      if (value != null) {
+                                                        setStateSheet(() {
+                                                          selectedDuration =
+                                                              value;
+                                                        });
+                                                        if (!widget
+                                                            .isDuration) {
+                                                          widget
+                                                              .onSelect(value);
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        } else {
+                                                          updateDurationValue(
+                                                              value);
+                                                        }
+                                                      }
+                                                    },
+                                                  ),
+                                                ),
+                                                if (widget.isDuration &&
+                                                    selectedDuration == item)
+                                                  Padding(
+                                                    padding: const EdgeInsets
+                                                        .symmetric(
+                                                        horizontal: 16.0,
+                                                        vertical: 8.0),
+                                                    child: DurationInputs(item),
+                                                  ),
+                                              ],
                                             ),
-                                          ),
-                                          if (widget.isDuration &&
-                                              selectedDuration == item)
-                                            Padding(
-                                              padding: const EdgeInsets
-                                                  .symmetric(
-                                                  horizontal: 16.0,
-                                                  vertical: 8.0),
-                                              child: DurationInputs(item),
-                                            ),
-                                        ],
-                                      ),
                                     ],
                                   );
                                 },
@@ -330,16 +343,21 @@ class _DropDownWidgetState extends State<DropDownWidget> {
                             ),
                             if (widget.isDuration && selectedDuration != null)
                               Padding(
-                                padding:
-                                const EdgeInsets.symmetric(horizontal: 16.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16.0),
                                 child: PrimaryButton(
                                   onTap: () {
-                                    if ((selectedDuration == null || selectedDuration!.isEmpty) ||
+                                    if ((selectedDuration == null ||
+                                            selectedDuration!.isEmpty) ||
                                         (selectedDuration == 'Hours' &&
-                                            (hoursController.text.isEmpty || minutesController.text.isEmpty)) ||
-                                        (selectedDuration == 'Days' && daysController.text.isEmpty) ||
-                                        (selectedDuration == 'Months' && monthsController.text.isEmpty)) {
-                                      selectedDuration==null;
+                                            (hoursController.text.isEmpty ||
+                                                minutesController
+                                                    .text.isEmpty)) ||
+                                        (selectedDuration == 'Days' &&
+                                            daysController.text.isEmpty) ||
+                                        (selectedDuration == 'Months' &&
+                                            monthsController.text.isEmpty)) {
+                                      selectedDuration == null;
                                       Get.snackbar(
                                         "Duration Error",
                                         "Please fill in the required duration details",
@@ -353,7 +371,6 @@ class _DropDownWidgetState extends State<DropDownWidget> {
                                     } else {
                                       Navigator.of(context).pop();
                                     }
-
                                   },
                                   title: "Confirm",
                                 ),
@@ -376,8 +393,8 @@ class _DropDownWidgetState extends State<DropDownWidget> {
             width: Get.width,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(9),
-              border:
-              Border.all(color: widget.iswhite ? Colors.white : Colors.black),
+              border: Border.all(
+                  color: widget.iswhite ? Colors.white : Colors.black),
               color: Colors.white,
             ),
             child: Padding(
@@ -389,10 +406,10 @@ class _DropDownWidgetState extends State<DropDownWidget> {
                       widget.isDuration
                           ? formatDurationDisplay(widget.selectedValue)
                           : widget.isAds
-                          ? _selectedValues.isNotEmpty
-                          ? _selectedValues.join(', ')
-                          : widget.title
-                          : formatDurationDisplay(widget.selectedValue),
+                              ? _selectedValues.isNotEmpty
+                                  ? _selectedValues.join(', ')
+                                  : widget.title
+                              : formatDurationDisplay(widget.selectedValue),
                       style: Get.textTheme.labelLarge,
                       overflow: TextOverflow.ellipsis,
                       maxLines: widget.isService == true ? 3 : 1,
@@ -423,7 +440,8 @@ class _DropDownWidgetState extends State<DropDownWidget> {
       }
 
       String type = selectedValue['type'];
-      Map<String, dynamic>? value = selectedValue['value'] as Map<String, dynamic>?;
+      Map<String, dynamic>? value =
+          selectedValue['value'] as Map<String, dynamic>?;
 
       if (value == null) {
         return widget.title;
@@ -435,9 +453,7 @@ class _DropDownWidgetState extends State<DropDownWidget> {
               ? "${value['hours']} hrs ${value['minutes']} mins"
               : widget.title;
         case "Days":
-          return value['days'] != null
-              ? "${value['days']} days"
-              : widget.title;
+          return value['days'] != null ? "${value['days']} days" : widget.title;
         case "Months":
           return value['months'] != null
               ? "${value['months']} months"
@@ -449,13 +465,10 @@ class _DropDownWidgetState extends State<DropDownWidget> {
 
     // Handle service category selection (String or List<String>)
     if (selectedValue is List<String>) {
-      return selectedValue.isNotEmpty
-          ? selectedValue.join(', ')
-          : widget.title;
+      return selectedValue.isNotEmpty ? selectedValue.join(', ') : widget.title;
     }
 
     // Handle single string selection
     return selectedValue?.toString() ?? widget.title;
   }
-
 }

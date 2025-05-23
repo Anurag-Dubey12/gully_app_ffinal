@@ -135,16 +135,19 @@ class ShopController extends GetxController with StateMixin {
   RxMap<String, List<String>> subcategories = <String, List<String>>{}.obs;
   RxList<String> subcategory = <String>[].obs;
   RxList<String> selectedsubcategory = <String>[].obs;
-
+  final isDataLoading = false.obs;
   // MARK: GetSubCategory
   Future<List<String>> getsubCategory(String category) async {
     try {
+      isDataLoading.value = true;
       final response = await shopApi.getsubCategory(category);
       if (response.status == false) {
         errorSnackBar("Failed to get Category");
+        isDataLoading.value = false;
         return [];
       }
       subcategory.value = List<String>.from(response.data!['subCategory']);
+      isDataLoading.value = false;
       return List<String>.from(response.data!['subCategory']);
     } catch (e) {
       if (kDebugMode) {
@@ -515,11 +518,13 @@ class ShopController extends GetxController with StateMixin {
   // Date labels for charts
   final dateLabels = <String>[].obs;
 
+  // MARK: Change Period
   void changePeriod(String period) async {
     selectedPeriod.value = period;
     await loadAnalyticsData(shop.value!.id);
   }
 
+  // MARK: GetTimeRangeParam
   String getTimeRangeParam() {
     switch (selectedPeriod.value) {
       case 'Last 7 Days':
@@ -546,6 +551,7 @@ class ShopController extends GetxController with StateMixin {
   //   }
   // }
 
+  // MARK: loadAnalyticsData
   Future<void> loadAnalyticsData(String shopId) async {
     if (shopId.isEmpty) {
       return;
@@ -565,6 +571,7 @@ class ShopController extends GetxController with StateMixin {
     }
   }
 
+  // MARK: getShopOverview
   Future<void> getShopOverview(String shopId) async {
     try {
       final response = await shopApi.getShopAnalytics(shopId);
@@ -596,6 +603,7 @@ class ShopController extends GetxController with StateMixin {
     }
   }
 
+  // MARK: getProductViewData
   Future<void> getProductViewData(String shopId) async {
     try {
       final response =
@@ -628,6 +636,7 @@ class ShopController extends GetxController with StateMixin {
     }
   }
 
+  // MARK: getVisitorData
   Future<void> getVisitorData(String shopId) async {
     try {
       final response =
@@ -651,9 +660,10 @@ class ShopController extends GetxController with StateMixin {
     }
   }
 
+  // MARK: processChartData
   void processChartData() {
     productViewsChartData.clear();
-    dateLabels.clear();
+    // dateLabels.clear();
 
     final sortedDates = productViewsOverTime.keys.toList()
       ..sort((a, b) => a.compareTo(b));
@@ -680,12 +690,25 @@ class ShopController extends GetxController with StateMixin {
     return '';
   }
 
-  Future<void> recordProductView(String productId, String shopId) async {
+  // MARK: recordProductView
+  Future<void> recordProductView(
+      String productId, String shopId) async {
     try {
       await shopApi.recordProductView(productId, shopId);
     } catch (e) {
       if (kDebugMode) {
         print('Error recording product view: $e');
+      }
+    }
+  }
+
+  // MARK: recordShopVisit
+  Future<void> recordShopVisit(String shopId) async {
+    try {
+      await shopApi.recordShopVisit(shopId);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error recording shop view view: $e');
       }
     }
   }

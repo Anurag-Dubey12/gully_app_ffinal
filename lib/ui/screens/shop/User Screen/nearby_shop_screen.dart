@@ -198,9 +198,10 @@ class _NearbyShopCardState extends State<NearbyShopCard>
     final closingTime = getClosingTime(shop.shopTiming);
 
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         final shopController = Get.find<ShopController>();
         shopController.shop.value = shop;
+        await shopController.recordShopVisit(shop.id);
         Get.to(() => const ShopDashboard(
               isAdmin: false,
             ));

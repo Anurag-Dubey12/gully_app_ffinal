@@ -239,6 +239,37 @@ class ShopAnalyticsScreenState extends State<ShopAnalyticsScreen> {
                         ),
                     ],
                   ),
+                  if (controller.mostViewedProducts.isEmpty)
+                    const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.insights_outlined,
+                            size: 60,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            'No data available',
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Analytics will appear once activity is recorded.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   const SizedBox(height: 16),
                   ProductListView(
                     products: controller.mostViewedProducts.length > 5
@@ -385,62 +416,88 @@ class ShopAnalyticsScreenState extends State<ShopAnalyticsScreen> {
       maxY = (highestY <= 3) ? 3 : (highestY.ceilToDouble() + 1);
     }
 
+    double step = (maxY / 3).ceilToDouble();
+
     return BarChartData(
       alignment: BarChartAlignment.spaceAround,
       maxY: maxY,
       barTouchData: BarTouchData(
+        handleBuiltInTouches: true,
         touchTooltipData: BarTouchTooltipData(
-          tooltipMargin: 5,
+          tooltipPadding: const EdgeInsets.all(8),
+          tooltipRoundedRadius: 8,
           getTooltipItem: (group, groupIndex, rod, rodIndex) {
             return BarTooltipItem(
-              '${rod.toY.toStringAsFixed(0)} Visitor',
-              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              '${rod.toY.toStringAsFixed(0)} Views',
+              const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
             );
           },
         ),
-        // touchCallback:
-        //     (FlTouchEvent touchEvent, BarTouchResponse? touchResponse) {
-        //   if (touchResponse != null && touchResponse.spot != null) {
-        //     final touchedIndex = touchResponse.spot!.touchedBarGroupIndex;
-        //     print("Touched bar at index: $touchedIndex");
-        //   }
-        // },
-        handleBuiltInTouches: true,
       ),
       titlesData: FlTitlesData(
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 40,
-            interval: 1,
-            getTitlesWidget: (value, meta) => Text(
-              value.toInt().toString(),
-              style: const TextStyle(fontSize: 12),
-            ),
+            reservedSize: 36,
+            getTitlesWidget: (value, meta) {
+              if (value % step == 0 && value <= maxY) {
+                return Text(
+                  value.toInt().toString(),
+                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+                );
+              }
+              return const SizedBox.shrink();
+            },
           ),
         ),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
+            reservedSize: 36,
             getTitlesWidget: (value, meta) {
               int index = value.toInt();
               if (index >= 0 && index < labels.length) {
-                return Text(
-                  labels[index],
-                  style: const TextStyle(fontSize: 10),
+                return Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: Text(
+                    labels[index],
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),
+                  ),
                 );
               }
               return const Text('');
             },
-            reservedSize: 30,
           ),
         ),
         topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         rightTitles:
             const AxisTitles(sideTitles: SideTitles(showTitles: false)),
       ),
-      gridData: const FlGridData(show: false),
-      borderData: FlBorderData(show: false),
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: false,
+        getDrawingHorizontalLine: (value) {
+          if (value % step == 0) {
+            return FlLine(
+              color: Colors.grey.withOpacity(0.2),
+              strokeWidth: 1,
+              dashArray: [4, 4],
+            );
+          }
+          return const FlLine(strokeWidth: 0);
+        },
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: const Border(
+          bottom: BorderSide(color: Colors.grey, width: 0.5),
+          left: BorderSide(color: Colors.grey, width: 0.5),
+        ),
+      ),
       barGroups: List.generate(controller.productViewsChartData.length, (i) {
         final point = controller.productViewsChartData[i];
         return BarChartGroupData(
@@ -448,9 +505,18 @@ class ShopAnalyticsScreenState extends State<ShopAnalyticsScreen> {
           barRods: [
             BarChartRodData(
               toY: point.y,
-              color: Colors.blue,
-              width: 12,
-              borderRadius: BorderRadius.circular(4),
+              width: 14,
+              borderRadius: BorderRadius.circular(6),
+              gradient: const LinearGradient(
+                colors: [Color(0xFF2196F3), Color(0xFF64B5F6)],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+              ),
+              backDrawRodData: BackgroundBarChartRodData(
+                show: true,
+                toY: maxY,
+                color: Colors.grey.withOpacity(0.1),
+              ),
             ),
           ],
         );
@@ -466,57 +532,91 @@ class ShopAnalyticsScreenState extends State<ShopAnalyticsScreen> {
       final highestY = controller.shopVisitsChartData
           .map((e) => e.y)
           .reduce((a, b) => a > b ? a : b);
-      maxY = (highestY <= 3) ? 3 : (highestY.ceilToDouble() + 1);
+      maxY = highestY <= 3 ? 3 : (highestY.ceilToDouble() + 1);
     }
+
+    double step = (maxY / 3).ceilToDouble();
 
     return BarChartData(
       alignment: BarChartAlignment.spaceAround,
       maxY: maxY,
       barTouchData: BarTouchData(
+        enabled: true,
         touchTooltipData: BarTouchTooltipData(
+          tooltipPadding: const EdgeInsets.all(8),
+          tooltipRoundedRadius: 8,
           getTooltipItem: (group, groupIndex, rod, rodIndex) {
             return BarTooltipItem(
               '${rod.toY.toStringAsFixed(0)} Visits',
-              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
             );
           },
         ),
-        handleBuiltInTouches: true,
       ),
       titlesData: FlTitlesData(
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
-            reservedSize: 40,
-            interval: 1, // Show only whole numbers
-            getTitlesWidget: (value, meta) => Text(
-              value.toInt().toString(),
-              style: const TextStyle(fontSize: 12),
-            ),
+            reservedSize: 36,
+            getTitlesWidget: (value, meta) {
+              if (value % step == 0 && value <= maxY) {
+                return Text(
+                  value.toInt().toString(),
+                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+                );
+              }
+              return const SizedBox.shrink();
+            },
           ),
         ),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
+            reservedSize: 36,
             getTitlesWidget: (value, meta) {
               int index = value.toInt();
               if (index >= 0 && index < labels.length) {
-                return Text(
-                  labels[index],
-                  style: const TextStyle(fontSize: 10),
+                return Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: Text(
+                    labels[index],
+                    style: const TextStyle(fontSize: 10, color: Colors.grey),
+                  ),
                 );
               }
               return const Text('');
             },
-            reservedSize: 30,
           ),
         ),
         topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         rightTitles:
             const AxisTitles(sideTitles: SideTitles(showTitles: false)),
       ),
-      gridData: const FlGridData(show: false),
-      borderData: FlBorderData(show: false),
+      gridData: FlGridData(
+        show: true,
+        drawVerticalLine: false,
+        getDrawingHorizontalLine: (value) {
+          if (value % step == 0) {
+            return FlLine(
+              color: Colors.grey.withOpacity(0.2),
+              strokeWidth: 1,
+              dashArray: [4, 4],
+            );
+          }
+          return const FlLine(strokeWidth: 0);
+        },
+      ),
+      borderData: FlBorderData(
+        show: true,
+        border: const Border(
+          bottom: BorderSide(color: Colors.grey, width: 0.5),
+          left: BorderSide(color: Colors.grey, width: 0.5),
+        ),
+      ),
       barGroups: List.generate(controller.shopVisitsChartData.length, (i) {
         final point = controller.shopVisitsChartData[i];
         return BarChartGroupData(
@@ -524,9 +624,18 @@ class ShopAnalyticsScreenState extends State<ShopAnalyticsScreen> {
           barRods: [
             BarChartRodData(
               toY: point.y,
-              color: Colors.green,
-              width: 12,
-              borderRadius: BorderRadius.circular(4),
+              gradient: const LinearGradient(
+                colors: [Color(0xFF4CAF50), Color(0xFF81C784)],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
+              ),
+              width: 14,
+              borderRadius: BorderRadius.circular(6),
+              backDrawRodData: BackgroundBarChartRodData(
+                show: true,
+                toY: maxY,
+                color: Colors.grey.withOpacity(0.1),
+              ),
             ),
           ],
         );

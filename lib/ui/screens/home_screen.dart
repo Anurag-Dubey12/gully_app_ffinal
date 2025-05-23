@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:gully_app/data/controller/auth_controller.dart';
@@ -11,6 +10,7 @@ import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/controller/tournament_controller.dart';
 import 'package:gully_app/ui/screens/current_tournament_list.dart';
 import 'package:gully_app/ui/screens/search_tournament_screen.dart';
+import 'package:gully_app/ui/screens/service/service_home_screen.dart';
 import 'package:gully_app/ui/screens/shop/User%20Screen/nearby_shop_screen.dart';
 import 'package:gully_app/ui/screens/tournament_form_screen.dart';
 import 'package:gully_app/ui/theme/theme.dart';
@@ -21,6 +21,7 @@ import 'package:gully_app/ui/widgets/home_screen/date_times_card.dart';
 import 'package:gully_app/ui/widgets/home_screen/tournament_list.dart';
 import 'package:gully_app/utils/app_logger.dart';
 import 'package:gully_app/utils/utils.dart';
+import 'package:icons_plus/icons_plus.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../config/app_constants.dart';
@@ -304,7 +305,7 @@ class _HomePageState extends State<HomePage>
       const ShopHome(),
       const SizedBox(),
       // const ShopHome(),
-      // const ServiceHomeScreen(),
+      const ServiceHomeScreen(),
       const LiveScore()
     ];
   }
@@ -318,7 +319,7 @@ class _HomePageState extends State<HomePage>
         inactiveColorPrimary: Colors.grey,
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.sports_kabaddi_outlined),
+        icon: const Icon(Bootstrap.shop),
         title: "Shop",
         activeColorPrimary: AppTheme.primaryColor,
         inactiveColorPrimary: Colors.grey,
@@ -330,12 +331,12 @@ class _HomePageState extends State<HomePage>
         inactiveColorPrimary: Colors.transparent,
         onPressed: (context) {},
       ),
-      // PersistentBottomNavBarItem(
-      //   icon: const Icon(Icons.room_service),
-      //   title: "Service",
-      //   activeColorPrimary: AppTheme.primaryColor,
-      //   inactiveColorPrimary: Colors.grey,
-      // ),
+      PersistentBottomNavBarItem(
+        icon: const Icon(BoxIcons.bx_support),
+        title: "Service",
+        activeColorPrimary: AppTheme.primaryColor,
+        inactiveColorPrimary: Colors.grey,
+      ),
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.live_tv_outlined),
         title: "Live Score",

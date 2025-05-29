@@ -374,6 +374,7 @@ class _SearchBar extends StatelessWidget {
               child: TextField(
                 onTap: () {
                   Get.to(() => SearchPlacesScreen(
+                        showSelectCurrentLocation: true,
                         onSelected: (e) {
                           onSelected?.call(
                               e.description ?? "No Address",

@@ -746,7 +746,7 @@ class TournamentController extends GetxController
     }
   }
 
-  Future<bool> createShopOrder(Map<String,dynamic>order) async {
+  Future<bool> createShopOrder(Map<String, dynamic> order) async {
     try {
       final response = await tournamentApi.createShopOrder(order);
       if (response.status == false) {
@@ -829,7 +829,10 @@ class TournamentController extends GetxController
       return transactions;
     } catch (e) {
       //logger.d"Error in getTransactions: $e");
-      errorSnackBar(e.toString());
+      // errorSnackBar(e.toString());
+      if (kDebugMode) {
+        print('Failed to get Transaction:$e');
+      }
       return [];
     }
   }

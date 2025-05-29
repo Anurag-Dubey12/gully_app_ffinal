@@ -324,7 +324,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
                               errorSnackBar(
                                   "Your subscription has expired. Editing is currently disabled. Please renew your subscription to continue.");
                             } else {
-                              Get.to(() => AddProduct(
+                              Get.off(() => AddProduct(
                                     product: product,
                                   ));
                             }

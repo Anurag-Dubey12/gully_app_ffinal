@@ -27,6 +27,20 @@ class _BusinessHoursScreenState extends State<BusinessHoursScreen> {
     'Sunday',
   ];
 
+  bool _isValidTimeRange(String? open, String? close) {
+    if (open == null || close == null) return false;
+
+    final openTime = _parseTimeString(open);
+    final closeTime = _parseTimeString(close);
+
+    if (openTime == null || closeTime == null) return false;
+
+    final openMinutes = openTime.hour * 60 + openTime.minute;
+    final closeMinutes = closeTime.hour * 60 + closeTime.minute;
+
+    return openMinutes < closeMinutes;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -98,16 +112,31 @@ class _BusinessHoursScreenState extends State<BusinessHoursScreen> {
     );
 
     if (picked != null) {
-      setState(() {
-        final period = picked.hour >= 12 ? 'PM' : 'AM';
-        final hour = picked.hour > 12
-            ? picked.hour - 12
-            : picked.hour == 0
-                ? 12
-                : picked.hour;
-        final formattedTime =
-            '${hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')} $period';
+      final period = picked.hour >= 12 ? 'PM' : 'AM';
+      final hour = picked.hour > 12
+          ? picked.hour - 12
+          : picked.hour == 0
+              ? 12
+              : picked.hour;
+      final formattedTime =
+          '${hour.toString().padLeft(2, '0')}:${picked.minute.toString().padLeft(2, '0')} $period';
 
+      final updatedOpen =
+          isOpenTime ? formattedTime : _businessHours[day]!.openTime;
+      final updatedClose =
+          isOpenTime ? _businessHours[day]!.closeTime : formattedTime;
+
+      if (!_isValidTimeRange(updatedOpen, updatedClose)) {
+        Get.snackbar(
+          "Incorrect time Picked for $day",
+          "Opening time must be before closing time.",
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+          duration: const Duration(seconds: 3),
+        );
+        return;
+      }
+      setState(() {
         if (isOpenTime) {
           _businessHours[day]!.openTime = formattedTime;
         } else {

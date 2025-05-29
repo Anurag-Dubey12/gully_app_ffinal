@@ -22,7 +22,7 @@ Future<XFile?> imagePickerHelper() async {
 Future<List<XFile?>?> multipleimagePickerHelper() async {
   final ImagePicker picker = ImagePicker();
   final List<XFile> images = await picker.pickMultiImage();
-  return images ?? [];
+  return images;
 }
 
 Future<String> convertImageToBase64(XFile image) async {
@@ -108,9 +108,8 @@ void imageViewer(BuildContext context, String? photoUrl, bool isnetworkimage,
                                         loadingBuilder:
                                             (context, child, loadingProgress) {
                                           if (loadingProgress == null) {
-                                            return child; 
+                                            return child;
                                           } else {
-                                           
                                             return Center(
                                               child: CircularProgressIndicator(
                                                 value: loadingProgress
@@ -175,6 +174,7 @@ ImageProvider _getImageProvider(String photoUrl) {
     return FileImage(File(photoUrl));
   }
 }
+
 void multiImageViewer(BuildContext context, List<String?> imageUrls,
     int initialIndex, bool isNetworkImage) {
   if (imageUrls.isEmpty) {

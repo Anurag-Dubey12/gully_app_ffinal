@@ -212,6 +212,10 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       change(GetStatus.loading());
       await Future.delayed(const Duration(seconds: 2));
       final response = await repo.verifyOtp(otp: otp);
+      if (response.status == false) {
+        errorSnackBar(response.message ?? "Something went wrong.");
+        return false;
+      }
       final user = UserModel.fromJson(response.data!['user']);
       change(GetStatus.success(user));
       return true;
@@ -223,14 +227,16 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
     }
   }
 
+
+
   Future<bool> sendOTP() async {
     try {
       change(GetStatus.loading());
       await Future.delayed(const Duration(seconds: 2));
-      final response = await repo.resendOTP(state!.phoneNumber!);
-      // final user = UserModel.fromJson(response.data!['user']);
-      successSnackBar(response.message!);
-      change(GetStatus.success(state));
+      // final response = await repo.resendOTP(state!.phoneNumber!);
+      // // final user = UserModel.fromJson(response.data!['user']);
+      // successSnackBar(response.message!);
+      // change(GetStatus.success(state));
       return true;
     } catch (e) {
       showSnackBar(title: e.toString(), message: e.toString(), isError: true);
@@ -239,6 +245,8 @@ class AuthController extends GetxController with StateMixin<UserModel?> {
       // return false;
     }
   }
+
+
 
   Future<bool> deleteAccount() async {
     try {

@@ -92,8 +92,7 @@ class _CreateProfileState extends State<CreateProfile>
                           height: Get.height * 0.13,
                         ),
                         Text(
-                          AppConstants.create_profile
-                              .toUpperCase(),
+                          AppConstants.create_profile.toUpperCase(),
                           style: Get.textTheme.titleLarge?.copyWith(
                               fontStyle: FontStyle.italic,
                               color: Colors.white,
@@ -158,15 +157,18 @@ class _CreateProfileState extends State<CreateProfile>
                                 validator: (e) {
                                   if (e!.contains(
                                       RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-                                    return AppConstants.name_cannot_contain_special_characters;
+                                    return AppConstants
+                                        .name_cannot_contain_special_characters;
                                   }
                                   if (e.contains(RegExp(r'[^\x00-\x7F]+'))) {
-                                    return AppConstants.name_cannot_contain_emojis;
+                                    return AppConstants
+                                        .name_cannot_contain_emojis;
                                   }
 
                                   if (e.contains(RegExp(
                                       r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]'))) {
-                                    return AppConstants.name_cannot_contain_special_characters_numbers;
+                                    return AppConstants
+                                        .name_cannot_contain_special_characters_numbers;
                                   }
                                   return null;
                                 },
@@ -182,7 +184,8 @@ class _CreateProfileState extends State<CreateProfile>
                                 maxLen: 10,
                                 validator: (e) {
                                   if (e!.length != 10) {
-                                    return AppConstants.please_enter_valid_phone_number;
+                                    return AppConstants
+                                        .please_enter_valid_phone_number;
                                   }
                                   return null;
                                 },
@@ -193,8 +196,8 @@ class _CreateProfileState extends State<CreateProfile>
                                     isLoading: controller.status.isLoading,
                                     onTap: () async {
                                       if (_image == null) {
-                                        errorSnackBar(
-                                            AppConstants.please_select_an_image);
+                                        errorSnackBar(AppConstants
+                                            .please_select_an_image);
                                         return;
                                       }
                                       if (_formKey.currentState!.validate()) {
@@ -203,7 +206,8 @@ class _CreateProfileState extends State<CreateProfile>
                                         if (!base64Image.contains(RegExp(
                                             r'data:image\/(png|jpeg);base64,'))) {
                                           if (mounted) {
-                                            errorSnackBar(AppConstants.please_select_a_valid_image);
+                                            errorSnackBar(AppConstants
+                                                .please_select_a_valid_image);
                                           }
                                           return;
                                         }
@@ -327,8 +331,7 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                   padding: const EdgeInsets.all(13.0),
                   child: Column(
                     children: [
-                      Text(
-                          AppConstants.please_enter_5_digit_code,
+                      Text(AppConstants.please_enter_5_digit_code,
                           style: Get.textTheme.labelSmall),
                       const SizedBox(height: 20),
                       PinCodeTextField(
@@ -373,9 +376,9 @@ class _OtpBottomSheetState extends State<_OtpBottomSheet> {
                                 controller.sendOTP();
                                 startTimer();
                               },
-                              child: Text(
+                              child: const Text(
                                 AppConstants.resend,
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(color: Colors.white),
                               ),
                             )
                           : Text(

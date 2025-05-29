@@ -237,9 +237,6 @@ class _DashboardState extends State<ShopDashboard> {
                               ),
                           transition: Transition.fadeIn,
                           duration: const Duration(milliseconds: 300));
-                      // Get.to(() => GoogleMapSearchPlacesApi(),
-                      //     transition: Transition.fadeIn,
-                      //     duration: const Duration(milliseconds: 300));
                       break;
                   }
                 },

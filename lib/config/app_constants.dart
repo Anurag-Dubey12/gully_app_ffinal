@@ -248,14 +248,14 @@ class AppConstants {
 
   //Aadhar Card
   static const String aadharCardAdded =
-      "Aadhaar Card Added to edit, click on image";
+      "Aadhaar card added.To edit, click on image.";
   static const String tapToEdit = "Tap to Add Aadhaar Images";
   static const String tapToView = "Tap to View your Aadhaar Images";
 
   static const String selectproductcategory = "Select Product Category";
   static const String selectallproductcategory = "Select Product Category";
   static const String productaddedsuccessfully = "Product Added Successfully";
-  static const String producteditedsuccessfully = "Product Edited SUccessfully";
+  static const String producteditedsuccessfully = "Product Edited Successfully";
 
   static const String unlistProduct =
       "Are you sure you want to unlist this product? It will no longer be visible to other users, but you can relist it anytime from your dashboard.";

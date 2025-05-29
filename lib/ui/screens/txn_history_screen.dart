@@ -7,8 +7,6 @@ import 'package:gully_app/ui/screens/view_tournaments_screen.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
 import 'package:intl/intl.dart';
 
-import '../../utils/app_logger.dart';
-
 class TxnHistoryScreen extends GetView<TournamentController> {
   const TxnHistoryScreen({super.key});
 
@@ -50,9 +48,7 @@ class TxnHistoryScreen extends GetView<TournamentController> {
               }
               if (snapshot.hasError) {
                 //logger.d"Error in FutureBuilder: ${snapshot.error}");
-                return Center(
-                    child: Text(
-                        "Failed To Get Transaction History: ${snapshot.error}"));
+                return const Center(child: Text("Something Went Wrong"));
               }
               if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 //logger.d"No data in snapshot");

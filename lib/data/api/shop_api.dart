@@ -373,4 +373,27 @@ class ShopApi {
     }
     return ApiResponse.fromJson(response.body);
   }
+
+  Future<ApiResponse> sendOTP(String phoneNumber) async {
+    final response = await repo
+        .post('/shop/sendShopOwnerVerifyOTP', {'phoneNumber': phoneNumber});
+    if (response.statusCode != 200) {
+      throw Exception(response.body['message'] ?? 'Unable to Process Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
+
+  Future<ApiResponse> verifyOtp(String otp) async {
+    final response = await repo.post('/shop/verifyOTP', {
+      'OTP': otp,
+    });
+    if (response.statusCode! >= 500) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Server Error');
+    } else if (response.statusCode! != 200) {
+      errorSnackBar(generateErrorMessage(response.body));
+      throw Exception('Bad Request');
+    }
+    return ApiResponse.fromJson(response.body);
+  }
 }

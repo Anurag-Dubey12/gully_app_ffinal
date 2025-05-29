@@ -120,59 +120,60 @@ class ShopAnalyticsScreenState extends State<ShopAnalyticsScreen> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  const Text(
-                    'Product Views Trend',
-                    style: TextStyle(
+                  Text(
+                    'Product Views Trend(${controller.selectedPeriod})',
+                    style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 16),
                   Container(
-                    height: 250,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: controller.productViewsChartData.isNotEmpty
-                        ? BarChart(_buildProductViewsChart())
-                        : const Center(child: Text('No data available')),
-                  ),
+                      height: 250,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: BarChart(_buildProductViewsChart())
+                      // child: controller.productViewsChartData.isNotEmpty
+                      //     ? BarChart(_buildProductViewsChart())
+                      //     : const Center(child: Text('No data available')),
+                      ),
                   const SizedBox(height: 10),
-                  const Text(
-                    'Shop Visits',
-                    style: TextStyle(
-                      fontSize: 20,
+                  Text(
+                    'Shop Visits(${controller.selectedPeriod})',
+                    style: const TextStyle(
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 16),
                   Container(
-                    height: 250,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 8,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    child: controller.shopVisitsChartData.isNotEmpty
-                        ? BarChart(_buildShopVisitsChart())
-                        : const Center(child: Text('No data available')),
-                  ),
+                      height: 250,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      // child: controller.shopVisitsChartData.isNotEmpty
+                      //     ? BarChart(_buildShopVisitsChart())
+                      //     : const Center(child: Text('No data available')),
+                      child: BarChart(_buildShopVisitsChart())),
                   const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -180,7 +181,7 @@ class ShopAnalyticsScreenState extends State<ShopAnalyticsScreen> {
                       const Text(
                         'Top Products',
                         style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -536,7 +537,6 @@ class ShopAnalyticsScreenState extends State<ShopAnalyticsScreen> {
     }
 
     double step = (maxY / 3).ceilToDouble();
-
     return BarChartData(
       alignment: BarChartAlignment.spaceAround,
       maxY: maxY,
@@ -561,6 +561,7 @@ class ShopAnalyticsScreenState extends State<ShopAnalyticsScreen> {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             showTitles: true,
+            interval: step,
             reservedSize: 36,
             getTitlesWidget: (value, meta) {
               if (value % step == 0 && value <= maxY) {

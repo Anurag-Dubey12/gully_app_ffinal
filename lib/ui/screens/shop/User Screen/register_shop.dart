@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,15 +7,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:gully_app/config/app_constants.dart';
+import 'package:gully_app/data/controller/auth_controller.dart';
 import 'package:gully_app/data/controller/shop_controller.dart';
 import 'package:gully_app/data/model/business_hours_model.dart';
+import 'package:gully_app/ui/screens/create_profile_screen.dart';
 import 'package:gully_app/ui/screens/select_location.dart';
+import 'package:gully_app/ui/screens/shop/Shop%20owner%20Screen/product_adding_screen.dart';
 import 'package:gully_app/ui/widgets/gradient_builder.dart';
+import 'package:gully_app/ui/widgets/primary_button.dart';
 import 'package:gully_app/ui/widgets/shop/aadhar_card_upload.dart';
+import 'package:gully_app/ui/widgets/shop/shopOtpBottomsheet.dart';
 import 'package:gully_app/utils/geo_locator_helper.dart';
 import 'package:gully_app/utils/image_picker_helper.dart';
 import 'package:gully_app/utils/utils.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shimmer/shimmer.dart';
 import '../../../../data/model/shop_model.dart';
 import '../../../theme/theme.dart';
 import '../../../widgets/create_tournament/form_input.dart';
@@ -47,6 +54,7 @@ class _ShopState extends State<RegisterShop>
   final TextEditingController shopWebsiteController = TextEditingController();
   final TextEditingController shopDescriptionController =
       TextEditingController();
+  TextEditingController otpController = TextEditingController();
 
   //Focus Node
   final FocusNode ownerNameFocus = FocusNode();
@@ -66,6 +74,10 @@ class _ShopState extends State<RegisterShop>
   final FocusNode shopDescriptionFocus = FocusNode();
 
   XFile? _documentImage;
+
+  Timer? timer;
+  int countDown = 20;
+  String originalPhoneNumber = '';
   bool tncAccepted = false;
   XFile? gstCertificateImage;
   XFile? shopLocation;
@@ -77,6 +89,7 @@ class _ShopState extends State<RegisterShop>
   List<XFile>? base64shopimages;
   int currentStep = 0;
   final ScrollController _controller = ScrollController();
+  final controller = Get.find<ShopController>();
   Map<String, String> aadhaarData = {};
 
   final _formKeys = [
@@ -121,7 +134,6 @@ class _ShopState extends State<RegisterShop>
   Map<String, String> existingImage = {};
 
   late LatLng location;
-
   @override
   void initState() {
     super.initState();
@@ -151,8 +163,8 @@ class _ShopState extends State<RegisterShop>
     );
     _progressAnimation =
         Tween<double>(begin: 0, end: 0).animate(_progressController);
-
     fetchLocation();
+    startTimer();
   }
 
   fetchLocation() async {
@@ -183,6 +195,14 @@ class _ShopState extends State<RegisterShop>
         errorSnackBar("Aadhar Card document required.");
         return;
       }
+      if (currentStep == 0 &&
+          !controller.isOtpVerified.value &&
+          widget.shop == null) {
+        errorSnackBar(
+            "Please verify the owner's phone number before proceeding.");
+
+        return;
+      }
 
       if (currentStep == 1 && shopimages == null && widget.shop == null) {
         errorSnackBar("Please Add An Shop Images");
@@ -210,7 +230,13 @@ class _ShopState extends State<RegisterShop>
   void _submitForm() async {
     if (_formKeys[currentStep].currentState!.validate()) {
       try {
-        final controller = Get.find<ShopController>();
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (_) => const UploadingDialog(
+              title: "Uploading Shop Data",
+              description: "Please wait while we upload your shop details."),
+        );
         List<String> shopBase64Images = [];
 
         for (dynamic image in shopimages) {
@@ -252,9 +278,10 @@ class _ShopState extends State<RegisterShop>
           "shopDescription": shopDescriptionController.text,
           "shopContact": shopPhoneController.text,
           "shopEmail": shopEmailController.text,
-          "shopLink": shopWebsiteController.text,
+          "shoplink": shopWebsiteController.text,
           if (widget.shop == null) "joinedAt": DateTime.now().toIso8601String(),
-          // "gstNumber": gstNumberController.text,
+          "GstNumber": gstNumberController.text,
+          "LicenseNumber": businessLicenseController.text,
           "selectLocation": shoplocationController.text,
           "latitude": location.latitude,
           "longitude": location.longitude,
@@ -272,18 +299,25 @@ class _ShopState extends State<RegisterShop>
           if (widget.shop != null) {
             bool isOk = await controller.editShop(shopData);
             if (isOk) {
-              successSnackBar("Shop Edited successfully!").then(
-                (value) => Get.back(),
-              );
+              if (Navigator.canPop(context)) {
+                Navigator.of(context).pop();
+              }
+              successSnackBar(
+                      "Your shop details have been successfully updated.")
+                  .then((value) => Get.back());
+
               controller.getMyShop();
             }
           } else {
-            final prettyJson =
-                const JsonEncoder.withIndent('  ').convert(shopData);
-            debugPrint(prettyJson, wrapWidth: 10024);
             bool isOk = await controller.registerShop(shopData);
             if (isOk) {
-              successSnackBar("Shop registration submitted successfully!");
+              if (Navigator.canPop(context)) {
+                Navigator.of(context).pop();
+              }
+              successSnackBar(
+                      "Thank you! Your shop registration is now complete.")
+                  .then((value) => Get.back());
+              controller.getMyShop();
             }
           }
         } catch (e) {
@@ -380,6 +414,26 @@ class _ShopState extends State<RegisterShop>
     });
   }
 
+  void startTimer() {
+    countDown = 60;
+    const oneSec = Duration(seconds: 1);
+    timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (countDown == 0) {
+          timer.cancel();
+          // setState(() {
+          //   isOtpSent = false;
+          // });
+        } else {
+          setState(() {
+            countDown--;
+          });
+        }
+      },
+    );
+  }
+
   @override
   void dispose() {
     ownerNameFocus.dispose();
@@ -397,6 +451,9 @@ class _ShopState extends State<RegisterShop>
     businessLicenseFocus.dispose();
     shopWebsiteFocus.dispose();
     shopDescriptionFocus.dispose();
+    timer?.cancel();
+    controller.isOtpSent.value = false;
+    controller.isOtpVerified.value = false;
     super.dispose();
   }
 
@@ -542,7 +599,6 @@ class _ShopState extends State<RegisterShop>
   Widget firstStep() {
     final bool hasAadhaarImages =
         frontImagePath != null && backImagePath != null;
-
     return Form(
       key: _formKeys[0],
       child: Column(
@@ -573,7 +629,7 @@ class _ShopState extends State<RegisterShop>
           ),
           FormInput(
             controller: ownerPhoneController,
-            enabled: true,
+            enabled: !controller.isOtpVerified.value,
             focusNode: ownerPhoneFocus,
             label: AppConstants.ownerPhone,
             textInputType: TextInputType.number,
@@ -602,6 +658,230 @@ class _ShopState extends State<RegisterShop>
 
               return null;
             },
+          ),
+          // if (widget.shop == null)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Obx(
+                      () => FormInput(
+                        controller: otpController,
+                        enabled: controller.isOtpSent.value &&
+                            !controller.isOtpVerified.value,
+                        label: "Verify OTP",
+                        textInputType: TextInputType.number,
+                        maxLength: 5,
+                        suffixIcon: controller.isOtpVerified.value
+                            ? const Icon(Icons.verified_rounded,
+                                color: Colors.green)
+                            : null,
+                        validator: (value) {
+                          if (value!.isEmpty) return "Enter OTP";
+                          if (value.length < 4) return "OTP too short";
+                          return null;
+                        },
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  if (!controller.isOtpVerified.value)
+                    Obx(() {
+                      if (controller.isOtpVerified.value) {
+                        return const SizedBox();
+                      }
+                      return Container(
+                        width: 130,
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: PrimaryButton(
+                          title: controller.isOtpSent.value
+                              ? "Verify OTP"
+                              : "Send OTP",
+                          isLoading: controller.isOtpInProgress.value,
+                          onTap: () async {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            final phone = ownerPhoneController.text.trim();
+                            if (!controller.isOtpSent.value) {
+                              if (phone.length == 10) {
+                                bool isSent = await controller.sendOTP(phone);
+                                if (isSent) {
+                                  controller.isOtpSent.value = true;
+                                  originalPhoneNumber = phone;
+                                  startTimer();
+                                }
+                              } else {
+                                errorSnackBar(
+                                    "Please enter a valid phone number");
+                              }
+                            } else {
+                              final otp = otpController.text.trim();
+                              if (otp.length == 5) {
+                                bool isVerified =
+                                    await controller.verifyOtp(otp: otp);
+                                if (isVerified) {
+                                  successSnackBar("OTP verified successfully");
+                                  controller.isOtpVerified.value = true;
+                                }
+                              } else {
+                                errorSnackBar("Please enter a 5-digit OTP");
+                              }
+                            }
+                          },
+                        ),
+                      );
+                    }),
+                ],
+              ),
+              Obx(
+                () => controller.isOtpVerified.value
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: GestureDetector(
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => Dialog(
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Icon(Icons.info_outline,
+                                          size: 48, color: Colors.blueAccent),
+                                      const SizedBox(height: 12),
+                                      Text(
+                                        "Change Phone Number?",
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headlineSmall
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.black87,
+                                            ),
+                                      ),
+                                      const SizedBox(height: 12),
+                                      const Text(
+                                        "Changing the number will require re-verification via OTP. Do you want to proceed?",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.black54,
+                                          height: 1.5,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 24),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          TextButton(
+                                            style: TextButton.styleFrom(
+                                              foregroundColor: Colors.grey[700],
+                                            ),
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: const Text("Cancel"),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          ElevatedButton.icon(
+                                            icon: const Icon(
+                                              Icons.check_circle_outline,
+                                              color: Colors.white,
+                                            ),
+                                            label: const Text("Yes, Change"),
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor:
+                                                  Colors.blueAccent,
+                                              foregroundColor: Colors.white,
+                                              elevation: 2,
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 12),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                              controller.isOtpVerified.value =
+                                                  false;
+                                              controller.isOtpSent.value =
+                                                  false;
+                                              otpController.clear();
+                                            },
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            "Change Number",
+                            style: TextStyle(
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
+              ),
+              Obx(
+                () => controller.isOtpSent.value &&
+                        !controller.isOtpVerified.value
+                    ? Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: GestureDetector(
+                          onTap: countDown == 0
+                              ? () async {
+                                  final phone =
+                                      ownerPhoneController.text.trim();
+                                  if (phone.length == 10) {
+                                    bool isSent =
+                                        await controller.sendOTP(phone);
+                                    if (isSent) {
+                                      startTimer();
+                                      controller.isOtpSent.value = true;
+                                      originalPhoneNumber = phone;
+                                    }
+                                  } else {
+                                    errorSnackBar(
+                                        "Please enter a valid phone number");
+                                  }
+                                }
+                              : null,
+                          child: Text(
+                            countDown == 0
+                                ? "Resend Code"
+                                : "Resend code in 00:${countDown.toString().padLeft(2, '0')}",
+                            style: TextStyle(
+                              color: countDown == 0 ? Colors.blue : Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              decoration: countDown == 0
+                                  ? TextDecoration.underline
+                                  : null,
+                            ),
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
+              ),
+            ],
           ),
           FormInput(
             controller: ownerAddressController,
@@ -805,6 +1085,22 @@ class _ShopState extends State<RegisterShop>
                                             .single
                                             .aadharFrontSide),
                                         fit: BoxFit.cover,
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          }
+
+                                          return Shimmer.fromColors(
+                                            baseColor: Colors.grey[300]!,
+                                            highlightColor: Colors.grey[100]!,
+                                            child: Container(
+                                              width: double.infinity,
+                                              height: 200,
+                                              color: Colors.white,
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
                                   ),
@@ -843,6 +1139,22 @@ class _ShopState extends State<RegisterShop>
                                             .first
                                             .aadharBackSide),
                                         fit: BoxFit.cover,
+                                        loadingBuilder:
+                                            (context, child, loadingProgress) {
+                                          if (loadingProgress == null) {
+                                            return child;
+                                          }
+
+                                          return Shimmer.fromColors(
+                                            baseColor: Colors.grey[300]!,
+                                            highlightColor: Colors.grey[100]!,
+                                            child: Container(
+                                              width: double.infinity,
+                                              height: 200,
+                                              color: Colors.white,
+                                            ),
+                                          );
+                                        },
                                       ),
                                     ),
                                   ),
@@ -1095,37 +1407,37 @@ class _ShopState extends State<RegisterShop>
             controller: gstNumberController,
             label: "Shop GST Number",
             textInputType: TextInputType.text,
-            // validator: (value) {
-            //   if (value == null || value.trim().isEmpty) {
-            //     return "Enter GST Number";
-            //   }
-            //   if (value.isNotEmpty) {
-            //     if (!RegExp(
-            //             r"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$")
-            //         .hasMatch(value)) {
-            //       return "Invalid GST Number";
-            //     }
-            //     return null;
-            //   }
-            //   return null;
-            // },
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return "Enter GST Number";
+              }
+              if (value.isNotEmpty) {
+                if (!RegExp(
+                        r"^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$")
+                    .hasMatch(value)) {
+                  return "Invalid GST Number";
+                }
+                return null;
+              }
+              return null;
+            },
           ),
           FormInput(
             controller: businessLicenseController,
             label: "Business License Number",
             textInputType: TextInputType.text,
-            // validator: (value) {
-            //   if (value == null || value.trim().isEmpty) {
-            //     return "Enter Business License Number";
-            //   }
-            //   if (value.isNotEmpty) {
-            //     if (!RegExp(r"^[a-zA-Z0-9]{5,15}$").hasMatch(value)) {
-            //       return "Invalid Business License Number";
-            //     }
-            //     return null;
-            //   }
-            //   return null;
-            // },
+            validator: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return "Enter Business License Number";
+              }
+              if (value.isNotEmpty) {
+                if (!RegExp(r"^[a-zA-Z0-9]{5,15}$").hasMatch(value)) {
+                  return "Invalid Business License Number";
+                }
+                return null;
+              }
+              return null;
+            },
           ),
           const SizedBox(height: 10),
         ],
@@ -1133,53 +1445,6 @@ class _ShopState extends State<RegisterShop>
     );
   }
 
-  // Widget thirdStep() {
-  //   return Form(
-  //       key: _formKeys[2],
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           ImageUploadWidget(
-  //             image: gstCertificateImage,
-  //             onTap: () => pickImage(ImageType.gstCertificateImage),
-  //             hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
-  //             title: "Upload GST Certificate",
-  //           ),
-  //           ImageUploadWidget(
-  //             image: rstCertificate,
-  //             onTap: () => pickImage(ImageType.registrationCertificate),
-  //             hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
-  //             title: "Upload Shop Registration Certificate",
-  //           ),
-  //           ImageUploadWidget(
-  //             image: _shopLogo,
-  //             onTap: () => pickImage(ImageType.shopLogo),
-  //             hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
-  //             title: "Upload Shop Logo/Image",
-  //           ),
-  //           ImageUploadWidget(
-  //             image: shopLocation,
-  //             onTap: () => pickImage(ImageType.shopLocation),
-  //             hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
-  //             title:
-  //                 "Upload Shop Location Proof (e.g., Utility bill, Rent agreement, etc.)",
-  //           ),
-  //           ImageUploadWidget(
-  //             image: businessLicense,
-  //             onTap: () => pickImage(ImageType.businessLicense),
-  //             hintText: "Select Documents for Verification\n(JPG, PNG max 2MB)",
-  //             title: "Upload Business License",
-  //           ),
-  //           ImageUploadWidget(
-  //             image: taxCertificate,
-  //             onTap: () => pickImage(ImageType.taxCertificate),
-  //             hintText:
-  //                 "Select Documents for Verification\n(JPG, PNG  max 2MB)",
-  //             title: "Upload VAT or Sales Tax Certificate (if applicable)",
-  //           ),
-  //         ],
-  //       ));
-  // }
   pickImages() async {
     final imgs = await multipleimagePickerHelper();
 
@@ -1382,29 +1647,29 @@ class _ShopState extends State<RegisterShop>
         return "Open daily ${firstDay.openTime} - ${firstDay.closeTime}";
       }
 
-      return "Open all days (varied hours)";
+      return "Open every day with different Working hours";
     }
-    final weekdaysList = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday'
-    ];
-    final weekendsList = ['Saturday', 'Sunday'];
+    // final weekdaysList = [
+    //   'Monday',
+    //   'Tuesday',
+    //   'Wednesday',
+    //   'Thursday',
+    //   'Friday'
+    // ];
+    // final weekendsList = ['Saturday', 'Sunday'];
 
-    bool allWeekdaysOpen =
-        weekdaysList.every((day) => businesshours[day]?.isOpen == true);
-    bool allWeekendsOpen =
-        weekendsList.every((day) => businesshours[day]?.isOpen == true);
+    // bool allWeekdaysOpen =
+    //     weekdaysList.every((day) => businesshours[day]?.isOpen == true);
+    // bool allWeekendsOpen =
+    //     weekendsList.every((day) => businesshours[day]?.isOpen == true);
 
-    if (allWeekdaysOpen && !allWeekendsOpen) {
-      return "Open weekdays only";
-    }
+    // if (allWeekdaysOpen && !allWeekendsOpen) {
+    //   return "Open weekdays only";
+    // }
 
-    if (!allWeekdaysOpen && allWeekendsOpen) {
-      return "Open weekends only";
-    }
+    // if (!allWeekdaysOpen && allWeekendsOpen) {
+    //   return "Open weekends only";
+    // }
     return "Open ${openDays.join(', ')}";
   }
 }

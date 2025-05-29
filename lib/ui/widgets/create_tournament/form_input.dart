@@ -19,6 +19,7 @@ class FormInput extends StatelessWidget {
   final String? infotext;
   final String? infotitle;
   final FocusNode? focusNode;
+  final Widget? suffixIcon;
 //ontap
   final Function()? onTap;
   final bool isUpperCase;
@@ -32,6 +33,7 @@ class FormInput extends StatelessWidget {
       this.filled = true,
       this.readOnly,
       this.enabled,
+      this.suffixIcon,
       this.validator,
       this.onTap,
       this.infotext,
@@ -113,6 +115,7 @@ class FormInput extends StatelessWidget {
             validator: validator,
             maxLines: maxLines,
             controller: controller,
+            suffixIcon: suffixIcon,
             textInputType: textInputType,
             isUpperCase: isUpperCase,
             focusNode: focusNode,

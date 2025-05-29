@@ -43,17 +43,27 @@ class ShopController extends GetxController with StateMixin {
 
   Rx<ProductModel?> productModel = Rx<ProductModel?>(null);
   Rx<LatLng> coordinates = const LatLng(0, 0).obs;
-
+  RxBool isShopUploading = false.obs;
   // MARK: RegisterShop
   Future<bool> registerShop(Map<String, dynamic> shop) async {
-    final response = await shopApi.registerShop(shop);
-    if (response.status == false) {
-      errorSnackBar(response.message!);
-      return false;
-    }
+    try {
+      isShopUploading.value = true;
+      final response = await shopApi.registerShop(shop);
+      if (response.status == false) {
+        errorSnackBar(response.message!);
+        return false;
+      }
 
-    // change(GetStatus.success(ShopModel.fromJson(response.data!)));
-    return true;
+      // change(GetStatus.success(ShopModel.fromJson(response.data!)));
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
+      return false;
+    } finally {
+      isShopUploading.value = false;
+    }
   }
 
   Rx<ShopModel?> shop = Rx<ShopModel?>(null);
@@ -61,6 +71,7 @@ class ShopController extends GetxController with StateMixin {
 // MARK: EditShop
   Future<bool> editShop(Map<String, dynamic> shopData) async {
     try {
+      isShopUploading.value = true;
       final response = await shopApi.editShop(shopData);
 
       if (response.status == false) {
@@ -78,6 +89,8 @@ class ShopController extends GetxController with StateMixin {
       if (kDebugMode) print("Edit Shop Error: $e");
       errorSnackBar("Failed to update shop. Please try again.");
       return false;
+    } finally {
+      isShopUploading.value = false;
     }
   }
 
@@ -177,15 +190,26 @@ class ShopController extends GetxController with StateMixin {
     }
   }
 
+  RxBool isProductUploading = false.obs;
   // MARK: AddShopProduct
   Future<bool> addShopProduct(Map<String, dynamic> product) async {
-    final response = await shopApi.addShopProduct(product);
-    if (response.status == false) {
-      errorSnackBar(response.message!);
+    try {
+      isProductUploading.value = true;
+      final response = await shopApi.addShopProduct(product);
+      if (response.status == false) {
+        errorSnackBar(response.message!);
+        return false;
+      }
+      change(GetStatus.success(ProductModel.fromJson(response.data!)));
+      return true;
+    } catch (e) {
+      if (kDebugMode) {
+        print(e);
+      }
       return false;
+    } finally {
+      isProductUploading.value = false;
     }
-    change(GetStatus.success(ProductModel.fromJson(response.data!)));
-    return true;
   }
 
   Rx<ProductModel?> shopProduct = Rx<ProductModel?>(null);
@@ -193,6 +217,7 @@ class ShopController extends GetxController with StateMixin {
   // MARK: EditShopProduct
   Future<bool> editProduct(Map<String, dynamic> product) async {
     try {
+      isProductUploading.value = true;
       final response = await shopApi.editProduct(product);
       if (response.status == false) {
         errorSnackBar(response.message ?? "Something went wrong.");
@@ -210,6 +235,8 @@ class ShopController extends GetxController with StateMixin {
         print(e.toString());
       }
       return false;
+    } finally {
+      isProductUploading.value = false;
     }
   }
 
@@ -303,6 +330,7 @@ class ShopController extends GetxController with StateMixin {
     return parsedProducts;
   }
 
+  RxBool isEdited = false.obs;
   RxInt totalImagesAdded = 0.obs;
   RxInt totalPackagelimit = 0.obs;
   // MARK: getShopImageCount
@@ -691,8 +719,7 @@ class ShopController extends GetxController with StateMixin {
   }
 
   // MARK: recordProductView
-  Future<void> recordProductView(
-      String productId, String shopId) async {
+  Future<void> recordProductView(String productId, String shopId) async {
     try {
       await shopApi.recordProductView(productId, shopId);
     } catch (e) {
@@ -715,5 +742,51 @@ class ShopController extends GetxController with StateMixin {
 
   List<String> getDateLabels() {
     return dateLabels;
+  }
+
+  // ***********************    Credential verification Section      ****************************
+  RxBool isOtpSent = false.obs;
+  RxBool isOtpVerified = false.obs;
+  RxBool isOtpInProgress = false.obs;
+
+  // MARK: SendOTP
+  Future<bool> sendOTP(String phoneNumber) async {
+    try {
+      isOtpInProgress.value = true;
+      await Future.delayed(const Duration(seconds: 2));
+      final response = await shopApi.sendOTP(phoneNumber);
+      if (response.status == false) {
+        errorSnackBar(response.message ?? "Something went wrong.");
+        return false;
+      }
+      print("The otp sent value:${isOtpSent.value}");
+      return true;
+    } catch (e) {
+      // rethrow;
+      return false;
+    } finally {
+      isOtpInProgress.value = false;
+    }
+  }
+
+  // MARK: VerifyOtp
+  Future<bool> verifyOtp({required String otp}) async {
+    try {
+      isOtpInProgress.value = true;
+      await Future.delayed(const Duration(seconds: 2));
+
+      final response = await shopApi.verifyOtp(otp);
+
+      if (response.status == false) {
+        errorSnackBar(response.message ?? "Invalid OTP");
+        return false;
+      }
+      return true;
+    } catch (e) {
+      errorSnackBar("OTP verification failed. Please try again.");
+      return false;
+    } finally {
+      isOtpInProgress.value = false;
+    }
   }
 }

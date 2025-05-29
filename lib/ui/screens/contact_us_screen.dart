@@ -167,14 +167,14 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                 SizedBox(
                   height: Get.height * 0.06,
                 ),
-                Row(
+                const Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.mail,
                       size: 17,
                       color: AppTheme.secondaryYellowColor,
                     ),
-                    const SizedBox(
+                    SizedBox(
                       width: 10,
                     ),
                     Text(AppConstants.emailInfo),
@@ -195,20 +195,20 @@ class _ContactUsScreenState extends State<ContactUsScreen> {
                     ),
                     SizedBox(
                         width: Get.width * 0.7,
-                        child: Text(AppConstants.addressInfo)),
+                        child: const Text(AppConstants.addressInfo)),
                   ],
                 ),
                 SizedBox(
                   height: Get.height * 0.02,
                 ),
-                Row(
+                const Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.phone,
                       size: 17,
                       color: AppTheme.secondaryYellowColor,
                     ),
-                    const SizedBox(
+                    SizedBox(
                       width: 10,
                     ),
                     Text(AppConstants.phoneInfo),

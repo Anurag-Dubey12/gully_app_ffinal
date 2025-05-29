@@ -135,7 +135,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               ..onTap = () {
                                 Get.bottomSheet(BottomSheet(
                                     onClosing: () {},
-                                    builder: (builder) => LegalViewScreen(
+                                    builder: (builder) => const LegalViewScreen(
                                           title:
                                               '${AppConstants.privacy_policy} ',
                                           slug: 'privacy',

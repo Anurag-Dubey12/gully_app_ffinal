@@ -152,6 +152,8 @@ class _ShopState extends State<RegisterShop>
       shopDescriptionController.text = widget.shop!.shopDescription;
       shopWebsiteController.text = widget.shop!.shoplink ?? '';
       businesshours = widget.shop!.shopTiming;
+      gstNumberController.text = widget.shop?.gstNumber ?? '';
+      businessLicenseController.text = widget.shop?.businesslicenseNumber ?? '';
       // shopimages = widget.shop!.shopImage;
       if (widget.shop!.shopImage != null) {
         shopimages = List.from(widget.shop!.shopImage);
@@ -195,14 +197,14 @@ class _ShopState extends State<RegisterShop>
         errorSnackBar("Aadhar Card document required.");
         return;
       }
-      if (currentStep == 0 &&
-          !controller.isOtpVerified.value &&
-          widget.shop == null) {
-        errorSnackBar(
-            "Please verify the owner's phone number before proceeding.");
+      // if (currentStep == 0 &&
+      //     !controller.isOtpVerified.value &&
+      //     widget.shop == null) {
+      //   errorSnackBar(
+      //       "Please verify the owner's phone number before proceeding.");
 
-        return;
-      }
+      //   return;
+      // }
 
       if (currentStep == 1 && shopimages == null && widget.shop == null) {
         errorSnackBar("Please Add An Shop Images");
@@ -679,11 +681,11 @@ class _ShopState extends State<RegisterShop>
                             ? const Icon(Icons.verified_rounded,
                                 color: Colors.green)
                             : null,
-                        validator: (value) {
-                          if (value!.isEmpty) return "Enter OTP";
-                          if (value.length < 4) return "OTP too short";
-                          return null;
-                        },
+                        // validator: (value) {
+                        //   if (value!.isEmpty) return "Enter OTP";
+                        //   if (value.length < 4) return "OTP too short";
+                        //   return null;
+                        // },
                       ),
                     ),
                   ),

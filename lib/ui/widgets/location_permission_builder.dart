@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gully_app/ui/widgets/primary_button.dart';
-import 'package:gully_app/utils/app_logger.dart';
 
 class LocationStreamHandler extends StatefulWidget {
   final Widget child;
@@ -55,10 +54,9 @@ class LocationStreamHandlerState extends State<LocationStreamHandler> {
   Widget build(BuildContext context) {
     return StreamBuilder<bool>(
       stream: _locationPermissionController.stream,
-      initialData: true, // Assuming permission is granted initially
+      initialData: true,
       builder: (context, snapshot) {
         if (snapshot.data == false) {
-          // Location permission denied, navigate to a different page
           return PermissionDeniedPage(
             onGrantPermission: () {
               checkLocationPermission();

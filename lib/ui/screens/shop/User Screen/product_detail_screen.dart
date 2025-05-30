@@ -47,6 +47,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen>
   bool showFixedPrice = false;
   late double _textWidth;
   late final product;
+  
   // MARK: _getTextWidth
   /// Measures and returns the width of the given [text] with the specified [style].
   /// This utility is useful when you need precise control over UI elements

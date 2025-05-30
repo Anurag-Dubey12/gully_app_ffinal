@@ -98,10 +98,11 @@ class ShopPaymentPageState extends State<ShopPaymentPage> {
           successSnackBar(
             AppConstants.additionalPackagePaymentSuccess,
             title: "Payment Successful",
-          ).then(
-            (value) => Get.offAll(() => const HomeScreen(),
-                predicate: (route) => route.name == '/HomeScreen'),
           );
+          // then(
+          //   (value) => Get.offAll(() => const HomeScreen(),
+          //       predicate: (route) => route.name == '/HomeScreen'),
+          // );
         } else {
           errorSnackBar("Something Went Wrong");
         }
@@ -123,10 +124,11 @@ class ShopPaymentPageState extends State<ShopPaymentPage> {
           successSnackBar(
             AppConstants.shopPaymentSuccessful,
             title: "Payment Successful",
-          ).then(
-            (value) => Get.offAll(() => const HomeScreen(),
-                predicate: (route) => route.name == '/HomeScreen'),
           );
+          // .then(
+          //   (value) => Get.offAll(() => const HomeScreen(),
+          //       predicate: (route) => route.name == '/HomeScreen'),
+          // );
         } else {
           errorSnackBar("Something Went Wrong");
         }

@@ -19,9 +19,15 @@ class ShopPackages extends StatefulWidget {
 
 class SponsorPackageScreenState extends State<ShopPackages> {
   int? selectedIndex = 0;
+  final controller = Get.find<MiscController>();
+  @override
+  void dispose() {
+    super.dispose();
+    controller.selectedpackage.value = null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<MiscController>();
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
@@ -90,6 +96,11 @@ class SponsorPackageScreenState extends State<ShopPackages> {
                       ? controller.getAdditionalPackages()
                       : controller.getPackage('shop'),
                   builder: (context, snapshot) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (controller.selectedpackage.value == null) {
+                        controller.selectedpackage.value = snapshot.data![0];
+                      }
+                    });
                     return Expanded(
                       child: ListView.separated(
                         padding: const EdgeInsets.all(16),

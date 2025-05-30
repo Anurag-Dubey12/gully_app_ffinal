@@ -24,6 +24,10 @@ class ShopModel {
   String shopContact;
   @JsonKey(name: "shopEmail")
   String shopEmail;
+  @JsonKey(name: "LicenseNumber")
+  String? businesslicenseNumber;
+  @JsonKey(name: "GstNumber")
+  String? gstNumber;
   @JsonKey(name: "ownerName")
   String ownerName;
   @JsonKey(name: "ownerPhoneNumber")
@@ -65,6 +69,8 @@ class ShopModel {
     required this.shopAddress,
     required this.shopContact,
     required this.shopEmail,
+    this.gstNumber,
+    this.businesslicenseNumber,
     required this.totalEditDone,
     this.shoplink,
     required this.ownerName,
